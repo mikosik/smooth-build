@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.interfaceTypeName;
 
 import com.google.common.collect.ImmutableMap;
@@ -13,7 +14,7 @@ public final class InterfaceTS extends FieldSetTS {
   private final ImmutableSortedMap<String, ItemSigS> fields;
 
   public InterfaceTS(ImmutableMap<String, ItemSigS> fields) {
-    super(interfaceTypeName(fields), calculateFieldSetVars(fields.values()));
+    super(interfaceTypeName(fields), calculateFieldSetVars(listOfAll(fields.values())));
     this.fields = ImmutableSortedMap.copyOf(fields);
   }
 

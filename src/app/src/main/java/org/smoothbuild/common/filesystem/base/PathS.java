@@ -1,11 +1,10 @@
 package org.smoothbuild.common.filesystem.base;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
+import static org.smoothbuild.common.collect.List.list;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 
 public class PathS {
   public static final String SEPARATOR = "/";
@@ -149,9 +148,9 @@ public class PathS {
 
   public List<PathS> parts() {
     if (isRoot()) {
-      return new ArrayList<>();
+      return list();
     } else {
-      return stream(value.split(quote(SEPARATOR))).map(PathS::path).toList();
+      return list(value.split(quote(SEPARATOR))).map(PathS::path);
     }
   }
 

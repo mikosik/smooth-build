@@ -5,7 +5,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
@@ -107,7 +108,7 @@ public class ConsoleReporterTest extends TestContext {
         logs.add(INFO_LOG);
       }
 
-      reporter.report(true, HEADER, logs);
+      reporter.report(true, HEADER, listOfAll(logs));
       reporter.printSummary();
 
       var inOrder = inOrder(console);
@@ -129,7 +130,7 @@ public class ConsoleReporterTest extends TestContext {
         logs.add(INFO_LOG);
       }
 
-      reporter.report(true, HEADER, logs);
+      reporter.report(true, HEADER, listOfAll(logs));
       reporter.printSummary();
 
       var inOrder = inOrder(console);

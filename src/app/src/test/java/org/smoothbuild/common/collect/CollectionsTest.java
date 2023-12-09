@@ -1,7 +1,7 @@
 package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -18,7 +18,7 @@ public class CollectionsTest {
 
     @Test
     public void empty_collection() {
-      assertThat(Collections.toMap(list(), String::length)).isEmpty();
+      assertThat(Collections.toMap(list(new String[] {}), String::length)).isEmpty();
     }
   }
 
@@ -40,7 +40,8 @@ public class CollectionsTest {
 
     @Test
     public void empty_collection() {
-      assertThat(Collections.toMap(list(), String::toUpperCase, String::length)).isEmpty();
+      assertThat(Collections.toMap(list(new String[] {}), String::toUpperCase, String::length))
+          .isEmpty();
     }
   }
 }

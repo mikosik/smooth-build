@@ -1,21 +1,22 @@
 package org.smoothbuild.common.graph;
 
-import static com.google.common.collect.Collections2.permutations;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.collect.Collections2;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 
 public class SortTopologicallyTest {
   @Nested
@@ -200,7 +201,7 @@ public class SortTopologicallyTest {
             return;
           }
         }
-        fail("For tested permutation: " + map(permutation, GraphNode::key) + "\n"
+        fail("For tested permutation: " + permutation.map(GraphNode::key) + "\n"
             + "actual cycle = " + actual + "\n"
             + "doesn't match expected cycle (even rotated) = " + cycle);
       }
@@ -217,7 +218,7 @@ public class SortTopologicallyTest {
             .orElseThrow(() -> new RuntimeException("nodes doesn't form a cycle"));
         result.add(edge);
       }
-      return result;
+      return listOfAll(result);
     }
   }
 
@@ -250,19 +251,19 @@ public class SortTopologicallyTest {
     var nodes = new ArrayList<>(topLayer);
     int layerCount = 100;
     for (int i = 0; i < layerCount; i++) {
-      topLayer = createLayer(key, map(topLayer, GraphNode::key));
+      topLayer = createLayer(key, topLayer.map(GraphNode::key));
       nodes.addAll(topLayer);
     }
     assertTimeoutPreemptively(Duration.ofSeconds(5), () -> sortTopologically(nodes));
   }
 
-  private ArrayList<GraphNode<Integer, String, String>> createLayer(
+  private List<GraphNode<Integer, String, String>> createLayer(
       AtomicInteger key, List<Integer> edges) {
     var layer = new ArrayList<GraphNode<Integer, String, String>>();
     for (int j = 0; j < 10; j++) {
       layer.add(node(key.getAndIncrement(), edges));
     }
-    return layer;
+    return listOfAll(layer);
   }
 
   private static void assertSortTopologically(
@@ -272,7 +273,7 @@ public class SortTopologicallyTest {
     for (List<GraphNode<Integer, String, String>> permutation : permutations) {
       var actual = sortTopologically(permutation).sorted();
 
-      String message = "tested permutation: " + map(permutation, GraphNode::key);
+      String message = "tested permutation: " + permutation.map(GraphNode::key);
       assertWithMessage(message).that(actual).containsExactlyElementsIn(nodes);
       for (List<GraphNode<Integer, String, String>> expectedOrder : expectedOrders) {
         assertWithMessage(message)
@@ -284,11 +285,15 @@ public class SortTopologicallyTest {
   }
 
   private static GraphNode<Integer, String, String> node(int n1) {
-    return node(n1, new ArrayList<>());
+    return node(n1, list());
   }
 
   private static GraphNode<Integer, String, String> node(Integer key, List<Integer> targetKeys) {
-    var edges = map(targetKeys, k -> new GraphEdge<>("->" + k, k));
+    var edges = targetKeys.map(k -> new GraphEdge<>("->" + k, k));
     return new GraphNode<>(key, "node" + key, edges);
+  }
+
+  public static <E> Collection<List<E>> permutations(Collection<E> elements) {
+    return Collections2.permutations(elements).stream().map(List::listOfAll).toList();
   }
 }

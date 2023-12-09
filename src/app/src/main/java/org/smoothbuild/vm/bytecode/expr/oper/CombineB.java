@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
@@ -38,24 +37,24 @@ public class CombineB extends OperB {
   }
 
   public List<ExprB> items() {
-    List<TypeB> expectedElementsTs = category().evaluationT().elements();
+    List<TypeB> expectedTypes = category().evaluationT().elements();
     List<ExprB> items = readDataSeqElems(ExprB.class);
-    allMatchOtherwise(
-        expectedElementsTs,
-        items,
-        (type, item) -> type.equals(item.evaluationT()),
-        (type, item) -> {
-          throw new DecodeCombineWrongElementsSizeException(hash(), category(), item);
-        },
-        (index) -> {
-          throw new DecodeExprWrongNodeTypeException(
-              hash(),
-              category(),
-              "elements",
-              index,
-              expectedElementsTs.get(index),
-              items.get(index).evaluationT());
-        });
+    if (items.size() != expectedTypes.size()) {
+      throw new DecodeCombineWrongElementsSizeException(hash(), category(), items.size());
+    }
+    for (int i = 0; i < items.size(); i++) {
+      ExprB item = items.get(i);
+      TypeB type = expectedTypes.get(i);
+      if (!type.equals(item.evaluationT())) {
+        throw new DecodeExprWrongNodeTypeException(
+            hash(),
+            category(),
+            "elements",
+            i,
+            expectedTypes.get(i),
+            items.get(i).evaluationT());
+      }
+    }
     return items;
   }
 }

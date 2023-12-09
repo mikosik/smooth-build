@@ -2,7 +2,9 @@ package org.smoothbuild.common.collect;
 
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.tuple.Tuple2.tuple2;
 
+import com.google.common.collect.Iterators;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.Comparator;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
 import org.smoothbuild.common.function.ThrowingSupplier;
+import org.smoothbuild.common.tuple.Tuple2;
 
 public final class List<E> extends AbstractList<E> {
   private final E[] array;
@@ -157,14 +160,35 @@ public final class List<E> extends AbstractList<E> {
   public <D, R, T extends Throwable> List<R> zip(
       Iterable<D> that, ThrowingBiFunction<? super E, ? super D, R, T> biFunction) throws T {
     var zipped = new ArrayList<R>();
-    var thisIterator = this.iterator();
     var thatIterator = that.iterator();
-    while (thisIterator.hasNext() && thatIterator.hasNext()) {
-      zipped.add(biFunction.apply(thisIterator.next(), thatIterator.next()));
+    for (int i = 0; i < this.size(); i++) {
+      if (thatIterator.hasNext()) {
+        zipped.add(biFunction.apply(this.get(i), thatIterator.next()));
+      } else {
+        throwZippingException(i);
+      }
+    }
+    if (thatIterator.hasNext()) {
+      throwZippingException(this.size() + Iterators.size(thatIterator));
     }
     @SuppressWarnings("unchecked")
     var zippedArray = (R[]) zipped.toArray();
     return new List<>(zippedArray);
+  }
+
+  private void throwZippingException(int thatSize) {
+    throw new IllegalArgumentException(
+        "Cannot zip with Iterable of different size: expected " + size() + ", got " + thatSize);
+  }
+
+  public List<Tuple2<E, Integer>> zipWithIndex() {
+    @SuppressWarnings("unchecked")
+    var zipped = (Tuple2<E, Integer>[]) new Tuple2[array.length];
+
+    for (int i = 0; i < this.size(); i++) {
+      zipped[i] = tuple2(get(i), i);
+    }
+    return new List<>(zipped);
   }
 
   public <T extends Throwable> boolean anyMatches(ThrowingFunction<E, Boolean, T> predicate)

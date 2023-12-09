@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.mapValues;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 

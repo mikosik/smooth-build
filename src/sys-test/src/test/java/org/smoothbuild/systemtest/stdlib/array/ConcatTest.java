@@ -1,7 +1,7 @@
 package org.smoothbuild.systemtest.stdlib.array;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;

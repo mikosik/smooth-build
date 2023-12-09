@@ -1,10 +1,8 @@
 package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.mapValues;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
@@ -135,11 +133,11 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
     }
 
     private NList<ItemS> convertParams(NamedFuncP namedFuncP) {
-      return nlist(map(namedFuncP.params().list(), this::convertParam));
+      return namedFuncP.params().map(this::convertParam);
     }
 
     private NList<ItemS> convertParams(NList<ItemP> params) {
-      return nlist(map(params.list(), this::convertParam));
+      return params.map(this::convertParam);
     }
 
     public ItemS convertParam(ItemP paramP) {

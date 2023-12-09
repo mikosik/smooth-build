@@ -12,7 +12,7 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.Strings.unlines;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.common.io.Okios.readAndClose;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;

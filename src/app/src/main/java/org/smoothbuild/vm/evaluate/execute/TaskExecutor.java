@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.out.log.Log.fatal;
 
 import jakarta.inject.Inject;

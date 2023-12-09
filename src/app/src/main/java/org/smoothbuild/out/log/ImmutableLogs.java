@@ -1,15 +1,10 @@
 package org.smoothbuild.out.log;
 
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
-import static org.smoothbuild.common.collect.List.*;
 import static org.smoothbuild.common.collect.List.list;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 import org.smoothbuild.common.collect.List;
 
 public class ImmutableLogs implements Logs {
@@ -19,8 +14,8 @@ public class ImmutableLogs implements Logs {
     return new ImmutableLogs(list(logs));
   }
 
-  public static ImmutableLogs logs(Collection<? extends Log> logs) {
-    return new ImmutableLogs(listOfAll(logs));
+  public static ImmutableLogs logs(List<Log> logs) {
+    return new ImmutableLogs(logs);
   }
 
   private ImmutableLogs(List<Log> logs) {
@@ -28,8 +23,8 @@ public class ImmutableLogs implements Logs {
   }
 
   @Override
-  public Stream<Log> stream() {
-    return logs.stream();
+  public Iterator<Log> iterator() {
+    return logs.iterator();
   }
 
   @Override
@@ -40,21 +35,6 @@ public class ImmutableLogs implements Logs {
   @Override
   public ImmutableLogs toImmutableLogs() {
     return this;
-  }
-
-  @Override
-  public Iterator<Log> iterator() {
-    return logs.iterator();
-  }
-
-  @Override
-  public void forEach(Consumer<? super Log> action) {
-    logs.forEach(action);
-  }
-
-  @Override
-  public Spliterator<Log> spliterator() {
-    return logs.spliterator();
   }
 
   @Override

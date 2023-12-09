@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Level.FATAL;
@@ -390,7 +390,7 @@ public class EvaluatorBTest extends TestContext {
               .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
         }
 
-        private ArgumentMatcher<java.util.List<Log>> isLogListWithFatalOutOfBounds() {
+        private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
           return isLogListWithFatalMessageStartingWith(
               "Computation failed with: org.smoothbuild.vm.evaluate.execute.VarOutOfBoundsExc");
         }
@@ -407,7 +407,7 @@ public class EvaluatorBTest extends TestContext {
                   eq("Internal smooth error"), argThat(isLogListWithFatalWrongEnvironmentType()));
         }
 
-        private ArgumentMatcher<java.util.List<Log>> isLogListWithFatalWrongEnvironmentType() {
+        private ArgumentMatcher<List<Log>> isLogListWithFatalWrongEnvironmentType() {
           return isLogListWithFatalMessageStartingWith("Computation failed with: "
               + "java.lang.RuntimeException: environment(0) evaluationT is `Blob`"
               + " but expected `Int`");
@@ -472,14 +472,14 @@ public class EvaluatorBTest extends TestContext {
             .report(eq("Internal smooth error"), argThat(isLogListWithFatalM()));
       }
 
-      private ArgumentMatcher<java.util.List<Log>> isLogListWithFatalM() {
+      private ArgumentMatcher<List<Log>> isLogListWithFatalM() {
         return isLogListWithFatalMessageStartingWith(
             "Computation failed with: java.lang.RuntimeException");
       }
     }
   }
 
-  private static ArgumentMatcher<java.util.List<Log>> isLogListWithFatalMessageStartingWith(
+  private static ArgumentMatcher<List<Log>> isLogListWithFatalMessageStartingWith(
       String messageStart) {
     return argument -> argument.size() == 1
         && argument.get(0).level() == Level.FATAL
@@ -717,7 +717,7 @@ public class EvaluatorBTest extends TestContext {
       int size, ResultSource expectedSource, TaskReporter reporter) {
     var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
     verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
-    var resSources = map(argCaptor.getAllValues(), ComputationResult::source);
+    var resSources = listOfAll(argCaptor.getAllValues()).map(ComputationResult::source);
     assertThat(resSources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 

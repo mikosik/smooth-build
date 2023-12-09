@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;

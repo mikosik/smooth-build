@@ -2,13 +2,13 @@ package org.smoothbuild.vm.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Collection;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 
 public class CategoryKindBTest {
   @ParameterizedTest
@@ -26,10 +26,10 @@ public class CategoryKindBTest {
   private static Collection<Arguments> from_marker_cases() {
     var illegalMarkers =
         list(arguments(-2, null), arguments(-1, null), arguments(17, null), arguments(18, null));
-    return concat(marker_to_kind_map(), illegalMarkers);
+    return marker_to_kind_map().appendAll(illegalMarkers);
   }
 
-  private static Collection<Arguments> marker_to_kind_map() {
+  private static List<Arguments> marker_to_kind_map() {
     return list(
         arguments(0, CategoryKinds.BLOB),
         arguments(1, CategoryKinds.BOOL),

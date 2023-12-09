@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.Map.entry;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.collect.Maps.mapEntries;
 import static org.smoothbuild.common.collect.Maps.override;

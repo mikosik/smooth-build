@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import com.google.common.testing.EqualsTester;

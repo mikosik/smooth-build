@@ -13,7 +13,7 @@ public final class StructTS extends FieldSetTS {
   private final NList<ItemSigS> fields;
 
   public StructTS(String name, NList<ItemSigS> fields) {
-    super(name, calculateFieldSetVars(fields));
+    super(name, calculateFieldSetVars(fields.list()));
     this.fields = fields;
   }
 

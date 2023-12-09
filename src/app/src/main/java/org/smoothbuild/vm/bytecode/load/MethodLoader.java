@@ -1,9 +1,8 @@
 package org.smoothbuild.vm.bytecode.load;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
-import static org.smoothbuild.common.collect.Lists.filter;
+import static org.smoothbuild.common.collect.List.list;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -53,8 +52,8 @@ public class MethodLoader {
   }
 
   private static Either<String, Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
-    var declaredMethods = asList(clazz.getDeclaredMethods());
-    var methods = filter(declaredMethods, m -> m.getName().equals(methodSpec.methodName()));
+    var declaredMethods = list(clazz.getDeclaredMethods());
+    var methods = declaredMethods.filter(m -> m.getName().equals(methodSpec.methodName()));
     return switch (methods.size()) {
       case 0 -> left(missingMethodError(methodSpec));
       case 1 -> right(methods.get(0));

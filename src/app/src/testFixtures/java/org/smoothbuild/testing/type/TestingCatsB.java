@@ -1,8 +1,6 @@
 package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.map;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.testing.TestContext;
@@ -56,8 +54,8 @@ public class TestingCatsB {
         tuple(CONTEXT.blobTB()),
         tuple(CONTEXT.blobTB(), CONTEXT.blobTB()),
         tuple(CONTEXT.stringTB()));
-    var arrayCs = map(baseCs, CONTEXT::arrayTB);
-    var valueCs = concat(baseCs, arrayCs);
+    var arrayCs = baseCs.map(CONTEXT::arrayTB);
+    var valueCs = baseCs.appendAll(arrayCs);
     var exprCs = list(
         CONTEXT.callCB(CONTEXT.blobTB()),
         CONTEXT.callCB(CONTEXT.stringTB()),

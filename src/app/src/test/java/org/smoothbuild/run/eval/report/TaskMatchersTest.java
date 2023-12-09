@@ -2,7 +2,7 @@ package org.smoothbuild.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
@@ -10,10 +10,10 @@ import static org.smoothbuild.out.log.Log.warning;
 import static org.smoothbuild.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.run.eval.report.TaskMatchers.or;
 
-import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.evaluate.task.Task;
@@ -27,7 +27,7 @@ public class TaskMatchersTest extends TestContext {
 
   public static List<Arguments> matcher_matches_cases() {
     var t = new TestContext();
-    return List.of(
+    return list(
         arguments(matcher("all"), null, null, true),
         arguments(matcher("none"), null, null, false),
         arguments(matcher("fatal"), null, list(fatal("fatal")), true),

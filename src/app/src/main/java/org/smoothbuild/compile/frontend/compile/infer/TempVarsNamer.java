@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
 import org.smoothbuild.compile.frontend.compile.ast.define.EvaluableP;
@@ -67,7 +67,7 @@ public class TempVarsNamer {
   }
 
   private void handleCall(CallP call) {
-    handleChildren(concat(call.callee(), call.args()));
+    handleChildren(list(call.callee()).appendAll(call.args()));
   }
 
   private void handleInstantiate(InstantiateP instantiateP) {
