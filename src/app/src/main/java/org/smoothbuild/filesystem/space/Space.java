@@ -2,7 +2,7 @@ package org.smoothbuild.filesystem.space;
 
 public enum Space {
   PROJECT("prj"),
-  STANDARD_LIBRARY("std-lib"),
+  STANDARD_LIBRARY("ssl"),
   BINARY("bin"),
   ;
 
