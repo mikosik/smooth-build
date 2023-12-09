@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.tuple.Tuple2.tuple2;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -563,12 +563,12 @@ public class ListTest {
 
     @Test
     void one_element_list() {
-      assertThat(list("a").zipWithIndex()).isEqualTo(list(tuple2("a", 0)));
+      assertThat(list("a").zipWithIndex()).isEqualTo(list(tuple("a", 0)));
     }
 
     @Test
     void two_elements_list() {
-      assertThat(list("a", "b").zipWithIndex()).isEqualTo(list(tuple2("a", 0), tuple2("b", 1)));
+      assertThat(list("a", "b").zipWithIndex()).isEqualTo(list(tuple("a", 0), tuple("b", 1)));
     }
   }
 

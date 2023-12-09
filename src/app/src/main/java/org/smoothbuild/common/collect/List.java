@@ -2,7 +2,7 @@ package org.smoothbuild.common.collect;
 
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.tuple.Tuple2.tuple2;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import com.google.common.collect.Iterators;
 import java.util.AbstractList;
@@ -183,7 +183,7 @@ public final class List<E> extends AbstractList<E> {
     var zipped = (Tuple2<E, Integer>[]) new Tuple2[array.length];
 
     for (int i = 0; i < this.size(); i++) {
-      zipped[i] = tuple2(get(i), i);
+      zipped[i] = tuple(get(i), i);
     }
     return new List<>(zipped);
   }
