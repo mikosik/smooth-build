@@ -27,7 +27,7 @@ public class VersionCommandTest {
       assertThat(sysOut()).containsMatch("installation +" + hexNumberPattern);
       assertThat(sysOut()).containsMatch("  smooth.jar +" + hexNumberPattern);
       assertThat(sysOut()).containsMatch("  standard libraries +" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("    \\{std-lib}/std_lib.smooth +" + hexNumberPattern);
+      assertThat(sysOut()).containsMatch("    \\{ssl}/std_lib.smooth +" + hexNumberPattern);
       assertSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }
   }
