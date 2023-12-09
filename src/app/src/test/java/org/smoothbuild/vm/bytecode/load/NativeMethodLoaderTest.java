@@ -108,7 +108,7 @@ public class NativeMethodLoaderTest extends TestContext {
       var jar = blobB();
       var classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
-      when(methodLoader.provide(methodSpec)).thenReturn(eitherMethod);
+      when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
@@ -117,7 +117,7 @@ public class NativeMethodLoaderTest extends TestContext {
       var resultMethod2 = nativeMethodLoader.load(nativeFuncB);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
-      verify(methodLoader, times(1)).provide(methodSpec);
+      verify(methodLoader, times(1)).load(methodSpec);
     }
   }
 }

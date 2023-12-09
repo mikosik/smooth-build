@@ -46,7 +46,7 @@ public class BytecodeMethodLoaderTest extends TestContext {
       BlobB jar = blobB();
       String classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
-      when(methodLoader.provide(methodSpec)).thenReturn(eitherMethod);
+      when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
 
       var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
@@ -54,7 +54,7 @@ public class BytecodeMethodLoaderTest extends TestContext {
       var resultMethod2 = bytecodeMethodLoader.load(jar, classBinaryName);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
-      verify(methodLoader, times(1)).provide(methodSpec);
+      verify(methodLoader, times(1)).load(methodSpec);
     }
   }
 
@@ -103,7 +103,7 @@ public class BytecodeMethodLoaderTest extends TestContext {
 
   private Either<String, Method> load(MethodSpec methodSpec, Method method) {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(right(method)).when(methodLoader).provide(methodSpec);
+    doReturn(right(method)).when(methodLoader).load(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
     return bytecodeMethodLoader.load(methodSpec.jar(), methodSpec.classBinaryName());
   }

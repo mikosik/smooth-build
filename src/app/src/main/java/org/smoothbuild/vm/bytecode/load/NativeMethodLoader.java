@@ -35,7 +35,7 @@ public class NativeMethodLoader {
     var classBinaryName = nativeFuncB.classBinaryName().toJ();
     var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader
-        .provide(methodSpec)
+        .load(methodSpec)
         .flatMapRight(this::validateMethodSignature)
         .mapLeft(e -> loadingError(classBinaryName, e));
   }

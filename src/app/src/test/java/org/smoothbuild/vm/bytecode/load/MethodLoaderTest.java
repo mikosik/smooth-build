@@ -26,7 +26,7 @@ public class MethodLoaderTest extends TestContext {
   public void class_not_found_in_jar_error() throws Exception {
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var methodSpec = new MethodSpec(blobBJarWithJavaByteCode(), "com.missing.Class", "methodName");
-    assertThat(methodLoader.provide(methodSpec)).isEqualTo(left("Class not found in jar."));
+    assertThat(methodLoader.load(methodSpec)).isEqualTo(left("Class not found in jar."));
   }
 
   @Test
@@ -34,7 +34,7 @@ public class MethodLoaderTest extends TestContext {
     var clazz = OverloadedMethod.class;
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var methodSpec = methodSpec(clazz);
-    assertThat(methodLoader.provide(methodSpec))
+    assertThat(methodLoader.load(methodSpec))
         .isEqualTo(loadingError(clazz, "has more than one 'func' method."));
   }
 
@@ -43,7 +43,7 @@ public class MethodLoaderTest extends TestContext {
     var clazz = MissingMethod.class;
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var methodSpec = methodSpec(clazz);
-    assertThat(methodLoader.provide(methodSpec))
+    assertThat(methodLoader.load(methodSpec))
         .isEqualTo(loadingError(clazz, "does not have 'func' method."));
   }
 
@@ -83,8 +83,8 @@ public class MethodLoaderTest extends TestContext {
 
       var methodLoader = new MethodLoader(classLoaderFactory);
       var methodSpec = new MethodSpec(jar, className, "func");
-      Either<String, Method> methodEither1 = methodLoader.provide(methodSpec);
-      Either<String, Method> methodEither2 = methodLoader.provide(methodSpec);
+      Either<String, Method> methodEither1 = methodLoader.load(methodSpec);
+      Either<String, Method> methodEither2 = methodLoader.load(methodSpec);
       assertThat(methodEither1).isSameInstanceAs(methodEither2);
       verify(classLoader, times(1)).loadClass(className);
     }

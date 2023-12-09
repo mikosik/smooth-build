@@ -33,7 +33,7 @@ public class BytecodeMethodLoader {
   }
 
   private Either<String, Method> loadImpl(MethodSpec methodSpec) {
-    return methodLoader.provide(methodSpec).flatMapRight(this::validateSignature);
+    return methodLoader.load(methodSpec).flatMapRight(this::validateSignature);
   }
 
   private Either<String, Method> validateSignature(Method method) {
