@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.MissingMethod;
@@ -58,7 +57,7 @@ public class MethodLoaderTest extends TestContext {
   }
 
   private MethodLoader methodLoaderWithPlatformClassLoader() {
-    return new MethodLoader(new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader()));
+    return new MethodLoader(new JarClassLoaderFactory(bytecodeF(), getPlatformClassLoader()));
   }
 
   @Nested
@@ -79,10 +78,10 @@ public class MethodLoaderTest extends TestContext {
 
       var classLoader = mock(ClassLoader.class);
       doReturn(clazz).when(classLoader).loadClass(className);
-      var classLoaderProv = Mockito.mock(JarClassLoaderProv.class);
-      doReturn(right(classLoader)).when(classLoaderProv).classLoaderFor(jar);
+      var classLoaderFactory = mock(JarClassLoaderFactory.class);
+      doReturn(right(classLoader)).when(classLoaderFactory).classLoaderFor(jar);
 
-      var methodLoader = new MethodLoader(classLoaderProv);
+      var methodLoader = new MethodLoader(classLoaderFactory);
       var methodSpec = new MethodSpec(jar, className, "func");
       Either<String, Method> methodEither1 = methodLoader.provide(methodSpec);
       Either<String, Method> methodEither2 = methodLoader.provide(methodSpec);

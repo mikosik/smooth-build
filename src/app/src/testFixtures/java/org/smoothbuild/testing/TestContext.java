@@ -143,7 +143,7 @@ import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
 import org.smoothbuild.vm.bytecode.load.BytecodeMethodLoader;
 import org.smoothbuild.vm.bytecode.load.FileLoader;
-import org.smoothbuild.vm.bytecode.load.JarClassLoaderProv;
+import org.smoothbuild.vm.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.vm.bytecode.load.MethodLoader;
 import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;
@@ -321,11 +321,11 @@ public class TestContext {
   }
 
   private MethodLoader methodLoader() {
-    return new MethodLoader(jarClassLoaderProv());
+    return new MethodLoader(jarClassLoaderFactory());
   }
 
-  private JarClassLoaderProv jarClassLoaderProv() {
-    return new JarClassLoaderProv(bytecodeF(), getSystemClassLoader());
+  private JarClassLoaderFactory jarClassLoaderFactory() {
+    return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
   }
 
   public TestingModuleLoader module(String code) {

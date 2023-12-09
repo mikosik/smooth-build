@@ -28,17 +28,17 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
  * This class is thread-safe.
  */
 @Singleton
-public class JarClassLoaderProv {
+public class JarClassLoaderFactory {
   private final BytecodeF bytecodeF;
   private final ClassLoader parentClassLoader;
   private final ConcurrentHashMap<BlobB, Either<String, ClassLoader>> cache;
 
   @Inject
-  public JarClassLoaderProv(BytecodeF bytecodeF) {
+  public JarClassLoaderFactory(BytecodeF bytecodeF) {
     this(bytecodeF, getSystemClassLoader());
   }
 
-  public JarClassLoaderProv(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
+  public JarClassLoaderFactory(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
     this.bytecodeF = bytecodeF;
     this.parentClassLoader = parentClassLoader;
     this.cache = new ConcurrentHashMap<>();
