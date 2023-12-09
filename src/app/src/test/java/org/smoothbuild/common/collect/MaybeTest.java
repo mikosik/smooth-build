@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Maybe.None;
-import org.smoothbuild.common.function.ThrowingBiFunction;
+import org.smoothbuild.common.function.Function2;
 
 public class MaybeTest {
   @Nested
@@ -328,8 +328,8 @@ public class MaybeTest {
         .addEqualityGroup(none(), none());
   }
 
-  private static final ThrowingBiFunction<Boolean, Integer, String, RuntimeException>
-      concatBoolAndInt = (Boolean a, Integer b) -> Boolean.toString(a) + b;
-  private static final ThrowingBiFunction<Boolean, Integer, Maybe<String>, RuntimeException>
+  private static final Function2<Boolean, Integer, String, RuntimeException> concatBoolAndInt =
+      (Boolean a, Integer b) -> Boolean.toString(a) + b;
+  private static final Function2<Boolean, Integer, Maybe<String>, RuntimeException>
       concatBoolAndIntOpt = (Boolean a, Integer b) -> some(Boolean.toString(a) + b);
 }

@@ -17,7 +17,7 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
-import org.smoothbuild.common.function.ThrowingFunction;
+import org.smoothbuild.common.function.Function1;
 
 /**
  * List of Named.
@@ -117,8 +117,7 @@ public class NList<T extends Named> extends AbstractList<T> {
     return builder.build();
   }
 
-  public <R extends Named, E extends Throwable> NList<R> map(ThrowingFunction<T, R, E> mapping)
-      throws E {
+  public <R extends Named, E extends Throwable> NList<R> map(Function1<T, R, E> mapping) throws E {
     return nlist(list().map(mapping));
   }
 

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.common.function.ThrowingSupplier;
+import org.smoothbuild.common.function.Function0;
 
 public class ListTest {
   @Nested
@@ -65,7 +65,7 @@ public class ListTest {
     @Test
     public void exception_from_supplier_is_propagated() {
       var exception = new Exception("message");
-      ThrowingSupplier<String, Exception> supplier = () -> {
+      Function0<String, Exception> supplier = () -> {
         throw exception;
       };
       assertCall(() -> list(5, supplier)).throwsException(exception);

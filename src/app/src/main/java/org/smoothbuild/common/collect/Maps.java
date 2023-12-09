@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import org.smoothbuild.common.function.ThrowingFunction;
+import org.smoothbuild.common.function.Function1;
 
 public class Maps {
   public static <K, V> ImmutableMap<K, V> toMap(
@@ -60,7 +60,7 @@ public class Maps {
    * use ThrowingFunction as mappingFunction.
    */
   public static <K, V, E extends Throwable> V computeIfAbsent(
-      Map<K, V> map, K key, ThrowingFunction<? super K, ? extends V, E> mappingFunction) throws E {
+      Map<K, V> map, K key, Function1<? super K, ? extends V, E> mappingFunction) throws E {
     V value = map.get(key);
     if (value == null) {
       value = mappingFunction.apply(key);

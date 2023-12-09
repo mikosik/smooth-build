@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Queue;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.function.ThrowingBiFunction;
+import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.FieldSetTS;
@@ -191,7 +191,7 @@ public class ConstraintInferrer {
   }
 
   private static <T> List<T> zip(
-      List<T> items1, List<T> items2, ThrowingBiFunction<T, T, T, UnifierException> mapper)
+      List<T> items1, List<T> items2, Function2<T, T, T, UnifierException> mapper)
       throws UnifierException {
     if (items1.size() != items2.size()) {
       throw new UnifierException();

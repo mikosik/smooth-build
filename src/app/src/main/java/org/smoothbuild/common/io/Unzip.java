@@ -9,14 +9,14 @@ import java.util.function.Predicate;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.io.inputstream.ZipInputStream;
 import net.lingala.zip4j.model.LocalFileHeader;
-import org.smoothbuild.common.function.ThrowingBiConsumer;
+import org.smoothbuild.common.function.Consumer2;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 
 public class Unzip {
   public static void unzip(
       BlobB blob,
       Predicate<String> includePredicate,
-      ThrowingBiConsumer<String, InputStream, IOException> entryConsumer)
+      Consumer2<String, InputStream, IOException> entryConsumer)
       throws IOException, ZipException, IllegalZipEntryFileNameException,
           DuplicateFileNameException {
     HashSet<String> fileNames = new HashSet<>();
