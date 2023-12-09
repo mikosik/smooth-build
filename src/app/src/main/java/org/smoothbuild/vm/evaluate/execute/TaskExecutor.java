@@ -7,7 +7,7 @@ import static org.smoothbuild.out.log.Log.fatal;
 import jakarta.inject.Inject;
 import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.common.function.ThrowingRunnable;
+import org.smoothbuild.common.function.Consumer0;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -40,10 +40,10 @@ public class TaskExecutor {
     });
   }
 
-  public void enqueue(ThrowingRunnable throwingRunnable) {
+  public void enqueue(Consumer0 consumer0) {
     executor.enqueue(() -> {
       try {
-        throwingRunnable.run();
+        consumer0.accept();
       } catch (Throwable e) {
         reportComputerException(e);
         executor.terminate();

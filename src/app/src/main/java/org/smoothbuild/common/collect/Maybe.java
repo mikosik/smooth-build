@@ -7,9 +7,9 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe.None;
 import org.smoothbuild.common.collect.Maybe.Some;
-import org.smoothbuild.common.function.ThrowingBiFunction;
-import org.smoothbuild.common.function.ThrowingFunction;
-import org.smoothbuild.common.function.ThrowingSupplier;
+import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.common.function.Function1;
+import org.smoothbuild.common.function.Function2;
 
 public abstract sealed class Maybe<E> permits Some, None {
 
@@ -29,23 +29,23 @@ public abstract sealed class Maybe<E> permits Some, None {
 
   public abstract E getOr(E b);
 
-  public abstract <T extends Throwable> E getOrGet(ThrowingSupplier<E, T> supplier) throws T;
+  public abstract <T extends Throwable> E getOrGet(Function0<E, T> supplier) throws T;
 
   public abstract <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
-      ThrowingSupplier<T1, T2> exceptionSupplier) throws T1, T2, T1;
+      Function0<T1, T2> exceptionSupplier) throws T1, T2, T1;
 
-  public abstract <R, T extends Throwable> Maybe<R> map(ThrowingFunction<E, R, T> mapper) throws T;
+  public abstract <R, T extends Throwable> Maybe<R> map(Function1<E, R, T> mapper) throws T;
 
-  public abstract <R, T extends Throwable> Maybe<R> flatMap(ThrowingFunction<E, Maybe<R>, T> mapper)
+  public abstract <R, T extends Throwable> Maybe<R> flatMap(Function1<E, Maybe<R>, T> mapper)
       throws T;
 
   public <D, R, T extends Throwable> Maybe<R> mapWith(
-      Maybe<D> second, ThrowingBiFunction<E, D, R, T> biFunction) throws T {
+      Maybe<D> second, Function2<E, D, R, T> biFunction) throws T {
     return flatMap(f -> second.map(d -> biFunction.apply(f, d)));
   }
 
   public <D, R, T extends Throwable> Maybe<R> flatMapWith(
-      Maybe<D> maybe, ThrowingBiFunction<E, D, Maybe<R>, T> biFunction) throws T {
+      Maybe<D> maybe, Function2<E, D, Maybe<R>, T> biFunction) throws T {
     return flatMap(e -> maybe.flatMap(d -> biFunction.apply(e, d)));
   }
 
@@ -73,24 +73,23 @@ public abstract sealed class Maybe<E> permits Some, None {
     }
 
     @Override
-    public <T extends Throwable> E getOrGet(ThrowingSupplier<E, T> supplier) {
+    public <T extends Throwable> E getOrGet(Function0<E, T> supplier) {
       return element;
     }
 
     @Override
     public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
-        ThrowingSupplier<T1, T2> exceptionSupplier) {
+        Function0<T1, T2> exceptionSupplier) {
       return element;
     }
 
     @Override
-    public <R, T extends Throwable> Some<R> map(ThrowingFunction<E, R, T> mapper) throws T {
+    public <R, T extends Throwable> Some<R> map(Function1<E, R, T> mapper) throws T {
       return some(mapper.apply(element));
     }
 
     @Override
-    public <R, T extends Throwable> Maybe<R> flatMap(ThrowingFunction<E, Maybe<R>, T> mapper)
-        throws T {
+    public <R, T extends Throwable> Maybe<R> flatMap(Function1<E, Maybe<R>, T> mapper) throws T {
       return requireNonNull(mapper.apply(element));
     }
 
@@ -142,23 +141,23 @@ public abstract sealed class Maybe<E> permits Some, None {
     }
 
     @Override
-    public <T extends Throwable> E getOrGet(ThrowingSupplier<E, T> supplier) throws T {
+    public <T extends Throwable> E getOrGet(Function0<E, T> supplier) throws T {
       return supplier.get();
     }
 
     @Override
     public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
-        ThrowingSupplier<T1, T2> exceptionSupplier) throws T2, T1 {
+        Function0<T1, T2> exceptionSupplier) throws T2, T1 {
       throw exceptionSupplier.get();
     }
 
     @Override
-    public <R, T extends Throwable> None<R> map(ThrowingFunction<E, R, T> mapper) throws T {
+    public <R, T extends Throwable> None<R> map(Function1<E, R, T> mapper) throws T {
       return cast();
     }
 
     @Override
-    public <R, T extends Throwable> None<R> flatMap(ThrowingFunction<E, Maybe<R>, T> mapper) {
+    public <R, T extends Throwable> None<R> flatMap(Function1<E, Maybe<R>, T> mapper) {
       return cast();
     }
 

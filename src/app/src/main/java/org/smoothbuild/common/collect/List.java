@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import org.smoothbuild.common.function.ThrowingBiFunction;
-import org.smoothbuild.common.function.ThrowingFunction;
-import org.smoothbuild.common.function.ThrowingSupplier;
+import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.common.function.Function1;
+import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.tuple.Tuple2;
 
 public final class List<E> extends AbstractList<E> {
@@ -35,8 +35,7 @@ public final class List<E> extends AbstractList<E> {
     }
   }
 
-  public static <E, T extends Throwable> List<E> list(int size, ThrowingSupplier<E, T> supplier)
-      throws T {
+  public static <E, T extends Throwable> List<E> list(int size, Function0<E, T> supplier) throws T {
     @SuppressWarnings("unchecked")
     E[] array = (E[]) new Object[size];
     for (int i = 0; i < array.length; i++) {
@@ -113,7 +112,7 @@ public final class List<E> extends AbstractList<E> {
     return new List<>(copy);
   }
 
-  public <R, T extends Throwable> List<R> map(ThrowingFunction<? super E, R, T> mapper) throws T {
+  public <R, T extends Throwable> List<R> map(Function1<? super E, R, T> mapper) throws T {
     @SuppressWarnings("unchecked")
     var mapped = (R[]) new Object[array.length];
     for (int i = 0; i < array.length; i++) {
@@ -122,7 +121,7 @@ public final class List<E> extends AbstractList<E> {
     return new List<>(mapped);
   }
 
-  public <T extends Throwable> List<E> filter(ThrowingFunction<E, Boolean, T> predicate) throws T {
+  public <T extends Throwable> List<E> filter(Function1<E, Boolean, T> predicate) throws T {
     var builder = new ArrayList<E>();
     for (E element : array) {
       if (predicate.apply(element)) {
@@ -132,8 +131,7 @@ public final class List<E> extends AbstractList<E> {
     return listOfAll(builder);
   }
 
-  public <T extends Throwable> List<E> dropWhile(ThrowingFunction<E, Boolean, T> predicate)
-      throws T {
+  public <T extends Throwable> List<E> dropWhile(Function1<E, Boolean, T> predicate) throws T {
     int i = 0;
     while (i < array.length && predicate.apply(array[i])) {
       i++;
@@ -146,8 +144,7 @@ public final class List<E> extends AbstractList<E> {
     return listOfAll(builder);
   }
 
-  public <T extends Throwable> List<E> takeWhile(ThrowingFunction<E, Boolean, T> predicate)
-      throws T {
+  public <T extends Throwable> List<E> takeWhile(Function1<E, Boolean, T> predicate) throws T {
     int i = 0;
     var builder = new ArrayList<E>();
     while (i < array.length && predicate.apply(array[i])) {
@@ -158,7 +155,7 @@ public final class List<E> extends AbstractList<E> {
   }
 
   public <D, R, T extends Throwable> List<R> zip(
-      Iterable<D> that, ThrowingBiFunction<? super E, ? super D, R, T> biFunction) throws T {
+      Iterable<D> that, Function2<? super E, ? super D, R, T> biFunction) throws T {
     var zipped = new ArrayList<R>();
     var thatIterator = that.iterator();
     for (int i = 0; i < this.size(); i++) {
@@ -191,8 +188,7 @@ public final class List<E> extends AbstractList<E> {
     return new List<>(zipped);
   }
 
-  public <T extends Throwable> boolean anyMatches(ThrowingFunction<E, Boolean, T> predicate)
-      throws T {
+  public <T extends Throwable> boolean anyMatches(Function1<E, Boolean, T> predicate) throws T {
     for (E element : array) {
       if (predicate.apply(element)) {
         return true;
