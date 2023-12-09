@@ -127,7 +127,7 @@ public class ExprTypeUnifier {
 
   private Maybe<List<TypeS>> inferParamTs(NList<ItemP> params) {
     var paramTs = pullUpMaybe(params.list().map(p -> typeTeller.translate(p.type())));
-    paramTs.toList().forEach(types -> params.list().zip(types, ItemP::setTypeS));
+    paramTs.ifPresent(types -> params.list().zip(types, ItemP::setTypeS));
     return paramTs.map(List::listOfAll);
   }
 
@@ -184,9 +184,7 @@ public class ExprTypeUnifier {
 
   private <T extends ExprP> Maybe<TypeS> unifyAndMemoize(
       Function<T, Maybe<TypeS>> unifier, T exprP) {
-    var type = unifier.apply(exprP);
-    type.toList().forEach(exprP::setTypeS);
-    return type;
+    return unifier.apply(exprP).ifPresent(exprP::setTypeS);
   }
 
   private Maybe<TypeS> unifyCall(CallP callP) {

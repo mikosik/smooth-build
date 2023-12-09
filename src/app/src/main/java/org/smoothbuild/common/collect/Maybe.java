@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe.None;
 import org.smoothbuild.common.collect.Maybe.Some;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.function.Function2;
@@ -33,6 +34,8 @@ public abstract sealed class Maybe<E> permits Some, None {
 
   public abstract <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
       Function0<T1, T2> exceptionSupplier) throws T1, T2;
+
+  public abstract <T extends Throwable> Maybe<E> ifPresent(Consumer1<E, T> consumer) throws T;
 
   public abstract <R, T extends Throwable> Maybe<R> map(Function1<E, R, T> mapper) throws T;
 
@@ -81,6 +84,12 @@ public abstract sealed class Maybe<E> permits Some, None {
     public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
         Function0<T1, T2> exceptionSupplier) {
       return element;
+    }
+
+    @Override
+    public <T extends Throwable> Maybe<E> ifPresent(Consumer1<E, T> consumer) throws T {
+      consumer.accept(element);
+      return this;
     }
 
     @Override
@@ -149,6 +158,11 @@ public abstract sealed class Maybe<E> permits Some, None {
     public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
         Function0<T1, T2> exceptionSupplier) throws T2, T1 {
       throw exceptionSupplier.get();
+    }
+
+    @Override
+    public <T extends Throwable> Maybe<E> ifPresent(Consumer1<E, T> consumer) {
+      return this;
     }
 
     @Override
