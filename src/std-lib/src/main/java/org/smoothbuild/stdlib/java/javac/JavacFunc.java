@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
 
@@ -109,7 +109,7 @@ public class JavacFunc {
     }
 
     private List<String> options() {
-      return map(options.elems(StringB.class), StringB::toJ);
+      return options.elems(StringB.class).map(StringB::toJ);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles) {
@@ -126,6 +126,6 @@ public class JavacFunc {
     var filesMap = filesFromLibJars(nativeApi, libraryJars, isClassFilePredicate());
     return filesMap == null
         ? null
-        : map(filesMap.entrySet(), e -> new InputClassFile(e.getValue(), e.getKey()));
+        : listOfAll(filesMap.entrySet()).map(e -> new InputClassFile(e.getValue(), e.getKey()));
   }
 }

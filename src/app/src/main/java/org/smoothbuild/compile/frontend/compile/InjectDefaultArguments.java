@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -135,7 +134,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
 
     private static List<ExprP> positionedArgs(
         CallP callP, List<Param> params, int positionalArgsCount, Logger logBuffer) {
-      var names = Lists.map(params, Param::name);
+      var names = params.map(Param::name);
       var args = callP.args();
       // Case where positional args count exceeds function params count is reported as error
       // during call unification. Here we silently ignore it by creating list that is big enough

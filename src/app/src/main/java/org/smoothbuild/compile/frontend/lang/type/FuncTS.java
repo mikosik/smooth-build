@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.funcTypeName;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
@@ -26,7 +26,7 @@ public final class FuncTS extends TypeS {
   }
 
   public static VarSetS calculateFuncVars(TupleTS paramTs, TypeS resultT) {
-    return varSetS(concat(resultT, paramTs.elements()));
+    return varSetS(list(resultT).appendAll(paramTs.elements()));
   }
 
   public TupleTS params() {

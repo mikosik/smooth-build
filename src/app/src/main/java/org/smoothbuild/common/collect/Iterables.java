@@ -2,7 +2,7 @@ package org.smoothbuild.common.collect;
 
 import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Iterator;
 import java.util.function.Function;

@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.accept;
 
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;

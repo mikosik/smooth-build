@@ -11,8 +11,10 @@ import static org.smoothbuild.run.eval.MessageStruct.text;
 import jakarta.inject.Inject;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
+import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
@@ -47,18 +49,18 @@ public class TaskReporterImpl implements TaskReporter {
   @Override
   public void report(Task task, ComputationResult result) {
     var source = result.source();
-    var logBuffer = logsFrom(result);
-    report(task, header(task, source), logBuffer);
+    var logs = logsFrom(result);
+    report(task, header(task, source), logs);
   }
 
-  private static LogBuffer logsFrom(ComputationResult result) {
+  private static ImmutableLogs logsFrom(ComputationResult result) {
     var logBuffer = new LogBuffer();
     result
         .output()
         .messages()
         .elems(TupleB.class)
         .forEach(message -> logBuffer.log(new Log(level(message), text(message))));
-    return logBuffer;
+    return logBuffer.toImmutableLogs();
   }
 
   private String header(Task task, ResultSource resultSource) {
@@ -99,12 +101,12 @@ public class TaskReporterImpl implements TaskReporter {
     return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "???");
   }
 
-  private void report(Task task, String taskHeader, LogBuffer logs) {
-    boolean visible = taskMatcher.matches(task, logs);
+  private void report(Task task, String taskHeader, Logs logs) {
+    boolean visible = taskMatcher.matches(task, logs.toList());
     var traceS = bsTraceTranslator.translate(task.trace());
     if (logs.containsAtLeast(WARNING) && traceS != null) {
       taskHeader += "\n" + indent(traceS.toString());
     }
-    reporter.report(visible, taskHeader, logs);
+    reporter.report(visible, taskHeader, logs.toList());
   }
 }

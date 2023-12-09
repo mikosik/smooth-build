@@ -1,6 +1,6 @@
 package org.smoothbuild.out.report;
 
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.out.log.Log;
 
 public interface Reporter {

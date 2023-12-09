@@ -1,34 +1,37 @@
 package org.smoothbuild.out.log;
 
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static com.google.common.collect.Iterators.unmodifiableIterator;
+import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.Iterator;
+import org.smoothbuild.common.collect.List;
 
-public class LogBuffer extends ArrayList<Log> implements Logger, Logs {
+public class LogBuffer implements Logger, Logs {
+  private final ArrayList<Log> list = new ArrayList<>();
+
   @Override
   public void log(Log log) {
-    add(log);
+    list.add(log);
   }
 
   @Override
   public List<Log> toList() {
-    return this;
+    return listOfAll(list);
   }
 
   @Override
   public ImmutableLogs toImmutableLogs() {
-    return ImmutableLogs.logs(this);
+    return ImmutableLogs.logs(toList());
   }
 
   @Override
-  public Stream<Log> stream() {
-    return super.stream();
+  public Iterator<Log> iterator() {
+    return unmodifiableIterator(list.iterator());
   }
 
   @Override
   public String toString() {
-    return joinWithCommaToString(this, Log::toString);
+    return toList().toString(",");
   }
 }

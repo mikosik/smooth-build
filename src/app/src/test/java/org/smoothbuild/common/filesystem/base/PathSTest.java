@@ -2,18 +2,17 @@ package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.truth.Truth;
-import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 
 public class PathSTest {
   @ParameterizedTest
@@ -216,7 +215,7 @@ public class PathSTest {
   @MethodSource("parts_cases")
   public void parts(String path, List<String> expectedParts) {
     List<PathS> actualParts = PathS.path(path).parts();
-    assertThat(map(actualParts, PathS::toString)).isEqualTo(expectedParts);
+    assertThat(actualParts.map(PathS::toString)).isEqualTo(expectedParts);
   }
 
   public static Stream<Arguments> parts_cases() {

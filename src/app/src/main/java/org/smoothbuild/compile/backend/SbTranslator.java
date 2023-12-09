@@ -1,9 +1,7 @@
 package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.common.Strings.q;
-import static org.smoothbuild.common.collect.Iterables.intIterable;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.collect.Maps.mapKeys;
 import static org.smoothbuild.common.collect.Maps.override;
@@ -172,7 +170,7 @@ public class SbTranslator {
 
   private ExprB translateInstantiate(InstantiateS instantiateS) {
     var keys = instantiateS.polymorphicS().schema().quantifiedVars().asList();
-    var values = map(instantiateS.typeArgs(), typeSbTranslator::translate);
+    var values = instantiateS.typeArgs().map(typeSbTranslator::translate);
     var instantiatedVarMap = zip(keys, values);
     var varMap = override(instantiatedVarMap, typeSbTranslator.varMap());
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
@@ -286,7 +284,8 @@ public class SbTranslator {
   private List<ExprB> createRefsB(TupleTB paramTs) {
     return paramTs
         .elements()
-        .zip(intIterable(0), (typeB, i) -> bytecodeF.var(typeB, BigInteger.valueOf(i)));
+        .zipWithIndex()
+        .map(tuple -> bytecodeF.var(tuple.e1(), BigInteger.valueOf(tuple.e2())));
   }
 
   private OrderB translateOrder(OrderS orderS) {

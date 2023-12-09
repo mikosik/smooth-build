@@ -3,17 +3,16 @@ package org.smoothbuild.out.report;
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Lists.filter;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 
@@ -64,7 +63,7 @@ public class ConsoleReporter implements Reporter {
   }
 
   private List<Log> logsPassingLevelThreshold(List<Log> logs) {
-    return filter(logs, this::passesLevelThreshold);
+    return logs.filter(this::passesLevelThreshold);
   }
 
   private boolean passesLevelThreshold(Log log) {

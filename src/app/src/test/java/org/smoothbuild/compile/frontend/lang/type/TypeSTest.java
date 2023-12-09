@@ -1,10 +1,8 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
@@ -25,7 +23,6 @@ import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
-import java.util.List;
 import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +30,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 
@@ -61,24 +59,22 @@ public class TypeSTest {
   }
 
   public static List<Arguments> names() {
-    return concat(
-        name_or_to_string(),
-        list(
+    return name_or_to_string()
+        .appendAll(list(
             arguments(structTS("MyStruct", nlist()), "MyStruct"),
             arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct")));
   }
 
   public static List<Arguments> to_string() {
-    return concat(
-        name_or_to_string(),
-        list(
+    return name_or_to_string()
+        .appendAll(list(
             arguments(structTS("MyStruct", nlist()), "MyStruct()"),
             arguments(
                 structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct(Int field)")));
   }
 
   public static List<Arguments> name_or_to_string() {
-    return asList(
+    return list(
         arguments(blobTS(), "Blob"),
         arguments(boolTS(), "Bool"),
         arguments(intTS(), "Int"),
@@ -135,7 +131,7 @@ public class TypeSTest {
   }
 
   public static List<Arguments> vars_test_data() {
-    return List.of(
+    return list(
         arguments(blobTS(), varSetS()),
         arguments(boolTS(), varSetS()),
         arguments(intTS(), varSetS()),
@@ -164,7 +160,7 @@ public class TypeSTest {
   }
 
   public static List<Arguments> map_vars() {
-    return List.of(
+    return list(
         arguments(blobTS(), blobTS()),
         arguments(boolTS(), boolTS()),
         arguments(intTS(), intTS()),
@@ -207,7 +203,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> elemType_test_data() {
-      return asList(
+      return list(
           arguments(blobTS()),
           arguments(boolTS()),
           arguments(funcTS(stringTS())),
@@ -233,7 +229,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> func_result_cases() {
-      return asList(
+      return list(
           arguments(funcTS(intTS()), intTS()),
           arguments(funcTS(boolTS(), blobTS()), blobTS()),
           arguments(funcTS(boolTS(), intTS(), blobTS()), blobTS()));
@@ -246,7 +242,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> func_params_cases() {
-      return asList(
+      return list(
           arguments(funcTS(intTS()), tupleTS()),
           arguments(funcTS(boolTS(), blobTS()), tupleTS(boolTS())),
           arguments(funcTS(boolTS(), intTS(), blobTS()), tupleTS(boolTS(), intTS())));
@@ -279,7 +275,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> struct_fields_cases() {
-      return asList(
+      return list(
           arguments(structTS("Person", nlist()), nlist()),
           arguments(
               structTS("Person", nlist(itemSigS(stringTS(), "field"))),
@@ -293,7 +289,7 @@ public class TypeSTest {
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
-    List<TypeS> types = asList(
+    List<TypeS> types = list(
         blobTS(),
         boolTS(),
         intTS(),
@@ -328,7 +324,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> tuple_items_cases() {
-      return asList(
+      return list(
           arguments(tupleTS(), list()),
           arguments(tupleTS(boolTS()), list(boolTS())),
           arguments(tupleTS(boolTS(), intTS()), list(boolTS(), intTS())));

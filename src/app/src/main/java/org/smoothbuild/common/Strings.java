@@ -2,10 +2,6 @@ package org.smoothbuild.common;
 
 import static org.smoothbuild.common.UnescapeFailedException.illegalEscapeSeqException;
 import static org.smoothbuild.common.UnescapeFailedException.missingEscapeCodeException;
-import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.Maybe.some;
-
-import org.smoothbuild.common.collect.Maybe;
 
 public class Strings {
   private static final char TAB = '\t';

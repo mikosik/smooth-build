@@ -4,7 +4,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.frontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
 import java.util.ArrayList;
@@ -94,7 +93,7 @@ public class Unifier {
       drainQueue(queue);
       var resolvedAfter = resolvedInstantiationConstraints(ordered);
       var updated = findUpdated(resolvedBefore, resolvedAfter, ordered);
-      queue = new LinkedList<>(map(updated, this::toEqualityConstraint));
+      queue = new LinkedList<>(updated.map(this::toEqualityConstraint));
     }
   }
 

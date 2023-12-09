@@ -3,7 +3,7 @@ package org.smoothbuild.run.eval;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.filesystem.base.PathS.path;

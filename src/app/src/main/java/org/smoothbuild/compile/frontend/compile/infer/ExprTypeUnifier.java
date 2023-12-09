@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.compile.infer;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
-import static org.smoothbuild.common.collect.Lists.zip;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
@@ -128,7 +127,7 @@ public class ExprTypeUnifier {
 
   private Maybe<List<TypeS>> inferParamTs(NList<ItemP> params) {
     var paramTs = pullUpMaybe(params.list().map(p -> typeTeller.translate(p.type())));
-    paramTs.toList().forEach(types -> zip(params, types, ItemP::setTypeS));
+    paramTs.toList().forEach(types -> params.list().zip(types, ItemP::setTypeS));
     return paramTs.map(List::listOfAll);
   }
 

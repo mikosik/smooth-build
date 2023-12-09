@@ -1,7 +1,5 @@
 package org.smoothbuild.vm.bytecode.type;
 
-import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
-
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -15,16 +13,17 @@ public class Validator {
   }
 
   public static void validateTuple(
-      TupleTB tupleTB, List<TypeB> itemTs, Supplier<RuntimeException> exceptionThrower) {
-    allMatchOtherwise(
-        tupleTB.elements(),
-        itemTs,
-        CategoryB::equals,
-        (expectedSize, actualSize) -> {
-          throw exceptionThrower.get();
-        },
-        i -> {
-          throw exceptionThrower.get();
-        });
+      TupleTB tupleTB, List<TypeB> itemTypes, Supplier<RuntimeException> exceptionSupplier) {
+    List<TypeB> expectedTypes = tupleTB.elements();
+    if (expectedTypes.size() != itemTypes.size()) {
+      throw exceptionSupplier.get();
+    }
+    for (int i = 0; i < expectedTypes.size(); i++) {
+      TypeB expectedType = expectedTypes.get(i);
+      TypeB itemType = itemTypes.get(i);
+      if (!itemType.equals(expectedType)) {
+        throw exceptionSupplier.get();
+      }
+    }
   }
 }

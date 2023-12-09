@@ -2,7 +2,6 @@ package org.smoothbuild.compile.frontend.compile.ast;
 
 import static java.lang.String.join;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
 
@@ -59,7 +58,7 @@ public class SortModuleMembersByDependency implements Function<ModuleP, Try<Modu
     evaluables.forEach(r -> names.add(r.name()));
 
     HashSet<GraphNode<String, NamedEvaluableP, Location>> nodes = new HashSet<>();
-    nodes.addAll(map(evaluables, r -> evaluable(r, names)));
+    nodes.addAll(evaluables.map(r -> evaluable(r, names)));
     return sortTopologically(nodes);
   }
 
@@ -81,7 +80,7 @@ public class SortModuleMembersByDependency implements Function<ModuleP, Try<Modu
   private static TopologicalSortingRes<String, StructP, Location> sortStructsByDeps(
       List<StructP> structs) {
     var structNames = Sets.map(structs, Nal::name);
-    var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
+    var nodes = structs.map(struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 

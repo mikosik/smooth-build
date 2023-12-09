@@ -1,8 +1,8 @@
 package org.smoothbuild.out.log;
 
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 
 public class TestingLog {
   public static final Log FATAL_LOG = Log.fatal("fatal message");

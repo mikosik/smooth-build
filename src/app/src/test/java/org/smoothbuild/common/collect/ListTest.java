@@ -8,6 +8,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.tuple.Tuple2.tuple2;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -502,8 +503,21 @@ public class ListTest {
   @Nested
   class _zip {
     @Test
-    void with_empty_iterable_returns_empty_list() {
-      assertThat(list("abc").zip(list(), (x, y) -> "")).containsExactly().inOrder();
+    void with_empty_iterable_fails() {
+      var list1 = list("a");
+      var list2 = list();
+      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+          .throwsException(new IllegalArgumentException(
+              "Cannot zip with Iterable of different size: expected 1, got 0"));
+    }
+
+    @Test
+    void empty_with_non_empty_iterable_fails() {
+      var list1 = list();
+      var list2 = list("a");
+      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+          .throwsException(new IllegalArgumentException(
+              "Cannot zip with Iterable of different size: expected 0, got 1"));
     }
 
     @Test
@@ -522,17 +536,39 @@ public class ListTest {
     }
 
     @Test
-    void with_shorter_iterable_returns_zipped_with_iterable_size() {
-      assertThat(list("a", "b").zip(list("1"), (x, y) -> x + y))
-          .containsExactly("a1")
-          .inOrder();
+    void with_shorter_iterable_fails() {
+      var list1 = list("a", "b");
+      var list2 = list("c");
+      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+          .throwsException(new IllegalArgumentException(
+              "Cannot zip with Iterable of different size: expected 2, got 1"));
     }
 
     @Test
-    void with_longer_iterable_returns_zipped_with_this_size() {
-      assertThat(list("a").zip(list("1", "2"), (x, y) -> x + y))
-          .containsExactly("a1")
-          .inOrder();
+    void with_longer_iterable_fails() {
+      var list1 = list("c");
+      var list2 = list("a", "b");
+      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+          .throwsException(new IllegalArgumentException(
+              "Cannot zip with Iterable of different size: expected 1, got 2"));
+    }
+  }
+
+  @Nested
+  class _zipWithIndex {
+    @Test
+    void empty_list() {
+      assertThat(list().zipWithIndex()).isEqualTo(list());
+    }
+
+    @Test
+    void one_element_list() {
+      assertThat(list("a").zipWithIndex()).isEqualTo(list(tuple2("a", 0)));
+    }
+
+    @Test
+    void two_elements_list() {
+      assertThat(list("a", "b").zipWithIndex()).isEqualTo(list(tuple2("a", 0), tuple2("b", 1)));
     }
   }
 

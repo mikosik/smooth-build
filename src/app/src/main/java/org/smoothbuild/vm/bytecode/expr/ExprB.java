@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.common.collect.Iterables.intIterable;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsDecodeExprNodeException;
 
 import java.util.Objects;
@@ -94,7 +93,8 @@ public abstract class ExprB {
   }
 
   private List<ExprB> readDataSeqElems(List<Hash> seq) {
-    return seq.zip(intIterable(0), (hash, i) -> readNode(indexOfDataNode(i), seq.get(i)));
+    return seq.zipWithIndex()
+        .map(tuple -> readNode(indexOfDataNode(tuple.e2()), seq.get(tuple.e2())));
   }
 
   private List<Hash> readDataSeqHashes(int expectedSize) {
