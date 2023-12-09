@@ -90,7 +90,7 @@ public class ConsoleReporter implements Reporter {
 
   @Override
   public void printSummary() {
-    console.println("Summary");
+    console.println("::Summary");
     int total = 0;
     for (Level level : Level.values()) {
       int count = counters.get(level).get();

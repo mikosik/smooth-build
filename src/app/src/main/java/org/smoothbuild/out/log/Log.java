@@ -28,6 +28,10 @@ public record Log(Level level, String message) {
     return new Log(INFO, log);
   }
 
+  public String toPrettyString() {
+    return "[" + level + "] " + message;
+  }
+
   @Override
   public String toString() {
     return "Log{" + level + ", '" + message + "'}";

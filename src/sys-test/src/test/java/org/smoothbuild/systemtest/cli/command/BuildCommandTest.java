@@ -101,7 +101,7 @@ public class BuildCommandTest {
           """;
       private static final String NATIVE_CALL_TASK_HEADER =
           """
-          concat()                                    build.smooth:1                 exec
+          ::Evaluating::concat()                      build.smooth:1                 exec
           """;
 
       @Test
@@ -143,7 +143,7 @@ public class BuildCommandTest {
           """;
       private static final String COMBINE_TASK_HEADER =
           """
-          (,)                                         build.smooth:1                 exec
+          ::Evaluating::(,)                           build.smooth:1                 exec
           """;
 
       @Test
@@ -170,21 +170,21 @@ public class BuildCommandTest {
           """;
       private static final String BLOB_CONST_TASK_HEADER =
           """
-          Blob                                        build.smooth:1
+          ::Evaluating::Blob                          build.smooth:1
           """;
       private static final String INT_CONST = """
           result = 123;
           """;
       private static final String INT_CONST_TASK_HEADER =
           """
-          Int                                         build.smooth:1
+          ::Evaluating::Int                           build.smooth:1
           """;
       private static final String STRING_CONST = """
           result = "myLiteral";
           """;
       private static final String STRING_CONST_TASK_HEADER =
           """
-          String                                      build.smooth:1
+          ::Evaluating::String                        build.smooth:1
           """;
 
       @Test
@@ -242,7 +242,7 @@ public class BuildCommandTest {
             """;
       private static final String PICK_TASK_HEADER =
           """
-          [].                                         unknown                        exec
+          ::Evaluating::[].                           unknown                        exec
           """;
 
       @Test
@@ -273,7 +273,7 @@ public class BuildCommandTest {
           """;
       private static final String ORDER_TASK_HEADER =
           """
-          [,]                                         build.smooth:1                 exec
+          ::Evaluating::[,]                           build.smooth:1                 exec
           """;
 
       @Test
@@ -305,7 +305,7 @@ public class BuildCommandTest {
             """;
       private static final String SELECT_TASK_HEADER =
           """
-          {}.                                         build.smooth:5                 exec
+          ::Evaluating::{}.                           build.smooth:5                 exec
           """;
 
       @Test
@@ -355,7 +355,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("WARNING: my-warning-message");
+        assertSysOutDoesNotContain("[WARNING] my-warning-message");
       }
 
       @Test
@@ -370,7 +370,7 @@ public class BuildCommandTest {
             ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("INFO: my-info-message");
+        assertSysOutDoesNotContain("[INFO] my-info-message");
       }
     }
 
@@ -388,7 +388,7 @@ public class BuildCommandTest {
             ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithError();
-        assertSysOutContains("ERROR: my-error-message");
+        assertSysOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -436,7 +436,7 @@ public class BuildCommandTest {
             ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithError();
-        assertSysOutContains("ERROR: my-error-message");
+        assertSysOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -451,7 +451,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains("WARNING: my-warning-message");
+        assertSysOutContains("[WARNING] my-warning-message");
       }
 
       @Test
@@ -484,7 +484,7 @@ public class BuildCommandTest {
             ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithError();
-        assertSysOutContains("ERROR: my-error-message");
+        assertSysOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -499,7 +499,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains("WARNING: my-warning-message");
+        assertSysOutContains("[WARNING] my-warning-message");
       }
 
       @Test
@@ -514,7 +514,7 @@ public class BuildCommandTest {
             ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains("INFO: my-info-message");
+        assertSysOutContains("[INFO] my-info-message");
       }
     }
   }
@@ -535,7 +535,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          myFunc()                                    build.smooth:3                 exec
+          ::Evaluating::myFunc()                      build.smooth:3                 exec
           """);
     }
 
@@ -552,7 +552,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          {}.                                         build.smooth:4                 exec
+          ::Evaluating::{}.                           build.smooth:4                 exec
           """);
     }
 
@@ -566,7 +566,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          myFunc                                      build.smooth:1
+          ::Evaluating::myFunc                        build.smooth:1
           """);
     }
 
@@ -580,7 +580,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          myValue                                     build.smooth:1
+          ::Evaluating::myValue                       build.smooth:1
           """);
     }
 
@@ -593,7 +593,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          [,]                                         build.smooth:1                 exec
+          ::Evaluating::[,]                           build.smooth:1                 exec
           """);
     }
 
@@ -606,7 +606,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          Blob                                        build.smooth:1
+          ::Evaluating::Blob                          build.smooth:1
           """);
     }
 
@@ -619,7 +619,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          String                                      build.smooth:1
+          ::Evaluating::String                        build.smooth:1
           """);
     }
 
@@ -632,7 +632,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(
           """
-          Int                                         build.smooth:1
+          ::Evaluating::Int                           build.smooth:1
           """);
     }
   }

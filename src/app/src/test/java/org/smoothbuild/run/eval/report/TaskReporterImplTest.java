@@ -73,7 +73,8 @@ public class TaskReporterImplTest extends TestContext {
     testHeader(
         bsMapping(exprHash, location(7)),
         task,
-        padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "build.smooth:7                 exec");
+        padEnd("::Evaluating::{}.", NAME_LENGTH_LIMIT + 1, ' ') + "build.smooth:7                 "
+            + "exec");
   }
 
   @Test
@@ -83,7 +84,7 @@ public class TaskReporterImplTest extends TestContext {
 
   @Test
   public void header_with_noop_source() {
-    var header = padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "unknown";
+    var header = padEnd("::Evaluating::{}.", NAME_LENGTH_LIMIT + 1, ' ') + "unknown";
     testHeader(selectTask(), NOOP, header);
   }
 
@@ -102,7 +103,8 @@ public class TaskReporterImplTest extends TestContext {
   }
 
   private static String header(String string, String result) {
-    return padEnd(string, NAME_LENGTH_LIMIT + 1, ' ') + "unknown                        " + result;
+    return padEnd("::Evaluating::" + string, NAME_LENGTH_LIMIT + 1, ' ') + "unknown              "
+        + "          " + result;
   }
 
   private void testHeader(Task task, String header) {
@@ -141,7 +143,7 @@ public class TaskReporterImplTest extends TestContext {
     taskReporter.report(task(), computationResultWithMessages(messages));
     var header =
         """
-        [,]                                         unknown                        exec
+        ::Evaluating::[,]                           unknown                        exec
           @ ??? ???""";
     var logs = list(
         fatal("fatal message"),
