@@ -1,15 +1,15 @@
 package org.smoothbuild.compile.backend;
 
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Try.failure;
 import static org.smoothbuild.out.log.Try.success;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
 import jakarta.inject.Inject;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.log.Try;
@@ -36,13 +36,13 @@ public class BackendCompile
   @Override
   public Try<Tuple2<List<ExprB>, BsMapping>> apply(
       Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>> argument) {
-    List<ExprS> exprs = argument._1();
-    var evaluables = argument._2();
+    List<ExprS> exprs = argument.element1();
+    var evaluables = argument.element2();
     var sbTranslator = new SbTranslator(bytecodeF, fileLoader, bytecodeLoader, evaluables);
     try {
       var exprBs = exprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
-      return success(Tuple.of(exprBs, bsMapping));
+      return success(tuple(exprBs, bsMapping));
     } catch (SbTranslatorException e) {
       return failure(fatal(e.getMessage()));
     }

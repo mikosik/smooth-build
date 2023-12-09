@@ -5,7 +5,6 @@ import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.Strings.unlines;
 
-import io.vavr.Tuple2;
 import java.util.BitSet;
 import java.util.function.Function;
 import org.antlr.v4.runtime.ANTLRErrorListener;
@@ -20,6 +19,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.CompileError;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
@@ -32,8 +32,8 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
   @Override
   public Try<ModuleContext> apply(Tuple2<String, FilePath> argument) {
     var logBuffer = new LogBuffer();
-    String sourceCode = argument._1();
-    FilePath filePath = argument._2();
+    String sourceCode = argument.element1();
+    FilePath filePath = argument.element2();
     var errorListener = new ErrorListener(filePath, logBuffer);
     var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
     smoothAntlrLexer.removeErrorListeners();

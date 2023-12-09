@@ -9,13 +9,13 @@ import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
-import io.vavr.Tuple;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -295,7 +295,7 @@ public class EvaluatorSTest extends TestContext {
       }
     });
     var step = step(sbTranslatorFacade).then(maybeStep(EvaluatorBFacade.class));
-    var argument = Tuple.of(exprs, evaluables);
+    var argument = tuple(exprs, evaluables);
 
     return new StepExecutor(injector).execute(step, argument, reporter);
   }

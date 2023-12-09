@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 
-import io.vavr.Tuple;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
@@ -43,6 +43,6 @@ public class InjectDefaultArgumentsTest extends TestContext {
 
   private static void callInjectDefaultArguments(ScopeS importedS, ModuleP moduleP) {
     new InitializeScopes().apply(moduleP);
-    new InjectDefaultArguments().apply(Tuple.of(moduleP, importedS));
+    new InjectDefaultArguments().apply(tuple(moduleP, importedS));
   }
 }

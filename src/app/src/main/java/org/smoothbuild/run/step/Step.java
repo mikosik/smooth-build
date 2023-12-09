@@ -1,13 +1,13 @@
 package org.smoothbuild.run.step;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.out.log.Try.success;
 
 import com.google.inject.Key;
-import io.vavr.Tuple;
-import io.vavr.Tuple0;
-import io.vavr.Tuple2;
 import java.util.function.Function;
+import org.smoothbuild.common.tuple.Tuple0;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.out.log.Try;
 import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
@@ -59,7 +59,7 @@ public sealed interface Step<T, R>
   record MaybeFunctionKeyStep<T, R>(Key<? extends MaybeFunction<T, R>> key) implements Step<T, R> {}
 
   public default <S> Step<T, Tuple2<R, S>> append(S value) {
-    return new ComposedStep<>(this, step((R r) -> success(Tuple.of(r, value))));
+    return new ComposedStep<>(this, step((R r) -> success(tuple(r, value))));
   }
 
   public default <S> Step<T, S> then(Step<? super R, S> nextStep) {

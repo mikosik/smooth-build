@@ -6,9 +6,9 @@ import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import io.vavr.Tuple0;
-import io.vavr.Tuple2;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.tuple.Tuple0;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.backend.BackendCompile;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
@@ -23,11 +23,11 @@ public class EvaluateStepFactory
   public Step<Tuple0, List<Tuple2<ExprS, ValueB>>> create(Tuple2<ScopeS, List<String>> argument) {
     return constStep(argument)
         .then(step(FindValues.class))
-        .append(argument._1().evaluables())
+        .append(argument.element1().evaluables())
         .then(stepFactory(arg -> constStep(arg)
             .then(step(BackendCompile.class))
             .then(maybeStep(EvaluatorBFacade.class))
-            .then(step(valueBs -> success(arg._1().zip(valueBs, Tuple2::new))))))
+            .then(step(valueBs -> success(arg.element1().zip(valueBs, Tuple2::new))))))
         .named("Evaluating");
   }
 }

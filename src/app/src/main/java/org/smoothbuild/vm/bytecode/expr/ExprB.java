@@ -94,7 +94,7 @@ public abstract class ExprB {
 
   private List<ExprB> readDataSeqElems(List<Hash> seq) {
     return seq.zipWithIndex()
-        .map(tuple -> readNode(indexOfDataNode(tuple.e2()), seq.get(tuple.e2())));
+        .map(tuple -> readNode(indexOfDataNode(tuple.element2()), seq.get(tuple.element2())));
   }
 
   private List<Hash> readDataSeqHashes(int expectedSize) {

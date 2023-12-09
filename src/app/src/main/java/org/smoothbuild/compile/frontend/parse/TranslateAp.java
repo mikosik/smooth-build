@@ -10,7 +10,6 @@ import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 
-import io.vavr.Tuple2;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -41,6 +40,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -75,8 +75,8 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Tr
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
     var logBuffer = new LogBuffer();
-    var module = context._1();
-    var filePath = context._2();
+    var module = context.element1();
+    var filePath = context.element2();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
     var apTranslatingVisitor = new ApTranslatingVisitor(filePath, structs, evaluables, logBuffer);

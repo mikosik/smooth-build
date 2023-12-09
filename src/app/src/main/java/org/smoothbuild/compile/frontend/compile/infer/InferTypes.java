@@ -7,10 +7,10 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import io.vavr.Tuple2;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.compile.ast.define.NamedFuncP;
@@ -44,8 +44,8 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
-    var moduleP = context._1();
-    var environment = context._2();
+    var moduleP = context.element1();
+    var environment = context.element2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     new Worker(typeTeller, logBuffer).visitModule(moduleP);
     return Try.of(moduleP, logBuffer);

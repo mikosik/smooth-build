@@ -9,10 +9,10 @@ import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
 import static org.smoothbuild.out.log.Try.success;
 
-import io.vavr.Tuple2;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
@@ -68,8 +68,8 @@ import org.smoothbuild.out.log.Try;
 public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>> {
   @Override
   public Try<ModuleS> apply(Tuple2<ModuleP, ScopeS> context) {
-    var moduleP = context._1();
-    var environment = context._2();
+    var moduleP = context.element1();
+    var environment = context.element2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     return success(new Worker(typeTeller, environment).convertModule(moduleP));
   }

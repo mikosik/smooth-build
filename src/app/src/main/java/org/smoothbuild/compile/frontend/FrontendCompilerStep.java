@@ -9,9 +9,9 @@ import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import io.vavr.Tuple0;
-import io.vavr.Tuple2;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.tuple.Tuple0;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ConvertPs;
 import org.smoothbuild.compile.frontend.compile.DecodeLiterals;
 import org.smoothbuild.compile.frontend.compile.DetectUndefined;
@@ -46,8 +46,8 @@ public class FrontendCompilerStep {
       implements StepFactory<Tuple2<ScopeS, FilePath>, ScopeS> {
     @Override
     public Step<Tuple0, ScopeS> create(Tuple2<ScopeS, FilePath> argument) {
-      var scopeS = argument._1();
-      var filePath = argument._2();
+      var scopeS = argument.element1();
+      var filePath = argument.element2();
       return constStep(filePath)
           .then(step(ReadFileContent.class))
           .append(filePath)

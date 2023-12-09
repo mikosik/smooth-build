@@ -4,8 +4,8 @@ import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendComp
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import io.vavr.Tuple0;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.run.eval.SaveArtifacts;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;

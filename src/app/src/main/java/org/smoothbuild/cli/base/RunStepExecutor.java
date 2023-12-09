@@ -5,8 +5,8 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.run.step.Step.step;
 
 import com.google.inject.Injector;
-import io.vavr.Tuple0;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step;

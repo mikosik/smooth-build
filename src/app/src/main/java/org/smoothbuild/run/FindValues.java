@@ -5,10 +5,10 @@ import static org.smoothbuild.compile.frontend.lang.base.location.Locations.comm
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Try.failure;
 
-import io.vavr.Tuple2;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
 import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
@@ -22,8 +22,8 @@ public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Try<Li
   @Override
   public Try<List<ExprS>> apply(Tuple2<ScopeS, List<String>> argument) {
     var logBuffer = new LogBuffer();
-    var valueNames = argument._2();
-    var environment = argument._1();
+    var valueNames = argument.element2();
+    var environment = argument.element1();
     var namedEvaluables = new ArrayList<NamedValueS>();
     var evaluables = environment.evaluables();
     for (var name : valueNames) {
