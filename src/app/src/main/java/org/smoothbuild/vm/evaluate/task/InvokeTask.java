@@ -23,15 +23,12 @@ public final class InvokeTask extends Task {
 
   @Override
   public Output run(TupleB input, Container container) {
-    var result = container
+    return container
         .nativeMethodLoader()
         .load(nativeFuncB)
-        .mapRight(m -> invokeMethod(m, input, container));
-    if (result.isRight()) {
-      return result.right();
-    } else {
-      return logFatalAndReturnNullOutput(container, result.left());
-    }
+        .mapRight(m -> invokeMethod(m, input, container))
+        .ifLeft(left -> container.log().fatal(left))
+        .rightOrGet(() -> new Output(null, container.messages()));
   }
 
   private Output invokeMethod(Method method, TupleB args, Container container) {
@@ -77,11 +74,6 @@ public final class InvokeTask extends Task {
 
   private void logFaultyImplementation(Container container, String message) {
     container.log().fatal("Faulty native implementation: " + message);
-  }
-
-  private static Output logFatalAndReturnNullOutput(Container container, String message) {
-    container.log().fatal(message);
-    return new Output(null, container.messages());
   }
 
   public NativeFuncB nativeFunc() {
