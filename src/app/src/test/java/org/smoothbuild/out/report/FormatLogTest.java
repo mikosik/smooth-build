@@ -24,11 +24,11 @@ public class FormatLogTest {
         .isEqualTo(
             """
             header
-             + FATAL: fatal message
-             + ERROR: error message
-             + WARNING: warning message
-             + INFO: info message
-          """);
+              [FATAL] fatal message
+              [ERROR] error message
+              [WARNING] warning message
+              [INFO] info message
+            """);
   }
 
   @ParameterizedTest
@@ -39,9 +39,9 @@ public class FormatLogTest {
 
   public static List<Arguments> test_format_log() {
     return List.of(
-        arguments(fatal("message"), "   + FATAL: message"),
-        arguments(error("message"), "   + ERROR: message"),
-        arguments(warning("message"), "   + WARNING: message"),
-        arguments(info("message"), "   + INFO: message"));
+        arguments(fatal("message"), "  [FATAL] message"),
+        arguments(error("message"), "  [ERROR] message"),
+        arguments(warning("message"), "  [WARNING] message"),
+        arguments(info("message"), "  [INFO] message"));
   }
 }

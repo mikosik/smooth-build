@@ -25,8 +25,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     assertSysOutContains(
         """
             ::Evaluating
-               + ERROR: Unknown value `unknownValue`.
-                 Try 'smooth list' to see all available values that can be calculated.\
+              [ERROR] Unknown value `unknownValue`.
+              Try 'smooth list' to see all available values that can be calculated.\
             """);
   }
 
@@ -46,7 +46,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal-name"));
     assertFinishedWithError();
-    assertSysOutContains("ERROR: Unknown value `illegal-name`.\n");
+    assertSysOutContains("[ERROR] Unknown value `illegal-name`.\n");
   }
 
   @Test
@@ -56,8 +56,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal-name", "other-name"));
     assertFinishedWithError();
-    assertSysOutContains("ERROR: Unknown value `illegal-name`.\n");
-    assertSysOutContains("ERROR: Unknown value `other-name`.\n");
+    assertSysOutContains("[ERROR] Unknown value `illegal-name`.\n");
+    assertSysOutContains("[ERROR] Unknown value `other-name`.\n");
   }
 
   @Test
@@ -71,8 +71,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     assertSysOutContains(
         """
         ::Evaluating
-           + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
-        Summary
+          [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
+        ::Summary
           1 error
         """);
   }
@@ -88,8 +88,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     assertSysOutContains(
         """
         ::Evaluating
-           + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
-        Summary
+          [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
+        ::Summary
           1 error
         """);
   }

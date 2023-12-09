@@ -64,10 +64,10 @@ public class TaskReporterImpl implements TaskReporter {
   }
 
   private String header(Task task, ResultSource resultSource) {
-    var tag = label(task);
+    var label = "::Evaluating::" + label(task);
     var loc = locationOf(task.exprB());
     var locString = loc == null ? "unknown" : loc.toString();
-    var trimmedLabel = limitedWithEllipsis(tag, NAME_LENGTH_LIMIT);
+    var trimmedLabel = limitedWithEllipsis(label, NAME_LENGTH_LIMIT);
     var labelColumn = padEnd(trimmedLabel, NAME_LENGTH_LIMIT + 1, ' ');
     var sourceString = resultSource.toString();
     var locColumn = sourceString.isEmpty() ? locString : padEnd(locString, 30, ' ') + " ";

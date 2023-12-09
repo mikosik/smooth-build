@@ -197,8 +197,8 @@ public class ArtifactTest extends SystemTestCase {
     assertSysOutContains(
         """
         ::Saving artifact(s)
-           + ERROR: Can't store array of Files as it contains files with duplicated paths:
-               'file.txt'
+          [ERROR] Can't store array of Files as it contains files with duplicated paths:
+            'file.txt'
             """);
     assertThat(Files.exists(artifactAbsolutePath("result"))).isFalse();
   }

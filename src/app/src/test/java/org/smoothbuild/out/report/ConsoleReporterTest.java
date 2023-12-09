@@ -112,7 +112,7 @@ public class ConsoleReporterTest extends TestContext {
       reporter.printSummary();
 
       var inOrder = inOrder(console);
-      inOrder.verify(console).println("Summary");
+      inOrder.verify(console).println("::Summary");
       inOrder.verify(console).println("  1 fatal");
       inOrder.verify(console).println("  2 errors");
       inOrder.verify(console).println("  3 warnings");
@@ -134,7 +134,7 @@ public class ConsoleReporterTest extends TestContext {
       reporter.printSummary();
 
       var inOrder = inOrder(console);
-      inOrder.verify(console).println("Summary");
+      inOrder.verify(console).println("::Summary");
       inOrder.verify(console).println("  1 fatal");
       inOrder.verify(console).println("  4 infos");
     }
