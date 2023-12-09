@@ -1,11 +1,11 @@
 package org.smoothbuild.cli.base;
 
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.out.log.Try.success;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple0;
 import jakarta.inject.Inject;
 import java.util.function.Function;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.out.log.Try;
 import org.smoothbuild.out.report.Console;
 
@@ -20,6 +20,6 @@ public class PrintResult implements Function<String, Try<Tuple0>> {
   @Override
   public Try<Tuple0> apply(String string) {
     console.println(string);
-    return success(Tuple.empty());
+    return success(tuple());
   }
 }

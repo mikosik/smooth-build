@@ -4,9 +4,9 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.isVarName;
 
-import io.vavr.Tuple2;
 import java.util.function.Function;
 import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
@@ -30,8 +30,8 @@ public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Try<Mo
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
-    var moduleP = context._1();
-    new Detector(context._2(), emptyScope(), logBuffer).visitModule(moduleP);
+    var moduleP = context.element1();
+    new Detector(context.element2(), emptyScope(), logBuffer).visitModule(moduleP);
     return Try.of(moduleP, logBuffer);
   }
 

@@ -5,7 +5,7 @@ import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendComp
 import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.step;
 
-import io.vavr.Tuple0;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedValueS;

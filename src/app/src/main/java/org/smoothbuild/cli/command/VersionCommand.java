@@ -1,10 +1,10 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 import static org.smoothbuild.run.step.Step.step;
 
-import io.vavr.Tuple;
 import java.util.concurrent.Callable;
 import org.smoothbuild.cli.base.LoggingCommand;
 import org.smoothbuild.run.Version;
@@ -18,7 +18,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
   public Integer call() {
     var injector = createInjector(out());
     var step = step(Version.class);
-    var argument = Tuple.empty();
+    var argument = tuple();
     return runStepExecutor(injector, step, argument);
   }
 }

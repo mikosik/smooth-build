@@ -4,8 +4,8 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.internalLocation;
 
-import io.vavr.Tuple0;
 import java.util.function.Function;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.compile.frontend.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.frontend.lang.type.TypeFS;

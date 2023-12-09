@@ -23,7 +23,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
-import io.vavr.Tuple2;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +30,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
@@ -113,7 +113,7 @@ public class AcceptanceTestCase extends TestContext {
     int size = artifactsArray.size();
     return switch (size) {
       case 0 -> fail("Expected artifact but evaluate returned empty list of artifacts.");
-      case 1 -> artifactsArray.get(0)._2();
+      case 1 -> artifactsArray.get(0).element2();
       default -> fail("Expected single artifact but evaluate returned " + size + " artifacts.");
     };
   }
@@ -125,7 +125,7 @@ public class AcceptanceTestCase extends TestContext {
     if (size <= index) {
       fail("Expected at least " + index + " artifacts but evaluation returned only " + size + ".");
     }
-    return artifactsArray.get(index)._2();
+    return artifactsArray.get(index).element2();
   }
 
   private List<Tuple2<ExprS, ValueB>> artifactsArray() {

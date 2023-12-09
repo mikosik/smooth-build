@@ -15,7 +15,6 @@ import static org.smoothbuild.out.log.Try.failure;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
-import io.vavr.Tuple2;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
@@ -25,6 +24,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
 import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
@@ -55,11 +55,11 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
       return failure(error(e.getMessage()));
     }
     var loggerBuffer = new LogBuffer();
-    var sortedArtifacts = artifacts.sortUsing(comparing(a -> a._1().name()));
+    var sortedArtifacts = artifacts.sortUsing(comparing(a -> a.element1().name()));
     var savedArtifacts =
-        sortedArtifacts.map(t -> t.map2(valueB -> save(t._1(), valueB, loggerBuffer)));
+        sortedArtifacts.map(t -> t.map2(valueB -> save(t.element1(), valueB, loggerBuffer)));
     var messages = savedArtifacts
-        .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOr("?"))
+        .map(t -> t.element1().name() + " -> " + t.element2().map(PathS::q).getOr("?"))
         .toString("\n");
     return Try.of(messages, loggerBuffer);
   }

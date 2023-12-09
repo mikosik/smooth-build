@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
@@ -23,8 +24,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import io.vavr.Tuple;
-import io.vavr.Tuple0;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.function.Function;
@@ -34,6 +33,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
@@ -120,7 +120,7 @@ class StepExecutorTest {
     void that_returns_failure(Log log) {
       var reporter = mock(Reporter.class);
 
-      var result = stepExecutor(log).execute(step(LogInjectedLog.class), Tuple.empty(), reporter);
+      var result = stepExecutor(log).execute(step(LogInjectedLog.class), tuple(), reporter);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, List.of(log));
@@ -133,7 +133,7 @@ class StepExecutorTest {
     @Test
     void that_returns_null_causes_execution_failure() {
       var reporter = mock(Reporter.class);
-      assertCall(() -> stepExecutor().execute(step(ReturnNull.class), Tuple.empty(), reporter))
+      assertCall(() -> stepExecutor().execute(step(ReturnNull.class), tuple(), reporter))
           .throwsException(NullPointerException.class);
     }
 
@@ -192,7 +192,7 @@ class StepExecutorTest {
 
       var reporter = mock(Reporter.class);
 
-      stepExecutor().execute(step, Tuple.empty(), reporter);
+      stepExecutor().execute(step, tuple(), reporter);
 
       var inOrder = inOrder(reporter);
       inOrder.verify(reporter).startNewPhase("::name");
@@ -208,7 +208,7 @@ class StepExecutorTest {
 
       var reporter = mock(Reporter.class);
 
-      stepExecutor().execute(step, Tuple.empty(), reporter);
+      stepExecutor().execute(step, tuple(), reporter);
 
       var inOrder = inOrder(reporter);
       inOrder.verify(reporter).startNewPhase("::outer");
@@ -225,7 +225,7 @@ class StepExecutorTest {
       var reporter = mock(Reporter.class);
       var step = constStep("abc").then(step(s -> success(s + "def")));
 
-      var result = stepExecutor().execute(step, Tuple.empty(), reporter);
+      var result = stepExecutor().execute(step, tuple(), reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
     }
@@ -236,7 +236,7 @@ class StepExecutorTest {
       var step = step(v -> success("abc", info("info")))
           .then(step(s -> success(s + "def", warning("warning"))));
 
-      var result = stepExecutor().execute(step, Tuple.empty(), reporter);
+      var result = stepExecutor().execute(step, tuple(), reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
       verifyReported(reporter, List.of(info("info"), warning("warning")));
@@ -248,7 +248,7 @@ class StepExecutorTest {
       Function<Object, Try<String>> function = mock();
       var step = step(v -> failure(error("error"))).then(step(function));
 
-      var result = stepExecutor().execute(step, Tuple.empty(), reporter);
+      var result = stepExecutor().execute(step, tuple(), reporter);
 
       assertThat(result).isEqualTo(none());
       verifyNoInteractions(function);
@@ -325,15 +325,15 @@ class StepExecutorTest {
     @Test
     void adds_another_argument() {
       var step = constStep("abc").append("def");
-      var result = stepExecutor().execute(step, Tuple.empty(), mock());
-      assertThat(result).isEqualTo(some(Tuple.of("abc", "def")));
+      var result = stepExecutor().execute(step, tuple(), mock());
+      assertThat(result).isEqualTo(some(tuple("abc", "def")));
     }
   }
 
   private static void assertStepExecutionReports(Step<Object, String> step, Log log) {
     var reporter = mock(Reporter.class);
 
-    stepExecutor().execute(step, Tuple.empty(), reporter);
+    stepExecutor().execute(step, tuple(), reporter);
 
     verifyReported(reporter, List.of(log));
   }

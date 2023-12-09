@@ -10,13 +10,13 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Level.ERROR;
 
-import io.vavr.Tuple2;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Sets;
+import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
@@ -42,8 +42,8 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
-    var environment = context._2();
-    var moduleP = context._1();
+    var environment = context.element2();
+    var moduleP = context.element1();
     new Visitor(environment, immutableBindings(), logBuffer).visitModule(moduleP);
     return Try.of(moduleP, logBuffer);
   }
