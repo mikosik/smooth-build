@@ -2,6 +2,9 @@ package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -13,6 +16,7 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Maybe.None;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function2;
 
 public class MaybeTest {
@@ -67,6 +71,19 @@ public class MaybeTest {
     void getOrThrow_returns_element() {
       var some = some("a");
       assertThat(some.getOrThrow(() -> new RuntimeException())).isEqualTo("a");
+    }
+
+    @Test
+    void ifPresent_calls_consumer() {
+      Consumer1<String, ? extends RuntimeException> consumer = mock();
+      some("a").ifPresent(consumer);
+      verify(consumer).accept("a");
+    }
+
+    @Test
+    void ifPresent_returns_this() {
+      var some = some("a");
+      assertThat(some.ifPresent(x -> {})).isSameInstanceAs(some);
     }
 
     @Test
@@ -178,6 +195,19 @@ public class MaybeTest {
       var none = none();
       var exception = new Exception("message");
       assertCall(() -> none.getOrThrow(() -> exception)).throwsException(exception);
+    }
+
+    @Test
+    void ifPresent_not_calls_consumer() {
+      Consumer1<Object, ? extends RuntimeException> consumer = mock();
+      none().ifPresent(consumer);
+      verifyNoInteractions(consumer);
+    }
+
+    @Test
+    void ifPresent_returns_this() {
+      var none = none();
+      assertThat(none.ifPresent(x -> {})).isSameInstanceAs(none);
     }
 
     @Test

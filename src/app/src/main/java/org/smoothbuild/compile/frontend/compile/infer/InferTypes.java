@@ -69,7 +69,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
 
     private void visitStruct(StructP structP) {
       var structTS = inferStructT(structP);
-      structTS.toList().forEach(st -> visitConstructor(structP, st));
+      structTS.ifPresent(st -> visitConstructor(structP, st));
     }
 
     private void visitConstructor(StructP structP, StructTS structT) {
@@ -102,11 +102,10 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
     }
 
     private Maybe<StructTS> inferStructT(StructP struct) {
-      var structTS = pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
+      return pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
           .map(NList::nlist)
-          .map(is -> new StructTS(struct.name(), is));
-      structTS.toList().forEach(struct::setTypeS);
-      return structTS;
+          .map(is -> new StructTS(struct.name(), is))
+          .ifPresent(struct::setTypeS);
     }
 
     private Maybe<ItemSigS> inferFieldSig(ItemP field) {
@@ -175,7 +174,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
         var index = i;
-        param.defaultValue().toList().forEach(defaultvalue -> {
+        param.defaultValue().ifPresent(defaultvalue -> {
           var schema = namedFunc.schemaS();
           var paramUnifier = new Unifier();
           var resolvedParamT = schema.type().params().elements().get(index);
