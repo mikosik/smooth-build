@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -32,12 +32,12 @@ public final class ItemS extends Tanal implements ReferenceableS {
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n",
-        "type = " + type().name(),
-        "name = " + name(),
-        "defaultValue = " + defaultValue,
-        "location = " + location());
+    var fields = list(
+            "type = " + type().name(),
+            "name = " + name(),
+            "defaultValue = " + defaultValue,
+            "location = " + location())
+        .toString("\n");
     return "ItemS(\n" + indent(fields) + "\n)";
   }
 

@@ -2,7 +2,6 @@ package org.smoothbuild.compile.frontend.lang.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;
@@ -27,12 +26,12 @@ public record InstantiateS(
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n",
-        "typeArgs = " + "<" + joinToString(typeArgs, ",") + ">",
-        "polymorphicS = " + polymorphicS,
-        "evaluationT = " + evaluationT,
-        "location = " + location);
+    var fields = list(
+            "typeArgs = " + "<" + typeArgs.toString(",") + ">",
+            "polymorphicS = " + polymorphicS,
+            "evaluationT = " + evaluationT,
+            "location = " + location)
+        .toString("\n");
     return "InstantiateS(\n" + indent(fields) + "\n)";
   }
 }

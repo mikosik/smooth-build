@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.type;
 
 import static java.lang.String.join;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 import java.util.Set;
@@ -95,7 +94,7 @@ public class TestedTS {
 
     @Override
     public String name() {
-      return "(" + joinWithCommaToString(paramTs, TestedTS::name) + ")->" + resultT.name();
+      return paramTs.map(TestedTS::name).toString("(", ",", ")->") + resultT.name();
     }
   }
 

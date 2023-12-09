@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
@@ -36,7 +36,7 @@ public abstract sealed class LiteralP extends ExprP permits BlobP, IntP, StringP
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "literal = " + literal, "location = " + location());
+    var fields = list("literal = " + literal, "location = " + location()).toString("\n");
     return getClass().getName() + "(\n" + indent(fields) + "\n)";
   }
 }

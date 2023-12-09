@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.frontend.lang.base;
 
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.List.listOfAll;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -47,11 +47,11 @@ public class TypeNamesS {
   }
 
   public static String interfaceTypeName(ImmutableMap<String, ItemSigS> fields) {
-    return "(" + joinWithCommaToString(fields.values()) + ")";
+    return listOfAll(fields.values()).toString("(", ",", ")");
   }
 
   private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
-    return joinWithCommaToString(elemTs, TypeS::name);
+    return elemTs.map(TypeS::name).toString(",");
   }
 
   public static String fullName(String scopeName, String shortName) {

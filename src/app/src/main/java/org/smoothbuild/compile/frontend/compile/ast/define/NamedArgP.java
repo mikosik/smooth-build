@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.Strings;
@@ -47,7 +47,8 @@ public final class NamedArgP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "name = " + name, "expr = " + expr, "location = " + location());
+    var fields =
+        list("name = " + name, "expr = " + expr, "location = " + location()).toString("\n");
     return "NamedArgP(\n" + indent(fields) + "\n)";
   }
 }

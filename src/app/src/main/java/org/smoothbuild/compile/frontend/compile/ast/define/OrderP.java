@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.Objects;
@@ -37,7 +37,7 @@ public final class OrderP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "elems = " + elems, "location = " + location());
+    var fields = list("elems = " + elems, "location = " + location()).toString("\n");
     return "OrderP(\n" + indent(fields) + "\n)";
   }
 }

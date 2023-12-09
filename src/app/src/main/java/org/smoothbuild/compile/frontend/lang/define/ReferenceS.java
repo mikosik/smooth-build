@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
@@ -15,7 +15,7 @@ public record ReferenceS(SchemaS schema, String name, Location location)
   @Override
   public String toString() {
     var fields =
-        joinToString("\n", "schema = " + schema, "name = " + name, "location = " + location);
+        list("schema = " + schema, "name = " + name, "location = " + location).toString("\n");
     return "ReferenceS(\n" + indent(fields) + "\n)";
   }
 }

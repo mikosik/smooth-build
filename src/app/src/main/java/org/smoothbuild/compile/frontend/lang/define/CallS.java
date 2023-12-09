@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncTS;
@@ -36,7 +36,7 @@ public record CallS(ExprS callee, CombineS args, Location location) implements E
   @Override
   public String toString() {
     var fields =
-        joinToString("\n", "callee = " + callee, "args = " + args, "location = " + location);
+        list("callee = " + callee, "args = " + args, "location = " + location).toString("\n");
     return "CallS(\n" + indent(fields) + "\n)";
   }
 }

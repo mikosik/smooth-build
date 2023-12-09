@@ -1,7 +1,7 @@
 package org.smoothbuild.common.bindings;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maps.mapValues;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 
@@ -52,7 +52,9 @@ public sealed class FlatBindings<E> extends AbstractBindings<E>
     if (map.isEmpty()) {
       return "<no bindings>";
     } else {
-      return joinToString(map.entrySet(), e -> e.getKey() + " -> " + e.getValue(), "\n");
+      return listOfAll(map.entrySet())
+          .map(e -> e.getKey() + " -> " + e.getValue())
+          .toString("\n");
     }
   }
 }

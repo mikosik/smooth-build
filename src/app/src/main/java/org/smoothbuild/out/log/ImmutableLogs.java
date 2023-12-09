@@ -1,6 +1,5 @@
 package org.smoothbuild.out.log;
 
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Iterator;
@@ -49,6 +48,6 @@ public class ImmutableLogs implements Logs {
 
   @Override
   public String toString() {
-    return joinWithCommaToString(logs, Log::toString);
+    return logs.toString(",");
   }
 }

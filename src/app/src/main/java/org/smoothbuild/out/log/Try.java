@@ -2,7 +2,6 @@ package org.smoothbuild.out.log;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.out.log.Level.ERROR;
 
@@ -80,6 +79,6 @@ public class Try<V> {
   }
 
   private String logsToString() {
-    return "[" + joinWithCommaToString(logs.toList()) + "]";
+    return logs.toList().toString("[", ",", "]");
   }
 }
