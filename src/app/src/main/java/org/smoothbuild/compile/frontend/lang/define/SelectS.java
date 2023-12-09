@@ -2,7 +2,7 @@ package org.smoothbuild.compile.frontend.lang.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.StructTS;
@@ -21,8 +21,8 @@ public record SelectS(ExprS selectable, String field, Location location) impleme
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n", "selectable = " + selectable, "field = " + field, "location = " + location);
+    var fields = list("selectable = " + selectable, "field = " + field, "location = " + location)
+        .toString("\n");
     return "SelectS(\n" + indent(fields) + "\n)";
   }
 }

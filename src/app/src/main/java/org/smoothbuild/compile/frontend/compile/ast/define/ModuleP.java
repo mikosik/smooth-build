@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -64,14 +64,14 @@ public final class ModuleP implements ScopedP {
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n",
-        "structs = [",
-        indent(joinToString(structs(), "\n")),
-        "]",
-        "evaluables = [",
-        indent(joinToString(evaluables(), "\n")),
-        "]");
+    var fields = list(
+            "structs = [",
+            indent(structs().toString("\n")),
+            "]",
+            "evaluables = [",
+            indent(evaluables().toString("\n")),
+            "]")
+        .toString("\n");
     return "ModuleP(\n" + indent(fields) + "\n)";
   }
 }

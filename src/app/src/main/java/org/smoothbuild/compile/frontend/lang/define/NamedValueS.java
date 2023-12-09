@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
@@ -16,7 +16,7 @@ public abstract sealed class NamedValueS extends NamedEvaluableS
   }
 
   protected String fieldsToString() {
-    return joinToString(
-        "\n", "schema = " + schema(), "name = " + name(), "location = " + location());
+    return list("schema = " + schema(), "name = " + name(), "location = " + location())
+        .toString("\n");
   }
 }

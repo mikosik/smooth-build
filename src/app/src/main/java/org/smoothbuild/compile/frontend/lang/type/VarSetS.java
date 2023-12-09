@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Sets.union;
 
@@ -151,6 +150,6 @@ public final class VarSetS implements Set<VarS> {
 
   @Override
   public String toString() {
-    return "<" + joinWithCommaToString(elements, VarS::name) + ">";
+    return listOfAll(elements).map(VarS::name).toString("<", ",", ">");
   }
 }

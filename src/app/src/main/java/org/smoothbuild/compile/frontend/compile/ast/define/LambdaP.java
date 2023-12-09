@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.Objects;
@@ -105,14 +105,14 @@ public final class LambdaP extends PolymorphicP implements FuncP {
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n",
-        "name = " + name,
-        "params = [",
-        indent(joinToString(params(), "\n")),
-        "]",
-        "body = " + body,
-        "location = " + location());
+    var fields = list(
+            "name = " + name,
+            "params = [",
+            indent(params().list().toString("\n")),
+            "]",
+            "body = " + body,
+            "location = " + location())
+        .toString("\n");
     return "LambdaP(\n" + indent(fields) + "\n)";
   }
 }

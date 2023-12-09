@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
@@ -72,13 +72,13 @@ public final class NamedValueP extends NamedEvaluableP {
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n",
-        "type = " + type,
-        "name = " + name(),
-        "body = " + body(),
-        "annotation = " + annotation(),
-        "location = " + location());
+    var fields = list(
+            "type = " + type,
+            "name = " + name(),
+            "body = " + body(),
+            "annotation = " + annotation(),
+            "location = " + location())
+        .toString("\n");
     return "NamedValueP(\n" + indent(fields) + "\n)";
   }
 }

@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
@@ -85,16 +85,17 @@ public sealed class NamedFuncP extends NamedEvaluableP implements FuncP permits 
 
   @Override
   public String toString() {
-    var fields = joinToString(
-        "\n",
-        "resulT = " + resultT,
-        "name = " + name(),
-        "params = [",
-        indent(joinToString(params(), "\n")),
-        "]",
-        "body = " + body(),
-        "annotation = " + annotation(),
-        "location = " + location());
+    var paramsString = params().list().toString("\n");
+    var fields = list(
+            "resulT = " + resultT,
+            "name = " + name(),
+            "params = [",
+            indent(paramsString),
+            "]",
+            "body = " + body(),
+            "annotation = " + annotation(),
+            "location = " + location())
+        .toString("\n");
     return "NamedFuncP(\n" + indent(fields) + "\n)";
   }
 }

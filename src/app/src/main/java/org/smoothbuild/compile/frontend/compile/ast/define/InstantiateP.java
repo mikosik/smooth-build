@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -49,7 +49,8 @@ public final class InstantiateP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "polymorphic = " + polymorphic, "location = " + location());
+    var fields =
+        list("polymorphic = " + polymorphic, "location = " + location()).toString("\n");
     return "InstantiateP(\n" + indent(fields) + "\n)";
   }
 }

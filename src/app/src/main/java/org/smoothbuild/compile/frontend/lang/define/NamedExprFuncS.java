@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.NList;
@@ -46,7 +46,7 @@ public final class NamedExprFuncS extends NamedFuncS implements ExprFuncS {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "name = " + name(), fieldsToString(), "body = " + body);
+    var fields = list("name = " + name(), fieldsToString(), "body = " + body).toString("\n");
     return "NamedExprFuncS(\n" + indent(fields) + "\n)";
   }
 }

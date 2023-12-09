@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
@@ -23,7 +23,7 @@ public abstract sealed class TypeP extends NalImpl permits ExplicitTP, ImplicitT
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "name = " + name(), "location = " + location());
+    var fields = list("name = " + name(), "location = " + location()).toString("\n");
     return "TypeP(\n" + indent(fields) + "\n)";
   }
 }

@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.base.Objects;
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
@@ -38,7 +38,7 @@ public final class AnnotationP extends NalImpl {
   @Override
   public String toString() {
     var fields =
-        joinToString("\n", "name = " + name(), "value = " + value, "location = " + location());
+        list("name = " + name(), "value = " + value, "location = " + location()).toString("\n");
     return "AnnotationP(\n" + indent(fields) + "\n)";
   }
 }

@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
@@ -172,7 +171,7 @@ public class BytecodeDb {
   }
 
   private static String itemTsToString(TupleTB argsT) {
-    return "(" + joinWithCommaToString(argsT.elements()) + ")";
+    return argsT.elements().toString("(", ",", ")");
   }
 
   // generic getter

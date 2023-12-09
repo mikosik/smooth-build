@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.lang.base.Tanal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
@@ -17,7 +17,7 @@ public class TypeDefinitionS extends Tanal {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "type = " + type(), "location = " + location());
+    var fields = list("type = " + type(), "location = " + location()).toString("\n");
     return "TypeDefinitionS(\n" + indent(fields) + "\n)";
   }
 }

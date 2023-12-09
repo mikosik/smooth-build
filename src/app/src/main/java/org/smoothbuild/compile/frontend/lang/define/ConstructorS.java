@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.NList;
@@ -36,7 +36,7 @@ public final class ConstructorS extends NamedFuncS {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n", "name = " + name(), fieldsToString());
+    var fields = list("name = " + name(), fieldsToString()).toString("\n");
     return "ConstructorS(\n" + indent(fields) + "\n)";
   }
 }

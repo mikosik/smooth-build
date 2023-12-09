@@ -1,8 +1,6 @@
 package org.smoothbuild.common.collect;
 
 import static com.google.common.base.Suppliers.memoize;
-import static org.smoothbuild.common.collect.Iterables.joinToString;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import com.google.common.base.Supplier;
@@ -156,11 +154,11 @@ public class NList<T extends Named> extends AbstractList<T> {
   }
 
   public String valuesToString() {
-    return joinWithCommaToString(list());
+    return list().toString(",");
   }
 
   public String valuesToPrettyString() {
-    return joinToString(list(), "\n");
+    return list().toString("\n");
   }
 
   // overriden methods from List<T>
