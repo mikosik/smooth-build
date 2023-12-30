@@ -2,13 +2,13 @@ package org.smoothbuild.common.collect;
 
 import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.Map.mapOfAll;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -24,17 +24,17 @@ import org.smoothbuild.common.function.Function1;
  *
  * This class is thread-safe.
  */
-public class NList<T extends Named> extends AbstractList<T> {
+public class NList<E extends Named> extends AbstractList<E> {
   private static final NList<?> EMPTY = nlist(List.list());
 
-  private final Supplier<List<T>> list;
-  private final Supplier<ImmutableMap<String, T>> map;
-  private final Supplier<ImmutableMap<String, Integer>> indexMap;
+  private final Supplier<List<E>> list;
+  private final Supplier<Map<String, E>> map;
+  private final Supplier<Map<String, Integer>> indexMap;
 
-  public static <T extends Named> NList<T> nlist() {
+  public static <E extends Named> NList<E> nlist() {
     // cast is safe as EMPTY is empty
     @SuppressWarnings("unchecked")
-    NList<T> result = (NList<T>) EMPTY;
+    NList<E> result = (NList<E>) EMPTY;
     return result;
   }
 
@@ -63,7 +63,7 @@ public class NList<T extends Named> extends AbstractList<T> {
     }
   }
 
-  public static <E extends Named> NList<E> nlist(ImmutableMap<String, E> map) {
+  public static <E extends Named> NList<E> nlist(Map<String, E> map) {
     return new NList<>(
         () -> listOfAll(map.values()), () -> map, () -> calculateIndexMap(map.values()));
   }
@@ -79,17 +79,16 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   // visible for testing
   NList(
-      Supplier<List<T>> list,
-      Supplier<ImmutableMap<String, T>> map,
-      Supplier<ImmutableMap<String, Integer>> indexMap) {
+      Supplier<List<E>> list,
+      Supplier<Map<String, E>> map,
+      Supplier<Map<String, Integer>> indexMap) {
     this.list = memoize(list);
     this.map = memoize(map);
     this.indexMap = memoize(indexMap);
   }
 
-  private static <E extends Named> ImmutableMap<String, Integer> calculateIndexMap(
-      Iterable<E> nameds) {
-    Builder<String, Integer> builder = ImmutableMap.builder();
+  private static <E extends Named> Map<String, Integer> calculateIndexMap(Iterable<E> nameds) {
+    HashMap<String, Integer> builder = new HashMap<>();
     var names = new HashSet<String>();
     int i = 0;
     for (E named : nameds) {
@@ -101,11 +100,11 @@ public class NList<T extends Named> extends AbstractList<T> {
       }
       i++;
     }
-    return builder.build();
+    return mapOfAll(builder);
   }
 
-  private static <E extends Named> ImmutableMap<String, E> calculateMap(Iterable<E> nameds) {
-    Builder<String, E> builder = ImmutableMap.builder();
+  private static <E extends Named> Map<String, E> calculateMap(Iterable<E> nameds) {
+    HashMap<String, E> builder = new HashMap<>();
     var names = new HashSet<String>();
     for (E named : nameds) {
       var name = named.name();
@@ -114,19 +113,19 @@ public class NList<T extends Named> extends AbstractList<T> {
         names.add(name);
       }
     }
-    return builder.build();
+    return mapOfAll(builder);
   }
 
-  public <R extends Named, E extends Throwable> NList<R> map(Function1<T, R, E> mapping) throws E {
+  public <F extends Named, T extends Throwable> NList<F> map(Function1<E, F, T> mapping) throws T {
     return nlist(list().map(mapping));
   }
 
   public Integer indexOf(String name) {
-    ImmutableMap<String, Integer> stringIntegerImmutableMap = indexMap.get();
+    Map<String, Integer> stringIntegerImmutableMap = indexMap.get();
     return stringIntegerImmutableMap.get(name);
   }
 
-  public T get(String name) {
+  public E get(String name) {
     return map().get(name);
   }
 
@@ -160,10 +159,10 @@ public class NList<T extends Named> extends AbstractList<T> {
     return list().toString("\n");
   }
 
-  // overriden methods from List<T>
+  // overridden methods from java.util.List
 
   @Override
-  public T get(int index) {
+  public E get(int index) {
     return list().get(index);
   }
 
@@ -173,55 +172,55 @@ public class NList<T extends Named> extends AbstractList<T> {
   }
 
   @Override
-  public void forEach(Consumer<? super T> consumer) {
+  public void forEach(Consumer<? super E> consumer) {
     list().forEach(consumer);
   }
 
   @Override
-  public Spliterator<T> spliterator() {
+  public Spliterator<E> spliterator() {
     return list().spliterator();
   }
 
   @Override
-  public Stream<T> stream() {
+  public Stream<E> stream() {
     return list().stream();
   }
 
   @Override
-  public Stream<T> parallelStream() {
+  public Stream<E> parallelStream() {
     return list().parallelStream();
   }
 
   @Override
-  public <T1> T1[] toArray(IntFunction<T1[]> generator) {
+  public <A> A[] toArray(IntFunction<A[]> generator) {
     return list().toArray(generator);
   }
 
   @Deprecated
   @Override
-  public boolean removeIf(Predicate<? super T> filter) {
+  public boolean removeIf(Predicate<? super E> filter) {
     return list().removeIf(filter);
   }
 
   @Deprecated
   @Override
-  public void replaceAll(UnaryOperator<T> operator) {
+  public void replaceAll(UnaryOperator<E> operator) {
     list().replaceAll(operator);
   }
 
   @Deprecated
   @Override
-  public void sort(Comparator<? super T> c) {
+  public void sort(Comparator<? super E> c) {
     list().sort(c);
   }
 
   // helper methods
 
-  public List<T> list() {
+  public List<E> list() {
     return list.get();
   }
 
-  public ImmutableMap<String, T> map() {
+  public Map<String, E> map() {
     return map.get();
   }
 }
