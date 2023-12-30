@@ -94,7 +94,7 @@ public abstract class ExprB {
 
   private List<ExprB> readDataSeqElems(List<Hash> seq) {
     return seq.zipWithIndex()
-        .map(tuple -> readNode(indexOfDataNode(tuple.element2()), seq.get(tuple.element2())));
+        .map(tuple -> readNode(dataNodePath(tuple.element2()), seq.get(tuple.element2())));
   }
 
   private List<Hash> readDataSeqHashes(int expectedSize) {
@@ -113,12 +113,12 @@ public abstract class ExprB {
 
   protected <T> T readDataSeqElem(int i, int expectedSize, Class<T> clazz) {
     var expr = readDataSeqElem(i, expectedSize);
-    return castNode(indexOfDataNode(i), expr, clazz);
+    return castNode(dataNodePath(i), expr, clazz);
   }
 
   private ExprB readDataSeqElem(int i, int expectedSize) {
     var elemHash = readDataSeqElemHash(i, expectedSize);
-    return readNode(indexOfDataNode(i), elemHash);
+    return readNode(dataNodePath(i), elemHash);
   }
 
   private ExprB readNode(String nodePath, Hash nodeHash) {
@@ -137,7 +137,7 @@ public abstract class ExprB {
 
   private <T> List<T> castDataSeqElements(List<ExprB> elems, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
-      castNode(indexOfDataNode(i), elems.get(i), clazz);
+      castNode(dataNodePath(i), elems.get(i), clazz);
     }
     @SuppressWarnings("unchecked")
     List<T> result = (List<T>) elems;
@@ -155,7 +155,7 @@ public abstract class ExprB {
     }
   }
 
-  private static String indexOfDataNode(int i) {
+  private static String dataNodePath(int i) {
     return DATA_PATH + "[" + i + "]";
   }
 
