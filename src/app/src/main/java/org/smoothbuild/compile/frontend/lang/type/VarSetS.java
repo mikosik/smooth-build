@@ -42,8 +42,8 @@ public final class VarSetS extends java.util.AbstractSet<VarS> {
     return new VarSetS(elements.filter(predicate));
   }
 
-  public List<VarS> asList() {
-    return listOfAll(elements.toList());
+  public List<VarS> toList() {
+    return elements.toList();
   }
 
   public VarSetS withAddedAll(Iterable<? extends VarS> toAdd) {

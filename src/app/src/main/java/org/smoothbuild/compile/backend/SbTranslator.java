@@ -168,7 +168,7 @@ public class SbTranslator {
   }
 
   private ExprB translateInstantiate(InstantiateS instantiateS) {
-    var keys = instantiateS.polymorphicS().schema().quantifiedVars().asList();
+    var keys = instantiateS.polymorphicS().schema().quantifiedVars().toList();
     var values = instantiateS.typeArgs().map(typeSbTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
     var varMap = typeSbTranslator.varMap().overrideWith(instantiatedVarMap);

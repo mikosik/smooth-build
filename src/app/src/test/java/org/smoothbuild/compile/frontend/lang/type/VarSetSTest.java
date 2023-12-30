@@ -68,9 +68,9 @@ public class VarSetSTest extends TestContext {
   }
 
   @Test
-  public void as_list() {
+  public void to_list() {
     var varSet = varSetS(varB(), varC(), varA());
-    assertThat(varSet.asList()).isEqualTo(list(varA(), varB(), varC()));
+    assertThat(varSet.toList()).isEqualTo(list(varA(), varB(), varC()));
   }
 
   @Test
