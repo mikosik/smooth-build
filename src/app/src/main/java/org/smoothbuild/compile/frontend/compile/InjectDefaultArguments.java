@@ -8,7 +8,6 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
-import static org.smoothbuild.out.log.Level.ERROR;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -121,7 +120,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       logBuffer.logAll(findUnknownParamNameErrors(callP, params));
       logBuffer.logAll(findDuplicateAssignmentErrors(callP, positionalArgs, params));
       logger.logAll(logBuffer);
-      if (logBuffer.containsAtLeast(ERROR)) {
+      if (logBuffer.containsFailure()) {
         return null;
       }
       return positionedArgs(callP, params, positionalArgs.size(), logger);

@@ -1,7 +1,6 @@
 package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
@@ -20,41 +19,41 @@ public class LogBufferTest {
   }
 
   @Nested
-  class _contains_at_least {
+  class _containsFailure {
     @Test
     public void when_nothing_has_been_logged_returns_false() {
-      assertThat(value.containsAtLeast(ERROR)).isFalse();
+      assertThat(value.containsFailure()).isFalse();
     }
 
     @Test
     public void after_logging_fatal_returns_true() {
       value.log(fatal("message"));
-      assertThat(value.containsAtLeast(ERROR)).isTrue();
+      assertThat(value.containsFailure()).isTrue();
     }
 
     @Test
     public void after_logging_error_returns_true() {
       value.log(error("message"));
-      assertThat(value.containsAtLeast(ERROR)).isTrue();
+      assertThat(value.containsFailure()).isTrue();
     }
 
     @Test
     public void after_logging_warning_returns_false() {
       value.log(warning("message"));
-      assertThat(value.containsAtLeast(ERROR)).isFalse();
+      assertThat(value.containsFailure()).isFalse();
     }
 
     @Test
     public void after_logging_info_returns_false() {
       value.log(info("message"));
-      assertThat(value.containsAtLeast(ERROR)).isFalse();
+      assertThat(value.containsFailure()).isFalse();
     }
 
     @Test
     public void
         after_adding_logs_from_other_logger_with_logs_contains_at_least_error_returns_true() {
       value.logAll(logBufferWith(error("message")));
-      assertThat(value.containsAtLeast(ERROR)).isTrue();
+      assertThat(value.containsFailure()).isTrue();
     }
 
     @Test
@@ -62,7 +61,7 @@ public class LogBufferTest {
         after_logging_fatal_and_adding_logs_from_other_logger_contains_at_least_error_returns_true() {
       value.log(fatal("message"));
       value.logAll(logBufferWith(info("message")));
-      assertThat(value.containsAtLeast(ERROR)).isTrue();
+      assertThat(value.containsFailure()).isTrue();
     }
 
     @Test
@@ -70,14 +69,14 @@ public class LogBufferTest {
         after_logging_error_and_adding_logs_from_other_logger_without_problems_returns_true() {
       value.log(error("message"));
       value.logAll(logBufferWith(info("message")));
-      assertThat(value.containsAtLeast(ERROR)).isTrue();
+      assertThat(value.containsFailure()).isTrue();
     }
 
     @Test
     public void after_logging_warning_and_adding_logs_from_other_logger_with_error_returns_true() {
       value.log(warning("message"));
       value.logAll(logBufferWith(error("message")));
-      assertThat(value.containsAtLeast(ERROR)).isTrue();
+      assertThat(value.containsFailure()).isTrue();
     }
   }
 

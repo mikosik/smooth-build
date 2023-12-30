@@ -16,7 +16,6 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PA
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
-import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
 import com.google.inject.Guice;
@@ -132,7 +131,7 @@ public class AcceptanceTestCase extends TestContext {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }
-    if (memoryReporter.containsAtLeast(ERROR)) {
+    if (memoryReporter.containsFailure()) {
       fail("Expected artifact but problems have been reported:\n" + memoryReporter.logs());
     }
     if (artifacts.isNone()) {
@@ -145,8 +144,8 @@ public class AcceptanceTestCase extends TestContext {
     return memoryReporter.logs().toList();
   }
 
-  protected void assertLogsContainProblem() {
-    assertThat(memoryReporter.logs().containsAtLeast(ERROR)).isTrue();
+  protected void assertLogsContainFailure() {
+    assertThat(memoryReporter.logs().containsFailure()).isTrue();
   }
 
   private FileSystem prjFileSystem() {

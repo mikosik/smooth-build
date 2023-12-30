@@ -3,7 +3,6 @@ package org.smoothbuild.out.log;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.out.log.Level.ERROR;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
@@ -18,7 +17,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> of(T value, Logs logs) {
-    var valueOrNull = logs.containsAtLeast(ERROR) ? null : value;
+    var valueOrNull = logs.containsFailure() ? null : value;
     return new Try<>(valueOrNull, logs);
   }
 
@@ -39,7 +38,7 @@ public class Try<V> {
   }
 
   private Try(V value, Logs logs) {
-    checkArgument((value == null) == logs.containsAtLeast(ERROR));
+    checkArgument((value == null) == logs.containsFailure());
     this.value = value;
     this.logs = logs.toImmutableLogs();
   }
