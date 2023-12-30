@@ -2,16 +2,20 @@ package org.smoothbuild.filesystem.space;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.PathState.DIR;
+import static org.smoothbuild.common.filesystem.base.PathState.FILE;
+import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 import static org.smoothbuild.common.io.Okios.writeAndClose;
+import static org.smoothbuild.filesystem.space.FilePath.filePath;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class FileResolverTest {
   private MemoryFileSystem fileSystem;
@@ -20,46 +24,17 @@ public class FileResolverTest {
   @BeforeEach
   public void setUp() {
     fileSystem = new MemoryFileSystem();
-    fileResolver = new FileResolver(map(Space.PROJECT, fileSystem));
+    fileResolver = new FileResolver(map(PROJECT, fileSystem));
   }
 
   @Nested
-  class _hash {
+  class _contentOf {
     @Test
-    public void of_file() throws IOException {
-      String content = "some string";
-      PathS path = PathS.path("file.txt");
+    void contentOf() throws IOException {
+      var path = path("file.txt");
+      var content = "some string";
       createFile(path, content);
-
-      Hash hash = fileResolver.hashOf(FilePath.filePath(Space.PROJECT, path));
-
-      assertThat(hash).isEqualTo(Hash.of(content));
-    }
-
-    @Test
-    public void is_cached() throws IOException {
-      String content = "some string";
-      PathS path = PathS.path("file.txt");
-      FilePath filePath = FilePath.filePath(Space.PROJECT, path);
-      createFile(path, content);
-      Hash hash1 = fileResolver.hashOf(filePath);
-      createFile(path, content + "something more");
-      Hash hash2 = fileResolver.hashOf(filePath);
-
-      assertThat(hash2).isEqualTo(hash1);
-    }
-
-    @Test
-    public void is_cached_when_calling_readFileContentAndCacheHash() throws IOException {
-      String content = "some string";
-      PathS path = PathS.path("file.txt");
-      FilePath filePath = FilePath.filePath(Space.PROJECT, path);
-      createFile(path, content);
-      fileResolver.readFileContentAndCacheHash(filePath);
-      createFile(path, content + "something more");
-      Hash hash = fileResolver.hashOf(filePath);
-
-      assertThat(hash).isEqualTo(Hash.of(content));
+      assertThat(fileResolver.contentOf(filePath(PROJECT, path))).isEqualTo(content);
     }
   }
 
@@ -67,25 +42,22 @@ public class FileResolverTest {
   class _path_state {
     @Test
     public void of_file() throws IOException {
-      PathS path = PathS.path("file.txt");
+      var path = path("file.txt");
       createFile(path, "some string");
-      assertThat(fileResolver.pathState(FilePath.filePath(Space.PROJECT, path)))
-          .isEqualTo(PathState.FILE);
+      assertThat(fileResolver.pathState(filePath(PROJECT, path))).isEqualTo(FILE);
     }
 
     @Test
     public void of_directory() throws IOException {
-      PathS path = PathS.path("directory");
+      var path = path("directory");
       fileSystem.createDir(path);
-      assertThat(fileResolver.pathState(FilePath.filePath(Space.PROJECT, path)))
-          .isEqualTo(PathState.DIR);
+      assertThat(fileResolver.pathState(filePath(PROJECT, path))).isEqualTo(DIR);
     }
 
     @Test
     public void of_nothing() {
-      PathS path = PathS.path("file.txt");
-      assertThat(fileResolver.pathState(FilePath.filePath(Space.PROJECT, path)))
-          .isEqualTo(PathState.NOTHING);
+      var path = path("file.txt");
+      assertThat(fileResolver.pathState(filePath(PROJECT, path))).isEqualTo(NOTHING);
     }
   }
 

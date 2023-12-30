@@ -23,7 +23,7 @@ public class ReadFileContent implements Function<FilePath, Try<String>> {
   @Override
   public Try<String> apply(FilePath filePath) {
     try {
-      return success(fileResolver.readFileContentAndCacheHash(filePath));
+      return success(fileResolver.contentOf(filePath));
     } catch (NoSuchFileException e) {
       return failure(error(filePath.q() + " doesn't exist."));
     } catch (IOException e) {
