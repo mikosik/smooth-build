@@ -35,7 +35,8 @@ public class InstallationHashes {
   }
 
   private HashNode smoothJarNode() throws IOException {
-    return new HashNode("smooth.jar", fileResolver.hashOf(SMOOTH_JAR_FILE_PATH));
+    var filePath = SMOOTH_JAR_FILE_PATH;
+    return new HashNode(filePath.path().lastPart().toString(), hashOf(filePath));
   }
 
   private static HashNode javaPlatformNode() {
@@ -82,6 +83,10 @@ public class InstallationHashes {
   }
 
   private HashNode nodeFor(FilePath filePath) throws IOException {
-    return new HashNode(filePath.toString(), fileResolver.hashOf(filePath));
+    return new HashNode(filePath.toString(), hashOf(filePath));
+  }
+
+  private Hash hashOf(FilePath filePath) throws IOException {
+    return Hash.of(fileResolver.source(filePath));
   }
 }
