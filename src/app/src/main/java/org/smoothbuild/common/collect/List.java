@@ -1,5 +1,6 @@
 package org.smoothbuild.common.collect;
 
+import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
@@ -197,6 +198,20 @@ public final class List<E> extends AbstractList<E> {
     return false;
   }
 
+  public Set<E> toSet() {
+    return Set.set(array);
+  }
+
+  public <V, T extends Throwable> Map<E, V> toMap(Function1<? super E, V, T> valueMapper) throws T {
+    return zipToMap(this, map(valueMapper));
+  }
+
+  public <K, V, T1 extends Throwable, T2 extends Throwable> Map<K, V> toMap(
+      Function1<? super E, K, T1> keyMapper, Function1<? super E, V, T2> valueMapper)
+      throws T1, T2 {
+    return zipToMap(map(keyMapper), map(valueMapper));
+  }
+
   public static <E> Maybe<List<E>> pullUpMaybe(List<Maybe<E>> list) {
     if (list.anyMatches(Maybe::isNone)) {
       return none();
@@ -206,7 +221,7 @@ public final class List<E> extends AbstractList<E> {
   }
 
   public String toString(String prefix, String delimiter, String suffix) {
-    return prefix + String.join(delimiter, map(Object::toString)) + suffix;
+    return prefix + toString(delimiter) + suffix;
   }
 
   public String toString(String delimiter) {

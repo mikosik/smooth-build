@@ -596,6 +596,108 @@ public class ListTest {
   }
 
   @Nested
+  class _toSet {
+    @Test
+    void on_empty_list_returns_empty_set() {
+      assertThat(list().toSet()).isEqualTo(java.util.Set.of());
+    }
+
+    @Test
+    void removes_duplicates() {
+      assertThat(list("a", "b", "c", "b").toSet()).isEqualTo(java.util.Set.of("a", "b", "c"));
+    }
+
+    @Test
+    void keeps_order_unchanged() {
+      assertThat(list("c", "b", "a", "d", "g", "f").toSet())
+          .containsExactly("c", "b", "a", "d", "g", "f")
+          .inOrder();
+    }
+
+    @Test
+    void returns_instance_of_custom_set() {
+      assertThat(list("a").toSet()).isInstanceOf(Set.class);
+    }
+  }
+
+  @Nested
+  class _toMap_with_value_mapper {
+    @Test
+    void on_empty_list_returns_empty_map() {
+      assertThat(list().toMap(Object::toString)).isEqualTo(java.util.Map.of());
+    }
+
+    @Test
+    void returns_map_with_calculated_values() {
+      assertThat(list("a", "b").toMap(String::toUpperCase))
+          .isEqualTo(java.util.Map.of("a", "A", "b", "B"));
+    }
+
+    @Test
+    void propagates_exception_from_value_mapper() {
+      var exception = new Exception("message");
+      assertCall(() -> list("a").toMap(e -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+
+    @Test
+    void returns_map_with_order_unchanged() {
+      var list = list("c", "b", "a", "d", "g", "f");
+      var map = list.toMap(String::toUpperCase);
+      assertThat(map.keySet()).containsExactly("c", "b", "a", "d", "g", "f").inOrder();
+      assertThat(map.values()).containsExactly("C", "B", "A", "D", "G", "F").inOrder();
+    }
+  }
+
+  @Nested
+  class _toMap_with_key_and_value_mapper {
+    @Test
+    void on_empty_list_returns_empty_map() {
+      List<String> list = list();
+      assertThat(list.toMap(e -> e + e, String::toUpperCase)).isEqualTo(java.util.Map.of());
+    }
+
+    @Test
+    void returns_map_with_calculated_values() {
+      assertThat(list("a", "b").toMap(e -> e + e, String::toUpperCase))
+          .isEqualTo(java.util.Map.of("aa", "A", "bb", "B"));
+    }
+
+    @Test
+    void propagates_exception_from_value_mapper() {
+      var exception = new Exception("message");
+      assertCall(() -> list("a")
+              .toMap(
+                  e -> {
+                    throw exception;
+                  },
+                  String::toUpperCase))
+          .throwsException(exception);
+    }
+
+    @Test
+    void propagates_exception_from_key_mapper() {
+      var exception = new Exception("message");
+      assertCall(() -> list("a").toMap(String::toUpperCase, e -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+
+    @Test
+    void returns_map_with_order_unchanged() {
+      var list = list("c", "b", "a", "d", "g", "f");
+      var map = list.toMap(e -> e + e, String::toUpperCase);
+      assertThat(map.keySet())
+          .containsExactly("cc", "bb", "aa", "dd", "gg", "ff")
+          .inOrder();
+      assertThat(map.values()).containsExactly("C", "B", "A", "D", "G", "F").inOrder();
+    }
+  }
+
+  @Nested
   class _pull_up_maybe {
     @Test
     public void with_zero_elements() {

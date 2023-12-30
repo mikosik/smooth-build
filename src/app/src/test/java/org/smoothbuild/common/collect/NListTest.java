@@ -2,12 +2,12 @@ package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +35,7 @@ public class NListTest {
 
     @Test
     public void from_map() {
-      assertThat(nlist(toMap(list(n0, n1, n2), Named::name, v -> v)))
+      assertThat(nlist(list(n0, n1, n2).toMap(Named::name, v -> v)))
           .containsExactly(n0, n1, n2)
           .inOrder();
     }
@@ -84,16 +84,14 @@ public class NListTest {
 
     @Test
     public void map_related_methods_dont_call_list_and_indexMap_suppliers() {
-      var nlist = new NList<>(
-          this::throwException, () -> ImmutableMap.of(n1.name(), n1), this::throwException);
+      var nlist = new NList<>(this::throwException, () -> map(n1.name(), n1), this::throwException);
       nlist.containsName("name");
       nlist.get("name");
     }
 
     @Test
     public void index_of_method_doesnt_call_list_and_map_suppliers() {
-      var nlist =
-          new NList<>(this::throwException, this::throwException, () -> ImmutableMap.of("name", 1));
+      var nlist = new NList<>(this::throwException, this::throwException, () -> map("name", 1));
       nlist.indexOf("name");
     }
 
@@ -230,9 +228,18 @@ public class NListTest {
 
     @Test
     public void non_unique_names() {
-      var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
+      var nlist = nlistWithShadowing(list(n1, n2, named(n0.name())));
       assertThat(nlist.indexOf(n0.name())).isEqualTo(0);
     }
+  }
+
+  @Test
+  void equals_and_hash_code() {
+    new EqualsTester()
+        .addEqualityGroup(nlist(), nlist())
+        .addEqualityGroup(nlist(named("a")), nlist(named("a")))
+        .addEqualityGroup(nlist(named("b")), nlist(named("b")))
+        .addEqualityGroup(nlist(named("a"), named("b")), nlist(named("a"), named("b")));
   }
 
   private static Named named(String name) {
