@@ -1,13 +1,10 @@
 package org.smoothbuild.stdlib.compress;
 
-import static java.util.function.Function.identity;
-import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.stdlib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,13 +53,13 @@ public class UnzipHelper {
     return filesFromJar(nativeApi, jarFile, NOT_MANIFEST_PREDICATE);
   }
 
-  private static ImmutableMap<String, TupleB> filesFromJar(
+  private static Map<String, TupleB> filesFromJar(
       NativeApi nativeApi, TupleB jarFile, Predicate<String> filter) throws IOException {
     var files = unzipToArrayB(nativeApi, fileContent(jarFile), filter);
     if (files == null) {
       return null;
     }
-    return toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
+    return files.elems(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
   }
 
   public static ArrayB unzipToArrayB(

@@ -26,44 +26,44 @@ public class VarSetSTest extends TestContext {
   }
 
   @Nested
-  class _with_added {
+  class _withAddedAll {
     @Test
     public void empty_set_is_not_changed() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAdded(varSetS())).isEqualTo(varSetS(varA()));
+      assertThat(varSet.withAddedAll(varSetS())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void itself() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAdded(varSet)).isEqualTo(varSetS(varA()));
+      assertThat(varSet.withAddedAll(varSet)).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void other_varset() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAdded(varSetS(varB()))).isEqualTo(varSetS(varA(), varB()));
+      assertThat(varSet.withAddedAll(varSetS(varB()))).isEqualTo(varSetS(varA(), varB()));
     }
   }
 
   @Nested
-  class with_removed {
+  class withRemovedAll {
     @Test
     public void empty_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemoved(varSetS())).isEqualTo(varSetS(varA()));
+      assertThat(varSet.withRemovedAll(varSetS())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void other_non_overlapping_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemoved(varSetS(varB()))).isEqualTo(varSetS(varA()));
+      assertThat(varSet.withRemovedAll(varSetS(varB()))).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void other_overlapping_set() {
       var varSet = varSetS(varA(), varB(), varC());
-      assertThat(varSet.withRemoved(varSetS(varB()))).isEqualTo(varSetS(varA(), varC()));
+      assertThat(varSet.withRemovedAll(varSetS(varB()))).isEqualTo(varSetS(varA(), varC()));
     }
   }
 

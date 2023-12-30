@@ -1,9 +1,9 @@
 package org.smoothbuild.filesystem.space;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.io.Okios.writeAndClose;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -20,7 +20,7 @@ public class FileResolverTest {
   @BeforeEach
   public void setUp() {
     fileSystem = new MemoryFileSystem();
-    fileResolver = new FileResolver(ImmutableMap.of(Space.PROJECT, fileSystem));
+    fileResolver = new FileResolver(map(Space.PROJECT, fileSystem));
   }
 
   @Nested

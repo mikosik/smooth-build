@@ -2,7 +2,7 @@ package org.smoothbuild.compile.frontend.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.collect.Maps.zip;
+import static org.smoothbuild.common.collect.Map.zipToMap;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +50,7 @@ public sealed class SchemaS permits FuncSchemaS {
   }
 
   public TypeS instantiate(List<TypeS> typeArgs) {
-    var map = zip(quantifiedVars.asList(), typeArgs);
+    var map = zipToMap(quantifiedVars.asList(), typeArgs);
     return type.mapVars(v -> map.getOrDefault(v, v));
   }
 

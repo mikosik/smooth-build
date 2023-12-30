@@ -228,7 +228,7 @@ public class NListTest {
 
     @Test
     public void non_unique_names() {
-      var nlist = nlistWithShadowing(list(n1, n2, named(n0.name())));
+      var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
       assertThat(nlist.indexOf(n0.name())).isEqualTo(0);
     }
   }

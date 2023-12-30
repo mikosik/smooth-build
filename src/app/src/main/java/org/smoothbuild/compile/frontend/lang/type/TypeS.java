@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.collect.Maps.mapValues;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import java.util.Map;
@@ -102,7 +101,7 @@ public abstract sealed class TypeS
 
   private static InterfaceTS mapVarsInInterface(
       InterfaceTS interfaceTS, Function<? super VarS, TypeS> map) {
-    var fields = mapValues(interfaceTS.fieldSet(), f -> mapItemSigComponents(f, map));
+    var fields = interfaceTS.fieldSet().mapValues(f -> mapItemSigComponents(f, map));
     return new InterfaceTS(fields);
   }
 

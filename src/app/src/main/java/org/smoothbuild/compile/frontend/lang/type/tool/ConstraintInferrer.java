@@ -1,12 +1,13 @@
 package org.smoothbuild.compile.frontend.lang.type.tool;
 
+import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.NList.nlist;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Queue;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
@@ -110,7 +111,7 @@ public class ConstraintInferrer {
     }
   }
 
-  private static ImmutableMap<String, ItemSigS> unifyFieldSetAndFieldSet(
+  private static Map<String, ItemSigS> unifyFieldSetAndFieldSet(
       FieldSetTS fieldSet1, FieldSetTS fieldSet2, Queue<EqualityConstraint> constraints)
       throws UnifierException {
     var fields1 = fieldSet1.fieldSet();
@@ -127,7 +128,7 @@ public class ConstraintInferrer {
         mergedFields.put(name, new ItemSigS(unifiedType, name));
       }
     }
-    return ImmutableMap.copyOf(mergedFields);
+    return mapOfAll(mergedFields);
   }
 
   private static StructTS unifyStructAndStruct(

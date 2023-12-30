@@ -3,7 +3,7 @@ package org.smoothbuild.compile.backend;
 import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
-import com.google.common.collect.ImmutableMap;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.BlobTS;
 import org.smoothbuild.compile.frontend.lang.type.BoolTS;
@@ -23,14 +23,14 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class TypeSbTranslator {
   private final BytecodeF bytecodeF;
-  private final ImmutableMap<VarS, TypeB> varMap;
+  private final Map<VarS, TypeB> varMap;
 
-  public TypeSbTranslator(BytecodeF bytecodeF, ImmutableMap<VarS, TypeB> varMap) {
+  public TypeSbTranslator(BytecodeF bytecodeF, Map<VarS, TypeB> varMap) {
     this.bytecodeF = bytecodeF;
     this.varMap = varMap;
   }
 
-  public ImmutableMap<VarS, TypeB> varMap() {
+  public Map<VarS, TypeB> varMap() {
     return varMap;
   }
 

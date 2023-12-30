@@ -2,12 +2,11 @@ package org.smoothbuild.common.bindings;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.collect.Maps.override;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
-import java.util.function.Function;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.function.Function1;
 
 public sealed class ScopedBindings<E> extends AbstractBindings<E>
     permits ScopedImmutableBindings, ScopedMutableBindings {
@@ -31,13 +30,15 @@ public sealed class ScopedBindings<E> extends AbstractBindings<E>
   }
 
   @Override
-  public <T> ScopedBindings<T> map(Function<? super E, T> mapper) {
+  public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T {
     return new ScopedBindings<>(outerScopeBindings.map(mapper), innerScopeBindings.map(mapper));
   }
 
   @Override
-  public ImmutableMap<String, E> toMap() {
-    return override(innerScopeBindings.toMap(), outerScopeBindings.toMap());
+  public Map<String, E> toMap() {
+    @SuppressWarnings("unchecked")
+    Map<String, E> map = (Map<String, E>) outerScopeBindings.toMap();
+    return map.overrideWith(innerScopeBindings.toMap());
   }
 
   public Bindings<? extends E> outerScopeBindings() {

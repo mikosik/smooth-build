@@ -1,11 +1,12 @@
 package org.smoothbuild.compile.backend;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 import org.smoothbuild.testing.TestContext;
@@ -60,13 +61,13 @@ public class TypeSbTranslatorTest extends TestContext {
   class _poly {
     @Test
     public void array_type() {
-      assertTranslation(ImmutableMap.of(varA(), intTB()), arrayTS(varA()), arrayTB(intTB()));
+      assertTranslation(map(varA(), intTB()), arrayTS(varA()), arrayTB(intTB()));
     }
 
     @Test
     public void tuple_type() {
       assertTranslation(
-          ImmutableMap.of(varA(), intTB(), varB(), blobTB()),
+          map(varA(), intTB(), varB(), blobTB()),
           tupleTS(varA(), varB()),
           tupleTB(intTB(), blobTB()));
     }
@@ -74,7 +75,7 @@ public class TypeSbTranslatorTest extends TestContext {
     @Test
     public void struct_type() {
       assertTranslation(
-          ImmutableMap.of(varA(), intTB(), varB(), blobTB()),
+          map(varA(), intTB(), varB(), blobTB()),
           structTS(varA(), varB()),
           tupleTB(intTB(), blobTB()));
     }
@@ -82,7 +83,7 @@ public class TypeSbTranslatorTest extends TestContext {
     @Test
     public void func_type() {
       assertTranslation(
-          ImmutableMap.of(varA(), intTB(), varB(), blobTB(), varC(), stringTB()),
+          map(varA(), intTB(), varB(), blobTB(), varC(), stringTB()),
           funcTS(varB(), varC(), varA()),
           funcTB(blobTB(), stringTB(), intTB()));
     }
@@ -95,10 +96,10 @@ public class TypeSbTranslatorTest extends TestContext {
   }
 
   private void assertTranslation(TypeS typeS, TypeB expected) {
-    assertTranslation(ImmutableMap.of(), typeS, expected);
+    assertTranslation(map(), typeS, expected);
   }
 
-  private void assertTranslation(ImmutableMap<VarS, TypeB> varMap, TypeS typeS, TypeB expected) {
+  private void assertTranslation(Map<VarS, TypeB> varMap, TypeS typeS, TypeB expected) {
     var typeSbTranslator = new TypeSbTranslator(bytecodeF(), varMap);
     assertThat(typeSbTranslator.translate(typeS)).isEqualTo(expected);
   }

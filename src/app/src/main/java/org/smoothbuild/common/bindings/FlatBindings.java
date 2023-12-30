@@ -2,20 +2,19 @@ package org.smoothbuild.common.bindings;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Maps.mapValues;
+import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.function.Function1;
 
 public sealed class FlatBindings<E> extends AbstractBindings<E>
     permits FlatImmutableBindings, FlatMutableBindings {
-  protected final Map<String, E> map;
+  protected final java.util.Map<String, E> map;
 
-  protected FlatBindings(Map<String, E> map) {
+  protected FlatBindings(java.util.Map<String, E> map) {
     this.map = requireNonNull(map);
   }
 
@@ -25,13 +24,13 @@ public sealed class FlatBindings<E> extends AbstractBindings<E>
   }
 
   @Override
-  public <T> FlatBindings<T> map(Function<? super E, T> mapper) {
-    return new FlatBindings<>(mapValues(map, mapper));
+  public <F, T extends Throwable> FlatBindings<F> map(Function1<? super E, F, T> mapper) throws T {
+    return new FlatBindings<>(mapOfAll(map).mapValues(mapper));
   }
 
   @Override
-  public ImmutableMap<String, E> toMap() {
-    return ImmutableMap.copyOf(map);
+  public Map<String, E> toMap() {
+    return mapOfAll(map);
   }
 
   @Override

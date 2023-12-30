@@ -11,6 +11,7 @@ public final class ScopedMutableBindings<E> extends ScopedBindings<E>
     return innerScopeBindings().add(name, elem);
   }
 
+  @Override
   public MutableBindings<E> innerScopeBindings() {
     // Cast is safe because constructor initializes innerScopeBindings with MutableBindings.
     @SuppressWarnings("unchecked")

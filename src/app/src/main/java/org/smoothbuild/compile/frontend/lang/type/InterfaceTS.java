@@ -1,25 +1,25 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.interfaceTypeName;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedMap;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 
 /**
  * This class is immutable.
  */
 public final class InterfaceTS extends FieldSetTS {
-  private final ImmutableSortedMap<String, ItemSigS> fields;
+  private final Map<String, ItemSigS> fields;
 
-  public InterfaceTS(ImmutableMap<String, ItemSigS> fields) {
+  public InterfaceTS(Map<String, ItemSigS> fields) {
     super(interfaceTypeName(fields), calculateFieldSetVars(listOfAll(fields.values())));
-    this.fields = ImmutableSortedMap.copyOf(fields);
+    this.fields = mapOfAll(fields);
   }
 
   @Override
-  public ImmutableSortedMap<String, ItemSigS> fieldSet() {
+  public Map<String, ItemSigS> fieldSet() {
     return fields;
   }
 
