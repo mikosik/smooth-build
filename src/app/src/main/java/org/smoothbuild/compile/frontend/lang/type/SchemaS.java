@@ -50,7 +50,7 @@ public sealed class SchemaS permits FuncSchemaS {
   }
 
   public TypeS instantiate(List<TypeS> typeArgs) {
-    var map = zipToMap(quantifiedVars.asList(), typeArgs);
+    var map = zipToMap(quantifiedVars.toList(), typeArgs);
     return type.mapVars(v -> map.getOrDefault(v, v));
   }
 

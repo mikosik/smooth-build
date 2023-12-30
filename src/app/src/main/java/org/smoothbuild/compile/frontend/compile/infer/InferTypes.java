@@ -198,7 +198,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
     }
 
     private static TypeS replaceVarsWithTempVars(VarSetS vars, TypeS type, Unifier unifier) {
-      var mapping = vars.asList().toMap(v -> (TypeS) unifier.newTempVar());
+      var mapping = vars.toList().toMap(v -> (TypeS) unifier.newTempVar());
       return type.mapVars(mapping);
     }
 

@@ -104,7 +104,7 @@ public class TempVarsNamer {
     var vars = resolvedT.vars();
     var varsToRename = vars.filter(VarS::isTemporary);
     var varGenerator = new UnusedVarsGenerator(reservedVars);
-    var mapping = varsToRename.asList().toMap(v -> (TypeS) varGenerator.next());
+    var mapping = varsToRename.toList().toMap(v -> (TypeS) varGenerator.next());
     return resolvedT.mapVars(mapping);
   }
 }
