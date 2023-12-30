@@ -4,6 +4,7 @@ import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 
 import java.util.BitSet;
 import java.util.function.Function;
@@ -20,7 +21,6 @@ import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.compile.frontend.compile.CompileError;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 import org.smoothbuild.filesystem.space.FilePath;
@@ -68,7 +68,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
           message,
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
-      logger.log(CompileError.compileError(location, text));
+      logger.log(compileError(location, text));
     }
 
     private Location createLoc(Object offendingSymbol, int line) {
@@ -141,7 +141,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      logger.log(CompileError.compileError(locOf(filePath, token), message));
+      logger.log(compileError(locOf(filePath, token), message));
     }
   }
 

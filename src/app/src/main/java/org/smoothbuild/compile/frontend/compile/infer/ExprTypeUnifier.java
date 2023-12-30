@@ -12,7 +12,6 @@ import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.compile.frontend.compile.CompileError;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
 import org.smoothbuild.compile.frontend.compile.ast.define.EvaluableP;
@@ -201,7 +200,7 @@ public class ExprTypeUnifier {
       unify(funcT, calleeT);
       return some(resultT);
     } catch (UnifierException e) {
-      logger.log(CompileError.compileError(location, "Illegal call."));
+      logger.log(compileError(location, "Illegal call."));
       return none();
     }
   }
@@ -244,7 +243,7 @@ public class ExprTypeUnifier {
       try {
         unify(elemVar, elemT);
       } catch (UnifierException e) {
-        logger.log(CompileError.compileError(
+        logger.log(compileError(
             location,
             "Cannot infer type for array literal. Its element types are not compatible."));
         return none();
