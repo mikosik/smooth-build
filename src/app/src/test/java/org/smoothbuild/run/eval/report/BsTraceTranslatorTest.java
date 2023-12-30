@@ -1,10 +1,11 @@
 package org.smoothbuild.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.unknownLocation;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.testing.TestContext;
@@ -58,16 +59,16 @@ public class BsTraceTranslatorTest extends TestContext {
   }
 
   private static BsMapping createBsMapping() {
-    ImmutableMap<Hash, String> names = ImmutableMap.of(
+    Map<Hash, String> names = map(
         HASH1, "name1",
         HASH2, "name2",
         HASH3, "name3",
         HASH4, "name4");
-    ImmutableMap<Hash, Location> locs = ImmutableMap.of(
+    Map<Hash, Location> locations = map(
         HASH1, location(1),
         HASH2, location(2),
         HASH3, location(3),
         HASH4, location(4));
-    return new BsMapping(names, locs);
+    return new BsMapping(names, locations);
   }
 }

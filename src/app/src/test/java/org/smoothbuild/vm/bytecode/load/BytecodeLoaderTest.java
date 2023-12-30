@@ -5,13 +5,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.common.collect.Map.map;
 
-import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
@@ -23,18 +22,17 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 public class BytecodeLoaderTest extends TestContext {
   @Test
   public void loading_bytecode() throws Exception {
-    assertThat(loadBytecode(ReturnAbc.class, new HashMap<>())).isEqualTo(right(stringB("abc")));
+    assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(right(stringB("abc")));
   }
 
   @Test
   public void loading_monomorphised_bytecode() throws Exception {
-    assertThat(loadBytecode(ReturnIdFunc.class, ImmutableMap.of("A", intTB())))
-        .isEqualTo(right(idFuncB()));
+    assertThat(loadBytecode(ReturnIdFunc.class, map("A", intTB()))).isEqualTo(right(idFuncB()));
   }
 
   @Test
   public void loading_bytecode_exception_is_returned_as_error() throws Exception {
-    assertThat(loadBytecode(ThrowException.class, new HashMap<>()))
+    assertThat(loadBytecode(ThrowException.class, map()))
         .isEqualTo(loadingError("Providing method thrown exception: java.lang"
             + ".UnsupportedOperationException: detailed message"));
   }
@@ -52,7 +50,7 @@ public class BytecodeLoaderTest extends TestContext {
 
   private static Either<String, Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
     return right(clazz.getDeclaredMethod(
-        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, Map.class));
+        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, java.util.Map.class));
   }
 
   private Either<String, Object> loadingError(String message) {

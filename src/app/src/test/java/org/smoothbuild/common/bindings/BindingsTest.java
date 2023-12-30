@@ -4,17 +4,16 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Map;
 
 public class BindingsTest {
   @Nested
@@ -104,8 +103,7 @@ public class BindingsTest {
 
     var equalsTester = new EqualsTester();
     // flat bindings with no elements
-    equalsTester.addEqualityGroup(
-        immutableBindings(), immutableBindings(Map.of()), mutableBindings());
+    equalsTester.addEqualityGroup(immutableBindings(), immutableBindings(map()), mutableBindings());
 
     // flat bindings with elem1
     equalsTester.addEqualityGroup(immutableBindingsWith(elem1), mutableBindingsWith(elem1));
@@ -115,7 +113,7 @@ public class BindingsTest {
 
     // scoped bindings with elem1 in outer scope
     equalsTester.addEqualityGroup(
-        immutableBindings(immutableBindingsWith(elem1), Map.of()),
+        immutableBindings(immutableBindingsWith(elem1), map()),
         mutableBindings(immutableBindingsWith(elem1)));
 
     // scoped bindings with elem1 in inner scope
@@ -185,7 +183,7 @@ public class BindingsTest {
       var first = elem("name", 7);
       var second = elem("other", 5);
       var bindings = newBindings(first, second);
-      assertThat(bindings.toMap()).isEqualTo(Map.of("name", first, "other", second));
+      assertThat(bindings.toMap()).isEqualTo(Map.map("name", first, "other", second));
     }
 
     public abstract Bindings<Elem> newBindings(Elem... elems);
@@ -278,7 +276,7 @@ public class BindingsTest {
   }
 
   private static ImmutableBindings<Elem> immutableBindingsWith(Elem elem) {
-    return immutableBindings(Map.of(elem.name(), elem));
+    return immutableBindings(map(elem.name(), elem));
   }
 
   private static Bindings<Elem> mutableBindingsWith(Elem... elems) {
@@ -298,8 +296,8 @@ public class BindingsTest {
     return mutableBindings;
   }
 
-  public static ImmutableMap<String, Elem> mapOfElems(Elem... nameables) {
-    return toMap(list(nameables), Elem::name, e -> e);
+  public static Map<String, Elem> mapOfElems(Elem... nameables) {
+    return list(nameables).toMap(Elem::name, e -> e);
   }
 
   public static Elem elem(String name, int value) {

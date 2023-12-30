@@ -2,8 +2,7 @@ package org.smoothbuild.common.bindings;
 
 import static org.smoothbuild.common.collect.Maybe.maybe;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 
 /**
@@ -12,7 +11,7 @@ import org.smoothbuild.common.collect.Maybe;
 public final class FlatImmutableBindings<E> extends FlatBindings<E>
     implements ImmutableBindings<E> {
   FlatImmutableBindings(Map<String, E> map) {
-    super(ImmutableMap.copyOf(map));
+    super(map);
   }
 
   @Override

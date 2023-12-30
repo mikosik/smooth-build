@@ -1,81 +1,57 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Sets.union;
+import static org.smoothbuild.common.collect.Set.set;
+import static org.smoothbuild.common.collect.Set.setOfAll;
 
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Streams;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Stream;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Sets;
+import org.smoothbuild.common.collect.Set;
+import org.smoothbuild.common.function.Function1;
 
-public final class VarSetS implements Set<VarS> {
-  private final ImmutableSortedSet<VarS> elements;
+public final class VarSetS extends java.util.AbstractSet<VarS> {
+  private final Set<VarS> elements;
 
   public static VarSetS varSetS(VarS... vars) {
-    return new VarSetS(Set.of(vars));
+    var set = set(vars);
+    return newSortedVarSetS(set);
   }
 
-  public static VarSetS varSetS(Collection<? extends TypeS> types) {
-    return types.stream().flatMap(t -> t.vars().stream()).collect(toVarSetS());
+  public static VarSetS varSetS(Iterable<? extends TypeS> types) {
+    return newSortedVarSetS(
+        setOfAll(Streams.stream(types).flatMap(t -> t.vars().stream()).collect(toSet())));
+  }
+
+  private static VarSetS newSortedVarSetS(Set<VarS> set) {
+    return new VarSetS(set.sort(comparing(VarS::name)));
   }
 
   private VarSetS(Set<VarS> elements) {
-    this.elements = Sets.sort(elements, comparing(VarS::name));
+    this.elements = elements;
   }
 
-  public static Collector<VarS, Object, VarSetS> toVarSetS() {
-    return collectingAndThen(toSet(), VarSetS::new);
+  public <R, T extends Throwable> Set<R> map(Function1<? super VarS, R, T> filter) throws T {
+    return elements.map(filter);
   }
 
-  public <T> Set<T> map(Function<? super VarS, T> filter) {
-    return stream().map(filter).collect(toImmutableSet());
-  }
-
-  public VarSetS filter(Predicate<? super VarS> predicate) {
-    return stream().filter(predicate).collect(toVarSetS());
+  public <T extends Throwable> VarSetS filter(Function1<VarS, Boolean, T> predicate) throws T {
+    return new VarSetS(elements.filter(predicate));
   }
 
   public List<VarS> asList() {
-    return listOfAll(elements.asList());
+    return listOfAll(elements.toList());
   }
 
-  public VarSetS withAdded(Set<VarS> toAdd) {
-    return new VarSetS(union(elements, toAdd));
+  public VarSetS withAddedAll(Iterable<? extends VarS> toAdd) {
+    return new VarSetS(elements.unionWith(toAdd));
   }
 
-  public VarSetS withRemoved(Set<?> toRemove) {
-    var result = new HashSet<>(elements);
-    result.removeAll(toRemove);
-    return new VarSetS(result);
-  }
-
-  // overrides from Set<VarS>
-
-  @Override
-  public boolean contains(Object object) {
-    return elements.contains(object);
-  }
-
-  @Override
-  public boolean containsAll(Collection<?> collection) {
-    return elements.containsAll(collection);
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return elements.isEmpty();
+  public VarSetS withRemovedAll(Collection<?> toRemove) {
+    return new VarSetS(elements.withRemovedAll(toRemove));
   }
 
   @Override
@@ -84,68 +60,8 @@ public final class VarSetS implements Set<VarS> {
   }
 
   @Override
-  public Object[] toArray() {
-    return elements.toArray();
-  }
-
-  @Override
-  public <T> T[] toArray(T[] array) {
-    return elements.toArray(array);
-  }
-
-  @Override
-  public boolean add(VarS var) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean remove(Object object) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean addAll(Collection<? extends VarS> collection) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean retainAll(Collection<?> collection) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean removeAll(Collection<?> collection) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void clear() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public int size() {
     return elements.size();
-  }
-
-  @Override
-  public Stream<VarS> stream() {
-    return elements.stream();
-  }
-
-  @Override
-  public void forEach(Consumer<? super VarS> consumer) {
-    elements.forEach(consumer);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof VarSetS that && this.elements.equals(that.elements);
-  }
-
-  @Override
-  public int hashCode() {
-    return elements.hashCode();
   }
 
   @Override

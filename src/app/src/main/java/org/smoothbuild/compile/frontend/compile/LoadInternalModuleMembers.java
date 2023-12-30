@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.internalLocation;
 
 import java.util.function.Function;
@@ -17,7 +16,7 @@ public class LoadInternalModuleMembers implements Function<Tuple0, Try<ScopeS>> 
   @Override
   public Try<ScopeS> apply(Tuple0 unused) {
     var logBuffer = new LogBuffer();
-    var types = immutableBindings(toMap(TypeFS.baseTs(), TypeS::name, t -> baseTypeDefinitions(t)));
+    var types = immutableBindings(TypeFS.baseTs().toMap(TypeS::name, t -> baseTypeDefinitions(t)));
     return Try.of(new ScopeS(types, immutableBindings()), logBuffer);
   }
 

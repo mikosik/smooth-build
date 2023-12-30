@@ -2,24 +2,23 @@ package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.collect.Map.mapOfAll;
+import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.common.collect.Maps.mapKeys;
-import static org.smoothbuild.common.collect.Maps.override;
-import static org.smoothbuild.common.collect.Maps.zip;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
-import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.Map;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
@@ -83,9 +82,9 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final ImmutableBindings<NamedEvaluableS> evaluables;
   private final NList<ItemS> environment;
-  private final Map<CacheKey, ExprB> cache;
-  private final Map<Hash, String> nameMapping;
-  private final Map<Hash, Location> locationMapping;
+  private final HashMap<CacheKey, ExprB> cache;
+  private final HashMap<Hash, String> nameMapping;
+  private final HashMap<Hash, Location> locationMapping;
 
   @Inject
   public SbTranslator(
@@ -95,7 +94,7 @@ public class SbTranslator {
       ImmutableBindings<NamedEvaluableS> evaluables) {
     this(
         bytecodeF,
-        new TypeSbTranslator(bytecodeF, ImmutableMap.of()),
+        new TypeSbTranslator(bytecodeF, map()),
         fileLoader,
         bytecodeLoader,
         evaluables,
@@ -112,9 +111,9 @@ public class SbTranslator {
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables,
       NList<ItemS> environment,
-      Map<CacheKey, ExprB> cache,
-      Map<Hash, String> nameMapping,
-      Map<Hash, Location> locationMapping) {
+      HashMap<CacheKey, ExprB> cache,
+      HashMap<Hash, String> nameMapping,
+      HashMap<Hash, Location> locationMapping) {
     this.bytecodeF = bytecodeF;
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
@@ -127,7 +126,7 @@ public class SbTranslator {
   }
 
   public BsMapping bsMapping() {
-    return new BsMapping(nameMapping, locationMapping);
+    return new BsMapping(mapOfAll(nameMapping), mapOfAll(locationMapping));
   }
 
   private List<ExprB> translateExprs(List<ExprS> exprs) {
@@ -171,8 +170,8 @@ public class SbTranslator {
   private ExprB translateInstantiate(InstantiateS instantiateS) {
     var keys = instantiateS.polymorphicS().schema().quantifiedVars().asList();
     var values = instantiateS.typeArgs().map(typeSbTranslator::translate);
-    var instantiatedVarMap = zip(keys, values);
-    var varMap = override(instantiatedVarMap, typeSbTranslator.varMap());
+    var instantiatedVarMap = zipToMap(keys, values);
+    var varMap = typeSbTranslator.varMap().overrideWith(instantiatedVarMap);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
         bytecodeF,
@@ -352,7 +351,7 @@ public class SbTranslator {
   }
 
   private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name) {
-    var varNameToTypeMap = mapKeys(typeSbTranslator.varMap(), VarS::name);
+    var varNameToTypeMap = typeSbTranslator.varMap().mapKeys(VarS::name);
     var jar = loadNativeJar(annotation.location());
     var bytecode = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
     if (!bytecode.isRight()) {
@@ -437,5 +436,5 @@ public class SbTranslator {
     locationMapping.put(exprB.hash(), location);
   }
 
-  private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {}
+  private static record CacheKey(String name, Map<VarS, TypeB> varMap) {}
 }

@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import org.smoothbuild.common.collect.List;
@@ -95,7 +94,7 @@ public class TempVarsNamer {
     var resolvedT = unifier.resolve(evaluable.typeS());
     var body = evaluable.body();
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
-    var varsInScope = outerScopeVars.withAdded(thisScopeVars);
+    var varsInScope = outerScopeVars.withAddedAll(thisScopeVars);
     body.ifPresent(b -> handleExpr(varsInScope, b));
     var resolvedAndRenamedT = nameVars(resolvedT, thisScopeVars);
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
@@ -105,7 +104,7 @@ public class TempVarsNamer {
     var vars = resolvedT.vars();
     var varsToRename = vars.filter(VarS::isTemporary);
     var varGenerator = new UnusedVarsGenerator(reservedVars);
-    var mapping = toMap(varsToRename, v -> (TypeS) varGenerator.next());
+    var mapping = varsToRename.asList().toMap(v -> (TypeS) varGenerator.next());
     return resolvedT.mapVars(mapping);
   }
 }

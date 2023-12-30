@@ -96,7 +96,7 @@ public class ExprTypeUnifier {
   }
 
   private VarSetS resolveQuantifiedVars(TypeS typeS) {
-    return typeS.vars().withRemoved(outerScopeVars.map(unifier::resolve));
+    return typeS.vars().withRemovedAll(outerScopeVars.map(unifier::resolve));
   }
 
   private TypeS resolveType(EvaluableP evaluableP) {
@@ -133,7 +133,7 @@ public class ExprTypeUnifier {
 
   private Boolean unifyEvaluableBody(
       EvaluableP evaluableP, TypeS evaluationT, TypeS type, TypeTeller typeTeller) {
-    var vars = outerScopeVars.withAdded(type.vars());
+    var vars = outerScopeVars.withAddedAll(type.vars());
     return new ExprTypeUnifier(unifier, typeTeller, vars, logger)
         .unifyEvaluableBody(evaluableP, evaluationT);
   }

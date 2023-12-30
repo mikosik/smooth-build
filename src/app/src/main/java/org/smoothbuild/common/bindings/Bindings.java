@@ -1,13 +1,12 @@
 package org.smoothbuild.common.bindings;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-import java.util.function.Function;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.function.Function1;
 
 public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings, MutableBindings {
   public static <E> FlatImmutableBindings<E> immutableBindings() {
-    return new FlatImmutableBindings<>(ImmutableMap.of());
+    return new FlatImmutableBindings<>(Map.map());
   }
 
   public static <E> FlatImmutableBindings<E> immutableBindings(Map<String, E> innerScopeMap) {
@@ -25,11 +24,11 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
     return new ScopedImmutableBindings<>(outerScopeBindings, innerScopeBindings);
   }
 
-  public static <T> FlatMutableBindings<T> mutableBindings() {
+  public static <E> FlatMutableBindings<E> mutableBindings() {
     return new FlatMutableBindings<>();
   }
 
-  public static <T> ScopedMutableBindings<T> mutableBindings(Bindings<T> outerScopeBindings) {
+  public static <E> ScopedMutableBindings<E> mutableBindings(Bindings<E> outerScopeBindings) {
     return new ScopedMutableBindings<>(outerScopeBindings);
   }
 
@@ -39,9 +38,9 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
 
   public Maybe<E> getMaybe(String name);
 
-  public <M> Bindings<M> map(Function<? super E, M> mapper);
+  public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T;
 
-  public ImmutableMap<String, E> toMap();
+  public Map<String, E> toMap();
 
   public FlatImmutableBindings<E> toFlatImmutable();
 }

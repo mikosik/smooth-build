@@ -1,9 +1,8 @@
 package org.smoothbuild.common.graph;
 
-import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.BEING_PROCESSED;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.NOT_VISITED;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSED;
@@ -11,9 +10,8 @@ import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSE
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Set;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Sets;
+import org.smoothbuild.common.collect.Set;
 
 public class SortTopologically {
   public static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologically(
@@ -27,7 +25,7 @@ public class SortTopologically {
   }
 
   private static <K, N, E> void assertAllEdgesPointToExistingNodes(List<Node<K, N, E>> nodes) {
-    var keys = Sets.map(nodes, Node::key);
+    var keys = nodes.map(Node::key).toSet();
     for (var node : nodes) {
       for (var edge : node.edges()) {
         if (!keys.contains(edge.targetKey())) {
@@ -69,10 +67,10 @@ public class SortTopologically {
 
     var rootKeys = findRootNodes(nodes);
     if (rootKeys.isEmpty()) {
-      rootKeys = Set.of(nodes.iterator().next().key());
+      rootKeys = set(nodes.getFirst().key());
     }
 
-    var keyToNode = toMap(nodes, Node::key, n -> n);
+    var keyToNode = nodes.toMap(Node::key, n -> n);
     var currentPath = new LinkedList<PathElem<K, N, E>>();
     var resultSeq = new ArrayDeque<Node<K, N, E>>(nodes.size());
 
@@ -110,12 +108,10 @@ public class SortTopologically {
     }
   }
 
-  private static <K, N, E> Set<K> findRootNodes(Collection<Node<K, N, E>> nodes) {
-    var result = nodes.stream().map(Node::key).collect(toSet());
+  private static <K, N, E> Set<K> findRootNodes(List<Node<K, N, E>> nodes) {
+    var result = nodes.map(Node::key).toSet();
     for (var node : nodes) {
-      for (var edge : node.edges()) {
-        result.remove(edge.targetKey());
-      }
+      result = result.withRemovedAll(node.edges().map(GraphEdge::targetKey));
     }
     return result;
   }

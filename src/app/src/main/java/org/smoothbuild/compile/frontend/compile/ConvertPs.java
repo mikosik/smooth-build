@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.collect.Maps.mapValues;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
@@ -85,8 +84,8 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
 
     private ModuleS convertModule(ModuleP moduleP) {
       var scopeP = moduleP.scope();
-      var structs = mapValues(scopeP.types().toMap(), this::convertStruct);
-      var evaluables = mapValues(scopeP.referencables().toMap(), this::convertReferenceableP);
+      var structs = scopeP.types().toMap().mapValues(this::convertStruct);
+      var evaluables = scopeP.referencables().toMap().mapValues(this::convertReferenceableP);
       var members = new ScopeS(immutableBindings(structs), immutableBindings(evaluables));
       var scopeS = scopeS(imported, members);
       return new ModuleS(members, scopeS);

@@ -2,8 +2,8 @@ package org.smoothbuild.compile.frontend.lang.base;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
-import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -46,7 +46,7 @@ public class TypeNamesS {
     return "(" + commaSeparatedTypeNames(elemTs) + ")";
   }
 
-  public static String interfaceTypeName(ImmutableMap<String, ItemSigS> fields) {
+  public static String interfaceTypeName(Map<String, ItemSigS> fields) {
     return listOfAll(fields.values()).toString("(", ",", ")");
   }
 

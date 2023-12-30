@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -180,7 +179,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
     }
 
     private static List<Log> findUnknownParamNameErrors(CallP callP, List<Param> params) {
-      var names = Sets.map(params, Param::name);
+      var names = params.map(Param::name).toSet();
       return callP
           .args()
           .filter(a -> a instanceof NamedArgP)

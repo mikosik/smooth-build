@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
@@ -79,7 +78,7 @@ public class SortModuleMembersByDependency implements Function<ModuleP, Try<Modu
 
   private static TopologicalSortingRes<String, StructP, Location> sortStructsByDeps(
       List<StructP> structs) {
-    var structNames = Sets.map(structs, Nal::name);
+    var structNames = structs.map(Nal::name).toSet();
     var nodes = structs.map(struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }

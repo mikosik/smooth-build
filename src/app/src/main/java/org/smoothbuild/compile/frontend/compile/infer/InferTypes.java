@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
-import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
@@ -199,7 +198,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
     }
 
     private static TypeS replaceVarsWithTempVars(VarSetS vars, TypeS type, Unifier unifier) {
-      var mapping = toMap(vars, v -> (TypeS) unifier.newTempVar());
+      var mapping = vars.asList().toMap(v -> (TypeS) unifier.newTempVar());
       return type.mapVars(mapping);
     }
 

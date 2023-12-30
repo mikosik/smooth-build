@@ -8,7 +8,7 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
@@ -32,18 +32,17 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 
-import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.function.Function;
 import okio.ByteString;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
@@ -1013,7 +1012,7 @@ public class TestContext {
   }
 
   public static InterfaceTS interfaceTS() {
-    return interfaceTS(ImmutableMap.of());
+    return interfaceTS(map());
   }
 
   public static InterfaceTS interfaceTS(TypeS... fieldTs) {
@@ -1024,7 +1023,7 @@ public class TestContext {
     return interfaceTS(itemSigsToMap(fieldTs));
   }
 
-  public static InterfaceTS interfaceTS(ImmutableMap<String, ItemSigS> fieldSignatures) {
+  public static InterfaceTS interfaceTS(Map<String, ItemSigS> fieldSignatures) {
     return new InterfaceTS(fieldSignatures);
   }
 
@@ -1068,16 +1067,16 @@ public class TestContext {
     return listOfAll(builder);
   }
 
-  public static ImmutableMap<String, ItemSigS> typesToItemSigsMap(TypeS... types) {
+  public static Map<String, ItemSigS> typesToItemSigsMap(TypeS... types) {
     return itemSigsToMap(typeTsToSigS(types));
   }
 
-  public static ImmutableMap<String, ItemSigS> itemSigsToMap(ItemSigS... itemSigs) {
+  public static Map<String, ItemSigS> itemSigsToMap(ItemSigS... itemSigs) {
     return itemSigsToMap(list(itemSigs));
   }
 
-  public static ImmutableMap<String, ItemSigS> itemSigsToMap(List<ItemSigS> sigs) {
-    return toMap(sigs, ItemSigS::name, f -> f);
+  public static Map<String, ItemSigS> itemSigsToMap(List<ItemSigS> sigs) {
+    return sigs.toMap(ItemSigS::name, f -> f);
   }
 
   private static List<ItemSigS> typeTsToSigS(TypeS... types) {
@@ -1156,12 +1155,12 @@ public class TestContext {
     return new IntS(intTS(), BigInteger.valueOf(value), location(line));
   }
 
-  public static ImmutableMap<VarS, TypeS> varMap() {
-    return ImmutableMap.of();
+  public static Map<VarS, TypeS> varMap() {
+    return map();
   }
 
-  public static ImmutableMap<VarS, TypeS> varMap(VarS var, TypeS type) {
-    return ImmutableMap.of(var, type);
+  public static Map<VarS, TypeS> varMap(VarS var, TypeS type) {
+    return map(var, type);
   }
 
   public static InstantiateS instantiateS(NamedEvaluableS namedEvaluableS) {
@@ -1759,20 +1758,20 @@ public class TestContext {
   }
 
   public static BsMapping bsMapping() {
-    return new BsMapping(Map.of(), Map.of());
+    return new BsMapping(map(), map());
   }
 
   public static BsMapping bsMapping(Hash hash, String name) {
-    return new BsMapping(Map.of(hash, name), Map.of());
+    return new BsMapping(map(hash, name), map());
   }
 
   public static BsMapping bsMapping(Hash hash, Location location) {
-    return new BsMapping(Map.of(), Map.of(hash, location));
+    return new BsMapping(map(), map(hash, location));
   }
 
   @SafeVarargs
   public static <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(toMap(list(nameds), Named::name, v -> v));
+    return immutableBindings(list(nameds).toMap(Named::name, v -> v));
   }
 
   private static String shortName(String fullName) {
