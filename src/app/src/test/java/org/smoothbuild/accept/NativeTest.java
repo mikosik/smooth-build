@@ -121,12 +121,12 @@ public class NativeTest extends AcceptanceTestCase {
             ThrowRandomException.class.getCanonicalName()));
 
         evaluate("result");
-        assertLogsContainProblem();
+        assertLogsContainFailure();
         String timestamp1 = fetchTimestamp(logs().get(0).message());
 
         resetState();
         evaluate("result");
-        assertLogsContainProblem();
+        assertLogsContainFailure();
         String timestamp2 = fetchTimestamp(logs().get(0).message());
 
         assertThat(timestamp1).isNotEqualTo(timestamp2);

@@ -2,7 +2,6 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
-import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Try.failure;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Try<Li
         logBuffer.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
       }
     }
-    if (logBuffer.containsAtLeast(ERROR)) {
+    if (logBuffer.containsFailure()) {
       return failure(logBuffer);
     }
     List<ExprS> exprs = listOfAll(namedEvaluables)

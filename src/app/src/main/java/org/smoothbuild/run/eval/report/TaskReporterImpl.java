@@ -4,7 +4,6 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
-import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
@@ -104,7 +103,7 @@ public class TaskReporterImpl implements TaskReporter {
   private void report(Task task, String taskHeader, Logs logs) {
     boolean visible = taskMatcher.matches(task, logs.toList());
     var traceS = bsTraceTranslator.translate(task.trace());
-    if (logs.containsAtLeast(WARNING) && traceS != null) {
+    if (logs.containsFailure() && traceS != null) {
       taskHeader += "\n" + indent(traceS.toString());
     }
     reporter.report(visible, taskHeader, logs.toList());

@@ -9,7 +9,6 @@ import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendComp
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
-import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.testing.TestContext.writeFile;
@@ -87,7 +86,7 @@ public class TestingModuleLoader {
   public void loadsWithProblems() {
     var module = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.logs().containsAtLeast(ERROR))
+        .that(module.logs().containsFailure())
         .isTrue();
   }
 
