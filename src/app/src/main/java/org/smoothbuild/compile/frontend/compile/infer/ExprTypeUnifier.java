@@ -85,12 +85,10 @@ public class ExprTypeUnifier {
   private boolean setEvaluableSchema(EvaluableP evaluableP) {
     var resolvedT = resolveType(evaluableP);
     var vars = resolveQuantifiedVars(resolvedT);
-    // @formatter:off
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(new SchemaS(vars, resolvedT));
       case FuncP funcP -> funcP.setSchemaS(new FuncSchemaS(vars, (FuncTS) resolvedT));
     }
-    // @formatter:on
     return true;
   }
 
@@ -162,7 +160,6 @@ public class ExprTypeUnifier {
   }
 
   private Maybe<TypeS> unifyExpr(ExprP exprP) {
-    // @formatter:off
     return switch (exprP) {
       case CallP callP -> unifyAndMemoize(this::unifyCall, callP);
       case InstantiateP instantiateP -> unifyAndMemoize(this::unifyInstantiate, instantiateP);
@@ -173,7 +170,6 @@ public class ExprTypeUnifier {
       case IntP intP -> setAndMemoize(TypeFS.INT, intP);
       case BlobP blobP -> setAndMemoize(TypeFS.BLOB, blobP);
     };
-    // @formatter:on
   }
 
   private Maybe<TypeS> setAndMemoize(TypeS typeS, ExprP exprP) {

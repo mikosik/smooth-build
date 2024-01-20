@@ -134,7 +134,6 @@ public class SbTranslator {
   }
 
   public ExprB translateExpr(ExprS exprS) {
-    // @formatter:off
     return switch (exprS) {
       case BlobS blobS -> saveLocAndReturn(blobS, translateBlob(blobS));
       case CallS callS -> saveLocAndReturn(callS, translateCall(callS));
@@ -145,7 +144,6 @@ public class SbTranslator {
       case StringS stringS -> saveLocAndReturn(stringS, translateString(stringS));
       case InstantiateS instantiateS -> translateInstantiate(instantiateS);
     };
-    // @formatter:on
   }
 
   private BlobB translateBlob(BlobS blobS) {

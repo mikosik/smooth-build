@@ -32,7 +32,6 @@ public class UnitTypeInferrer {
   }
 
   public void infer(ExprP expr) {
-    // @formatter:off
     switch (expr) {
       case CallP call -> inferCall(call);
       case InstantiateP instantiateP -> inferInstantiate(instantiateP);
@@ -43,7 +42,6 @@ public class UnitTypeInferrer {
       case IntP int_ -> {}
       case BlobP blob -> {}
     }
-    // @formatter:on
   }
 
   private void inferCall(CallP call) {

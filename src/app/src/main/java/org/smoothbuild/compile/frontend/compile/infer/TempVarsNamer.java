@@ -51,7 +51,6 @@ public class TempVarsNamer {
   }
 
   private void handleExpr(ExprP expr) {
-    // @formatter:off
     switch (expr) {
       case CallP callP -> handleCall(callP);
       case InstantiateP instantiateP -> handleInstantiate(instantiateP);
@@ -62,7 +61,6 @@ public class TempVarsNamer {
       case BlobP blobP -> {}
       case StringP stringP -> {}
     }
-    // @formatter:on
   }
 
   private void handleCall(CallP call) {

@@ -74,7 +74,6 @@ public class SchedulerB {
   }
 
   private void scheduleJobTasksEvaluation(Job job) {
-    // @formatter:off
     switch (job.exprB()) {
       case CallB call -> new CallScheduler(job, call).scheduleCall();
       case CombineB combine -> scheduleOperTask(job, combine, CombineTask::new);
@@ -88,7 +87,6 @@ public class SchedulerB {
         // than its subclasses and code is not modularized.
       default -> throw new RuntimeException("shouldn't happen");
     }
-    // @formatter:on
   }
 
   /**
@@ -112,12 +110,10 @@ public class SchedulerB {
 
     private void onFuncEvaluated(ValueB funcB) {
       switch ((FuncB) funcB) {
-          // @formatter:off
         case LambdaB lambdaB -> handleLambda(lambdaB);
         case IfFuncB ifFuncB -> handleIfFunc();
         case MapFuncB mapFuncB -> handleMapFunc();
         case NativeFuncB nativeFuncB -> handleNativeFunc(nativeFuncB);
-          // @formatter:on
       }
     }
 

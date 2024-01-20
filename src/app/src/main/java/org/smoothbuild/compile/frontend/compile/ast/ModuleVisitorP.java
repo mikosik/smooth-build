@@ -109,7 +109,6 @@ public class ModuleVisitorP {
   public void visitType(TypeP typeP) {}
 
   public void visitExpr(ExprP exprP) {
-    // @formatter:off
     switch (exprP) {
       case BlobP blobP -> visitBlob(blobP);
       case CallP callP -> visitCall(callP);
@@ -120,7 +119,6 @@ public class ModuleVisitorP {
       case SelectP selectP -> visitSelect(selectP);
       case StringP stringP -> visitString(stringP);
     }
-    // @formatter:on
   }
 
   public void visitLambda(LambdaP lambdaP) {
