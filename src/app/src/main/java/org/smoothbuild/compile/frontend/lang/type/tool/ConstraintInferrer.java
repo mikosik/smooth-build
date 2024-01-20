@@ -37,14 +37,12 @@ public class ConstraintInferrer {
       return type2;
     }
     return switch (type1) {
-        // @formatter:off
       case ArrayTS array1 -> unifyArrayAndType(array1, type2, constraints);
       case FieldSetTS fieldSet1 -> unifyFieldSetAndType(fieldSet1, type2, constraints);
       case FuncTS func1 -> unifyFunctionAndType(func1, type2, constraints);
       case TupleTS tuple1 -> unifyTupleAndType(tuple1, type2, constraints);
       case VarS varS -> assertTypesAreEqual(varS, type2);
       default -> assertTypesAreEqual(type1, type2);
-        // @formatter:on
     };
   }
 

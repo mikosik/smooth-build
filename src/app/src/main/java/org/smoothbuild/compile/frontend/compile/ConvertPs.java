@@ -171,7 +171,6 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
     }
 
     private ExprS convertExpr(ExprP expr) {
-      // @formatter:off
       return switch (expr) {
         case BlobP blobP -> convertBlob(blobP);
         case CallP callP -> convertCall(callP);
@@ -182,7 +181,6 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
         case SelectP selectP -> convertSelect(selectP);
         case StringP stringP -> convertString(stringP);
       };
-      // @formatter:on
     }
 
     private LambdaS convertLambda(LambdaP lambdaP) {

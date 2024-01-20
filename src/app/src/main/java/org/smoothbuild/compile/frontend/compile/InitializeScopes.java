@@ -72,14 +72,12 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
     }
 
     private ScopeP createScopeFor(ScopedP scopedP) {
-      // @formatter:off
       switch (scopedP) {
         case ModuleP moduleP -> initializeScopeFor(moduleP);
         case StructP structP -> initializeScopeFor(structP);
         case NamedValueP namedValueP -> initializeScopeFor(namedValueP);
         case FuncP funcP -> initializeScopeFor(funcP);
       }
-      // @formatter:on
       return scope.newInnerScope(
           scopedP.name(), referenceables.toFlatImmutable(), types.toFlatImmutable());
     }

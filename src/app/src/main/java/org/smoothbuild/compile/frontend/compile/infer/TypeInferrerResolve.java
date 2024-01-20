@@ -51,12 +51,10 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveSchema(EvaluableP evaluableP) {
-    // @formatter:off
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(resolveSchema(valueP.schemaS()));
       case FuncP funcP -> funcP.setSchemaS(resolveSchema(funcP.schemaS()));
     }
-    // @formatter:off
     return true;
   }
 
@@ -91,7 +89,6 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveExpr(ExprP expr) {
-    // @formatter:off
     return switch (expr) {
       case CallP callP -> resolveCall(callP);
       case InstantiateP instantiateP -> resolveInstantiate(instantiateP);
@@ -102,7 +99,6 @@ public class TypeInferrerResolve {
       case IntP intP -> resolveExprType(intP);
       case BlobP blobP -> resolveExprType(blobP);
     };
-    // @formatter:on
   }
 
   private boolean resolveCall(CallP callP) {

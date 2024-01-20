@@ -225,7 +225,6 @@ public class CategoryDb {
       case OperKindB<?> oper -> readOperCat(hash, rootSeq, oper);
       case TupleKindB tuple -> readTupleT(hash, rootSeq);
     };
-    // @formatter:on
   }
 
   private List<Hash> readCatRootSeq(Hash hash) {

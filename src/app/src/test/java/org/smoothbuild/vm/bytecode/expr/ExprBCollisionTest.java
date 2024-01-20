@@ -27,7 +27,6 @@ public class ExprBCollisionTest extends TestContext {
     BlobB blob1 = blobB(0);
     BlobB blob2 = blobB(1);
     BlobB blobEmpty = blobB(ByteString.EMPTY);
-    // @formatter:off
     return List.of(
         // values
         arrayB(blobTB()),
@@ -87,6 +86,5 @@ public class ExprBCollisionTest extends TestContext {
         selectB(tupleB(intB(1), stringB("a")), intB(0)),
         selectB(tupleB(intB(1), stringB("a")), intB(1)),
         selectB(tupleB(intB(1), stringB("b")), intB(0)));
-    // @formatter:on
   }
 }

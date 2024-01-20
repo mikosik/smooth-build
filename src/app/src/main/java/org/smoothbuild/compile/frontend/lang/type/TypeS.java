@@ -75,7 +75,6 @@ public abstract sealed class TypeS
       return this;
     } else {
       return switch (this) {
-          // @formatter:off
         case ArrayTS a -> mapVarsInArray(a, map);
         case FuncTS f -> mapVarsInFunc(f, map);
         case InterfaceTS i -> mapVarsInInterface(i, map);
@@ -83,7 +82,6 @@ public abstract sealed class TypeS
         case TupleTS t -> mapVarsInTuple(t, map);
         case VarS v -> map.apply(v);
         default -> this;
-          // @formatter:on
       };
     }
   }
