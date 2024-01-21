@@ -15,4 +15,6 @@ public interface Reporter {
   public void report(boolean visible, String header, List<Log> logs);
 
   public void printSummary();
+
+  public void reportResult(String string);
 }

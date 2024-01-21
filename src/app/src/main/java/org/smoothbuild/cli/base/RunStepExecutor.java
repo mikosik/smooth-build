@@ -16,7 +16,7 @@ public class RunStepExecutor {
     var reporter = injector.getInstance(Reporter.class);
     Maybe<Tuple0> message = injector
         .getInstance(StepExecutor.class)
-        .execute(step.then(step(PrintResult.class)), argument, reporter);
+        .execute(step.then(step(ReportResult.class)), argument, reporter);
     reporter.printSummary();
     return message.map(v -> EXIT_CODE_SUCCESS).getOr(EXIT_CODE_ERROR);
   }

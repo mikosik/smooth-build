@@ -3,7 +3,7 @@ package org.smoothbuild.common.io;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
-import static org.smoothbuild.out.report.Console.printErrorToWriter;
+import static org.smoothbuild.out.report.SystemOutReporter.printErrorToWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;

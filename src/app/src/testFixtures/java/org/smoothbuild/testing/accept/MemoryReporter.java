@@ -26,6 +26,9 @@ public class MemoryReporter implements Reporter {
   @Override
   public void printSummary() {}
 
+  @Override
+  public void reportResult(String string) {}
+
   public boolean containsFailure() {
     return buffer.containsFailure();
   }

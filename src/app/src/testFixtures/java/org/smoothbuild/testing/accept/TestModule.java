@@ -1,13 +1,10 @@
 package org.smoothbuild.testing.accept;
 
-import static com.google.common.io.ByteStreams.nullOutputStream;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import java.io.PrintWriter;
-import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -24,7 +21,6 @@ public class TestModule extends AbstractModule {
   protected void configure() {
     bind(MemoryReporter.class).toInstance(memoryReporter);
     bind(Reporter.class).to(MemoryReporter.class);
-    bind(Console.class).toInstance(new Console(new PrintWriter(nullOutputStream(), true)));
     bind(TaskMatcher.class).toInstance(ALL);
   }
 

@@ -112,9 +112,8 @@ import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.Space;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.report.Console;
-import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.out.report.SystemOutReporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
@@ -339,12 +338,8 @@ public class TestContext {
     return new TaskReporterImpl(ALL, reporter, bsMapping());
   }
 
-  public ConsoleReporter reporter() {
-    return new ConsoleReporter(console(), INFO);
-  }
-
-  private Console console() {
-    return new Console(new PrintWriter(systemOut(), true));
+  public SystemOutReporter reporter() {
+    return new SystemOutReporter(new PrintWriter(systemOut(), true), INFO);
   }
 
   public ByteArrayOutputStream systemOut() {
