@@ -10,6 +10,7 @@ import static org.smoothbuild.out.report.FormatLog.formatLogs;
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.smoothbuild.common.collect.List;
@@ -20,20 +21,24 @@ import org.smoothbuild.out.log.Log;
  * This class is thread-safe.
  */
 @Singleton
-public class ConsoleReporter implements Reporter {
-  private final Console console;
+public class SystemOutReporter implements Reporter {
+  private final PrintWriter sysOut;
   private final Level logLevel;
   private final ImmutableMap<Level, AtomicInteger> counters = createCounters();
 
   @Inject
-  public ConsoleReporter(Console console, Level logLevel) {
-    this.console = console;
+  public SystemOutReporter(PrintWriter sysOut, Level logLevel) {
+    this.sysOut = sysOut;
     this.logLevel = logLevel;
+  }
+
+  public static void printErrorToWriter(PrintWriter printWriter, String message) {
+    printWriter.println("smooth: error: " + message);
   }
 
   @Override
   public void startNewPhase(String name) {
-    console.println(name);
+    sysOut.println(name);
   }
 
   @Override
@@ -81,28 +86,33 @@ public class ConsoleReporter implements Reporter {
   }
 
   private void print(Log log) {
-    console.println(formatLog(log));
+    sysOut.println(formatLog(log));
   }
 
   private void print(String header, List<Log> logs) {
-    console.println(formatLogs(header, logs));
+    sysOut.println(formatLogs(header, logs));
   }
 
   @Override
   public void printSummary() {
-    console.println("::Summary");
+    sysOut.println("::Summary");
     int total = 0;
     for (Level level : Level.values()) {
       int count = counters.get(level).get();
       if (count != 0) {
         int value = counters.get(level).get();
-        console.println(indent(statText(level, value)));
+        sysOut.println(indent(statText(level, value)));
       }
       total += count;
     }
     if (total == 0) {
       print("No logs reported.", list());
     }
+  }
+
+  @Override
+  public void reportResult(String resultMessage) {
+    this.sysOut.println(resultMessage);
   }
 
   private String statText(Level level, int value) {

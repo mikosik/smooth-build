@@ -7,19 +7,19 @@ import jakarta.inject.Inject;
 import java.util.function.Function;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.out.log.Try;
-import org.smoothbuild.out.report.Console;
+import org.smoothbuild.out.report.Reporter;
 
-public class PrintResult implements Function<String, Try<Tuple0>> {
-  private final Console console;
+public class ReportResult implements Function<String, Try<Tuple0>> {
+  private final Reporter reporter;
 
   @Inject
-  public PrintResult(Console console) {
-    this.console = console;
+  public ReportResult(Reporter reporter) {
+    this.reporter = reporter;
   }
 
   @Override
   public Try<Tuple0> apply(String string) {
-    console.println(string);
+    reporter.reportResult(string);
     return success(tuple());
   }
 }

@@ -18,6 +18,7 @@ import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -30,17 +31,17 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.TestingLog;
 import org.smoothbuild.testing.TestContext;
 
-public class ConsoleReporterTest extends TestContext {
+public class SystemOutReporterTest extends TestContext {
   private static final String HEADER = "TASK NAME";
 
   @ParameterizedTest
   @MethodSource(value = "single_log_cases")
   public void report_single_log_logs_log_when_it_exceeds_threshold(
       Log log, Level level, boolean logged) {
-    var console = mock(Console.class);
-    var reporter = new ConsoleReporter(console, level);
+    var sysOut = mock(PrintWriter.class);
+    var reporter = new SystemOutReporter(sysOut, level);
     reporter.report(log);
-    verify(console, times(logged ? 1 : 0)).println(formatLog(log));
+    verify(sysOut, times(logged ? 1 : 0)).println(formatLog(log));
   }
 
   private static List<Arguments> single_log_cases() {
@@ -66,10 +67,10 @@ public class ConsoleReporterTest extends TestContext {
   @ParameterizedTest
   @MethodSource("filtered_logs_cases")
   public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
-    var console = mock(Console.class);
-    var reporter = new ConsoleReporter(console, level);
+    var sysOut = mock(PrintWriter.class);
+    var reporter = new SystemOutReporter(sysOut, level);
     reporter.report(true, "header", TestingLog.logsWithAllLevels());
-    verify(console, times(1)).println(formatLogs("header", loggedLogs));
+    verify(sysOut, times(1)).println(formatLogs("header", loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -78,6 +79,14 @@ public class ConsoleReporterTest extends TestContext {
         arguments(ERROR, list(FATAL_LOG, ERROR_LOG)),
         arguments(WARNING, list(FATAL_LOG, ERROR_LOG, WARNING_LOG)),
         arguments(INFO, list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG)));
+  }
+
+  @Test
+  void reportResult() {
+    var sysOut = mock(PrintWriter.class);
+    var reporter = new SystemOutReporter(sysOut, INFO);
+    reporter.reportResult("result message");
+    verify(sysOut).println("result message");
   }
 
   @Nested
@@ -93,8 +102,8 @@ public class ConsoleReporterTest extends TestContext {
     }
 
     private void doTestSummary(Level logLevel) {
-      var console = mock(Console.class);
-      var reporter = new ConsoleReporter(console, logLevel);
+      var sysOut = mock(PrintWriter.class);
+      var reporter = new SystemOutReporter(sysOut, logLevel);
 
       List<Log> logs = new ArrayList<>();
       logs.add(FATAL_LOG);
@@ -111,18 +120,18 @@ public class ConsoleReporterTest extends TestContext {
       reporter.report(true, HEADER, listOfAll(logs));
       reporter.printSummary();
 
-      var inOrder = inOrder(console);
-      inOrder.verify(console).println("::Summary");
-      inOrder.verify(console).println("  1 fatal");
-      inOrder.verify(console).println("  2 errors");
-      inOrder.verify(console).println("  3 warnings");
-      inOrder.verify(console).println("  4 infos");
+      var inOrder = inOrder(sysOut);
+      inOrder.verify(sysOut).println("::Summary");
+      inOrder.verify(sysOut).println("  1 fatal");
+      inOrder.verify(sysOut).println("  2 errors");
+      inOrder.verify(sysOut).println("  3 warnings");
+      inOrder.verify(sysOut).println("  4 infos");
     }
 
     @Test
     public void skips_levels_with_zero_logs() {
-      var console = mock(Console.class);
-      var reporter = new ConsoleReporter(console, INFO);
+      var sysOut = mock(PrintWriter.class);
+      var reporter = new SystemOutReporter(sysOut, INFO);
 
       List<Log> logs = new ArrayList<>();
       logs.add(FATAL_LOG);
@@ -133,10 +142,10 @@ public class ConsoleReporterTest extends TestContext {
       reporter.report(true, HEADER, listOfAll(logs));
       reporter.printSummary();
 
-      var inOrder = inOrder(console);
-      inOrder.verify(console).println("::Summary");
-      inOrder.verify(console).println("  1 fatal");
-      inOrder.verify(console).println("  4 infos");
+      var inOrder = inOrder(sysOut);
+      inOrder.verify(sysOut).println("::Summary");
+      inOrder.verify(sysOut).println("  1 fatal");
+      inOrder.verify(sysOut).println("  4 infos");
     }
   }
 }
