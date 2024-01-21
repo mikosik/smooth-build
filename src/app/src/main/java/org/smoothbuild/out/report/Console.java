@@ -16,10 +16,6 @@ public class Console {
     this.printWriter = printWriter;
   }
 
-  public void error(String message) {
-    printErrorToWriter(printWriter, message);
-  }
-
   public static void printErrorToWriter(PrintWriter printWriter, String message) {
     printWriter.println("smooth: error: " + message);
   }
