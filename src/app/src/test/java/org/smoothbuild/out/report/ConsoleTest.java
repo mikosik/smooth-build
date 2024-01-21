@@ -8,16 +8,6 @@ import org.junit.jupiter.api.Test;
 
 public class ConsoleTest {
   @Test
-  public void error() {
-    var printWriter = mock(PrintWriter.class);
-    var console = new Console(printWriter);
-
-    console.error("sth bad happened.");
-
-    verify(printWriter).println("smooth: error: sth bad happened.");
-  }
-
-  @Test
   void println() {
     var printWriter = mock(PrintWriter.class);
     var console = new Console(printWriter);
