@@ -30,13 +30,13 @@ public abstract class AbstractLockFileTestSuite extends SystemTestCase {
     CommandWithArgs commandWithArgs = commandNameWithArg();
 
     AtomicInteger savedExitCode = new AtomicInteger();
-    AtomicReference<String> savedSysOut = new AtomicReference<>();
-    AtomicReference<String> savedSysErr = new AtomicReference<>();
+    AtomicReference<String> savedSystemOut = new AtomicReference<>();
+    AtomicReference<String> savedSystemErr = new AtomicReference<>();
     Thread thread = new Thread(() -> {
       otherTest.runSmoothBuild("result");
       savedExitCode.set(otherTest.exitCode());
-      savedSysOut.set(otherTest.sysOut());
-      savedSysErr.set(otherTest.sysErr());
+      savedSystemOut.set(otherTest.systemOut());
+      savedSystemErr.set(otherTest.systemErr());
     });
 
     thread.start();
@@ -44,27 +44,28 @@ public abstract class AbstractLockFileTestSuite extends SystemTestCase {
     thread.join();
 
     int otherErrorCode = savedExitCode.get();
-    String otherSysOut = savedSysOut.get();
+    String otherSystemOut = savedSystemOut.get();
 
     String expectedError = "smooth: error: Another instance of smooth is running for this project.";
-    boolean sysOutsMatch = sysOut().contains(expectedError) || otherSysOut.contains(expectedError);
+    boolean systemOutsMatch =
+        systemOut().contains(expectedError) || otherSystemOut.contains(expectedError);
     boolean errorCodesMatch =
         (exitCode() == 0 && otherErrorCode == 2) || (exitCode() == 2 && otherErrorCode == 0);
 
-    if (!(errorCodesMatch && sysOutsMatch)) {
+    if (!(errorCodesMatch && systemOutsMatch)) {
       fail(unlines(
           "this process =================",
           "errorCode = " + exitCode(),
-          "sysOut:",
-          sysOut(),
-          "sysErr:",
-          sysErr(),
+          "systemOut:",
+          systemOut(),
+          "systemErr:",
+          systemErr(),
           "other process =================",
           "errorCode = " + otherErrorCode,
-          "sysOut:",
-          otherSysOut,
-          "sysErr:",
-          savedSysErr.get()));
+          "systemOut:",
+          otherSystemOut,
+          "systemErr:",
+          savedSystemErr.get()));
     }
   }
 

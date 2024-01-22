@@ -36,7 +36,7 @@ public class ElemTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Index (3) out of bounds. Array size = 3.");
+    assertSystemOutContains("Index (3) out of bounds. Array size = 3.");
   }
 
   @Test
@@ -47,6 +47,6 @@ public class ElemTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Index (-1) out of bounds. Array size = 3.");
+    assertSystemOutContains("Index (-1) out of bounds. Array size = 3.");
   }
 }

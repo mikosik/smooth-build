@@ -24,7 +24,7 @@ public class ListCommandTest {
             """);
       runSmoothList();
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
         Values that can be evaluated:
         aValue

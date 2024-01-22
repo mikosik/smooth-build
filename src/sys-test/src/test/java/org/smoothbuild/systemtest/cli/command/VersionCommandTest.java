@@ -16,7 +16,7 @@ public class VersionCommandTest {
     public void version_command_prints_tool_version() {
       runSmoothVersion();
       assertFinishedWithSuccess();
-      assertSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
+      assertSystemOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }
 
     @Test
@@ -24,11 +24,11 @@ public class VersionCommandTest {
       runSmoothVersion();
       assertFinishedWithSuccess();
       String hexNumberPattern = "[a-f0-9]+";
-      assertThat(sysOut()).containsMatch("installation +" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("  smooth.jar +" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("  standard libraries +" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("    \\{ssl}/std_lib.smooth +" + hexNumberPattern);
-      assertSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
+      assertThat(systemOut()).containsMatch("installation +" + hexNumberPattern);
+      assertThat(systemOut()).containsMatch("  smooth.jar +" + hexNumberPattern);
+      assertThat(systemOut()).containsMatch("  standard libraries +" + hexNumberPattern);
+      assertThat(systemOut()).containsMatch("    \\{ssl}/std_lib.smooth +" + hexNumberPattern);
+      assertSystemOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }
   }
 

@@ -12,7 +12,7 @@ public class HelpCommandTest extends SystemTestCase {
   public void help_command_prints_general_help() {
     runSmoothHelp();
     assertFinishedWithSuccess();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         Usage:
         smooth COMMAND
@@ -39,7 +39,7 @@ public class HelpCommandTest extends SystemTestCase {
   public void help_build() {
     runSmoothHelp(BuildCommand.NAME);
     assertFinishedWithSuccess();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         Usage:
         smooth build [-l=<level>] [-s=<filter>] <value>...
@@ -104,7 +104,7 @@ public class HelpCommandTest extends SystemTestCase {
   public void help_clean() {
     runSmoothHelp(CleanCommand.NAME);
     assertFinishedWithSuccess();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         Usage:
         smooth clean [-l=<level>]
@@ -128,7 +128,7 @@ public class HelpCommandTest extends SystemTestCase {
   public void help_list() {
     runSmoothHelp(ListCommand.NAME);
     assertFinishedWithSuccess();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         Usage:
         smooth list [-l=<level>]
@@ -152,7 +152,7 @@ public class HelpCommandTest extends SystemTestCase {
   public void help_version() {
     runSmoothHelp(VersionCommand.NAME);
     assertFinishedWithSuccess();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         Usage:
         smooth version [-l=<level>]

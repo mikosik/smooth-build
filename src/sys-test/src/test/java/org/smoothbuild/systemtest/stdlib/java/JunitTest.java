@@ -21,7 +21,8 @@ public class JunitTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
+    assertSystemOutContains(
+        "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
   }
 
   @Test
@@ -50,7 +51,7 @@ public class JunitTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("test failed");
+    assertSystemOutContains("test failed");
   }
 
   @Test
@@ -65,7 +66,7 @@ public class JunitTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertSysOutContains("No junit tests found.");
+    assertSystemOutContains("No junit tests found.");
   }
 
   @Test
