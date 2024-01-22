@@ -23,9 +23,9 @@ public class LoggingTest extends SystemTestCase {
     userModuleCreator.initialize(this);
     runSmoothBuild("--log-level=" + logLevel, "result");
     if (logShown) {
-      assertSysOutContains(LOG_MESSAGE);
+      assertSystemOutContains(LOG_MESSAGE);
     } else {
-      assertSysOutDoesNotContain(LOG_MESSAGE);
+      assertSystemOutDoesNotContain(LOG_MESSAGE);
     }
   }
 

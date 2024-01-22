@@ -38,10 +38,10 @@ public class SystemOutReporterTest extends TestContext {
   @MethodSource(value = "single_log_cases")
   public void report_single_log_logs_log_when_it_exceeds_threshold(
       Log log, Level level, boolean logged) {
-    var sysOut = mock(PrintWriter.class);
-    var reporter = new SystemOutReporter(sysOut, level);
+    var systemOut = mock(PrintWriter.class);
+    var reporter = new SystemOutReporter(systemOut, level);
     reporter.report(log);
-    verify(sysOut, times(logged ? 1 : 0)).println(formatLog(log));
+    verify(systemOut, times(logged ? 1 : 0)).println(formatLog(log));
   }
 
   private static List<Arguments> single_log_cases() {
@@ -67,10 +67,10 @@ public class SystemOutReporterTest extends TestContext {
   @ParameterizedTest
   @MethodSource("filtered_logs_cases")
   public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
-    var sysOut = mock(PrintWriter.class);
-    var reporter = new SystemOutReporter(sysOut, level);
+    var systemOut = mock(PrintWriter.class);
+    var reporter = new SystemOutReporter(systemOut, level);
     reporter.report(true, "header", TestingLog.logsWithAllLevels());
-    verify(sysOut, times(1)).println(formatLogs("header", loggedLogs));
+    verify(systemOut, times(1)).println(formatLogs("header", loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -83,10 +83,10 @@ public class SystemOutReporterTest extends TestContext {
 
   @Test
   void reportResult() {
-    var sysOut = mock(PrintWriter.class);
-    var reporter = new SystemOutReporter(sysOut, INFO);
+    var systemOut = mock(PrintWriter.class);
+    var reporter = new SystemOutReporter(systemOut, INFO);
     reporter.reportResult("result message");
-    verify(sysOut).println("result message");
+    verify(systemOut).println("result message");
   }
 
   @Nested
@@ -102,8 +102,8 @@ public class SystemOutReporterTest extends TestContext {
     }
 
     private void doTestSummary(Level logLevel) {
-      var sysOut = mock(PrintWriter.class);
-      var reporter = new SystemOutReporter(sysOut, logLevel);
+      var systemOut = mock(PrintWriter.class);
+      var reporter = new SystemOutReporter(systemOut, logLevel);
 
       List<Log> logs = new ArrayList<>();
       logs.add(FATAL_LOG);
@@ -120,18 +120,18 @@ public class SystemOutReporterTest extends TestContext {
       reporter.report(true, HEADER, listOfAll(logs));
       reporter.printSummary();
 
-      var inOrder = inOrder(sysOut);
-      inOrder.verify(sysOut).println("::Summary");
-      inOrder.verify(sysOut).println("  1 fatal");
-      inOrder.verify(sysOut).println("  2 errors");
-      inOrder.verify(sysOut).println("  3 warnings");
-      inOrder.verify(sysOut).println("  4 infos");
+      var inOrder = inOrder(systemOut);
+      inOrder.verify(systemOut).println("::Summary");
+      inOrder.verify(systemOut).println("  1 fatal");
+      inOrder.verify(systemOut).println("  2 errors");
+      inOrder.verify(systemOut).println("  3 warnings");
+      inOrder.verify(systemOut).println("  4 infos");
     }
 
     @Test
     public void skips_levels_with_zero_logs() {
-      var sysOut = mock(PrintWriter.class);
-      var reporter = new SystemOutReporter(sysOut, INFO);
+      var systemOut = mock(PrintWriter.class);
+      var reporter = new SystemOutReporter(systemOut, INFO);
 
       List<Log> logs = new ArrayList<>();
       logs.add(FATAL_LOG);
@@ -142,10 +142,10 @@ public class SystemOutReporterTest extends TestContext {
       reporter.report(true, HEADER, listOfAll(logs));
       reporter.printSummary();
 
-      var inOrder = inOrder(sysOut);
-      inOrder.verify(sysOut).println("::Summary");
-      inOrder.verify(sysOut).println("  1 fatal");
-      inOrder.verify(sysOut).println("  4 infos");
+      var inOrder = inOrder(systemOut);
+      inOrder.verify(systemOut).println("::Summary");
+      inOrder.verify(systemOut).println("  1 fatal");
+      inOrder.verify(systemOut).println("  4 infos");
     }
   }
 }

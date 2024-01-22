@@ -10,9 +10,9 @@ public class NoCommandTest extends SystemTestCase {
   @Test
   public void calling_smooth_without_command_defaults_to_help_command() {
     runSmoothHelp();
-    String helpOutput = sysOut();
+    String helpOutput = systemOut();
     runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));
     assertFinishedWithSuccess();
-    assertThat(sysOut()).isEqualTo(helpOutput);
+    assertThat(systemOut()).isEqualTo(helpOutput);
   }
 }

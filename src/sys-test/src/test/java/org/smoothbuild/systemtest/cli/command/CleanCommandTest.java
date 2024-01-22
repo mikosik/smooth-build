@@ -48,7 +48,7 @@ public class CleanCommandTest {
       createDirectories(smoothDirAbsolutePath());
       runSmoothClean();
       assertFinishedWithError();
-      assertSysOutContains("smooth: error: Current directory doesn't have "
+      assertSystemOutContains("smooth: error: Current directory doesn't have "
           + DEFAULT_MODULE_PATH.q() + ". Is it really smooth enabled project?");
     }
 
@@ -59,8 +59,8 @@ public class CleanCommandTest {
               """);
       runSmoothClean("some", "arguments");
       assertFinishedWithError();
-      assertSysErrContains("Unmatched arguments from index");
-      assertSysErrContains(
+      assertSystemErrContains("Unmatched arguments from index");
+      assertSystemErrContains(
           """
           Usage:
           smooth clean [-l=<level>]

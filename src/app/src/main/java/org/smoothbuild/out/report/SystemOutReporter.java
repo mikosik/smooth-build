@@ -22,13 +22,13 @@ import org.smoothbuild.out.log.Log;
  */
 @Singleton
 public class SystemOutReporter implements Reporter {
-  private final PrintWriter sysOut;
+  private final PrintWriter systemOut;
   private final Level logLevel;
   private final ImmutableMap<Level, AtomicInteger> counters = createCounters();
 
   @Inject
-  public SystemOutReporter(PrintWriter sysOut, Level logLevel) {
-    this.sysOut = sysOut;
+  public SystemOutReporter(PrintWriter systemOut, Level logLevel) {
+    this.systemOut = systemOut;
     this.logLevel = logLevel;
   }
 
@@ -38,7 +38,7 @@ public class SystemOutReporter implements Reporter {
 
   @Override
   public void startNewPhase(String name) {
-    sysOut.println(name);
+    systemOut.println(name);
   }
 
   @Override
@@ -86,22 +86,22 @@ public class SystemOutReporter implements Reporter {
   }
 
   private void print(Log log) {
-    sysOut.println(formatLog(log));
+    systemOut.println(formatLog(log));
   }
 
   private void print(String header, List<Log> logs) {
-    sysOut.println(formatLogs(header, logs));
+    systemOut.println(formatLogs(header, logs));
   }
 
   @Override
   public void printSummary() {
-    sysOut.println("::Summary");
+    systemOut.println("::Summary");
     int total = 0;
     for (Level level : Level.values()) {
       int count = counters.get(level).get();
       if (count != 0) {
         int value = counters.get(level).get();
-        sysOut.println(indent(statText(level, value)));
+        systemOut.println(indent(statText(level, value)));
       }
       total += count;
     }
@@ -112,7 +112,7 @@ public class SystemOutReporter implements Reporter {
 
   @Override
   public void reportResult(String resultMessage) {
-    this.sysOut.println(resultMessage);
+    this.systemOut.println(resultMessage);
   }
 
   private String statText(Level level, int value) {

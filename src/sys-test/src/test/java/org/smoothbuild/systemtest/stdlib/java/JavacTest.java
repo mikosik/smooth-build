@@ -22,7 +22,7 @@ public class JavacTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("modifier private not allowed here");
+    assertSystemOutContains("modifier private not allowed here");
   }
 
   @Test
@@ -32,7 +32,7 @@ public class JavacTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertSysOutContains("Param 'srcs' is empty list.");
+    assertSystemOutContains("Param 'srcs' is empty list.");
   }
 
   @Test
@@ -93,7 +93,7 @@ public class JavacTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("duplicate class: MyClass");
+    assertSystemOutContains("duplicate class: MyClass");
   }
 
   @Test
@@ -105,7 +105,7 @@ public class JavacTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("invalid source release: 0.9");
+    assertSystemOutContains("invalid source release: 0.9");
   }
 
   @Test
@@ -117,7 +117,7 @@ public class JavacTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("invalid target release: 0.9");
+    assertSystemOutContains("invalid target release: 0.9");
   }
 
   @Test
@@ -130,7 +130,7 @@ public class JavacTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Source option 1.4 is no longer supported.");
+    assertSystemOutContains("Source option 1.4 is no longer supported.");
   }
 
   private Object invoke(Path appClassFile, String method)

@@ -12,7 +12,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName()));
     assertFinishedWithError();
-    assertSysErrContains("Missing required parameter: '<value>'");
+    assertSystemErrContains("Missing required parameter: '<value>'");
   }
 
   @Test
@@ -22,7 +22,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
     assertFinishedWithError();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
             ::Evaluating
               [ERROR] Unknown value `unknownValue`.
@@ -46,7 +46,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal-name"));
     assertFinishedWithError();
-    assertSysOutContains("[ERROR] Unknown value `illegal-name`.\n");
+    assertSystemOutContains("[ERROR] Unknown value `illegal-name`.\n");
   }
 
   @Test
@@ -56,8 +56,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal-name", "other-name"));
     assertFinishedWithError();
-    assertSysOutContains("[ERROR] Unknown value `illegal-name`.\n");
-    assertSysOutContains("[ERROR] Unknown value `other-name`.\n");
+    assertSystemOutContains("[ERROR] Unknown value `illegal-name`.\n");
+    assertSystemOutContains("[ERROR] Unknown value `other-name`.\n");
   }
 
   @Test
@@ -68,7 +68,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         ::Evaluating
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
@@ -85,7 +85,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
-    assertSysOutContains(
+    assertSystemOutContains(
         """
         ::Evaluating
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.

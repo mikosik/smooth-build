@@ -14,7 +14,7 @@ public class FileFuncTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Reading file from '.smooth' dir is not allowed.");
+    assertSystemOutContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -25,7 +25,7 @@ public class FileFuncTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Reading file from '.smooth' dir is not allowed.");
+    assertSystemOutContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -35,7 +35,7 @@ public class FileFuncTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Param `path` has illegal value. Path cannot contain '..' part.");
+    assertSystemOutContains("Param `path` has illegal value. Path cannot contain '..' part.");
   }
 
   @Test
@@ -45,7 +45,7 @@ public class FileFuncTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("File 'nonexistent/file.txt' doesn't exist.");
+    assertSystemOutContains("File 'nonexistent/file.txt' doesn't exist.");
   }
 
   @Test
@@ -56,7 +56,7 @@ public class FileFuncTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("File 'some/dir' doesn't exist. It is a dir.");
+    assertSystemOutContains("File 'some/dir' doesn't exist. It is a dir.");
   }
 
   @Test

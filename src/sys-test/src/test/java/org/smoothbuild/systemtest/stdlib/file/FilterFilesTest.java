@@ -14,7 +14,7 @@ public class FilterFilesTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains(
+    assertSystemOutContains(
         "Parameter 'pattern' has illegal value. Pattern can't start with slash character '/'.");
   }
 

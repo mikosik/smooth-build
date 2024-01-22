@@ -63,8 +63,8 @@ public abstract class SystemTestCase {
 
   private Path projectDir;
   private Integer exitCode;
-  private String sysOut;
-  private String sysErr;
+  private String systemOut;
+  private String systemErr;
 
   @BeforeEach
   public void init(@TempDir Path projectDir) {
@@ -151,8 +151,8 @@ public abstract class SystemTestCase {
       Path workingDir = projectDirAbsolutePath();
       CommandResult r = CommandExecutor.execute(workingDir, allArgs);
       exitCode = r.exitCode();
-      sysOut = r.sysOut();
-      sysErr = r.sysErr();
+      systemOut = r.systemOut();
+      systemErr = r.systemErr();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
@@ -176,8 +176,8 @@ public abstract class SystemTestCase {
   private void assertReturnedCode(int expected) {
     if (expected != exitCode) {
       fail("Expected return code " + expected + " but was " + exitCode + ".\n"
-          + "standard out:\n" + sysOut + "\n"
-          + "standard err:\n" + sysErr + "\n");
+          + "standard out:\n" + systemOut + "\n"
+          + "standard err:\n" + systemErr + "\n");
     }
   }
 
@@ -185,12 +185,12 @@ public abstract class SystemTestCase {
     return exitCode;
   }
 
-  public void assertSysOutContains(String text) {
-    assertWithFullOutputs(sysOut, text, "SysOut");
+  public void assertSystemOutContains(String text) {
+    assertWithFullOutputs(systemOut, text, "SystemOut");
   }
 
-  public void assertSysErrContains(String text) {
-    assertWithFullOutputs(sysErr, text, "SysErr");
+  public void assertSystemErrContains(String text) {
+    assertWithFullOutputs(systemErr, text, "SystemErr");
   }
 
   private void assertWithFullOutputs(String out, String text, String outName) {
@@ -198,27 +198,27 @@ public abstract class SystemTestCase {
     if (!convertedOut.contains(text)) {
       assertWithMessage(unlines(
               outName + " doesn't contain expected substring.",
-              "================= SYS-OUT START ====================",
-              sysOut,
-              "================= SYS-OUT END   ====================",
-              "================= SYS-ERR START ====================",
-              sysErr,
-              "================= SYS-ERR END   ===================="))
+              "================= SYSTEM-OUT START ====================",
+              systemOut,
+              "================= SYSTEM-OUT END   ====================",
+              "================= SYSTEM-ERR START ====================",
+              systemErr,
+              "================= SYSTEM-ERR END   ===================="))
           .that(convertedOut)
           .isEqualTo(text);
     }
   }
 
-  public void assertSysOutDoesNotContain(String text) {
+  public void assertSystemOutDoesNotContain(String text) {
     assertWithMessage(unlines(
-            "SysOut contains forbidden substring",
-            "================= SYS-OUT START ====================",
-            sysOut,
-            "================= SYS-OUT END   ====================",
-            "================= SYS-ERR START ====================",
-            sysErr,
-            "================= SYS-ERR END   ===================="))
-        .that(convertOsLineSeparatorsToNewLine(sysOut))
+            "SystemOut contains forbidden substring",
+            "================= SYSTEM-OUT START ====================",
+            systemOut,
+            "================= SYSTEM-OUT END   ====================",
+            "================= SYSTEM-ERR START ====================",
+            systemErr,
+            "================= SYSTEM-ERR END   ===================="))
+        .that(convertOsLineSeparatorsToNewLine(systemOut))
         .doesNotContain(text);
   }
 
@@ -226,18 +226,18 @@ public abstract class SystemTestCase {
    * On window OS call to `System.out.println("abc\n");` will produce two line separators. One
    * is "\n" from string itself that won't be converted and the other ("\r\n") added by print_ln_
    * method. To make it possible to write assertions in unit test using only "\n" we need to
-   * convert sysOut to use only "\n".
+   * convert systemOut to use only "\n".
    */
   private static String convertOsLineSeparatorsToNewLine(String string) {
     return String.join("\n", Splitter.on(System.lineSeparator()).split(string));
   }
 
-  public String sysOut() {
-    return sysOut;
+  public String systemOut() {
+    return systemOut;
   }
 
-  public String sysErr() {
-    return sysErr;
+  public String systemErr() {
+    return systemErr;
   }
 
   /**

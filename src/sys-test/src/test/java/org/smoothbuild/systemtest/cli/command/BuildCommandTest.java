@@ -85,7 +85,7 @@ public class BuildCommandTest {
                 """);
         runSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
         assertFinishedWithError();
-        assertSysErrContains(
+        assertSystemErrContains(
             """
             Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.
 
@@ -120,7 +120,7 @@ public class BuildCommandTest {
         createUserModule(callDeclaration);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(expectedHeaderToBeShown);
+        assertSystemOutContains(expectedHeaderToBeShown);
       }
 
       private void testThatTaskHeaderIsNotShownWhenCallIsDisabled(
@@ -128,7 +128,7 @@ public class BuildCommandTest {
         createUserModule(callDeclaration);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(headerThatShouldNotBeShows);
+        assertSystemOutDoesNotContain(headerThatShouldNotBeShows);
       }
     }
 
@@ -151,7 +151,7 @@ public class BuildCommandTest {
         createUserModule(COMBINE);
         runSmooth(buildCommand("--show-tasks=tuple", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(COMBINE_TASK_HEADER);
+        assertSystemOutContains(COMBINE_TASK_HEADER);
       }
 
       @Test
@@ -159,7 +159,7 @@ public class BuildCommandTest {
         createUserModule(COMBINE);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(COMBINE_TASK_HEADER);
+        assertSystemOutDoesNotContain(COMBINE_TASK_HEADER);
       }
     }
 
@@ -222,7 +222,7 @@ public class BuildCommandTest {
         createUserModule(constDeclaration);
         runSmooth(buildCommand("--show-tasks=const", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(expectedTaskHeader);
+        assertSystemOutContains(expectedTaskHeader);
       }
 
       private void testThatTaskHeaderIsNotShownWhenConstAreDisabled(
@@ -230,7 +230,7 @@ public class BuildCommandTest {
         createUserModule(constDeclaration);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(headerThatShouldNotBeShown);
+        assertSystemOutDoesNotContain(headerThatShouldNotBeShown);
       }
     }
 
@@ -250,7 +250,7 @@ public class BuildCommandTest {
         createUserModule(PICK);
         runSmooth(buildCommand("--show-tasks=pick", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(PICK_TASK_HEADER);
+        assertSystemOutContains(PICK_TASK_HEADER);
       }
 
       @Test
@@ -258,7 +258,7 @@ public class BuildCommandTest {
         createUserModule(PICK);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(PICK_TASK_HEADER);
+        assertSystemOutDoesNotContain(PICK_TASK_HEADER);
       }
     }
 
@@ -281,7 +281,7 @@ public class BuildCommandTest {
         createUserModule(ORDER);
         runSmooth(buildCommand("--show-tasks=array", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(ORDER_TASK_HEADER);
+        assertSystemOutContains(ORDER_TASK_HEADER);
       }
 
       @Test
@@ -289,7 +289,7 @@ public class BuildCommandTest {
         createUserModule(ORDER);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(ORDER_TASK_HEADER);
+        assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
       }
     }
 
@@ -313,7 +313,7 @@ public class BuildCommandTest {
         createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=select", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(SELECT_TASK_HEADER);
+        assertSystemOutContains(SELECT_TASK_HEADER);
       }
 
       @Test
@@ -321,7 +321,7 @@ public class BuildCommandTest {
         createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(SELECT_TASK_HEADER);
+        assertSystemOutDoesNotContain(SELECT_TASK_HEADER);
       }
     }
   }
@@ -340,7 +340,7 @@ public class BuildCommandTest {
                 """);
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithError();
-        assertSysOutDoesNotContain("my-error-message");
+        assertSystemOutDoesNotContain("my-error-message");
       }
 
       @Test
@@ -355,7 +355,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("[WARNING] my-warning-message");
+        assertSystemOutDoesNotContain("[WARNING] my-warning-message");
       }
 
       @Test
@@ -370,7 +370,7 @@ public class BuildCommandTest {
             ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("[INFO] my-info-message");
+        assertSystemOutDoesNotContain("[INFO] my-info-message");
       }
     }
 
@@ -388,7 +388,7 @@ public class BuildCommandTest {
             ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithError();
-        assertSysOutContains("[ERROR] my-error-message");
+        assertSystemOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -403,7 +403,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("my-warning-message");
+        assertSystemOutDoesNotContain("my-warning-message");
       }
 
       @Test
@@ -418,7 +418,7 @@ public class BuildCommandTest {
             ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("my-info-message");
+        assertSystemOutDoesNotContain("my-info-message");
       }
     }
 
@@ -436,7 +436,7 @@ public class BuildCommandTest {
             ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithError();
-        assertSysOutContains("[ERROR] my-error-message");
+        assertSystemOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -451,7 +451,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains("[WARNING] my-warning-message");
+        assertSystemOutContains("[WARNING] my-warning-message");
       }
 
       @Test
@@ -466,7 +466,7 @@ public class BuildCommandTest {
             ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain("my-info-message");
+        assertSystemOutDoesNotContain("my-info-message");
       }
     }
 
@@ -484,7 +484,7 @@ public class BuildCommandTest {
             ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithError();
-        assertSysOutContains("[ERROR] my-error-message");
+        assertSystemOutContains("[ERROR] my-error-message");
       }
 
       @Test
@@ -499,7 +499,7 @@ public class BuildCommandTest {
             ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains("[WARNING] my-warning-message");
+        assertSystemOutContains("[WARNING] my-warning-message");
       }
 
       @Test
@@ -514,7 +514,7 @@ public class BuildCommandTest {
             ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains("[INFO] my-info-message");
+        assertSystemOutContains("[INFO] my-info-message");
       }
     }
   }
@@ -533,7 +533,7 @@ public class BuildCommandTest {
           ReturnAbc.class.getCanonicalName()));
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::myFunc()                      build.smooth:3                 exec
           """);
@@ -550,7 +550,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::{}.                           build.smooth:4                 exec
           """);
@@ -564,7 +564,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::myFunc                        build.smooth:1
           """);
@@ -578,7 +578,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::myValue                       build.smooth:1
           """);
@@ -591,7 +591,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::[,]                           build.smooth:1                 exec
           """);
@@ -604,7 +604,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::Blob                          build.smooth:1
           """);
@@ -617,7 +617,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::String                        build.smooth:1
           """);
@@ -630,7 +630,7 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains(
+      assertSystemOutContains(
           """
           ::Evaluating::Int                           build.smooth:1
           """);

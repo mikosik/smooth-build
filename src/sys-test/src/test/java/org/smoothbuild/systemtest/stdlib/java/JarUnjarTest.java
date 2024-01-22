@@ -29,7 +29,7 @@ public class JarUnjarTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains(
+    assertSystemOutContains(
         "Cannot read archive. Corrupted data? Internal message: Could not fill buffer");
   }
 }
