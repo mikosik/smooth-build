@@ -6,8 +6,8 @@ import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
 /**
  * Variable that references bound value using De Bruijn indexing with zero-based numbering.
- * <a href="https://en.wikipedia.org/wiki/De_Bruijn_index"></a>
- *
+ * <a href="https://en.wikipedia.org/wiki/De_Bruijn_index">De Bruijn index article</a> in wikipedia.
+ * <p>
  * This class is thread-safe.
  */
 public class VarB extends OperB {
