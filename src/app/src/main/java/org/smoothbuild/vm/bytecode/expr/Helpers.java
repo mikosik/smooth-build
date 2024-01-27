@@ -1,5 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr;
 
+import org.smoothbuild.common.function.Consumer0;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -7,61 +9,50 @@ import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 
 public class Helpers {
-  public static void wrapHashedDbExcAsBytecodeDbExc(HashedDbRunnable runnable) {
+  public static void wrapHashedDbExcAsBytecodeDbExc(Consumer0<HashedDbException> runnable) {
     try {
-      runnable.run();
+      runnable.accept();
     } catch (HashedDbException e) {
       throw new BytecodeDbException(e);
     }
   }
 
-  public static <T> T wrapHashedDbExcAsBytecodeDbExc(HashedDbCallable<T> callable) {
+  public static <T> T wrapHashedDbExcAsBytecodeDbExc(Function0<T, HashedDbException> function0) {
     try {
-      return callable.call();
+      return function0.apply();
     } catch (HashedDbException e) {
       throw new BytecodeDbException(e);
     }
   }
 
   public static <T> T wrapHashedDbExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, HashedDbCallable<T> callable) {
+      Hash hash, CategoryB cat, String path, Function0<T, HashedDbException> function0) {
     try {
-      return callable.call();
+      return function0.apply();
     } catch (HashedDbException e) {
       throw new DecodeExprNodeException(hash, cat, path, e);
     }
   }
 
   public static <T> T wrapBytecodeDbExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, BytecodeDbCallable<T> callable) {
+      Hash hash, CategoryB cat, String path, Function0<T, BytecodeDbException> callable) {
     try {
-      return callable.call();
+      return callable.apply();
     } catch (BytecodeDbException e) {
       throw new DecodeExprNodeException(hash, cat, path, e);
     }
   }
 
   public static <T> T wrapBytecodeDbExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, int pathIndex, BytecodeDbCallable<T> callable) {
+      Hash hash,
+      CategoryB cat,
+      String path,
+      int pathIndex,
+      Function0<T, BytecodeDbException> callable) {
     try {
-      return callable.call();
+      return callable.apply();
     } catch (BytecodeDbException e) {
       throw new DecodeExprNodeException(hash, cat, path + "[" + pathIndex + "]", e);
     }
-  }
-
-  @FunctionalInterface
-  public static interface BytecodeDbCallable<T> {
-    public T call() throws BytecodeDbException;
-  }
-
-  @FunctionalInterface
-  public static interface HashedDbCallable<T> {
-    public T call() throws HashedDbException;
-  }
-
-  @FunctionalInterface
-  public static interface HashedDbRunnable {
-    public void run() throws HashedDbException;
   }
 }
