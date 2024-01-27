@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -205,7 +205,7 @@ public class ExprTypeUnifier {
     var polymorphicP = instantiateP.polymorphic();
     if (unifyPolymorphic(polymorphicP)) {
       var schema = polymorphicP.schemaS();
-      instantiateP.setTypeArgs(list(schema.quantifiedVars().size(), unifier::newTempVar));
+      instantiateP.setTypeArgs(generateList(schema.quantifiedVars().size(), unifier::newTempVar));
       return some(schema.instantiate(instantiateP.typeArgs()));
     } else {
       return none();

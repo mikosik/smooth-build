@@ -44,7 +44,8 @@ public final class List<E> extends AbstractList<E> {
     return new List<>(array);
   }
 
-  public static <E, T extends Throwable> List<E> list(int size, Function0<E, T> supplier) throws T {
+  public static <E, T extends Throwable> List<E> generateList(int size, Function0<E, T> supplier)
+      throws T {
     @SuppressWarnings("unchecked")
     E[] array = (E[]) new Object[size];
     for (int i = 0; i < array.length; i++) {
