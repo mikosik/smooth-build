@@ -3,6 +3,7 @@ package org.smoothbuild.common.collect;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
+import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.nCopiesList;
@@ -46,21 +47,21 @@ public class ListTest {
   }
 
   @Nested
-  class _list_with_supplier {
+  class _generateList {
     @Test
     public void with_no_elements() {
-      assertThat(list(0, () -> "a")).isEmpty();
+      assertThat(generateList(0, () -> "a")).isEmpty();
     }
 
     @Test
     public void with_one_element() {
-      assertThat(list(1, () -> "a")).isEqualTo(list("a"));
+      assertThat(generateList(1, () -> "a")).isEqualTo(list("a"));
     }
 
     @Test
     public void with_many_elements() {
       var index = new AtomicInteger(0);
-      assertThat(list(5, index::getAndIncrement)).isEqualTo(list(0, 1, 2, 3, 4));
+      assertThat(generateList(5, index::getAndIncrement)).isEqualTo(list(0, 1, 2, 3, 4));
     }
 
     @Test
@@ -69,7 +70,7 @@ public class ListTest {
       Function0<String, Exception> supplier = () -> {
         throw exception;
       };
-      assertCall(() -> list(5, supplier)).throwsException(exception);
+      assertCall(() -> generateList(5, supplier)).throwsException(exception);
     }
   }
 
