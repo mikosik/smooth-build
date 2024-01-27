@@ -5,13 +5,14 @@ import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsDecodeEx
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.vm.bytecode.expr.Helpers.HashedDbCallable;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
@@ -58,7 +59,7 @@ public abstract class ExprB {
 
   public abstract String exprToString();
 
-  protected <T> T readData(HashedDbCallable<T> reader) {
+  protected <T> T readData(Function0<T, HashedDbException> reader) {
     return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
 
