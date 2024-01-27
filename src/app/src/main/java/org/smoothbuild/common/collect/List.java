@@ -1,5 +1,6 @@
 package org.smoothbuild.common.collect;
 
+import static java.util.Arrays.fill;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -34,6 +35,13 @@ public final class List<E> extends AbstractList<E> {
       R[] array1 = (R[]) collection.toArray();
       return new List<>(array1);
     }
+  }
+
+  public static <E> List<E> nCopiesList(int size, E element) {
+    @SuppressWarnings("unchecked")
+    E[] array = (E[]) new Object[size];
+    fill(array, element);
+    return new List<>(array);
   }
 
   public static <E, T extends Throwable> List<E> list(int size, Function0<E, T> supplier) throws T {

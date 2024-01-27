@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.List.nCopiesList;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -69,6 +70,24 @@ public class ListTest {
         throw exception;
       };
       assertCall(() -> list(5, supplier)).throwsException(exception);
+    }
+  }
+
+  @Nested
+  class _nCopiesList {
+    @Test
+    public void with_no_elements() {
+      assertThat(nCopiesList(0, "a")).isEmpty();
+    }
+
+    @Test
+    public void with_one_element() {
+      assertThat(nCopiesList(1, "a")).isEqualTo(list("a"));
+    }
+
+    @Test
+    public void with_many_elements() {
+      assertThat(nCopiesList(5, "a")).isEqualTo(list("a", "a", "a", "a", "a"));
     }
   }
 
