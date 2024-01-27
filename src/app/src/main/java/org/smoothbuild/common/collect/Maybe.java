@@ -151,13 +151,13 @@ public abstract sealed class Maybe<E> permits Some, None {
 
     @Override
     public <T extends Throwable> E getOrGet(Function0<E, T> supplier) throws T {
-      return supplier.get();
+      return supplier.apply();
     }
 
     @Override
     public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
         Function0<T1, T2> exceptionSupplier) throws T2, T1 {
-      throw exceptionSupplier.get();
+      throw exceptionSupplier.apply();
     }
 
     @Override

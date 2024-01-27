@@ -78,7 +78,7 @@ public sealed interface Either<L, R> permits Left, Right {
 
     @Override
     public <T extends Throwable> L leftOrGet(Function0<L, T> supplier) throws T {
-      return supplier.get();
+      return supplier.apply();
     }
 
     @Override
@@ -136,7 +136,7 @@ public sealed interface Either<L, R> permits Left, Right {
 
     @Override
     public <T extends Throwable> R rightOrGet(Function0<R, T> supplier) throws T {
-      return supplier.get();
+      return supplier.apply();
     }
 
     @Override

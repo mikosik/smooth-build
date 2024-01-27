@@ -40,7 +40,7 @@ public final class List<E> extends AbstractList<E> {
     @SuppressWarnings("unchecked")
     E[] array = (E[]) new Object[size];
     for (int i = 0; i < array.length; i++) {
-      array[i] = supplier.get();
+      array[i] = supplier.apply();
     }
     return new List<>(array);
   }
