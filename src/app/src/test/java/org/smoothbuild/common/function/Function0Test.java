@@ -6,10 +6,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.nCopiesList;
 import static org.smoothbuild.common.function.Function0.memoize;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,22 +56,26 @@ public class Function0Test {
       var memoizer = memoize(atomicInteger::getAndIncrement);
 
       var count = 1000;
-      var futures = invokeMemoizingFunctionFromMultipleThreads(count, memoizer);
+      var futures = invokeFunctionFromMultipleThreads(count, memoizer);
       assertThat(futures.map(Future::get)).isEqualTo(nCopiesList(count, 7));
     }
 
-    private static List<Future<Integer>> invokeMemoizingFunctionFromMultipleThreads(
-        int count, Function0<Integer, RuntimeException> memoizingFunction) {
+    private static List<Future<Integer>> invokeFunctionFromMultipleThreads(
+        int count, Function0<Integer, RuntimeException> function0) {
       var countDownLatch = new CountDownLatch(1);
       try (var executorService = newVirtualThreadPerTaskExecutor()) {
-        var futures = nCopiesList(count, (Callable<Integer>) () -> {
-              countDownLatch.await();
-              return memoizingFunction.apply();
-            })
-            .map(executorService::submit);
+        var futures = generateList(
+            count, () -> executorService.submit(() -> awaitAndApply(function0, countDownLatch)));
         countDownLatch.countDown();
         return futures;
       }
+    }
+
+    private static Integer awaitAndApply(
+        Function0<Integer, RuntimeException> function0, CountDownLatch countDownLatch)
+        throws InterruptedException {
+      countDownLatch.await();
+      return function0.apply();
     }
   }
 }
