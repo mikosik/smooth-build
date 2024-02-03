@@ -50,7 +50,7 @@ public class Computer {
   }
 
   public void compute(Task task, TupleB input, Consumer<ComputationResult> consumer)
-      throws ComputationCacheException {
+      throws ComputeException {
     if (task.purity() == FAST) {
       computeFast(task, input, consumer);
     } else {
@@ -64,7 +64,7 @@ public class Computer {
   }
 
   private void computeWithCache(Task task, TupleB input, Consumer<ComputationResult> consumer)
-      throws ComputationCacheException {
+      throws ComputeException {
     var hash = computationHash(task, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
     PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
