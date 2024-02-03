@@ -1,9 +1,11 @@
 package org.smoothbuild.vm.bytecode.expr;
 
+import java.io.IOException;
 import org.smoothbuild.common.function.Consumer0;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
@@ -40,6 +42,14 @@ public class Helpers {
       return callable.apply();
     } catch (BytecodeDbException e) {
       throw new DecodeExprNodeException(hash, cat, path, e);
+    }
+  }
+
+  public static <T> T wrapIOExcAsIOByteCodeException(Function0<T, IOException> callable) {
+    try {
+      return callable.apply();
+    } catch (IOException e) {
+      throw new IoBytecodeException(e);
     }
   }
 

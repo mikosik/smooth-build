@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-import net.lingala.zip4j.exception.ZipException;
-import org.smoothbuild.common.io.DuplicateFileNameException;
-import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -48,13 +45,12 @@ public class UnzipHelper {
     return result;
   }
 
-  public static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile)
-      throws IOException {
+  public static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile) {
     return filesFromJar(nativeApi, jarFile, NOT_MANIFEST_PREDICATE);
   }
 
   private static Map<String, TupleB> filesFromJar(
-      NativeApi nativeApi, TupleB jarFile, Predicate<String> filter) throws IOException {
+      NativeApi nativeApi, TupleB jarFile, Predicate<String> filter) {
     var files = unzipToArrayB(nativeApi, fileContent(jarFile), filter);
     if (files == null) {
       return null;
@@ -63,20 +59,9 @@ public class UnzipHelper {
   }
 
   public static ArrayB unzipToArrayB(
-      NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate) throws IOException {
-    try {
-      return unzipBlob(nativeApi.factory(), blob, includePredicate);
-    } catch (ZipException e) {
-      nativeApi
-          .log()
-          .error("Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
-      return null;
-    } catch (DuplicateFileNameException e) {
-      nativeApi.log().error("Archive contains two files with the same path = " + e.getMessage());
-      return null;
-    } catch (IllegalZipEntryFileNameException e) {
-      nativeApi.log().error(e.getMessage());
-      return null;
-    }
+      NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate) {
+    return unzipBlob(nativeApi.factory(), blob, includePredicate)
+        .ifLeft(error -> nativeApi.log().error("Error reading archive: " + error))
+        .rightOrGet(() -> null);
   }
 }

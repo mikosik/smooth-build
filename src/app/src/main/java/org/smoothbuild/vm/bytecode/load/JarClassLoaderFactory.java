@@ -1,8 +1,6 @@
 package org.smoothbuild.vm.bytecode.load;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
@@ -13,12 +11,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import net.lingala.zip4j.exception.ZipException;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.io.DuplicateFileNameException;
-import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
@@ -43,21 +39,21 @@ public class JarClassLoaderFactory {
   }
 
   public Either<String, ClassLoader> classLoaderFor(BlobB jar) throws IOException {
-    return computeIfAbsent(cache, jar, j -> newClassLoader(parentClassLoader, j));
+    return computeIfAbsent(cache, jar, this::newClassLoader);
   }
 
-  private Either<String, ClassLoader> newClassLoader(ClassLoader parentClassLoader, BlobB jar)
-      throws IOException {
-    try {
-      var files = unzipBlob(bytecodeF, jar, s -> true);
-      var filesMap = files.elems(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
-      return right(classLoader(parentClassLoader, filesMap));
-    } catch (DuplicateFileNameException | IllegalZipEntryFileNameException | ZipException e) {
-      return left("Error unpacking jar with native code: " + e.getMessage());
-    }
+  private Either<String, ClassLoader> newClassLoader(BlobB jar) {
+    return unzipBlob(bytecodeF, jar, s -> true)
+        .mapRight(this::newClassLoader)
+        .mapLeft(error -> "Error unpacking jar with native code: " + error);
   }
 
-  private ClassLoader classLoader(ClassLoader parentClassLoader, Map<String, TupleB> filesMap) {
+  private ClassLoader newClassLoader(ArrayB files) {
+    var filesMap = files.elems(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
+    return newClassLoader(filesMap);
+  }
+
+  private ClassLoader newClassLoader(Map<String, TupleB> filesMap) {
     return mapClassLoader(parentClassLoader, path -> {
       TupleB file = filesMap.get(path);
       return file == null ? null : fileContent(file).source().inputStream();
