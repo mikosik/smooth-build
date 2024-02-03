@@ -10,6 +10,7 @@ import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.nCopiesList;
 import static org.smoothbuild.common.function.Function0.memoize;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +23,7 @@ public class Function0Test {
   class _memoize {
     @Test
     void calls_function_lazily() {
-      var function0 = mock(Function0.class);
+      Function0<String, IOException> function0 = mock();
       memoize(function0);
       verifyNoInteractions(function0);
     }
@@ -35,7 +36,7 @@ public class Function0Test {
 
     @Test
     void second_call_to_apply_does_not_call_wrapped_function() throws Throwable {
-      var function0 = mock(Function0.class);
+      Function0<String, IOException> function0 = mock();
       var memoized = memoize(function0);
       memoized.apply();
       memoized.apply();

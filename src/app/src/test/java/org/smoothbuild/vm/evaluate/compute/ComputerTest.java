@@ -151,8 +151,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk()
-        throws ComputeException, IOException {
+    public void executed_computation_is_cached_on_disk() throws ComputeException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -200,8 +199,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk()
-        throws ComputeException, IOException {
+    public void executed_computation_is_cached_on_disk() throws ComputeException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
