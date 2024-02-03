@@ -25,10 +25,9 @@ public class Unzip {
       while ((header = zipInputStream.getNextEntry()) != null) {
         var fileName = header.getFileName();
         if (!fileName.endsWith("/") && includePredicate.test(fileName)) {
-          throwExcIfIllegalFileName(fileName);
+          checkFileNameIsLegal(fileName);
           if (!fileNames.add(fileName)) {
-            throw new DuplicateFileNameException(
-                "Archive contains more than one file with name '" + fileName + "'.");
+            throwDuplicateFileNameException(fileName);
           }
           entryConsumer.accept(fileName, zipInputStream);
         }
@@ -36,12 +35,17 @@ public class Unzip {
     }
   }
 
-  private static void throwExcIfIllegalFileName(String fileName)
+  private static void checkFileNameIsLegal(String fileName)
       throws IllegalZipEntryFileNameException {
     String pathError = detectPathError(fileName);
     if (pathError != null) {
       throw new IllegalZipEntryFileNameException(
           "File in archive has illegal name = '" + fileName + "'. " + pathError);
     }
+  }
+
+  private static void throwDuplicateFileNameException(String fileName) throws DuplicateFileNameException {
+    throw new DuplicateFileNameException(
+        "Archive contains more than one file with name '" + fileName + "'.");
   }
 }
