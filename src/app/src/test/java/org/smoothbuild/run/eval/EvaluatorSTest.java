@@ -51,7 +51,7 @@ public class EvaluatorSTest extends TestContext {
     @Nested
     class _constant {
       @Test
-      public void blob() throws EvaluatorSException {
+      public void blob() {
         assertEvaluation(blobS(7), blobB(7));
       }
 
@@ -61,7 +61,7 @@ public class EvaluatorSTest extends TestContext {
       }
 
       @Test
-      public void string() throws EvaluatorSException {
+      public void string() {
         assertEvaluation(stringS("abc"), stringB("abc"));
       }
     }
@@ -141,7 +141,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _combine {
         @Test
-        public void combine() throws EvaluatorSException {
+        public void combine() {
           assertEvaluation(combineS(intS(7), stringS("abc")), tupleB(intB(7), stringB("abc")));
         }
       }
@@ -149,7 +149,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _order {
         @Test
-        public void order() throws EvaluatorSException {
+        public void order() {
           assertEvaluation(orderS(intTS(), intS(7), intS(8)), arrayB(intTB(), intB(7), intB(8)));
         }
       }
@@ -167,7 +167,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _select {
         @Test
-        public void select() throws EvaluatorSException {
+        public void select() {
           var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
           var constructorS = constructorS(structTS);
           var callS = callS(instantiateS(constructorS), intS(7));
