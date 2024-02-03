@@ -40,7 +40,7 @@ public class TaskExecutor {
     });
   }
 
-  public void enqueue(Consumer0 consumer0) {
+  public <T extends Throwable> void enqueue(Consumer0<T> consumer0) {
     executor.enqueue(() -> {
       try {
         consumer0.accept();

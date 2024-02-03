@@ -5,9 +5,10 @@ import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
 import jakarta.inject.Inject;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.concurrent.PromisedValue;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -68,7 +69,13 @@ public class SchedulerB {
     }
   }
 
-  private void scheduleJobEvaluationWithConsumer(Job job, Consumer<ValueB> consumer) {
+  private <T extends Throwable> void scheduleJobEvaluation(Job job, Consumer1<ValueB, T> consumer) {
+    scheduleJobEvaluation(job);
+    job.promisedValue()
+        .addConsumer((valueB) -> taskExecutor.enqueue(() -> consumer.accept(valueB)));
+  }
+
+  private void scheduleJobEvaluation(Job job, PromisedValue<ValueB> consumer) {
     scheduleJobEvaluation(job);
     job.promisedValue().addConsumer(consumer);
   }
@@ -105,7 +112,7 @@ public class SchedulerB {
     public void scheduleCall() {
       var exprB = call.subExprs().func();
       var funcJob = newJob(exprB, callJob);
-      scheduleJobEvaluationWithConsumer(funcJob, this::onFuncEvaluated);
+      scheduleJobEvaluation(funcJob, this::onFuncEvaluated);
     }
 
     private void onFuncEvaluated(ValueB funcB) {
@@ -123,7 +130,7 @@ public class SchedulerB {
       var bodyEnvironmentJobs = argJobs().appendAll(callJob.environment());
       var bodyTrace = callTrace(lambdaB);
       var bodyJob = newJob(lambdaB.body(), bodyEnvironmentJobs, bodyTrace);
-      scheduleJobEvaluationWithConsumer(bodyJob, callJob.promisedValue());
+      scheduleJobEvaluation(bodyJob, callJob.promisedValue());
     }
 
     // handling IfFunc
@@ -131,12 +138,12 @@ public class SchedulerB {
     private void handleIfFunc() {
       var args = args();
       var job = newJob(args.get(0), callJob);
-      scheduleJobEvaluationWithConsumer(job, v -> onConditionEvaluated(v, args));
+      scheduleJobEvaluation(job, v -> onConditionEvaluated(v, args));
     }
 
     private void onConditionEvaluated(ValueB conditionB, List<ExprB> args) {
       var exprB = args.get(((BoolB) conditionB).toJ() ? 1 : 2);
-      scheduleJobEvaluationWithConsumer(newJob(exprB, callJob), callJob.promisedValue());
+      scheduleJobEvaluation(newJob(exprB, callJob), callJob.promisedValue());
     }
 
     // handling MapFunc
@@ -144,7 +151,7 @@ public class SchedulerB {
     private void handleMapFunc() {
       var arrayArg = args().get(0);
       var job = newJob(arrayArg, callJob);
-      scheduleJobEvaluationWithConsumer(job, v -> onMapArrayArgEvaluated((ArrayB) v));
+      scheduleJobEvaluation(job, v -> onMapArrayArgEvaluated((ArrayB) v));
     }
 
     private void onMapArrayArgEvaluated(ArrayB arrayB) {
@@ -152,7 +159,7 @@ public class SchedulerB {
       var callBs = arrayB.elems(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
       var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationT()).result();
       var orderB = bytecodeF.order(bytecodeF.arrayT(mappingFuncResultT), callBs);
-      scheduleJobEvaluationWithConsumer(newJob(orderB, callJob), callJob.promisedValue());
+      scheduleJobEvaluation(newJob(orderB, callJob), callJob.promisedValue());
     }
 
     private ExprB newCallB(ExprB funcExprB, ValueB valueB) {
@@ -206,7 +213,7 @@ public class SchedulerB {
     var referencedJob = job.environment().get(index);
     var jobEvaluationT = referencedJob.exprB().evaluationT();
     if (jobEvaluationT.equals(varB.evaluationT())) {
-      scheduleJobEvaluationWithConsumer(referencedJob, job.promisedValue());
+      scheduleJobEvaluation(referencedJob, job.promisedValue());
     } else {
       throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
           .formatted(index, jobEvaluationT.q(), varB.evaluationT().q()));
