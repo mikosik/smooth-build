@@ -9,19 +9,18 @@ import java.util.function.Predicate;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.io.inputstream.ZipInputStream;
 import net.lingala.zip4j.model.LocalFileHeader;
+import okio.BufferedSource;
 import org.smoothbuild.common.function.Consumer2;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 
 public class Unzip {
   public static void unzip(
-      BlobB blob,
+      BufferedSource source,
       Predicate<String> includePredicate,
       Consumer2<String, InputStream, IOException> entryConsumer)
       throws IOException, ZipException, IllegalZipEntryFileNameException,
           DuplicateFileNameException {
     HashSet<String> fileNames = new HashSet<>();
-    try (var s = blob.source();
-        var zipInputStream = new ZipInputStream(s.inputStream())) {
+    try (var zipInputStream = new ZipInputStream(source.inputStream())) {
       LocalFileHeader header;
       while ((header = zipInputStream.getNextEntry()) != null) {
         var fileName = header.getFileName();

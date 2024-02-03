@@ -21,7 +21,9 @@ public class UnzipBlob {
       throws IOException, ZipException, DuplicateFileNameException,
           IllegalZipEntryFileNameException {
     var arrayBuilder = bytecodeF.arrayBuilderWithElems(bytecodeF.fileT());
-    unzip(blob, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeF, f, is)));
+    try (var source = blob.source()) {
+      unzip(source, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeF, f, is)));
+    }
     return arrayBuilder.build();
   }
 
