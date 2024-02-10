@@ -1,5 +1,6 @@
 package org.smoothbuild.stdlib.compress;
 
+import static okio.Okio.buffer;
 import static okio.Okio.sink;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
@@ -22,7 +23,7 @@ public class ZipFunc {
     ArrayB files = (ArrayB) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
-      try (var zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
+      try (var zipOutputStream = new ZipOutputStream(buffer(blobBuilder).outputStream())) {
         for (TupleB file : files.elems(TupleB.class)) {
           String path = filePath(file).toJ();
           if (!duplicatesDetector.add(path)) {

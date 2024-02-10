@@ -641,7 +641,7 @@ public class TestContext {
 
   private BlobB blobBWith(java.util.List<Class<?>> list) throws BytecodeException {
     try (var blobBBuilder = bytecodeDb().blobBuilder()) {
-      saveBytecodeInJar(blobBBuilder.sink(), list);
+      saveBytecodeInJar(blobBBuilder, list);
       return blobBBuilder.build();
     } catch (IOException e) {
       throw new IoBytecodeException(e);

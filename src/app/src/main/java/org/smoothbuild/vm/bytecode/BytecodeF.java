@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.bytecode;
 
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.function.Function0.memoize;
@@ -12,9 +13,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.math.BigInteger;
+import okio.BufferedSink;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
-import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -76,9 +78,11 @@ public class BytecodeF {
     return bytecodeDb.arrayBuilder(type);
   }
 
-  public BlobB blob(DataWriter dataWriter) throws BytecodeException {
+  public BlobB blob(Consumer1<BufferedSink, IOException> writer) throws BytecodeException {
     try (BlobBBuilder builder = blobBuilder()) {
-      builder.write(dataWriter);
+      try (var bufferedSink = buffer(builder)) {
+        writer.accept(bufferedSink);
+      }
       return builder.build();
     } catch (IOException e) {
       throw new BytecodeDbException(e);
