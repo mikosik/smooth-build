@@ -12,19 +12,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class ArrayBTest extends TestContext {
   @Test
-  public void empty_int_array_can_be_iterated_as_int() {
+  public void empty_int_array_can_be_iterated_as_int() throws Exception {
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB(intTB())).build();
     assertThat(array.elems(IntB.class)).isEmpty();
   }
 
   @Test
-  public void string_array_cannot_be_iterated_as_tuple() {
+  public void string_array_cannot_be_iterated_as_tuple() throws Exception {
     ArrayB array =
         bytecodeDb().arrayBuilder(arrayTB(stringTB())).add(stringB("abc")).build();
     assertCall(() -> array.elems(TupleB.class))
@@ -33,32 +34,32 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void empty_array_is_empty() {
+  public void empty_array_is_empty() throws Exception {
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).build();
     assertThat(array.elems(StringB.class)).isEmpty();
   }
 
   @Test
-  public void adding_null_is_forbidden() {
+  public void adding_null_is_forbidden() throws Exception {
     ArrayBBuilder arrayBuilder = bytecodeDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(null)).throwsException(NullPointerException.class);
   }
 
   @Test
-  public void adding_elem_with_wrong_type_is_forbidden() {
+  public void adding_elem_with_wrong_type_is_forbidden() throws Exception {
     ArrayBBuilder arrayBuilder = bytecodeDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(blobB(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void array_contains_added_elem() {
+  public void array_contains_added_elem() throws Exception {
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(stringB("abc")).build();
     assertThat(array.elems(StringB.class)).containsExactly(stringB("abc"));
   }
 
   @Test
-  public void array_contains_added_elem_via_add_all_method() {
+  public void array_contains_added_elem_via_add_all_method() throws Exception {
     StringB str = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).addAll(list(str, str2)).build();
@@ -66,7 +67,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void array_contains_added_elems_in_order() {
+  public void array_contains_added_elems_in_order() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     StringB str3 = stringB("ghi");
@@ -76,7 +77,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void adding_same_elem_twice_builds_array_with_two_elems() {
+  public void adding_same_elem_twice_builds_array_with_two_elems() throws Exception {
     StringB str = stringB("abc");
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str).add(str).build();
     assertThat(array.elems(StringB.class)).containsExactly(str, str);
@@ -85,12 +86,12 @@ public class ArrayBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<ArrayB> {
     @Override
-    protected List<ArrayB> equalExprs() {
+    protected List<ArrayB> equalExprs() throws BytecodeException {
       return list(arrayB(intB(0), intB(1)), arrayB(intB(0), intB(1)));
     }
 
     @Override
-    protected List<ArrayB> nonEqualExprs() {
+    protected List<ArrayB> nonEqualExprs() throws BytecodeException {
       return list(
           arrayB(intTB()),
           arrayB(stringTB()),
@@ -101,7 +102,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void array_can_be_read_by_hash() {
+  public void array_can_be_read_by_hash() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
@@ -109,7 +110,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void array_read_by_hash_contains_same_elems() {
+  public void array_read_by_hash_contains_same_elems() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
@@ -119,7 +120,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void array_read_by_hash_has_same_hash() {
+  public void array_read_by_hash_has_same_hash() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
@@ -128,7 +129,7 @@ public class ArrayBTest extends TestContext {
 
   @ParameterizedTest
   @MethodSource("type_test_data")
-  public void type(TypeB elemT) {
+  public void type(TypeB elemT) throws Exception {
     var arrayTH = arrayTB(elemT);
     var arrayH = bytecodeDb().arrayBuilder(arrayTH).build();
     assertThat(arrayH.category()).isEqualTo(arrayTH);
@@ -139,7 +140,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();

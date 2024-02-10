@@ -8,6 +8,8 @@ import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import java.math.BigInteger;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.vm.bytecode.BytecodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -36,6 +38,7 @@ import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;
 import org.smoothbuild.vm.bytecode.type.exc.CategoryDbException;
+import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
@@ -62,72 +65,73 @@ public class BytecodeDb {
     return new ArrayBBuilder(type, this);
   }
 
-  public BlobBBuilder blobBuilder() {
+  public BlobBBuilder blobBuilder() throws BytecodeException {
     return wrapHashedDbExcAsBytecodeDbExc(() -> new BlobBBuilder(this, hashedDb.sink()));
   }
 
-  public BoolB bool(boolean value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newBool(value));
+  public BoolB bool(boolean value) throws BytecodeException {
+    return newBool(value);
   }
 
-  public LambdaB lambda(FuncTB type, ExprB body) {
+  public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
     validateBodyEvaluationT(type, body);
     var cat = categoryDb.lambda(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newLambda(cat, body));
+    return newLambda(cat, body);
   }
 
-  public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+  public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
+      throws BytecodeException {
     var cat = categoryDb.nativeFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newNativeFunc(cat, jar, classBinaryName, isPure));
+    return newNativeFunc(cat, jar, classBinaryName, isPure);
   }
 
-  public IntB int_(BigInteger value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newInt(value));
+  public IntB int_(BigInteger value) throws BytecodeException {
+    return newInt(value);
   }
 
-  public StringB string(String value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newString(value));
+  public StringB string(String value) throws BytecodeException {
+    return newString(value);
   }
 
-  public TupleB tuple(List<ValueB> items) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
+  public TupleB tuple(List<ValueB> items) throws BytecodeException {
+    return newTuple(items);
   }
 
   // methods for creating OperB subclasses
 
-  public CallB call(ExprB func, CombineB args) {
+  public CallB call(ExprB func, CombineB args) throws BytecodeException {
     var funcTB = castEvaluationTypeToFuncTB(func);
     validateArgsInCall(funcTB, args);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(funcTB, func, args));
+    return newCall(funcTB, func, args);
   }
 
-  public CombineB combine(List<ExprB> items) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(items));
+  public CombineB combine(List<ExprB> items) throws BytecodeException {
+    return newCombine(items);
   }
 
-  public IfFuncB ifFunc(TypeB t) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newIfFunc(t));
+  public IfFuncB ifFunc(TypeB t) throws BytecodeException {
+    return newIfFunc(t);
   }
 
-  public MapFuncB mapFunc(TypeB r, TypeB s) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newMapFunc(r, s));
+  public MapFuncB mapFunc(TypeB r, TypeB s) throws BytecodeException {
+    return newMapFunc(r, s);
   }
 
-  public OrderB order(ArrayTB evaluationT, List<ExprB> elems) {
+  public OrderB order(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
     validateOrderElems(evaluationT.elem(), elems);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evaluationT, elems));
+    return newOrder(evaluationT, elems);
   }
 
-  public PickB pick(ExprB pickable, ExprB index) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(pickable, index));
+  public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
+    return newPick(pickable, index);
   }
 
-  public VarB varB(TypeB evaluationT, IntB index) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newVar(evaluationT, index));
+  public VarB varB(TypeB evaluationT, IntB index) throws BytecodeException {
+    return newVar(evaluationT, index);
   }
 
-  public SelectB select(ExprB selectable, IntB index) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newSelect(selectable, index));
+  public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
+    return newSelect(selectable, index);
   }
 
   // validators
@@ -159,9 +163,8 @@ public class BytecodeDb {
   }
 
   private void validateArgsInCall(FuncTB funcTB, CombineB args) {
-    validateArgs(funcTB, args.evaluationT().elements(), () -> {
-      throw illegalArgs(funcTB, args.evaluationT());
-    });
+    validateArgs(
+        funcTB, args.evaluationT().elements(), () -> illegalArgs(funcTB, args.evaluationT()));
   }
 
   private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {
@@ -176,7 +179,7 @@ public class BytecodeDb {
 
   // generic getter
 
-  public ExprB get(Hash rootHash) {
+  public ExprB get(Hash rootHash) throws BytecodeException {
     var hashes = decodeRootSeq(rootHash);
     int rootSeqSize = hashes.size();
     if (rootSeqSize != 2 && rootSeqSize != 1) {
@@ -197,7 +200,8 @@ public class BytecodeDb {
     }
   }
 
-  private CategoryB getCatOrChainException(Hash rootHash, Hash typeHash) {
+  private CategoryB getCatOrChainException(Hash rootHash, Hash typeHash)
+      throws DecodeExprCatException {
     try {
       return categoryDb.get(typeHash);
     } catch (CategoryDbException e) {
@@ -205,42 +209,36 @@ public class BytecodeDb {
     }
   }
 
-  private List<Hash> decodeRootSeq(Hash rootHash) {
-    try {
-      return hashedDb.readSeq(rootHash);
-    } catch (NoSuchDataException e) {
-      throw new DecodeExprNoSuchExprException(rootHash, e);
-    } catch (HashedDbException e) {
-      throw cannotReadRootException(rootHash, e);
-    }
+  private List<Hash> decodeRootSeq(Hash rootHash) throws BytecodeException {
+    return readRootSeq(rootHash);
   }
 
-  // methods for creating InstBs
+  // methods for creating ValueBs
 
-  public ArrayB newArray(ArrayTB type, List<ValueB> elems) throws HashedDbException {
+  public ArrayB newArray(ArrayTB type, List<ValueB> elems) throws BytecodeException {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  public BlobB newBlob(Hash dataHash) throws HashedDbException {
+  public BlobB newBlob(Hash dataHash) throws BytecodeException {
     var root = newRoot(categoryDb.blob(), dataHash);
     return categoryDb.blob().newExpr(root, this);
   }
 
-  private BoolB newBool(boolean value) throws HashedDbException {
+  private BoolB newBool(boolean value) throws BytecodeException {
     var data = writeBoolData(value);
     var root = newRoot(categoryDb.bool(), data);
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private LambdaB newLambda(LambdaCB type, ExprB body) throws HashedDbException {
+  private LambdaB newLambda(LambdaCB type, ExprB body) throws BytecodeException {
     var dataHash = body.hash();
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
 
-  private IntB newInt(BigInteger value) throws HashedDbException {
+  private IntB newInt(BigInteger value) throws BytecodeException {
     var data = writeIntData(value);
     var root = newRoot(categoryDb.int_(), data);
     return categoryDb.int_().newExpr(root, this);
@@ -248,35 +246,35 @@ public class BytecodeDb {
 
   private NativeFuncB newNativeFunc(
       NativeFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
-      throws HashedDbException {
+      throws BytecodeException {
     var data = writeNativeFuncData(jar, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  private StringB newString(String string) throws HashedDbException {
+  private StringB newString(String string) throws BytecodeException {
     var data = writeStringData(string);
     var root = newRoot(categoryDb.string(), data);
     return categoryDb.string().newExpr(root, this);
   }
 
-  private TupleB newTuple(List<ValueB> items) throws HashedDbException {
+  private TupleB newTuple(List<ValueB> items) throws BytecodeException {
     var type = categoryDb.tuple(items.map(ValueB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  // methods for creating Expr-s
+  // methods for creating OperBs
 
-  private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws HashedDbException {
+  private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws BytecodeException {
     var callCB = categoryDb.call(funcTB.result());
     var data = writeCallData(func, args);
     var root = newRoot(callCB, data);
     return callCB.newExpr(root, this);
   }
 
-  private CombineB newCombine(List<ExprB> items) throws HashedDbException {
+  private CombineB newCombine(List<ExprB> items) throws BytecodeException {
     var evaluationT = categoryDb.tuple(items.map(ExprB::evaluationT));
     var combineCB = categoryDb.combine(evaluationT);
     var data = writeCombineData(items);
@@ -284,26 +282,26 @@ public class BytecodeDb {
     return combineCB.newExpr(root, this);
   }
 
-  private IfFuncB newIfFunc(TypeB t) throws HashedDbException {
+  private IfFuncB newIfFunc(TypeB t) throws BytecodeException {
     var ifFuncCB = categoryDb.ifFunc(t);
     var root = newRoot(ifFuncCB);
     return ifFuncCB.newExpr(root, this);
   }
 
-  private MapFuncB newMapFunc(TypeB r, TypeB s) throws HashedDbException {
+  private MapFuncB newMapFunc(TypeB r, TypeB s) throws BytecodeException {
     var mapFuncCB = categoryDb.mapFunc(r, s);
     var root = newRoot(mapFuncCB);
     return mapFuncCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evaluationT, List<ExprB> elems) throws HashedDbException {
+  private OrderB newOrder(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
     var orderCB = categoryDb.order(evaluationT);
     var data = writeOrderData(elems);
     var root = newRoot(orderCB, data);
     return orderCB.newExpr(root, this);
   }
 
-  private PickB newPick(ExprB pickable, ExprB index) throws HashedDbException {
+  private PickB newPick(ExprB pickable, ExprB index) throws BytecodeException {
     var evaluationT = pickEvaluationT(pickable);
     if (!(index.evaluationT() instanceof IntTB)) {
       throw new IllegalArgumentException(
@@ -325,13 +323,13 @@ public class BytecodeDb {
     }
   }
 
-  private VarB newVar(TypeB evaluationT, IntB index) throws HashedDbException {
-    var type = categoryDb.var(evaluationT);
+  private VarB newVar(TypeB evaluationT, IntB index) throws BytecodeException {
+    VarCB type = categoryDb.var(evaluationT);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }
 
-  private SelectB newSelect(ExprB selectable, IntB index) throws HashedDbException {
+  private SelectB newSelect(ExprB selectable, IntB index) throws BytecodeException {
     var evaluationT = selectEvaluationT(selectable, index);
     var data = writeSelectData(selectable, index);
     var category = categoryDb.select(evaluationT);
@@ -339,7 +337,7 @@ public class BytecodeDb {
     return category.newExpr(root, this);
   }
 
-  private TypeB selectEvaluationT(ExprB selectable, IntB index) {
+  private TypeB selectEvaluationT(ExprB selectable, IntB index) throws BytecodeException {
     var evaluationT = selectable.evaluationT();
     if (evaluationT instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
@@ -352,70 +350,96 @@ public class BytecodeDb {
     }
   }
 
-  private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws HashedDbException {
-    Hash rootHash = hashedDb.writeSeq(cat.hash(), dataHash);
+  private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws BytecodeException {
+    Hash rootHash = writeSeq(cat.hash(), dataHash);
     return new MerkleRoot(rootHash, cat, dataHash);
   }
 
-  private MerkleRoot newRoot(CategoryB cat) throws HashedDbException {
-    Hash rootHash = hashedDb.writeSeq(cat.hash());
+  private MerkleRoot newRoot(CategoryB cat) throws BytecodeException {
+    Hash rootHash = writeSeq(cat.hash());
     return new MerkleRoot(rootHash, cat, null);
   }
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ExprB func, CombineB args) throws HashedDbException {
-    return hashedDb.writeSeq(func.hash(), args.hash());
+  private Hash writeCallData(ExprB func, CombineB args) throws BytecodeException {
+    return writeSeq(func.hash(), args.hash());
   }
 
-  private Hash writeCombineData(List<ExprB> items) throws HashedDbException {
+  private Hash writeCombineData(List<ExprB> items) throws BytecodeException {
     return writeSeq(items);
   }
 
-  private Hash writeOrderData(List<ExprB> elems) throws HashedDbException {
+  private Hash writeOrderData(List<ExprB> elems) throws BytecodeException {
     return writeSeq(elems);
   }
 
-  private Hash writePickData(ExprB pickable, ExprB index) throws HashedDbException {
-    return hashedDb.writeSeq(pickable.hash(), index.hash());
+  private Hash writePickData(ExprB pickable, ExprB index) throws BytecodeException {
+    return writeSeq(pickable.hash(), index.hash());
   }
 
-  private Hash writeSelectData(ExprB selectable, IntB index) throws HashedDbException {
-    return hashedDb.writeSeq(selectable.hash(), index.hash());
+  private Hash writeSelectData(ExprB selectable, IntB index) throws BytecodeException {
+    return writeSeq(selectable.hash(), index.hash());
   }
 
   // methods for writing data of InstB-s
 
-  private Hash writeArrayData(List<ValueB> elems) throws HashedDbException {
+  private Hash writeArrayData(List<ValueB> elems) throws BytecodeException {
     return writeSeq(elems);
   }
 
-  private Hash writeBoolData(boolean value) throws HashedDbException {
-    return hashedDb.writeBoolean(value);
+  private Hash writeBoolData(boolean value) throws BytecodeException {
+    return writeBoolean(value);
   }
 
-  private Hash writeIntData(BigInteger value) throws HashedDbException {
-    return hashedDb.writeBigInteger(value);
+  private Hash writeIntData(BigInteger value) throws BytecodeException {
+    return writeBigInteger(value);
   }
 
   private Hash writeNativeFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
-      throws HashedDbException {
-    return hashedDb.writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
+      throws BytecodeException {
+    return writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
   }
 
-  private Hash writeStringData(String string) throws HashedDbException {
-    return hashedDb.writeString(string);
+  private Hash writeStringData(String string) throws BytecodeException {
+    return writeString(string);
   }
 
-  private Hash writeTupleData(List<ValueB> items) throws HashedDbException {
+  private Hash writeTupleData(List<ValueB> items) throws BytecodeException {
     return writeSeq(items);
   }
 
-  // helpers
+  // hashedDb calls with exception translation
 
-  private Hash writeSeq(List<? extends ExprB> exprs) throws HashedDbException {
+  private List<Hash> readRootSeq(Hash rootHash) throws BytecodeDbException {
+    try {
+      return hashedDb.readSeq(rootHash);
+    } catch (NoSuchDataException e) {
+      throw new DecodeExprNoSuchExprException(rootHash, e);
+    } catch (HashedDbException e) {
+      throw cannotReadRootException(rootHash, e);
+    }
+  }
+
+  private Hash writeBoolean(boolean value) throws BytecodeDbException {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeBoolean(value));
+  }
+
+  private Hash writeBigInteger(BigInteger value) throws BytecodeDbException {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeBigInteger(value));
+  }
+
+  private Hash writeString(String string) throws BytecodeDbException {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeString(string));
+  }
+
+  private Hash writeSeq(Hash... hashes) throws BytecodeDbException {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeSeq(hashes));
+  }
+
+  private Hash writeSeq(List<? extends ExprB> exprs) throws BytecodeDbException {
     var hashes = exprs.map(ExprB::hash);
-    return hashedDb.writeSeq(hashes);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeSeq(hashes));
   }
 
   // visible for classes from db.object package tree until creating ExprB is cached and

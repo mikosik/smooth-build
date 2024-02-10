@@ -2,6 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -31,7 +32,7 @@ public class PickB extends OperB {
   }
 
   @Override
-  public PickSubExprsB subExprs() {
+  public PickSubExprsB subExprs() throws BytecodeException {
     var pickable = readPickable();
     if (pickable.evaluationT() instanceof ArrayTB arrayT) {
       var elementT = arrayT.elem();
@@ -45,11 +46,11 @@ public class PickB extends OperB {
     }
   }
 
-  private ExprB readPickable() {
+  private ExprB readPickable() throws BytecodeException {
     return readDataSeqElem(PICKABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
-  private ExprB readIndex() {
+  private ExprB readIndex() throws BytecodeException {
     var index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
     if (!(index.evaluationT() instanceof IntTB)) {
       throw new DecodeExprWrongNodeTypeException(

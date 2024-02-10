@@ -7,19 +7,20 @@ import com.google.common.testing.EqualsTester;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 
 public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestContext {
-  protected abstract List<T> equalExprs();
+  protected abstract List<T> equalExprs() throws BytecodeException;
 
-  protected abstract List<T> nonEqualExprs();
+  protected abstract List<T> nonEqualExprs() throws BytecodeException;
 
   @Test
-  public void test_equals_and_hashcode_of_equal_exprs() {
+  public void test_equals_and_hashcode_of_equal_exprs() throws Exception {
     new EqualsTester().addEqualityGroup(equalExprs().toArray()).testEquals();
   }
 
   @Test
-  public void test_equals_and_hashcode_of_inequal_exprs() {
+  public void test_equals_and_hashcode_of_inequal_exprs() throws Exception {
     var equalsTester = new EqualsTester();
     for (T value : nonEqualExprs()) {
       equalsTester.addEqualityGroup(value);
@@ -28,13 +29,13 @@ public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestContex
   }
 
   @Test
-  public void test_hash_of_equal_exprs() {
+  public void test_hash_of_equal_exprs() throws Exception {
     var values = equalExprs();
     assertThat(values.get(0).hash()).isEqualTo(values.get(1).hash());
   }
 
   @Test
-  public void test_hash_of_inequal_exprs() {
+  public void test_hash_of_inequal_exprs() throws Exception {
     var values = nonEqualExprs();
     for (int i = 0; i < values.size(); i++) {
       for (int j = i + 1; j < values.size(); j++) {

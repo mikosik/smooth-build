@@ -6,6 +6,7 @@ import static org.smoothbuild.vm.evaluate.task.Purity.PURE;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -16,13 +17,13 @@ import org.smoothbuild.vm.evaluate.execute.TraceB;
 public final class InvokeTask extends Task {
   private final NativeFuncB nativeFuncB;
 
-  public InvokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) {
+  public InvokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) throws BytecodeException {
     super(callB, trace, nativeFuncB.isPure().toJ() ? PURE : IMPURE);
     this.nativeFuncB = nativeFuncB;
   }
 
   @Override
-  public Output run(TupleB input, Container container) {
+  public Output run(TupleB input, Container container) throws BytecodeException {
     return container
         .nativeMethodLoader()
         .load(nativeFuncB)
@@ -31,7 +32,8 @@ public final class InvokeTask extends Task {
         .rightOrGet(() -> new Output(null, container.messages()));
   }
 
-  private Output invokeMethod(Method method, TupleB args, Container container) {
+  private Output invokeMethod(Method method, TupleB args, Container container)
+      throws BytecodeException {
     ValueB result = null;
     try {
       result = (ValueB) method.invoke(null, new Object[] {container, args});
@@ -46,11 +48,11 @@ public final class InvokeTask extends Task {
   }
 
   private static void reportExceptionAsFatal(
-      Container container, String message, Throwable throwable) {
+      Container container, String message, Throwable throwable) throws BytecodeException {
     container.log().fatal(message + ":\n" + getStackTraceAsString(throwable));
   }
 
-  private Output buildOutput(Container container, ValueB result) {
+  private Output buildOutput(Container container, ValueB result) throws BytecodeException {
     var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {
@@ -72,7 +74,8 @@ public final class InvokeTask extends Task {
     return new Output(result, container.messages());
   }
 
-  private void logFaultyImplementation(Container container, String message) {
+  private void logFaultyImplementation(Container container, String message)
+      throws BytecodeException {
     container.log().fatal("Faulty native implementation: " + message);
   }
 

@@ -3,6 +3,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -32,11 +33,11 @@ public class CombineB extends OperB {
   }
 
   @Override
-  public CombineSubExprsB subExprs() {
+  public CombineSubExprsB subExprs() throws BytecodeException {
     return new CombineSubExprsB(items());
   }
 
-  public List<ExprB> items() {
+  public List<ExprB> items() throws BytecodeException {
     List<TypeB> expectedTypes = category().evaluationT().elements();
     List<ExprB> items = readDataSeqElems(ExprB.class);
     if (items.size() != expectedTypes.size()) {

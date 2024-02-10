@@ -15,6 +15,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
@@ -25,7 +26,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   private final ArrayBBuilder resClassFiles;
 
   SandboxedJavaFileManager(
-      StandardJavaFileManager fileManager, NativeApi nativeApi, Iterable<InputClassFile> objects) {
+      StandardJavaFileManager fileManager, NativeApi nativeApi, Iterable<InputClassFile> objects)
+      throws BytecodeException {
     super(fileManager);
     this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
@@ -44,18 +46,22 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     return result;
   }
 
-  public ArrayB resultClassfiles() {
+  public ArrayB resultClassfiles() throws BytecodeException {
     return resClassFiles.build();
   }
 
   @Override
   public JavaFileObject getJavaFileForOutput(
       Location location, String className, Kind kind, FileObject sibling) throws IOException {
-    if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
-      PathS classFilePath = path(className.replace('.', '/') + ".class");
-      return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
-    } else {
-      return super.getJavaFileForOutput(location, className, kind, sibling);
+    try {
+      if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
+        PathS classFilePath = path(className.replace('.', '/') + ".class");
+        return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
+      } else {
+        return super.getJavaFileForOutput(location, className, kind, sibling);
+      }
+    } catch (BytecodeException e) {
+      throw e.toIOException();
     }
   }
 

@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -26,7 +27,8 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class JunitFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args)
+      throws IOException, BytecodeException {
     TupleB tests = (TupleB) args.get(0);
     ArrayB deps = (ArrayB) args.get(1);
     StringB include = (StringB) args.get(2);
@@ -74,8 +76,12 @@ public class JunitFunc {
 
   private static ClassLoader classLoader(ImmutableMap<String, TupleB> filesMap) {
     return mapClassLoader(getPlatformClassLoader(), path -> {
-      TupleB file = filesMap.get(path);
-      return file == null ? null : fileContent(file).source().inputStream();
+      try {
+        TupleB file = filesMap.get(path);
+        return file == null ? null : fileContent(file).source().inputStream();
+      } catch (BytecodeException e) {
+        throw e.toIOException();
+      }
     });
   }
 
@@ -113,7 +119,8 @@ public class JunitFunc {
     }
   }
 
-  private static Predicate<PathS> createFilter(StringB includeParam) throws JunitException {
+  private static Predicate<PathS> createFilter(StringB includeParam)
+      throws JunitException, BytecodeException {
     try {
       return new PathMatcher(includeParam.toJ());
     } catch (IllegalPathPatternException e) {

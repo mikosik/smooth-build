@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.bytecode.load;
 
+import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
@@ -8,6 +9,7 @@ import jakarta.inject.Singleton;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -27,12 +29,12 @@ public class BytecodeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Either<String, Method> load(BlobB jar, String classBinaryName) {
+  public Either<String, Method> load(BlobB jar, String classBinaryName) throws BytecodeException {
     var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
-    return cache.computeIfAbsent(methodSpec, this::loadImpl);
+    return invokeWithTunneling((f) -> cache.computeIfAbsent(methodSpec, f), this::loadImpl);
   }
 
-  private Either<String, Method> loadImpl(MethodSpec methodSpec) {
+  private Either<String, Method> loadImpl(MethodSpec methodSpec) throws BytecodeException {
     return methodLoader.load(methodSpec).flatMapRight(this::validateSignature);
   }
 

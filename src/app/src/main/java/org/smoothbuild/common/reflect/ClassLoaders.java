@@ -12,18 +12,19 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Function;
+import org.smoothbuild.common.function.Function1;
 
 public class ClassLoaders {
-  public static ClassLoader mapClassLoader(Function<String, InputStream> filesMap) {
-    return mapClassLoader(ClassLoaders.class.getClassLoader(), filesMap);
+  public static ClassLoader mapClassLoader(
+      Function1<String, InputStream, IOException> inputStreams) {
+    return mapClassLoader(ClassLoaders.class.getClassLoader(), inputStreams);
   }
 
   public static ClassLoader mapClassLoader(
-      ClassLoader parentClassLoader, Function<String, InputStream> filesMap) {
+      ClassLoader parentClassLoader, Function1<String, InputStream, IOException> inputStreams) {
     try {
       var uri = new URI("x-buffer", "ssp", "/", "");
-      var url = URL.of(uri, urlStreamHandler(filesMap));
+      var url = URL.of(uri, urlStreamHandler(inputStreams));
       return new URLClassLoader(new URL[] {url}, parentClassLoader);
     } catch (MalformedURLException | URISyntaxException e) {
       // shouldn't happen
@@ -31,7 +32,8 @@ public class ClassLoaders {
     }
   }
 
-  private static URLStreamHandler urlStreamHandler(Function<String, InputStream> inputStreams) {
+  private static URLStreamHandler urlStreamHandler(
+      Function1<String, InputStream, IOException> inputStreams) {
     return new URLStreamHandler() {
       @Override
       protected URLConnection openConnection(URL url) throws IOException {

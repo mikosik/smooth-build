@@ -2,6 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -18,7 +19,7 @@ public final class LambdaB extends FuncB {
     checkArgument(merkleRoot.category() instanceof LambdaCB);
   }
 
-  public ExprB body() {
+  public ExprB body() throws BytecodeException {
     var body = readData();
     var resultT = type().result();
     var bodyT = body.evaluationT();

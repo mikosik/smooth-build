@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeSelectIndexOutOfBoundsExceptionTest extends TestContext {
   @Test
-  public void message() {
+  public void message() throws Exception {
     var exception =
         new DecodeSelectIndexOutOfBoundsException(Hash.of(13), selectCB(intTB()), 13, 10);
     assertThat(exception.getMessage())

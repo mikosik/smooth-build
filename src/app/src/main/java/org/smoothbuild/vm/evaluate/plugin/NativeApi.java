@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.evaluate.plugin;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 
@@ -12,5 +13,5 @@ public interface NativeApi {
 
   public MessageLogger log();
 
-  public ArrayB messages();
+  public ArrayB messages() throws BytecodeException;
 }

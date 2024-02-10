@@ -16,7 +16,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 public class PathArgValidatorTest extends TestContext {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
-  public void valid_project_paths_are_accepted(String path) {
+  public void valid_project_paths_are_accepted(String path) throws Exception {
     validatedProjectPath(container(), "name", stringB(path));
   }
 
@@ -39,13 +39,14 @@ public class PathArgValidatorTest extends TestContext {
 
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
-  public void illegal_project_paths_are_reported(String path) {
+  public void illegal_project_paths_are_reported(String path) throws Exception {
     PathS name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name).isNull();
-    container().messages().elems(TupleB.class).forEach(s -> {
-      assertThat(messageText(s).toJ()).startsWith("Param `name` has illegal value.");
-      assertThat(messageSeverity(s).toJ()).isEqualTo(ERROR.name());
-    });
+    var elements = container().messages().elems(TupleB.class);
+    elements.map(e -> messageText(e).toJ()).forEach(t -> assertThat(t)
+        .startsWith("Param `name` has illegal value."));
+    elements.map(e -> messageSeverity(e).toJ()).forEach(s -> assertThat(s)
+        .startsWith(ERROR.name()));
   }
 
   public static Stream<String> listOfInvalidProjectPaths() {

@@ -9,8 +9,6 @@ import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrong
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import okio.ByteString;
@@ -23,7 +21,10 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Consumer1;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
@@ -1132,13 +1133,14 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   private void obj_root_with_two_data_hashes(
-      CategoryB type, Hash dataHash, Function<Hash, ?> factory) throws HashedDbException {
+      CategoryB type, Hash dataHash, Function1<Hash, ?, BytecodeException> factory)
+      throws HashedDbException {
     var hash = hash(hash(type), dataHash, dataHash);
     assertCall(() -> factory.apply(hash)).throwsException(wrongSizeOfRootSeqException(hash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      CategoryB category, Consumer<Hash> factory) throws HashedDbException {
+      CategoryB category, Consumer1<Hash, BytecodeException> factory) throws HashedDbException {
     var dataHash = Hash.of(33);
     var hash = hash(hash(category), dataHash);
     assertCall(() -> factory.accept(hash))
@@ -1147,7 +1149,7 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-      CategoryB category, Consumer<Hash> factory) throws HashedDbException {
+      CategoryB category, Consumer1<Hash, BytecodeException> factory) throws HashedDbException {
     var dataHash = Hash.of(33);
     var hash = hash(hash(category), dataHash);
     assertCall(() -> factory.accept(hash))

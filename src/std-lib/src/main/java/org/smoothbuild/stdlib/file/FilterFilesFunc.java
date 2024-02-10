@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -15,7 +16,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class FilterFilesFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     ArrayB files = (ArrayB) args.get(0);
     StringB pattern = (StringB) args.get(1);
 

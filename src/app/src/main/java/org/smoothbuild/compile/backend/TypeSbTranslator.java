@@ -15,6 +15,7 @@ import org.smoothbuild.compile.frontend.lang.type.StructTS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -34,7 +35,7 @@ public class TypeSbTranslator {
     return varMap;
   }
 
-  public TypeB translate(TypeS type) {
+  public TypeB translate(TypeS type) throws BytecodeException {
     return switch (type) {
       case ArrayTS arrayTS -> translate(arrayTS);
       case BlobTS blobTS -> bytecodeF.blobT();
@@ -58,19 +59,19 @@ public class TypeSbTranslator {
     }
   }
 
-  public TupleTB translate(StructTS struct) {
+  public TupleTB translate(StructTS struct) throws BytecodeException {
     return bytecodeF.tupleT(listOfAll(struct.fields()).map(isig -> translate(isig.type())));
   }
 
-  public FuncTB translate(FuncTS func) {
+  public FuncTB translate(FuncTS func) throws BytecodeException {
     return bytecodeF.funcT(translate(func.params()), translate(func.result()));
   }
 
-  public TupleTB translate(TupleTS tuple) {
+  public TupleTB translate(TupleTS tuple) throws BytecodeException {
     return bytecodeF.tupleT(listOfAll(tuple.elements()).map(this::translate));
   }
 
-  public ArrayTB translate(ArrayTS array) {
+  public ArrayTB translate(ArrayTS array) throws BytecodeException {
     return bytecodeF.arrayT(translate(array.elem()));
   }
 }

@@ -7,6 +7,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class TupleBTest extends TestContext {
@@ -17,32 +18,33 @@ public class TupleBTest extends TestContext {
   }
 
   @Test
-  public void type_of_person_tuple_is_person_type() {
+  public void type_of_person_tuple_is_person_type() throws Exception {
     TupleB person = johnDoePerson();
     assertThat(person.category()).isEqualTo(personTB());
   }
 
   @Test
-  public void element_contains_object_passed_to_builder() {
+  public void element_contains_object_passed_to_builder() throws Exception {
     TupleB person = johnDoePerson();
     assertThat(person.category()).isEqualTo(personTB());
     assertThat(person.get(0)).isEqualTo(stringB("John"));
   }
 
   @Test
-  public void reading_elements_with_negative_index_throws_exception() {
+  public void reading_elements_with_negative_index_throws_exception() throws Exception {
     TupleB person = johnDoePerson();
     assertCall(() -> person.get(-1)).throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void reading_elements_with_index_greater_than_max_index_throws_exception() {
+  public void reading_elements_with_index_greater_than_max_index_throws_exception()
+      throws Exception {
     TupleB person = johnDoePerson();
     assertCall(() -> person.get(2)).throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void tuple_hash_is_different_of_its_element_hash() {
+  public void tuple_hash_is_different_of_its_element_hash() throws Exception {
     TupleB person = johnDoePerson();
     assertThat(person.hash()).isNotEqualTo(person.get(0).hash());
   }
@@ -50,12 +52,12 @@ public class TupleBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<TupleB> {
     @Override
-    protected java.util.List<TupleB> equalExprs() {
+    protected java.util.List<TupleB> equalExprs() throws BytecodeException {
       return list(tupleB(intB(7), stringB("abc")), tupleB(intB(7), stringB("abc")));
     }
 
     @Override
-    protected java.util.List<TupleB> nonEqualExprs() {
+    protected java.util.List<TupleB> nonEqualExprs() throws BytecodeException {
       return list(
           tupleB(),
           tupleB(intB(0)),
@@ -67,13 +69,13 @@ public class TupleBTest extends TestContext {
   }
 
   @Test
-  public void tuples_can_be_read_by_hash() {
+  public void tuples_can_be_read_by_hash() throws Exception {
     TupleB person = johnDoePerson();
     assertThat(bytecodeDbOther().get(person.hash())).isEqualTo(person);
   }
 
   @Test
-  public void tuples_read_by_hash_have_equal_elements() {
+  public void tuples_read_by_hash_have_equal_elements() throws Exception {
     TupleB person = johnDoePerson();
     TupleB personRead = (TupleB) bytecodeDbOther().get(person.hash());
     assertThat(personRead.get(0)).isEqualTo(person.get(0));
@@ -81,13 +83,13 @@ public class TupleBTest extends TestContext {
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     TupleB person = johnDoePerson();
     assertThat(person.toString()).isEqualTo("""
             {"John","Doe"}@""" + person.hash());
   }
 
-  private TupleB johnDoePerson() {
+  private TupleB johnDoePerson() throws Exception {
     return tupleB(stringB("John"), stringB("Doe"));
   }
 }

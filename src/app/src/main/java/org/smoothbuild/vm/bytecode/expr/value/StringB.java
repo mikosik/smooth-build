@@ -3,6 +3,7 @@ package org.smoothbuild.vm.bytecode.expr.value;
 import static org.smoothbuild.common.Strings.escaped;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 
@@ -14,12 +15,12 @@ public final class StringB extends ValueB {
     super(merkleRoot, bytecodeDb);
   }
 
-  public String toJ() {
+  public String toJ() throws BytecodeException {
     return readData(() -> hashedDb().readString(dataHash()));
   }
 
   @Override
-  public String exprToString() {
+  public String exprToString() throws BytecodeException {
     return limitedWithEllipsis("\"" + escaped(toJ()) + "\"", 30);
   }
 }

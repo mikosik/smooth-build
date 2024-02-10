@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeCombineWrongElementsSizeExceptionTest extends TestContext {
   @Test
-  public void message() {
+  public void message() throws Exception {
     var exception =
         new DecodeCombineWrongElementsSizeException(Hash.of(13), combineCB(intTB(), stringTB()), 3);
     assertThat(exception.getMessage())

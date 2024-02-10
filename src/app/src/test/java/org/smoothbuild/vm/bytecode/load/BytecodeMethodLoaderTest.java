@@ -21,6 +21,7 @@ import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.WithNonValueResult;
 import org.smoothbuild.testing.func.bytecode.WithThreeParams;
 import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -41,7 +42,8 @@ public class BytecodeMethodLoaderTest extends TestContext {
     }
 
     private void testCaching(
-        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected) {
+        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
+        throws BytecodeException {
       var methodLoader = mock(MethodLoader.class);
       BlobB jar = blobB();
       String classBinaryName = "binary.name";
@@ -95,13 +97,14 @@ public class BytecodeMethodLoaderTest extends TestContext {
     assertLoadingCausesError(fetchJMethod(clazz), message);
   }
 
-  private void assertLoadingCausesError(Method method, String message) {
+  private void assertLoadingCausesError(Method method, String message) throws BytecodeException {
     var methodSpec =
         new MethodSpec(blobB(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
     assertThat(load(methodSpec, method)).isEqualTo(left(message));
   }
 
-  private Either<String, Method> load(MethodSpec methodSpec, Method method) {
+  private Either<String, Method> load(MethodSpec methodSpec, Method method)
+      throws BytecodeException {
     var methodLoader = mock(MethodLoader.class);
     doReturn(right(method)).when(methodLoader).load(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);

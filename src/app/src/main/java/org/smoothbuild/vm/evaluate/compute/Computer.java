@@ -2,6 +2,7 @@ package org.smoothbuild.vm.evaluate.compute;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.run.eval.MessageStruct.containsFatal;
+import static org.smoothbuild.vm.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.MEMORY;
@@ -15,6 +16,7 @@ import jakarta.inject.Provider;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.PromisedValue;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.SandboxHash;
@@ -58,7 +60,8 @@ public class Computer {
     }
   }
 
-  private void computeFast(Task task, TupleB input, Consumer<ComputationResult> consumer) {
+  private void computeFast(Task task, TupleB input, Consumer<ComputationResult> consumer)
+      throws ComputeException {
     var output = runComputation(task, input);
     consumer.accept(new ComputationResult(output, NOOP));
   }
@@ -80,13 +83,21 @@ public class Computer {
       } else {
         var output = runComputation(task, input);
         if (isPure) {
-          if (!containsFatal(output.messages())) {
+          if (!outputContainsFatalMessage(output)) {
             diskCache.write(hash, output);
           }
           memoryCache.remove(hash);
         }
         newPromised.accept(new ComputationResult(output, EXECUTION));
       }
+    }
+  }
+
+  private static boolean outputContainsFatalMessage(Output output) throws ComputeException {
+    try {
+      return containsFatal(output.messages());
+    } catch (BytecodeException e) {
+      throw computeException(e);
     }
   }
 
@@ -101,9 +112,13 @@ public class Computer {
     return new ComputationResult(computationResult.output(), resultSource);
   }
 
-  private Output runComputation(Task task, TupleB input) {
+  private Output runComputation(Task task, TupleB input) throws ComputeException {
     var container = containerProvider.get();
-    return task.run(input, container);
+    try {
+      return task.run(input, container);
+    } catch (BytecodeException e) {
+      throw computeException(e);
+    }
   }
 
   private Hash computationHash(Task task, TupleB args) {

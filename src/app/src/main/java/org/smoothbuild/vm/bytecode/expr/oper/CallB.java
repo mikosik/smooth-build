@@ -3,9 +3,11 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
+import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -30,14 +32,14 @@ public class CallB extends OperB {
   }
 
   @Override
-  public CallSubExprsB subExprs() {
+  public CallSubExprsB subExprs() throws BytecodeException {
     var func = readFunc();
     var args = readArgs();
     validate(func, args);
     return new CallSubExprsB(func, args);
   }
 
-  private void validate(ExprB func, CombineB args) {
+  private void validate(ExprB func, CombineB args) throws BytecodeDbException {
     if (func.evaluationT() instanceof FuncTB funcTB) {
       validate(funcTB, args);
     } else {
@@ -46,7 +48,7 @@ public class CallB extends OperB {
     }
   }
 
-  protected void validate(FuncTB funcTB, CombineB args) {
+  private void validate(FuncTB funcTB, CombineB args) throws BytecodeDbException {
     var argsT = args.evaluationT();
     validateArgs(funcTB, argsT.elements(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
@@ -56,15 +58,15 @@ public class CallB extends OperB {
     }
   }
 
-  private RuntimeException illegalArgsExc(TupleTB params, TupleTB argsType) {
+  private BytecodeDbException illegalArgsExc(TupleTB params, TupleTB argsType) {
     return new DecodeExprWrongNodeTypeException(hash(), this.category(), "args", params, argsType);
   }
 
-  private ExprB readFunc() {
+  private ExprB readFunc() throws BytecodeException {
     return readDataSeqElem(CALLABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
-  private CombineB readArgs() {
+  private CombineB readArgs() throws BytecodeException {
     return readDataSeqElem(ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
   }
 }

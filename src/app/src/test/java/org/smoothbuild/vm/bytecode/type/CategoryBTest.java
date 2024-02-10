@@ -6,15 +6,16 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.testing.EqualsTester;
-import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -42,19 +43,24 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 public class CategoryBTest extends TestContext {
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<CategoryDb, CategoryB> factoryCall, String name) {
+  public void name(Function1<CategoryDb, CategoryB, BytecodeException> factoryCall, String name)
+      throws Exception {
     assertThat(execute(factoryCall).name()).isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<CategoryDb, CategoryB> factoryCall, String name) {
+  public void quoted_name(
+      Function1<CategoryDb, CategoryB, BytecodeException> factoryCall, String name)
+      throws Exception {
     assertThat(execute(factoryCall).q()).isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<CategoryDb, CategoryB> factoryCall, String name) {
+  public void to_string(
+      Function1<CategoryDb, CategoryB, BytecodeException> factoryCall, String name)
+      throws Exception {
     var catH = execute(factoryCall);
     assertThat(catH.toString()).isEqualTo(name);
   }
@@ -97,8 +103,9 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function<CategoryDb, FuncTB> factoryCall,
-        Function<CategoryDb, java.util.List<TypeB>> expected) {
+        Function1<CategoryDb, FuncTB, BytecodeException> factoryCall,
+        Function1<CategoryDb, java.util.List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).result()).isEqualTo(execute(expected));
     }
 
@@ -112,8 +119,9 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function<CategoryDb, FuncTB> factoryCall,
-        Function<CategoryDb, java.util.List<TypeB>> expected) {
+        Function1<CategoryDb, FuncTB, BytecodeException> factoryCall,
+        Function1<CategoryDb, java.util.List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).params()).isEqualTo(execute(expected));
     }
 
@@ -130,8 +138,9 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function<CategoryDb, LambdaCB> factoryCall,
-        Function<CategoryDb, java.util.List<TypeB>> expected) {
+        Function1<CategoryDb, LambdaCB, BytecodeException> factoryCall,
+        Function1<CategoryDb, java.util.List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).type().result()).isEqualTo(execute(expected));
     }
 
@@ -145,8 +154,9 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function<CategoryDb, LambdaCB> factoryCall,
-        Function<CategoryDb, java.util.List<TypeB>> expected) {
+        Function1<CategoryDb, LambdaCB, BytecodeException> factoryCall,
+        Function1<CategoryDb, java.util.List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).type().params()).isEqualTo(execute(expected));
     }
 
@@ -165,8 +175,9 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function<CategoryDb, NativeFuncCB> factoryCall,
-        Function<CategoryDb, java.util.List<TypeB>> expected) {
+        Function1<CategoryDb, NativeFuncCB, BytecodeException> factoryCall,
+        Function1<CategoryDb, java.util.List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).type().result()).isEqualTo(execute(expected));
     }
 
@@ -180,8 +191,9 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function<CategoryDb, NativeFuncCB> factoryCall,
-        Function<CategoryDb, java.util.List<TypeB>> expected) {
+        Function1<CategoryDb, NativeFuncCB, BytecodeException> factoryCall,
+        Function1<CategoryDb, java.util.List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).type().params()).isEqualTo(execute(expected));
     }
 
@@ -199,7 +211,8 @@ public class CategoryBTest extends TestContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<CategoryDb, TypeB> factoryCall) {
+    public void elemType(Function1<CategoryDb, TypeB, BytecodeException> factoryCall)
+        throws Exception {
       TypeB elem = execute(factoryCall);
       ArrayTB array = categoryDb().array(elem);
       assertThat(array.elem()).isEqualTo(elem);
@@ -224,14 +237,16 @@ public class CategoryBTest extends TestContext {
   @Nested
   class _tuple {
     @Test
-    public void _without_items_can_be_created() {
+    public void _without_items_can_be_created() throws Exception {
       tupleTB();
     }
 
     @ParameterizedTest
     @MethodSource("tuple_items_cases")
     public void tuple_items(
-        Function<CategoryDb, TupleTB> factoryCall, Function<CategoryDb, List<TypeB>> expected) {
+        Function1<CategoryDb, TupleTB, BytecodeException> factoryCall,
+        Function1<CategoryDb, List<TypeB>, BytecodeException> expected)
+        throws Exception {
       assertThat(execute(factoryCall).elements()).isEqualTo(execute(expected));
     }
 
@@ -245,11 +260,11 @@ public class CategoryBTest extends TestContext {
 
   @ParameterizedTest
   @MethodSource("typeJ_test_data")
-  public void typeJ(CategoryB type, Class<?> expected) {
+  public void typeJ(CategoryB type, Class<?> expected) throws Exception {
     assertThat(type.typeJ()).isEqualTo(expected);
   }
 
-  public static java.util.List<Arguments> typeJ_test_data() {
+  public static java.util.List<Arguments> typeJ_test_data() throws BytecodeException {
     TestContext CONTEXT = new TestContext();
     return list(
         arguments(CONTEXT.blobTB(), BlobB.class),
@@ -280,17 +295,17 @@ public class CategoryBTest extends TestContext {
   class _oper {
     @ParameterizedTest
     @MethodSource("types")
-    public void call(TypeB type) {
+    public void call(TypeB type) throws Exception {
       assertThat(categoryDb().call(type).evaluationT()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("combine_cases")
-    public void combine(CombineCB type, TupleTB expected) {
+    public void combine(CombineCB type, TupleTB expected) throws Exception {
       assertThat(type.evaluationT()).isEqualTo(expected);
     }
 
-    public static java.util.List<Arguments> combine_cases() {
+    public static java.util.List<Arguments> combine_cases() throws BytecodeException {
       TestContext CONTEXT = new TestContext();
       CategoryDb db = CONTEXT.categoryDb();
       return list(
@@ -300,26 +315,26 @@ public class CategoryBTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void order(TypeB type) {
+    public void order(TypeB type) throws Exception {
       var array = arrayTB(type);
       assertThat(orderCB(type).evaluationT()).isEqualTo(array);
     }
 
     @ParameterizedTest
     @MethodSource("types")
-    public void pick(TypeB type) {
+    public void pick(TypeB type) throws Exception {
       assertThat(pickCB(type).evaluationT()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
-    public void reference(TypeB type) {
+    public void reference(TypeB type) throws Exception {
       assertThat(varCB(type).evaluationT()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
-    public void select(TypeB type) {
+    public void select(TypeB type) throws Exception {
       assertThat(selectCB(type).evaluationT()).isEqualTo(type);
     }
 
@@ -329,7 +344,7 @@ public class CategoryBTest extends TestContext {
   }
 
   @Test
-  public void equals_and_hashcode() {
+  public void equals_and_hashcode() throws Exception {
     var tester = new EqualsTester();
     tester.addEqualityGroup(blobTB(), blobTB());
     tester.addEqualityGroup(boolTB(), boolTB());
@@ -366,7 +381,7 @@ public class CategoryBTest extends TestContext {
     tester.testEquals();
   }
 
-  private <R> R execute(Function<CategoryDb, R> f) {
+  private <R> R execute(Function1<CategoryDb, R, BytecodeException> f) throws BytecodeException {
     return f.apply(categoryDb());
   }
 
@@ -375,7 +390,8 @@ public class CategoryBTest extends TestContext {
    * exact type of lambda expression passed to factoryCall.
    */
   private static <R> Arguments args(
-      Function<CategoryDb, R> factoryCall1, Function<CategoryDb, R> factoryCall2) {
+      Function1<CategoryDb, R, BytecodeException> factoryCall1,
+      Function1<CategoryDb, R, BytecodeException> factoryCall2) {
     return arguments(factoryCall1, factoryCall2);
   }
 
@@ -383,7 +399,8 @@ public class CategoryBTest extends TestContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<CategoryDb, R> factoryCall, Object arg) {
+  private static <R> Arguments args(
+      Function1<CategoryDb, R, BytecodeException> factoryCall, Object arg) {
     return arguments(factoryCall, arg);
   }
 
@@ -391,7 +408,7 @@ public class CategoryBTest extends TestContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<CategoryDb, R> factoryCall) {
+  private static <R> Arguments args(Function1<CategoryDb, R, BytecodeException> factoryCall) {
     return arguments(factoryCall);
   }
 }

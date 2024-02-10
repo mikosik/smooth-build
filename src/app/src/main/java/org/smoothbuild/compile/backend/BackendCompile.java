@@ -13,6 +13,7 @@ import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.log.Try;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
@@ -43,7 +44,7 @@ public class BackendCompile
       var exprBs = exprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
       return success(tuple(exprBs, bsMapping));
-    } catch (SbTranslatorException e) {
+    } catch (SbTranslatorException | BytecodeException e) {
       return failure(fatal(e.getMessage()));
     }
   }

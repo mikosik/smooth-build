@@ -10,48 +10,49 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class TypeSbTranslatorTest extends TestContext {
   @Nested
   class _mono {
     @Test
-    public void blob_type() {
+    public void blob_type() throws Exception {
       assertTranslation(blobTS(), blobTB());
     }
 
     @Test
-    public void bool_type() {
+    public void bool_type() throws Exception {
       assertTranslation(boolTS(), boolTB());
     }
 
     @Test
-    public void int_type() {
+    public void int_type() throws Exception {
       assertTranslation(intTS(), intTB());
     }
 
     @Test
-    public void string_type() {
+    public void string_type() throws Exception {
       assertTranslation(stringTS(), stringTB());
     }
 
     @Test
-    public void int_array_type() {
+    public void int_array_type() throws Exception {
       assertTranslation(arrayTS(intTS()), arrayTB(intTB()));
     }
 
     @Test
-    public void tuple_type() {
+    public void tuple_type() throws Exception {
       assertTranslation(tupleTS(intTS(), blobTS()), tupleTB(intTB(), blobTB()));
     }
 
     @Test
-    public void struct_type() {
+    public void struct_type() throws Exception {
       assertTranslation(structTS(intTS(), blobTS()), tupleTB(intTB(), blobTB()));
     }
 
     @Test
-    public void func_type() {
+    public void func_type() throws Exception {
       assertTranslation(
           funcTS(blobTS(), stringTS(), intTS()), funcTB(blobTB(), stringTB(), intTB()));
     }
@@ -60,12 +61,12 @@ public class TypeSbTranslatorTest extends TestContext {
   @Nested
   class _poly {
     @Test
-    public void array_type() {
+    public void array_type() throws Exception {
       assertTranslation(map(varA(), intTB()), arrayTS(varA()), arrayTB(intTB()));
     }
 
     @Test
-    public void tuple_type() {
+    public void tuple_type() throws Exception {
       assertTranslation(
           map(varA(), intTB(), varB(), blobTB()),
           tupleTS(varA(), varB()),
@@ -73,7 +74,7 @@ public class TypeSbTranslatorTest extends TestContext {
     }
 
     @Test
-    public void struct_type() {
+    public void struct_type() throws Exception {
       assertTranslation(
           map(varA(), intTB(), varB(), blobTB()),
           structTS(varA(), varB()),
@@ -81,7 +82,7 @@ public class TypeSbTranslatorTest extends TestContext {
     }
 
     @Test
-    public void func_type() {
+    public void func_type() throws Exception {
       assertTranslation(
           map(varA(), intTB(), varB(), blobTB(), varC(), stringTB()),
           funcTS(varB(), varC(), varA()),
@@ -95,11 +96,12 @@ public class TypeSbTranslatorTest extends TestContext {
     }
   }
 
-  private void assertTranslation(TypeS typeS, TypeB expected) {
+  private void assertTranslation(TypeS typeS, TypeB expected) throws BytecodeException {
     assertTranslation(map(), typeS, expected);
   }
 
-  private void assertTranslation(Map<VarS, TypeB> varMap, TypeS typeS, TypeB expected) {
+  private void assertTranslation(Map<VarS, TypeB> varMap, TypeS typeS, TypeB expected)
+      throws BytecodeException {
     var typeSbTranslator = new TypeSbTranslator(bytecodeF(), varMap);
     assertThat(typeSbTranslator.translate(typeS)).isEqualTo(expected);
   }

@@ -13,6 +13,7 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Try.failure;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
+import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import jakarta.inject.Inject;
@@ -34,6 +35,7 @@ import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -73,8 +75,8 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
     try {
       var path = write(valueS, valueB);
       return some(path);
-    } catch (IOException e) {
-      logger.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
+    } catch (IOException | BytecodeException e) {
+      logger.fatal("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
       return none();
     } catch (DuplicatedPathsException e) {
@@ -84,7 +86,7 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
   }
 
   private PathS write(ReferenceS referenceS, ValueB valueB)
-      throws IOException, DuplicatedPathsException {
+      throws IOException, DuplicatedPathsException, BytecodeException {
     PathS artifactPath = artifactPath(referenceS.name());
     if (referenceS.schema().type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
@@ -96,13 +98,13 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
   }
 
   private PathS saveFile(PathS artifactPath, TupleB file)
-      throws IOException, DuplicatedPathsException {
+      throws IOException, DuplicatedPathsException, BytecodeException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileValuePath(file));
   }
 
   private PathS saveArray(ArrayTS arrayTS, PathS artifactPath, ArrayB arrayB)
-      throws IOException, DuplicatedPathsException {
+      throws IOException, DuplicatedPathsException, BytecodeException {
     fileSystem.createDir(artifactPath);
     TypeS elemTS = arrayTS.elem();
     if (elemTS instanceof ArrayTS elemArrayTS) {
@@ -119,7 +121,8 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
     return artifactPath;
   }
 
-  private void saveNonFileArray(PathS artifactPath, ArrayB arrayB) throws IOException {
+  private void saveNonFileArray(PathS artifactPath, ArrayB arrayB)
+      throws IOException, BytecodeException {
     int i = 0;
     for (var valueB : arrayB.elems(ValueB.class)) {
       PathS sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
@@ -130,7 +133,7 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
   }
 
   private void saveFileArray(PathS artifactPath, Iterable<TupleB> files)
-      throws IOException, DuplicatedPathsException {
+      throws IOException, DuplicatedPathsException, BytecodeException {
     DuplicatesDetector<PathS> duplicatesDetector = new DuplicatesDetector<>();
     for (TupleB file : files) {
       PathS filePath = fileValuePath(file);
@@ -162,8 +165,8 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
     return artifactPath;
   }
 
-  private static PathS fileValuePath(TupleB file) {
-    return path(FileStruct.filePath(file).toJ());
+  private static PathS fileValuePath(TupleB file) throws BytecodeException {
+    return path(filePath(file).toJ());
   }
 
   private static PathS targetPath(ValueB valueB) {

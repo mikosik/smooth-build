@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeSelectWrongEvaluationTypeExceptionTest extends TestContext {
   @Test
-  public void message() {
+  public void message() throws Exception {
     var exception =
         new DecodeSelectWrongEvaluationTypeException(Hash.of(13), selectCB(intTB()), stringTB());
     assertThat(exception.getMessage())

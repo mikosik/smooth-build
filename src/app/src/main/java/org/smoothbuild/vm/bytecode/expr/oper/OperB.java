@@ -2,6 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -28,10 +29,10 @@ public abstract class OperB extends ExprB {
     return category().evaluationT();
   }
 
-  public abstract SubExprsB subExprs();
+  public abstract SubExprsB subExprs() throws BytecodeException;
 
   @Override
-  public String exprToString() {
+  public String exprToString() throws BytecodeException {
     return category().name() + "(???)";
   }
 }

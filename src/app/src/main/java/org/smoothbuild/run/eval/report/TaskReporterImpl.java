@@ -4,17 +4,19 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
+import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
 import jakarta.inject.Inject;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -46,20 +48,19 @@ public class TaskReporterImpl implements TaskReporter {
   }
 
   @Override
-  public void report(Task task, ComputationResult result) {
+  public void report(Task task, ComputationResult result) throws BytecodeException {
     var source = result.source();
     var logs = logsFrom(result);
     report(task, header(task, source), logs);
   }
 
-  private static ImmutableLogs logsFrom(ComputationResult result) {
-    var logBuffer = new LogBuffer();
-    result
+  private static ImmutableLogs logsFrom(ComputationResult result) throws BytecodeException {
+    List<Log> logs = result
         .output()
         .messages()
         .elems(TupleB.class)
-        .forEach(message -> logBuffer.log(new Log(level(message), text(message))));
-    return logBuffer.toImmutableLogs();
+        .map(message -> new Log(level(message), text(message)));
+    return logs(logs);
   }
 
   private String header(Task task, ResultSource resultSource) {

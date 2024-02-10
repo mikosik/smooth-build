@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import okio.BufferedSource;
+import org.smoothbuild.vm.bytecode.BytecodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -17,7 +19,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class ZipFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     ArrayB files = (ArrayB) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
@@ -31,11 +33,14 @@ public class ZipFunc {
         }
         addZipEntry(zipOutputStream, file);
       }
+    } catch (IOException e) {
+      throw new IoBytecodeException(e);
     }
     return blobBuilder.build();
   }
 
-  private static void addZipEntry(ZipOutputStream zipOutputStream, TupleB file) throws IOException {
+  private static void addZipEntry(ZipOutputStream zipOutputStream, TupleB file)
+      throws IOException, BytecodeException {
     var zipEntry = new ZipEntry(filePath(file).toJ());
     zipEntry.setLastModifiedTime(FileTime.fromMillis(0));
     zipOutputStream.putNextEntry(zipEntry);

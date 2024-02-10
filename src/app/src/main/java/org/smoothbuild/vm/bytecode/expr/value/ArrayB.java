@@ -1,9 +1,10 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
-import static com.google.common.base.Suppliers.memoize;
+import static org.smoothbuild.common.function.Function0.memoize;
 
-import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
@@ -13,11 +14,11 @@ import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
  * This class is thread-safe.
  */
 public final class ArrayB extends ValueB {
-  private final Supplier<List<ValueB>> elemsSupplier;
+  private final Function0<List<ValueB>, BytecodeException> elementsSupplier;
 
   public ArrayB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    this.elemsSupplier = memoize(this::instantiateElems);
+    this.elementsSupplier = memoize(this::instantiateElements);
   }
 
   @Override
@@ -30,14 +31,14 @@ public final class ArrayB extends ValueB {
     return (ArrayTB) super.category();
   }
 
-  public long size() {
+  public long size() throws BytecodeException {
     return readDataSeqSize();
   }
 
-  public <T extends ValueB> List<T> elems(Class<T> elemTJ) {
+  public <T extends ValueB> List<T> elems(Class<T> elemTJ) throws BytecodeException {
     assertIsIterableAs(elemTJ);
     @SuppressWarnings("unchecked")
-    List<T> result = (List<T>) elemsSupplier.get();
+    List<T> result = (List<T>) elementsSupplier.apply();
     return result;
   }
 
@@ -49,25 +50,25 @@ public final class ArrayB extends ValueB {
     }
   }
 
-  private List<ValueB> instantiateElems() {
-    var elems = readElems();
+  private List<ValueB> instantiateElements() throws BytecodeException {
+    var elements = readElements();
     var expectedElemT = type().elem();
-    for (int i = 0; i < elems.size(); i++) {
-      var elemT = elems.get(i).type();
+    for (int i = 0; i < elements.size(); i++) {
+      var elemT = elements.get(i).type();
       if (!expectedElemT.equals(elemT)) {
         throw new DecodeExprWrongNodeTypeException(
             hash(), category(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
-    return elems;
+    return elements;
   }
 
-  private List<ValueB> readElems() {
+  private List<ValueB> readElements() throws BytecodeException {
     return readDataSeqElems(ValueB.class);
   }
 
   @Override
-  public String exprToString() {
-    return "[" + exprsToString(readElems()) + ']';
+  public String exprToString() throws BytecodeException {
+    return "[" + exprsToString(readElements()) + ']';
   }
 }

@@ -7,6 +7,7 @@ import javax.tools.SimpleJavaFileObject;
 import okio.ForwardingSink;
 import okio.Okio;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -19,7 +20,8 @@ public class OutputClassFile extends SimpleJavaFileObject {
   private final BlobBBuilder contentBuilder;
   private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBBuilder fileArrayBuilder, PathS path, NativeApi nativeApi) {
+  public OutputClassFile(ArrayBBuilder fileArrayBuilder, PathS path, NativeApi nativeApi)
+      throws BytecodeException {
     super(URI.create("class:///" + path.toString()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
@@ -33,9 +35,13 @@ public class OutputClassFile extends SimpleJavaFileObject {
           @Override
           public void close() throws IOException {
             super.close();
-            StringB pathString = nativeApi.factory().string(path.toString());
-            TupleB file = nativeApi.factory().file(contentBuilder.build(), pathString);
-            fileArrayBuilder.add(file);
+            try {
+              StringB pathString = nativeApi.factory().string(path.toString());
+              TupleB file = nativeApi.factory().file(contentBuilder.build(), pathString);
+              fileArrayBuilder.add(file);
+            } catch (BytecodeException e) {
+              throw e.toIOException();
+            }
           }
         })
         .outputStream();

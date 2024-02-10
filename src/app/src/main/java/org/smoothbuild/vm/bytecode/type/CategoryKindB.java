@@ -45,7 +45,7 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public abstract sealed class CategoryKindB
     permits AbstFuncKindB, ArrayKindB, BaseKindB, FuncKindB, OperKindB, TupleKindB {
-  public static sealed class BaseKindB extends CategoryKindB
+  public abstract static sealed class BaseKindB extends CategoryKindB
       permits BlobKindB, BoolKindB, IntKindB, StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
       super(name, marker, typeJ);
@@ -239,5 +239,13 @@ public abstract sealed class CategoryKindB
       case 16 -> CategoryKinds.FUNC;
       default -> null;
     };
+  }
+
+  @Override
+  public String toString() {
+    return "CategoryKindB{" + "name='"
+        + name + '\'' + ", marker="
+        + marker + ", typeJ="
+        + typeJ.getSimpleName() + '}';
   }
 }

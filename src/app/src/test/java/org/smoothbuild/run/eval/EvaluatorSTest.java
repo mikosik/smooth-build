@@ -29,6 +29,7 @@ import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -51,17 +52,17 @@ public class EvaluatorSTest extends TestContext {
     @Nested
     class _constant {
       @Test
-      public void blob() {
+      public void blob() throws BytecodeException {
         assertEvaluation(blobS(7), blobB(7));
       }
 
       @Test
-      public void int_() {
+      public void int_() throws BytecodeException {
         assertEvaluation(intS(8), intB(8));
       }
 
       @Test
-      public void string() {
+      public void string() throws BytecodeException {
         assertEvaluation(stringS("abc"), stringB("abc"));
       }
     }
@@ -71,14 +72,14 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void call_lambda() {
+        public void call_lambda() throws BytecodeException {
           var LambdaS = lambdaS(nlist(), intS(7));
           var callS = callS(instantiateS(LambdaS));
           assertEvaluation(callS, intB(7));
         }
 
         @Test
-        public void call_lambda_returning_enclosing_func_param() {
+        public void call_lambda_returning_enclosing_func_param() throws BytecodeException {
           var lambdaS = instantiateS(lambdaS(nlist(), paramRefS(intTS(), "p")));
           var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(lambdaS));
           var callS = callS(instantiateS(funcS), intS(7));
@@ -86,14 +87,14 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void call_expression_function() {
+        public void call_expression_function() throws BytecodeException {
           var funcS = funcS("n", nlist(), intS(7));
           var callS = callS(instantiateS(funcS));
           assertEvaluation(bindings(funcS), callS, intB(7));
         }
 
         @Test
-        public void call_poly_expression_function() {
+        public void call_poly_expression_function() throws BytecodeException {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
@@ -102,7 +103,7 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void call_constructor() {
+        public void call_constructor() throws BytecodeException {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
           var callS = callS(instantiateS(constructorS), intS(7));
           assertEvaluation(bindings(constructorS), callS, tupleB(intB(7)));
@@ -141,7 +142,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _combine {
         @Test
-        public void combine() {
+        public void combine() throws BytecodeException {
           assertEvaluation(combineS(intS(7), stringS("abc")), tupleB(intB(7), stringB("abc")));
         }
       }
@@ -149,7 +150,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _order {
         @Test
-        public void order() {
+        public void order() throws BytecodeException {
           assertEvaluation(orderS(intTS(), intS(7), intS(8)), arrayB(intTB(), intB(7), intB(8)));
         }
       }
@@ -157,7 +158,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _param_ref {
         @Test
-        public void param_ref() {
+        public void param_ref() throws BytecodeException {
           var funcS = funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
           var callS = callS(instantiateS(funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, intB(7));
@@ -167,7 +168,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _select {
         @Test
-        public void select() {
+        public void select() throws BytecodeException {
           var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
           var constructorS = constructorS(structTS);
           var callS = callS(instantiateS(constructorS), intS(7));
@@ -181,12 +182,12 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _lambda {
         @Test
-        public void mono_lambda() {
+        public void mono_lambda() throws BytecodeException {
           assertEvaluation(instantiateS(lambdaS(intS(7))), lambdaB(intB(7)));
         }
 
         @Test
-        public void poly_lambda() {
+        public void poly_lambda() throws BytecodeException {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
@@ -197,12 +198,12 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _named_func {
         @Test
-        public void mono_expression_func() {
+        public void mono_expression_func() throws BytecodeException {
           assertEvaluation(intIdFuncS(), idFuncB());
         }
 
         @Test
-        public void poly_expression_function() {
+        public void poly_expression_function() throws BytecodeException {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
           var instantiateS = instantiateS(list(intTS()), funcS);
@@ -225,7 +226,7 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void constructor() {
+        public void constructor() throws BytecodeException {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
           assertEvaluation(constructorS, lambdaB(list(intTB()), combineB(varB(intTB(), 0))));
         }
@@ -234,13 +235,13 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _named_value {
         @Test
-        public void mono_expression_value() {
+        public void mono_expression_value() throws BytecodeException {
           var valueS = valueS(1, intTS(), "name", intS(7));
           assertEvaluation(bindings(valueS), instantiateS(valueS), intB(7));
         }
 
         @Test
-        public void poly_value() {
+        public void poly_value() throws BytecodeException {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
           var instantiatedValue = instantiateS(list(intTS()), polyValue);
@@ -251,7 +252,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _constructor {
         @Test
-        public void constructor() {
+        public void constructor() throws BytecodeException {
           assertEvaluation(
               constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field")))),
               lambdaB(funcTB(intTB(), tupleTB(intTB())), combineB(varB(intTB(), 0))));
@@ -300,15 +301,15 @@ public class EvaluatorSTest extends TestContext {
     return new StepExecutor(injector).execute(step, argument, reporter);
   }
 
-  public static IntB returnInt(NativeApi nativeApi, TupleB args) {
+  public static IntB returnInt(NativeApi nativeApi, TupleB args) throws BytecodeException {
     return nativeApi.factory().int_(BigInteger.valueOf(173));
   }
 
-  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
+  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) throws BytecodeException {
     return (IntB) args.get(0);
   }
 
-  public static ArrayB returnArrayParam(NativeApi nativeApi, TupleB args) {
+  public static ArrayB returnArrayParam(NativeApi nativeApi, TupleB args) throws BytecodeException {
     return (ArrayB) args.get(0);
   }
 }

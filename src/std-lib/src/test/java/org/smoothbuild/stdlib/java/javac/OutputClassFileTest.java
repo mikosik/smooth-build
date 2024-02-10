@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
 
-import java.io.IOException;
 import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ public class OutputClassFileTest extends TestContext {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test
-  public void open_output_stream() throws IOException {
+  public void open_output_stream() throws Exception {
     var nativeApi = nativeApi();
     var factory = nativeApi.factory();
     ArrayBBuilder fileArrayBuilder = bytecodeDb().arrayBuilder(factory.arrayT(factory.fileT()));
@@ -30,7 +29,7 @@ public class OutputClassFileTest extends TestContext {
   }
 
   @Test
-  public void get_name_returns_file_path() {
+  public void get_name_returns_file_path() throws Exception {
     var arrayTH = arrayTB(fileTB());
     OutputClassFile outputClassFile =
         new OutputClassFile(bytecodeDb().arrayBuilder(arrayTH), path, nativeApi());

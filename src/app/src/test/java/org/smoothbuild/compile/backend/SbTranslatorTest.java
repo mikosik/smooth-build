@@ -13,7 +13,6 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -25,6 +24,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -39,13 +39,13 @@ public class SbTranslatorTest extends TestContext {
       @Nested
       class _named_value {
         @Test
-        public void mono_expression_value() {
+        public void mono_expression_value() throws Exception {
           var valueS = valueS("myValue", intS(7));
           assertTranslation(valueS, callB(lambdaB(intB(7))));
         }
 
         @Test
-        public void poly_expression_value() {
+        public void poly_expression_value() throws Exception {
           var emptyArrayVal = emptyArrayValueS();
           var instantiateS = instantiateS(list(intTS()), emptyArrayVal);
           var orderB = orderB(intTB());
@@ -53,7 +53,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void mono_expression_value_referencing_other_expression_value() {
+        public void mono_expression_value_referencing_other_expression_value() throws Exception {
           var otherValue = valueS("otherValue", intS(7));
           var myValue = valueS("myValue", instantiateS(otherValue));
           assertTranslation(
@@ -64,7 +64,8 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void
-            poly_expression_value_instantitaed_with_type_param_of_enclosing_value_type_param() {
+            poly_expression_value_instantitaed_with_type_param_of_enclosing_value_type_param()
+                throws Exception {
           var a = varA();
           var b = varB();
 
@@ -82,7 +83,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void mono_native_value() {
+        public void mono_native_value() throws Exception {
           var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
@@ -98,7 +99,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void mono_bytecode_value() throws IOException {
+        public void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
           var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
@@ -112,7 +113,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void poly_bytecode_value() throws IOException {
+        public void poly_bytecode_value() throws Exception {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = funcTS(a, a);
@@ -131,13 +132,13 @@ public class SbTranslatorTest extends TestContext {
       @Nested
       class _named_func {
         @Test
-        public void mono_expression_function() {
+        public void mono_expression_function() throws Exception {
           var funcS = funcS("myFunc", nlist(), intS(7));
           assertTranslation(funcS, lambdaB(intB(7)));
         }
 
         @Test
-        public void poly_expression_function() {
+        public void poly_expression_function() throws Exception {
           var funcS = idFuncS();
           var instantiateS = instantiateS(list(intTS()), funcS);
           var lambdaB = lambdaB(funcTB(intTB(), intTB()), varB(intTB(), 0));
@@ -145,8 +146,8 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void
-            poly_expression_func_instantiated_with_type_param_of_enclosing_func_type_param() {
+        public void poly_expression_func_instantiated_with_type_param_of_enclosing_func_type_param()
+            throws Exception {
           var b = varB();
 
           var idFuncS = idFuncS();
@@ -162,7 +163,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void mono_native_function() {
+        public void mono_native_function() throws Exception {
           var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
@@ -177,7 +178,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void poly_native_function() {
+        public void poly_native_function() throws Exception {
           var a = varA();
           var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = "class.binary.name";
@@ -193,7 +194,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void mono_bytecode_function() throws IOException {
+        public void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
           var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
@@ -208,7 +209,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void poly_bytecode_function() throws IOException {
+        public void poly_bytecode_function() throws Exception {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = funcTS(a, a);
@@ -229,32 +230,32 @@ public class SbTranslatorTest extends TestContext {
     @Nested
     class _expr {
       @Test
-      public void blob() {
+      public void blob() throws Exception {
         var blobS = blobS(37);
         assertTranslation(blobS, blobB(37));
       }
 
       @Test
-      public void int_() {
+      public void int_() throws Exception {
         var intS = intS(1);
         assertTranslation(intS, intB(1));
       }
 
       @Test
-      public void string() {
+      public void string() throws Exception {
         var stringS = stringS("abc");
         assertTranslation(stringS, stringB("abc"));
       }
 
       @Test
-      public void lambda() {
+      public void lambda() throws Exception {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
         assertTranslation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
       }
 
       @Test
-      public void lambda_referencing_param_of_enclosing_function() {
+      public void lambda_referencing_param_of_enclosing_function() throws Exception {
         var monoLambdaS = instantiateS(lambdaS(paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
@@ -265,7 +266,7 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void lambda_with_body_referencing_param_of_enclosing_function() {
+      public void lambda_with_body_referencing_param_of_enclosing_function() throws Exception {
         // myFunc(Int i) = (Blob b) -> i;
         var monoLambdaS =
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
@@ -278,39 +279,39 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void call() {
+      public void call() throws Exception {
         var funcS = funcS("myFunc", nlist(), stringS("abc"));
         var callS = callS(instantiateS(funcS));
         assertTranslation(bindings(funcS), callS, callB(lambdaB(stringB("abc"))));
       }
 
       @Test
-      public void combine() {
+      public void combine() throws Exception {
         var combineS = combineS(intS(3), stringS("abc"));
         assertTranslation(combineS, combineB(intB(3), stringB("abc")));
       }
 
       @Test
-      public void order() {
+      public void order() throws Exception {
         var orderS = orderS(intTS(), intS(3), intS(7));
         assertTranslation(orderS, orderB(intB(3), intB(7)));
       }
 
       @Test
-      public void param_ref() {
+      public void param_ref() throws Exception {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
         assertTranslation(funcS, idFuncB());
       }
 
       @Test
-      public void param_ref_to_unknown_param_causes_exception() {
+      public void param_ref_to_unknown_param_causes_exception() throws Exception {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(instantiateS(funcS)))
             .throwsException(new SbTranslatorException("Cannot resolve `p2` at build.smooth:1."));
       }
 
       @Test
-      public void select() {
+      public void select() throws Exception {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructorS = constructorS(structTS);
         var callS = callS(instantiateS(constructorS), stringS("abc"));
@@ -322,7 +323,8 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var() {
+      public void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var()
+          throws Exception {
         // regression test
         var monoLambdaS = instantiateS(lambdaS(varSetS(), paramRefS(varA(), "a")));
         var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoLambdaS);
@@ -343,14 +345,14 @@ public class SbTranslatorTest extends TestContext {
       @Nested
       class _named_value {
         @Test
-        public void expression_value() {
+        public void expression_value() throws Exception {
           var valueS = valueS(3, "myValue", intS(7, 37));
           assertValueNalMapping(
               bindings(valueS), instantiateS(9, valueS), location(9), "myValue", location(3));
         }
 
         @Test
-        public void expression_value_referencing_other_expression_value() {
+        public void expression_value_referencing_other_expression_value() throws Exception {
           var otherValueS = valueS(6, "otherValue", intS(7, 37));
           var valueS = valueS(5, "myValue", instantiateS(otherValueS));
           assertValueNalMapping(
@@ -362,7 +364,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void bytecode_value() throws IOException {
+        public void bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
           var filePath = filePath();
           var classBinaryName = clazz.getCanonicalName();
@@ -380,13 +382,13 @@ public class SbTranslatorTest extends TestContext {
       @Nested
       class _named_func {
         @Test
-        public void expression_function() {
+        public void expression_function() throws Exception {
           var funcS = funcS(7, "myFunc", nlist(), intS(37));
           assertNalMapping(bindings(funcS), instantiateS(3, funcS), "myFunc", location(7));
         }
 
         @Test
-        public void expression_inside_expression_function_body() {
+        public void expression_inside_expression_function_body() throws Exception {
           var funcS = funcS(7, "myFunc", nlist(), intS(8, 37));
           var sbTranslator = newTranslator(bindings(funcS));
           var funcB = (LambdaB) sbTranslator.translateExpr(instantiateS(funcS));
@@ -395,7 +397,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void native_func() {
+        public void native_func() throws Exception {
           var filePath = filePath();
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
@@ -408,7 +410,7 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Test
-        public void bytecode_func() throws IOException {
+        public void bytecode_func() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
           var filePath = filePath();
           var classBinaryName = clazz.getCanonicalName();
@@ -427,25 +429,25 @@ public class SbTranslatorTest extends TestContext {
     @Nested
     class _expr {
       @Test
-      public void blob() {
+      public void blob() throws Exception {
         var blobS = blobS(7, 0x37);
         assertNalMapping(blobS, null, location(7));
       }
 
       @Test
-      public void int_() {
+      public void int_() throws Exception {
         var intS = intS(7, 37);
         assertNalMapping(intS, null, location(7));
       }
 
       @Test
-      public void string() {
+      public void string() throws Exception {
         var stringS = stringS(7, "abc");
         assertNalMapping(stringS, null, location(7));
       }
 
       @Test
-      public void lambda() {
+      public void lambda() throws Exception {
         var monoLambdaS = instantiateS(lambdaS(7, nlist(), stringS("abc")));
 
         var sbTranslator = newTranslator();
@@ -457,20 +459,20 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void call() {
+      public void call() throws Exception {
         var funcS = funcS(7, "myFunc", nlist(), stringS("abc"));
         var call = callS(8, instantiateS(funcS));
         assertNalMapping(bindings(funcS), call, null, location(8));
       }
 
       @Test
-      public void order() {
+      public void order() throws Exception {
         var order = orderS(3, intTS(), intS(6), intS(7));
         assertNalMapping(order, null, location(3));
       }
 
       @Test
-      public void param_ref() {
+      public void param_ref() throws Exception {
         var funcS = funcS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator(bindings(funcS));
         var funcB = (LambdaB) sbTranslator.translateExpr(instantiateS(funcS));
@@ -479,7 +481,7 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void select() {
+      public void select() throws Exception {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructorS = constructorS(structTS);
         var callS = callS(instantiateS(constructorS), stringS("abc"));
@@ -490,14 +492,14 @@ public class SbTranslatorTest extends TestContext {
       @Nested
       class _instantiate {
         @Test
-        public void expression_value() {
+        public void expression_value() throws Exception {
           var emptyArrayVal = valueS(7, "emptyArray", orderS(varA()));
           var instantiateS = instantiateS(4, list(intTS()), emptyArrayVal);
           assertNalMapping(bindings(emptyArrayVal), instantiateS, null, location(4));
         }
 
         @Test
-        public void expression_function() {
+        public void expression_function() throws Exception {
           var identity = idFuncS();
           var instantiateS = instantiateS(list(intTS()), identity);
           assertNalMapping(bindings(idFuncS()), instantiateS, "myId", location(1));
@@ -509,13 +511,13 @@ public class SbTranslatorTest extends TestContext {
   @Nested
   class _caching {
     @Test
-    public void expression_value_translation_result() {
+    public void expression_value_translation_result() throws Exception {
       var valueS = valueS("myVal", stringS("abcdefghi"));
       assertTranslationIsCached(valueS);
     }
 
     @Test
-    public void bytecode_value_translation_result() throws IOException {
+    public void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
       var filePath = filePath(PROJECT, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
@@ -528,19 +530,19 @@ public class SbTranslatorTest extends TestContext {
     }
 
     @Test
-    public void expression_function_translation_result() {
+    public void expression_function_translation_result() throws Exception {
       var funcS = funcS("myFunc", nlist(), stringS("abcdefghi"));
       assertTranslationIsCached(funcS);
     }
 
     @Test
-    public void native_function_translation_result() {
+    public void native_function_translation_result() throws Exception {
       var funcS = nativeFuncS(stringTS(), "myFunc", nlist());
       assertTranslationIsCached(funcS);
     }
 
     @Test
-    public void bytecode_function_translation_result() throws IOException {
+    public void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
       var filePath = filePath(PROJECT, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
@@ -553,49 +555,54 @@ public class SbTranslatorTest extends TestContext {
     }
 
     @Test
-    public void constructor_translation_result() {
+    public void constructor_translation_result() throws Exception {
       var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "name")));
       assertTranslationIsCached(constructorS(myStruct));
     }
 
     @Test
-    public void instantiated_poly_function_translation_result() {
+    public void instantiated_poly_function_translation_result() throws Exception {
       var funcS = idFuncS();
       var instantiateS = instantiateS(list(intTS()), funcS);
       assertTranslationIsCached(bindings(funcS), instantiateS);
     }
 
-    private void assertTranslationIsCached(NamedEvaluableS namedEvaluableS) {
+    private void assertTranslationIsCached(NamedEvaluableS namedEvaluableS)
+        throws BytecodeException {
       assertTranslationIsCached(bindings(namedEvaluableS), instantiateS(namedEvaluableS));
     }
 
     private void assertTranslationIsCached(
-        ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+        ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) throws BytecodeException {
       assertTranslationIsCached(exprS, newTranslator(evaluables));
     }
 
     private void assertTranslationIsCached(
-        FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+        FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
+        throws BytecodeException {
       var sbTranslator = newTranslator(fileLoader, evaluables);
       assertTranslationIsCached(exprS, sbTranslator);
     }
 
-    private void assertTranslationIsCached(ExprS exprS, SbTranslator sbTranslator) {
+    private void assertTranslationIsCached(ExprS exprS, SbTranslator sbTranslator)
+        throws BytecodeException {
       assertThat(sbTranslator.translateExpr(exprS))
           .isSameInstanceAs(sbTranslator.translateExpr(exprS));
     }
   }
 
   private void assertTranslation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected) {
+      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected)
+      throws BytecodeException {
     assertTranslation(newTranslator(evaluables), exprS, expected);
   }
 
-  private void assertTranslation(NamedEvaluableS namedEvaluableS, ExprB expectedB) {
+  private void assertTranslation(NamedEvaluableS namedEvaluableS, ExprB expectedB)
+      throws BytecodeException {
     assertTranslation(bindings(namedEvaluableS), instantiateS(namedEvaluableS), expectedB);
   }
 
-  private void assertTranslation(ExprS exprS, ExprB expected) {
+  private void assertTranslation(ExprS exprS, ExprB expected) throws BytecodeException {
     assertTranslation(newTranslator(), exprS, expected);
   }
 
@@ -603,17 +610,20 @@ public class SbTranslatorTest extends TestContext {
       FileLoader fileLoader,
       ImmutableBindings<NamedEvaluableS> evaluables,
       ExprS exprS,
-      ExprB expected) {
+      ExprB expected)
+      throws BytecodeException {
     var sbTranslator = newTranslator(fileLoader, evaluables);
     assertTranslation(sbTranslator, exprS, expected);
   }
 
-  private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, ExprB expected) {
+  private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, ExprB expected)
+      throws BytecodeException {
     assertThat(sbTranslator.translateExpr(exprS)).isEqualTo(expected);
   }
 
   private void assertValueNalMapping(
-      ExprS exprS, Location expectedCallLocation, String expectedName, Location expectedLocation) {
+      ExprS exprS, Location expectedCallLocation, String expectedName, Location expectedLocation)
+      throws BytecodeException {
     assertValueNalMapping(
         newTranslator(), exprS, expectedCallLocation, expectedName, expectedLocation);
   }
@@ -623,7 +633,8 @@ public class SbTranslatorTest extends TestContext {
       ExprS exprS,
       Location expectedCallLocation,
       String expectedName,
-      Location expectedLocation) {
+      Location expectedLocation)
+      throws BytecodeException {
     assertValueNalMapping(
         newTranslator(evaluables), exprS, expectedCallLocation, expectedName, expectedLocation);
   }
@@ -633,7 +644,8 @@ public class SbTranslatorTest extends TestContext {
       ExprS exprS,
       Location expectedCallLocation,
       String expectedName,
-      Location expectedLocation) {
+      Location expectedLocation)
+      throws BytecodeException {
     var call = ((CallB) sbTranslator.translateExpr(exprS));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
     var called = call.subExprs().func();
@@ -644,16 +656,19 @@ public class SbTranslatorTest extends TestContext {
       ImmutableBindings<NamedEvaluableS> evaluables,
       ExprS exprS,
       String expectedName,
-      Location expectedLocation) {
+      Location expectedLocation)
+      throws BytecodeException {
     assertNalMapping(newTranslator(evaluables), exprS, expectedName, expectedLocation);
   }
 
-  private void assertNalMapping(ExprS exprS, String expectedName, Location expectedLocation) {
+  private void assertNalMapping(ExprS exprS, String expectedName, Location expectedLocation)
+      throws BytecodeException {
     assertNalMapping(newTranslator(), exprS, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(
-      SbTranslator sbTranslator, ExprS exprS, String expectedName, Location expectedLocation) {
+      SbTranslator sbTranslator, ExprS exprS, String expectedName, Location expectedLocation)
+      throws BytecodeException {
     var exprB = sbTranslator.translateExpr(exprS);
     assertNalMapping(sbTranslator, exprB, expectedName, expectedLocation);
   }
@@ -665,11 +680,12 @@ public class SbTranslatorTest extends TestContext {
     assertThat(bsMapping.locMapping().get(exprB.hash())).isEqualTo(expectedLocation);
   }
 
-  private SbTranslator newTranslator() {
+  private SbTranslator newTranslator() throws BytecodeException {
     return newTranslator(immutableBindings());
   }
 
-  private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
+  private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables)
+      throws BytecodeException {
     try {
       var fileLoader = mock(FileLoader.class);
       when(fileLoader.load(any())).thenReturn(blobB(1));
@@ -689,7 +705,7 @@ public class SbTranslatorTest extends TestContext {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(filePath)).thenReturn(value);
       return mock;
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | BytecodeException e) {
       throw new RuntimeException(e);
     }
   }

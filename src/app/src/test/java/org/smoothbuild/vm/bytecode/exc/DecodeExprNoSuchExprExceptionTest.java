@@ -13,6 +13,6 @@ public class DecodeExprNoSuchExprExceptionTest {
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode object at "
             + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
-            + "Cannot find it in object db.");
+            + "Cannot find it in bytecode db.");
   }
 }

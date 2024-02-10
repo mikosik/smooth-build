@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.evaluate.compute;
 
 import java.io.IOException;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class ComputeException extends Exception {
@@ -9,8 +10,12 @@ public class ComputeException extends Exception {
         hash.toString() + " value in ComputationCache is corrupted. " + message);
   }
 
-  public static ComputeException computationCacheException(IOException e) {
+  public static ComputeException computeException(IOException e) {
     return new ComputeException("IOException when accessing ComputationCache", e);
+  }
+
+  public static ComputeException computeException(BytecodeException e) {
+    return new ComputeException("BytecodeException when accessing ComputationCache", e);
   }
 
   private ComputeException(String message) {

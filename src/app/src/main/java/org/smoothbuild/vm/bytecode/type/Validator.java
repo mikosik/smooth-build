@@ -7,13 +7,13 @@ import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class Validator {
-  public static void validateArgs(
-      FuncTB funcTB, List<TypeB> items, Supplier<RuntimeException> exceptionThrower) {
-    validateTuple(funcTB.params(), items, exceptionThrower);
+  public static <T extends Throwable> void validateArgs(
+      FuncTB funcTB, List<TypeB> items, Supplier<T> exceptionSupplier) throws T {
+    validateTuple(funcTB.params(), items, exceptionSupplier);
   }
 
-  public static void validateTuple(
-      TupleTB tupleTB, List<TypeB> itemTypes, Supplier<RuntimeException> exceptionSupplier) {
+  public static <T extends Throwable> void validateTuple(
+      TupleTB tupleTB, List<TypeB> itemTypes, Supplier<T> exceptionSupplier) throws T {
     List<TypeB> expectedTypes = tupleTB.elements();
     if (expectedTypes.size() != itemTypes.size()) {
       throw exceptionSupplier.get();

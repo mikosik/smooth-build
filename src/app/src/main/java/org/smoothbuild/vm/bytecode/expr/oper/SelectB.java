@@ -2,6 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -31,7 +32,7 @@ public class SelectB extends OperB {
   }
 
   @Override
-  public SelectSubExprsB subExprs() {
+  public SelectSubExprsB subExprs() throws BytecodeException {
     var selectable = readSelectable();
     if (selectable.evaluationT() instanceof TupleTB tupleT) {
       var index = readIndex();
@@ -51,11 +52,11 @@ public class SelectB extends OperB {
     }
   }
 
-  private ExprB readSelectable() {
+  private ExprB readSelectable() throws BytecodeException {
     return readDataSeqElem(SELECTABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
-  private IntB readIndex() {
+  private IntB readIndex() throws BytecodeException {
     return readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, IntB.class);
   }
 }

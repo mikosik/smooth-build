@@ -7,11 +7,12 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class NativeFuncBTest extends TestContext {
   @Test
-  public void type_is_read_correctly() {
+  public void type_is_read_correctly() throws Exception {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
@@ -21,7 +22,7 @@ public class NativeFuncBTest extends TestContext {
   }
 
   @Test
-  public void components_are_read_correctly() {
+  public void components_are_read_correctly() throws Exception {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
@@ -36,14 +37,14 @@ public class NativeFuncBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<NativeFuncB> {
     @Override
-    protected List<NativeFuncB> equalExprs() {
+    protected List<NativeFuncB> equalExprs() throws BytecodeException {
       return list(
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)),
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)));
     }
 
     @Override
-    protected List<NativeFuncB> nonEqualExprs() {
+    protected List<NativeFuncB> nonEqualExprs() throws BytecodeException {
       return list(
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)),
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(false)),
@@ -54,7 +55,7 @@ public class NativeFuncBTest extends TestContext {
   }
 
   @Test
-  public void native_func_can_be_read_back_by_hash() {
+  public void native_func_can_be_read_back_by_hash() throws Exception {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
@@ -64,7 +65,7 @@ public class NativeFuncBTest extends TestContext {
   }
 
   @Test
-  public void native_func_read_back_by_hash_has_same_data() {
+  public void native_func_read_back_by_hash_has_same_data() throws Exception {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
@@ -77,7 +78,7 @@ public class NativeFuncBTest extends TestContext {
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);

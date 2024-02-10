@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import java.math.BigInteger;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 
@@ -12,12 +13,12 @@ public final class IntB extends ValueB {
     super(merkleRoot, bytecodeDb);
   }
 
-  public BigInteger toJ() {
+  public BigInteger toJ() throws BytecodeException {
     return readData(() -> hashedDb().readBigInteger(dataHash()));
   }
 
   @Override
-  public String exprToString() {
+  public String exprToString() throws BytecodeException {
     return toJ().toString();
   }
 }
