@@ -1,13 +1,13 @@
 package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
-import static org.smoothbuild.common.io.Okios.copyAllAndClose;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import okio.BufferedSource;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.BytecodeException;
@@ -38,7 +38,9 @@ public class FileLoader {
 
   private BlobB loadImpl(FilePath filePath) throws BytecodeException {
     try (BlobBBuilder blobBuilder = bytecodeDb.blobBuilder()) {
-      blobBuilder.write(sink -> copyAllAndClose(fileResolver.source(filePath), sink));
+      try (BufferedSource source = fileResolver.source(filePath)) {
+        source.readAll(blobBuilder);
+      }
       return blobBuilder.build();
     } catch (IOException e) {
       throw new IoBytecodeException(e);
