@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
-public class JarUnjarTest extends SystemTestCase {
+public class JarTest extends SystemTestCase {
   @Test
   public void jar_unjar() throws IOException {
     createUserModule(

@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
-public class ZipUnzipTest extends SystemTestCase {
+public class ZipTest extends SystemTestCase {
   @Test
   public void zip_unzip() throws IOException {
     createFile("dir/file1.txt", "abc");
