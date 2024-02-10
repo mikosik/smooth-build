@@ -17,7 +17,6 @@ import okio.Timeout;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.io.DataWriter;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 
 public class HashingBufferedSink implements BufferedSink {
   private final HashingSink hashingSink;
@@ -44,8 +43,8 @@ public class HashingBufferedSink implements BufferedSink {
     return hash;
   }
 
-  public void write(DataWriter dataWriter) throws HashedDbException {
-    Helpers.wrapIOExceptionAsHashedDbException(() -> dataWriter.writeTo(this));
+  public void write(DataWriter dataWriter) throws IOException {
+    dataWriter.writeTo(this);
   }
 
   @Override

@@ -6,8 +6,6 @@ import okio.BufferedSink;
 import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
-import org.smoothbuild.vm.bytecode.expr.Helpers;
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
 
 public class BlobBBuilder implements Closeable {
@@ -23,8 +21,8 @@ public class BlobBBuilder implements Closeable {
     return sink;
   }
 
-  public void write(DataWriter dataWriter) throws BytecodeException {
-    Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> sink.write(dataWriter));
+  public void write(DataWriter dataWriter) throws IOException {
+    sink.write(dataWriter);
   }
 
   @Override
@@ -32,12 +30,8 @@ public class BlobBBuilder implements Closeable {
     sink.close();
   }
 
-  public BlobB build() throws BytecodeException {
-    try {
-      sink.close();
-      return bytecodeDb.newBlob(sink.hash());
-    } catch (IOException e) {
-      throw new BytecodeDbException(e);
-    }
+  public BlobB build() throws BytecodeException, IOException {
+    sink.close();
+    return bytecodeDb.newBlob(sink.hash());
   }
 }

@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.bytecode.expr;
 
-import org.smoothbuild.common.function.Consumer0;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
@@ -10,15 +9,6 @@ import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 
 public class Helpers {
-  public static void wrapHashedDbExcAsBytecodeDbExc(Consumer0<HashedDbException> runnable)
-      throws BytecodeDbException {
-    try {
-      runnable.accept();
-    } catch (HashedDbException e) {
-      throw new BytecodeDbException(e);
-    }
-  }
-
   public static <T> T wrapHashedDbExcAsBytecodeDbExc(Function0<T, HashedDbException> function0)
       throws BytecodeDbException {
     try {
