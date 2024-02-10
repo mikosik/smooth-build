@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeExprWrongNodeClassExceptionTest extends TestContext {
   @Test
-  public void message_without_index() {
+  public void message_without_index() throws Exception {
     var exception = new DecodeExprWrongNodeClassException(
         Hash.of(123), intTB(), "node-path", Integer.class, Double.class);
     assertThat(exception.getMessage())
@@ -21,7 +21,7 @@ public class DecodeExprWrongNodeClassExceptionTest extends TestContext {
   }
 
   @Test
-  public void message_with_index() {
+  public void message_with_index() throws Exception {
     var exception = new DecodeExprWrongNodeClassException(
         Hash.of(123), intTB(), "node-path", 7, Integer.class, Double.class);
     assertThat(exception.getMessage())

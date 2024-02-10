@@ -12,7 +12,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class TaskHashesCollisionTest extends TestContext {
   @Test
-  public void each_task_has_different_hash() {
+  public void each_task_has_different_hash() throws Exception {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 

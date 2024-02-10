@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.bytecode.load;
 
+import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
@@ -7,6 +8,7 @@ import jakarta.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -27,11 +29,11 @@ public class NativeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Either<String, Method> load(NativeFuncB nativeFuncB) {
-    return cache.computeIfAbsent(nativeFuncB, this::loadImpl);
+  public Either<String, Method> load(NativeFuncB nativeFuncB) throws BytecodeException {
+    return invokeWithTunneling(f -> cache.computeIfAbsent(nativeFuncB, f), this::loadImpl);
   }
 
-  private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) {
+  private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) throws BytecodeException {
     var classBinaryName = nativeFuncB.classBinaryName().toJ();
     var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader

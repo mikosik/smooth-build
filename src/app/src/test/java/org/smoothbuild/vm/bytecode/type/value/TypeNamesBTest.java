@@ -14,7 +14,7 @@ public class TypeNamesBTest extends TestContext {
   @Nested
   class _array_type_name {
     @Test
-    public void array_type_name() {
+    public void array_type_name() throws Exception {
       assertThat(arrayTypeName(stringTB())).isEqualTo("[String]");
     }
   }
@@ -22,7 +22,7 @@ public class TypeNamesBTest extends TestContext {
   @Nested
   class _func_type_name {
     @Test
-    public void func_type_name() {
+    public void func_type_name() throws Exception {
       assertThat(funcTypeName(list(blobTB(), boolTB()), stringTB()))
           .isEqualTo("(Blob,Bool)->String");
     }
@@ -31,7 +31,7 @@ public class TypeNamesBTest extends TestContext {
   @Nested
   class _tuple_type_name {
     @Test
-    public void func_type_name() {
+    public void func_type_name() throws Exception {
       assertThat(tupleTypeName(list(blobTB(), boolTB()))).isEqualTo("{Blob,Bool}");
     }
   }

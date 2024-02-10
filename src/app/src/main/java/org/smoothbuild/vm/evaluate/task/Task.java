@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.evaluate.task;
 
 import java.util.Objects;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
@@ -39,7 +40,7 @@ public abstract sealed class Task
     return purity;
   }
 
-  public abstract Output run(TupleB input, Container container);
+  public abstract Output run(TupleB input, Container container) throws BytecodeException;
 
   @Override
   public int hashCode() {

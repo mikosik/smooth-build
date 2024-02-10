@@ -36,7 +36,9 @@ public class TaskExecutor {
   public void enqueue(Task task, TupleB input, Consumer<ValueB> consumer) {
     enqueue(() -> {
       var resHandler = new ResHandler(task, executor, taskReporter, consumer);
-      computer.compute(task, input, resHandler);
+      // TODO bytecodeException thrown by compute() should be reported differently with more
+      //  details
+      computer.compute(task, input, r -> enqueue(() -> resHandler.accept(r)));
     });
   }
 

@@ -7,7 +7,8 @@ import org.smoothbuild.vm.bytecode.type.exc.DecodeCatException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatNodeException;
 
 public class Helpers {
-  public static <T> T wrapHashedDbExcAsDecodeCatExc(Hash hash, HashedDbCallable<T> callable) {
+  public static <T> T wrapHashedDbExcAsDecodeCatExc(Hash hash, HashedDbCallable<T> callable)
+      throws DecodeCatException {
     try {
       return callable.call();
     } catch (HashedDbException e) {
@@ -16,7 +17,8 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExcAsDecodeCatNodeExc(
-      Hash hash, CategoryKindB kind, String path, int index, HashedDbCallable<T> callable) {
+      Hash hash, CategoryKindB kind, String path, int index, HashedDbCallable<T> callable)
+      throws DecodeCatNodeException {
     try {
       return callable.call();
     } catch (HashedDbException e) {
@@ -25,7 +27,8 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExcAsDecodeCatNodeExc(
-      Hash hash, CategoryKindB kind, String path, HashedDbCallable<T> callable) {
+      Hash hash, CategoryKindB kind, String path, HashedDbCallable<T> callable)
+      throws DecodeCatNodeException {
     try {
       return callable.call();
     } catch (HashedDbException e) {
@@ -33,8 +36,18 @@ public class Helpers {
     }
   }
 
+  public static <T> T wrapHashedDbExcAsCategoryDbException(HashedDbCallable<T> callable)
+      throws CategoryDbException {
+    try {
+      return callable.call();
+    } catch (HashedDbException e) {
+      throw new CategoryDbException(e);
+    }
+  }
+
   public static <T> T wrapCatDbExcAsDecodeCatNodeExc(
-      CategoryKindB kind, Hash hash, String path, int index, CategoryDbCallable<T> callable) {
+      CategoryKindB kind, Hash hash, String path, int index, CategoryDbCallable<T> callable)
+      throws DecodeCatNodeException {
     try {
       return callable.call();
     } catch (CategoryDbException e) {
@@ -43,7 +56,8 @@ public class Helpers {
   }
 
   public static <T> T wrapCatDbExcAsDecodeCatNodeExc(
-      CategoryKindB kind, Hash hash, String path, CategoryDbCallable<T> callable) {
+      CategoryKindB kind, Hash hash, String path, CategoryDbCallable<T> callable)
+      throws DecodeCatNodeException {
     try {
       return callable.call();
     } catch (CategoryDbException e) {

@@ -2,9 +2,9 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 
 import java.util.ArrayList;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 
@@ -39,7 +39,7 @@ public class ArrayBBuilder {
     return this;
   }
 
-  public ArrayB build() {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> bytecodeDb.newArray(type, listOfAll(elems)));
+  public ArrayB build() throws BytecodeException {
+    return bytecodeDb.newArray(type, listOfAll(elems));
   }
 }

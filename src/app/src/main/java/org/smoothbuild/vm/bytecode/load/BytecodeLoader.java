@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -25,7 +26,8 @@ public class BytecodeLoader {
   }
 
   public Either<String, ExprB> load(
-      String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap) {
+      String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap)
+      throws BytecodeException {
     return methodLoader
         .load(jar, classBinaryName)
         .flatMapRight(method -> invoke(method, varMap))

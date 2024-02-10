@@ -24,7 +24,6 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -44,6 +43,7 @@ import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.MessageStruct;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -79,7 +79,7 @@ public class EvaluatorBTest extends TestContext {
     @Nested
     class _task_execution {
       @Test
-      public void learning_test() {
+      public void learning_test() throws Exception {
         // This test makes sure that it is possible to detect Task creation using a mock.
         var order = orderB(intB(7));
 
@@ -90,7 +90,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void no_task_is_executed_for_func_arg_that_is_not_used() {
+      public void no_task_is_executed_for_func_arg_that_is_not_used() throws Exception {
         var lambdaB = lambdaB(list(arrayTB(boolTB())), intB(7));
         var call = callB(lambdaB, orderB(boolTB()));
 
@@ -101,7 +101,8 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void no_task_is_executed_for_func_expr_in_call_to_map_when_array_expr_is_empty() {
+      public void no_task_is_executed_for_func_expr_in_call_to_map_when_array_expr_is_empty()
+          throws Exception {
         var mapFuncB = mapFuncB(intTB(), intTB());
         var mappingFunc = pickB(orderB(idFuncB()), intB(0));
         var emptyIntArray = arrayB(intTB());
@@ -114,7 +115,8 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
+      public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used()
+          throws Exception {
         var innerLambda = lambdaB(list(arrayTB(boolTB())), intB(7));
         var outerLambda =
             lambdaB(list(arrayTB(boolTB())), callB(innerLambda, varB(arrayTB(boolTB()), 0)));
@@ -127,7 +129,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void task_for_func_arg_that_is_used_twice_is_executed_only_once() {
+      public void task_for_func_arg_that_is_used_twice_is_executed_only_once() throws Exception {
         var arrayT = arrayTB(intTB());
         var lambdaB = lambdaB(list(arrayT), combineB(varB(arrayT, 0), varB(arrayT, 0)));
         var call = callB(lambdaB, orderB(intB(7)));
@@ -143,7 +145,7 @@ public class EvaluatorBTest extends TestContext {
     @Nested
     class _job_creation {
       @Test
-      public void learning_test() {
+      public void learning_test() throws Exception {
         // Learning test verifies that job creation is counted also inside func body.
         var func = lambdaB(orderB(intB(7)));
         var call = callB(func);
@@ -155,7 +157,8 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies() {
+      public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies()
+          throws Exception {
         var lambdaB = lambdaB(list(arrayTB(boolTB())), intB(7));
         var call = callB(lambdaB, orderB(boolB()));
 
@@ -172,32 +175,32 @@ public class EvaluatorBTest extends TestContext {
     @Nested
     class _values {
       @Test
-      public void array() {
+      public void array() throws Exception {
         assertThat(evaluate(arrayB(intB(7)))).isEqualTo(arrayB(intB(7)));
       }
 
       @Test
-      public void blob() {
+      public void blob() throws Exception {
         assertThat(evaluate(blobB(7))).isEqualTo(blobB(7));
       }
 
       @Test
-      public void bool() {
+      public void bool() throws Exception {
         assertThat(evaluate(boolB(true))).isEqualTo(boolB(true));
       }
 
       @Test
-      public void int_() {
+      public void int_() throws Exception {
         assertThat(evaluate(intB(8))).isEqualTo(intB(8));
       }
 
       @Test
-      public void string() {
+      public void string() throws Exception {
         assertThat(evaluate(stringB("abc"))).isEqualTo(stringB("abc"));
       }
 
       @Test
-      public void tuple() {
+      public void tuple() throws Exception {
         assertThat(evaluate(tupleB(intB(7)))).isEqualTo(tupleB(intB(7)));
       }
     }
@@ -207,14 +210,14 @@ public class EvaluatorBTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void lambda() {
+        public void lambda() throws Exception {
           var func = lambdaB(intB(7));
           var call = callB(func);
           assertThat(evaluate(call)).isEqualTo(intB(7));
         }
 
         @Test
-        public void lambda_passed_as_argument() {
+        public void lambda_passed_as_argument() throws Exception {
           var paramFunc = lambdaB(intB(7));
           var paramFuncT = paramFunc.evaluationT();
           var outerLambda = lambdaB(list(paramFuncT), callB(varB(paramFuncT, 0)));
@@ -223,7 +226,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void lambda_returned_from_call() {
+        public void lambda_returned_from_call() throws Exception {
           var innerLambda = lambdaB(intB(7));
           var outerLambda = lambdaB(innerLambda);
           var call = callB(callB(outerLambda));
@@ -231,7 +234,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void lambda_returning_param_of_enclosing_lambda() {
+        public void lambda_returning_param_of_enclosing_lambda() throws Exception {
           var innerLambda = lambdaB(varB(intTB(), 0));
           var outerLambda = lambdaB(list(intTB()), innerLambda);
           var innerReturnedByOuter = callB(outerLambda, intB(17));
@@ -240,7 +243,8 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void lambda_returning_value_from_environment_that_references_another_environment() {
+        public void lambda_returning_value_from_environment_that_references_another_environment()
+            throws Exception {
           var innerLambda = lambdaB(varB(intTB(), 0));
           var middleLambda = lambdaB(list(intTB()), innerLambda);
           var outerLambda = lambdaB(list(intTB()), callB(middleLambda, varB(intTB(), 0)));
@@ -249,21 +253,21 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void if_function_with_true_condition() {
+        public void if_function_with_true_condition() throws Exception {
           var ifFunc = ifFuncB(intTB());
           var call = callB(ifFunc, boolB(true), intB(7), intB(0));
           assertThat(evaluate(call)).isEqualTo(intB(7));
         }
 
         @Test
-        public void if_func_with_false_condition() {
+        public void if_func_with_false_condition() throws Exception {
           var ifFunc = ifFuncB(intTB());
           var call = callB(ifFunc, boolB(false), intB(7), intB(0));
           assertThat(evaluate(call)).isEqualTo(intB(0));
         }
 
         @Test
-        public void map_func() {
+        public void map_func() throws Exception {
           var s = intTB();
           var r = tupleTB(s);
           var lambda = lambdaB(funcTB(s, r), combineB(varB(s, 0)));
@@ -285,7 +289,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void native_func_passed_as_arg() throws NoSuchMethodException {
+        public void native_func_passed_as_arg() throws Exception {
           var nativeFuncB =
               nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
@@ -300,7 +304,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void native_func_returned_from_call() throws NoSuchMethodException {
+        public void native_func_returned_from_call() throws Exception {
           var nativeFuncB =
               nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
@@ -315,13 +319,13 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void combine() {
+      public void combine() throws Exception {
         var combine = combineB(intB(7));
         assertThat(evaluate(combine)).isEqualTo(tupleB(intB(7)));
       }
 
       @Test
-      public void order() {
+      public void order() throws Exception {
         var order = orderB(intB(7), intB(8));
         assertThat(evaluate(order)).isEqualTo(arrayB(intB(7), intB(8)));
       }
@@ -329,14 +333,14 @@ public class EvaluatorBTest extends TestContext {
       @Nested
       class _pick {
         @Test
-        public void pick() {
+        public void pick() throws Exception {
           var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
           var pick = pickB(tuple, intB(2));
           assertThat(evaluate(pick)).isEqualTo(intB(12));
         }
 
         @Test
-        public void pick_with_index_outside_of_bounds() {
+        public void pick_with_index_outside_of_bounds() throws Exception {
           var pick = pickB(arrayB(intB(10), intB(11), intB(12), intB(13)), intB(4));
           var memoryReporter = new MemoryReporter();
           evaluateWithFailure(evaluatorB(memoryReporter), pick);
@@ -345,7 +349,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void pick_with_index_negative() {
+        public void pick_with_index_negative() throws Exception {
           var pick = pickB(arrayB(intB(10), intB(11), intB(12), intB(13)), intB(-1));
           var memoryReporter = new MemoryReporter();
           evaluateWithFailure(evaluatorB(memoryReporter), pick);
@@ -357,21 +361,23 @@ public class EvaluatorBTest extends TestContext {
       @Nested
       class _reference {
         @Test
-        public void var_referencing_func_param() {
+        public void var_referencing_func_param() throws Exception {
           var lambdaB = lambdaB(list(intTB()), varB(intTB(), 0));
           var callB = callB(lambdaB, intB(7));
           assertThat(evaluate(callB)).isEqualTo(intB(7));
         }
 
         @Test
-        public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda() {
+        public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
+            throws Exception {
           var innerLambda = lambdaB(list(), varB(intTB(), 0));
           var outerLambda = lambdaB(list(intTB()), callB(innerLambda));
           assertThat(evaluate(callB(outerLambda, intB(7)))).isEqualTo(intB(7));
         }
 
         @Test
-        public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() {
+        public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda()
+            throws Exception {
           var innerLambdaB = lambdaB(list(intTB()), varB(intTB(), 1));
           var outerLambdaB = lambdaB(list(intTB()), innerLambdaB);
           var callOuter = callB(outerLambdaB, intB(7));
@@ -381,7 +387,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void var_referencing_with_index_out_of_bounds_causes_fatal() {
+        public void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambdaB = lambdaB(list(intTB()), varB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
@@ -397,7 +403,8 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void
-            reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal() {
+            reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
+                throws Exception {
           var lambdaB = lambdaB(list(blobTB()), varB(intTB(), 0));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
@@ -415,7 +422,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void select() {
+      public void select() throws Exception {
         var tuple = tupleB(intB(7));
         var select = selectB(tuple, intB(0));
         assertThat(evaluate(select)).isEqualTo(intB(7));
@@ -436,13 +443,17 @@ public class EvaluatorBTest extends TestContext {
 
       private boolean computationResultWithFatalCausedByRuntimeException(ComputationResult result) {
         ArrayB messages = result.output().messages();
-        return messages.size() == 1
-            && MessageStruct.level(messages.elems(TupleB.class).get(0)) == FATAL
-            && MessageStruct.text(messages.elems(TupleB.class).get(0))
-                .startsWith("Native code thrown exception:\njava.lang.ArithmeticException");
+        try {
+          return messages.size() == 1
+              && MessageStruct.level(messages.elems(TupleB.class).get(0)) == FATAL
+              && MessageStruct.text(messages.elems(TupleB.class).get(0))
+                  .startsWith("Native code thrown exception:\njava.lang.ArithmeticException");
+        } catch (BytecodeException e) {
+          throw new RuntimeException(e);
+        }
       }
 
-      private CallB throwExceptionCall() throws IOException {
+      private CallB throwExceptionCall() throws Exception {
         var funcTB = funcTB(stringTB());
         var nativeFuncB = nativeFuncB(funcTB, ThrowException.class);
         return callB(nativeFuncB);
@@ -455,7 +466,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void computer_that_throws_exception_is_detected() {
+      public void computer_that_throws_exception_is_detected() throws Exception {
         var reporter = mock(Reporter.class);
         var exprB = stringB("abc");
         var runtimeException = new RuntimeException();
@@ -492,13 +503,13 @@ public class EvaluatorBTest extends TestContext {
     class _empty_trace {
       @ParameterizedTest
       @MethodSource("report_const_task_cases")
-      public void report_value_as_const_task(ValueB valueB) {
+      public void report_value_as_const_task(ValueB valueB) throws Exception {
         var taskReporter = mock(TaskReporter.class);
         evaluate(evaluatorB(taskReporter), valueB);
         verify(taskReporter).report(constTask(valueB, traceB()), computationResult(valueB, NOOP));
       }
 
-      public static List<ValueB> report_const_task_cases() {
+      public static List<ValueB> report_const_task_cases() throws Exception {
         var t = new TestContext();
         return list(
             t.arrayB(t.intB(17)),
@@ -514,7 +525,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void report_native_call_as_invoke_task() throws IOException {
+      public void report_native_call_as_invoke_task() throws Exception {
         var funcB = returnAbcNativeFunc();
         var callB = callB(funcB);
         assertReport(
@@ -524,7 +535,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void report_combine_as_combine_task() {
+      public void report_combine_as_combine_task() throws Exception {
         var combineB = combineB(intB(17));
         assertReport(
             combineB,
@@ -533,20 +544,20 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void report_order_as_order_task() {
+      public void report_order_as_order_task() throws Exception {
         var orderB = orderB(intB(17));
         assertReport(
             orderB, orderTask(orderB, traceB()), computationResult(arrayB(intB(17)), EXECUTION));
       }
 
       @Test
-      public void report_pick_as_pick_task() {
+      public void report_pick_as_pick_task() throws Exception {
         var pickB = pickB(arrayB(intB(17)), intB(0));
         assertReport(pickB, pickTask(pickB, traceB()), computationResult(intB(17), EXECUTION));
       }
 
       @Test
-      public void report_select_as_select_task() {
+      public void report_select_as_select_task() throws Exception {
         var selectB = selectB(tupleB(intB(17)), intB(0));
         assertReport(
             selectB, selectTask(selectB, traceB()), computationResult(intB(17), EXECUTION));
@@ -556,7 +567,7 @@ public class EvaluatorBTest extends TestContext {
     @Nested
     class _with_traces {
       @Test
-      public void order_inside_func_body() {
+      public void order_inside_func_body() throws Exception {
         var orderB = orderB(intB(17));
         var funcB = lambdaB(orderB);
         var funcAsExpr = callB(lambdaB(funcB));
@@ -568,7 +579,7 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Test
-      public void order_inside_func_body_that_is_called_from_other_func_body() {
+      public void order_inside_func_body_that_is_called_from_other_func_body() throws Exception {
         var orderB = orderB(intB(17));
         var func2 = lambdaB(orderB);
         var call2 = callB(func2);
@@ -581,7 +592,8 @@ public class EvaluatorBTest extends TestContext {
       }
     }
 
-    private void assertReport(ExprB exprB, Task task, ComputationResult result) {
+    private void assertReport(ExprB exprB, Task task, ComputationResult result)
+        throws BytecodeException {
       var taskReporter = mock(TaskReporter.class);
       evaluate(evaluatorB(taskReporter), exprB);
       verify(taskReporter).report(task, result);
@@ -647,18 +659,18 @@ public class EvaluatorBTest extends TestContext {
       assertThat(evaluate(vm, exprB)).isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
 
-    private CallB commandCall(String testName, String commands) throws IOException {
+    private CallB commandCall(String testName, String commands) throws Exception {
       return commandCall(testName, commands, true);
     }
 
-    private CallB commandCall(String testName, String commands, boolean isPure) throws IOException {
+    private CallB commandCall(String testName, String commands, boolean isPure) throws Exception {
       var nativeFuncB =
           nativeFuncB(funcTB(stringTB(), stringTB(), stringTB()), ExecuteCommands.class, isPure);
       return callB(nativeFuncB, stringB(testName), stringB(commands));
     }
 
     public static class ExecuteCommands {
-      public static ValueB func(NativeApi nativeApi, TupleB args) {
+      public static ValueB func(NativeApi nativeApi, TupleB args) throws Exception {
         String name = ((StringB) args.get(0)).toJ();
         String commands = ((StringB) args.get(1)).toJ();
         int result = 0;
@@ -709,12 +721,12 @@ public class EvaluatorBTest extends TestContext {
     assertThat(results).isEqualTo(none());
   }
 
-  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
+  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) throws Exception {
     return (IntB) args.get(0);
   }
 
   private static void verifyConstTasksResSource(
-      int size, ResultSource expectedSource, TaskReporter reporter) {
+      int size, ResultSource expectedSource, TaskReporter reporter) throws Exception {
     var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
     verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
     var resSources = listOfAll(argCaptor.getAllValues()).map(ComputationResult::source);

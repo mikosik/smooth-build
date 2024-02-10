@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class CategoryBStableHashTest extends TestContext {
@@ -17,7 +18,7 @@ public class CategoryBStableHashTest extends TestContext {
     assertThat(categoryB.hash()).isEqualTo(Hash.decode(hash));
   }
 
-  public static List<Arguments> hash_is_stable_cases() {
+  public static List<Arguments> hash_is_stable_cases() throws BytecodeException {
     var t = new TestContext();
     return List.of(
         arguments(t.blobTB(), "1406e05881e299367766d313e26c05564ec91bf721d31726bd6e46e60689539a"),

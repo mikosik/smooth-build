@@ -3,13 +3,14 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 
 /**
  * This class is thread-safe.
@@ -25,22 +26,18 @@ public class MethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Either<String, Method> load(MethodSpec methodSpec) {
-    return cache.computeIfAbsent(methodSpec, this::findMethod);
+  public Either<String, Method> load(MethodSpec methodSpec) throws BytecodeException {
+    return invokeWithTunneling(f -> cache.computeIfAbsent(methodSpec, f), this::findMethod);
   }
 
-  private Either<String, Method> findMethod(MethodSpec methodSpec) {
-    return findClass(methodSpec).flatMapRight(c -> findMethod(methodSpec, c));
+  private Either<String, Method> findMethod(MethodSpec methodSpec) throws BytecodeException {
+    return findClass(methodSpec).flatMapRight(c -> findMethodInClass(methodSpec, c));
   }
 
-  private Either<String, Class<?>> findClass(MethodSpec methodSpec) {
-    try {
-      return jarClassLoaderFactory
-          .classLoaderFor(methodSpec.jar())
-          .flatMapRight(classLoader -> loadClass(classLoader, methodSpec));
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+  private Either<String, Class<?>> findClass(MethodSpec methodSpec) throws BytecodeException {
+    return jarClassLoaderFactory
+        .classLoaderFor(methodSpec.jar())
+        .flatMapRight(classLoader -> loadClass(classLoader, methodSpec));
   }
 
   private Either<String, Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
@@ -51,7 +48,7 @@ public class MethodLoader {
     }
   }
 
-  private static Either<String, Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
+  private static Either<String, Method> findMethodInClass(MethodSpec methodSpec, Class<?> clazz) {
     var declaredMethods = list(clazz.getDeclaredMethods());
     var methods = declaredMethods.filter(m -> m.getName().equals(methodSpec.methodName()));
     return switch (methods.size()) {

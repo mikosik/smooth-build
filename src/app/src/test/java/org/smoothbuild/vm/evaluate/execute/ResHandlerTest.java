@@ -21,7 +21,7 @@ public class ResHandlerTest extends TestContext {
 
   @BeforeEach
   @SuppressWarnings("unchecked")
-  public void beforeEach() {
+  public void beforeEach() throws Exception {
     reporter = mock(TaskReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
@@ -31,14 +31,14 @@ public class ResHandlerTest extends TestContext {
   @Nested
   class when_output_with_value_is_passed {
     @Test
-    public void object_is_forwarded_to_consumer() {
+    public void object_is_forwarded_to_consumer() throws Exception {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(computationResult(value));
       verify(consumer, only()).accept(value);
     }
 
     @Test
-    public void executor_is_not_stopped() {
+    public void executor_is_not_stopped() throws Exception {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(computationResult(value));
       verifyNoInteractions(executor);
@@ -48,14 +48,14 @@ public class ResHandlerTest extends TestContext {
   @Nested
   class when_output_without_value_is_passed {
     @Test
-    public void object_is_not_forwarded_to_consumer() {
+    public void object_is_not_forwarded_to_consumer() throws Exception {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(computationResult(null));
       verifyNoInteractions(consumer);
     }
 
     @Test
-    public void executor_is_stopped() {
+    public void executor_is_stopped() throws Exception {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(computationResult(null));
       verify(executor, only()).terminate();

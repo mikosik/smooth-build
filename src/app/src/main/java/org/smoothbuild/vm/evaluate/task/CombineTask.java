@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.evaluate.task;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.evaluate.compute.Container;
@@ -11,7 +12,7 @@ public final class CombineTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, Container container) {
+  public Output run(TupleB input, Container container) throws BytecodeException {
     return new Output(input, container.messages());
   }
 }

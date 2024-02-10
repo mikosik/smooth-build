@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.load;
 
-import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.common.filesystem.base.PathState.FILE;
+import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
 import static org.smoothbuild.common.io.Okios.copyAllAndClose;
 
 import jakarta.inject.Inject;
@@ -10,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
@@ -30,15 +30,12 @@ public class FileLoader {
     this.fileCache = new ConcurrentHashMap<>();
   }
 
-  public BlobB load(FilePath filePath) throws FileNotFoundException {
-    return computeIfAbsent(fileCache, filePath, this::loadImpl);
+  public BlobB load(FilePath filePath) throws FileNotFoundException, BytecodeException {
+    return invokeWithTunneling(f -> fileCache.computeIfAbsent(filePath, f), this::loadImpl);
   }
 
-  private BlobB loadImpl(FilePath filePath) throws FileNotFoundException {
+  private BlobB loadImpl(FilePath filePath) throws BytecodeException {
     BlobBBuilder blobBuilder = bytecodeDb.blobBuilder();
-    if (!fileResolver.pathState(filePath).equals(FILE)) {
-      throw new FileNotFoundException(filePath.q());
-    }
     blobBuilder.write(sink -> copyAllAndClose(fileResolver.source(filePath), sink));
     return blobBuilder.build();
   }

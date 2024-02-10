@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.filesystem.space.ForSpace;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -52,7 +53,7 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public ArrayB messages() {
+  public ArrayB messages() throws BytecodeException {
     return bytecodeF
         .arrayBuilderWithElems(bytecodeF.messageT())
         .addAll(messageLogger.messages)
@@ -73,24 +74,24 @@ public class Container implements NativeApi {
     }
 
     @Override
-    public void fatal(String message) {
+    public void fatal(String message) throws BytecodeException {
       messages.add(bytecodeF.fatalMessage(message));
       containsErrorOrAbove = true;
     }
 
     @Override
-    public void error(String message) {
+    public void error(String message) throws BytecodeException {
       messages.add(bytecodeF.errorMessage(message));
       containsErrorOrAbove = true;
     }
 
     @Override
-    public void warning(String message) {
+    public void warning(String message) throws BytecodeException {
       messages.add(bytecodeF.warningMessage(message));
     }
 
     @Override
-    public void info(String message) {
+    public void info(String message) throws BytecodeException {
       messages.add(bytecodeF.infoMessage(message));
     }
   }

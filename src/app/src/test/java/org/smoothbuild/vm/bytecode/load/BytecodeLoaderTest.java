@@ -15,6 +15,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ThrowException;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
@@ -38,7 +39,7 @@ public class BytecodeLoaderTest extends TestContext {
   }
 
   private Either<String, ExprB> loadBytecode(Class<?> clazz, Map<String, TypeB> varMap)
-      throws NoSuchMethodException {
+      throws NoSuchMethodException, BytecodeException {
     var jar = blobB();
     var classBinaryName = "binary.name";
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);

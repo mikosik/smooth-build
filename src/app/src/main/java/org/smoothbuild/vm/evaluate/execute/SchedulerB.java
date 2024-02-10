@@ -9,6 +9,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.function.Consumer1;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -80,7 +81,7 @@ public class SchedulerB {
     job.promisedValue().addConsumer(consumer);
   }
 
-  private void scheduleJobTasksEvaluation(Job job) {
+  private void scheduleJobTasksEvaluation(Job job) throws BytecodeException {
     switch (job.exprB()) {
       case CallB call -> new CallScheduler(job, call).scheduleCall();
       case CombineB combine -> scheduleOperTask(job, combine, CombineTask::new);
@@ -109,13 +110,13 @@ public class SchedulerB {
       this.call = call;
     }
 
-    public void scheduleCall() {
+    public void scheduleCall() throws BytecodeException {
       var exprB = call.subExprs().func();
       var funcJob = newJob(exprB, callJob);
       scheduleJobEvaluation(funcJob, this::onFuncEvaluated);
     }
 
-    private void onFuncEvaluated(ValueB funcB) {
+    private void onFuncEvaluated(ValueB funcB) throws BytecodeException {
       switch ((FuncB) funcB) {
         case LambdaB lambdaB -> handleLambda(lambdaB);
         case IfFuncB ifFuncB -> handleIfFunc();
@@ -126,7 +127,7 @@ public class SchedulerB {
 
     // functions with body
 
-    private void handleLambda(LambdaB lambdaB) {
+    private void handleLambda(LambdaB lambdaB) throws BytecodeException {
       var bodyEnvironmentJobs = argJobs().appendAll(callJob.environment());
       var bodyTrace = callTrace(lambdaB);
       var bodyJob = newJob(lambdaB.body(), bodyEnvironmentJobs, bodyTrace);
@@ -135,26 +136,27 @@ public class SchedulerB {
 
     // handling IfFunc
 
-    private void handleIfFunc() {
+    private void handleIfFunc() throws BytecodeException {
       var args = args();
       var job = newJob(args.get(0), callJob);
       scheduleJobEvaluation(job, v -> onConditionEvaluated(v, args));
     }
 
-    private void onConditionEvaluated(ValueB conditionB, List<ExprB> args) {
+    private void onConditionEvaluated(ValueB conditionB, List<ExprB> args)
+        throws BytecodeException {
       var exprB = args.get(((BoolB) conditionB).toJ() ? 1 : 2);
       scheduleJobEvaluation(newJob(exprB, callJob), callJob.promisedValue());
     }
 
     // handling MapFunc
 
-    private void handleMapFunc() {
+    private void handleMapFunc() throws BytecodeException {
       var arrayArg = args().get(0);
       var job = newJob(arrayArg, callJob);
       scheduleJobEvaluation(job, v -> onMapArrayArgEvaluated((ArrayB) v));
     }
 
-    private void onMapArrayArgEvaluated(ArrayB arrayB) {
+    private void onMapArrayArgEvaluated(ArrayB arrayB) throws BytecodeException {
       var mappingFuncArg = args().get(1);
       var callBs = arrayB.elems(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
       var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationT()).result();
@@ -162,17 +164,17 @@ public class SchedulerB {
       scheduleJobEvaluation(newJob(orderB, callJob), callJob.promisedValue());
     }
 
-    private ExprB newCallB(ExprB funcExprB, ValueB valueB) {
+    private ExprB newCallB(ExprB funcExprB, ValueB valueB) throws BytecodeException {
       return bytecodeF.call(funcExprB, singleArg(valueB));
     }
 
-    private CombineB singleArg(ValueB valueB) {
+    private CombineB singleArg(ValueB valueB) throws BytecodeException {
       return bytecodeF.combine(list(valueB));
     }
 
     // handling NativeFunc
 
-    private void handleNativeFunc(NativeFuncB nativeFuncB) {
+    private void handleNativeFunc(NativeFuncB nativeFuncB) throws BytecodeException {
       var trace = callTrace(nativeFuncB);
       var task = new InvokeTask(call, nativeFuncB, trace);
       var subExprJobs = argJobs();
@@ -182,7 +184,7 @@ public class SchedulerB {
 
     // helpers
 
-    private List<Job> argJobs() {
+    private List<Job> argJobs() throws BytecodeException {
       return args().map(e -> newJob(e, callJob));
     }
 
@@ -190,7 +192,7 @@ public class SchedulerB {
       return new TraceB(call.hash(), funcB.hash(), callJob.trace());
     }
 
-    private List<ExprB> args() {
+    private List<ExprB> args() throws BytecodeException {
       return call.subExprs().args().items();
     }
   }
@@ -201,14 +203,14 @@ public class SchedulerB {
   }
 
   private <T extends OperB> void scheduleOperTask(
-      Job job, T operB, BiFunction<T, TraceB, Task> taskCreator) {
+      Job job, T operB, BiFunction<T, TraceB, Task> taskCreator) throws BytecodeException {
     var operTask = taskCreator.apply(operB, job.trace());
     var subExprJobs = operB.subExprs().toList().map(e -> newJob(e, job));
     subExprJobs.forEach(this::scheduleJobEvaluation);
     scheduleJobTask(job, operTask, subExprJobs);
   }
 
-  private void scheduleVarB(Job job, VarB varB) {
+  private void scheduleVarB(Job job, VarB varB) throws BytecodeException {
     int index = varB.index().toJ().intValue();
     var referencedJob = job.environment().get(index);
     var jobEvaluationT = referencedJob.exprB().evaluationT();
@@ -226,10 +228,12 @@ public class SchedulerB {
     var subExprPromises = subExprJobs.map(Job::promisedValue);
     var consumer = job.promisedValue();
     runWhenAllAvailable(
-        subExprPromises, () -> taskExecutor.enqueue(task, toInput(subExprPromises), consumer));
+        subExprPromises,
+        () -> taskExecutor.enqueue(
+            () -> taskExecutor.enqueue(task, toInput(subExprPromises), consumer)));
   }
 
-  private TupleB toInput(List<? extends Promise<ValueB>> depResults) {
+  private TupleB toInput(List<? extends Promise<ValueB>> depResults) throws BytecodeException {
     return bytecodeF.tuple(depResults.map(Promise::get));
   }
 

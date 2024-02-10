@@ -56,6 +56,7 @@ import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 import org.smoothbuild.filesystem.space.FilePath;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -129,11 +130,11 @@ public class SbTranslator {
     return new BsMapping(mapOfAll(nameMapping), mapOfAll(locationMapping));
   }
 
-  private List<ExprB> translateExprs(List<ExprS> exprs) {
+  private List<ExprB> translateExprs(List<ExprS> exprs) throws BytecodeException {
     return exprs.map(this::translateExpr);
   }
 
-  public ExprB translateExpr(ExprS exprS) {
+  public ExprB translateExpr(ExprS exprS) throws BytecodeException {
     return switch (exprS) {
       case BlobS blobS -> saveLocAndReturn(blobS, translateBlob(blobS));
       case CallS callS -> saveLocAndReturn(callS, translateCall(callS));
@@ -146,26 +147,26 @@ public class SbTranslator {
     };
   }
 
-  private BlobB translateBlob(BlobS blobS) {
+  private BlobB translateBlob(BlobS blobS) throws BytecodeException {
     return bytecodeF.blob(sink -> sink.write(blobS.byteString()));
   }
 
-  private CallB translateCall(CallS callS) {
+  private CallB translateCall(CallS callS) throws BytecodeException {
     var callableB = translateExpr(callS.callee());
     var argsB = (CombineB) translateExpr(callS.args());
     return bytecodeF.call(callableB, argsB);
   }
 
-  private CombineB translateCombine(CombineS combineS) {
+  private CombineB translateCombine(CombineS combineS) throws BytecodeException {
     var elemBs = translateExprs(combineS.elems());
     return bytecodeF.combine(elemBs);
   }
 
-  private IntB translateInt(IntS intS) {
+  private IntB translateInt(IntS intS) throws BytecodeException {
     return bytecodeF.int_(intS.bigInteger());
   }
 
-  private ExprB translateInstantiate(InstantiateS instantiateS) {
+  private ExprB translateInstantiate(InstantiateS instantiateS) throws BytecodeException {
     var keys = instantiateS.polymorphicS().schema().quantifiedVars().toList();
     var values = instantiateS.typeArgs().map(typeSbTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
@@ -184,19 +185,19 @@ public class SbTranslator {
     return sbTranslator.translatePolymorphic(instantiateS.polymorphicS());
   }
 
-  private ExprB translatePolymorphic(PolymorphicS polymorphicS) {
+  private ExprB translatePolymorphic(PolymorphicS polymorphicS) throws BytecodeException {
     return switch (polymorphicS) {
       case LambdaS lambdaS -> translateLambda(lambdaS);
       case ReferenceS referenceS -> translateReference(referenceS);
     };
   }
 
-  private ExprB translateLambda(LambdaS lambdaS) {
+  private ExprB translateLambda(LambdaS lambdaS) throws BytecodeException {
     var lambdaB = funcBodySbTranslator(lambdaS).translateExprFunc(lambdaS);
     return saveNalAndReturn("<lambda>", lambdaS, lambdaB);
   }
 
-  private ExprB translateReference(ReferenceS referenceS) {
+  private ExprB translateReference(ReferenceS referenceS) throws BytecodeException {
     var itemS = environment.get(referenceS.name());
     if (itemS == null) {
       Maybe<NamedEvaluableS> namedEvaluableS = evaluables.getMaybe(referenceS.name());
@@ -216,12 +217,12 @@ public class SbTranslator {
     }
   }
 
-  private ExprB translateNamedFuncWithCache(NamedFuncS namedFuncS) {
+  private ExprB translateNamedFuncWithCache(NamedFuncS namedFuncS) throws BytecodeException {
     var key = new CacheKey(namedFuncS.name(), typeSbTranslator.varMap());
     return computeIfAbsent(cache, key, name -> translateNamedFunc(namedFuncS));
   }
 
-  private ExprB translateNamedFunc(NamedFuncS namedFuncS) {
+  private ExprB translateNamedFunc(NamedFuncS namedFuncS) throws BytecodeException {
     var funcB = funcBodySbTranslator(namedFuncS).translateNamedFuncImpl(namedFuncS);
     return saveNalAndReturn(namedFuncS, funcB);
   }
@@ -240,7 +241,7 @@ public class SbTranslator {
         locationMapping);
   }
 
-  private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
+  private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) throws BytecodeException {
     return switch (namedFuncS) {
       case AnnotatedFuncS a -> translateAnnotatedFunc(a);
       case NamedExprFuncS e -> translateExprFunc(e);
@@ -248,7 +249,7 @@ public class SbTranslator {
     };
   }
 
-  private ExprB translateAnnotatedFunc(AnnotatedFuncS annotatedFuncS) {
+  private ExprB translateAnnotatedFunc(AnnotatedFuncS annotatedFuncS) throws BytecodeException {
     var annotationName = annotatedFuncS.annotation().name();
     return switch (annotationName) {
       case BYTECODE -> fetchFuncBytecode(annotatedFuncS);
@@ -258,11 +259,11 @@ public class SbTranslator {
     };
   }
 
-  private LambdaB translateExprFunc(ExprFuncS exprFuncS) {
+  private LambdaB translateExprFunc(ExprFuncS exprFuncS) throws BytecodeException {
     return bytecodeF.lambda(translateT(exprFuncS.schema().type()), translateExpr(exprFuncS.body()));
   }
 
-  private NativeFuncB translateNativeFunc(AnnotatedFuncS nativeFuncS) {
+  private NativeFuncB translateNativeFunc(AnnotatedFuncS nativeFuncS) throws BytecodeException {
     var funcTB = translateT(nativeFuncS.schema().type());
     var annS = nativeFuncS.annotation();
     var jarB = loadNativeJar(annS.location());
@@ -271,27 +272,27 @@ public class SbTranslator {
     return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private LambdaB translateConstructor(ConstructorS constructorS) {
+  private LambdaB translateConstructor(ConstructorS constructorS) throws BytecodeException {
     var funcTB = translateT(constructorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, constructorS);
     return bytecodeF.lambda(funcTB, bodyB);
   }
 
-  private List<ExprB> createRefsB(TupleTB paramTs) {
+  private List<ExprB> createRefsB(TupleTB paramTs) throws BytecodeException {
     return paramTs
         .elements()
         .zipWithIndex()
         .map(tuple -> bytecodeF.var(tuple.element1(), BigInteger.valueOf(tuple.element2())));
   }
 
-  private OrderB translateOrder(OrderS orderS) {
+  private OrderB translateOrder(OrderS orderS) throws BytecodeException {
     var arrayTB = translateT(orderS.evaluationT());
     var elemsB = translateExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
   }
 
-  private SelectB translateSelect(SelectS selectS) {
+  private SelectB translateSelect(SelectS selectS) throws BytecodeException {
     var selectableB = translateExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().evaluationT();
     var indexJ = structTS.fields().indexOf(selectS.field());
@@ -301,24 +302,26 @@ public class SbTranslator {
     return bytecodeF.select(selectableB, indexB);
   }
 
-  private StringB translateString(StringS stringS) {
+  private StringB translateString(StringS stringS) throws BytecodeException {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateNamedValueWithCache(ReferenceS referenceS, NamedValueS namedValueS) {
+  private ExprB translateNamedValueWithCache(ReferenceS referenceS, NamedValueS namedValueS)
+      throws BytecodeException {
     var key = new CacheKey(namedValueS.name(), typeSbTranslator.varMap());
     return computeIfAbsent(
         cache, key, name -> translateNamedValue(referenceS.location(), namedValueS));
   }
 
-  private ExprB translateNamedValue(Location refLocation, NamedValueS namedValueS) {
+  private ExprB translateNamedValue(Location refLocation, NamedValueS namedValueS)
+      throws BytecodeException {
     return switch (namedValueS) {
       case AnnotatedValueS annotatedValueS -> translateAnnotatedValue(annotatedValueS);
       case NamedExprValueS namedExprValueS -> translateNamedExprValue(refLocation, namedExprValueS);
     };
   }
 
-  private ExprB translateAnnotatedValue(AnnotatedValueS annotatedValueS) {
+  private ExprB translateAnnotatedValue(AnnotatedValueS annotatedValueS) throws BytecodeException {
     var annName = annotatedValueS.annotation().name();
     if (annName.equals(BYTECODE)) {
       return saveNalAndReturn(annotatedValueS, fetchValBytecode(annotatedValueS));
@@ -327,7 +330,8 @@ public class SbTranslator {
     }
   }
 
-  private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS) {
+  private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS)
+      throws BytecodeException {
     var funcTB = bytecodeF.funcT(list(), translateT(namedExprValueS.schema().type()));
     var funcB = bytecodeF.lambda(funcTB, translateExpr(namedExprValueS.body()));
     saveNal(funcB, namedExprValueS);
@@ -338,17 +342,18 @@ public class SbTranslator {
 
   // helpers
 
-  private ExprB fetchValBytecode(AnnotatedValueS annotatedValueS) {
+  private ExprB fetchValBytecode(AnnotatedValueS annotatedValueS) throws BytecodeException {
     var typeB = translateT(annotatedValueS.schema().type());
     return fetchBytecode(annotatedValueS.annotation(), typeB, annotatedValueS.name());
   }
 
-  private ExprB fetchFuncBytecode(AnnotatedFuncS annotatedFuncS) {
+  private ExprB fetchFuncBytecode(AnnotatedFuncS annotatedFuncS) throws BytecodeException {
     var typeB = translateT(annotatedFuncS.schema().type());
     return fetchBytecode(annotatedFuncS.annotation(), typeB, annotatedFuncS.name());
   }
 
-  private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name) {
+  private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name)
+      throws BytecodeException {
     var varNameToTypeMap = typeSbTranslator.varMap().mapKeys(VarS::name);
     var jar = loadNativeJar(annotation.location());
     var bytecode = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
@@ -365,7 +370,7 @@ public class SbTranslator {
     return bytecodeB;
   }
 
-  private BlobB loadNativeJar(Location location) {
+  private BlobB loadNativeJar(Location location) throws BytecodeException {
     var filePath = filePathOf(location).withExtension("jar");
     try {
       return fileLoader.load(filePath);
@@ -386,19 +391,19 @@ public class SbTranslator {
     }
   }
 
-  private TypeB translateT(TypeS typeS) {
+  private TypeB translateT(TypeS typeS) throws BytecodeException {
     return typeSbTranslator.translate(typeS);
   }
 
-  private FuncTB translateT(FuncTS funcTS) {
+  private FuncTB translateT(FuncTS funcTS) throws BytecodeException {
     return typeSbTranslator.translate(funcTS);
   }
 
-  private TupleTB translateT(TupleTS tupleTS) {
+  private TupleTB translateT(TupleTS tupleTS) throws BytecodeException {
     return typeSbTranslator.translate(tupleTS);
   }
 
-  private ArrayTB translateT(ArrayTS arrayTS) {
+  private ArrayTB translateT(ArrayTS arrayTS) throws BytecodeException {
     return typeSbTranslator.translate(arrayTS);
   }
 

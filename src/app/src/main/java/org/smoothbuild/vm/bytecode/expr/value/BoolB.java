@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 
@@ -11,12 +12,12 @@ public final class BoolB extends ValueB {
     super(merkleRoot, bytecodeDb);
   }
 
-  public boolean toJ() {
+  public boolean toJ() throws BytecodeException {
     return readData(() -> hashedDb().readBoolean(dataHash()));
   }
 
   @Override
-  public String exprToString() {
+  public String exprToString() throws BytecodeException {
     return Boolean.toString(toJ());
   }
 }

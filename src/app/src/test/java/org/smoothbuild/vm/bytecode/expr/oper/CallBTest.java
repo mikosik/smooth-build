@@ -7,6 +7,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class CallBTest extends TestContext {
@@ -42,7 +43,7 @@ public class CallBTest extends TestContext {
   }
 
   @Test
-  public void sub_exprs_returns_sub_exprs() {
+  public void sub_exprs_returns_sub_exprs() throws Exception {
     var func = lambdaB(list(stringTB()), intB());
     var args = combineB(stringB());
     assertThat(callB(func, args).subExprs()).isEqualTo(new CallSubExprsB(func, args));
@@ -51,14 +52,14 @@ public class CallBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<CallB> {
     @Override
-    protected java.util.List<CallB> equalExprs() {
+    protected java.util.List<CallB> equalExprs() throws BytecodeException {
       return list(
           callB(lambdaB(list(blobTB()), intB()), blobB()),
           callB(lambdaB(list(blobTB()), intB()), blobB()));
     }
 
     @Override
-    protected java.util.List<CallB> nonEqualExprs() {
+    protected java.util.List<CallB> nonEqualExprs() throws BytecodeException {
       return list(
           callB(lambdaB(list(blobTB()), intB()), blobB()),
           callB(lambdaB(list(stringTB()), intB()), stringB()),
@@ -67,13 +68,13 @@ public class CallBTest extends TestContext {
   }
 
   @Test
-  public void call_can_be_read_back_by_hash() {
+  public void call_can_be_read_back_by_hash() throws Exception {
     var call = callB(lambdaB(list(stringTB()), intB()), stringB());
     assertThat(bytecodeDbOther().get(call.hash())).isEqualTo(call);
   }
 
   @Test
-  public void call_read_back_by_hash_has_same_data() {
+  public void call_read_back_by_hash_has_same_data() throws Exception {
     var func = lambdaB(list(stringTB()), intB());
     var args = combineB(stringB());
     var call = callB(func, args);
@@ -82,7 +83,7 @@ public class CallBTest extends TestContext {
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     var func = lambdaB(list(stringTB()), intB());
     var call = callB(func, stringB());
     assertThat(call.toString()).isEqualTo("CALL:Int(???)@" + call.hash());

@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.evaluate.task.Task;
 
 public class TaskMatchersTest extends TestContext {
@@ -25,7 +26,7 @@ public class TaskMatchersTest extends TestContext {
     assertThat(matcher.matches(task, logs)).isEqualTo(expected);
   }
 
-  public static List<Arguments> matcher_matches_cases() {
+  public static List<Arguments> matcher_matches_cases() throws BytecodeException {
     var t = new TestContext();
     return list(
         arguments(matcher("all"), null, null, true),

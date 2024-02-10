@@ -35,7 +35,7 @@ public class LoggingDiagnosticListenerTest {
   }
 
   @Test
-  public void diagnostic_is_reported_as_error() {
+  public void diagnostic_is_reported_as_error() throws Exception {
     LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
     listener.report(diagnostic);
     verify(messageLogger).error(anyString());

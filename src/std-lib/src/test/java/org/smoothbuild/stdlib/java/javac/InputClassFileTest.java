@@ -13,6 +13,7 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class InputClassFileTest extends TestContext {
@@ -26,55 +27,58 @@ public class InputClassFileTest extends TestContext {
   }
 
   @Test
-  public void input_class_files_with_equal_paths_but_different_content_are_equal() {
+  public void input_class_files_with_equal_paths_but_different_content_are_equal()
+      throws Exception {
     assertThat(new InputClassFile(fileB(path, ByteString.encodeUtf8("abc"))))
         .isEqualTo(new InputClassFile(fileB(path, ByteString.encodeUtf8("def"))));
   }
 
   @Test
-  public void input_class_files_with_different_paths_are_not_equal() {
+  public void input_class_files_with_different_paths_are_not_equal() throws Exception {
     assertThat(new InputClassFile(fileB(path("a/b/MyClass.class"), bytes)))
         .isNotEqualTo(new InputClassFile(fileB(path("a/b/OtherClass.class"), bytes)));
   }
 
   @Test
-  public void class_in_default_package_has_empty_package() {
+  public void class_in_default_package_has_empty_package() throws Exception {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("Myclass.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("");
   }
 
   @Test
-  public void aPackage_returns_class_package() {
+  public void aPackage_returns_class_package() throws Exception {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/Myclass.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("a.b");
   }
 
   @Test
-  public void aPackage_for_inner_class_returns_package_of_enclosing_class() {
+  public void aPackage_for_inner_class_returns_package_of_enclosing_class()
+      throws BytecodeException {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass$Inner.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("a.b");
   }
 
   @Test
-  public void binary_name_for_default_class_returns_class_name() {
+  public void binary_name_for_default_class_returns_class_name() throws Exception {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("MyClass.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("MyClass");
   }
 
   @Test
-  public void binary_name_for_class_returns_package_plus_class_name() {
+  public void binary_name_for_class_returns_package_plus_class_name() throws Exception {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("a.b.MyClass");
   }
 
   @Test
-  public void binary_name_for_inner_class_returns_package_plus_outer_class_plus_inner_class_name() {
+  public void binary_name_for_inner_class_returns_package_plus_outer_class_plus_inner_class_name()
+      throws BytecodeException {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass$Inner.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("a.b.MyClass$Inner");
   }
 
   @Test
-  public void to_uri() {
+  public void to_uri() throws Exception {
     InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass.class")));
     assertThat(inputClassFile.toUri()).isEqualTo(URI.create("jar:///:a/b/MyClass.class"));
   }

@@ -4,10 +4,11 @@ import java.io.Closeable;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.smoothbuild.common.io.DataWriter;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.Helpers;
+import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 
 public class BlobBBuilder implements Closeable {
   private final BytecodeDb bytecodeDb;
@@ -22,7 +23,7 @@ public class BlobBBuilder implements Closeable {
     return sink;
   }
 
-  public void write(DataWriter dataWriter) {
+  public void write(DataWriter dataWriter) throws BytecodeException {
     Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> sink.write(dataWriter));
   }
 
@@ -31,16 +32,12 @@ public class BlobBBuilder implements Closeable {
     sink.close();
   }
 
-  public BlobB build() {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(this::buildImpl);
-  }
-
-  private BlobB buildImpl() throws HashedDbException {
+  public BlobB build() throws BytecodeException {
     try {
       sink.close();
       return bytecodeDb.newBlob(sink.hash());
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new BytecodeDbException(e);
     }
   }
 }

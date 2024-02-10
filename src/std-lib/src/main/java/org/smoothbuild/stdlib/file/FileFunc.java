@@ -6,13 +6,15 @@ import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 
 public class FileFunc {
-  public static ValueB func(Container container, TupleB args) throws IOException {
+  public static ValueB func(Container container, TupleB args)
+      throws IOException, BytecodeException {
     StringB path = (StringB) args.get(0);
     PathS validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {

@@ -15,7 +15,7 @@ public class ContainerTest extends TestContext {
   }
 
   @Test
-  public void messages_are_logged() {
+  public void messages_are_logged() throws Exception {
     var container = container();
     container.log().error("message");
     Iterable<TupleB> iterable = container.messages().elems(TupleB.class);

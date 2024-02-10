@@ -21,28 +21,28 @@ public class BytecodeFTest extends TestContext {
   }
 
   @Test
-  public void fatal_severity_is_fatal() {
+  public void fatal_severity_is_fatal() throws Exception {
     assertThat(MessageStruct.severity(bytecodeF().fatalMessage("text"))).isEqualTo(FATAL.name());
   }
 
   @Test
-  public void error_severity_is_error() {
+  public void error_severity_is_error() throws Exception {
     assertThat(MessageStruct.severity(bytecodeF().errorMessage("text"))).isEqualTo(ERROR.name());
   }
 
   @Test
-  public void warning_severity_is_warning() {
+  public void warning_severity_is_warning() throws Exception {
     assertThat(MessageStruct.severity(bytecodeF().warningMessage("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
-  public void info_severity_is_info() {
+  public void info_severity_is_info() throws Exception {
     assertThat(MessageStruct.severity(bytecodeF().infoMessage("text"))).isEqualTo(INFO.name());
   }
 
   @Test
-  public void text_returns_text() {
+  public void text_returns_text() throws Exception {
     assertThat(MessageStruct.text(bytecodeF().errorMessage("text"))).isEqualTo("text");
   }
 }

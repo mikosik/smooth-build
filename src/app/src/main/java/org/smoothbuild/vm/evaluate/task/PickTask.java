@@ -3,6 +3,7 @@ package org.smoothbuild.vm.evaluate.task;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -17,7 +18,7 @@ public final class PickTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, Container container) {
+  public Output run(TupleB input, Container container) throws BytecodeException {
     var components = input.elements();
     checkArgument(components.size() == 2);
     int index = index(components).toJ().intValue();

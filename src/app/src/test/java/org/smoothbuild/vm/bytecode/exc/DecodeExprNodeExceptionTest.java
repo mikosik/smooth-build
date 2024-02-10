@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeExprNodeExceptionTest extends TestContext {
   @Test
-  public void message() {
+  public void message() throws Exception {
     var exception =
         new DecodeExprNodeException(Hash.of(13), intTB(), "node-path", "Detailed message.");
     assertThat(exception.getMessage())

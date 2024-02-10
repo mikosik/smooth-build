@@ -3,7 +3,6 @@ package org.smoothbuild.accept;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
@@ -363,7 +362,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         @Nested
         class _imported {
           @Test
-          public void value_makes_it_inaccessible() throws IOException {
+          public void value_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               String myFunc(String true) = true;
@@ -374,7 +373,7 @@ public class EvaluateTest extends AcceptanceTestCase {
           }
 
           @Test
-          public void func_makes_it_inaccessible() throws IOException {
+          public void func_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               String myFunc(String and) = and;
@@ -388,7 +387,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         @Nested
         class _local {
           @Test
-          public void value_makes_it_inaccessible() throws IOException {
+          public void value_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               localValue = 7;
@@ -400,7 +399,7 @@ public class EvaluateTest extends AcceptanceTestCase {
           }
 
           @Test
-          public void func_makes_it_inaccessible() throws IOException {
+          public void func_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               localFunc() = 7;

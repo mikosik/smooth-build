@@ -8,6 +8,7 @@ import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
@@ -21,7 +22,7 @@ public class BlobBTest extends TestContext {
   }
 
   @Test
-  public void type_of_blob_is_blob_type() {
+  public void type_of_blob_is_blob_type() throws Exception {
     assertThat(blobB(bytes).category()).isEqualTo(blobTB());
   }
 
@@ -40,12 +41,12 @@ public class BlobBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<BlobB> {
     @Override
-    protected List<BlobB> equalExprs() {
+    protected List<BlobB> equalExprs() throws BytecodeException {
       return list(blobB(ByteString.encodeUtf8("aaa")), blobB(ByteString.encodeUtf8("aaa")));
     }
 
     @Override
-    protected List<BlobB> nonEqualExprs() {
+    protected List<BlobB> nonEqualExprs() throws BytecodeException {
       return list(
           blobB(ByteString.encodeUtf8("")),
           blobB(ByteString.encodeUtf8("aaa")),
@@ -54,7 +55,7 @@ public class BlobBTest extends TestContext {
   }
 
   @Test
-  public void blob_can_be_read_by_hash() {
+  public void blob_can_be_read_by_hash() throws Exception {
     BlobB blob = blobB(bytes);
     Hash hash = blob.hash();
     assertThat(bytecodeDbOther().get(hash)).isEqualTo(blob);
@@ -69,7 +70,7 @@ public class BlobBTest extends TestContext {
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     BlobB blob = blobB(bytes);
     assertThat(blob.toString()).isEqualTo("0x??@" + blob.hash());
   }

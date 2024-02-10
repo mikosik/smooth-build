@@ -13,7 +13,7 @@ import org.smoothbuild.vm.evaluate.task.SelectTask;
 
 public class ComputationHashTest extends TestContext {
   @Test
-  public void hashes_of_computations_with_same_task_runtime_and_input_are_equal() {
+  public void hashes_of_computations_with_same_task_runtime_and_input_are_equal() throws Exception {
     var task = new ConstTask(intB(7), traceB());
     var input = tupleB(stringB("input"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -21,8 +21,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void
-      hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal() {
+  public void hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal()
+      throws Exception {
     var task1 = new ConstTask(intB(7), traceB());
     var task2 = new ConstTask(intB(9), traceB());
     var input = tupleB(stringB("input"));
@@ -31,8 +31,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void
-      hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal() {
+  public void hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal()
+      throws Exception {
     var task = new ConstTask(intB(7), traceB());
     var input = tupleB(stringB("input"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -40,7 +40,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hashes_of_computations_with_same_task_runtime_but_different_input_are_not_equal() {
+  public void hashes_of_computations_with_same_task_runtime_but_different_input_are_not_equal()
+      throws Exception {
     var task = new ConstTask(intB(7), traceB());
     var input1 = tupleB(stringB("input"));
     var input2 = tupleB(stringB("input2"));
@@ -49,7 +50,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_order_task_and_empty_input_is_stable() {
+  public void hash_of_computation_with_order_task_and_empty_input_is_stable() throws Exception {
     var task = new OrderTask(orderB(stringTB()), traceB());
     var input = tupleB();
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -57,7 +58,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_order_task_and_non_empty_input_is_stable() {
+  public void hash_of_computation_with_order_task_and_non_empty_input_is_stable() throws Exception {
     var task = new OrderTask(orderB(stringTB()), traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -65,7 +66,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() {
+  public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() throws Exception {
     var nativeFuncB = nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
     var task = new InvokeTask(callB(nativeFuncB), nativeFuncB, traceB());
     var input = tupleB();
@@ -74,7 +75,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable() {
+  public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable()
+      throws Exception {
     var nativeFuncB = nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
     var task = new InvokeTask(callB(nativeFuncB), nativeFuncB, traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
@@ -83,7 +85,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_combine_task_and_empty_input_is_stable() {
+  public void hash_of_computation_with_combine_task_and_empty_input_is_stable() throws Exception {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB();
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -91,7 +93,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_combine_task_and_one_elem_input_is_stable() {
+  public void hash_of_computation_with_combine_task_and_one_elem_input_is_stable()
+      throws Exception {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB(stringB("abc"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -99,7 +102,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_combine_task_and_two_elems_input_is_stable() {
+  public void hash_of_computation_with_combine_task_and_two_elems_input_is_stable()
+      throws Exception {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
@@ -107,7 +111,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_select_task_and_one_elem_input_is_stable() {
+  public void hash_of_computation_with_select_task_and_one_elem_input_is_stable() throws Exception {
     var task = new SelectTask(selectB(), traceB());
     var input = tupleB(stringB("abc"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))

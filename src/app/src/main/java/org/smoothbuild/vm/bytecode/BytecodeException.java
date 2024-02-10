@@ -1,6 +1,8 @@
 package org.smoothbuild.vm.bytecode;
 
-public class BytecodeException extends RuntimeException {
+import java.io.IOException;
+
+public class BytecodeException extends Exception {
   public BytecodeException(String message) {
     super(message);
   }
@@ -11,5 +13,9 @@ public class BytecodeException extends RuntimeException {
 
   public BytecodeException(Throwable cause) {
     super(cause);
+  }
+
+  public IOException toIOException() {
+    return new IOException(this);
   }
 }

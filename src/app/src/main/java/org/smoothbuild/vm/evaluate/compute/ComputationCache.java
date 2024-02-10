@@ -5,7 +5,7 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
-import static org.smoothbuild.vm.evaluate.compute.ComputeException.computationCacheException;
+import static org.smoothbuild.vm.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.vm.evaluate.compute.ComputeException.corruptedValueException;
 
 import jakarta.inject.Inject;
@@ -15,6 +15,7 @@ import okio.BufferedSource;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.ForSpace;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -49,7 +50,7 @@ public class ComputationCache {
         sink.write(valueB.hash().toByteString());
       }
     } catch (IOException e) {
-      throw computationCacheException(e);
+      throw computeException(e);
     }
   }
 
@@ -97,7 +98,9 @@ public class ComputationCache {
         }
       }
     } catch (IOException e) {
-      throw computationCacheException(e);
+      throw computeException(e);
+    } catch (BytecodeException e) {
+      throw computeException(e);
     }
   }
 

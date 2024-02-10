@@ -3,29 +3,32 @@ package org.smoothbuild.vm.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 
-import java.util.function.Function;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 
 public class CategoryBCachingTest extends TestContext {
   @ParameterizedTest
   @MethodSource("factories")
-  public void created_type_is_cached(Function<CategoryDb, CategoryB> factory) {
+  public void created_type_is_cached(Function1<CategoryDb, CategoryB, BytecodeException> factory)
+      throws Exception {
     assertThat(factory.apply(categoryDb())).isSameInstanceAs(factory.apply(categoryDb()));
   }
 
   @ParameterizedTest
   @MethodSource("factories")
-  public void read_type_is_cached(Function<CategoryDb, CategoryB> factory) {
+  public void read_type_is_cached(Function1<CategoryDb, CategoryB, BytecodeException> factory)
+      throws Exception {
     var hash = factory.apply(categoryDb()).hash();
     var catDb = categoryDbOther();
     assertThat(catDb.get(hash)).isSameInstanceAs(catDb.get(hash));
   }
 
-  private static java.util.List<Function<CategoryDb, CategoryB>> factories() {
+  private static java.util.List<Function1<CategoryDb, CategoryB, BytecodeException>> factories() {
     return list(
         CategoryDb::blob,
         CategoryDb::bool,
@@ -57,11 +60,11 @@ public class CategoryBCachingTest extends TestContext {
         catDb -> catDb.array(catDb.array(funcT(catDb))));
   }
 
-  private static TupleTB tupleT(CategoryDb categoryDb) {
+  private static TupleTB tupleT(CategoryDb categoryDb) throws BytecodeException {
     return categoryDb.tuple(categoryDb.string(), categoryDb.string());
   }
 
-  private static FuncTB funcT(CategoryDb categoryDb) {
+  private static FuncTB funcT(CategoryDb categoryDb) throws BytecodeException {
     return categoryDb.funcT(list(categoryDb.bool(), categoryDb.blob()), categoryDb.string());
   }
 }

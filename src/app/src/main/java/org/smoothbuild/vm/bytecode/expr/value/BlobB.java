@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import okio.BufferedSource;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 
@@ -12,7 +13,7 @@ public final class BlobB extends ValueB {
     super(merkleRoot, bytecodeDb);
   }
 
-  public BufferedSource source() {
+  public BufferedSource source() throws BytecodeException {
     return readData(() -> hashedDb().source(dataHash()));
   }
 

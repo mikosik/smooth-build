@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -20,12 +21,12 @@ public class VarB extends OperB {
     return new ReferenceSubExprsB();
   }
 
-  public IntB index() {
+  public IntB index() throws BytecodeException {
     return readData(IntB.class);
   }
 
   @Override
-  public String exprToString() {
+  public String exprToString() throws BytecodeException {
     return category().name() + "(" + index().toJ() + ")";
   }
 }

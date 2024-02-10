@@ -22,7 +22,7 @@ public class UnzipTest extends TestContext {
     assertThat(unzipIntoMap(jarBlob)).isEqualTo(files);
   }
 
-  private static Map<String, String> unzipIntoMap(BlobB jarBlob) throws IOException {
+  private static Map<String, String> unzipIntoMap(BlobB jarBlob) throws Exception {
     Map<String, String> result = new HashMap<>();
     try (var source = jarBlob.source()) {
       unzip(source, s -> true, (s, is) -> result.put(s, new String(is.readAllBytes(), UTF_8)));

@@ -10,7 +10,6 @@ import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.vm.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import org.smoothbuild.testing.func.nativ.MissingMethod;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.OverloadedMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 
 public class MethodLoaderTest extends TestContext {
   @Test
@@ -47,7 +47,7 @@ public class MethodLoaderTest extends TestContext {
         .isEqualTo(loadingError(clazz, "does not have 'func' method."));
   }
 
-  private MethodSpec methodSpec(Class<?> clazz) throws IOException {
+  private MethodSpec methodSpec(Class<?> clazz) throws BytecodeException {
     var jar = blobBJarWithPluginApi(clazz);
     return new MethodSpec(jar, clazz.getCanonicalName(), NATIVE_METHOD_NAME);
   }

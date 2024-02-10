@@ -6,29 +6,30 @@ import static org.smoothbuild.common.collect.List.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class CombineBTest extends TestContext {
   @Test
-  public void category_returns_category() {
+  public void category_returns_category() throws Exception {
     var combineH = combineB(intB(3));
     assertThat(combineH.category()).isEqualTo(combineCB(intTB()));
   }
 
   @Test
-  public void items_returns_items() {
+  public void items_returns_items() throws Exception {
     assertThat(combineB(intB(1), stringB("abc")).items()).isEqualTo(list(intB(1), stringB("abc")));
   }
 
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<CombineB> {
     @Override
-    protected java.util.List<CombineB> equalExprs() {
+    protected java.util.List<CombineB> equalExprs() throws BytecodeException {
       return list(combineB(intB(1), stringB("abc")), combineB(intB(1), stringB("abc")));
     }
 
     @Override
-    protected java.util.List<CombineB> nonEqualExprs() {
+    protected java.util.List<CombineB> nonEqualExprs() throws BytecodeException {
       return list(
           combineB(intB(1)),
           combineB(intB(2)),
@@ -38,20 +39,20 @@ public class CombineBTest extends TestContext {
   }
 
   @Test
-  public void combine_can_be_read_back_by_hash() {
+  public void combine_can_be_read_back_by_hash() throws Exception {
     CombineB combine = combineB(intB(1));
     assertThat(bytecodeDbOther().get(combine.hash())).isEqualTo(combine);
   }
 
   @Test
-  public void combine_read_back_by_hash_has_same_items() {
+  public void combine_read_back_by_hash_has_same_items() throws Exception {
     var combine = combineB(intB(), stringB());
     assertThat(((CombineB) bytecodeDbOther().get(combine.hash())).items())
         .isEqualTo(list(intB(), stringB()));
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     CombineB combine = combineB(intB(1));
     assertThat(combine.toString()).isEqualTo("COMBINE:{Int}(???)@" + combine.hash());
   }

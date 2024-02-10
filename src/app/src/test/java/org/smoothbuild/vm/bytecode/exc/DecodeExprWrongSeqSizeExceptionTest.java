@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeExprWrongSeqSizeExceptionTest extends TestContext {
   @Test
-  public void message() {
+  public void message() throws Exception {
     var exception = new DecodeExprWrongSeqSizeException(Hash.of(123), intTB(), "node-path", 7, 2);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` object at "

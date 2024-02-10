@@ -2,6 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
@@ -21,15 +22,15 @@ public final class NativeFuncB extends FuncB {
     checkArgument(merkleRoot.category() instanceof NativeFuncCB);
   }
 
-  public BlobB jar() {
+  public BlobB jar() throws BytecodeException {
     return readDataSeqElem(JAR_IDX, DATA_SEQ_SIZE, BlobB.class);
   }
 
-  public StringB classBinaryName() {
+  public StringB classBinaryName() throws BytecodeException {
     return readDataSeqElem(CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
   }
 
-  public BoolB isPure() {
+  public BoolB isPure() throws BytecodeException {
     return readDataSeqElem(IS_PURE_IDX, DATA_SEQ_SIZE, BoolB.class);
   }
 

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.zip.ZipException;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -19,7 +20,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class JavacFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     ArrayB srcs = (ArrayB) args.get(0);
     ArrayB libs = (ArrayB) args.get(1);
     ArrayB options = (ArrayB) args.get(2);
@@ -42,7 +43,7 @@ public class JavacFunc {
       this.options = options;
     }
 
-    public ArrayB execute() throws IOException {
+    public ArrayB execute() throws BytecodeException {
       if (compiler == null) {
         nativeApi
             .log()
@@ -54,7 +55,7 @@ public class JavacFunc {
       return compile(srcs);
     }
 
-    public ArrayB compile(ArrayB files) throws IOException {
+    public ArrayB compile(ArrayB files) throws BytecodeException {
       // prepare args for compilation
 
       var additionalCompilerOutput = new StringWriter();
@@ -101,18 +102,21 @@ public class JavacFunc {
           return null;
         }
       } catch (ZipException e) {
-        nativeApi
-            .log()
-            .error("Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
+        var message = "Cannot read archive. Corrupted data? Internal message: " + e.getMessage();
+        nativeApi.log().error(message);
+        return null;
+      } catch (IOException e) {
+        nativeApi.log().error("IOException: " + e.getMessage());
         return null;
       }
     }
 
-    private List<String> options() {
+    private List<String> options() throws BytecodeException {
       return options.elems(StringB.class).map(StringB::toJ);
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles) {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles)
+        throws BytecodeException {
       ArrayList<InputSourceFile> result = new ArrayList<>();
       for (TupleB file : sourceFiles) {
         result.add(new InputSourceFile(file));
@@ -122,7 +126,7 @@ public class JavacFunc {
   }
 
   public static Iterable<InputClassFile> classesFromJarFiles(
-      NativeApi nativeApi, ArrayB libraryJars) throws IOException {
+      NativeApi nativeApi, ArrayB libraryJars) throws BytecodeException {
     var filesMap = filesFromLibJars(nativeApi, libraryJars, isClassFilePredicate());
     return filesMap == null
         ? null

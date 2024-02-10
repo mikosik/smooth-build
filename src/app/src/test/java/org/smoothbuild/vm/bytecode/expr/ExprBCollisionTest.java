@@ -12,7 +12,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class ExprBCollisionTest extends TestContext {
   @Test
-  public void collisions() {
+  public void collisions() throws Exception {
     HashMap<Hash, ExprB> map = new HashMap<>();
     for (ExprB expr : exprBs()) {
       Hash hash = expr.hash();
@@ -23,7 +23,7 @@ public class ExprBCollisionTest extends TestContext {
     }
   }
 
-  private List<ExprB> exprBs() {
+  private List<ExprB> exprBs() throws Exception {
     BlobB blob1 = blobB(0);
     BlobB blob2 = blobB(1);
     BlobB blobEmpty = blobB(ByteString.EMPTY);

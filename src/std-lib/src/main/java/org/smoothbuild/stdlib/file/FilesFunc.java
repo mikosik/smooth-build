@@ -10,6 +10,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathIterator;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.filesystem.base.PathState;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -17,7 +18,8 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 
 public class FilesFunc {
-  public static ValueB func(Container container, TupleB args) throws IOException {
+  public static ValueB func(Container container, TupleB args)
+      throws IOException, BytecodeException {
     StringB dir = (StringB) args.get(0);
     PathS path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
@@ -30,22 +32,21 @@ public class FilesFunc {
       return null;
     }
 
-    switch (fileSystem.pathState(path)) {
-      case DIR:
-        return readFiles(container, fileSystem, path);
-      case FILE:
+    return switch (fileSystem.pathState(path)) {
+      case DIR -> readFiles(container, fileSystem, path);
+      case FILE -> {
         container.log().error("Dir " + path.q() + " doesn't exist. It is a file.");
-        return null;
-      case NOTHING:
+        yield null;
+      }
+      case NOTHING -> {
         container.log().error("Dir " + path.q() + " doesn't exist.");
-        return null;
-      default:
-        throw new RuntimeException("Broken 'files' function implementation: unreachable case");
-    }
+        yield null;
+      }
+    };
   }
 
   private static ArrayB readFiles(Container container, FileSystem fileSystem, PathS dir)
-      throws IOException {
+      throws IOException, BytecodeException {
     var fileArrayBuilder =
         container.factory().arrayBuilderWithElems(container.factory().fileT());
     var reader = new FileReader(container);

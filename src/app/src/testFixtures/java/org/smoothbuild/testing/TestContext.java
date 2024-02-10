@@ -115,9 +115,11 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.out.report.SystemOutReporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -444,450 +446,463 @@ public class TestContext {
 
   // InstB types
 
-  public TupleTB animalTB() {
+  public TupleTB animalTB() throws BytecodeException {
     return tupleTB(stringTB(), intTB());
   }
 
-  public ArrayTB arrayTB() {
+  public ArrayTB arrayTB() throws BytecodeException {
     return arrayTB(stringTB());
   }
 
-  public ArrayTB arrayTB(TypeB elemT) {
+  public ArrayTB arrayTB(TypeB elemT) throws BytecodeException {
     return categoryDb().array(elemT);
   }
 
-  public BlobTB blobTB() {
+  public BlobTB blobTB() throws BytecodeException {
     return categoryDb().blob();
   }
 
-  public BoolTB boolTB() {
+  public BoolTB boolTB() throws BytecodeException {
     return categoryDb().bool();
   }
 
-  public TupleTB fileTB() {
+  public TupleTB fileTB() throws BytecodeException {
     return tupleTB(stringTB(), blobTB());
   }
 
-  public LambdaCB lambdaCB() {
+  public LambdaCB lambdaCB() throws BytecodeException {
     return lambdaCB(blobTB(), stringTB(), intTB());
   }
 
-  public LambdaCB lambdaCB(TypeB resultT) {
+  public LambdaCB lambdaCB(TypeB resultT) throws BytecodeException {
     return categoryDb().lambda(funcTB(resultT));
   }
 
-  public LambdaCB lambdaCB(TypeB param, TypeB resultT) {
+  public LambdaCB lambdaCB(TypeB param, TypeB resultT) throws BytecodeException {
     return categoryDb().lambda(funcTB(param, resultT));
   }
 
-  public LambdaCB lambdaCB(TypeB param1, TypeB param2, TypeB resultT) {
+  public LambdaCB lambdaCB(TypeB param1, TypeB param2, TypeB resultT) throws BytecodeException {
     return categoryDb().lambda(funcTB(param1, param2, resultT));
   }
 
-  public FuncTB funcTB() {
+  public FuncTB funcTB() throws BytecodeException {
     return funcTB(blobTB(), stringTB(), intTB());
   }
 
-  public FuncTB funcTB(TypeB resultT) {
+  public FuncTB funcTB(TypeB resultT) throws BytecodeException {
     return funcTB(list(), resultT);
   }
 
-  public FuncTB funcTB(TypeB param1, TypeB resultT) {
+  public FuncTB funcTB(TypeB param1, TypeB resultT) throws BytecodeException {
     return funcTB(list(param1), resultT);
   }
 
-  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resultT) {
+  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resultT) throws BytecodeException {
     return funcTB(list(param1, param2), resultT);
   }
 
-  public FuncTB funcTB(List<TypeB> paramTs, TypeB resultT) {
+  public FuncTB funcTB(List<TypeB> paramTs, TypeB resultT) throws BytecodeException {
     return categoryDb().funcT(paramTs, resultT);
   }
 
-  public IntTB intTB() {
+  public IntTB intTB() throws BytecodeException {
     return categoryDb().int_();
   }
 
-  public NativeFuncCB nativeFuncCB() {
+  public NativeFuncCB nativeFuncCB() throws BytecodeException {
     return nativeFuncCB(boolTB(), blobTB());
   }
 
-  public NativeFuncCB nativeFuncCB(TypeB resultT) {
+  public NativeFuncCB nativeFuncCB(TypeB resultT) throws BytecodeException {
     return categoryDb().nativeFunc(funcTB(resultT));
   }
 
-  public NativeFuncCB nativeFuncCB(TypeB param, TypeB resultT) {
+  public NativeFuncCB nativeFuncCB(TypeB param, TypeB resultT) throws BytecodeException {
     return categoryDb().nativeFunc(funcTB(param, resultT));
   }
 
-  public NativeFuncCB nativeFuncCB(TypeB param1, TypeB param2, TypeB resultT) {
+  public NativeFuncCB nativeFuncCB(TypeB param1, TypeB param2, TypeB resultT)
+      throws BytecodeException {
     return categoryDb().nativeFunc(funcTB(param1, param2, resultT));
   }
 
-  public TupleTB personTB() {
+  public TupleTB personTB() throws BytecodeException {
     return tupleTB(stringTB(), stringTB());
   }
 
-  public StringTB stringTB() {
+  public StringTB stringTB() throws BytecodeException {
     return categoryDb().string();
   }
 
-  public TupleTB tupleTB(TypeB... itemTs) {
+  public TupleTB tupleTB(TypeB... itemTs) throws BytecodeException {
     return categoryDb().tuple(itemTs);
   }
 
   // OperB categories
 
-  public CallCB callCB() {
+  public CallCB callCB() throws BytecodeException {
     return callCB(intTB());
   }
 
-  public CallCB callCB(TypeB evaluationT) {
+  public CallCB callCB(TypeB evaluationT) throws BytecodeException {
     return categoryDb().call(evaluationT);
   }
 
-  public CombineCB combineCB(TypeB... itemTs) {
+  public CombineCB combineCB(TypeB... itemTs) throws BytecodeException {
     return categoryDb().combine(tupleTB(itemTs));
   }
 
-  public IfFuncCB ifFuncCB() {
+  public IfFuncCB ifFuncCB() throws BytecodeException {
     return ifFuncCB(intTB());
   }
 
-  public IfFuncCB ifFuncCB(TypeB t) {
+  public IfFuncCB ifFuncCB(TypeB t) throws BytecodeException {
     return categoryDb().ifFunc(t);
   }
 
-  public MapFuncCB mapFuncCB() {
+  public MapFuncCB mapFuncCB() throws BytecodeException {
     return mapFuncCB(intTB(), boolTB());
   }
 
-  public MapFuncCB mapFuncCB(TypeB r, TypeB s) {
+  public MapFuncCB mapFuncCB(TypeB r, TypeB s) throws BytecodeException {
     return categoryDb().mapFunc(r, s);
   }
 
-  public OrderCB orderCB() {
+  public OrderCB orderCB() throws BytecodeException {
     return orderCB(intTB());
   }
 
-  public OrderCB orderCB(TypeB elemT) {
+  public OrderCB orderCB(TypeB elemT) throws BytecodeException {
     return categoryDb().order(arrayTB(elemT));
   }
 
-  public PickCB pickCB() {
+  public PickCB pickCB() throws BytecodeException {
     return pickCB(intTB());
   }
 
-  public PickCB pickCB(TypeB evaluationT) {
+  public PickCB pickCB(TypeB evaluationT) throws BytecodeException {
     return categoryDb().pick(evaluationT);
   }
 
-  public VarCB varCB() {
+  public VarCB varCB() throws BytecodeException {
     return varCB(intTB());
   }
 
-  public VarCB varCB(TypeB evaluationT) {
+  public VarCB varCB(TypeB evaluationT) throws BytecodeException {
     return categoryDb().var(evaluationT);
   }
 
-  public SelectCB selectCB() {
+  public SelectCB selectCB() throws BytecodeException {
     return selectCB(intTB());
   }
 
-  public SelectCB selectCB(TypeB evaluationT) {
+  public SelectCB selectCB(TypeB evaluationT) throws BytecodeException {
     return categoryDb().select(evaluationT);
   }
 
   // ValueB-s
 
-  public TupleB animalB() {
+  public TupleB animalB() throws BytecodeException {
     return animalB("rabbit", 7);
   }
 
-  public TupleB animalB(String species, int speed) {
+  public TupleB animalB(String species, int speed) throws BytecodeException {
     return animalB(stringB(species), intB(speed));
   }
 
-  public TupleB animalB(StringB species, IntB speed) {
+  public TupleB animalB(StringB species, IntB speed) throws BytecodeException {
     return tupleB(species, speed);
   }
 
-  public ArrayB arrayB(ValueB... elems) {
+  public ArrayB arrayB(ValueB... elems) throws BytecodeException {
     return arrayB(elems[0].evaluationT(), elems);
   }
 
-  public ArrayB arrayB(TypeB elemT, ValueB... elems) {
+  public ArrayB arrayB(TypeB elemT, ValueB... elems) throws BytecodeException {
     return bytecodeDb().arrayBuilder(arrayTB(elemT)).addAll(list(elems)).build();
   }
 
-  public BlobB blobBJarWithPluginApi(Class<?>... classes) throws IOException {
+  public BlobB blobBJarWithPluginApi(Class<?>... classes) throws BytecodeException {
     return blobBWith(list(classes)
         .append(
-            BlobB.class, NativeApi.class, ExprB.class, StringB.class, TupleB.class, ValueB.class));
+            BlobB.class,
+            NativeApi.class,
+            ExprB.class,
+            StringB.class,
+            TupleB.class,
+            ValueB.class,
+            BytecodeException.class));
   }
 
-  public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
+  public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws BytecodeException {
     return blobBWith(list(classes));
   }
 
-  private BlobB blobBWith(java.util.List<Class<?>> list) throws IOException {
+  private BlobB blobBWith(java.util.List<Class<?>> list) throws BytecodeException {
     var blobBBuilder = bytecodeDb().blobBuilder();
     try (var outputStream = blobBBuilder.sink()) {
       saveBytecodeInJar(outputStream, list);
+    } catch (IOException e) {
+      throw new IoBytecodeException(e);
     }
     return blobBBuilder.build();
   }
 
-  public BlobB blobB() {
+  public BlobB blobB() throws BytecodeException {
     return bytecodeF().blob(sink -> sink.writeUtf8("blob data"));
   }
 
-  public BlobB blobB(int data) {
+  public BlobB blobB(int data) throws BytecodeException {
     return blobB(intToByteString(data));
   }
 
-  public BlobB blobB(ByteString bytes) {
+  public BlobB blobB(ByteString bytes) throws BytecodeException {
     return bytecodeF().blob(sink -> sink.write(bytes));
   }
 
-  public BlobBBuilder blobBBuilder() {
+  public BlobBBuilder blobBBuilder() throws BytecodeException {
     return bytecodeDb().blobBuilder();
   }
 
-  public BoolB boolB() {
+  public BoolB boolB() throws BytecodeException {
     return boolB(true);
   }
 
-  public BoolB boolB(boolean value) {
+  public BoolB boolB(boolean value) throws BytecodeException {
     return bytecodeDb().bool(value);
   }
 
-  public TupleB fileB(PathS path) {
+  public TupleB fileB(PathS path) throws BytecodeException {
     return fileB(path, path.toString());
   }
 
-  public TupleB fileB(PathS path, String content) {
+  public TupleB fileB(PathS path, String content) throws BytecodeException {
     return fileB(path.toString(), content);
   }
 
-  public TupleB fileB(String path, String content) {
+  public TupleB fileB(String path, String content) throws BytecodeException {
     return fileB(path, ByteString.encodeString(content, CHARSET));
   }
 
-  public TupleB fileB(PathS path, ByteString content) {
+  public TupleB fileB(PathS path, ByteString content) throws BytecodeException {
     return fileB(path.toString(), content);
   }
 
-  public TupleB fileB(String path, ByteString content) {
+  public TupleB fileB(String path, ByteString content) throws BytecodeException {
     return fileB(path, blobB(content));
   }
 
-  public TupleB fileB(String path, BlobB blob) {
+  public TupleB fileB(String path, BlobB blob) throws BytecodeException {
     StringB string = bytecodeF().string(path);
     return bytecodeF().file(blob, string);
   }
 
-  public LambdaB lambdaB() {
+  public LambdaB lambdaB() throws BytecodeException {
     return lambdaB(intB());
   }
 
-  public LambdaB lambdaB(ExprB body) {
+  public LambdaB lambdaB(ExprB body) throws BytecodeException {
     return lambdaB(list(), body);
   }
 
-  public LambdaB lambdaB(List<TypeB> paramTs, ExprB body) {
+  public LambdaB lambdaB(List<TypeB> paramTs, ExprB body) throws BytecodeException {
     var funcTB = funcTB(paramTs, body.evaluationT());
     return lambdaB(funcTB, body);
   }
 
-  public LambdaB lambdaB(FuncTB type, ExprB body) {
+  public LambdaB lambdaB(FuncTB type, ExprB body) throws BytecodeException {
     return bytecodeDb().lambda(type, body);
   }
 
-  public LambdaB idFuncB() {
+  public LambdaB idFuncB() throws BytecodeException {
     return lambdaB(list(intTB()), varB(intTB(), 0));
   }
 
-  public LambdaB returnAbcFuncB() {
+  public LambdaB returnAbcFuncB() throws BytecodeException {
     return lambdaB(stringB("abc"));
   }
 
-  public NativeFuncB returnAbcNativeFuncB() throws IOException {
+  public NativeFuncB returnAbcNativeFuncB() throws IOException, BytecodeException {
     return returnAbcNativeFuncB(true);
   }
 
-  public NativeFuncB returnAbcNativeFuncB(boolean isPure) throws IOException {
+  public NativeFuncB returnAbcNativeFuncB(boolean isPure) throws IOException, BytecodeException {
     return nativeFuncB(funcTB(stringTB()), ReturnAbcFunc.class, isPure);
   }
 
-  public IntB intB() {
+  public IntB intB() throws BytecodeException {
     return intB(17);
   }
 
-  public IntB intB(int value) {
+  public IntB intB(int value) throws BytecodeException {
     return intB(BigInteger.valueOf(value));
   }
 
-  public IntB intB(BigInteger value) {
+  public IntB intB(BigInteger value) throws BytecodeException {
     return bytecodeDb().int_(value);
   }
 
-  public NativeFuncB returnAbcNativeFunc() throws IOException {
+  public NativeFuncB returnAbcNativeFunc() throws IOException, BytecodeException {
     var funcTB = funcTB(stringTB());
     return nativeFuncB(funcTB, ReturnAbcFunc.class);
   }
 
   public static class ReturnAbcFunc {
-    public static ValueB func(NativeApi nativeApi, TupleB args) {
+    public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
       return nativeApi.factory().string("abc");
     }
   }
 
-  public NativeFuncB nativeFuncB(Class<?> clazz) throws IOException {
+  public NativeFuncB nativeFuncB(Class<?> clazz) throws IOException, BytecodeException {
     return nativeFuncB(funcTB(), clazz);
   }
 
-  public NativeFuncB nativeFuncB(FuncTB funcTB, Class<?> clazz) throws IOException {
+  public NativeFuncB nativeFuncB(FuncTB funcTB, Class<?> clazz)
+      throws IOException, BytecodeException {
     return nativeFuncB(funcTB, clazz, true);
   }
 
-  public NativeFuncB nativeFuncB(FuncTB funcTB, Class<?> clazz, boolean isPure) throws IOException {
+  public NativeFuncB nativeFuncB(FuncTB funcTB, Class<?> clazz, boolean isPure)
+      throws IOException, BytecodeException {
     return nativeFuncB(
         funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getName()), boolB(isPure));
   }
 
-  public NativeFuncB nativeFuncB() {
+  public NativeFuncB nativeFuncB() throws BytecodeException {
     return nativeFuncB(funcTB());
   }
 
-  public NativeFuncB nativeFuncB(FuncTB funcTB) {
+  public NativeFuncB nativeFuncB(FuncTB funcTB) throws BytecodeException {
     return nativeFuncB(funcTB, blobB(7), stringB("class binary name"), boolB(true));
   }
 
-  public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName) {
+  public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName)
+      throws BytecodeException {
     return nativeFuncB(type, jar, classBinaryName, boolB(true));
   }
 
-  public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+  public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
+      throws BytecodeException {
     return bytecodeDb().nativeFunc(type, jar, classBinaryName, isPure);
   }
 
-  public TupleB personB(String firstName, String lastName) {
+  public TupleB personB(String firstName, String lastName) throws BytecodeException {
     return tupleB(stringB(firstName), stringB(lastName));
   }
 
-  public StringB stringB() {
+  public StringB stringB() throws BytecodeException {
     return bytecodeDb().string("abc");
   }
 
-  public StringB stringB(String string) {
+  public StringB stringB(String string) throws BytecodeException {
     return bytecodeDb().string(string);
   }
 
-  public TupleB tupleB(ValueB... items) {
+  public TupleB tupleB(ValueB... items) throws BytecodeException {
     return bytecodeDb().tuple(list(items));
   }
 
-  public ArrayB messageArrayWithOneError() {
+  public ArrayB messageArrayWithOneError() throws BytecodeException {
     return arrayB(bytecodeF().errorMessage("error message"));
   }
 
-  public ArrayB messageArrayEmpty() {
+  public ArrayB messageArrayEmpty() throws BytecodeException {
     return arrayB(bytecodeF().messageT());
   }
 
-  public TupleB fatalMessage() {
+  public TupleB fatalMessage() throws BytecodeException {
     return fatalMessage("fatal message");
   }
 
-  public TupleB fatalMessage(String text) {
+  public TupleB fatalMessage(String text) throws BytecodeException {
     return bytecodeF().fatalMessage(text);
   }
 
-  public TupleB errorMessage() {
+  public TupleB errorMessage() throws BytecodeException {
     return errorMessage("error message");
   }
 
-  public TupleB errorMessage(String text) {
+  public TupleB errorMessage(String text) throws BytecodeException {
     return bytecodeF().errorMessage(text);
   }
 
-  public TupleB warningMessage() {
+  public TupleB warningMessage() throws BytecodeException {
     return warningMessage("warning message");
   }
 
-  public TupleB warningMessage(String text) {
+  public TupleB warningMessage(String text) throws BytecodeException {
     return bytecodeF().warningMessage(text);
   }
 
-  public TupleB infoMessage() {
+  public TupleB infoMessage() throws BytecodeException {
     return infoMessage("info message");
   }
 
-  public TupleB infoMessage(String text) {
+  public TupleB infoMessage(String text) throws BytecodeException {
     return bytecodeF().infoMessage(text);
   }
 
   // OperB-s
 
-  public CallB callB() {
+  public CallB callB() throws BytecodeException {
     return callB(idFuncB(), intB());
   }
 
-  public CallB callB(ExprB func, ExprB... args) {
+  public CallB callB(ExprB func, ExprB... args) throws BytecodeException {
     return callB(func, combineB(args));
   }
 
-  public CallB callB(ExprB func, CombineB args) {
+  public CallB callB(ExprB func, CombineB args) throws BytecodeException {
     return bytecodeDb().call(func, args);
   }
 
-  public CombineB combineB(ExprB... items) {
+  public CombineB combineB(ExprB... items) throws BytecodeException {
     return bytecodeDb().combine(list(items));
   }
 
-  public IfFuncB ifFuncB(TypeB t) {
+  public IfFuncB ifFuncB(TypeB t) throws BytecodeException {
     return bytecodeDb().ifFunc(t);
   }
 
-  public MapFuncB mapFuncB(TypeB r, TypeB s) {
+  public MapFuncB mapFuncB(TypeB r, TypeB s) throws BytecodeException {
     return bytecodeDb().mapFunc(r, s);
   }
 
-  public OrderB orderB() {
+  public OrderB orderB() throws BytecodeException {
     return orderB(intTB());
   }
 
-  public OrderB orderB(ExprB... elems) {
+  public OrderB orderB(ExprB... elems) throws BytecodeException {
     return orderB(elems[0].evaluationT(), elems);
   }
 
-  public OrderB orderB(TypeB elemT, ExprB... elems) {
+  public OrderB orderB(TypeB elemT, ExprB... elems) throws BytecodeException {
     var elemList = list(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
-  public PickB pickB() {
+  public PickB pickB() throws BytecodeException {
     return pickB(arrayB(intB()), intB(0));
   }
 
-  public PickB pickB(ExprB array, ExprB index) {
+  public PickB pickB(ExprB array, ExprB index) throws BytecodeException {
     return bytecodeDb().pick(array, index);
   }
 
-  public VarB varB(int index) {
+  public VarB varB(int index) throws BytecodeException {
     return varB(intTB(), index);
   }
 
-  public VarB varB(TypeB evaluationT, int index) {
+  public VarB varB(TypeB evaluationT, int index) throws BytecodeException {
     return bytecodeDb().varB(evaluationT, intB(index));
   }
 
-  public SelectB selectB() {
+  public SelectB selectB() throws BytecodeException {
     return bytecodeDb().select(tupleB(intB()), intB(0));
   }
 
-  public SelectB selectB(ExprB tuple, IntB index) {
+  public SelectB selectB(ExprB tuple, IntB index) throws BytecodeException {
     return bytecodeDb().select(tuple, index);
   }
 
@@ -1668,23 +1683,24 @@ public class TestContext {
 
   // Task, Computation, Output
 
-  public Task task() {
+  public Task task() throws BytecodeException {
     return orderTask();
   }
 
-  public InvokeTask invokeTask() {
+  public InvokeTask invokeTask() throws BytecodeException {
     return invokeTask(callB(), nativeFuncB(), traceB());
   }
 
-  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB) {
+  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB) throws BytecodeException {
     return invokeTask(callB, nativeFuncB, null);
   }
 
-  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) {
+  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace)
+      throws BytecodeException {
     return new InvokeTask(callB, nativeFuncB, trace);
   }
 
-  public CombineTask combineTask() {
+  public CombineTask combineTask() throws BytecodeException {
     return combineTask(combineB(), traceB());
   }
 
@@ -1692,7 +1708,7 @@ public class TestContext {
     return new CombineTask(combineB, trace);
   }
 
-  public SelectTask selectTask() {
+  public SelectTask selectTask() throws BytecodeException {
     return selectTask(selectB(), traceB());
   }
 
@@ -1700,7 +1716,7 @@ public class TestContext {
     return new SelectTask(selectB, trace);
   }
 
-  public PickTask pickTask() {
+  public PickTask pickTask() throws BytecodeException {
     return pickTask(pickB(), traceB());
   }
 
@@ -1708,7 +1724,7 @@ public class TestContext {
     return new PickTask(pickB, trace);
   }
 
-  public OrderTask orderTask() {
+  public OrderTask orderTask() throws BytecodeException {
     return orderTask(orderB(), traceB(Hash.of(7), Hash.of(9)));
   }
 
@@ -1716,7 +1732,7 @@ public class TestContext {
     return new OrderTask(orderB, trace);
   }
 
-  public ConstTask constTask() {
+  public ConstTask constTask() throws BytecodeException {
     return constTask(intB(7));
   }
 
@@ -1728,11 +1744,12 @@ public class TestContext {
     return new ConstTask(valueB, trace);
   }
 
-  public ComputationResult computationResult(ValueB valueB) {
+  public ComputationResult computationResult(ValueB valueB) throws BytecodeException {
     return computationResult(output(valueB), DISK);
   }
 
-  public ComputationResult computationResult(ValueB valueB, ResultSource source) {
+  public ComputationResult computationResult(ValueB valueB, ResultSource source)
+      throws BytecodeException {
     return computationResult(output(valueB), source);
   }
 
@@ -1740,11 +1757,11 @@ public class TestContext {
     return new ComputationResult(output, source);
   }
 
-  public ComputationResult computationResultWithMessages(ArrayB messages) {
+  public ComputationResult computationResultWithMessages(ArrayB messages) throws BytecodeException {
     return computationResult(output(intB(), messages), EXECUTION);
   }
 
-  public Output output(ValueB valueB) {
+  public Output output(ValueB valueB) throws BytecodeException {
     return output(valueB, messageArrayEmpty());
   }
 

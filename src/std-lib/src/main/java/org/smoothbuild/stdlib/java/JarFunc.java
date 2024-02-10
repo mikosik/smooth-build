@@ -12,6 +12,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import okio.BufferedSink;
 import okio.BufferedSource;
+import org.smoothbuild.vm.bytecode.BytecodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -21,7 +23,7 @@ import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 public class JarFunc {
   private static final String MANIFEST_FILE_PATH = "META-INF/MANIFEST.MF";
 
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     ArrayB files = (ArrayB) args.get(0);
     BlobB manifest = (BlobB) args.get(1);
 
@@ -39,11 +41,14 @@ public class JarFunc {
         addJarEntry(jarOutputStream, MANIFEST_FILE_PATH, manifest);
       }
       return blobBuilder.build();
+    } catch (IOException e) {
+      throw new IoBytecodeException(e);
     }
   }
 
   private static void addJarEntry(
-      JarOutputStream jarOutputStream, String filePath, BlobB fileContent) throws IOException {
+      JarOutputStream jarOutputStream, String filePath, BlobB fileContent)
+      throws IOException, BytecodeException {
     var jarEntry = new JarEntry(filePath);
     jarEntry.setLastModifiedTime(FileTime.fromMillis(0));
     jarOutputStream.putNextEntry(jarEntry);

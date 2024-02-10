@@ -1,11 +1,12 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
-import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
+import static org.smoothbuild.common.function.Function0.memoize;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
-import com.google.common.base.Supplier;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
@@ -16,7 +17,7 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
  * This class is thread-safe.
  */
 public final class TupleB extends ValueB {
-  private final Supplier<List<ValueB>> elementsSupplier;
+  private final Function0<List<ValueB>, BytecodeException> elementsSupplier;
 
   public TupleB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
@@ -33,25 +34,26 @@ public final class TupleB extends ValueB {
     return (TupleTB) super.category();
   }
 
-  public ValueB get(int index) {
+  public ValueB get(int index) throws BytecodeException {
     List<ValueB> elements = elements();
     checkIndex(index, elements.size());
     return elements.get(index);
   }
 
-  public List<ValueB> elements() {
-    return elementsSupplier.get();
+  public List<ValueB> elements() throws BytecodeException {
+    return elementsSupplier.apply();
   }
 
-  private List<ValueB> instantiateItems() {
+  private List<ValueB> instantiateItems() throws BytecodeException {
     var type = type();
     var expectedElementTs = type.elements();
     var elements = readDataSeqElems(expectedElementTs.size());
     var elementTs = elements.map(ValueB::type);
-    validateTuple(type, elementTs, () -> {
-      throw new DecodeExprWrongNodeTypeException(
-          hash(), category(), DATA_PATH, type, asTupleToString(elementTs));
-    });
+    validateTuple(
+        type,
+        elementTs,
+        () -> new DecodeExprWrongNodeTypeException(
+            hash(), category(), DATA_PATH, type, asTupleToString(elementTs)));
     return elements;
   }
 
@@ -60,7 +62,7 @@ public final class TupleB extends ValueB {
   }
 
   @Override
-  public String exprToString() {
+  public String exprToString() throws BytecodeException {
     return "{" + exprsToString(elements()) + '}';
   }
 }

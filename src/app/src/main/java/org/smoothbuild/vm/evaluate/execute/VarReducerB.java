@@ -2,6 +2,7 @@ package org.smoothbuild.vm.evaluate.execute;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -20,19 +21,20 @@ public class VarReducerB {
     this.bytecodeF = bytecodeF;
   }
 
-  public List<ExprB> inline(List<Job> environment) {
+  public List<ExprB> inline(List<Job> environment) throws BytecodeException {
     return environment.map(this::inline);
   }
 
-  public ExprB inline(Job job) {
+  public ExprB inline(Job job) throws BytecodeException {
     return rewriteExpr(job.exprB(), new Resolver(inline(job.environment())));
   }
 
-  private List<ExprB> rewriteExprs(Resolver resolver, List<ExprB> elements) {
+  private List<ExprB> rewriteExprs(Resolver resolver, List<ExprB> elements)
+      throws BytecodeException {
     return elements.map(e -> rewriteExpr(e, resolver));
   }
 
-  private ExprB rewriteExpr(ExprB exprB, Resolver resolver) {
+  private ExprB rewriteExpr(ExprB exprB, Resolver resolver) throws BytecodeException {
     return switch (exprB) {
       case CallB callB -> rewriteCall(callB, resolver);
       case CombineB combineB -> rewriteCombine(combineB, resolver);
@@ -45,7 +47,7 @@ public class VarReducerB {
     };
   }
 
-  private ExprB rewriteCall(CallB callB, Resolver resolver) {
+  private ExprB rewriteCall(CallB callB, Resolver resolver) throws BytecodeException {
     var subExprs = callB.subExprs();
     var func = subExprs.func();
     var args = subExprs.args();
@@ -58,7 +60,7 @@ public class VarReducerB {
     }
   }
 
-  private CombineB rewriteCombine(CombineB combineB, Resolver resolver) {
+  private CombineB rewriteCombine(CombineB combineB, Resolver resolver) throws BytecodeException {
     var items = combineB.items();
     var rewrittenItems = rewriteExprs(resolver, items);
     if (items.equals(rewrittenItems)) {
@@ -68,7 +70,7 @@ public class VarReducerB {
     }
   }
 
-  private ExprB rewriteOrder(OrderB orderB, Resolver resolver) {
+  private ExprB rewriteOrder(OrderB orderB, Resolver resolver) throws BytecodeException {
     var elements = orderB.elements();
     var rewrittenElements = rewriteExprs(resolver, elements);
     if (elements.equals(rewrittenElements)) {
@@ -78,7 +80,7 @@ public class VarReducerB {
     }
   }
 
-  private ExprB rewritePick(PickB pickB, Resolver resolver) {
+  private ExprB rewritePick(PickB pickB, Resolver resolver) throws BytecodeException {
     var subExprs = pickB.subExprs();
     var pickable = subExprs.pickable();
     var index = subExprs.index();
@@ -91,11 +93,11 @@ public class VarReducerB {
     }
   }
 
-  private ExprB rewriteVar(VarB var, Resolver resolver) {
+  private ExprB rewriteVar(VarB var, Resolver resolver) throws BytecodeException {
     return resolver.resolve(var);
   }
 
-  private ExprB rewriteSelect(SelectB selectB, Resolver resolver) {
+  private ExprB rewriteSelect(SelectB selectB, Resolver resolver) throws BytecodeException {
     var subExprsB = selectB.subExprs();
     var selectable = subExprsB.selectable();
     var rewrittenSelectable = rewriteExpr(selectable, resolver);
@@ -106,7 +108,7 @@ public class VarReducerB {
     }
   }
 
-  private LambdaB rewriteLambda(LambdaB lambdaB, Resolver resolver) {
+  private LambdaB rewriteLambda(LambdaB lambdaB, Resolver resolver) throws BytecodeException {
     var funcTB = lambdaB.type();
     int paramsSize = funcTB.params().size();
     var body = lambdaB.body();
@@ -135,7 +137,7 @@ public class VarReducerB {
       return new Resolver(paramCount + delta, environment);
     }
 
-    public ExprB resolve(VarB varB) {
+    public ExprB resolve(VarB varB) throws BytecodeException {
       int index = varB.index().toJ().intValue();
       if (index < 0) {
         throw new VarOutOfBoundsException(index, paramCount + environment.size());

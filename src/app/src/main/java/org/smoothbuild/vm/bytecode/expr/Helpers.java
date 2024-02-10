@@ -1,17 +1,17 @@
 package org.smoothbuild.vm.bytecode.expr;
 
-import java.io.IOException;
 import org.smoothbuild.common.function.Consumer0;
 import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 
 public class Helpers {
-  public static void wrapHashedDbExcAsBytecodeDbExc(Consumer0<HashedDbException> runnable) {
+  public static void wrapHashedDbExcAsBytecodeDbExc(Consumer0<HashedDbException> runnable)
+      throws BytecodeDbException {
     try {
       runnable.accept();
     } catch (HashedDbException e) {
@@ -19,7 +19,8 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapHashedDbExcAsBytecodeDbExc(Function0<T, HashedDbException> function0) {
+  public static <T> T wrapHashedDbExcAsBytecodeDbExc(Function0<T, HashedDbException> function0)
+      throws BytecodeDbException {
     try {
       return function0.apply();
     } catch (HashedDbException e) {
@@ -28,7 +29,8 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, Function0<T, HashedDbException> function0) {
+      Hash hash, CategoryB cat, String path, Function0<T, HashedDbException> function0)
+      throws DecodeExprNodeException {
     try {
       return function0.apply();
     } catch (HashedDbException e) {
@@ -36,33 +38,13 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapBytecodeDbExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, Function0<T, BytecodeDbException> callable) {
+  public static <T> T wrapBytecodeExcAsDecodeExprNodeException(
+      Hash hash, CategoryB cat, String path, Function0<T, BytecodeException> callable)
+      throws DecodeExprNodeException {
     try {
       return callable.apply();
-    } catch (BytecodeDbException e) {
+    } catch (BytecodeException e) {
       throw new DecodeExprNodeException(hash, cat, path, e);
-    }
-  }
-
-  public static <T> T wrapIOExcAsIOByteCodeException(Function0<T, IOException> callable) {
-    try {
-      return callable.apply();
-    } catch (IOException e) {
-      throw new IoBytecodeException(e);
-    }
-  }
-
-  public static <T> T wrapBytecodeDbExcAsDecodeExprNodeException(
-      Hash hash,
-      CategoryB cat,
-      String path,
-      int pathIndex,
-      Function0<T, BytecodeDbException> callable) {
-    try {
-      return callable.apply();
-    } catch (BytecodeDbException e) {
-      throw new DecodeExprNodeException(hash, cat, path + "[" + pathIndex + "]", e);
     }
   }
 }

@@ -22,6 +22,7 @@ import org.smoothbuild.testing.func.nativ.TooFewParameters;
 import org.smoothbuild.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.testing.func.nativ.WrongParameterType;
 import org.smoothbuild.testing.func.nativ.WrongReturnType;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -29,36 +30,37 @@ import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class NativeMethodLoaderTest extends TestContext {
   @Test
-  public void non_public_method_causes_error() throws IOException {
+  public void non_public_method_causes_error() throws Exception {
     assertLoadingCausesError(NonPublicMethod.class, "Providing method is not public.");
   }
 
   @Test
-  public void non_static_method_causes_error() throws IOException {
+  public void non_static_method_causes_error() throws Exception {
     assertLoadingCausesError(NonStaticMethod.class, "Providing method is not static.");
   }
 
   @Test
-  public void wrong_return_type_in_method_causes_error() throws IOException {
+  public void wrong_return_type_in_method_causes_error() throws Exception {
     assertLoadingCausesError(WrongReturnType.class, wrongReturnTypeErrorMessage());
   }
 
   @Test
-  public void too_few_parameters_in_method_causes_error() throws IOException {
+  public void too_few_parameters_in_method_causes_error() throws Exception {
     assertLoadingCausesError(TooFewParameters.class, wrongParametersErrorMessage());
   }
 
   @Test
-  public void too_many_parameters_in_method_causes_error() throws IOException {
+  public void too_many_parameters_in_method_causes_error() throws Exception {
     assertLoadingCausesError(TooManyParameters.class, wrongParametersErrorMessage());
   }
 
   @Test
-  public void wrong_parameter_type_in_method_causes_error() throws IOException {
+  public void wrong_parameter_type_in_method_causes_error() throws Exception {
     assertLoadingCausesError(WrongParameterType.class, wrongParametersErrorMessage());
   }
 
-  private void assertLoadingCausesError(Class<?> clazz, String message) throws IOException {
+  private void assertLoadingCausesError(Class<?> clazz, String message)
+      throws IOException, BytecodeException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
     assertThat(nativeMethodLoader.load(nativeFuncB(clazz))).isEqualTo(loadingError(clazz, message));
   }
@@ -103,7 +105,8 @@ public class NativeMethodLoaderTest extends TestContext {
     }
 
     private void testCaching(
-        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected) {
+        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
+        throws Exception {
       var methodLoader = mock(MethodLoader.class);
       var jar = blobB();
       var classBinaryName = "binary.name";

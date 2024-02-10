@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class PickBTest extends TestContext {
@@ -26,7 +27,7 @@ public class PickBTest extends TestContext {
   }
 
   @Test
-  public void data_returns_array_and_index() {
+  public void data_returns_array_and_index() throws Exception {
     var pickable = arrayB(intB(7));
     var index = intB(0);
     assertThat(pickB(pickable, index).subExprs()).isEqualTo(new PickSubExprsB(pickable, index));
@@ -35,13 +36,13 @@ public class PickBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<PickB> {
     @Override
-    protected List<PickB> equalExprs() {
+    protected List<PickB> equalExprs() throws BytecodeException {
       return list(
           pickB(arrayB(intB(7), intB(9)), intB(0)), pickB(arrayB(intB(7), intB(9)), intB(0)));
     }
 
     @Override
-    protected List<PickB> nonEqualExprs() {
+    protected List<PickB> nonEqualExprs() throws BytecodeException {
       return list(
           pickB(arrayB(intB(1)), intB(0)),
           pickB(arrayB(intB(2)), intB(0)),
@@ -53,13 +54,13 @@ public class PickBTest extends TestContext {
   }
 
   @Test
-  public void pick_can_be_read_back_by_hash() {
+  public void pick_can_be_read_back_by_hash() throws Exception {
     var pick = pickB(arrayB(intB(7)), intB(0));
     assertThat(bytecodeDbOther().get(pick.hash())).isEqualTo(pick);
   }
 
   @Test
-  public void pick_read_back_by_hash_has_same_sub_expressions() {
+  public void pick_read_back_by_hash_has_same_sub_expressions() throws Exception {
     var array = arrayB(intB(17), intB(18));
     var index = intB(0);
     var pick = pickB(array, index);
@@ -68,7 +69,7 @@ public class PickBTest extends TestContext {
   }
 
   @Test
-  public void to_string() {
+  public void to_string() throws Exception {
     var pick = pickB(arrayB(intB(17)), intB(0));
     assertThat(pick.toString()).isEqualTo("PICK:Int(???)@" + pick.hash());
   }
