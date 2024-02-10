@@ -5,8 +5,8 @@ import static java.lang.Byte.MAX_VALUE;
 import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import okio.Buffer;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,23 +28,22 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 
 public class HashedDbTest extends TestContext {
-  private final ByteString byteString1 = ByteString.encodeUtf8("aaa");
-  private final ByteString byteString2 = ByteString.encodeUtf8("bbb");
+  private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
+  private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
 
   @Test
-  public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbException {
+  public void not_contains_not_written_data() throws CorruptedHashedDbException {
     assertThat(hashedDb().contains(Hash.of(33))).isFalse();
   }
 
   @Test
-  public void db_contains_written_data() throws Exception {
-    var sink = hashedDb().sink();
-    sink.close();
-
-    assertThat(hashedDb().contains(sink.hash())).isTrue();
+  public void contains_written_data() throws Exception {
+    var hash = hashedDb().writeData(bufferedSink -> bufferedSink.write(BYTE_STRING_1));
+    assertThat(hashedDb().contains(hash)).isTrue();
   }
 
   @Test
@@ -54,66 +54,63 @@ public class HashedDbTest extends TestContext {
 
   @Test
   public void written_data_can_be_read_back() throws Exception {
-    var sink = hashedDb().sink();
-    sink.write(encodeUtf8("abc"));
-    sink.close();
-
-    assertThat(hashedDb().source(sink.hash()).readUtf8()).isEqualTo("abc");
+    var hash = hashedDb().writeData(bufferedSink -> bufferedSink.write(encodeUtf8("abc")));
+    try (var source = hashedDb().source(hash)) {
+      assertThat(source.readUtf8()).isEqualTo("abc");
+    }
   }
 
   @Test
   public void written_zero_length_data_can_be_read_back() throws Exception {
-    var sink = hashedDb().sink();
-    sink.close();
-
-    assertThat(hashedDb().source(sink.hash()).readByteString()).isEqualTo(ByteString.of());
+    var hash = hashedDb().writeData(bufferedSink -> {});
+    try (var source = hashedDb().source(hash)) {
+      assertThat(source.readByteString()).isEqualTo(ByteString.of());
+    }
   }
 
   @Test
   public void bytes_written_twice_can_be_read_back() throws Exception {
-    var sink = hashedDb().sink();
-    sink.write(byteString1);
-    sink.close();
-    sink = hashedDb().sink();
-    sink.write(byteString1);
-    sink.close();
+    var hash = hashedDb().writeData(sink -> sink.write(BYTE_STRING_1));
+    hashedDb().writeData(sink -> sink.write(BYTE_STRING_1));
 
-    assertThat(hashedDb().source(sink.hash()).readByteString()).isEqualTo(byteString1);
+    try (var source = hashedDb().source(hash)) {
+      assertThat(source.readByteString()).isEqualTo(BYTE_STRING_1);
+    }
   }
 
   @Test
   public void hashes_for_different_data_are_different() throws Exception {
-    var sink = hashedDb().sink();
-    sink.write(byteString1);
-    sink.close();
-    var hash = sink.hash();
-    sink = hashedDb().sink();
-    sink.write(byteString2);
-    sink.close();
+    var hash1 = hashedDb().writeData(sink -> sink.write(BYTE_STRING_1));
+    var hash2 = hashedDb().writeData(sink -> sink.write(BYTE_STRING_2));
 
-    assertThat(sink.hash()).isNotEqualTo(hash);
+    assertThat(hash1).isNotEqualTo(hash2);
   }
 
   @Test
   public void written_data_is_not_visible_until_close_is_invoked() throws Exception {
     var byteString = ByteString.of(new byte[1024 * 1024]);
     var hash = Hash.of(byteString);
-    var sink = hashedDb().sink();
-    sink.write(byteString);
-
-    assertCall(() -> hashedDb().source(hash)).throwsException(new NoSuchDataException(hash));
+    hashedDb().writeData(bufferedSink -> {
+      bufferedSink.write(byteString);
+      assertCall(() -> hashedDb().source(hash)).throwsException(new NoSuchDataException(hash));
+    });
   }
 
   @Test
-  public void getting_hash_when_sink_is_not_closed_causes_exception() throws Exception {
-    var sink = hashedDb().sink();
-    assertCall(() -> sink.hash()).throwsException(IllegalStateException.class);
+  public void getting_hash_when_sink_is_not_closed_closes_sink() throws Exception {
+    try (HashingSink hashingSink = hashedDb().sink()) {
+      try (var source = new Buffer()) {
+        source.write(BYTE_STRING_1);
+        source.readAll(hashingSink);
+        assertThat(hashingSink.hash()).isEqualTo(Hash.of(BYTE_STRING_1));
+      }
+    }
   }
 
   // tests for corrupted db
 
   @Test
-  public void when_hash_points_to_directory_then_contains_causes_corrupted_exception()
+  public void when_hash_points_to_directory_then_contains_fails_with_corrupted_exception()
       throws Exception {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
@@ -125,7 +122,7 @@ public class HashedDbTest extends TestContext {
   }
 
   @Test
-  public void when_hash_points_to_directory_then_source_causes_corrupted_exception()
+  public void when_hash_points_to_directory_then_source_fails_with_corrupted_exception()
       throws IOException {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
@@ -137,15 +134,16 @@ public class HashedDbTest extends TestContext {
   }
 
   @Test
-  public void when_hash_points_to_directory_then_sink_causes_corrupted_exception()
-      throws IOException {
-    var hash = Hash.of(byteString1);
+  public void when_hash_points_to_directory_then_sink_fails_with_corrupted_exception()
+      throws Exception {
+    var hash = Hash.of(BYTE_STRING_1);
     var path = dbPathTo(hash);
     hashedDbFileSystem().createDir(path);
 
-    assertCall(() -> hashedDb().sink().write(byteString1).close())
-        .throwsException(new IOException(
-            "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory."));
+    assertCall(() -> hashedDb().writeData(bufferedSink -> bufferedSink.write(BYTE_STRING_1)))
+        .throwsException(
+            new HashedDbException("java.io.IOException: Corrupted HashedDb. Cannot store data at "
+                + path.q() + " as it is a directory."));
   }
 
   @Test
@@ -234,7 +232,10 @@ public class HashedDbTest extends TestContext {
     public void illegal_string_causes_decode_exception() throws Exception {
       var hash = Hash.of("abc");
       var path = dbPathTo(hash);
-      writeAndClose(hashedDbFileSystem().sink(path), s -> s.write(illegalString()));
+
+      try (var sink = buffer(hashedDbFileSystem().sink(path))) {
+        sink.write(illegalString());
+      }
       assertCall(() -> hashedDb().readString(hash))
           .throwsException(new DecodeStringException(hash, null));
     }

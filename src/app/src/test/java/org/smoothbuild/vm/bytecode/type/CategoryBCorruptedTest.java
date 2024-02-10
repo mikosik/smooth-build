@@ -35,7 +35,6 @@ import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.IllegalArrayByteSizesProvider;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
@@ -524,19 +523,11 @@ public class CategoryBCorruptedTest extends TestContext {
   }
 
   protected Hash hash(byte value) throws Exception {
-    try (HashingBufferedSink sink = hashedDb().sink()) {
-      sink.writeByte(value);
-      sink.close();
-      return sink.hash();
-    }
+    return hashedDb().writeData(sink -> sink.writeByte(value));
   }
 
   protected Hash hash(ByteString bytes) throws Exception {
-    try (HashingBufferedSink sink = hashedDb().sink()) {
-      sink.write(bytes);
-      sink.close();
-      return sink.hash();
-    }
+    return hashedDb().writeData(sink -> sink.write(bytes));
   }
 
   protected Hash hash(ExprB expr) {
