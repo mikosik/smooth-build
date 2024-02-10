@@ -222,14 +222,16 @@ public class BytecodeDb {
   }
 
   public BlobB newBlob(Hash dataHash) throws BytecodeException {
-    var root = newRoot(categoryDb.blob(), dataHash);
-    return categoryDb.blob().newExpr(root, this);
+    var blobTB = categoryDb.blob();
+    var root = newRoot(blobTB, dataHash);
+    return blobTB.newExpr(root, this);
   }
 
   private BoolB newBool(boolean value) throws BytecodeException {
     var data = writeBoolData(value);
-    var root = newRoot(categoryDb.bool(), data);
-    return categoryDb.bool().newExpr(root, this);
+    var boolTB = categoryDb.bool();
+    var root = newRoot(boolTB, data);
+    return boolTB.newExpr(root, this);
   }
 
   private LambdaB newLambda(LambdaCB type, ExprB body) throws BytecodeException {
@@ -240,8 +242,9 @@ public class BytecodeDb {
 
   private IntB newInt(BigInteger value) throws BytecodeException {
     var data = writeIntData(value);
-    var root = newRoot(categoryDb.int_(), data);
-    return categoryDb.int_().newExpr(root, this);
+    var intTB = categoryDb.int_();
+    var root = newRoot(intTB, data);
+    return intTB.newExpr(root, this);
   }
 
   private NativeFuncB newNativeFunc(
@@ -254,8 +257,9 @@ public class BytecodeDb {
 
   private StringB newString(String string) throws BytecodeException {
     var data = writeStringData(string);
-    var root = newRoot(categoryDb.string(), data);
-    return categoryDb.string().newExpr(root, this);
+    var stringTB = categoryDb.string();
+    var root = newRoot(stringTB, data);
+    return stringTB.newExpr(root, this);
   }
 
   private TupleB newTuple(List<ValueB> items) throws BytecodeException {
