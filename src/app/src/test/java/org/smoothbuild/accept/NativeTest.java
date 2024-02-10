@@ -91,8 +91,7 @@ public class NativeTest extends AcceptanceTestCase {
                 //  FileNotFoundException to caller
                 //                userFatal(1, "Error loading native jar: File '{prj}/build.jar'
                 // doesn't exist."));
-                fatal(
-                    "org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException: java.io.IOException: File 'build.jar' doesn't exist."));
+                fatal("IOException reading from bytecodeDb: File 'build.jar' doesn't exist."));
       }
 
       @Test
