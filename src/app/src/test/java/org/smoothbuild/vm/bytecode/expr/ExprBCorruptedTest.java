@@ -54,7 +54,6 @@ import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBooleanException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeByteException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
@@ -1179,19 +1178,11 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   protected Hash hash(byte value) throws IOException, HashedDbException {
-    try (HashingBufferedSink sink = hashedDb().sink()) {
-      sink.writeByte(value);
-      sink.close();
-      return sink.hash();
-    }
+    return hashedDb().writeData(sink -> sink.writeByte(value));
   }
 
   protected Hash hash(ByteString bytes) throws IOException, HashedDbException {
-    try (HashingBufferedSink sink = hashedDb().sink()) {
-      sink.write(bytes);
-      sink.close();
-      return sink.hash();
-    }
+    return hashedDb().writeData(sink -> sink.write(bytes));
   }
 
   protected Hash hash(ExprB expr) {

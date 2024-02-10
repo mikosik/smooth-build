@@ -4,6 +4,7 @@ import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
+import static okio.Okio.buffer;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
@@ -13,11 +14,13 @@ import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
+import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBigIntegerException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBooleanException;
@@ -40,13 +43,7 @@ public class HashedDb {
   }
 
   public Hash writeBigInteger(BigInteger value) throws HashedDbException {
-    try (HashingBufferedSink sink = sink()) {
-      sink.write(value.toByteArray());
-      sink.close();
-      return sink.hash();
-    } catch (IOException e) {
-      throw new HashedDbException(e);
-    }
+    return writeData(bufferedSink -> bufferedSink.write(value.toByteArray()));
   }
 
   public BigInteger readBigInteger(Hash hash) throws HashedDbException {
@@ -79,13 +76,7 @@ public class HashedDb {
   }
 
   public Hash writeByte(byte value) throws HashedDbException {
-    try (HashingBufferedSink sink = sink()) {
-      sink.writeByte(value);
-      sink.close();
-      return sink.hash();
-    } catch (IOException e) {
-      throw new HashedDbException(e);
-    }
+    return writeData(bufferedSink -> bufferedSink.writeByte(value));
   }
 
   public byte readByte(Hash hash) throws HashedDbException {
@@ -104,13 +95,7 @@ public class HashedDb {
   }
 
   public Hash writeString(String string) throws HashedDbException {
-    try (HashingBufferedSink sink = sink()) {
-      sink.writeString(string, CHARSET);
-      sink.close();
-      return sink.hash();
-    } catch (IOException e) {
-      throw new HashedDbException(e);
-    }
+    return writeData(bufferedSink -> bufferedSink.writeString(string, CHARSET));
   }
 
   public String readString(Hash hash) throws HashedDbException {
@@ -131,12 +116,19 @@ public class HashedDb {
   }
 
   public Hash writeSeq(Iterable<Hash> hashes) throws HashedDbException {
-    try (HashingBufferedSink sink = sink()) {
+    return writeData(bufferedSink -> {
       for (Hash hash : hashes) {
-        sink.write(hash.toByteString());
+        bufferedSink.write(hash.toByteString());
       }
-      sink.close();
-      return sink.hash();
+    });
+  }
+
+  public Hash writeData(Consumer1<BufferedSink, IOException> writer) throws HashedDbException {
+    try (HashingSink hashingSink = sink()) {
+      try (BufferedSink bufferedSink = buffer(hashingSink)) {
+        writer.accept(bufferedSink);
+      }
+      return hashingSink.hash();
     } catch (IOException e) {
       throw new HashedDbException(e);
     }
@@ -213,9 +205,9 @@ public class HashedDb {
     }
   }
 
-  public HashingBufferedSink sink() throws HashedDbException {
+  public HashingSink sink() throws HashedDbException {
     try {
-      return new HashingBufferedSink(fileSystem, newTempFileProjectPath());
+      return new HashingSink(fileSystem, newTempFileProjectPath());
     } catch (IOException e) {
       throw new HashedDbException(e);
     }
