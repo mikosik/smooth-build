@@ -3,7 +3,6 @@ package org.smoothbuild.common.reflect;
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
 import static okio.Okio.source;
-import static org.smoothbuild.common.io.Okios.readAndClose;
 
 import com.google.common.io.ByteStreams;
 import java.io.FileNotFoundException;
@@ -14,7 +13,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
-import okio.BufferedSource;
 import okio.ByteString;
 import okio.Sink;
 
@@ -77,7 +75,8 @@ public class Classes {
   }
 
   public static ByteString bytecode(Class<?> clazz) throws IOException {
-    return readAndClose(
-        buffer(source(bytecodeAsInputStream(clazz))), BufferedSource::readByteString);
+    try (var source = buffer(source(bytecodeAsInputStream(clazz)))) {
+      return source.readByteString();
+    }
   }
 }

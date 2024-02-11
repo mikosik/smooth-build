@@ -6,7 +6,6 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
-import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.filesystem.space.FilePath.filePath;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
@@ -62,6 +61,8 @@ public class FileResolverTest {
   }
 
   private void createFile(PathS path, String string) throws IOException {
-    writeAndClose(fileSystem.sink(path), s -> s.writeUtf8(string));
+    try (var bufferedSink = fileSystem.sink(path)) {
+      bufferedSink.writeUtf8(string);
+    }
   }
 }

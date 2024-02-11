@@ -4,11 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.common.io.Okios.readAndClose;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.net.URI;
-import okio.BufferedSource;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -87,8 +85,8 @@ public class InputClassFileTest extends TestContext {
   public void open_input_stream_returns_file_content() throws Exception {
     TupleB file = fileB(path, bytes);
     InputClassFile inputClassFile = new InputClassFile(file);
-    BufferedSource buffer = buffer(source(inputClassFile.openInputStream()));
-    ByteString byteString = readAndClose(buffer, BufferedSource::readByteString);
-    assertThat(byteString).isEqualTo(bytes);
+    try (var source = buffer(source(inputClassFile.openInputStream()))) {
+      assertThat(source.readByteString()).isEqualTo(bytes);
+    }
   }
 }
