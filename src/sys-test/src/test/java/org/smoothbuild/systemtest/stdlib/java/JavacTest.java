@@ -3,7 +3,6 @@ package org.smoothbuild.systemtest.stdlib.java;
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.common.io.Okios.readAndClose;
 
 import java.io.File;
 import java.io.IOException;
@@ -145,7 +144,9 @@ public class JavacTest extends SystemTestCase {
   }
 
   private byte[] bytecode(File classFilePath) throws IOException {
-    return readAndClose(buffer(source(classFilePath)), s -> s.readByteArray());
+    try (var bufferedSource = buffer(source(classFilePath))) {
+      return bufferedSource.readByteArray();
+    }
   }
 
   private Class<?> loadClass(MyClassLoader classLoader, byte[] bytes) {

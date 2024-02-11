@@ -1,7 +1,5 @@
 package org.smoothbuild.common.filesystem.mem;
 
-import static org.smoothbuild.common.io.Okios.copyAllAndClose;
-
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Iterator;
@@ -52,7 +50,11 @@ public class MemoryFileSystem implements FileSystem {
     if (pathState(target) == PathState.DIR) {
       throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
-    copyAllAndClose(source(source), sink(target));
+    try (var bufferedSource = source(source)) {
+      try (var sink = sinkWithoutBuffer(target)) {
+        bufferedSource.readAll(sink);
+      }
+    }
     delete(source);
   }
 

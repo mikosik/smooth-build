@@ -14,7 +14,6 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.disk.RecursiveDeleter.deleteRecursively;
-import static org.smoothbuild.common.io.Okios.readAndClose;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_PATH;
@@ -46,7 +45,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.CommandExecutor;
 import org.smoothbuild.common.CommandExecutor.CommandResult;
-import org.smoothbuild.common.io.DataReader;
+import org.smoothbuild.common.function.Function1;
 
 public abstract class SystemTestCase {
   public static final Path SYS_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
@@ -254,17 +253,17 @@ public abstract class SystemTestCase {
 
   public boolean artifactAsBoolean(String name) {
     try {
-      return readAndClose(buffer(source(artifactAbsolutePath(name))), s -> {
-        ByteString value = s.readByteString();
-        if (value.size() != 1) {
-          throw new RuntimeException("Expected boolean artifact but got " + value);
+      try (var source = buffer(source(artifactAbsolutePath(name)))) {
+        var byteString = source.readByteString();
+        if (byteString.size() != 1) {
+          throw new RuntimeException("Expected boolean artifact but got " + byteString);
         }
-        return switch (value.getByte(0)) {
+        return switch (byteString.getByte(0)) {
           case 0 -> false;
           case 1 -> true;
-          default -> throw new RuntimeException("Expected boolean artifact but got " + value);
+          default -> throw new RuntimeException("Expected boolean artifact but got " + byteString);
         };
-      });
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -272,14 +271,14 @@ public abstract class SystemTestCase {
 
   public Integer artifactAsInt(String name) {
     try {
-      return readAndClose(buffer(source(artifactAbsolutePath(name))), s -> {
-        ByteString value = s.readByteString();
-        if (4 < value.size()) {
+      try (var bufferedSource = buffer(source(artifactAbsolutePath(name)))) {
+        var byteString = bufferedSource.readByteString();
+        if (4 < byteString.size()) {
           throw new RuntimeException(
-              "Expected int artifact but got too many bytes: " + value.size() + " .");
+              "Expected int artifact but got too many bytes: " + byteString.size() + " .");
         }
-        return new BigInteger(value.toByteArray()).intValue();
-      });
+        return new BigInteger(byteString.toByteArray()).intValue();
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -298,17 +297,21 @@ public abstract class SystemTestCase {
     }
   }
 
-  private static Object actual(Path path, DataReader<?> dataReader) throws IOException {
+  private static Object actual(Path path, Function1<BufferedSource, Object, IOException> dataReader)
+      throws IOException {
     if (!Files.exists(path)) {
       return null;
     }
     if (Files.isDirectory(path)) {
       return actualArray(path, dataReader);
     }
-    return readAndClose(buffer(source(path)), dataReader);
+    try (var bufferedSource = buffer(source(path))) {
+      return dataReader.apply(bufferedSource);
+    }
   }
 
-  private static Object actualArray(Path path, DataReader<?> dataReader) throws IOException {
+  private static Object actualArray(
+      Path path, Function1<BufferedSource, Object, IOException> dataReader) throws IOException {
     try (Stream<Path> pathStream = Files.list(path)) {
       long count = pathStream.count();
       List<Object> result = new ArrayList<>((int) count);
@@ -348,15 +351,19 @@ public abstract class SystemTestCase {
   }
 
   private static String fileContentAsString(Path path) throws IOException {
-    return readAndClose(buffer(source(path)), s -> s.readString(CHARSET));
+    try (var bufferedSource = buffer(source(path))) {
+      return bufferedSource.readString(CHARSET);
+    }
   }
 
   public ByteString artifactAsByteString(String artifact) throws IOException {
-    return fileContentAsByteSTring(artifactAbsolutePath(artifact));
+    return fileContentAsByteString(artifactAbsolutePath(artifact));
   }
 
-  public static ByteString fileContentAsByteSTring(Path path) throws IOException {
-    return readAndClose(buffer(source(path)), BufferedSource::readByteString);
+  public static ByteString fileContentAsByteString(Path path) throws IOException {
+    try (var bufferedSource = buffer(source(path))) {
+      return bufferedSource.readByteString();
+    }
   }
 
   public Path smoothDirAbsolutePath() {
