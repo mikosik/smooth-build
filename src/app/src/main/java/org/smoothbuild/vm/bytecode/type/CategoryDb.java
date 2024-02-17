@@ -37,7 +37,6 @@ import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BaseKindB;
@@ -93,39 +92,37 @@ public class CategoryDb {
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, CategoryB> cache;
-
-  private final Function0<BlobTB, HashedDbException> blobSupplier;
-  private final Function0<BoolTB, HashedDbException> boolSupplier;
-  private final Function0<IntTB, HashedDbException> intSupplier;
-  private final Function0<StringTB, HashedDbException> stringSupplier;
+  private final Function0<BlobTB, CategoryDbException> blobSupplier;
+  private final Function0<BoolTB, CategoryDbException> boolSupplier;
+  private final Function0<IntTB, CategoryDbException> intSupplier;
+  private final Function0<StringTB, CategoryDbException> stringSupplier;
 
   public CategoryDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.cache = new ConcurrentHashMap<>();
-
     this.blobSupplier = createAndCacheTypeMemoizer(BlobTB::new, BLOB);
     this.boolSupplier = createAndCacheTypeMemoizer(BoolTB::new, BOOL);
     this.intSupplier = createAndCacheTypeMemoizer(IntTB::new, INT);
     this.stringSupplier = createAndCacheTypeMemoizer(StringTB::new, STRING);
   }
 
-  private <A extends TypeB> Function0<A, HashedDbException> createAndCacheTypeMemoizer(
+  private <A extends TypeB> Function0<A, CategoryDbException> createAndCacheTypeMemoizer(
       Function<Hash, A> factory, CategoryKindB kind) {
     return memoize(() -> cache(factory.apply(writeBaseRoot(kind))));
   }
 
-  // methods for getting ValueB-s types
+  // methods for getting ValueB types
 
   public ArrayTB array(TypeB elemT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(() -> newArray(elemT), CategoryDbException::new);
+    return newArray(elemT);
   }
 
   public BlobTB blob() throws CategoryDbException {
-    return invokeTranslatingHashedDbException(blobSupplier, CategoryDbException::new);
+    return blobSupplier.apply();
   }
 
   public BoolTB bool() throws CategoryDbException {
-    return invokeTranslatingHashedDbException(boolSupplier, CategoryDbException::new);
+    return boolSupplier.apply();
   }
 
   public LambdaCB lambda(List<TypeB> params, TypeB result) throws CategoryDbException {
@@ -143,8 +140,7 @@ public class CategoryDb {
 
   private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
       throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newFuncC(funcKind, funcTB), CategoryDbException::new);
+    return newFuncC(funcKind, funcTB);
   }
 
   public FuncTB funcT(List<TypeB> params, TypeB result) throws CategoryDbException {
@@ -152,8 +148,7 @@ public class CategoryDb {
   }
 
   public FuncTB funcT(TupleTB params, TypeB result) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newFuncT(params, result), CategoryDbException::new);
+    return newFuncT(params, result);
   }
 
   public IfFuncCB ifFunc(TypeB t) throws CategoryDbException {
@@ -162,7 +157,7 @@ public class CategoryDb {
   }
 
   public IntTB int_() throws CategoryDbException {
-    return invokeTranslatingHashedDbException(intSupplier, CategoryDbException::new);
+    return intSupplier.apply();
   }
 
   public MapFuncCB mapFunc(TypeB r, TypeB s) throws CategoryDbException {
@@ -183,43 +178,37 @@ public class CategoryDb {
   }
 
   public TupleTB tuple(List<TypeB> items) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(() -> newTuple(items), CategoryDbException::new);
+    return newTuple(items);
   }
 
   public StringTB string() throws CategoryDbException {
-    return invokeTranslatingHashedDbException(stringSupplier, CategoryDbException::new);
+    return stringSupplier.apply();
   }
 
-  // methods for getting ExprB-s types
+  // methods for getting ExprB types
 
   public CallCB call(TypeB evaluationT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newOper(CALL, evaluationT), CategoryDbException::new);
+    return newOper(CALL, evaluationT);
   }
 
   public CombineCB combine(TupleTB evaluationT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newOper(COMBINE, evaluationT), CategoryDbException::new);
+    return newOper(COMBINE, evaluationT);
   }
 
   public OrderCB order(ArrayTB evaluationT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newOper(ORDER, evaluationT), CategoryDbException::new);
+    return newOper(ORDER, evaluationT);
   }
 
   public PickCB pick(TypeB evaluationT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newOper(PICK, evaluationT), CategoryDbException::new);
+    return newOper(PICK, evaluationT);
   }
 
   public VarCB var(TypeB evaluationT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newOper(VAR, evaluationT), CategoryDbException::new);
+    return newOper(VAR, evaluationT);
   }
 
   public SelectCB select(TypeB evaluationT) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
-        () -> newOper(SELECT, evaluationT), CategoryDbException::new);
+    return newOper(SELECT, evaluationT);
   }
 
   // methods for reading from db
@@ -231,7 +220,6 @@ public class CategoryDb {
   private CategoryB read(Hash hash) throws CategoryDbException {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
-    // @formatter:off
     return switch (kind) {
       case ArrayKindB array -> readArrayT(hash, rootSeq, kind);
       case BaseKindB base -> readBaseT(hash, rootSeq, base);
@@ -426,7 +414,7 @@ public class CategoryDb {
 
   // methods for creating java instances of CategoryB
 
-  private ArrayTB newArray(TypeB elem) throws HashedDbException {
+  private ArrayTB newArray(TypeB elem) throws CategoryDbException {
     var rootHash = writeArrayRoot(elem);
     return newArray(rootHash, elem);
   }
@@ -445,19 +433,19 @@ public class CategoryDb {
         });
   }
 
-  private FuncTB newFuncT(TupleTB params, TypeB result) throws HashedDbException {
+  private FuncTB newFuncT(TupleTB params, TypeB result) throws CategoryDbException {
     var rootHash = writeFuncTypeRoot(params, result);
     return cache(new FuncTB(rootHash, params, result));
   }
 
   private <T extends FuncCB> T newFuncC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
-      throws HashedDbException {
+      throws CategoryDbException {
     var rootHash = writeFuncCategoryRoot(funcKind, funcTB);
     var instantiator = funcKind.instantiator();
     return cache(instantiator.apply(rootHash, funcTB));
   }
 
-  private TupleTB newTuple(List<TypeB> items) throws HashedDbException {
+  private TupleTB newTuple(List<TypeB> items) throws CategoryDbException {
     var hash = writeTupleRoot(items);
     return newTuple(hash, items);
   }
@@ -467,7 +455,7 @@ public class CategoryDb {
   }
 
   private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT)
-      throws HashedDbException {
+      throws CategoryDbException {
     var rootHash = writeRootWithData(kind, evaluationT);
     return newOper(kind.constructor(), rootHash, evaluationT);
   }
@@ -485,35 +473,54 @@ public class CategoryDb {
 
   // Methods for writing category root
 
-  private Hash writeArrayRoot(CategoryB elem) throws HashedDbException {
+  private Hash writeArrayRoot(CategoryB elem) throws CategoryDbException {
     return writeRootWithData(ARRAY, elem);
   }
 
-  private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws HashedDbException {
-    var dataHash = hashedDb.writeSeq(params.hash(), result.hash());
+  private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws CategoryDbException {
+    var dataHash = writeSeq(params.hash(), result.hash());
     return writeRootWithData(FUNC, dataHash);
   }
 
-  private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws HashedDbException {
+  private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws CategoryDbException {
     return writeRootWithData(kind, funcTB);
   }
 
-  private Hash writeTupleRoot(List<TypeB> items) throws HashedDbException {
-    var dataHash = hashedDb.writeSeq(items.map(CategoryB::hash));
+  private Hash writeTupleRoot(List<TypeB> items) throws CategoryDbException {
+    var dataHash = writeSeq(items);
     return writeRootWithData(TUPLE, dataHash);
   }
 
   // Helper methods for writing roots
 
-  private Hash writeRootWithData(CategoryKindB kind, CategoryB categoryB) throws HashedDbException {
+  private Hash writeRootWithData(CategoryKindB kind, CategoryB categoryB)
+      throws CategoryDbException {
     return writeRootWithData(kind, categoryB.hash());
   }
 
-  private Hash writeRootWithData(CategoryKindB kind, Hash dataHash) throws HashedDbException {
-    return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()), dataHash);
+  private Hash writeRootWithData(CategoryKindB kind, Hash dataHash) throws CategoryDbException {
+    return writeSeq(writeByte(kind.marker()), dataHash);
   }
 
-  private Hash writeBaseRoot(CategoryKindB kind) throws HashedDbException {
-    return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()));
+  private Hash writeBaseRoot(CategoryKindB kind) throws CategoryDbException {
+    return writeSeq(writeByte(kind.marker()));
+  }
+
+  // hashedDb calls with exception translation
+
+  private Hash writeByte(byte value) throws CategoryDbException {
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeByte(value), CategoryDbException::new);
+  }
+
+  private Hash writeSeq(Hash... hashes) throws CategoryDbException {
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeSeq(hashes), CategoryDbException::new);
+  }
+
+  private Hash writeSeq(List<? extends TypeB> types) throws CategoryDbException {
+    var hashes = types.map(TypeB::hash);
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeSeq(hashes), CategoryDbException::new);
   }
 }

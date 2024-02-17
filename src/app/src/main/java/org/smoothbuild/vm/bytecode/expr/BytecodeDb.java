@@ -33,6 +33,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
+import org.smoothbuild.vm.bytecode.hashed.HashingSink;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
@@ -66,8 +67,7 @@ public class BytecodeDb {
   }
 
   public BlobBBuilder blobBuilder() throws BytecodeException {
-    return invokeTranslatingHashedDbException(
-        () -> new BlobBBuilder(this, hashedDb.sink()), BytecodeDbException::new);
+    return new BlobBBuilder(this, sink());
   }
 
   public BoolB bool(boolean value) throws BytecodeException {
@@ -424,6 +424,10 @@ public class BytecodeDb {
     } catch (HashedDbException e) {
       throw cannotReadRootException(rootHash, e);
     }
+  }
+
+  private HashingSink sink() throws BytecodeDbException {
+    return invokeTranslatingHashedDbException(hashedDb::sink, BytecodeDbException::new);
   }
 
   private Hash writeBoolean(boolean value) throws BytecodeDbException {
