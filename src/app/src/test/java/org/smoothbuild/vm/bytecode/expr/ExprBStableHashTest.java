@@ -73,9 +73,11 @@ public class ExprBStableHashTest extends TestContext {
   class _blob {
     @Test
     public void empty_blob() throws Exception {
-      assertThat(blobBBuilder().build().hash())
-          .isEqualTo(
-              Hash.decode("72a41db3104c7b18b2a606f85daa5f8dd160d2a25a34a1a838d682a3064fa568"));
+      try (var blobBBuilder = blobBBuilder()) {
+        assertThat(blobBBuilder.build().hash())
+            .isEqualTo(
+                Hash.decode("72a41db3104c7b18b2a606f85daa5f8dd160d2a25a34a1a838d682a3064fa568"));
+      }
     }
 
     @Test

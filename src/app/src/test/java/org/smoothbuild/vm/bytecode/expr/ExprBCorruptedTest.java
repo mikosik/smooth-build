@@ -196,7 +196,9 @@ public class ExprBCorruptedTest extends TestContext {
        */
       var byteString = ByteString.of((byte) 1, (byte) 2);
       var hash = hash(hash(blobTB()), hash(byteString));
-      assertThat(((BlobB) bytecodeDb().get(hash)).source().readByteString()).isEqualTo(byteString);
+      try (var source = ((BlobB) bytecodeDb().get(hash)).source()) {
+        assertThat(source.readByteString()).isEqualTo(byteString);
+      }
     }
 
     @Test

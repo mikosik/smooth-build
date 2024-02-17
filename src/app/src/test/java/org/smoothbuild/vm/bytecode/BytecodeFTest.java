@@ -16,8 +16,9 @@ public class BytecodeFTest extends TestContext {
 
   @Test
   public void blob_data_can_be_read_back() throws Exception {
-    assertThat(bytecodeF().blob(sink -> sink.write(bytes)).source().readByteString())
-        .isEqualTo(bytes);
+    try (var source = bytecodeF().blob(sink -> sink.write(bytes)).source()) {
+      assertThat(source.readByteString()).isEqualTo(bytes);
+    }
   }
 
   @Test
