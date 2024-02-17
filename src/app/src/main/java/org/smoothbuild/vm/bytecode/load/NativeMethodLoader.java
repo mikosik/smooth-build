@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.load;
 
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
@@ -32,7 +32,7 @@ public class NativeMethodLoader {
   }
 
   public Either<String, Method> load(NativeFuncB nativeFuncB) throws BytecodeException {
-    var memoizer = cache.computeIfAbsent(nativeFuncB, f -> memoize(() -> loadImpl(f)));
+    var memoizer = cache.computeIfAbsent(nativeFuncB, f -> memoizer(() -> loadImpl(f)));
     return memoizer.apply();
   }
 

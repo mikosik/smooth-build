@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
@@ -57,15 +57,15 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 public class BytecodeF {
   private final BytecodeDb bytecodeDb;
   private final CategoryDb categoryDb;
-  private final Function0<TupleTB, BytecodeException> messageTypeSupplier;
-  private final Function0<TupleTB, BytecodeException> fileTypeSupplier;
+  private final Function0<TupleTB, BytecodeException> messageTypeMemoizer;
+  private final Function0<TupleTB, BytecodeException> fileTypeMemoizer;
 
   @Inject
   public BytecodeF(BytecodeDb bytecodeDb, CategoryDb categoryDb) {
     this.bytecodeDb = bytecodeDb;
     this.categoryDb = categoryDb;
-    this.messageTypeSupplier = memoize(() -> createMessageT(categoryDb));
-    this.fileTypeSupplier = memoize(() -> createFileT(categoryDb));
+    this.messageTypeMemoizer = memoizer(() -> createMessageT(categoryDb));
+    this.fileTypeMemoizer = memoizer(() -> createFileT(categoryDb));
   }
 
   // Objects
@@ -181,7 +181,7 @@ public class BytecodeF {
   }
 
   public TupleTB messageT() throws BytecodeException {
-    return messageTypeSupplier.apply();
+    return messageTypeMemoizer.apply();
   }
 
   public StringTB stringT() throws BytecodeException {
@@ -199,7 +199,7 @@ public class BytecodeF {
   // other values and its types
 
   public TupleTB fileT() throws BytecodeException {
-    return fileTypeSupplier.apply();
+    return fileTypeMemoizer.apply();
   }
 
   public TupleB fatalMessage(String text) throws BytecodeException {

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.nCopiesList;
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -24,20 +24,20 @@ public class Function0Test {
     @Test
     void calls_function_lazily() {
       Function0<String, IOException> function0 = mock();
-      memoize(function0);
+      memoizer(function0);
       verifyNoInteractions(function0);
     }
 
     @Test
     void apply_returns_value_from_wrapped_function() {
-      var memoizer = memoize(() -> "abc");
+      var memoizer = memoizer(() -> "abc");
       assertThat(memoizer.apply()).isEqualTo("abc");
     }
 
     @Test
     void second_call_to_apply_does_not_call_wrapped_function() throws Throwable {
       Function0<String, IOException> function0 = mock();
-      var memoized = memoize(function0);
+      var memoized = memoizer(function0);
       memoized.apply();
       memoized.apply();
 
@@ -46,7 +46,7 @@ public class Function0Test {
 
     @Test
     void second_call_to_apply_returns_memoized_value() {
-      var memoizer = memoize(() -> "abc");
+      var memoizer = memoizer(() -> "abc");
       memoizer.apply();
       assertThat(memoizer.apply()).isEqualTo("abc");
     }
@@ -54,7 +54,7 @@ public class Function0Test {
     @Test
     void multi_threaded_test() throws Exception {
       var atomicInteger = new AtomicInteger(7);
-      var memoizer = memoize(atomicInteger::getAndIncrement);
+      var memoizer = memoizer(atomicInteger::getAndIncrement);
 
       var count = 1000;
       var futures = invokeFunctionFromMultipleThreads(count, memoizer);

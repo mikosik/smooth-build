@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -29,7 +29,7 @@ public class MethodLoader {
   }
 
   public Either<String, Method> load(MethodSpec methodSpec) throws BytecodeException {
-    var memoizer = cache.computeIfAbsent(methodSpec, (ms) -> memoize(() -> findMethod(ms)));
+    var memoizer = cache.computeIfAbsent(methodSpec, (ms) -> memoizer(() -> findMethod(ms)));
     return memoizer.apply();
   }
 
