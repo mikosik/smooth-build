@@ -17,8 +17,8 @@ public class VarB extends OperB {
   }
 
   @Override
-  public ReferenceSubExprsB subExprs() {
-    return new ReferenceSubExprsB();
+  public VarSubExprsB subExprs() {
+    return new VarSubExprsB();
   }
 
   public IntB index() throws BytecodeException {

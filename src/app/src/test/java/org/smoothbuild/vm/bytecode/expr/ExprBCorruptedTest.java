@@ -29,7 +29,6 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeExcept
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongChainSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
@@ -1149,8 +1148,7 @@ public class ExprBCorruptedTest extends TestContext {
       CategoryB type, Hash dataHash, Function1<Hash, ?, BytecodeException> factory)
       throws HashedDbException {
     var hash = hash(hash(type), dataHash, dataHash);
-    assertCall(() -> factory.apply(hash))
-        .throwsException(wrongSizeOfRootChainException(hash, 3));
+    assertCall(() -> factory.apply(hash)).throwsException(wrongSizeOfRootChainException(hash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
