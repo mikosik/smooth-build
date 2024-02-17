@@ -5,6 +5,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingCategoryDbException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
@@ -23,10 +25,6 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.STRING;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.VAR;
-import static org.smoothbuild.vm.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
-import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsCategoryDbException;
-import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
-import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
@@ -119,15 +117,15 @@ public class CategoryDb {
   // methods for getting ValueB-s types
 
   public ArrayTB array(TypeB elemT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newArray(elemT));
+    return invokeTranslatingHashedDbException(() -> newArray(elemT), CategoryDbException::new);
   }
 
   public BlobTB blob() throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(blobSupplier::apply);
+    return invokeTranslatingHashedDbException(blobSupplier, CategoryDbException::new);
   }
 
   public BoolTB bool() throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(boolSupplier::apply);
+    return invokeTranslatingHashedDbException(boolSupplier, CategoryDbException::new);
   }
 
   public LambdaCB lambda(List<TypeB> params, TypeB result) throws CategoryDbException {
@@ -145,7 +143,8 @@ public class CategoryDb {
 
   private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
       throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newFuncC(funcKind, funcTB));
+    return invokeTranslatingHashedDbException(
+        () -> newFuncC(funcKind, funcTB), CategoryDbException::new);
   }
 
   public FuncTB funcT(List<TypeB> params, TypeB result) throws CategoryDbException {
@@ -153,7 +152,8 @@ public class CategoryDb {
   }
 
   public FuncTB funcT(TupleTB params, TypeB result) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newFuncT(params, result));
+    return invokeTranslatingHashedDbException(
+        () -> newFuncT(params, result), CategoryDbException::new);
   }
 
   public IfFuncCB ifFunc(TypeB t) throws CategoryDbException {
@@ -162,7 +162,7 @@ public class CategoryDb {
   }
 
   public IntTB int_() throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(intSupplier::apply);
+    return invokeTranslatingHashedDbException(intSupplier, CategoryDbException::new);
   }
 
   public MapFuncCB mapFunc(TypeB r, TypeB s) throws CategoryDbException {
@@ -183,37 +183,43 @@ public class CategoryDb {
   }
 
   public TupleTB tuple(List<TypeB> items) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newTuple(items));
+    return invokeTranslatingHashedDbException(() -> newTuple(items), CategoryDbException::new);
   }
 
   public StringTB string() throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(stringSupplier::apply);
+    return invokeTranslatingHashedDbException(stringSupplier, CategoryDbException::new);
   }
 
   // methods for getting ExprB-s types
 
   public CallCB call(TypeB evaluationT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newOper(CALL, evaluationT));
+    return invokeTranslatingHashedDbException(
+        () -> newOper(CALL, evaluationT), CategoryDbException::new);
   }
 
   public CombineCB combine(TupleTB evaluationT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newOper(COMBINE, evaluationT));
+    return invokeTranslatingHashedDbException(
+        () -> newOper(COMBINE, evaluationT), CategoryDbException::new);
   }
 
   public OrderCB order(ArrayTB evaluationT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newOper(ORDER, evaluationT));
+    return invokeTranslatingHashedDbException(
+        () -> newOper(ORDER, evaluationT), CategoryDbException::new);
   }
 
   public PickCB pick(TypeB evaluationT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newOper(PICK, evaluationT));
+    return invokeTranslatingHashedDbException(
+        () -> newOper(PICK, evaluationT), CategoryDbException::new);
   }
 
   public VarCB var(TypeB evaluationT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newOper(VAR, evaluationT));
+    return invokeTranslatingHashedDbException(
+        () -> newOper(VAR, evaluationT), CategoryDbException::new);
   }
 
   public SelectCB select(TypeB evaluationT) throws CategoryDbException {
-    return wrapHashedDbExcAsCategoryDbException(() -> newOper(SELECT, evaluationT));
+    return invokeTranslatingHashedDbException(
+        () -> newOper(SELECT, evaluationT), CategoryDbException::new);
   }
 
   // methods for reading from db
@@ -240,7 +246,8 @@ public class CategoryDb {
   }
 
   private List<Hash> readCatRootSeq(Hash hash) throws DecodeCatException {
-    var hashes = wrapHashedDbExcAsDecodeCatExc(hash, () -> hashedDb.readSeq(hash));
+    var hashes = invokeTranslatingHashedDbException(
+        () -> hashedDb.readSeq(hash), e -> new DecodeCatException(hash, e));
     int seqSize = hashes.size();
     if (seqSize != 1 && seqSize != 2) {
       throw new DecodeCatRootException(hash, seqSize);
@@ -249,7 +256,8 @@ public class CategoryDb {
   }
 
   private CategoryKindB decodeCatMarker(Hash hash, Hash markerHash) throws DecodeCatException {
-    byte marker = wrapHashedDbExcAsDecodeCatExc(hash, () -> hashedDb.readByte(markerHash));
+    byte marker = invokeTranslatingHashedDbException(
+        () -> hashedDb.readByte(markerHash), e -> new DecodeCatException(hash, e));
     CategoryKindB kind = fromMarker(marker);
     if (kind == null) {
       throw new DecodeCatIllegalKindException(hash, marker);
@@ -348,8 +356,8 @@ public class CategoryDb {
       throws CategoryDbException {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var dataHash = rootSeq.get(DATA_IDX);
-    var typeComponent =
-        wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, () -> read(dataHash));
+    var typeComponent = invokeTranslatingCategoryDbException(
+        () -> read(dataHash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
     if (typeComponent instanceof FuncTB funcTB) {
       typeVerifier.accept(funcTB);
       return cache(kind.instantiator().apply(rootHash, funcTB));
@@ -372,7 +380,8 @@ public class CategoryDb {
       throws DecodeCatException {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var hash = rootSeq.get(DATA_IDX);
-    var categoryB = wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, () -> get(hash));
+    var categoryB = invokeTranslatingCategoryDbException(
+        () -> get(hash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
     if (typeClass.isAssignableFrom(categoryB.getClass())) {
       @SuppressWarnings("unchecked")
       T result = (T) categoryB;
@@ -385,8 +394,9 @@ public class CategoryDb {
 
   private List<TypeB> readDataSeqAsTypes(Hash rootHash, CategoryKindB kind, List<Hash> rootSeq)
       throws DecodeCatNodeException {
-    var elemHashes = wrapHashedDbExcAsDecodeCatNodeExc(
-        rootHash, kind, DATA_PATH, () -> hashedDb.readSeq(rootSeq.get(DATA_IDX)));
+    var elemHashes = invokeTranslatingHashedDbException(
+        () -> hashedDb.readSeq(rootSeq.get(DATA_IDX)),
+        e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
     var builder = new ArrayList<TypeB>();
     for (int i = 0; i < elemHashes.size(); i++) {
       builder.add(readDataSeqElemAsType(kind, rootHash, elemHashes.get(i), i));
@@ -396,8 +406,8 @@ public class CategoryDb {
 
   private TypeB readDataSeqElemAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index)
       throws DecodeCatNodeException {
-    var categoryB =
-        wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, index, () -> get(hash));
+    var categoryB = invokeTranslatingCategoryDbException(
+        () -> get(hash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, index, e));
     if (categoryB instanceof TypeB typeB) {
       return typeB;
     } else {

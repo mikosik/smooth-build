@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
@@ -66,7 +66,8 @@ public class BytecodeDb {
   }
 
   public BlobBBuilder blobBuilder() throws BytecodeException {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> new BlobBBuilder(this, hashedDb.sink()));
+    return invokeTranslatingHashedDbException(
+        () -> new BlobBBuilder(this, hashedDb.sink()), BytecodeDbException::new);
   }
 
   public BoolB bool(boolean value) throws BytecodeException {
@@ -426,24 +427,29 @@ public class BytecodeDb {
   }
 
   private Hash writeBoolean(boolean value) throws BytecodeDbException {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeBoolean(value));
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeBoolean(value), BytecodeDbException::new);
   }
 
   private Hash writeBigInteger(BigInteger value) throws BytecodeDbException {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeBigInteger(value));
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeBigInteger(value), BytecodeDbException::new);
   }
 
   private Hash writeString(String string) throws BytecodeDbException {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeString(string));
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeString(string), BytecodeDbException::new);
   }
 
   private Hash writeSeq(Hash... hashes) throws BytecodeDbException {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeSeq(hashes));
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeSeq(hashes), BytecodeDbException::new);
   }
 
   private Hash writeSeq(List<? extends ExprB> exprs) throws BytecodeDbException {
     var hashes = exprs.map(ExprB::hash);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> hashedDb.writeSeq(hashes));
+    return invokeTranslatingHashedDbException(
+        () -> hashedDb.writeSeq(hashes), BytecodeDbException::new);
   }
 
   // visible for classes from db.object package tree until creating ExprB is cached and

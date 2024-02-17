@@ -1,40 +1,40 @@
 package org.smoothbuild.vm.bytecode.expr;
 
+import java.util.function.Function;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
-import org.smoothbuild.vm.bytecode.type.CategoryB;
+import org.smoothbuild.vm.bytecode.type.exc.CategoryDbException;
 
 public class Helpers {
-  public static <T> T wrapHashedDbExcAsBytecodeDbExc(Function0<T, HashedDbException> function0)
-      throws BytecodeDbException {
+  public static <R, T extends Throwable> R invokeTranslatingBytecodeException(
+      Function0<R, BytecodeException> function0, Function<BytecodeException, T> exceptionTranslator)
+      throws T {
     try {
       return function0.apply();
-    } catch (HashedDbException e) {
-      throw new BytecodeDbException(e);
-    }
-  }
-
-  public static <T> T wrapHashedDbExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, Function0<T, HashedDbException> function0)
-      throws DecodeExprNodeException {
-    try {
-      return function0.apply();
-    } catch (HashedDbException e) {
-      throw new DecodeExprNodeException(hash, cat, path, e);
-    }
-  }
-
-  public static <T> T wrapBytecodeExcAsDecodeExprNodeException(
-      Hash hash, CategoryB cat, String path, Function0<T, BytecodeException> callable)
-      throws DecodeExprNodeException {
-    try {
-      return callable.apply();
     } catch (BytecodeException e) {
-      throw new DecodeExprNodeException(hash, cat, path, e);
+      throw exceptionTranslator.apply(e);
+    }
+  }
+
+  public static <R, T extends Throwable> R invokeTranslatingCategoryDbException(
+      Function0<R, CategoryDbException> function0,
+      Function<CategoryDbException, T> exceptionTranslator)
+      throws T {
+    try {
+      return function0.apply();
+    } catch (CategoryDbException e) {
+      throw exceptionTranslator.apply(e);
+    }
+  }
+
+  public static <R, T extends Throwable> R invokeTranslatingHashedDbException(
+      Function0<R, HashedDbException> function0, Function<HashedDbException, T> exceptionTranslator)
+      throws T {
+    try {
+      return function0.apply();
+    } catch (HashedDbException e) {
+      throw exceptionTranslator.apply(e);
     }
   }
 }
