@@ -13,7 +13,7 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
 import jakarta.inject.Inject;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -374,9 +374,8 @@ public class SbTranslator {
     var filePath = filePathOf(location).withExtension("jar");
     try {
       return fileLoader.load(filePath);
-    } catch (FileNotFoundException e) {
-      var message =
-          location + ": Error loading native jar: File %s doesn't exist.".formatted(filePath.q());
+    } catch (IOException e) {
+      var message = location + ": Error loading native jar %s.".formatted(filePath.q());
       throw new SbTranslatorException(message);
     }
   }

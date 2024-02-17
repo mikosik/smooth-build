@@ -1,10 +1,7 @@
 package org.smoothbuild.vm.bytecode.load;
 
-import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import okio.BufferedSource;
@@ -12,7 +9,6 @@ import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
-import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 
@@ -23,7 +19,7 @@ import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 public class FileLoader {
   private final FileResolver fileResolver;
   private final BytecodeDb bytecodeDb;
-  private final ConcurrentHashMap<FilePath, BlobB> fileCache;
+  private final ConcurrentHashMap<FilePath, CachingLoader> fileCache;
 
   @Inject
   public FileLoader(FileResolver fileResolver, BytecodeDb bytecodeDb) {
@@ -32,18 +28,33 @@ public class FileLoader {
     this.fileCache = new ConcurrentHashMap<>();
   }
 
-  public BlobB load(FilePath filePath) throws FileNotFoundException, BytecodeException {
-    return invokeWithTunneling(f -> fileCache.computeIfAbsent(filePath, f), this::loadImpl);
+  public BlobB load(FilePath filePath) throws IOException, BytecodeException {
+    var cachingLoader = fileCache.computeIfAbsent(filePath, CachingLoader::new);
+    return cachingLoader.load();
   }
 
-  private BlobB loadImpl(FilePath filePath) throws BytecodeException {
-    try (BlobBBuilder blobBuilder = bytecodeDb.blobBuilder()) {
-      try (BufferedSource source = fileResolver.source(filePath)) {
-        source.readAll(blobBuilder);
+  private class CachingLoader {
+    private final FilePath filePath;
+    private BlobB blob;
+
+    private CachingLoader(FilePath filePath) {
+      this.filePath = filePath;
+    }
+
+    public synchronized BlobB load() throws IOException, BytecodeException {
+      if (blob == null) {
+        blob = loadImpl();
       }
-      return blobBuilder.build();
-    } catch (IOException e) {
-      throw new IoBytecodeException(e);
+      return blob;
+    }
+
+    private BlobB loadImpl() throws BytecodeException, IOException {
+      try (BlobBBuilder blobBuilder = bytecodeDb.blobBuilder()) {
+        try (BufferedSource source = fileResolver.source(filePath)) {
+          source.readAll(blobBuilder);
+        }
+        return blobBuilder.build();
+      }
     }
   }
 }
