@@ -5,7 +5,6 @@ import static okio.Okio.sink;
 import static okio.Okio.source;
 
 import com.google.common.io.ByteStreams;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -18,16 +17,6 @@ import okio.Sink;
 
 public class Classes {
   public static final String CLASS_FILE_EXTENSION = ".class";
-
-  public static Class<?> loadClass(Path jarPath, String binaryName)
-      throws ClassNotFoundException, FileNotFoundException {
-    return jarClassLoader(jarPath).loadClass(binaryName);
-  }
-
-  private static ClassLoader jarClassLoader(Path jar) throws FileNotFoundException {
-    ClassLoader parentClassLoader = Classes.class.getClassLoader();
-    return ClassLoaders.jarClassLoader(parentClassLoader, jar);
-  }
 
   public static String binaryPath(Class<?> clazz) {
     return binaryPath(clazz.getName());
