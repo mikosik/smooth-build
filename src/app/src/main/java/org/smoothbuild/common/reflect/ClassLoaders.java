@@ -10,8 +10,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.smoothbuild.common.function.Function1;
 
 public class ClassLoaders {
@@ -54,24 +52,5 @@ public class ClassLoaders {
         };
       }
     };
-  }
-
-  public static URLClassLoader jarClassLoader(ClassLoader parent, Path jarPath)
-      throws FileNotFoundException {
-    Path absolutePath = jarPath.toAbsolutePath();
-    if (!Files.exists(absolutePath)) {
-      throw new FileNotFoundException("Cannot find '" + absolutePath + "' file.");
-    }
-
-    return new URLClassLoader(new URL[] {toUrl(absolutePath)}, parent);
-  }
-
-  private static URL toUrl(Path path) {
-    String urlString = "file://" + path.toString();
-    try {
-      return new URI(urlString).toURL();
-    } catch (MalformedURLException | URISyntaxException e) {
-      throw new IllegalArgumentException("Cannot convert '" + urlString + "' to URL.");
-    }
   }
 }
