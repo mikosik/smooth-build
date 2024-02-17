@@ -1150,7 +1150,7 @@ public class ExprBCorruptedTest extends TestContext {
       throws HashedDbException {
     var hash = hash(hash(type), dataHash, dataHash);
     assertCall(() -> factory.apply(hash))
-        .throwsException(DecodeExprRootException.wrongSizeOfRootChainException(hash, 3));
+        .throwsException(wrongSizeOfRootChainException(hash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
