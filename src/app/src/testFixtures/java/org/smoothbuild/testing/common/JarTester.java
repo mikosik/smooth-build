@@ -33,7 +33,9 @@ public class JarTester {
     JarEntry entry = new JarEntry(filePath(file).toJ());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {
-      source.readAll(sink(jarOutputStream));
+      var sink = sink(jarOutputStream);
+      source.readAll(sink);
+      sink.flush();
     }
     jarOutputStream.closeEntry();
   }

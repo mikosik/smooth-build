@@ -17,8 +17,12 @@ public class BlobBTest extends TestContext {
 
   @Test
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
-    BlobB blob = blobBBuilder().build();
-    assertThat(blob.source().readByteString()).isEqualTo(ByteString.of());
+    try (var builder = blobBBuilder()) {
+      var blobB = builder.build();
+      try (var source = blobB.source()) {
+        assertThat(source.readByteString()).isEqualTo(ByteString.of());
+      }
+    }
   }
 
   @Test
@@ -27,15 +31,11 @@ public class BlobBTest extends TestContext {
   }
 
   @Test
-  public void empty_blob_is_empty() throws Exception {
-    BlobB blob = blobBBuilder().build();
-    assertThat(blob.source().readByteString()).isEqualTo(ByteString.of());
-  }
-
-  @Test
   public void blob_has_content_passed_to_builder() throws Exception {
-    BlobB blob = blobB(bytes);
-    assertThat(blob.source().readByteString()).isEqualTo(bytes);
+    var blobB = blobB(bytes);
+    try (var source = blobB.source()) {
+      assertThat(source.readByteString()).isEqualTo(bytes);
+    }
   }
 
   @Nested
@@ -63,10 +63,13 @@ public class BlobBTest extends TestContext {
 
   @Test
   public void blob_read_by_hash_has_same_content() throws Exception {
-    BlobB blob = blobB(bytes);
-    Hash hash = blob.hash();
-    assertThat(((BlobB) bytecodeDbOther().get(hash)).source().readByteString())
-        .isEqualTo(blob.source().readByteString());
+    var blobB = blobB(bytes);
+    var hash = blobB.hash();
+    try (var source = blobB.source()) {
+      try (var otherSource = ((BlobB) bytecodeDbOther().get(hash)).source()) {
+        assertThat(otherSource.readByteString()).isEqualTo(source.readByteString());
+      }
+    }
   }
 
   @Test

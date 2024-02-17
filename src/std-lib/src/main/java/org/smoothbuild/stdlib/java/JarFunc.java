@@ -10,7 +10,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
@@ -53,7 +52,7 @@ public class JarFunc {
     jarEntry.setLastModifiedTime(FileTime.fromMillis(0));
     jarOutputStream.putNextEntry(jarEntry);
     try (BufferedSource source = fileContent.source()) {
-      BufferedSink sink = buffer(sink(jarOutputStream));
+      var sink = sink(jarOutputStream);
       source.readAll(sink);
       sink.flush();
     }
