@@ -108,7 +108,7 @@ public class CategoryDb {
 
   private <A extends TypeB> Function0<A, CategoryDbException> createAndCacheTypeMemoizer(
       Function<Hash, A> factory, CategoryKindB kind) {
-    return memoizer(() -> cache(factory.apply(writeBaseRoot(kind))));
+    return memoizer(() -> cache(factory.apply(writeRoot(kind))));
   }
 
   // methods for getting ValueB types
@@ -456,7 +456,7 @@ public class CategoryDb {
 
   private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT)
       throws CategoryDbException {
-    var rootHash = writeRootWithData(kind, evaluationT);
+    var rootHash = writeRoot(kind, evaluationT);
     return newOper(kind.constructor(), rootHash, evaluationT);
   }
 
@@ -474,35 +474,34 @@ public class CategoryDb {
   // Methods for writing category root
 
   private Hash writeArrayRoot(CategoryB elem) throws CategoryDbException {
-    return writeRootWithData(ARRAY, elem);
+    return writeRoot(ARRAY, elem);
   }
 
   private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws CategoryDbException {
     var dataHash = writeSeq(params.hash(), result.hash());
-    return writeRootWithData(FUNC, dataHash);
+    return writeRoot(FUNC, dataHash);
   }
 
   private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws CategoryDbException {
-    return writeRootWithData(kind, funcTB);
+    return writeRoot(kind, funcTB);
   }
 
   private Hash writeTupleRoot(List<TypeB> items) throws CategoryDbException {
     var dataHash = writeSeq(items);
-    return writeRootWithData(TUPLE, dataHash);
+    return writeRoot(TUPLE, dataHash);
   }
 
   // Helper methods for writing roots
 
-  private Hash writeRootWithData(CategoryKindB kind, CategoryB categoryB)
-      throws CategoryDbException {
-    return writeRootWithData(kind, categoryB.hash());
+  private Hash writeRoot(CategoryKindB kind, CategoryB categoryB) throws CategoryDbException {
+    return writeRoot(kind, categoryB.hash());
   }
 
-  private Hash writeRootWithData(CategoryKindB kind, Hash dataHash) throws CategoryDbException {
+  private Hash writeRoot(CategoryKindB kind, Hash dataHash) throws CategoryDbException {
     return writeSeq(writeByte(kind.marker()), dataHash);
   }
 
-  private Hash writeBaseRoot(CategoryKindB kind) throws CategoryDbException {
+  private Hash writeRoot(CategoryKindB kind) throws CategoryDbException {
     return writeSeq(writeByte(kind.marker()));
   }
 
