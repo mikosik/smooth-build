@@ -35,15 +35,15 @@ import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.IllegalArrayByteSizesProvider;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatIllegalKindException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatNodeException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongChainSizeException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatException;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -299,13 +299,13 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(FUNC);
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(FUNC);
       }
 
       @Test
-      public void with_data_not_being_seq_of_hashes() throws Exception {
-        var notHashOfSeq = hash("abc");
-        var hash = hash(hash(FUNC.marker()), notHashOfSeq);
+      public void with_data_not_being_hash_chain() throws Exception {
+        var notHashOfChain = hash("abc");
+        var hash = hash(hash(FUNC.marker()), notHashOfChain);
         assertThatGet(hash).throwsException(new DecodeCatNodeException(hash, FUNC, DATA_PATH));
       }
 
@@ -315,7 +315,7 @@ public class CategoryBCorruptedTest extends TestContext {
         var resultT = intTB();
         var hash = hash(hash(FUNC.marker()), hash(hash(paramTs), hash(resultT), hash(resultT)));
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeException(hash, FUNC, DATA_PATH, 2, 3));
+            .throwsException(new DecodeCatWrongChainSizeException(hash, FUNC, DATA_PATH, 2, 3));
       }
 
       @Test
@@ -323,18 +323,19 @@ public class CategoryBCorruptedTest extends TestContext {
         var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(hash(FUNC.marker()), hash(hash(paramTs)));
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeException(hash, FUNC, DATA_PATH, 2, 1));
+            .throwsException(new DecodeCatWrongChainSizeException(hash, FUNC, DATA_PATH, 2, 1));
       }
 
       @ParameterizedTest
       @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-      public void with_data_seq_size_different_than_multiple_of_hash_size(int byteCount)
+      public void with_data_chain_size_different_than_multiple_of_hash_size(int byteCount)
           throws Exception {
-        var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-        var typeHash = hash(hash(FUNC.marker()), notHashOfSeq);
+        var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
+        var typeHash = hash(hash(FUNC.marker()), notHashOfChain);
         assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).result())
             .throwsException(new DecodeCatNodeException(typeHash, FUNC, DATA_PATH))
-            .withCause(new DecodeHashSeqException(notHashOfSeq, byteCount % Hash.lengthInBytes()));
+            .withCause(
+                new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
       }
 
       @Test
@@ -423,13 +424,13 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(TUPLE);
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(TUPLE);
       }
 
       @Test
-      public void with_elements_not_being_seq_of_hashes() throws Exception {
-        Hash notHashOfSeq = hash("abc");
-        Hash hash = hash(hash(TUPLE.marker()), notHashOfSeq);
+      public void with_elements_not_being_hash_chain() throws Exception {
+        Hash notHashOfChain = hash("abc");
+        Hash hash = hash(hash(TUPLE.marker()), notHashOfChain);
         assertThatGet(hash).throwsException(new DecodeCatNodeException(hash, TUPLE, DATA_PATH));
       }
 
@@ -443,7 +444,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elements_being_seq_of_oper_types() throws Exception {
+      public void with_elements_being_chain_of_oper_types() throws Exception {
         Hash hash = hash(hash(TUPLE.marker()), hash(hash(varCB())));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatException(
@@ -481,7 +482,7 @@ public class CategoryBCorruptedTest extends TestContext {
         .withCause(new DecodeCatException(dataHash));
   }
 
-  private void assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
+  private void assert_reading_cat_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(
       CategoryKindB kind) throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(hash(kind.marker()), dataHash);
@@ -539,7 +540,7 @@ public class CategoryBCorruptedTest extends TestContext {
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
-    return hashedDb().writeSeq(hashes);
+    return hashedDb().writeHashChain(hashes);
   }
 
   @Nested

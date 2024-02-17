@@ -5,7 +5,7 @@ import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
-import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
+import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -29,9 +29,10 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeExcept
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongChainSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
@@ -56,7 +57,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBooleanException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeByteException;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
@@ -87,7 +88,7 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> bytecodeDb().get(hash))
           .throwsException(cannotReadRootException(hash, null))
-          .withCause(new DecodeHashSeqException(hash, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashChainException(hash, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -133,7 +134,7 @@ public class ExprBCorruptedTest extends TestContext {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
           arrayTB(intTB()),
-          hashedDb().writeSeq(),
+          hashedDb().writeHashChain(),
           (Hash hash) -> ((ArrayB) bytecodeDb().get(hash)).elems(IntB.class));
     }
 
@@ -145,17 +146,19 @@ public class ExprBCorruptedTest extends TestContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
-      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+    public void with_chain_size_different_than_multiple_of_hash_size(int byteCount)
+        throws Exception {
+      var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
       ArrayTB type = arrayTB(stringTB());
-      var hash = hash(hash(type), notHashOfSeq);
+      var hash = hash(hash(type), notHashOfChain);
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(ValueB.class))
           .throwsException(new DecodeExprNodeException(hash, type, DATA_PATH))
-          .withCause(new DecodeHashSeqException(notHashOfSeq, byteCount % Hash.lengthInBytes()));
+          .withCause(
+              new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_seq_elem_pointing_nowhere() throws Exception {
+    public void with_chain_element_pointing_nowhere() throws Exception {
       var nowhereHash = Hash.of(33);
       var dataHash = hash(nowhereHash);
       var arrayTB = arrayTB(stringTB());
@@ -320,18 +323,18 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void data_is_seq_with_one_elem() throws Exception {
+    public void data_is_chain_with_one_elem() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = lambdaB(funcT, intB());
       var dataHash = hash(hash(func));
       var cat = callCB(intTB());
       var hash = hash(hash(cat), dataHash);
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, cat, DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, cat, DATA_PATH, 2, 1));
     }
 
     @Test
-    public void data_is_seq_with_three_elems() throws Exception {
+    public void data_is_chain_with_three_elems() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = lambdaB(funcT, intB());
       var args = combineB(stringB(), intB());
@@ -339,7 +342,7 @@ public class ExprBCorruptedTest extends TestContext {
       var cat = callCB(intTB());
       var hash = hash(hash(cat), dataHash);
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, cat, DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, cat, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -439,16 +442,18 @@ public class ExprBCorruptedTest extends TestContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
-      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-      var hash = hash(hash(combineCB()), notHashOfSeq);
+    public void with_chain_size_different_than_multiple_of_hash_size(int byteCount)
+        throws Exception {
+      var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
+      var hash = hash(hash(combineCB()), notHashOfChain);
       assertCall(() -> ((CombineB) bytecodeDb().get(hash)).subExprs())
           .throwsException(new DecodeExprNodeException(hash, combineCB(), DATA_PATH))
-          .withCause(new DecodeHashSeqException(notHashOfSeq, byteCount % Hash.lengthInBytes()));
+          .withCause(
+              new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_seq_item_pointing_nowhere() throws Exception {
+    public void with_chain_element_pointing_nowhere() throws Exception {
       var nowhere = Hash.of(33);
       var hash = hash(hash(combineCB()), hash(nowhere));
       assertCall(() -> ((CombineB) bytecodeDb().get(hash)).subExprs())
@@ -638,7 +643,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void data_is_seq_with_two_elem() throws Exception {
+    public void data_is_chain_with_two_elements() throws Exception {
       var category = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
@@ -646,11 +651,11 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(hash(category), dataHash);
 
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, category, DATA_PATH, 3, 2));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, category, DATA_PATH, 3, 2));
     }
 
     @Test
-    public void data_is_seq_with_four_elems() throws Exception {
+    public void data_is_chain_with_four_elements() throws Exception {
       var type = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
@@ -659,7 +664,7 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(hash(type), dataHash);
 
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, type, DATA_PATH, 3, 4));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, type, DATA_PATH, 3, 4));
     }
 
     @Test
@@ -738,16 +743,18 @@ public class ExprBCorruptedTest extends TestContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
-      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-      var hash = hash(hash(orderCB()), notHashOfSeq);
+    public void with_chain_size_different_than_multiple_of_hash_size(int byteCount)
+        throws Exception {
+      var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
+      var hash = hash(hash(orderCB()), notHashOfChain);
       assertCall(() -> ((OrderB) bytecodeDb().get(hash)).subExprs())
           .throwsException(new DecodeExprNodeException(hash, orderCB(), DATA_PATH))
-          .withCause(new DecodeHashSeqException(notHashOfSeq, byteCount % Hash.lengthInBytes()));
+          .withCause(
+              new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_seq_elem_pointing_nowhere() throws Exception {
+    public void with_chain_elem_pointing_nowhere() throws Exception {
       var nowhereHash = Hash.of(33);
       var hash = hash(hash(orderCB()), hash(nowhereHash));
       assertCall(() -> ((OrderB) bytecodeDb().get(hash)).subExprs())
@@ -804,22 +811,22 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void data_is_seq_with_one_elem() throws Exception {
+    public void data_is_chain_with_one_element() throws Exception {
       var expr = intB(123);
       var dataHash = hash(hash(expr));
       var hash = hash(hash(pickCB()), dataHash);
       assertCall(() -> ((PickB) bytecodeDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, pickCB(), DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, pickCB(), DATA_PATH, 2, 1));
     }
 
     @Test
-    public void data_is_seq_with_three_elems() throws Exception {
+    public void data_is_chain_with_three_elements() throws Exception {
       var index = intB(2);
       var expr = intB(123);
       var dataHash = hash(hash(expr), hash(index), hash(index));
       var hash = hash(hash(pickCB()), dataHash);
       assertCall(() -> ((PickB) bytecodeDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, pickCB(), DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, pickCB(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -927,22 +934,24 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void data_is_seq_with_one_elem() throws Exception {
+    public void data_is_chain_with_one_element() throws Exception {
       var expr = intB(123);
       var dataHash = hash(hash(expr));
       var hash = hash(hash(selectCB()), dataHash);
       assertCall(() -> ((SelectB) bytecodeDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, selectCB(), DATA_PATH, 2, 1));
+          .throwsException(
+              new DecodeExprWrongChainSizeException(hash, selectCB(), DATA_PATH, 2, 1));
     }
 
     @Test
-    public void data_is_seq_with_three_elems() throws Exception {
+    public void data_is_chain_with_three_element() throws Exception {
       var index = intB(2);
       var expr = intB(123);
       var dataHash = hash(hash(expr), hash(index), hash(index));
       var hash = hash(hash(selectCB()), dataHash);
       assertCall(() -> ((SelectB) bytecodeDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, selectCB(), DATA_PATH, 2, 3));
+          .throwsException(
+              new DecodeExprWrongChainSizeException(hash, selectCB(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1024,7 +1033,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void data_being_invalid_utf8_seq() throws Exception {
+    public void data_being_invalid_utf8_chain() throws Exception {
       var notStringHash = hash(illegalString());
       var hash = hash(hash(stringTB()), notStringHash);
       assertCall(() -> ((StringB) bytecodeDb().get(hash)).toJ())
@@ -1066,16 +1075,17 @@ public class ExprBCorruptedTest extends TestContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
-      var notSeqHash = hash(ByteString.of(new byte[byteCount]));
-      var hash = hash(hash(personTB()), notSeqHash);
+    public void with_chain_size_different_than_multiple_of_hash_size(int byteCount)
+        throws Exception {
+      var notChainHash = hash(ByteString.of(new byte[byteCount]));
+      var hash = hash(hash(personTB()), notChainHash);
       assertCall(() -> ((TupleB) bytecodeDb().get(hash)).get(0))
           .throwsException(new DecodeExprNodeException(hash, personTB(), DATA_PATH))
-          .withCause(new DecodeHashSeqException(notSeqHash, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashChainException(notChainHash, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_seq_element_pointing_nowhere() throws Exception {
+    public void with_chain_element_pointing_nowhere() throws Exception {
       var nowhereHash = Hash.of(33);
       var dataHash = hash(nowhereHash, nowhereHash);
       var hash = hash(hash(personTB()), dataHash);
@@ -1090,7 +1100,8 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(hash(personTB()), dataHash);
       TupleB tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, personTB(), DATA_PATH, 2, 1));
+          .throwsException(
+              new DecodeExprWrongChainSizeException(hash, personTB(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1099,7 +1110,8 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(hash(personTB()), dataHash);
       var tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeExprWrongSeqSizeException(hash, personTB(), DATA_PATH, 2, 3));
+          .throwsException(
+              new DecodeExprWrongChainSizeException(hash, personTB(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1124,20 +1136,21 @@ public class ExprBCorruptedTest extends TestContext {
   private void obj_root_without_data_hash(CategoryB cat) throws HashedDbException {
     var hash = hash(hash(cat));
     assertCall(() -> bytecodeDb().get(hash))
-        .throwsException(wrongSizeOfRootSeqException(hash, cat, 1));
+        .throwsException(wrongSizeOfRootChainException(hash, cat, 1));
   }
 
   private void obj_root_with_data_hash(CategoryB category) throws HashedDbException {
     var hash = hash(hash(category), hash(category));
     assertCall(() -> bytecodeDb().get(hash))
-        .throwsException(wrongSizeOfRootSeqException(hash, category, 2));
+        .throwsException(wrongSizeOfRootChainException(hash, category, 2));
   }
 
   private void obj_root_with_two_data_hashes(
       CategoryB type, Hash dataHash, Function1<Hash, ?, BytecodeException> factory)
       throws HashedDbException {
     var hash = hash(hash(type), dataHash, dataHash);
-    assertCall(() -> factory.apply(hash)).throwsException(wrongSizeOfRootSeqException(hash, 3));
+    assertCall(() -> factory.apply(hash))
+        .throwsException(DecodeExprRootException.wrongSizeOfRootChainException(hash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
@@ -1196,6 +1209,6 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
-    return hashedDb().writeSeq(hashes);
+    return hashedDb().writeHashChain(hashes);
   }
 }

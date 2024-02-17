@@ -10,8 +10,8 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongChainSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
@@ -78,7 +78,7 @@ public abstract class ExprB {
 
   protected long readDataSeqSize() throws BytecodeException {
     return invokeTranslatingHashedDbException(
-        () -> bytecodeDb.hashedDb().readSeqSize(dataHash()),
+        () -> bytecodeDb.hashedDb().readHashChainSize(dataHash()),
         e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
@@ -106,7 +106,7 @@ public abstract class ExprB {
   private List<Hash> readDataSeqHashes(int expectedSize) throws BytecodeDbException {
     List<Hash> data = readDataSeqHashes();
     if (data.size() != expectedSize) {
-      throw new DecodeExprWrongSeqSizeException(
+      throw new DecodeExprWrongChainSizeException(
           hash(), category(), DATA_PATH, expectedSize, data.size());
     }
     return data;
@@ -114,7 +114,7 @@ public abstract class ExprB {
 
   private List<Hash> readDataSeqHashes() throws BytecodeDbException {
     return invokeTranslatingHashedDbException(
-        () -> bytecodeDb.hashedDb().readSeq(dataHash()),
+        () -> bytecodeDb.hashedDb().readHashChain(dataHash()),
         e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
