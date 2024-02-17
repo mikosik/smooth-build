@@ -8,13 +8,13 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.ComputationResult;
 import org.smoothbuild.vm.evaluate.task.Task;
 
-public class ResHandler implements Consumer1<ComputationResult, BytecodeException> {
+public class ResultHandler implements Consumer1<ComputationResult, BytecodeException> {
   private final SoftTerminationExecutor executor;
   private final TaskReporter reporter;
   private final Consumer<ValueB> consumer;
   private final Task task;
 
-  public ResHandler(
+  public ResultHandler(
       Task task,
       SoftTerminationExecutor executor,
       TaskReporter reporter,

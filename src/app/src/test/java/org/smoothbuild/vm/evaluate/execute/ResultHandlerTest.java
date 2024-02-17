@@ -13,7 +13,7 @@ import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
-public class ResHandlerTest extends TestContext {
+public class ResultHandlerTest extends TestContext {
   private TaskReporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<ValueB> consumer;
@@ -32,15 +32,15 @@ public class ResHandlerTest extends TestContext {
   class when_output_with_value_is_passed {
     @Test
     public void object_is_forwarded_to_consumer() throws Exception {
-      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(computationResult(value));
+      var resultHandler = new ResultHandler(task(), executor, reporter, consumer);
+      resultHandler.accept(computationResult(value));
       verify(consumer, only()).accept(value);
     }
 
     @Test
     public void executor_is_not_stopped() throws Exception {
-      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(computationResult(value));
+      var resultHandler = new ResultHandler(task(), executor, reporter, consumer);
+      resultHandler.accept(computationResult(value));
       verifyNoInteractions(executor);
     }
   }
@@ -49,15 +49,15 @@ public class ResHandlerTest extends TestContext {
   class when_output_without_value_is_passed {
     @Test
     public void object_is_not_forwarded_to_consumer() throws Exception {
-      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(computationResult(null));
+      ResultHandler resultHandler = new ResultHandler(task(), executor, reporter, consumer);
+      resultHandler.accept(computationResult(null));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() throws Exception {
-      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(computationResult(null));
+      ResultHandler resultHandler = new ResultHandler(task(), executor, reporter, consumer);
+      resultHandler.accept(computationResult(null));
       verify(executor, only()).terminate();
     }
   }
