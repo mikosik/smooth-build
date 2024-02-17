@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import static java.util.Objects.checkIndex;
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
 import org.smoothbuild.common.collect.List;
@@ -17,11 +17,11 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
  * This class is thread-safe.
  */
 public final class TupleB extends ValueB {
-  private final Function0<List<ValueB>, BytecodeException> elementsSupplier;
+  private final Function0<List<ValueB>, BytecodeException> elementsMemoizer;
 
   public TupleB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    this.elementsSupplier = memoize(this::instantiateItems);
+    this.elementsMemoizer = memoizer(this::instantiateItems);
   }
 
   @Override
@@ -41,7 +41,7 @@ public final class TupleB extends ValueB {
   }
 
   public List<ValueB> elements() throws BytecodeException {
-    return elementsSupplier.apply();
+    return elementsMemoizer.apply();
   }
 
   private List<ValueB> instantiateItems() throws BytecodeException {

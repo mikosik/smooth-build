@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingCategoryDbException;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
@@ -108,7 +108,7 @@ public class CategoryDb {
 
   private <A extends TypeB> Function0<A, CategoryDbException> createAndCacheTypeMemoizer(
       Function<Hash, A> factory, CategoryKindB kind) {
-    return memoize(() -> cache(factory.apply(writeBaseRoot(kind))));
+    return memoizer(() -> cache(factory.apply(writeBaseRoot(kind))));
   }
 
   // methods for getting ValueB types

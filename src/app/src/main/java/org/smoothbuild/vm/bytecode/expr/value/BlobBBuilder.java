@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 
 import java.io.IOException;
 import okio.ForwardingSink;
@@ -17,7 +17,7 @@ public class BlobBBuilder extends ForwardingSink {
   public BlobBBuilder(BytecodeDb bytecodeDb, HashingSink hashingSink) {
     super(hashingSink);
     this.bytecodeDb = bytecodeDb;
-    this.hashMemoizer = memoize(this::createBlobB);
+    this.hashMemoizer = memoizer(this::createBlobB);
   }
 
   public BlobB build() throws BytecodeException {

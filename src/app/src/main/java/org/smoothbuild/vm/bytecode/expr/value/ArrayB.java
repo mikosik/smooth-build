@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
@@ -14,11 +14,11 @@ import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
  * This class is thread-safe.
  */
 public final class ArrayB extends ValueB {
-  private final Function0<List<ValueB>, BytecodeException> elementsSupplier;
+  private final Function0<List<ValueB>, BytecodeException> elementsMemoizer;
 
   public ArrayB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    this.elementsSupplier = memoize(this::instantiateElements);
+    this.elementsMemoizer = memoizer(this::instantiateElements);
   }
 
   @Override
@@ -38,7 +38,7 @@ public final class ArrayB extends ValueB {
   public <T extends ValueB> List<T> elems(Class<T> elemTJ) throws BytecodeException {
     assertIsIterableAs(elemTJ);
     @SuppressWarnings("unchecked")
-    List<T> result = (List<T>) elementsSupplier.apply();
+    List<T> result = (List<T>) elementsMemoizer.apply();
     return result;
   }
 

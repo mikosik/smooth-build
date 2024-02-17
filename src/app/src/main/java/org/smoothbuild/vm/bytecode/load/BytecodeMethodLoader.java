@@ -2,7 +2,7 @@ package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
@@ -35,7 +35,7 @@ public class BytecodeMethodLoader {
 
   public Either<String, Method> load(BlobB jar, String classBinaryName) throws BytecodeException {
     var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
-    var memoizer = cache.computeIfAbsent(methodSpec, ms -> memoize(() -> loadImpl(ms)));
+    var memoizer = cache.computeIfAbsent(methodSpec, ms -> memoizer(() -> loadImpl(ms)));
     return memoizer.apply();
   }
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.hashed;
 
-import static org.smoothbuild.common.function.Function0.memoize;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class HashingSink extends ForwardingSink {
     super(Hash.hashingSink(fileSystem.sinkWithoutBuffer(tempPath)));
     this.fileSystem = fileSystem;
     this.tempPath = tempPath;
-    this.hashMemoizer = memoize(this::calculateHash);
+    this.hashMemoizer = memoizer(this::calculateHash);
   }
 
   public Hash hash() throws IOException {
