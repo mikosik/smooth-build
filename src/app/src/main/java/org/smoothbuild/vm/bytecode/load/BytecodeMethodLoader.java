@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.load;
 
-import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
+import static org.smoothbuild.common.function.Function0.memoize;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
@@ -9,6 +9,7 @@ import jakarta.inject.Singleton;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -21,7 +22,8 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 public class BytecodeMethodLoader {
   static final String BYTECODE_METHOD_NAME = "bytecode";
   private final MethodLoader methodLoader;
-  private final ConcurrentHashMap<MethodSpec, Either<String, Method>> cache;
+  private final ConcurrentHashMap<MethodSpec, Function0<Either<String, Method>, BytecodeException>>
+      cache;
 
   @Inject
   public BytecodeMethodLoader(MethodLoader methodLoader) {
@@ -31,7 +33,8 @@ public class BytecodeMethodLoader {
 
   public Either<String, Method> load(BlobB jar, String classBinaryName) throws BytecodeException {
     var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
-    return invokeWithTunneling((f) -> cache.computeIfAbsent(methodSpec, f), this::loadImpl);
+    var memoizer = cache.computeIfAbsent(methodSpec, ms -> memoize(() -> loadImpl(ms)));
+    return memoizer.apply();
   }
 
   private Either<String, Method> loadImpl(MethodSpec methodSpec) throws BytecodeException {
