@@ -38,8 +38,4 @@ public class AssertPath {
       case NOTHING -> {}
     }
   }
-
-  public static RuntimeException newUnknownPathState(PathState state) {
-    return new RuntimeException("Unknown " + PathState.class.getName() + ": " + state);
-  }
 }
