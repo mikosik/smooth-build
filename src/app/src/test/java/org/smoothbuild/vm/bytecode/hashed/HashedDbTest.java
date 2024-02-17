@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbException;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
@@ -242,70 +242,72 @@ public class HashedDbTest extends TestContext {
   }
 
   @Nested
-  class _sequence {
+  class _hash_chain {
     @Test
     public void with_no_elems_can_be_read_back() throws Exception {
-      var hash = hashedDb().writeSeq();
-      assertThat(hashedDb().readSeq(hash)).isEqualTo(list());
+      var hash = hashedDb().writeHashChain();
+      assertThat(hashedDb().readHashChain(hash)).isEqualTo(list());
     }
 
     @Test
     public void with_one_elem_can_be_read_back() throws Exception {
-      var hash = hashedDb().writeSeq(Hash.of("abc"));
-      assertThat(hashedDb().readSeq(hash)).isEqualTo(list(Hash.of("abc")));
+      var hash = hashedDb().writeHashChain(Hash.of("abc"));
+      assertThat(hashedDb().readHashChain(hash)).isEqualTo(list(Hash.of("abc")));
     }
 
     @Test
     public void with_two_elems_can_be_read_back() throws Exception {
-      var hash = hashedDb().writeSeq(Hash.of("abc"), Hash.of("def"));
-      assertThat(hashedDb().readSeq(hash)).isEqualTo(list(Hash.of("abc"), Hash.of("def")));
+      var hash = hashedDb().writeHashChain(Hash.of("abc"), Hash.of("def"));
+      assertThat(hashedDb().readHashChain(hash)).isEqualTo(list(Hash.of("abc"), Hash.of("def")));
     }
 
     @Test
-    public void not_written_seq_of_hashes_cannot_be_read_back() {
+    public void not_written_hash_chain_cannot_be_read_back() {
       var hash = Hash.of("abc");
-      assertCall(() -> hashedDb().readSeq(hash)).throwsException(new NoSuchDataException(hash));
+      assertCall(() -> hashedDb().readHashChain(hash))
+          .throwsException(new NoSuchDataException(hash));
     }
 
     @Test
-    public void corrupted_seq_of_hashes_cannot_be_read_back() throws Exception {
+    public void corrupted_hash_chain_cannot_be_read_back() throws Exception {
       var hash = hashedDb().writeString("12345");
-      assertCall(() -> hashedDb().readSeq(hash))
-          .throwsException(new DecodeHashSeqException(hash, 5));
+      assertCall(() -> hashedDb().readHashChain(hash))
+          .throwsException(new DecodeHashChainException(hash, 5));
     }
   }
 
   @Nested
-  class _sequence_size {
+  class _hash_chain_size {
     @Test
     public void with_no_elems_has_zero_size() throws Exception {
-      var hash = hashedDb().writeSeq();
-      assertThat(hashedDb().readSeqSize(hash)).isEqualTo(0);
+      var hash = hashedDb().writeHashChain();
+      assertThat(hashedDb().readHashChainSize(hash)).isEqualTo(0);
     }
 
     @Test
     public void with_one_elem_has_size_one() throws Exception {
-      var hash = hashedDb().writeSeq(Hash.of("1"));
-      assertThat(hashedDb().readSeqSize(hash)).isEqualTo(1);
+      var hash = hashedDb().writeHashChain(Hash.of("1"));
+      assertThat(hashedDb().readHashChainSize(hash)).isEqualTo(1);
     }
 
     @Test
     public void with_three_elem_has_size_three() throws Exception {
-      var hash = hashedDb().writeSeq(Hash.of("1"), Hash.of("2"), Hash.of("3"));
-      assertThat(hashedDb().readSeqSize(hash)).isEqualTo(3);
+      var hash = hashedDb().writeHashChain(Hash.of("1"), Hash.of("2"), Hash.of("3"));
+      assertThat(hashedDb().readHashChainSize(hash)).isEqualTo(3);
     }
 
     @Test
-    public void reading_size_of_not_written_seq_of_hashes_causes_exception() {
+    public void reading_size_of_not_written_hash_chain_causes_exception() {
       var hash = Hash.of("abc");
-      assertCall(() -> hashedDb().readSeqSize(hash)).throwsException(new NoSuchDataException(hash));
+      assertCall(() -> hashedDb().readHashChainSize(hash))
+          .throwsException(new NoSuchDataException(hash));
     }
 
     @Test
-    public void reading_size_of_corrupted_seq_of_hashes_causes_exception() throws Exception {
+    public void reading_size_of_corrupted_hash_chain_causes_exception() throws Exception {
       var hash = hashedDb().writeString("12345");
-      assertCall(() -> hashedDb().readSeqSize(hash))
-          .throwsException(new DecodeHashSeqException(hash, 5));
+      assertCall(() -> hashedDb().readHashChainSize(hash))
+          .throwsException(new DecodeHashChainException(hash, 5));
     }
   }
 }

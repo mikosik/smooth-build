@@ -8,14 +8,14 @@ public class DecodeExprRootException extends DecodeExprException {
     return new DecodeExprRootException(hash, "Cannot decode root.", cause);
   }
 
-  public static DecodeExprRootException wrongSizeOfRootSeqException(Hash hash, int actualSize) {
+  public static DecodeExprRootException wrongSizeOfRootChainException(Hash hash, int actualSize) {
     return new DecodeExprRootException(
         hash,
         "Its root points to hash sequence with " + actualSize
             + " elems when it should point to sequence with 1 or 2 elems.");
   }
 
-  public static DecodeExprRootException wrongSizeOfRootSeqException(
+  public static DecodeExprRootException wrongSizeOfRootChainException(
       Hash hash, CategoryB category, int actualSize) {
     return new DecodeExprRootException(
         hash,

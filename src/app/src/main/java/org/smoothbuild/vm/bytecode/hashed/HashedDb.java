@@ -25,7 +25,7 @@ import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBigIntegerException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBooleanException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeByteException;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
@@ -111,11 +111,11 @@ public class HashedDb {
     }
   }
 
-  public Hash writeSeq(Hash... hashes) throws HashedDbException {
-    return writeSeq(asList(hashes));
+  public Hash writeHashChain(Hash... hashes) throws HashedDbException {
+    return writeHashChain(asList(hashes));
   }
 
-  public Hash writeSeq(Iterable<Hash> hashes) throws HashedDbException {
+  public Hash writeHashChain(Iterable<Hash> hashes) throws HashedDbException {
     return writeData(bufferedSink -> {
       for (Hash hash : hashes) {
         bufferedSink.write(hash.toByteString());
@@ -134,39 +134,39 @@ public class HashedDb {
     }
   }
 
-  public long readSeqSize(Hash hash) throws HashedDbException {
+  public long readHashChainSize(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
     var pathState = fileSystem.pathState(path);
     return switch (pathState) {
-      case FILE -> readSeqSize(hash, path);
+      case FILE -> readHashChainSize(hash, path);
       case DIR -> throw new CorruptedHashedDbException(
           format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
       case NOTHING -> throw new NoSuchDataException(hash);
     };
   }
 
-  private long readSeqSize(Hash hash, PathS path) throws HashedDbException {
+  private long readHashChainSize(Hash hash, PathS path) throws HashedDbException {
     try {
       var sizeInBytes = fileSystem.size(path);
       long remainder = sizeInBytes % Hash.lengthInBytes();
       if (remainder == 0) {
         return sizeInBytes / Hash.lengthInBytes();
       } else {
-        throw new DecodeHashSeqException(hash, remainder);
+        throw new DecodeHashChainException(hash, remainder);
       }
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
   }
 
-  public List<Hash> readSeq(Hash hash) throws HashedDbException {
+  public List<Hash> readHashChain(Hash hash) throws HashedDbException {
     var builder = new ArrayList<Hash>();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
         if (source.request(Hash.lengthInBytes())) {
           builder.add(Hash.read(source));
         } else {
-          throw new DecodeHashSeqException(hash, source.readByteArray().length);
+          throw new DecodeHashChainException(hash, source.readByteArray().length);
         }
       }
     } catch (IOException e) {

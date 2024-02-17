@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.expr;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
-import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
+import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import java.math.BigInteger;
@@ -181,21 +181,20 @@ public class BytecodeDb {
   // generic getter
 
   public ExprB get(Hash rootHash) throws BytecodeException {
-    var hashes = decodeRootSeq(rootHash);
-    int rootSeqSize = hashes.size();
-    if (rootSeqSize != 2 && rootSeqSize != 1) {
-      throw wrongSizeOfRootSeqException(rootHash, rootSeqSize);
-    }
+    var hashes = decodeRootChain(rootHash);
+    int rootChainSize = hashes.size();
+    if (rootChainSize != 2 && rootChainSize != 1)
+      throw wrongSizeOfRootChainException(rootHash, rootChainSize);
     var category = getCatOrChainException(rootHash, hashes.get(0));
     if (category.containsData()) {
-      if (rootSeqSize != 2) {
-        throw wrongSizeOfRootSeqException(rootHash, category, rootSeqSize);
+      if (rootChainSize != 2) {
+        throw wrongSizeOfRootChainException(rootHash, category, rootChainSize);
       }
       var dataHash = hashes.get(1);
       return category.newExpr(new MerkleRoot(rootHash, category, dataHash), this);
     } else {
-      if (rootSeqSize != 1) {
-        throw wrongSizeOfRootSeqException(rootHash, category, rootSeqSize);
+      if (rootChainSize != 1) {
+        throw wrongSizeOfRootChainException(rootHash, category, rootChainSize);
       }
       return category.newExpr(new MerkleRoot(rootHash, category, null), this);
     }
@@ -210,8 +209,8 @@ public class BytecodeDb {
     }
   }
 
-  private List<Hash> decodeRootSeq(Hash rootHash) throws BytecodeException {
-    return readRootSeq(rootHash);
+  private List<Hash> decodeRootChain(Hash rootHash) throws BytecodeException {
+    return readRootChain(rootHash);
   }
 
   // methods for creating ValueBs
@@ -356,41 +355,41 @@ public class BytecodeDb {
   }
 
   private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws BytecodeException {
-    Hash rootHash = writeSeq(cat.hash(), dataHash);
+    Hash rootHash = writeChain(cat.hash(), dataHash);
     return new MerkleRoot(rootHash, cat, dataHash);
   }
 
   private MerkleRoot newRoot(CategoryB cat) throws BytecodeException {
-    Hash rootHash = writeSeq(cat.hash());
+    Hash rootHash = writeChain(cat.hash());
     return new MerkleRoot(rootHash, cat, null);
   }
 
   // methods for writing data of Expr-s
 
   private Hash writeCallData(ExprB func, CombineB args) throws BytecodeException {
-    return writeSeq(func.hash(), args.hash());
+    return writeChain(func.hash(), args.hash());
   }
 
   private Hash writeCombineData(List<ExprB> items) throws BytecodeException {
-    return writeSeq(items);
+    return writeChain(items);
   }
 
   private Hash writeOrderData(List<ExprB> elems) throws BytecodeException {
-    return writeSeq(elems);
+    return writeChain(elems);
   }
 
   private Hash writePickData(ExprB pickable, ExprB index) throws BytecodeException {
-    return writeSeq(pickable.hash(), index.hash());
+    return writeChain(pickable.hash(), index.hash());
   }
 
   private Hash writeSelectData(ExprB selectable, IntB index) throws BytecodeException {
-    return writeSeq(selectable.hash(), index.hash());
+    return writeChain(selectable.hash(), index.hash());
   }
 
   // methods for writing data of InstB-s
 
   private Hash writeArrayData(List<ValueB> elems) throws BytecodeException {
-    return writeSeq(elems);
+    return writeChain(elems);
   }
 
   private Hash writeBoolData(boolean value) throws BytecodeException {
@@ -403,7 +402,7 @@ public class BytecodeDb {
 
   private Hash writeNativeFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
-    return writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
+    return writeChain(jar.hash(), classBinaryName.hash(), isPure.hash());
   }
 
   private Hash writeStringData(String string) throws BytecodeException {
@@ -411,14 +410,14 @@ public class BytecodeDb {
   }
 
   private Hash writeTupleData(List<ValueB> items) throws BytecodeException {
-    return writeSeq(items);
+    return writeChain(items);
   }
 
   // hashedDb calls with exception translation
 
-  private List<Hash> readRootSeq(Hash rootHash) throws BytecodeDbException {
+  private List<Hash> readRootChain(Hash rootHash) throws BytecodeDbException {
     try {
-      return hashedDb.readSeq(rootHash);
+      return hashedDb.readHashChain(rootHash);
     } catch (NoSuchDataException e) {
       throw new DecodeExprNoSuchExprException(rootHash, e);
     } catch (HashedDbException e) {
@@ -445,15 +444,15 @@ public class BytecodeDb {
         () -> hashedDb.writeString(string), BytecodeDbException::new);
   }
 
-  private Hash writeSeq(Hash... hashes) throws BytecodeDbException {
+  private Hash writeChain(Hash... hashes) throws BytecodeDbException {
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeSeq(hashes), BytecodeDbException::new);
+        () -> hashedDb.writeHashChain(hashes), BytecodeDbException::new);
   }
 
-  private Hash writeSeq(List<? extends ExprB> exprs) throws BytecodeDbException {
+  private Hash writeChain(List<? extends ExprB> exprs) throws BytecodeDbException {
     var hashes = exprs.map(ExprB::hash);
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeSeq(hashes), BytecodeDbException::new);
+        () -> hashedDb.writeHashChain(hashes), BytecodeDbException::new);
   }
 
   // visible for classes from db.object package tree until creating ExprB is cached and
