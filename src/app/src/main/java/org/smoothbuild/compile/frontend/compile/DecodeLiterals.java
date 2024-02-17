@@ -10,16 +10,15 @@ import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.IntP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StringP;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
 public class DecodeLiterals implements Function<ModuleP, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
-    var logBuffer = new LogBuffer();
-    new DecodeLiteralModuleVisitor(logBuffer).visitModule(moduleP);
-    return Try.of(moduleP, logBuffer);
+    var logger = new Logger();
+    new DecodeLiteralModuleVisitor(logger).visitModule(moduleP);
+    return Try.of(moduleP, logger);
   }
 
   private static class DecodeLiteralModuleVisitor extends ModuleVisitorP {

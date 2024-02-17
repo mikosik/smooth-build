@@ -32,18 +32,17 @@ import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedFuncS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
 public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     var environment = context.element2();
     var moduleP = context.element1();
-    new Visitor(environment, immutableBindings(), logBuffer).visitModule(moduleP);
-    return Try.of(moduleP, logBuffer);
+    new Visitor(environment, immutableBindings(), logger).visitModule(moduleP);
+    return Try.of(moduleP, logger);
   }
 
   private static class Visitor extends ScopingModuleVisitorP {
@@ -113,17 +112,18 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       return args;
     }
 
-    private static List<ExprP> inferPositionedArgs(CallP callP, List<Param> params, Logger logger) {
-      var logBuffer = new LogBuffer();
+    private static List<ExprP> inferPositionedArgs(
+        CallP callP, List<Param> params, Logger mainLogger) {
+      var logger = new Logger();
       var positionalArgs = leadingPositionalArgs(callP);
-      logBuffer.logAll(findPositionalArgAfterNamedArgError(callP));
-      logBuffer.logAll(findUnknownParamNameErrors(callP, params));
-      logBuffer.logAll(findDuplicateAssignmentErrors(callP, positionalArgs, params));
-      logger.logAll(logBuffer);
-      if (logBuffer.containsFailure()) {
+      logger.logAll(findPositionalArgAfterNamedArgError(callP));
+      logger.logAll(findUnknownParamNameErrors(callP, params));
+      logger.logAll(findDuplicateAssignmentErrors(callP, positionalArgs, params));
+      mainLogger.logAll(logger);
+      if (logger.containsFailure()) {
         return null;
       }
-      return positionedArgs(callP, params, positionalArgs.size(), logger);
+      return positionedArgs(callP, params, positionalArgs.size(), mainLogger);
     }
 
     private static List<ExprP> leadingPositionalArgs(CallP callP) {

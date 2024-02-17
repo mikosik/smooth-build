@@ -23,7 +23,7 @@ import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
 /**
@@ -32,23 +32,23 @@ import org.smoothbuild.out.log.Try;
 public class SortModuleMembersByDependency implements Function<ModuleP, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     var sortedTs = sortStructsByDeps(moduleP.structs());
     if (sortedTs.sorted() == null) {
-      logBuffer.log(createCycleError("Type hierarchy", sortedTs.cycle()));
-      return Try.of(null, logBuffer);
+      logger.log(createCycleError("Type hierarchy", sortedTs.cycle()));
+      return Try.of(null, logger);
     }
     var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
     if (sortedEvaluables.sorted() == null) {
-      logBuffer.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
-      return Try.of(null, logBuffer);
+      logger.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
+      return Try.of(null, logger);
     }
     ModuleP result = new ModuleP(
         moduleP.name(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         moduleP.scope());
-    return Try.of(result, logBuffer);
+    return Try.of(result, logger);
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(

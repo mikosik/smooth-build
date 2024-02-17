@@ -1,9 +1,9 @@
 package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
@@ -26,14 +26,14 @@ public class TryTest {
     void creation_with_value_and_non_problem() {
       var tryOf = Try.of("abc", WARNING_LOG);
       assertThat(tryOf.value()).isEqualTo("abc");
-      assertThat(tryOf.logs()).isEqualTo(logs(WARNING_LOG));
+      assertThat(tryOf.logs()).isEqualTo(list(WARNING_LOG));
     }
 
     @Test
     void creation_with_value_and_problem() {
       var tryOf = Try.of("abc", ERROR_LOG);
       assertThat(tryOf.toMaybe()).isEqualTo(none());
-      assertThat(tryOf.logs()).isEqualTo(logs(ERROR_LOG));
+      assertThat(tryOf.logs()).isEqualTo(list(ERROR_LOG));
     }
   }
 
@@ -72,7 +72,7 @@ public class TryTest {
   class _failure {
     @Test
     public void creation_with_no_failure_fails() {
-      ImmutableLogs logs = logs(INFO_LOG);
+      var logs = list(INFO_LOG);
       assertCall(() -> failure(logs)).throwsException(IllegalArgumentException.class);
     }
 
@@ -94,17 +94,17 @@ public class TryTest {
     new EqualsTester()
         .addEqualityGroup(success("abc"), success("abc"))
         .addEqualityGroup(success("def"), success("def"))
-        .addEqualityGroup(failure(fatal("abc")), failure(fatal("abc")), failure(logs(fatal("abc"))))
-        .addEqualityGroup(failure(error("abc")), failure(error("abc")), failure(logs(error("abc"))))
-        .addEqualityGroup(failure(error("def")), failure(error("def")), failure(logs(error("def"))))
+        .addEqualityGroup(failure(fatal("abc")), failure(fatal("abc")), failure(list(fatal("abc"))))
+        .addEqualityGroup(failure(error("abc")), failure(error("abc")), failure(list(error("abc"))))
+        .addEqualityGroup(failure(error("def")), failure(error("def")), failure(list(error("def"))))
         .addEqualityGroup(
             success("abc", warning("abc")),
             success("abc", warning("abc")),
-            success("abc", logs(warning("abc"))))
+            success("abc", list(warning("abc"))))
         .addEqualityGroup(
             success("abc", info("abc")),
             success("abc", info("abc")),
-            success("abc", logs(info("abc"))));
+            success("abc", list(info("abc"))));
   }
 
   @Test

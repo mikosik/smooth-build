@@ -9,15 +9,15 @@ import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.compile.frontend.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.frontend.lang.type.TypeFS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
 public class LoadInternalModuleMembers implements Function<Tuple0, Try<ScopeS>> {
   @Override
   public Try<ScopeS> apply(Tuple0 unused) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     var types = immutableBindings(TypeFS.baseTs().toMap(TypeS::name, t -> baseTypeDefinitions(t)));
-    return Try.of(new ScopeS(types, immutableBindings()), logBuffer);
+    return Try.of(new ScopeS(types, immutableBindings()), logger);
   }
 
   private static TypeDefinitionS baseTypeDefinitions(TypeS baseTypeS) {

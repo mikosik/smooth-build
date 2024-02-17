@@ -17,7 +17,6 @@ import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
@@ -345,7 +344,7 @@ public class EvaluatorBTest extends TestContext {
           var memoryReporter = new MemoryReporter();
           evaluateWithFailure(evaluatorB(memoryReporter), pick);
           assertThat(memoryReporter.logs())
-              .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
+              .isEqualTo(list(error("Index (4) out of bounds. Array size = 4.")));
         }
 
         @Test
@@ -354,7 +353,7 @@ public class EvaluatorBTest extends TestContext {
           var memoryReporter = new MemoryReporter();
           evaluateWithFailure(evaluatorB(memoryReporter), pick);
           assertThat(memoryReporter.logs())
-              .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
+              .isEqualTo(list(error("Index (-1) out of bounds. Array size = 4.")));
         }
       }
 

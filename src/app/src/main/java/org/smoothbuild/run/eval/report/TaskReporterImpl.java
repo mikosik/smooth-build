@@ -4,7 +4,7 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
-import static org.smoothbuild.out.log.ImmutableLogs.logs;
+import static org.smoothbuild.out.log.Log.containsAnyFailure;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
@@ -12,9 +12,7 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -54,13 +52,12 @@ public class TaskReporterImpl implements TaskReporter {
     report(task, header(task, source), logs);
   }
 
-  private static ImmutableLogs logsFrom(ComputationResult result) throws BytecodeException {
-    List<Log> logs = result
+  private static List<Log> logsFrom(ComputationResult result) throws BytecodeException {
+    return result
         .output()
         .messages()
         .elems(TupleB.class)
         .map(message -> new Log(level(message), text(message)));
-    return logs(logs);
   }
 
   private String header(Task task, ResultSource resultSource) {
@@ -101,12 +98,12 @@ public class TaskReporterImpl implements TaskReporter {
     return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "???");
   }
 
-  private void report(Task task, String taskHeader, Logs logs) {
-    boolean visible = taskMatcher.matches(task, logs.toList());
+  private void report(Task task, String taskHeader, List<Log> logs) {
+    boolean visible = taskMatcher.matches(task, logs);
     var traceS = bsTraceTranslator.translate(task.trace());
-    if (logs.containsFailure() && traceS != null) {
+    if (containsAnyFailure(logs) && traceS != null) {
       taskHeader += "\n" + indent(traceS.toString());
     }
-    reporter.report(visible, taskHeader, logs.toList());
+    reporter.report(visible, taskHeader, logs);
   }
 }

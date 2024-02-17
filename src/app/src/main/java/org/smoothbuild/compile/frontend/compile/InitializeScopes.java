@@ -21,7 +21,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
@@ -32,9 +31,9 @@ import org.smoothbuild.out.log.Try;
 public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
-    var logBuffer = new LogBuffer();
-    initializeScopes(moduleP, logBuffer);
-    return Try.of(moduleP, logBuffer);
+    var logger = new Logger();
+    initializeScopes(moduleP, logger);
+    return Try.of(moduleP, logger);
   }
 
   @VisibleForTesting
