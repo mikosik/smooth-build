@@ -85,13 +85,7 @@ public class NativeTest extends AcceptanceTestCase {
             result = myFunc();
             """);
         evaluate("result");
-        assertThat(logs())
-            .contains(
-                // TODO This can be reverted once FileLoader correctly propagates
-                //  FileNotFoundException to caller
-                //                userFatal(1, "Error loading native jar: File '{prj}/build.jar'
-                // doesn't exist."));
-                fatal("IOException reading from bytecodeDb: File 'build.jar' doesn't exist."));
+        assertThat(logs()).contains(userFatal(1, "Error loading native jar '{prj}/build.jar'."));
       }
 
       @Test

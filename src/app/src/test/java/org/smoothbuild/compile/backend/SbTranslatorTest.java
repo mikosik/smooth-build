@@ -12,7 +12,7 @@ import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -690,7 +690,7 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = mock(FileLoader.class);
       when(fileLoader.load(any())).thenReturn(blobB(1));
       return sbTranslator(fileLoader, evaluables);
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
@@ -705,7 +705,7 @@ public class SbTranslatorTest extends TestContext {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(filePath)).thenReturn(value);
       return mock;
-    } catch (FileNotFoundException | BytecodeException e) {
+    } catch (IOException | BytecodeException e) {
       throw new RuntimeException(e);
     }
   }
