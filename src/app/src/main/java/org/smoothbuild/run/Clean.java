@@ -13,7 +13,6 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.filesystem.space.ForSpace;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
@@ -27,10 +26,10 @@ public class Clean implements Function<Tuple0, Try<String>> {
 
   @Override
   public Try<String> apply(Tuple0 argument) {
-    var logBuffer = new LogBuffer();
-    deleteDir(logBuffer, HASHED_DB_PATH);
-    deleteDir(logBuffer, COMPUTATION_CACHE_PATH);
-    deleteDir(logBuffer, ARTIFACTS_PATH);
+    var logger = new Logger();
+    deleteDir(logger, HASHED_DB_PATH);
+    deleteDir(logger, COMPUTATION_CACHE_PATH);
+    deleteDir(logger, ARTIFACTS_PATH);
     return success("Cache and artifacts removed.");
   }
 

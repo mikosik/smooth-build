@@ -19,7 +19,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.ScopeP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ScopedP;
 import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
@@ -29,10 +28,10 @@ import org.smoothbuild.out.log.Try;
 public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     var moduleP = context.element1();
-    new Detector(context.element2(), emptyScope(), logBuffer).visitModule(moduleP);
-    return Try.of(moduleP, logBuffer);
+    new Detector(context.element2(), emptyScope(), logger).visitModule(moduleP);
+    return Try.of(moduleP, logger);
   }
 
   private static class Detector extends ScopingModuleVisitorP {

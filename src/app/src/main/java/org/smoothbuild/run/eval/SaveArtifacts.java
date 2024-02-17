@@ -32,7 +32,6 @@ import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.filesystem.space.ForSpace;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 import org.smoothbuild.vm.bytecode.BytecodeException;
@@ -56,14 +55,14 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
     } catch (IOException e) {
       return failure(error(e.getMessage()));
     }
-    var loggerBuffer = new LogBuffer();
+    var logger = new Logger();
     var sortedArtifacts = artifacts.sortUsing(comparing(a -> a.element1().name()));
     var savedArtifacts =
-        sortedArtifacts.map(t -> t.map2(valueB -> save(t.element1(), valueB, loggerBuffer)));
+        sortedArtifacts.map(t -> t.map2(valueB -> save(t.element1(), valueB, logger)));
     var messages = savedArtifacts
         .map(t -> t.element1().name() + " -> " + t.element2().map(PathS::q).getOr("?"))
         .toString("\n");
-    return Try.of(messages, loggerBuffer);
+    return Try.of(messages, logger);
   }
 
   private ReferenceS toReferenceS(ExprS e) {

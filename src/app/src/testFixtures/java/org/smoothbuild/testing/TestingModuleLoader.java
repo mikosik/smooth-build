@@ -9,6 +9,7 @@ import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendComp
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
+import static org.smoothbuild.out.log.Log.containsAnyFailure;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.testing.TestContext.writeFile;
@@ -46,7 +47,7 @@ public class TestingModuleLoader {
 
   public TestingModuleLoader loadsWithSuccess() {
     definitions = load();
-    assertWithMessage(messageWithSourceCode()).that(definitions.logs().toList()).isEmpty();
+    assertWithMessage(messageWithSourceCode()).that(definitions.logs()).isEmpty();
     return this;
   }
 
@@ -86,7 +87,7 @@ public class TestingModuleLoader {
   public void loadsWithProblems() {
     var module = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.logs().containsFailure())
+        .that(containsAnyFailure(module.logs()))
         .isTrue();
   }
 
@@ -100,9 +101,7 @@ public class TestingModuleLoader {
 
   public void loadsWith(Log... logs) {
     var module = load();
-    assertWithMessage(messageWithSourceCode())
-        .that(module.logs().toList())
-        .containsExactlyElementsIn(logs);
+    assertWithMessage(messageWithSourceCode()).that(module.logs()).containsExactlyElementsIn(logs);
   }
 
   private String messageWithSourceCode() {

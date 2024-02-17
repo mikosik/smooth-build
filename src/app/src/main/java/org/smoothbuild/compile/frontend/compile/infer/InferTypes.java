@@ -28,7 +28,6 @@ import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.compile.frontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
 import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
@@ -42,12 +41,12 @@ import org.smoothbuild.out.log.Try;
 public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     var moduleP = context.element1();
     var environment = context.element2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
-    new Worker(typeTeller, logBuffer).visitModule(moduleP);
-    return Try.of(moduleP, logBuffer);
+    new Worker(typeTeller, logger).visitModule(moduleP);
+    return Try.of(moduleP, logger);
   }
 
   public static class Worker {

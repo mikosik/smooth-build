@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
@@ -25,19 +26,17 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import jakarta.inject.Inject;
-import java.util.List;
 import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.tuple.Tuple0;
-import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Try;
 import org.smoothbuild.out.report.Reporter;
 
@@ -61,38 +60,34 @@ class StepExecutorTest {
   class _function_step {
     @ParameterizedTest
     @MethodSource
-    void that_returns_success(Logs logs) {
+    void that_returns_success(List<Log> logs) {
       var reporter = mock(Reporter.class);
 
       var result = stepExecutor().execute(step(s -> success(s + "b", logs)), "a", reporter);
 
       assertThat(result).isEqualTo(some("ab"));
-      verifyReported(reporter, logs.toList());
+      verifyReported(reporter, logs);
     }
 
     static List<Arguments> that_returns_success() {
-      return List.of(
-          arguments(ImmutableLogs.logs(warning("warning"))),
-          arguments(ImmutableLogs.logs(info("info"))),
-          arguments(ImmutableLogs.logs()));
+      return list(
+          arguments(list(warning("warning"))), arguments(list(info("info"))), arguments(list()));
     }
 
     @ParameterizedTest
     @MethodSource
-    void that_returns_failure(Logs logs) {
+    void that_returns_failure(List<Log> logs) {
       var reporter = mock(Reporter.class);
       var step = step(s -> failure(logs));
 
       var result = stepExecutor().execute(step, "a", reporter);
 
       assertThat(result).isEqualTo(none());
-      verifyReported(reporter, logs.toList());
+      verifyReported(reporter, logs);
     }
 
     static List<Arguments> that_returns_failure() {
-      return List.of(
-          arguments(ImmutableLogs.logs(error("error"))),
-          arguments(ImmutableLogs.logs(fatal("fatal"))));
+      return list(arguments(list(error("error"))), arguments(list(fatal("fatal"))));
     }
 
     @Test
@@ -123,11 +118,11 @@ class StepExecutorTest {
       var result = stepExecutor(log).execute(step(LogInjectedLog.class), tuple(), reporter);
 
       assertThat(result).isEqualTo(none());
-      verifyReported(reporter, List.of(log));
+      verifyReported(reporter, list(log));
     }
 
     static List<Arguments> that_returns_failure() {
-      return List.of(arguments(error("error")), arguments(fatal("fatal")));
+      return list(arguments(error("error")), arguments(fatal("fatal")));
     }
 
     @Test
@@ -239,7 +234,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, tuple(), reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
-      verifyReported(reporter, List.of(info("info"), warning("warning")));
+      verifyReported(reporter, list(info("info"), warning("warning")));
     }
 
     @Test
@@ -252,7 +247,7 @@ class StepExecutorTest {
 
       assertThat(result).isEqualTo(none());
       verifyNoInteractions(function);
-      verifyReported(reporter, List.of(error("error")));
+      verifyReported(reporter, list(error("error")));
     }
   }
 
@@ -266,7 +261,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, "abc", reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
-      verifyReported(reporter, List.of());
+      verifyReported(reporter, list());
     }
 
     @Test
@@ -277,7 +272,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, "abc", reporter);
 
       assertThat(result).isEqualTo(none());
-      verifyReported(reporter, List.of(error("error")));
+      verifyReported(reporter, list(error("error")));
     }
   }
 
@@ -291,7 +286,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, 3, reporter);
 
       assertThat(result).isEqualTo(some("3"));
-      verifyReported(reporter, List.of());
+      verifyReported(reporter, list());
     }
 
     @Test
@@ -302,7 +297,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, 3, reporter);
 
       assertThat(result).isEqualTo(none());
-      verifyReported(reporter, List.of());
+      verifyReported(reporter, list());
     }
 
     private static class OptionFunctionReturningSome implements MaybeFunction<Integer, String> {
@@ -335,7 +330,7 @@ class StepExecutorTest {
 
     stepExecutor().execute(step, tuple(), reporter);
 
-    verifyReported(reporter, List.of(log));
+    verifyReported(reporter, list(log));
   }
 
   private static void verifyReported(Reporter reporter, List<Log> logs) {

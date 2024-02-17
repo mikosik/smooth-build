@@ -16,6 +16,7 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PA
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
+import static org.smoothbuild.out.log.Log.containsAnyFailure;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
 import com.google.inject.Guice;
@@ -141,11 +142,11 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected List<Log> logs() {
-    return memoryReporter.logs().toList();
+    return memoryReporter.logs();
   }
 
   protected void assertLogsContainFailure() {
-    assertThat(memoryReporter.logs().containsFailure()).isTrue();
+    assertThat(containsAnyFailure(memoryReporter.logs())).isTrue();
   }
 
   private FileSystem prjFileSystem() {

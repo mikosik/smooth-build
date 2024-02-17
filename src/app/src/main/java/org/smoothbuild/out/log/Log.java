@@ -6,6 +6,8 @@ import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
+import java.util.Collection;
+
 public record Log(Level level, String message) {
   public Log(Level level, String message) {
     this.level = requireNonNull(level);
@@ -26,6 +28,10 @@ public record Log(Level level, String message) {
 
   public static Log info(String log) {
     return new Log(INFO, log);
+  }
+
+  public static boolean containsAnyFailure(Collection<Log> list) {
+    return list.stream().anyMatch(l -> l.level().hasPriorityAtLeast(ERROR));
   }
 
   public String toPrettyString() {

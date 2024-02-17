@@ -19,7 +19,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.NamedFuncP;
 import org.smoothbuild.compile.frontend.compile.ast.define.NamedValueP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ReferenceableP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
@@ -33,12 +32,12 @@ import org.smoothbuild.out.log.Try;
 public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
-    var logBuffer = new LogBuffer();
-    detectIllegalNames(moduleP, logBuffer);
-    detectIllegalAnnotations(moduleP, logBuffer);
-    detectStructFieldWithDefaultValue(moduleP, logBuffer);
-    detectLambdaParamWithDefaultValue(moduleP, logBuffer);
-    return Try.of(moduleP, logBuffer);
+    var logger = new Logger();
+    detectIllegalNames(moduleP, logger);
+    detectIllegalAnnotations(moduleP, logger);
+    detectStructFieldWithDefaultValue(moduleP, logger);
+    detectLambdaParamWithDefaultValue(moduleP, logger);
+    return Try.of(moduleP, logger);
   }
 
   private static void detectIllegalNames(ModuleP moduleP, Logger logger) {

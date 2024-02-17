@@ -24,17 +24,16 @@ import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
 public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleContext>> {
   @Override
   public Try<ModuleContext> apply(Tuple2<String, FilePath> argument) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     String sourceCode = argument.element1();
     FilePath filePath = argument.element2();
-    var errorListener = new ErrorListener(filePath, logBuffer);
+    var errorListener = new ErrorListener(filePath, logger);
     var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
     smoothAntlrLexer.removeErrorListeners();
     smoothAntlrLexer.addErrorListener(errorListener);
@@ -43,7 +42,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
 
-    return Try.of(smoothAntlrParser.module(), logBuffer);
+    return Try.of(smoothAntlrParser.module(), logger);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

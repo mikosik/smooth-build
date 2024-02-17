@@ -67,23 +67,22 @@ import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Try;
 
 public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Try<ModuleP>> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
-    var logBuffer = new LogBuffer();
+    var logger = new Logger();
     var module = context.element1();
     var filePath = context.element2();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
-    var apTranslatingVisitor = new ApTranslatingVisitor(filePath, structs, evaluables, logBuffer);
+    var apTranslatingVisitor = new ApTranslatingVisitor(filePath, structs, evaluables, logger);
     apTranslatingVisitor.visit(module);
     var name = filePath.withExtension("").path().lastPart().toString();
     var moduleP = new ModuleP(name, listOfAll(structs), listOfAll(evaluables));
-    return Try.of(moduleP, logBuffer);
+    return Try.of(moduleP, logger);
   }
 
   private static String unquote(String quotedString) {

@@ -1,13 +1,12 @@
 package org.smoothbuild.testing.accept;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.report.Reporter;
 
 public class MemoryReporter implements Reporter {
-  private final LogBuffer buffer = new LogBuffer();
+  private final Logger buffer = new Logger();
 
   @Override
   public void startNewPhase(String name) {}
@@ -33,7 +32,7 @@ public class MemoryReporter implements Reporter {
     return buffer.containsFailure();
   }
 
-  public ImmutableLogs logs() {
-    return buffer.toImmutableLogs();
+  public List<Log> logs() {
+    return buffer.toList();
   }
 }
