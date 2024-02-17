@@ -1,14 +1,15 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapBytecodeExcAsDecodeExprNodeException;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsDecodeExprNodeException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingBytecodeException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -62,7 +63,8 @@ public abstract class ExprB {
   public abstract String exprToString() throws BytecodeException;
 
   protected <T> T readData(Function0<T, HashedDbException> reader) throws BytecodeException {
-    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
+    return invokeTranslatingHashedDbException(
+        reader, e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
   protected <T extends ExprB> T readData(Class<T> clazz) throws BytecodeException {
@@ -75,8 +77,9 @@ public abstract class ExprB {
   }
 
   protected long readDataSeqSize() throws BytecodeException {
-    return wrapHashedDbExcAsDecodeExprNodeException(
-        hash(), category(), DATA_PATH, () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
+    return invokeTranslatingHashedDbException(
+        () -> bytecodeDb.hashedDb().readSeqSize(dataHash()),
+        e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
   protected List<ValueB> readDataSeqElems(int expectedSize) throws BytecodeException {
@@ -110,8 +113,9 @@ public abstract class ExprB {
   }
 
   private List<Hash> readDataSeqHashes() throws BytecodeDbException {
-    return wrapHashedDbExcAsDecodeExprNodeException(
-        hash(), category(), DATA_PATH, () -> bytecodeDb.hashedDb().readSeq(dataHash()));
+    return invokeTranslatingHashedDbException(
+        () -> bytecodeDb.hashedDb().readSeq(dataHash()),
+        e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
   protected <T> T readDataSeqElem(int i, int expectedSize, Class<T> clazz)
@@ -126,8 +130,9 @@ public abstract class ExprB {
   }
 
   private ExprB readNode(String nodePath, Hash nodeHash) throws BytecodeException {
-    return wrapBytecodeExcAsDecodeExprNodeException(
-        hash(), category(), nodePath, () -> bytecodeDb.get(nodeHash));
+    return invokeTranslatingBytecodeException(
+        () -> bytecodeDb.get(nodeHash),
+        e -> new DecodeExprNodeException(hash(), category(), nodePath, e));
   }
 
   private Hash readDataSeqElemHash(int i, int expectedSize) throws BytecodeDbException {
