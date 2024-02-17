@@ -1,5 +1,7 @@
 package org.smoothbuild.vm.bytecode.load;
 
+import static org.smoothbuild.common.collect.Either.left;
+import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.function.Function0.memoize;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
@@ -43,19 +45,22 @@ public class BytecodeMethodLoader {
 
   private Either<String, Method> validateSignature(Method method) {
     if (!isPublic(method)) {
-      return Either.left("Providing method is not public.");
-    } else if (!isStatic(method)) {
-      return Either.left("Providing method is not static.");
-    } else if (!hasBytecodeFactoryParam(method)) {
-      return Either.left(
-          "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
-    } else if (method.getParameterTypes().length != 2) {
-      return Either.left("Providing method parameter count is different than 2.");
-    } else if (!method.getReturnType().equals(ValueB.class)) {
-      return Either.left("Providing method result type is not " + ValueB.class.getName() + ".");
-    } else {
-      return Either.right(method);
+      return left("Providing method is not public.");
     }
+    if (!isStatic(method)) {
+      return left("Providing method is not static.");
+    }
+    if (!hasBytecodeFactoryParam(method)) {
+      return left(
+          "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
+    }
+    if (method.getParameterTypes().length != 2) {
+      return left("Providing method parameter count is different than 2.");
+    }
+    if (!method.getReturnType().equals(ValueB.class)) {
+      return left("Providing method result type is not " + ValueB.class.getName() + ".");
+    }
+    return right(method);
   }
 
   private static boolean hasBytecodeFactoryParam(Method method) {
