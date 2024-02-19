@@ -7,7 +7,7 @@ import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
 
 /**
- * If function.
+ * 'If' function.
  * This class is thread-safe.
  */
 public final class IfFuncB extends FuncB {
