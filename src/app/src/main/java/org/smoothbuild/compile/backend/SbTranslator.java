@@ -219,7 +219,7 @@ public class SbTranslator {
 
   private ExprB translateNamedFuncWithCache(NamedFuncS namedFuncS) throws BytecodeException {
     var key = new CacheKey(namedFuncS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateNamedFunc(namedFuncS));
+    return computeIfAbsent(cache, key, k -> translateNamedFunc(namedFuncS));
   }
 
   private ExprB translateNamedFunc(NamedFuncS namedFuncS) throws BytecodeException {
@@ -310,7 +310,7 @@ public class SbTranslator {
       throws BytecodeException {
     var key = new CacheKey(namedValueS.name(), typeSbTranslator.varMap());
     return computeIfAbsent(
-        cache, key, name -> translateNamedValue(referenceS.location(), namedValueS));
+        cache, key, k -> translateNamedValue(referenceS.location(), namedValueS));
   }
 
   private ExprB translateNamedValue(Location refLocation, NamedValueS namedValueS)
