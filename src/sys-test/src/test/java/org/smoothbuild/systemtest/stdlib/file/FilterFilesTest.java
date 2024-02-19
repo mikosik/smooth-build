@@ -96,7 +96,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void double_star_after_dir_doesnt_match_file_inside_different_dir() throws Exception {
+  public void double_star_after_dir_not_matches_file_inside_different_dir() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "different/file.txt")] > filterFiles("dir/**");
@@ -107,7 +107,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void double_star_after_dir_doesnt_match_file_with_the_same_name_as_that_dir()
+  public void double_star_after_dir_not_matches_file_with_the_same_name_as_that_dir()
       throws Exception {
     createUserModule(
         """
@@ -152,7 +152,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void leading_double_star_with_file_doesnt_match_different_file() throws Exception {
+  public void leading_double_star_with_file_not_matches_different_file() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "file2.txt")] > filterFiles("**/file1.txt");
@@ -199,7 +199,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void single_star_doesnt_match_file_inside_dir() throws Exception {
+  public void single_star_not_matches_file_inside_dir() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "dir/file.txt")] > filterFiles("*");
@@ -221,7 +221,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void star_slash_file_doesnt_match_file_without_dir() throws Exception {
+  public void star_slash_file_not_matches_file_without_dir() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "file.txt")] > filterFiles("*/file.txt");
@@ -255,7 +255,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void dir_slash_star_doesnt_match_file_without_dir() throws Exception {
+  public void dir_slash_star_not_matches_file_without_dir() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "file.txt")] > filterFiles("dir/*");
@@ -277,7 +277,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void star_slash_star_doesnt_match_file_without_dir() throws Exception {
+  public void star_slash_star_not_matches_file_without_dir() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "file.txt")] > filterFiles("*/*");
@@ -288,7 +288,7 @@ public class FilterFilesTest extends SystemTestCase {
   }
 
   @Test
-  public void star_slash_star_doesnt_match_file_inside_two_dirs() throws Exception {
+  public void star_slash_star_not_matches_file_inside_two_dirs() throws Exception {
     createUserModule(
         """
             result = [File(0x41, "dir/subdir/file.txt")] > filterFiles("*/*");
