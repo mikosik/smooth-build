@@ -3,14 +3,13 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.function.Function0.memoizer;
+import static org.smoothbuild.common.function.Function1.memoizer;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 
 /**
@@ -19,18 +18,16 @@ import org.smoothbuild.vm.bytecode.BytecodeException;
 @Singleton
 public class MethodLoader {
   private final JarClassLoaderFactory jarClassLoaderFactory;
-  private final ConcurrentHashMap<MethodSpec, Function0<Either<String, Method>, BytecodeException>>
-      cache;
+  private final Function1<MethodSpec, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public MethodLoader(JarClassLoaderFactory jarClassLoaderFactory) {
     this.jarClassLoaderFactory = jarClassLoaderFactory;
-    this.cache = new ConcurrentHashMap<>();
+    this.memoizer = memoizer(this::findMethod);
   }
 
   public Either<String, Method> load(MethodSpec methodSpec) throws BytecodeException {
-    var memoizer = cache.computeIfAbsent(methodSpec, (ms) -> memoizer(() -> findMethod(ms)));
-    return memoizer.apply();
+    return memoizer.apply(methodSpec);
   }
 
   private Either<String, Method> findMethod(MethodSpec methodSpec) throws BytecodeException {

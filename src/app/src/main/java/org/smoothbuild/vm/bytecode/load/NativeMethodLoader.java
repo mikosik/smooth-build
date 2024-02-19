@@ -1,14 +1,13 @@
 package org.smoothbuild.vm.bytecode.load;
 
-import static org.smoothbuild.common.function.Function0.memoizer;
+import static org.smoothbuild.common.function.Function1.memoizer;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
 import jakarta.inject.Inject;
 import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -22,18 +21,16 @@ import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final ConcurrentHashMap<NativeFuncB, Function0<Either<String, Method>, BytecodeException>>
-      cache;
+  private final Function1<NativeFuncB, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
     this.methodLoader = methodLoader;
-    this.cache = new ConcurrentHashMap<>();
+    this.memoizer = memoizer(this::loadImpl);
   }
 
   public Either<String, Method> load(NativeFuncB nativeFuncB) throws BytecodeException {
-    var memoizer = cache.computeIfAbsent(nativeFuncB, f -> memoizer(() -> loadImpl(f)));
-    return memoizer.apply();
+    return memoizer.apply(nativeFuncB);
   }
 
   private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) throws BytecodeException {
