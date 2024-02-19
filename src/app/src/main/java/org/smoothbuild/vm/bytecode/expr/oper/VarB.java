@@ -1,7 +1,11 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
+import static org.smoothbuild.common.collect.List.list;
+
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
@@ -17,8 +21,8 @@ public class VarB extends OperB {
   }
 
   @Override
-  public VarSubExprsB subExprs() {
-    return new VarSubExprsB();
+  public SubExprsB subExprs() {
+    return new SubExprsB();
   }
 
   public IntB index() throws BytecodeException {
@@ -28,5 +32,12 @@ public class VarB extends OperB {
   @Override
   public String exprToString() throws BytecodeException {
     return category().name() + "(" + index().toJ() + ")";
+  }
+
+  public static record SubExprsB() implements ExprsB {
+    @Override
+    public List<ExprB> toList() {
+      return list();
+    }
   }
 }

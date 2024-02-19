@@ -1,7 +1,9 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -32,14 +34,14 @@ public class PickB extends OperB {
   }
 
   @Override
-  public PickSubExprsB subExprs() throws BytecodeException {
+  public SubExprsB subExprs() throws BytecodeException {
     var pickable = readPickable();
     if (pickable.evaluationT() instanceof ArrayTB arrayT) {
       var elementT = arrayT.elem();
       if (!evaluationT().equals(elementT)) {
         throw new DecodePickWrongEvaluationTypeException(hash(), category(), elementT);
       }
-      return new PickSubExprsB(readPickable(), readIndex());
+      return new SubExprsB(readPickable(), readIndex());
     } else {
       throw new DecodeExprWrongNodeTypeException(
           hash(), category(), "array", ArrayTB.class, pickable.evaluationT());
@@ -57,5 +59,12 @@ public class PickB extends OperB {
           hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationT());
     }
     return index;
+  }
+
+  public static record SubExprsB(ExprB pickable, ExprB index) implements ExprsB {
+    @Override
+    public List<ExprB> toList() {
+      return list(pickable, index);
+    }
   }
 }

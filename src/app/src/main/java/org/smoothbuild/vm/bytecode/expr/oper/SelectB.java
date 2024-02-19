@@ -1,7 +1,9 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -32,7 +34,7 @@ public class SelectB extends OperB {
   }
 
   @Override
-  public SelectSubExprsB subExprs() throws BytecodeException {
+  public SubExprsB subExprs() throws BytecodeException {
     var selectable = readSelectable();
     if (selectable.evaluationT() instanceof TupleTB tupleT) {
       var index = readIndex();
@@ -45,7 +47,7 @@ public class SelectB extends OperB {
       if (!evaluationT().equals(fieldT)) {
         throw new DecodeSelectWrongEvaluationTypeException(hash(), category(), fieldT);
       }
-      return new SelectSubExprsB(selectable, index);
+      return new SubExprsB(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassException(
           hash(), category(), "tuple", TupleTB.class, selectable.evaluationT().getClass());
@@ -58,5 +60,12 @@ public class SelectB extends OperB {
 
   private IntB readIndex() throws BytecodeException {
     return readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, IntB.class);
+  }
+
+  public static record SubExprsB(ExprB selectable, IntB index) implements ExprsB {
+    @Override
+    public List<ExprB> toList() {
+      return list(selectable, index);
+    }
   }
 }

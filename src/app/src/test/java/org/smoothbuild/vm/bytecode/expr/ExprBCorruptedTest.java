@@ -36,13 +36,10 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeExcepti
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.CallSubExprsB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.PickSubExprsB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
-import org.smoothbuild.vm.bytecode.expr.oper.SelectSubExprsB;
 import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -297,7 +294,7 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(hash(callCB(intTB())), hash(hash(func), hash(args)));
 
       assertThat(((CallB) bytecodeDb().get(hash)).subExprs())
-          .isEqualTo(new CallSubExprsB(func, args));
+          .isEqualTo(new CallB.SubExprsB(func, args));
     }
 
     @Test
@@ -786,7 +783,7 @@ public class ExprBCorruptedTest extends TestContext {
       var index = varB(intTB(), 7);
       var hash = hash(hash(pickCB(stringTB())), hash(hash(pickable), hash(index)));
       assertThat(((PickB) bytecodeDb().get(hash)).subExprs())
-          .isEqualTo(new PickSubExprsB(pickable, index));
+          .isEqualTo(new PickB.SubExprsB(pickable, index));
     }
 
     @Test
@@ -909,7 +906,7 @@ public class ExprBCorruptedTest extends TestContext {
       var index = intB(0);
       var hash = hash(hash(selectCB(stringTB())), hash(hash(selectable), hash(index)));
       assertThat(((SelectB) bytecodeDb().get(hash)).subExprs())
-          .isEqualTo(new SelectSubExprsB(selectable, index));
+          .isEqualTo(new SelectB.SubExprsB(selectable, index));
     }
 
     @Test

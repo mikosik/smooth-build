@@ -46,7 +46,7 @@ public class CallBTest extends TestContext {
   public void sub_exprs_returns_sub_exprs() throws Exception {
     var func = lambdaB(list(stringTB()), intB());
     var args = combineB(stringB());
-    assertThat(callB(func, args).subExprs()).isEqualTo(new CallSubExprsB(func, args));
+    assertThat(callB(func, args).subExprs()).isEqualTo(new CallB.SubExprsB(func, args));
   }
 
   @Nested
@@ -79,7 +79,7 @@ public class CallBTest extends TestContext {
     var args = combineB(stringB());
     var call = callB(func, args);
     assertThat(((CallB) bytecodeDbOther().get(call.hash())).subExprs())
-        .isEqualTo(new CallSubExprsB(func, args));
+        .isEqualTo(new CallB.SubExprsB(func, args));
   }
 
   @Test
