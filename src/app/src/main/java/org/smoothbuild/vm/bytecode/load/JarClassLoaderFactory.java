@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.load;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static org.smoothbuild.common.function.Function0.memoizer;
+import static org.smoothbuild.common.function.Function1.memoizer;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
@@ -9,10 +9,9 @@ import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -26,8 +25,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 public class JarClassLoaderFactory {
   private final BytecodeF bytecodeF;
   private final ClassLoader parentClassLoader;
-  private final ConcurrentHashMap<BlobB, Function0<Either<String, ClassLoader>, BytecodeException>>
-      cache;
+  private final Function1<BlobB, Either<String, ClassLoader>, BytecodeException> memoizer;
 
   @Inject
   public JarClassLoaderFactory(BytecodeF bytecodeF) {
@@ -37,12 +35,11 @@ public class JarClassLoaderFactory {
   public JarClassLoaderFactory(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
     this.bytecodeF = bytecodeF;
     this.parentClassLoader = parentClassLoader;
-    this.cache = new ConcurrentHashMap<>();
+    this.memoizer = memoizer(this::newClassLoader);
   }
 
   public Either<String, ClassLoader> classLoaderFor(BlobB jar) throws BytecodeException {
-    var memoizer = cache.computeIfAbsent(jar, j -> memoizer(() -> newClassLoader(j)));
-    return memoizer.apply();
+    return memoizer.apply(jar);
   }
 
   private Either<String, ClassLoader> newClassLoader(BlobB jar) throws BytecodeException {
