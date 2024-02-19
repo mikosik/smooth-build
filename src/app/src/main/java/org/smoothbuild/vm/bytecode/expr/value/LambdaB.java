@@ -10,7 +10,7 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 
 /**
- * Named Expression Function.
+ * Lambda function (aka anonymous function).
  * This class is thread-safe.
  */
 public final class LambdaB extends FuncB {
