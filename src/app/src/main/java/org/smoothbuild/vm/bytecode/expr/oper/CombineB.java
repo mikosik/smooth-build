@@ -33,8 +33,8 @@ public class CombineB extends OperB {
   }
 
   @Override
-  public CombineSubExprsB subExprs() throws BytecodeException {
-    return new CombineSubExprsB(items());
+  public SubExprsB subExprs() throws BytecodeException {
+    return new SubExprsB(items());
   }
 
   public List<ExprB> items() throws BytecodeException {
@@ -57,5 +57,12 @@ public class CombineB extends OperB {
       }
     }
     return items;
+  }
+
+  public static record SubExprsB(List<ExprB> items) implements ExprsB {
+    @Override
+    public List<ExprB> toList() {
+      return items;
+    }
   }
 }

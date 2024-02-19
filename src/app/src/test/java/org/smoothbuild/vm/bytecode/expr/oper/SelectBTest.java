@@ -38,7 +38,7 @@ public class SelectBTest extends TestContext {
     var selectable = tupleB(intB(7));
     var index = intB(0);
     assertThat(selectB(selectable, index).subExprs())
-        .isEqualTo(new SelectSubExprsB(selectable, index));
+        .isEqualTo(new SelectB.SubExprsB(selectable, index));
   }
 
   @Nested
@@ -75,7 +75,7 @@ public class SelectBTest extends TestContext {
     var index = intB(0);
     var select = selectB(selectable, index);
     assertThat(((SelectB) bytecodeDbOther().get(select.hash())).subExprs())
-        .isEqualTo(new SelectSubExprsB(selectable, index));
+        .isEqualTo(new SelectB.SubExprsB(selectable, index));
   }
 
   @Test

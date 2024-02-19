@@ -29,7 +29,7 @@ public abstract class OperB extends ExprB {
     return category().evaluationT();
   }
 
-  public abstract SubExprsB subExprs() throws BytecodeException;
+  public abstract ExprsB subExprs() throws BytecodeException;
 
   @Override
   public String exprToString() throws BytecodeException {

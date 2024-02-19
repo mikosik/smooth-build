@@ -31,8 +31,8 @@ public class OrderB extends OperB {
   }
 
   @Override
-  public OrderSubExprsB subExprs() throws BytecodeException {
-    return new OrderSubExprsB(elements());
+  public SubExprsB subExprs() throws BytecodeException {
+    return new SubExprsB(elements());
   }
 
   public List<ExprB> elements() throws BytecodeException {
@@ -46,5 +46,12 @@ public class OrderB extends OperB {
       }
     }
     return elements;
+  }
+
+  public static record SubExprsB(List<ExprB> elements) implements ExprsB {
+    @Override
+    public List<ExprB> toList() {
+      return elements;
+    }
   }
 }

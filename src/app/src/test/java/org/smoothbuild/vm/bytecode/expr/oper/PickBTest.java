@@ -30,7 +30,7 @@ public class PickBTest extends TestContext {
   public void data_returns_array_and_index() throws Exception {
     var pickable = arrayB(intB(7));
     var index = intB(0);
-    assertThat(pickB(pickable, index).subExprs()).isEqualTo(new PickSubExprsB(pickable, index));
+    assertThat(pickB(pickable, index).subExprs()).isEqualTo(new PickB.SubExprsB(pickable, index));
   }
 
   @Nested
@@ -65,7 +65,7 @@ public class PickBTest extends TestContext {
     var index = intB(0);
     var pick = pickB(array, index);
     assertThat(((PickB) bytecodeDbOther().get(pick.hash())).subExprs())
-        .isEqualTo(new PickSubExprsB(array, index));
+        .isEqualTo(new PickB.SubExprsB(array, index));
   }
 
   @Test

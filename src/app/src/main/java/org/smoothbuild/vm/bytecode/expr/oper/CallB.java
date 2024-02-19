@@ -1,8 +1,10 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -32,11 +34,11 @@ public class CallB extends OperB {
   }
 
   @Override
-  public CallSubExprsB subExprs() throws BytecodeException {
+  public SubExprsB subExprs() throws BytecodeException {
     var func = readFunc();
     var args = readArgs();
     validate(func, args);
-    return new CallSubExprsB(func, args);
+    return new SubExprsB(func, args);
   }
 
   private void validate(ExprB func, CombineB args) throws BytecodeDbException {
@@ -68,5 +70,12 @@ public class CallB extends OperB {
 
   private CombineB readArgs() throws BytecodeException {
     return readDataSeqElem(ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
+  }
+
+  public static record SubExprsB(ExprB func, CombineB args) implements ExprsB {
+    @Override
+    public List<ExprB> toList() {
+      return list(func, args());
+    }
   }
 }
