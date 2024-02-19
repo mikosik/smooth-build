@@ -2,7 +2,7 @@ package org.smoothbuild.common.function;
 
 import static java.util.Objects.requireNonNull;
 
-public class MemoizingFunction0<R, T extends Throwable> implements Function0<R, T> {
+class MemoizingFunction0<R, T extends Throwable> implements Function0<R, T> {
   private final Function0<R, T> function0;
   private volatile boolean computed = false;
   private R result;
