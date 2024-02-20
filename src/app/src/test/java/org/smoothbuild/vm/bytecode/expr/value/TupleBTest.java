@@ -13,7 +13,7 @@ import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 public class TupleBTest extends TestContext {
   @Test
   public void setting_element_to_null_throws_exception() {
-    assertCall(() -> bytecodeDb().tuple(list(stringB("John"), null)))
+    assertCall(() -> exprDb().tuple(list(stringB("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
@@ -71,13 +71,13 @@ public class TupleBTest extends TestContext {
   @Test
   public void tuples_can_be_read_by_hash() throws Exception {
     TupleB person = johnDoePerson();
-    assertThat(bytecodeDbOther().get(person.hash())).isEqualTo(person);
+    assertThat(exprDbOther().get(person.hash())).isEqualTo(person);
   }
 
   @Test
   public void tuples_read_by_hash_have_equal_elements() throws Exception {
     TupleB person = johnDoePerson();
-    TupleB personRead = (TupleB) bytecodeDbOther().get(person.hash());
+    TupleB personRead = (TupleB) exprDbOther().get(person.hash());
     assertThat(personRead.get(0)).isEqualTo(person.get(0));
     assertThat(personRead.get(1)).isEqualTo(person.get(1));
   }

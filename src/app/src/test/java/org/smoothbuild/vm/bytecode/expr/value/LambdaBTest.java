@@ -62,14 +62,14 @@ public class LambdaBTest extends TestContext {
   public void func_can_be_read_by_hash() throws Exception {
     var funcT = funcTB(stringTB(), intTB());
     var lambdaB = lambdaB(funcT, intB());
-    assertThat(bytecodeDbOther().get(lambdaB.hash())).isEqualTo(lambdaB);
+    assertThat(exprDbOther().get(lambdaB.hash())).isEqualTo(lambdaB);
   }
 
   @Test
   public void funcs_read_by_hash_have_equal_bodies() throws Exception {
     var funcT = funcTB(stringTB(), intTB());
     var lambdaB = lambdaB(funcT, intB());
-    var lambdaRead = (LambdaB) bytecodeDbOther().get(lambdaB.hash());
+    var lambdaRead = (LambdaB) exprDbOther().get(lambdaB.hash());
     assertThat(lambdaB.body()).isEqualTo(lambdaRead.body());
   }
 

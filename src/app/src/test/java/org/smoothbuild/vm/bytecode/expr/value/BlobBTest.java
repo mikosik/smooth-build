@@ -58,7 +58,7 @@ public class BlobBTest extends TestContext {
   public void blob_can_be_read_by_hash() throws Exception {
     BlobB blob = blobB(bytes);
     Hash hash = blob.hash();
-    assertThat(bytecodeDbOther().get(hash)).isEqualTo(blob);
+    assertThat(exprDbOther().get(hash)).isEqualTo(blob);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class BlobBTest extends TestContext {
     var blobB = blobB(bytes);
     var hash = blobB.hash();
     try (var source = blobB.source()) {
-      try (var otherSource = ((BlobB) bytecodeDbOther().get(hash)).source()) {
+      try (var otherSource = ((BlobB) exprDbOther().get(hash)).source()) {
         assertThat(otherSource.readByteString()).isEqualTo(source.readByteString());
       }
     }

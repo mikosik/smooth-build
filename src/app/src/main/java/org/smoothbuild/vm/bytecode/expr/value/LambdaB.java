@@ -3,8 +3,8 @@ package org.smoothbuild.vm.bytecode.expr.value;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
@@ -14,8 +14,8 @@ import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
  * This class is thread-safe.
  */
 public final class LambdaB extends FuncB {
-  public LambdaB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public LambdaB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     checkArgument(merkleRoot.category() instanceof LambdaCB);
   }
 

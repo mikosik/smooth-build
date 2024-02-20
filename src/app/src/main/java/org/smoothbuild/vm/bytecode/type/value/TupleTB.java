@@ -5,7 +5,7 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.tupleTypeName;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -22,9 +22,9 @@ public final class TupleTB extends TypeB {
   }
 
   @Override
-  public TupleB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public TupleB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof TupleTB);
-    return new TupleB(merkleRoot, bytecodeDb);
+    return new TupleB(merkleRoot, exprDb);
   }
 
   public TypeB get(int i) {

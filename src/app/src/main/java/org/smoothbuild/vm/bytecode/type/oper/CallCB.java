@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.type.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CALL;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -18,8 +18,8 @@ public class CallCB extends OperCB {
   }
 
   @Override
-  public CallB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public CallB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof CallCB);
-    return new CallB(merkleRoot, bytecodeDb);
+    return new CallB(merkleRoot, exprDb);
   }
 }

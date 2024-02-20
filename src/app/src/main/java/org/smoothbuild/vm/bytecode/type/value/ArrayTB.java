@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -25,8 +25,8 @@ public final class ArrayTB extends TypeB {
   }
 
   @Override
-  public ArrayB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public ArrayB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof ArrayTB);
-    return new ArrayB(merkleRoot, bytecodeDb);
+    return new ArrayB(merkleRoot, exprDb);
   }
 }

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
 
@@ -11,8 +11,8 @@ import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
  * This class is thread-safe.
  */
 public final class IfFuncB extends FuncB {
-  public IfFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public IfFuncB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     checkArgument(merkleRoot.category() instanceof IfFuncCB);
   }
 

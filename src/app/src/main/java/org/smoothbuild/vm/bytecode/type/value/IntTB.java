@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.INT;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -17,8 +17,8 @@ public class IntTB extends TypeB {
   }
 
   @Override
-  public IntB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public IntB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof IntTB);
-    return new IntB(merkleRoot, bytecodeDb);
+    return new IntB(merkleRoot, exprDb);
   }
 }

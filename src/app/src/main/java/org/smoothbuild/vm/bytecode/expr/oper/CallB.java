@@ -6,11 +6,11 @@ import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
+import org.smoothbuild.vm.bytecode.expr.exc.ExprDbException;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -23,8 +23,8 @@ public class CallB extends OperB {
   private static final int CALLABLE_IDX = 0;
   private static final int ARGS_IDX = 1;
 
-  public CallB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public CallB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     checkArgument(merkleRoot.category() instanceof CallCB);
   }
 
@@ -41,7 +41,7 @@ public class CallB extends OperB {
     return new SubExprsB(func, args);
   }
 
-  private void validate(ExprB func, CombineB args) throws BytecodeDbException {
+  private void validate(ExprB func, CombineB args) throws ExprDbException {
     if (func.evaluationT() instanceof FuncTB funcTB) {
       validate(funcTB, args);
     } else {
@@ -50,7 +50,7 @@ public class CallB extends OperB {
     }
   }
 
-  private void validate(FuncTB funcTB, CombineB args) throws BytecodeDbException {
+  private void validate(FuncTB funcTB, CombineB args) throws ExprDbException {
     var argsT = args.evaluationT();
     validateArgs(funcTB, argsT.elements(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
@@ -60,7 +60,7 @@ public class CallB extends OperB {
     }
   }
 
-  private BytecodeDbException illegalArgsExc(TupleTB params, TupleTB argsType) {
+  private ExprDbException illegalArgsExc(TupleTB params, TupleTB argsType) {
     return new DecodeExprWrongNodeTypeException(hash(), this.category(), "args", params, argsType);
   }
 

@@ -116,8 +116,8 @@ import org.smoothbuild.out.report.SystemOutReporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
@@ -191,7 +191,7 @@ public class TestContext {
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
 
   private BytecodeF bytecodeF;
-  private BytecodeDb bytecodeDb;
+  private ExprDb exprDb;
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
   private FileSystem projectFileSystem;
@@ -372,7 +372,7 @@ public class TestContext {
 
   public BytecodeF bytecodeF() {
     if (bytecodeF == null) {
-      bytecodeF = new BytecodeF(bytecodeDb(), categoryDb());
+      bytecodeF = new BytecodeF(exprDb(), categoryDb());
     }
     return bytecodeF;
   }
@@ -384,15 +384,15 @@ public class TestContext {
     return categoryDb;
   }
 
-  public BytecodeDb bytecodeDb() {
-    if (bytecodeDb == null) {
-      bytecodeDb = new BytecodeDb(hashedDb(), categoryDb());
+  public ExprDb exprDb() {
+    if (exprDb == null) {
+      exprDb = new ExprDb(hashedDb(), categoryDb());
     }
-    return bytecodeDb;
+    return exprDb;
   }
 
   public ComputationCache computationCache() {
-    return new ComputationCache(projectFileSystem(), bytecodeDb(), bytecodeF());
+    return new ComputationCache(projectFileSystem(), exprDb(), bytecodeF());
   }
 
   public FileSystem projectFileSystem() {
@@ -407,8 +407,8 @@ public class TestContext {
     return projectFileSystem;
   }
 
-  public BytecodeDb bytecodeDbOther() {
-    return new BytecodeDb(hashedDb(), categoryDbOther());
+  public ExprDb exprDbOther() {
+    return new ExprDb(hashedDb(), categoryDbOther());
   }
 
   public CategoryDb categoryDbOther() {
@@ -619,7 +619,7 @@ public class TestContext {
   }
 
   public ArrayB arrayB(TypeB elemT, ValueB... elems) throws BytecodeException {
-    return bytecodeDb().arrayBuilder(arrayTB(elemT)).addAll(list(elems)).build();
+    return exprDb().arrayBuilder(arrayTB(elemT)).addAll(list(elems)).build();
   }
 
   public BlobB blobBJarWithPluginApi(Class<?>... classes) throws BytecodeException {
@@ -639,7 +639,7 @@ public class TestContext {
   }
 
   private BlobB blobBWith(java.util.List<Class<?>> list) throws BytecodeException {
-    try (var blobBBuilder = bytecodeDb().blobBuilder()) {
+    try (var blobBBuilder = exprDb().blobBuilder()) {
       saveBytecodeInJar(blobBBuilder, list);
       return blobBBuilder.build();
     } catch (IOException e) {
@@ -660,7 +660,7 @@ public class TestContext {
   }
 
   public BlobBBuilder blobBBuilder() throws BytecodeException {
-    return bytecodeDb().blobBuilder();
+    return exprDb().blobBuilder();
   }
 
   public BoolB boolB() throws BytecodeException {
@@ -668,7 +668,7 @@ public class TestContext {
   }
 
   public BoolB boolB(boolean value) throws BytecodeException {
-    return bytecodeDb().bool(value);
+    return exprDb().bool(value);
   }
 
   public TupleB fileB(PathS path) throws BytecodeException {
@@ -710,7 +710,7 @@ public class TestContext {
   }
 
   public LambdaB lambdaB(FuncTB type, ExprB body) throws BytecodeException {
-    return bytecodeDb().lambda(type, body);
+    return exprDb().lambda(type, body);
   }
 
   public LambdaB idFuncB() throws BytecodeException {
@@ -738,7 +738,7 @@ public class TestContext {
   }
 
   public IntB intB(BigInteger value) throws BytecodeException {
-    return bytecodeDb().int_(value);
+    return exprDb().int_(value);
   }
 
   public NativeFuncB returnAbcNativeFunc() throws IOException, BytecodeException {
@@ -782,7 +782,7 @@ public class TestContext {
 
   public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
-    return bytecodeDb().nativeFunc(type, jar, classBinaryName, isPure);
+    return exprDb().nativeFunc(type, jar, classBinaryName, isPure);
   }
 
   public TupleB personB(String firstName, String lastName) throws BytecodeException {
@@ -790,15 +790,15 @@ public class TestContext {
   }
 
   public StringB stringB() throws BytecodeException {
-    return bytecodeDb().string("abc");
+    return exprDb().string("abc");
   }
 
   public StringB stringB(String string) throws BytecodeException {
-    return bytecodeDb().string(string);
+    return exprDb().string(string);
   }
 
   public TupleB tupleB(ValueB... items) throws BytecodeException {
-    return bytecodeDb().tuple(list(items));
+    return exprDb().tuple(list(items));
   }
 
   public ArrayB messageArrayWithOneError() throws BytecodeException {
@@ -852,19 +852,19 @@ public class TestContext {
   }
 
   public CallB callB(ExprB func, CombineB args) throws BytecodeException {
-    return bytecodeDb().call(func, args);
+    return exprDb().call(func, args);
   }
 
   public CombineB combineB(ExprB... items) throws BytecodeException {
-    return bytecodeDb().combine(list(items));
+    return exprDb().combine(list(items));
   }
 
   public IfFuncB ifFuncB(TypeB t) throws BytecodeException {
-    return bytecodeDb().ifFunc(t);
+    return exprDb().ifFunc(t);
   }
 
   public MapFuncB mapFuncB(TypeB r, TypeB s) throws BytecodeException {
-    return bytecodeDb().mapFunc(r, s);
+    return exprDb().mapFunc(r, s);
   }
 
   public OrderB orderB() throws BytecodeException {
@@ -877,7 +877,7 @@ public class TestContext {
 
   public OrderB orderB(TypeB elemT, ExprB... elems) throws BytecodeException {
     var elemList = list(elems);
-    return bytecodeDb().order(arrayTB(elemT), elemList);
+    return exprDb().order(arrayTB(elemT), elemList);
   }
 
   public PickB pickB() throws BytecodeException {
@@ -885,7 +885,7 @@ public class TestContext {
   }
 
   public PickB pickB(ExprB array, ExprB index) throws BytecodeException {
-    return bytecodeDb().pick(array, index);
+    return exprDb().pick(array, index);
   }
 
   public VarB varB(int index) throws BytecodeException {
@@ -893,15 +893,15 @@ public class TestContext {
   }
 
   public VarB varB(TypeB evaluationT, int index) throws BytecodeException {
-    return bytecodeDb().varB(evaluationT, intB(index));
+    return exprDb().varB(evaluationT, intB(index));
   }
 
   public SelectB selectB() throws BytecodeException {
-    return bytecodeDb().select(tupleB(intB()), intB(0));
+    return exprDb().select(tupleB(intB()), intB(0));
   }
 
   public SelectB selectB(ExprB tuple, IntB index) throws BytecodeException {
-    return bytecodeDb().select(tuple, index);
+    return exprDb().select(tuple, index);
   }
 
   public static TraceB traceB() {

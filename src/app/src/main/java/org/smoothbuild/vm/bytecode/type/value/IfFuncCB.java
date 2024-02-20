@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.IF_FUNC;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -14,9 +14,9 @@ public final class IfFuncCB extends FuncCB {
   }
 
   @Override
-  public IfFuncB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public IfFuncB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof IfFuncCB);
-    return new IfFuncB(merkleRoot, bytecodeDb);
+    return new IfFuncB(merkleRoot, exprDb);
   }
 
   @Override

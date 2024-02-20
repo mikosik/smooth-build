@@ -30,7 +30,7 @@ public class MapFuncBTest extends TestContext {
   @Test
   public void map_can_be_read_back_by_hash() throws Exception {
     var mapB = mapFuncB(intTB(), stringTB());
-    assertThat(bytecodeDbOther().get(mapB.hash())).isEqualTo(mapB);
+    assertThat(exprDbOther().get(mapB.hash())).isEqualTo(mapB);
   }
 
   @Test

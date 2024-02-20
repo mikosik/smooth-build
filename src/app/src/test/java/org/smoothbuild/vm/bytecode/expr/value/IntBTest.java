@@ -38,13 +38,13 @@ public class IntBTest extends TestContext {
   @Test
   public void int_can_be_read_back_by_hash() throws Exception {
     IntB i = intB(123);
-    assertThat(bytecodeDbOther().get(i.hash())).isEqualTo(i);
+    assertThat(exprDbOther().get(i.hash())).isEqualTo(i);
   }
 
   @Test
   public void int_read_back_by_hash_has_same_to_J() throws Exception {
     IntB i = intB(123);
-    assertThat(((IntB) bytecodeDbOther().get(i.hash())).toJ()).isEqualTo(BigInteger.valueOf(123));
+    assertThat(((IntB) exprDbOther().get(i.hash())).toJ()).isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test

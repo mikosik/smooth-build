@@ -61,7 +61,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(bytecodeDbOther().get(nativeFuncB.hash())).isEqualTo(nativeFuncB);
+    assertThat(exprDbOther().get(nativeFuncB.hash())).isEqualTo(nativeFuncB);
   }
 
   @Test
@@ -71,7 +71,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    var readNativeFuncB = (NativeFuncB) bytecodeDbOther().get(nativeFuncB.hash());
+    var readNativeFuncB = (NativeFuncB) exprDbOther().get(nativeFuncB.hash());
     assertThat(readNativeFuncB.classBinaryName()).isEqualTo(classBinaryName);
     assertThat(readNativeFuncB.jar()).isEqualTo(jar);
     assertThat(readNativeFuncB.isPure()).isEqualTo(isPure);

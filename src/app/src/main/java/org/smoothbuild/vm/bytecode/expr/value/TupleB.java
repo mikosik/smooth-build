@@ -7,7 +7,7 @@ import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -19,8 +19,8 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 public final class TupleB extends ValueB {
   private final Function0<List<ValueB>, BytecodeException> elementsMemoizer;
 
-  public TupleB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public TupleB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     this.elementsMemoizer = memoizer(this::instantiateItems);
   }
 

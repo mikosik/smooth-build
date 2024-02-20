@@ -66,7 +66,7 @@ public class SelectBTest extends TestContext {
   public void select_can_be_read_back_by_hash() throws Exception {
     var tupleB = animalB("rabbit", 7);
     var selectB = selectB(tupleB, intB(0));
-    assertThat(bytecodeDbOther().get(selectB.hash())).isEqualTo(selectB);
+    assertThat(exprDbOther().get(selectB.hash())).isEqualTo(selectB);
   }
 
   @Test
@@ -74,7 +74,7 @@ public class SelectBTest extends TestContext {
     var selectable = animalB();
     var index = intB(0);
     var select = selectB(selectable, index);
-    assertThat(((SelectB) bytecodeDbOther().get(select.hash())).subExprs())
+    assertThat(((SelectB) exprDbOther().get(select.hash())).subExprs())
         .isEqualTo(new SelectB.SubExprsB(selectable, index));
   }
 

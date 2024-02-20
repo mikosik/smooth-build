@@ -2,8 +2,8 @@ package org.smoothbuild.vm.bytecode.type;
 
 import java.util.Objects;
 import org.smoothbuild.common.Strings;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeIllegalCategoryException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -30,7 +30,7 @@ public abstract class CategoryB {
     return Strings.q(name);
   }
 
-  public abstract ExprB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb)
+  public abstract ExprB newExpr(MerkleRoot merkleRoot, ExprDb exprDb)
       throws DecodeIllegalCategoryException;
 
   public Hash hash() {

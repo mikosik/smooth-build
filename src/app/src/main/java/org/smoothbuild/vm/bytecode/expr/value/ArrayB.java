@@ -5,7 +5,7 @@ import static org.smoothbuild.common.function.Function0.memoizer;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
@@ -16,8 +16,8 @@ import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 public final class ArrayB extends ValueB {
   private final Function0<List<ValueB>, BytecodeException> elementsMemoizer;
 
-  public ArrayB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public ArrayB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     this.elementsMemoizer = memoizer(this::instantiateElements);
   }
 

@@ -11,8 +11,8 @@ public class DecodeExprNoSuchExprExceptionTest {
   public void message() {
     var exception = new DecodeExprNoSuchExprException(Hash.of(123));
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode object at "
+        .isEqualTo("Cannot decode expression at "
             + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
-            + "Cannot find it in bytecode db.");
+            + "Cannot find it in expression db.");
   }
 }

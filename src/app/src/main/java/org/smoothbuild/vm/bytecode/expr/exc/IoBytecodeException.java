@@ -5,6 +5,6 @@ import org.smoothbuild.vm.bytecode.BytecodeException;
 
 public class IoBytecodeException extends BytecodeException {
   public IoBytecodeException(IOException ioException) {
-    super("IOException reading from bytecodeDb: " + ioException.getMessage(), ioException);
+    super("IOException reading from ExprDb: " + ioException.getMessage(), ioException);
   }
 }

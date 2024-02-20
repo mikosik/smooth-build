@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
@@ -17,8 +17,8 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
  * This class is thread-safe.
  */
 public class CombineB extends OperB {
-  public CombineB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public CombineB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     checkArgument(merkleRoot.category() instanceof CombineCB);
   }
 

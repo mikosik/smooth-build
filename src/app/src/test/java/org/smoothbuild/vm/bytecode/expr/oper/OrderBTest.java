@@ -57,13 +57,13 @@ public class OrderBTest extends TestContext {
   @Test
   public void array_can_be_read_back_by_hash() throws Exception {
     var orderB = orderB(intB(1));
-    assertThat(bytecodeDbOther().get(orderB.hash())).isEqualTo(orderB);
+    assertThat(exprDbOther().get(orderB.hash())).isEqualTo(orderB);
   }
 
   @Test
   public void array_read_back_by_hash_has_same_elementss() throws Exception {
     var orderB = orderB(intB(1));
-    assertThat(((OrderB) bytecodeDbOther().get(orderB.hash())).elements()).isEqualTo(list(intB(1)));
+    assertThat(((OrderB) exprDbOther().get(orderB.hash())).elements()).isEqualTo(list(intB(1)));
   }
 
   @Test

@@ -5,8 +5,8 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeException;
@@ -23,8 +23,8 @@ public class PickB extends OperB {
   private static final int PICKABLE_IDX = 0;
   private static final int IDX_IDX = 1;
 
-  public PickB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public PickB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
     checkArgument(merkleRoot.category() instanceof PickCB);
   }
 

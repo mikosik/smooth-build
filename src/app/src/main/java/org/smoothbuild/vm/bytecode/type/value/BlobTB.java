@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -17,8 +17,8 @@ public class BlobTB extends TypeB {
   }
 
   @Override
-  public BlobB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public BlobB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof BlobTB);
-    return new BlobB(merkleRoot, bytecodeDb);
+    return new BlobB(merkleRoot, exprDb);
   }
 }

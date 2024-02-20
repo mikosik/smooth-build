@@ -27,7 +27,7 @@ public class IfFuncBTest extends TestContext {
   @Test
   public void if_can_be_read_back_by_hash() throws Exception {
     var ifB = ifFuncB(intTB());
-    assertThat(bytecodeDbOther().get(ifB.hash())).isEqualTo(ifB);
+    assertThat(exprDbOther().get(ifB.hash())).isEqualTo(ifB);
   }
 
   @Test

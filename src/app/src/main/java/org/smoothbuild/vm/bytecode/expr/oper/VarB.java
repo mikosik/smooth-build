@@ -4,8 +4,8 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
@@ -16,8 +16,8 @@ import org.smoothbuild.vm.bytecode.expr.value.IntB;
  * This class is thread-safe.
  */
 public class VarB extends OperB {
-  public VarB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public VarB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
   }
 
   @Override
