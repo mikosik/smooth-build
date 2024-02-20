@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.function.Function0;
+import org.smoothbuild.common.function.Function1;
 
 public class ListTest {
   @Nested
@@ -47,7 +48,7 @@ public class ListTest {
   }
 
   @Nested
-  class _generateList {
+  class _generateList_function0 {
     @Test
     public void with_no_elements() {
       assertThat(generateList(0, () -> "a")).isEmpty();
@@ -68,6 +69,33 @@ public class ListTest {
     public void exception_from_supplier_is_propagated() {
       var exception = new Exception("message");
       Function0<String, Exception> supplier = () -> {
+        throw exception;
+      };
+      assertCall(() -> generateList(5, supplier)).throwsException(exception);
+    }
+  }
+
+  @Nested
+  class _generateList_function1 {
+    @Test
+    public void with_no_elements() {
+      assertThat(generateList(0, (i) -> "a")).isEmpty();
+    }
+
+    @Test
+    public void with_one_element() {
+      assertThat(generateList(1, Object::toString)).isEqualTo(list("0"));
+    }
+
+    @Test
+    public void with_many_elements() {
+      assertThat(generateList(5, Object::toString)).isEqualTo(list("0", "1", "2", "3", "4"));
+    }
+
+    @Test
+    public void exception_from_supplier_is_propagated() {
+      var exception = new Exception("message");
+      Function1<Integer, String, Exception> supplier = (i) -> {
         throw exception;
       };
       assertCall(() -> generateList(5, supplier)).throwsException(exception);

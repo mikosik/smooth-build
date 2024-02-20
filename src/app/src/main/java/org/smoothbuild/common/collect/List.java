@@ -46,10 +46,15 @@ public final class List<E> extends AbstractList<E> {
 
   public static <E, T extends Throwable> List<E> generateList(int size, Function0<E, T> supplier)
       throws T {
+    return generateList(size, i -> supplier.apply());
+  }
+
+  public static <E, T extends Throwable> List<E> generateList(
+      int size, Function1<Integer, E, T> supplier) throws T {
     @SuppressWarnings("unchecked")
     E[] array = (E[]) new Object[size];
     for (int i = 0; i < array.length; i++) {
-      array[i] = supplier.apply();
+      array[i] = supplier.apply(i);
     }
     return new List<>(array);
   }
