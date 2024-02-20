@@ -20,7 +20,7 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
+import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -85,7 +85,7 @@ public class BytecodeF {
       }
       return builder.build();
     } catch (IOException e) {
-      throw new BytecodeDbException(e);
+      throw new IoBytecodeException(e);
     }
   }
 
