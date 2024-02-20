@@ -134,7 +134,7 @@ public class CategoryBTest extends TestContext {
   }
 
   @Nested
-  class _expression_func {
+  class _lambda {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
