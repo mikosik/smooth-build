@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -134,6 +135,17 @@ public final class List<E> extends AbstractList<E> {
       mapped[i] = mapper.apply(array[i]);
     }
     return new List<>(mapped);
+  }
+
+  public <R, T extends Throwable> List<R> flatMap(Function1<? super E, Iterable<R>, T> mapper)
+      throws T {
+    var resultList = new ArrayList<>(array.length);
+    for (E e : array) {
+      Iterables.addAll(resultList, mapper.apply(e));
+    }
+    @SuppressWarnings("unchecked")
+    var resultArray = (R[]) resultList.toArray(Object[]::new);
+    return new List<>(resultArray);
   }
 
   public <T extends Throwable> List<E> filter(Function1<E, Boolean, T> predicate) throws T {

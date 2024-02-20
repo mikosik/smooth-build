@@ -430,6 +430,38 @@ public class ListTest {
   }
 
   @Nested
+  class _flatMap {
+    @Test
+    public void returns_empty_list_for_empty_arg() {
+      assertThat(List.<String>list().flatMap(s -> list(s, s))).isEmpty();
+    }
+
+    @Test
+    public void returns_doubled_element() {
+      assertThat(list("abc").flatMap(s -> list(s, s)))
+          .containsExactly("abc", "abc")
+          .inOrder();
+    }
+
+    @Test
+    public void returns_doubled_elements() {
+      assertThat(list("abc", "def").flatMap(s -> list(s, s)))
+          .containsExactly("abc", "abc", "def", "def")
+          .inOrder();
+    }
+
+    @Test
+    public void exception_from_mapper_is_propagated() {
+      assertCall(() -> list("abc").flatMap(this::throwRuntimeException))
+          .throwsException(RuntimeException.class);
+    }
+
+    private Iterable<Object> throwRuntimeException(String string) {
+      throw new RuntimeException();
+    }
+  }
+
+  @Nested
   class _filter {
     @Test
     public void returns_empty_for_empty_list() {
