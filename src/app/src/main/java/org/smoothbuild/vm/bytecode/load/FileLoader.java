@@ -8,7 +8,7 @@ import okio.BufferedSource;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 
@@ -18,13 +18,13 @@ import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 @Singleton
 public class FileLoader {
   private final FileResolver fileResolver;
-  private final BytecodeDb bytecodeDb;
+  private final ExprDb exprDb;
   private final ConcurrentHashMap<FilePath, CachingLoader> fileCache;
 
   @Inject
-  public FileLoader(FileResolver fileResolver, BytecodeDb bytecodeDb) {
+  public FileLoader(FileResolver fileResolver, ExprDb exprDb) {
     this.fileResolver = fileResolver;
-    this.bytecodeDb = bytecodeDb;
+    this.exprDb = exprDb;
     this.fileCache = new ConcurrentHashMap<>();
   }
 
@@ -49,7 +49,7 @@ public class FileLoader {
     }
 
     private BlobB loadImpl() throws BytecodeException, IOException {
-      try (BlobBBuilder blobBuilder = bytecodeDb.blobBuilder()) {
+      try (BlobBBuilder blobBuilder = exprDb.blobBuilder()) {
         try (BufferedSource source = fileResolver.source(filePath)) {
           source.readAll(blobBuilder);
         }

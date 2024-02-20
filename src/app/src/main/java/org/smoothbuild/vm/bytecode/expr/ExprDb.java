@@ -9,9 +9,9 @@ import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 import java.math.BigInteger;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
+import org.smoothbuild.vm.bytecode.expr.exc.ExprDbException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -51,11 +51,11 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 /**
  * This class is thread-safe.
  */
-public class BytecodeDb {
+public class ExprDb {
   private final HashedDb hashedDb;
   private final CategoryDb categoryDb;
 
-  public BytecodeDb(HashedDb hashedDb, CategoryDb categoryDb) {
+  public ExprDb(HashedDb hashedDb, CategoryDb categoryDb) {
     this.hashedDb = hashedDb;
     this.categoryDb = categoryDb;
   }
@@ -415,7 +415,7 @@ public class BytecodeDb {
 
   // hashedDb calls with exception translation
 
-  private List<Hash> readRootChain(Hash rootHash) throws BytecodeDbException {
+  private List<Hash> readRootChain(Hash rootHash) throws ExprDbException {
     try {
       return hashedDb.readHashChain(rootHash);
     } catch (NoSuchDataException e) {
@@ -425,34 +425,34 @@ public class BytecodeDb {
     }
   }
 
-  private HashingSink sink() throws BytecodeDbException {
-    return invokeTranslatingHashedDbException(hashedDb::sink, BytecodeDbException::new);
+  private HashingSink sink() throws ExprDbException {
+    return invokeTranslatingHashedDbException(hashedDb::sink, ExprDbException::new);
   }
 
-  private Hash writeBoolean(boolean value) throws BytecodeDbException {
+  private Hash writeBoolean(boolean value) throws ExprDbException {
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeBoolean(value), BytecodeDbException::new);
+        () -> hashedDb.writeBoolean(value), ExprDbException::new);
   }
 
-  private Hash writeBigInteger(BigInteger value) throws BytecodeDbException {
+  private Hash writeBigInteger(BigInteger value) throws ExprDbException {
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeBigInteger(value), BytecodeDbException::new);
+        () -> hashedDb.writeBigInteger(value), ExprDbException::new);
   }
 
-  private Hash writeString(String string) throws BytecodeDbException {
+  private Hash writeString(String string) throws ExprDbException {
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeString(string), BytecodeDbException::new);
+        () -> hashedDb.writeString(string), ExprDbException::new);
   }
 
-  private Hash writeChain(Hash... hashes) throws BytecodeDbException {
+  private Hash writeChain(Hash... hashes) throws ExprDbException {
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeHashChain(hashes), BytecodeDbException::new);
+        () -> hashedDb.writeHashChain(hashes), ExprDbException::new);
   }
 
-  private Hash writeChain(List<? extends ExprB> exprs) throws BytecodeDbException {
+  private Hash writeChain(List<? extends ExprB> exprs) throws ExprDbException {
     var hashes = exprs.map(ExprB::hash);
     return invokeTranslatingHashedDbException(
-        () -> hashedDb.writeHashChain(hashes), BytecodeDbException::new);
+        () -> hashedDb.writeHashChain(hashes), ExprDbException::new);
   }
 
   // visible for classes from db.object package tree until creating ExprB is cached and

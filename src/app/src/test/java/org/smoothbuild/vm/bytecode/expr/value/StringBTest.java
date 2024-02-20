@@ -45,13 +45,13 @@ public class StringBTest extends TestContext {
   @Test
   public void str_can_be_read_back_by_hash() throws Exception {
     var stringB = stringB(string);
-    assertThat(bytecodeDbOther().get(stringB.hash())).isEqualTo(stringB);
+    assertThat(exprDbOther().get(stringB.hash())).isEqualTo(stringB);
   }
 
   @Test
   public void str_read_back_by_hash_has_same_to_j() throws Exception {
     StringB stringB = stringB(string);
-    assertThat(((StringB) bytecodeDbOther().get(stringB.hash())).toJ()).isEqualTo(string);
+    assertThat(((StringB) exprDbOther().get(stringB.hash())).toJ()).isEqualTo(string);
   }
 
   @Test

@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.type.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.COMBINE;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -25,8 +25,8 @@ public class CombineCB extends OperCB {
   }
 
   @Override
-  public CombineB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public CombineB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof CombineCB);
-    return new CombineB(merkleRoot, bytecodeDb);
+    return new CombineB(merkleRoot, exprDb);
   }
 }

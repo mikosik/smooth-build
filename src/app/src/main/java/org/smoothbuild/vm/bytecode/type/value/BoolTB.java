@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -17,8 +17,8 @@ public class BoolTB extends TypeB {
   }
 
   @Override
-  public BoolB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public BoolB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
     checkArgument(merkleRoot.category() instanceof BoolTB);
-    return new BoolB(merkleRoot, bytecodeDb);
+    return new BoolB(merkleRoot, exprDb);
   }
 }

@@ -56,7 +56,7 @@ public class PickBTest extends TestContext {
   @Test
   public void pick_can_be_read_back_by_hash() throws Exception {
     var pick = pickB(arrayB(intB(7)), intB(0));
-    assertThat(bytecodeDbOther().get(pick.hash())).isEqualTo(pick);
+    assertThat(exprDbOther().get(pick.hash())).isEqualTo(pick);
   }
 
   @Test
@@ -64,7 +64,7 @@ public class PickBTest extends TestContext {
     var array = arrayB(intB(17), intB(18));
     var index = intB(0);
     var pick = pickB(array, index);
-    assertThat(((PickB) bytecodeDbOther().get(pick.hash())).subExprs())
+    assertThat(((PickB) exprDbOther().get(pick.hash())).subExprs())
         .isEqualTo(new PickB.SubExprsB(array, index));
   }
 

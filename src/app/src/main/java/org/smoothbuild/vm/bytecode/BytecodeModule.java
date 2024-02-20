@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.filesystem.space.ForSpace;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;
 
@@ -19,8 +19,8 @@ public class BytecodeModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public BytecodeDb provideBytecodeDb(HashedDb hashedDb, CategoryDb categoryDb) {
-    return new BytecodeDb(hashedDb, categoryDb);
+  public ExprDb provideExprDb(HashedDb hashedDb, CategoryDb categoryDb) {
+    return new ExprDb(hashedDb, categoryDb);
   }
 
   @Provides

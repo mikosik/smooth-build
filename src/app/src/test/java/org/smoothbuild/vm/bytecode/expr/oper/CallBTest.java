@@ -70,7 +70,7 @@ public class CallBTest extends TestContext {
   @Test
   public void call_can_be_read_back_by_hash() throws Exception {
     var call = callB(lambdaB(list(stringTB()), intB()), stringB());
-    assertThat(bytecodeDbOther().get(call.hash())).isEqualTo(call);
+    assertThat(exprDbOther().get(call.hash())).isEqualTo(call);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class CallBTest extends TestContext {
     var func = lambdaB(list(stringTB()), intB());
     var args = combineB(stringB());
     var call = callB(func, args);
-    assertThat(((CallB) bytecodeDbOther().get(call.hash())).subExprs())
+    assertThat(((CallB) exprDbOther().get(call.hash())).subExprs())
         .isEqualTo(new CallB.SubExprsB(func, args));
   }
 

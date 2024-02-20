@@ -41,13 +41,13 @@ public class CombineBTest extends TestContext {
   @Test
   public void combine_can_be_read_back_by_hash() throws Exception {
     CombineB combine = combineB(intB(1));
-    assertThat(bytecodeDbOther().get(combine.hash())).isEqualTo(combine);
+    assertThat(exprDbOther().get(combine.hash())).isEqualTo(combine);
   }
 
   @Test
   public void combine_read_back_by_hash_has_same_items() throws Exception {
     var combine = combineB(intB(), stringB());
-    assertThat(((CombineB) bytecodeDbOther().get(combine.hash())).items())
+    assertThat(((CombineB) exprDbOther().get(combine.hash())).items())
         .isEqualTo(list(intB(), stringB()));
   }
 

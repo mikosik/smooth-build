@@ -17,7 +17,7 @@ import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -30,14 +30,14 @@ import org.smoothbuild.vm.evaluate.task.Output;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final BytecodeDb bytecodeDb;
+  private final ExprDb exprDb;
   private final BytecodeF bytecodeF;
 
   @Inject
   public ComputationCache(
-      @ForSpace(PROJECT) FileSystem fileSystem, BytecodeDb bytecodeDb, BytecodeF bytecodeF) {
+      @ForSpace(PROJECT) FileSystem fileSystem, ExprDb exprDb, BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
-    this.bytecodeDb = bytecodeDb;
+    this.exprDb = exprDb;
     this.bytecodeF = bytecodeF;
   }
 
@@ -66,7 +66,7 @@ public class ComputationCache {
   public synchronized Output read(Hash hash, TypeB type) throws ComputeException {
     try (BufferedSource source = fileSystem.source(toPath(hash))) {
       var messagesHash = Hash.read(source);
-      var messages = bytecodeDb.get(messagesHash);
+      var messages = exprDb.get(messagesHash);
       var messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
       if (!messages.category().equals(messageArrayT)) {
         throw corruptedValueException(
@@ -87,7 +87,7 @@ public class ComputationCache {
         return new Output(null, messageArray);
       } else {
         var valueHash = Hash.read(source);
-        var value = bytecodeDb.get(valueHash);
+        var value = exprDb.get(valueHash);
         if (!type.equals(value.evaluationT())) {
           throw corruptedValueException(
               hash,

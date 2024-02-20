@@ -2,15 +2,15 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import java.math.BigInteger;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 
 /**
  * This class is thread-safe.
  */
 public final class IntB extends ValueB {
-  public IntB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    super(merkleRoot, bytecodeDb);
+  public IntB(MerkleRoot merkleRoot, ExprDb exprDb) {
+    super(merkleRoot, exprDb);
   }
 
   public BigInteger toJ() throws BytecodeException {

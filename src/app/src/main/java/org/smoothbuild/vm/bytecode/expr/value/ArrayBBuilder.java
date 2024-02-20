@@ -5,17 +5,17 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.ArrayList;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 
 public class ArrayBBuilder {
   private final ArrayTB type;
-  private final BytecodeDb bytecodeDb;
+  private final ExprDb exprDb;
   private final java.util.List<ValueB> elems;
 
-  public ArrayBBuilder(ArrayTB type, BytecodeDb bytecodeDb) {
+  public ArrayBBuilder(ArrayTB type, ExprDb exprDb) {
     this.type = type;
-    this.bytecodeDb = bytecodeDb;
+    this.exprDb = exprDb;
     this.elems = new ArrayList<>();
   }
 
@@ -40,6 +40,6 @@ public class ArrayBBuilder {
   }
 
   public ArrayB build() throws BytecodeException {
-    return bytecodeDb.newArray(type, listOfAll(elems));
+    return exprDb.newArray(type, listOfAll(elems));
   }
 }

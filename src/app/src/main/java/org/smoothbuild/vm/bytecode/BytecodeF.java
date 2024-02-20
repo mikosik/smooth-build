@@ -18,8 +18,8 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.out.log.Level;
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
@@ -55,14 +55,14 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
  */
 @Singleton
 public class BytecodeF {
-  private final BytecodeDb bytecodeDb;
+  private final ExprDb exprDb;
   private final CategoryDb categoryDb;
   private final Function0<TupleTB, BytecodeException> messageTypeMemoizer;
   private final Function0<TupleTB, BytecodeException> fileTypeMemoizer;
 
   @Inject
-  public BytecodeF(BytecodeDb bytecodeDb, CategoryDb categoryDb) {
-    this.bytecodeDb = bytecodeDb;
+  public BytecodeF(ExprDb exprDb, CategoryDb categoryDb) {
+    this.exprDb = exprDb;
     this.categoryDb = categoryDb;
     this.messageTypeMemoizer = memoizer(() -> createMessageT(categoryDb));
     this.fileTypeMemoizer = memoizer(() -> createFileT(categoryDb));
@@ -71,11 +71,11 @@ public class BytecodeF {
   // Objects
 
   public ArrayBBuilder arrayBuilderWithElems(TypeB elemT) throws BytecodeException {
-    return bytecodeDb.arrayBuilder(categoryDb.array(elemT));
+    return exprDb.arrayBuilder(categoryDb.array(elemT));
   }
 
   public ArrayBBuilder arrayBuilder(ArrayTB type) {
-    return bytecodeDb.arrayBuilder(type);
+    return exprDb.arrayBuilder(type);
   }
 
   public BlobB blob(Consumer1<BufferedSink, IOException> writer) throws BytecodeException {
@@ -90,68 +90,68 @@ public class BytecodeF {
   }
 
   public BlobBBuilder blobBuilder() throws BytecodeException {
-    return bytecodeDb.blobBuilder();
+    return exprDb.blobBuilder();
   }
 
   public BoolB bool(boolean value) throws BytecodeException {
-    return bytecodeDb.bool(value);
+    return exprDb.bool(value);
   }
 
   public CallB call(ExprB func, CombineB args) throws BytecodeException {
-    return bytecodeDb.call(func, args);
+    return exprDb.call(func, args);
   }
 
   public CombineB combine(List<ExprB> items) throws BytecodeException {
-    return bytecodeDb.combine(items);
+    return exprDb.combine(items);
   }
 
   public TupleB file(BlobB content, StringB path) throws BytecodeException {
-    return bytecodeDb.tuple(list(content, path));
+    return exprDb.tuple(list(content, path));
   }
 
   public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
-    return bytecodeDb.lambda(type, body);
+    return exprDb.lambda(type, body);
   }
 
   public IfFuncB ifFunc(TypeB t) throws BytecodeException {
-    return bytecodeDb.ifFunc(t);
+    return exprDb.ifFunc(t);
   }
 
   public IntB int_(BigInteger value) throws BytecodeException {
-    return bytecodeDb.int_(value);
+    return exprDb.int_(value);
   }
 
   public MapFuncB mapFunc(TypeB r, TypeB s) throws BytecodeException {
-    return bytecodeDb.mapFunc(r, s);
+    return exprDb.mapFunc(r, s);
   }
 
   public NativeFuncB nativeFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
-    return bytecodeDb.nativeFunc(funcTB, jar, classBinaryName, isPure);
+    return exprDb.nativeFunc(funcTB, jar, classBinaryName, isPure);
   }
 
   public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
-    return bytecodeDb.pick(pickable, index);
+    return exprDb.pick(pickable, index);
   }
 
   public VarB var(TypeB evaluationT, BigInteger value) throws BytecodeException {
-    return bytecodeDb.varB(evaluationT, bytecodeDb.int_(value));
+    return exprDb.varB(evaluationT, exprDb.int_(value));
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
-    return bytecodeDb.select(selectable, index);
+    return exprDb.select(selectable, index);
   }
 
   public StringB string(String string) throws BytecodeException {
-    return bytecodeDb.string(string);
+    return exprDb.string(string);
   }
 
   public TupleB tuple(List<ValueB> items) throws BytecodeException {
-    return bytecodeDb.tuple(items);
+    return exprDb.tuple(items);
   }
 
   public OrderB order(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
-    return bytecodeDb.order(evaluationT, elems);
+    return exprDb.order(evaluationT, elems);
   }
 
   // Types
@@ -219,9 +219,9 @@ public class BytecodeF {
   }
 
   private TupleB message(Level level, String text) throws BytecodeException {
-    ValueB textValue = bytecodeDb.string(text);
-    ValueB severityValue = bytecodeDb.string(level.name());
-    return bytecodeDb.tuple(list(textValue, severityValue));
+    ValueB textValue = exprDb.string(text);
+    ValueB severityValue = exprDb.string(level.name());
+    return exprDb.tuple(list(textValue, severityValue));
   }
 
   private static TupleTB createMessageT(CategoryDb categoryDb) throws BytecodeException {

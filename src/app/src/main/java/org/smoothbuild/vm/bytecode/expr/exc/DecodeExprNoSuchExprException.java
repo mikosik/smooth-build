@@ -8,6 +8,6 @@ public class DecodeExprNoSuchExprException extends DecodeExprException {
   }
 
   public DecodeExprNoSuchExprException(Hash hash, Throwable cause) {
-    super("Cannot decode object at " + hash + ". Cannot find it in bytecode db.", cause);
+    super("Cannot decode expression at " + hash + ". Cannot find it in expression db.", cause);
   }
 }

@@ -20,14 +20,14 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 public class ArrayBTest extends TestContext {
   @Test
   public void empty_int_array_can_be_iterated_as_int() throws Exception {
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB(intTB())).build();
+    ArrayB array = exprDb().arrayBuilder(arrayTB(intTB())).build();
     assertThat(array.elems(IntB.class)).isEmpty();
   }
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() throws Exception {
     ArrayB array =
-        bytecodeDb().arrayBuilder(arrayTB(stringTB())).add(stringB("abc")).build();
+        exprDb().arrayBuilder(arrayTB(stringTB())).add(stringB("abc")).build();
     assertCall(() -> array.elems(TupleB.class))
         .throwsException(new IllegalArgumentException(
             "[String] cannot be viewed as Iterable of " + TupleB.class.getCanonicalName() + "."));
@@ -35,26 +35,26 @@ public class ArrayBTest extends TestContext {
 
   @Test
   public void empty_array_is_empty() throws Exception {
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).build();
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).build();
     assertThat(array.elems(StringB.class)).isEmpty();
   }
 
   @Test
   public void adding_null_is_forbidden() throws Exception {
-    ArrayBBuilder arrayBuilder = bytecodeDb().arrayBuilder(arrayTB());
+    ArrayBBuilder arrayBuilder = exprDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(null)).throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_elem_with_wrong_type_is_forbidden() throws Exception {
-    ArrayBBuilder arrayBuilder = bytecodeDb().arrayBuilder(arrayTB());
+    ArrayBBuilder arrayBuilder = exprDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(blobB(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_elem() throws Exception {
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(stringB("abc")).build();
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).add(stringB("abc")).build();
     assertThat(array.elems(StringB.class)).containsExactly(stringB("abc"));
   }
 
@@ -62,7 +62,7 @@ public class ArrayBTest extends TestContext {
   public void array_contains_added_elem_via_add_all_method() throws Exception {
     StringB str = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).addAll(list(str, str2)).build();
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).addAll(list(str, str2)).build();
     assertThat(array.elems(StringB.class)).containsExactly(str, str2).inOrder();
   }
 
@@ -72,14 +72,14 @@ public class ArrayBTest extends TestContext {
     StringB str2 = stringB("def");
     StringB str3 = stringB("ghi");
     ArrayB array =
-        bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).add(str3).build();
+        exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).add(str3).build();
     assertThat(array.elems(StringB.class)).containsExactly(str1, str2, str3).inOrder();
   }
 
   @Test
   public void adding_same_elem_twice_builds_array_with_two_elems() throws Exception {
     StringB str = stringB("abc");
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str).add(str).build();
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str).add(str).build();
     assertThat(array.elems(StringB.class)).containsExactly(str, str);
   }
 
@@ -105,16 +105,16 @@ public class ArrayBTest extends TestContext {
   public void array_can_be_read_by_hash() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
-    assertThat(bytecodeDbOther().get(array.hash())).isEqualTo(array);
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
+    assertThat(exprDbOther().get(array.hash())).isEqualTo(array);
   }
 
   @Test
   public void array_read_by_hash_contains_same_elems() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
-    assertThat(((ArrayB) bytecodeDbOther().get(array.hash())).elems(StringB.class))
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
+    assertThat(((ArrayB) exprDbOther().get(array.hash())).elems(StringB.class))
         .containsExactly(str1, str2)
         .inOrder();
   }
@@ -123,15 +123,15 @@ public class ArrayBTest extends TestContext {
   public void array_read_by_hash_has_same_hash() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
-    assertThat(bytecodeDbOther().get(array.hash()).hash()).isEqualTo(array.hash());
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
+    assertThat(exprDbOther().get(array.hash()).hash()).isEqualTo(array.hash());
   }
 
   @ParameterizedTest
   @MethodSource("type_test_data")
   public void type(TypeB elemT) throws Exception {
     var arrayTH = arrayTB(elemT);
-    var arrayH = bytecodeDb().arrayBuilder(arrayTH).build();
+    var arrayH = exprDb().arrayBuilder(arrayTH).build();
     assertThat(arrayH.category()).isEqualTo(arrayTH);
   }
 
@@ -143,7 +143,7 @@ public class ArrayBTest extends TestContext {
   public void to_string() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = bytecodeDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
+    ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
     assertThat(array.toString()).isEqualTo("""
             ["abc","def"]@""" + array.hash());
   }

@@ -3,8 +3,8 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.funcTypeName;
 
-import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeIllegalCategoryException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -28,8 +28,7 @@ public final class FuncTB extends TypeB {
   }
 
   @Override
-  public ExprB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb)
-      throws DecodeIllegalCategoryException {
+  public ExprB newExpr(MerkleRoot merkleRoot, ExprDb exprDb) throws DecodeIllegalCategoryException {
     throw new DecodeIllegalCategoryException(merkleRoot.hash(), this);
   }
 }

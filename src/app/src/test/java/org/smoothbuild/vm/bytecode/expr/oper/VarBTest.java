@@ -37,13 +37,13 @@ public class VarBTest extends TestContext {
   @Test
   public void var_can_be_read_back_by_hash() throws Exception {
     var varB = varB(intTB(), 123);
-    assertThat(bytecodeDbOther().get(varB.hash())).isEqualTo(varB);
+    assertThat(exprDbOther().get(varB.hash())).isEqualTo(varB);
   }
 
   @Test
   public void const_read_back_by_hash_has_same_value() throws Exception {
     var varB = varB(intTB(), 123);
-    assertThat(((VarB) bytecodeDbOther().get(varB.hash())).index()).isEqualTo(intB(123));
+    assertThat(((VarB) exprDbOther().get(varB.hash())).index()).isEqualTo(intB(123));
   }
 
   @Test
