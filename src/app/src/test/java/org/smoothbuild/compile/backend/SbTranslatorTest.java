@@ -567,42 +567,40 @@ public class SbTranslatorTest extends TestContext {
       assertTranslationIsCached(bindings(funcS), instantiateS);
     }
 
-    private void assertTranslationIsCached(NamedEvaluableS namedEvaluableS)
-        throws BytecodeException {
+    private void assertTranslationIsCached(NamedEvaluableS namedEvaluableS) throws Exception {
       assertTranslationIsCached(bindings(namedEvaluableS), instantiateS(namedEvaluableS));
     }
 
     private void assertTranslationIsCached(
-        ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) throws BytecodeException {
+        ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) throws Exception {
       assertTranslationIsCached(exprS, newTranslator(evaluables));
     }
 
     private void assertTranslationIsCached(
         FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
-        throws BytecodeException {
+        throws SbTranslatorException {
       var sbTranslator = newTranslator(fileLoader, evaluables);
       assertTranslationIsCached(exprS, sbTranslator);
     }
 
     private void assertTranslationIsCached(ExprS exprS, SbTranslator sbTranslator)
-        throws BytecodeException {
+        throws SbTranslatorException {
       assertThat(sbTranslator.translateExpr(exprS))
           .isSameInstanceAs(sbTranslator.translateExpr(exprS));
     }
   }
 
   private void assertTranslation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected)
-      throws BytecodeException {
+      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected) throws Exception {
     assertTranslation(newTranslator(evaluables), exprS, expected);
   }
 
   private void assertTranslation(NamedEvaluableS namedEvaluableS, ExprB expectedB)
-      throws BytecodeException {
+      throws Exception {
     assertTranslation(bindings(namedEvaluableS), instantiateS(namedEvaluableS), expectedB);
   }
 
-  private void assertTranslation(ExprS exprS, ExprB expected) throws BytecodeException {
+  private void assertTranslation(ExprS exprS, ExprB expected) throws Exception {
     assertTranslation(newTranslator(), exprS, expected);
   }
 
@@ -611,19 +609,19 @@ public class SbTranslatorTest extends TestContext {
       ImmutableBindings<NamedEvaluableS> evaluables,
       ExprS exprS,
       ExprB expected)
-      throws BytecodeException {
+      throws SbTranslatorException {
     var sbTranslator = newTranslator(fileLoader, evaluables);
     assertTranslation(sbTranslator, exprS, expected);
   }
 
   private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, ExprB expected)
-      throws BytecodeException {
+      throws SbTranslatorException {
     assertThat(sbTranslator.translateExpr(exprS)).isEqualTo(expected);
   }
 
   private void assertValueNalMapping(
       ExprS exprS, Location expectedCallLocation, String expectedName, Location expectedLocation)
-      throws BytecodeException {
+      throws Exception {
     assertValueNalMapping(
         newTranslator(), exprS, expectedCallLocation, expectedName, expectedLocation);
   }
@@ -634,7 +632,7 @@ public class SbTranslatorTest extends TestContext {
       Location expectedCallLocation,
       String expectedName,
       Location expectedLocation)
-      throws BytecodeException {
+      throws Exception {
     assertValueNalMapping(
         newTranslator(evaluables), exprS, expectedCallLocation, expectedName, expectedLocation);
   }
@@ -645,7 +643,7 @@ public class SbTranslatorTest extends TestContext {
       Location expectedCallLocation,
       String expectedName,
       Location expectedLocation)
-      throws BytecodeException {
+      throws Exception {
     var call = ((CallB) sbTranslator.translateExpr(exprS));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
     var called = call.subExprs().func();
@@ -657,18 +655,18 @@ public class SbTranslatorTest extends TestContext {
       ExprS exprS,
       String expectedName,
       Location expectedLocation)
-      throws BytecodeException {
+      throws Exception {
     assertNalMapping(newTranslator(evaluables), exprS, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(ExprS exprS, String expectedName, Location expectedLocation)
-      throws BytecodeException {
+      throws Exception {
     assertNalMapping(newTranslator(), exprS, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(
       SbTranslator sbTranslator, ExprS exprS, String expectedName, Location expectedLocation)
-      throws BytecodeException {
+      throws SbTranslatorException {
     var exprB = sbTranslator.translateExpr(exprS);
     assertNalMapping(sbTranslator, exprB, expectedName, expectedLocation);
   }
@@ -680,12 +678,12 @@ public class SbTranslatorTest extends TestContext {
     assertThat(bsMapping.locMapping().get(exprB.hash())).isEqualTo(expectedLocation);
   }
 
-  private SbTranslator newTranslator() throws BytecodeException {
+  private SbTranslator newTranslator() throws Exception {
     return newTranslator(immutableBindings());
   }
 
   private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables)
-      throws BytecodeException {
+      throws Exception {
     try {
       var fileLoader = mock(FileLoader.class);
       when(fileLoader.load(any())).thenReturn(blobB(1));

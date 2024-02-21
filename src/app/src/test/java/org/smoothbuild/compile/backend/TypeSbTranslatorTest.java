@@ -10,7 +10,6 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class TypeSbTranslatorTest extends TestContext {
@@ -96,13 +95,13 @@ public class TypeSbTranslatorTest extends TestContext {
     }
   }
 
-  private void assertTranslation(TypeS typeS, TypeB expected) throws BytecodeException {
+  private void assertTranslation(TypeS typeS, TypeB expected) throws SbTranslatorException {
     assertTranslation(map(), typeS, expected);
   }
 
   private void assertTranslation(Map<VarS, TypeB> varMap, TypeS typeS, TypeB expected)
-      throws BytecodeException {
-    var typeSbTranslator = new TypeSbTranslator(bytecodeF(), varMap);
+      throws SbTranslatorException {
+    var typeSbTranslator = new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF()), varMap);
     assertThat(typeSbTranslator.translate(typeS)).isEqualTo(expected);
   }
 }
