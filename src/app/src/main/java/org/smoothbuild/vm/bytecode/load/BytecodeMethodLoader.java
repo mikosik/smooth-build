@@ -14,9 +14,12 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 /**
+ * Loads java methods as instances of {@link Method}.
+ * Method to load is specified by providing {@link NativeFuncB}.
  * This class is thread-safe.
  */
 @Singleton

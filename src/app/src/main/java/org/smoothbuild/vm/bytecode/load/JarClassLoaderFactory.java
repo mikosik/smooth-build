@@ -19,6 +19,7 @@ import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 /**
+ * Factory for creating classLoaders that load classes from jar file provided as BlobB.
  * This class is thread-safe.
  */
 @Singleton

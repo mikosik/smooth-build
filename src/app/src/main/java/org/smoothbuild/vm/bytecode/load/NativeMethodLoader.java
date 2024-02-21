@@ -16,6 +16,8 @@ import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 /**
+ * Loads java methods as instances of {@link Method}.
+ * Method to load is specified by providing {@link NativeFuncB}.
  * This class is thread-safe.
  */
 public class NativeMethodLoader {

@@ -13,6 +13,8 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 
 /**
+ * Loads java methods as instances of {@link Method}.
+ * Method to load is specified by providing {@link MethodSpec}.
  * This class is thread-safe.
  */
 @Singleton
