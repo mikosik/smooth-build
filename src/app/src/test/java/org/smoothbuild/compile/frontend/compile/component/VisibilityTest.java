@@ -15,82 +15,82 @@ public class VisibilityTest extends TestContext {
     class _local {
       @Test
       public void value_declared_above_is_visible() {
-        module(
-                """
-             String myValue = "abc";
-             result = myValue;
-             """)
-            .loadsWithSuccess();
+        var code =
+            """
+            String myValue = "abc";
+            result = myValue;
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void value_declared_below_is_visible() {
-        module(
-                """
-             result = myValue;
-             String myValue = "abc";
-             """)
-            .loadsWithSuccess();
+        var code =
+            """
+            result = myValue;
+            String myValue = "abc";
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void func_declared_above_is_visible() {
-        module(
-                """
-             String myFunc() = "abc";
-             result = myFunc;
-             """)
-            .loadsWithSuccess();
+        var code =
+            """
+            String myFunc() = "abc";
+            result = myFunc;
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void func_declared_below_is_visible() {
-        module(
-                """
-             result = myFunc;
-             String myFunc() = "abc";
-             """)
-            .loadsWithSuccess();
+        var code =
+            """
+            result = myFunc;
+            String myFunc() = "abc";
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
-      public void ctor_declared_above_is_visible() {
-        module("""
-             MyStruct()
-             result = MyStruct;
-             """)
-            .loadsWithSuccess();
+      public void constructor_declared_above_is_visible() {
+        var code = """
+            MyStruct()
+            result = MyStruct;
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
-      public void ctor_declared_below_is_visible() {
-        module("""
-             result = MyStruct;
-             MyStruct()
-             """)
-            .loadsWithSuccess();
+      public void constructor_declared_below_is_visible() {
+        var code = """
+            result = MyStruct;
+            MyStruct()
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void struct_declared_above_is_visible() {
-        module(
-                """
-             MyStruct()
-             @Native("impl.met")
-             MyStruct myFunc();
-             """)
-            .loadsWithSuccess();
+        var code =
+            """
+            MyStruct()
+            @Native("impl.met")
+            MyStruct myFunc();
+            """;
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void struct_declared_below_is_visible() {
-        module(
-                """
-             @Native("impl.met")
-             MyStruct myFunc();
-             MyStruct()
-             """)
-            .loadsWithSuccess();
+        var code =
+            """
+            @Native("impl.met")
+            MyStruct myFunc();
+            MyStruct()
+            """;
+        module(code).loadsWithSuccess();
       }
     }
 
@@ -98,23 +98,23 @@ public class VisibilityTest extends TestContext {
     class _imported {
       @Test
       public void value_is_visible() {
-        module("myValue = otherModuleValue;")
-            .withImported("Int otherModuleValue = 7;")
-            .loadsWithSuccess();
+        var code = "myValue = otherModuleValue;";
+        var imported = "Int otherModuleValue = 7;";
+        module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
       public void func_is_visible() {
-        module("myValue = otherModuleFunc;")
-            .withImported("Int otherModuleFunc() = 7;")
-            .loadsWithSuccess();
+        var code = "myValue = otherModuleFunc;";
+        var imported = "Int otherModuleFunc() = 7;";
+        module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
       public void constructor_is_visible() {
-        module("myValue = OtherModuleStruct;")
-            .withImported("OtherModuleStruct()")
-            .loadsWithSuccess();
+        var code = "myValue = OtherModuleStruct;";
+        var imported = "OtherModuleStruct()";
+        module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
@@ -124,7 +124,8 @@ public class VisibilityTest extends TestContext {
             @Native("impl.met")
             OtherModuleStruct myFunc();
             """;
-        module(code).withImported("OtherModuleStruct()").loadsWithSuccess();
+        var imported = "OtherModuleStruct()";
+        module(code).withImported(imported).loadsWithSuccess();
       }
     }
 
@@ -150,32 +151,32 @@ public class VisibilityTest extends TestContext {
       class _of_named_function {
         @Test
         public void is_visible_in_its_body() {
-          module("""
-             myFunc(String param) = param;
-             """)
-              .loadsWithSuccess();
+          var code = """
+              myFunc(String param) = param;
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void is_not_visible_outside_its_body() {
-          module(
-                  """
-             myFunc(String param) = "abc";
-             result = param;
-             """)
-              .loadsWithError(2, "`param` is undefined.");
+          var code =
+              """
+              myFunc(String param) = "abc";
+              result = param;
+              """;
+          module(code).loadsWithError(2, "`param` is undefined.");
         }
 
         @Test
         public void is_not_visible_in_its_default_value() {
-          module("func(String withDefault = withDefault) = withDefault;")
-              .loadsWithError(1, "`withDefault` is undefined.");
+          var code = "func(String withDefault = withDefault) = withDefault;";
+          module(code).loadsWithError(1, "`withDefault` is undefined.");
         }
 
         @Test
         public void is_not_visible_in_default_value_of_other_param() {
-          module("func(String param, String withDefault = param) = param;")
-              .loadsWithError(1, "`param` is undefined.");
+          var code = "func(String param, String withDefault = param) = param;";
+          module(code).loadsWithError(1, "`param` is undefined.");
         }
       }
 
@@ -183,20 +184,20 @@ public class VisibilityTest extends TestContext {
       class _of_lambda {
         @Test
         public void is_visible_in_its_body() {
-          module("""
-             myValue = (String param) -> param;
-             """)
-              .loadsWithSuccess();
+          var code = """
+              myValue = (String param) -> param;
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void is_not_visible_outside_its_body() {
-          module(
-                  """
-             myValue = (String param) -> "abc";
-             result = param;
-             """)
-              .loadsWithError(2, "`param` is undefined.");
+          var code =
+              """
+              myValue = (String param) -> "abc";
+              result = param;
+              """;
+          module(code).loadsWithError(2, "`param` is undefined.");
         }
       }
     }
@@ -347,80 +348,86 @@ public class VisibilityTest extends TestContext {
     class one_elem_cycle {
       @Test
       public void value() {
-        module("""
-             myValue = myValue;
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myValue ~> myValue""");
+        var code = """
+            myValue = myValue;
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myValue ~> myValue""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void func() {
-        module("""
-             myFunc1() = myFunc1();
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myFunc1 ~> myFunc1""");
+        var code = """
+            myFunc1() = myFunc1();
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myFunc1 ~> myFunc1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct() {
-        module(
-                """
-             MyStruct(
-               MyStruct myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct ~> MyStruct""");
+        var code =
+            """
+            MyStruct(
+              MyStruct myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct ~> MyStruct""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_through_array() {
-        module(
-                """
-             MyStruct(
-               [MyStruct] myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct ~> MyStruct""");
+        var code =
+            """
+            MyStruct(
+              [MyStruct] myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct ~> MyStruct""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_through_func_result() {
-        module(
-                """
-             MyStruct(
-               ()->MyStruct myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct ~> MyStruct""");
+        var code =
+            """
+            MyStruct(
+              ()->MyStruct myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct ~> MyStruct""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_through_func_param() {
-        module(
-                """
-             MyStruct(
-               (MyStruct)->Blob myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct ~> MyStruct""");
+        var code =
+            """
+            MyStruct(
+              (MyStruct)->Blob myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct ~> MyStruct""";
+        module(code).loadsWithError(error);
       }
     }
 
@@ -428,128 +435,136 @@ public class VisibilityTest extends TestContext {
     class two_elems_cycle {
       @Test
       public void value_value() {
-        module(
-                """
-             myValue1 = myValue2;
-             myValue2 = myValue1;
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myValue1 ~> myValue2
-              build.smooth:2: myValue2 ~> myValue1""");
+        var code =
+            """
+            myValue1 = myValue2;
+            myValue2 = myValue1;
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myValue1 ~> myValue2
+            build.smooth:2: myValue2 ~> myValue1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void func_func() {
-        module(
-                """
-             myFunc1() = myFunc2();
-             myFunc2() = myFunc1();
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myFunc1 ~> myFunc2
-              build.smooth:2: myFunc2 ~> myFunc1""");
+        var code =
+            """
+            myFunc1() = myFunc2();
+            myFunc2() = myFunc1();
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myFunc1 ~> myFunc2
+            build.smooth:2: myFunc2 ~> myFunc1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void func_func_through_arg() {
-        module(
-                """
-             String myFunc() = myIdentity(myFunc());
-             String myIdentity(String s) = s;
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myFunc ~> myFunc""");
+        var code =
+            """
+            String myFunc() = myIdentity(myFunc());
+            String myIdentity(String s) = s;
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myFunc ~> myFunc""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void value_value_through_arg() {
-        module(
-                """
-             String myIdentity(String s) = s;
-             String myValue = myIdentity(myValue);
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:2: myValue ~> myValue""");
+        var code =
+            """
+            String myIdentity(String s) = s;
+            String myValue = myIdentity(myValue);
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:2: myValue ~> myValue""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct() {
-        module(
-                """
-             MyStruct1(
-               MyStruct2 myField
-             )
-             MyStruct2(
-               MyStruct1 myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              MyStruct2 myField
+            )
+            MyStruct2(
+              MyStruct1 myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct_through_array() {
-        module(
-                """
-             MyStruct1(
-               MyStruct2 myField
-             )
-             MyStruct2(
-               [MyStruct1] myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              MyStruct2 myField
+            )
+            MyStruct2(
+              [MyStruct1] myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct_through_func_result() {
-        module(
-                """
-             MyStruct1(
-               MyStruct2 myField
-             )
-             MyStruct2(
-               ()->MyStruct1 myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              MyStruct2 myField
+            )
+            MyStruct2(
+              ()->MyStruct1 myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct_through_func_param() {
-        module(
-                """
-             MyStruct1(
-               MyStruct2 myField
-             )
-             MyStruct2(
-               (MyStruct1)->Blob myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              MyStruct2 myField
+            )
+            MyStruct2(
+              (MyStruct1)->Blob myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
     }
 
@@ -557,132 +572,139 @@ public class VisibilityTest extends TestContext {
     class three_elem_cycle {
       @Test
       public void value_value_value() {
-        module(
-                """
-             myValue1 = myValue2;
-             myValue2 = myValue3;
-             myValue3 = myValue1;
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myValue1 ~> myValue2
-              build.smooth:2: myValue2 ~> myValue3
-              build.smooth:3: myValue3 ~> myValue1""");
+        var code =
+            """
+            myValue1 = myValue2;
+            myValue2 = myValue3;
+            myValue3 = myValue1;
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myValue1 ~> myValue2
+            build.smooth:2: myValue2 ~> myValue3
+            build.smooth:3: myValue3 ~> myValue1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void func_func_func() {
-        module(
-                """
-             myFunc1() = myFunc2();
-             myFunc2() = myFunc3();
-             myFunc3() = myFunc1();
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myFunc1 ~> myFunc2
-              build.smooth:2: myFunc2 ~> myFunc3
-              build.smooth:3: myFunc3 ~> myFunc1""");
+        var code =
+            """
+            myFunc1() = myFunc2();
+            myFunc2() = myFunc3();
+            myFunc3() = myFunc1();
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myFunc1 ~> myFunc2
+            build.smooth:2: myFunc2 ~> myFunc3
+            build.smooth:3: myFunc3 ~> myFunc1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void value_func_value() {
-        module(
-                """
-             myValue1 = myFunc();
-             myFunc() = myValue2;
-             myValue2 = myValue1;
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myValue1 ~> myFunc
-              build.smooth:2: myFunc ~> myValue2
-              build.smooth:3: myValue2 ~> myValue1""");
+        var code =
+            """
+            myValue1 = myFunc();
+            myFunc() = myValue2;
+            myValue2 = myValue1;
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myValue1 ~> myFunc
+            build.smooth:2: myFunc ~> myValue2
+            build.smooth:3: myValue2 ~> myValue1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void func_value_func() {
-        module(
-                """
-             myFunc1() = myValue;
-             myValue = myFunc2();
-             myFunc2() = myFunc1();
-             """)
-            .loadsWithError(
-                """
-              Dependency graph contains cycle:
-              build.smooth:1: myFunc1 ~> myValue
-              build.smooth:2: myValue ~> myFunc2
-              build.smooth:3: myFunc2 ~> myFunc1""");
+        var code =
+            """
+            myFunc1() = myValue;
+            myValue = myFunc2();
+            myFunc2() = myFunc1();
+            """;
+        var error =
+            """
+            Dependency graph contains cycle:
+            build.smooth:1: myFunc1 ~> myValue
+            build.smooth:2: myValue ~> myFunc2
+            build.smooth:3: myFunc2 ~> myFunc1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct_struct_through_array() {
-        module(
-                """
-             MyStruct1(
-               MyStruct2 myField
-             )
-             MyStruct2(
-               MyStruct3 myField
-             )
-             MyStruct3(
-               [MyStruct1] myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct3
-              build.smooth:8: MyStruct3 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              MyStruct2 myField
+            )
+            MyStruct2(
+              MyStruct3 myField
+            )
+            MyStruct3(
+              [MyStruct1] myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct3
+            build.smooth:8: MyStruct3 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct_struct_through_func_result() {
-        module(
-                """
-             MyStruct1(
-               [MyStruct2] myField
-             )
-             MyStruct2(
-               [MyStruct3] myField
-             )
-             MyStruct3(
-               ()->MyStruct1 myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct3
-              build.smooth:8: MyStruct3 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              [MyStruct2] myField
+            )
+            MyStruct2(
+              [MyStruct3] myField
+            )
+            MyStruct3(
+              ()->MyStruct1 myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct3
+            build.smooth:8: MyStruct3 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
 
       @Test
       public void struct_struct_struct_through_func_param() {
-        module(
-                """
-             MyStruct1(
-               [MyStruct2] myField
-             )
-             MyStruct2(
-               [MyStruct3] myField
-             )
-             MyStruct3(
-               (MyStruct1)->Blob myField
-             )
-             """)
-            .loadsWithError(
-                """
-              Type hierarchy contains cycle:
-              build.smooth:2: MyStruct1 ~> MyStruct2
-              build.smooth:5: MyStruct2 ~> MyStruct3
-              build.smooth:8: MyStruct3 ~> MyStruct1""");
+        var code =
+            """
+            MyStruct1(
+              [MyStruct2] myField
+            )
+            MyStruct2(
+              [MyStruct3] myField
+            )
+            MyStruct3(
+              (MyStruct1)->Blob myField
+            )
+            """;
+        var error =
+            """
+            Type hierarchy contains cycle:
+            build.smooth:2: MyStruct1 ~> MyStruct2
+            build.smooth:5: MyStruct2 ~> MyStruct3
+            build.smooth:8: MyStruct3 ~> MyStruct1""";
+        module(code).loadsWithError(error);
       }
     }
   }
@@ -695,24 +717,30 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          module("otherModuleValue = 8;")
-              .withImported("otherModuleValue = 7;")
+          var code = "otherModuleValue = 8;";
+          var imported = "otherModuleValue = 7;";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleValue", schemaS(intTS()));
         }
 
         @Test
         public void func_succeeds() {
-          module("otherModuleFunc = 7;")
-              .withImported("otherModuleFunc() = 8;")
+          var code = "otherModuleFunc = 7;";
+          var imported = "otherModuleFunc() = 8;";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleFunc", schemaS(intTS()));
         }
 
         @Test
         public void constructor_succeeds() {
-          module("otherModuleStruct = 7;")
-              .withImported("OtherModuleStruct()")
+          var code = "otherModuleStruct = 7;";
+          var imported = "OtherModuleStruct()";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleStruct", schemaS(intTS()));
         }
@@ -722,22 +750,22 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void value_fails() {
-          module(
-                  """
-               myValue = "abc";
-               myValue = "def";
-               """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
+          var code =
+              """
+              myValue = "abc";
+              myValue = "def";
+              """;
+          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
         }
 
         @Test
         public void func_fails() {
-          module(
-                  """
-               myFunc() = "abc";
-               myFunc = "def";
-               """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
+          var code =
+              """
+              myFunc() = "abc";
+              myFunc = "def";
+              """;
+          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }
       }
     }
@@ -748,24 +776,30 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          module("otherModuleValue() = 8;")
-              .withImported("otherModuleValue = 7;")
+          var code = "otherModuleValue() = 8;";
+          var imported = "otherModuleValue = 7;";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleValue", schemaS(funcTS(intTS())));
         }
 
         @Test
         public void function_succeeds() {
-          module("otherModuleFunc() = 8;")
-              .withImported("otherModuleFunc() = 7;")
+          var code = "otherModuleFunc() = 8;";
+          var imported = "otherModuleFunc() = 7;";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleFunc", schemaS(funcTS(intTS())));
         }
 
         @Test
         public void constructor_succeeds() {
-          module("otherModuleStruct() = 7;")
-              .withImported("OtherModuleStruct()")
+          var code = "otherModuleStruct() = 7;";
+          var imported = "OtherModuleStruct()";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleStruct", schemaS(funcTS(intTS())));
         }
@@ -775,22 +809,22 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void named_value_fails() {
-          module(
-                  """
-               myValue = "abc";
-               myValue() = "def";
-               """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
+          var code =
+              """
+              myValue = "abc";
+              myValue() = "def";
+              """;
+          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
         }
 
         @Test
         public void named_function_fails() {
-          module(
-                  """
-               myFunc() = "abc";
-               myFunc() = "def";
-               """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
+          var code =
+              """
+              myFunc() = "abc";
+              myFunc() = "def";
+              """;
+          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }
       }
     }
@@ -799,36 +833,36 @@ public class VisibilityTest extends TestContext {
     class _named_function_param_shadowing {
       @Test
       public void other_param_fails() {
-        module(
-                """
-             String myFunc(
-               String param,
-               String param) = "abc";
-               """)
-            .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
+        var code =
+            """
+            String myFunc(
+              String param,
+              String param) = "abc";
+              """;
+        module(code).loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
       }
 
       @Nested
       class _imported {
         @Test
         public void named_value_succeeds() {
-          module("Int myFunc(String otherModuleValue) = 8;")
-              .withImported("otherModuleValue = 7;")
-              .loadsWithSuccess();
+          var code = "Int myFunc(String otherModuleValue) = 8;";
+          var imported = "otherModuleValue = 7;";
+          module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void named_function_succeeds() {
-          module("Int myFunc(String otherModuleFunc) = 8;")
-              .withImported("otherModuleFunc() = 7;")
-              .loadsWithSuccess();
+          var code = "Int myFunc(String otherModuleFunc) = 8;";
+          var imported = "otherModuleFunc() = 7;";
+          module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          module("Int myFunc(String otherModuleStruct) = 7;")
-              .withImported("OtherModuleStruct()")
-              .loadsWithSuccess();
+          var code = "Int myFunc(String otherModuleStruct) = 7;";
+          var imported = "OtherModuleStruct()";
+          module(code).withImported(imported).loadsWithSuccess();
         }
       }
 
@@ -836,32 +870,32 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void named_value_succeeds() {
-          module(
-                  """
+          var code =
+              """
               myValue = "abc";
               String myFunc(String myValue) = "abc";
-              """)
-              .loadsWithSuccess();
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void named_function_succeeds() {
-          module(
-                  """
+          var code =
+              """
               myFunc() = "abc";
               String myOtherFunc(String myFunc) = "abc";
-              """)
-              .loadsWithSuccess();
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          module(
-                  """
-             MyStruct()
-             String myFunc(String myStruct) = "abc";
-             """)
-              .loadsWithSuccess();
+          var code =
+              """
+              MyStruct()
+              String myFunc(String myStruct) = "abc";
+              """;
+          module(code).loadsWithSuccess();
         }
       }
     }
@@ -870,36 +904,36 @@ public class VisibilityTest extends TestContext {
     class _lambda_param_shadowing {
       @Test
       public void other_param_fails() {
-        module(
-                """
-             myValue = (
-               String param,
-               String param) -> 7;
-               """)
-            .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
+        var code =
+            """
+            myValue = (
+              String param,
+              String param) -> 7;
+              """;
+        module(code).loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
       }
 
       @Nested
       class _imported {
         @Test
         public void named_value_succeeds() {
-          module("myValue = (String otherModuleValue) -> 7;")
-              .withImported("otherModuleValue = 8;")
-              .loadsWithSuccess();
+          var code = "myValue = (String otherModuleValue) -> 7;";
+          var imported = "otherModuleValue = 8;";
+          module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void named_function_succeeds() {
-          module("myValue = (String otherModuleFunc) -> 7;")
-              .withImported("otherModuleFunc() = 8;")
-              .loadsWithSuccess();
+          var code = "myValue = (String otherModuleFunc) -> 7;";
+          var imported = "otherModuleFunc() = 8;";
+          module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          module("myValue = (String otherModuleStruct) -> 7;")
-              .withImported("OtherModuleStruct()")
-              .loadsWithSuccess();
+          var code = "myValue = (String otherModuleStruct) -> 7;";
+          var imported = "OtherModuleStruct()";
+          module(code).withImported(imported).loadsWithSuccess();
         }
       }
 
@@ -907,32 +941,32 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void named_value_succeeds() {
-          module(
-                  """
+          var code =
+              """
               myValue = "abc";
               otherValue = (String myValue) -> 7;
-              """)
-              .loadsWithSuccess();
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void named_function_succeeds() {
-          module(
-                  """
+          var code =
+              """
               myFunc() = "abc";
               myValue = (String myFunc) -> 7;
-              """)
-              .loadsWithSuccess();
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          module(
-                  """
-             MyStruct()
-             myValue = (String myStruct) -> 7;
-             """)
-              .loadsWithSuccess();
+          var code =
+              """
+              MyStruct()
+              myValue = (String myStruct) -> 7;
+              """;
+          module(code).loadsWithSuccess();
         }
       }
     }
@@ -949,8 +983,10 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void struct_succeeds() {
-          module("OtherModuleStruct()")
-              .withImported("OtherModuleStruct(Int int)")
+          var code = "OtherModuleStruct()";
+          var imported = "OtherModuleStruct(Int int)";
+          module(code)
+              .withImported(imported)
               .loadsWithSuccess()
               .containsType(structTS("OtherModuleStruct", nlist()));
         }
@@ -960,12 +996,12 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void struct_fails() {
-          module(
-                  """
-               OtherModuleStruct()
-               OtherModuleStruct()
-               """)
-              .loadsWith(err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")));
+          var code =
+              """
+              OtherModuleStruct()
+              OtherModuleStruct()
+              """;
+          module(code).loadsWith(err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")));
         }
       }
     }
@@ -974,37 +1010,37 @@ public class VisibilityTest extends TestContext {
     class _field_shadowing {
       @Test
       public void other_field_fails() {
-        module(
-                """
-             MyStruct(
-               String field,
-               String field
-             )
-             """)
-            .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "field"));
+        var code =
+            """
+            MyStruct(
+              String field,
+              String field
+            )
+            """;
+        module(code).loadsWithError(3, alreadyDefinedIn(filePath(), 2, "field"));
       }
 
       @Nested
       class _imported {
         @Test
         public void value_succeeds() {
-          module("MyStruct(Int otherModuleValue)")
-              .withImported("otherModuleValue = 7;")
-              .loadsWithSuccess();
+          var code = "MyStruct(Int otherModuleValue)";
+          var imported = "otherModuleValue = 7;";
+          module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void func_succeeds() {
-          module("MyStruct(String otherModuleFunc)")
-              .withImported("otherModuleFunc() = 7;")
-              .loadsWithSuccess();
+          var code = "MyStruct(String otherModuleFunc)";
+          var imported = "otherModuleFunc() = 7;";
+          module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void ctor_succeeds() {
-          module("MyStruct(String otherModuleStruct)")
-              .withImported("OtherModuleStruct()")
-              .loadsWithSuccess();
+        public void constructor_succeeds() {
+          var code = "MyStruct(String otherModuleStruct)";
+          var imported = "OtherModuleStruct()";
+          module(code).withImported(imported).loadsWithSuccess();
         }
       }
 
@@ -1012,38 +1048,38 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void value_succeeds() {
-          module(
-                  """
+          var code =
+              """
               myValue = "abc";
               MyStruct(
                 String myValue,
               )
-              """)
-              .loadsWithSuccess();
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void func_succeeds() {
-          module(
-                  """
+          var code =
+              """
               myFunc() = "abc";
               MyStruct(
                 String myFunc,
               )
-              """)
-              .loadsWithSuccess();
+              """;
+          module(code).loadsWithSuccess();
         }
 
         @Test
-        public void ctor_succeeds() {
-          module(
-                  """
-             MyStruct()
-             MyOtherStruct(
-                String myStruct,
-             )
-             """)
-              .loadsWithSuccess();
+        public void constructor_succeeds() {
+          var code =
+              """
+              MyStruct()
+              MyOtherStruct(
+                 String myStruct,
+              )
+              """;
+          module(code).loadsWithSuccess();
         }
       }
     }
