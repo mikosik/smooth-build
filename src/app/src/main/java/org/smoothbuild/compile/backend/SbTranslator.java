@@ -67,14 +67,14 @@ import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
-import org.smoothbuild.vm.bytecode.load.FileLoader;
+import org.smoothbuild.vm.bytecode.load.FilePersister;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class SbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
   private final TypeSbTranslator typeF;
-  private final FileLoader fileLoader;
+  private final FilePersister filePersister;
   private final BytecodeLoader bytecodeLoader;
   private final ImmutableBindings<NamedEvaluableS> evaluables;
   private final NList<ItemS> environment;
@@ -85,13 +85,13 @@ public class SbTranslator {
   @Inject
   public SbTranslator(
       BytecodeF bytecodeF,
-      FileLoader fileLoader,
+      FilePersister filePersister,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables) {
     this(
         new ChainingBytecodeFactory(bytecodeF),
         new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF), map()),
-        fileLoader,
+        filePersister,
         bytecodeLoader,
         evaluables,
         nlist(),
@@ -103,7 +103,7 @@ public class SbTranslator {
   private SbTranslator(
       ChainingBytecodeFactory bytecodeF,
       TypeSbTranslator typeF,
-      FileLoader fileLoader,
+      FilePersister filePersister,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables,
       NList<ItemS> environment,
@@ -112,7 +112,7 @@ public class SbTranslator {
       HashMap<Hash, Location> locationMapping) {
     this.bytecodeF = bytecodeF;
     this.typeF = typeF;
-    this.fileLoader = fileLoader;
+    this.filePersister = filePersister;
     this.bytecodeLoader = bytecodeLoader;
     this.evaluables = evaluables;
     this.environment = environment;
@@ -170,7 +170,7 @@ public class SbTranslator {
     var sbTranslator = new SbTranslator(
         bytecodeF,
         newTypeSbTranslator,
-        fileLoader,
+        filePersister,
         bytecodeLoader,
         evaluables,
         environment,
@@ -227,7 +227,7 @@ public class SbTranslator {
     return new SbTranslator(
         bytecodeF,
         typeF,
-        fileLoader,
+        filePersister,
         bytecodeLoader,
         evaluables,
         newEnvironment,
@@ -382,7 +382,7 @@ public class SbTranslator {
   private BlobB persistNativeJar(Location location) throws SbTranslatorException {
     var filePath = filePathOf(location).withExtension("jar");
     try {
-      return fileLoader.load(filePath);
+      return filePersister.persist(filePath);
     } catch (IOException | BytecodeException e) {
       var message = location + ": Error persisting native jar %s.".formatted(filePath.q());
       throw new SbTranslatorException(message);

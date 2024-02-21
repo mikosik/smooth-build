@@ -16,20 +16,21 @@ import org.smoothbuild.out.log.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
-import org.smoothbuild.vm.bytecode.load.FileLoader;
+import org.smoothbuild.vm.bytecode.load.FilePersister;
 
 public class BackendCompile
     implements Function<
         Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>>,
         Try<Tuple2<List<ExprB>, BsMapping>>> {
   private final BytecodeF bytecodeF;
-  private final FileLoader fileLoader;
+  private final FilePersister filePersister;
   private final BytecodeLoader bytecodeLoader;
 
   @Inject
-  public BackendCompile(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+  public BackendCompile(
+      BytecodeF bytecodeF, FilePersister filePersister, BytecodeLoader bytecodeLoader) {
     this.bytecodeF = bytecodeF;
-    this.fileLoader = fileLoader;
+    this.filePersister = filePersister;
     this.bytecodeLoader = bytecodeLoader;
   }
 
@@ -38,7 +39,7 @@ public class BackendCompile
       Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>> argument) {
     List<ExprS> exprs = argument.element1();
     var evaluables = argument.element2();
-    var sbTranslator = new SbTranslator(bytecodeF, fileLoader, bytecodeLoader, evaluables);
+    var sbTranslator = new SbTranslator(bytecodeF, filePersister, bytecodeLoader, evaluables);
     try {
       var exprBs = exprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();

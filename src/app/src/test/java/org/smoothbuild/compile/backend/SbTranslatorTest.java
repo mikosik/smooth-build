@@ -29,7 +29,7 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
-import org.smoothbuild.vm.bytecode.load.FileLoader;
+import org.smoothbuild.vm.bytecode.load.FilePersister;
 
 public class SbTranslatorTest extends TestContext {
   @Nested
@@ -91,8 +91,8 @@ public class SbTranslatorTest extends TestContext {
               annotatedValueS(nativeAnnotation, stringTS(), "myValue", location(filePath, 2));
 
           var jar = blobB(37);
-          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-          var translator = sbTranslator(fileLoader, bindings(nativeValueS));
+          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), jar);
+          var translator = sbTranslator(filePersister, bindings(nativeValueS));
 
           assertCall(() -> translator.translateExpr(instantiateS(nativeValueS)))
               .throwsException(new SbTranslatorException("Illegal value annotation: `@Native`."));
@@ -106,10 +106,13 @@ public class SbTranslatorTest extends TestContext {
           var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
           var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(filePath, 2));
 
-          var fileLoader =
-              createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var filePersister = createFilePersisterMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
-              fileLoader, bindings(bytecodeValueS), instantiateS(bytecodeValueS), stringB("abc"));
+              filePersister,
+              bindings(bytecodeValueS),
+              instantiateS(bytecodeValueS),
+              stringB("abc"));
         }
 
         @Test
@@ -122,10 +125,10 @@ public class SbTranslatorTest extends TestContext {
           var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
           var bytecodeValueS = annotatedValueS(2, ann, funcTS, "myFunc");
 
-          var fileLoader =
-              createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var filePersister = createFilePersisterMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = instantiateS(list(intTS()), bytecodeValueS);
-          assertTranslation(fileLoader, bindings(bytecodeValueS), instantiateS, idFuncB());
+          assertTranslation(filePersister, bindings(bytecodeValueS), instantiateS, idFuncB());
         }
       }
 
@@ -172,9 +175,9 @@ public class SbTranslatorTest extends TestContext {
           var funcTB = funcTB(blobTB(), intTB());
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
-          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), blobB(37));
           assertTranslation(
-              fileLoader, bindings(nativeFuncS), instantiateS(nativeFuncS), nativeFuncB);
+              filePersister, bindings(nativeFuncS), instantiateS(nativeFuncS), nativeFuncB);
         }
 
         @Test
@@ -188,9 +191,9 @@ public class SbTranslatorTest extends TestContext {
           var funcTB = funcTB(intTB(), intTB());
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
-          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), blobB(37));
           var instantiateS = instantiateS(list(intTS()), nativeFuncS);
-          assertTranslation(fileLoader, bindings(nativeFuncS), instantiateS, nativeFuncB);
+          assertTranslation(filePersister, bindings(nativeFuncS), instantiateS, nativeFuncB);
         }
 
         @Test
@@ -202,10 +205,13 @@ public class SbTranslatorTest extends TestContext {
           var bytecodeFuncS =
               annotatedFuncS(annotationS, stringTS(), "myFunc", nlist(), location(filePath, 2));
 
-          var fileLoader =
-              createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var filePersister = createFilePersisterMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
-              fileLoader, bindings(bytecodeFuncS), instantiateS(bytecodeFuncS), returnAbcFuncB());
+              filePersister,
+              bindings(bytecodeFuncS),
+              instantiateS(bytecodeFuncS),
+              returnAbcFuncB());
         }
 
         @Test
@@ -219,10 +225,10 @@ public class SbTranslatorTest extends TestContext {
           var bytecodeFuncS =
               annotatedFuncS(1, ann, funcTS.result(), "myFunc", nlist(itemS(a, "p")));
 
-          var fileLoader =
-              createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var filePersister = createFilePersisterMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = instantiateS(list(intTS()), bytecodeFuncS);
-          assertTranslation(fileLoader, bindings(bytecodeFuncS), instantiateS, idFuncB());
+          assertTranslation(filePersister, bindings(bytecodeFuncS), instantiateS, idFuncB());
         }
       }
     }
@@ -371,9 +377,9 @@ public class SbTranslatorTest extends TestContext {
           var ann = bytecodeS(stringS(classBinaryName), location(filePath, 7));
           var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(filePath, 8));
 
-          var fileLoader =
-              createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var sbTranslator = sbTranslator(fileLoader, bindings(bytecodeValueS));
+          var filePersister = createFilePersisterMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var sbTranslator = sbTranslator(filePersister, bindings(bytecodeValueS));
           var exprB = sbTranslator.translateExpr(instantiateS(3, bytecodeValueS));
           assertNalMapping(sbTranslator, exprB, "myValue", location(8));
         }
@@ -404,8 +410,8 @@ public class SbTranslatorTest extends TestContext {
           var nativeFuncS =
               annotatedFuncS(2, annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
-          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var sbTranslator = sbTranslator(fileLoader, bindings(nativeFuncS));
+          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), blobB(37));
+          var sbTranslator = sbTranslator(filePersister, bindings(nativeFuncS));
           assertNalMapping(sbTranslator, instantiateS(3, nativeFuncS), "myFunc", location(2));
         }
 
@@ -418,9 +424,9 @@ public class SbTranslatorTest extends TestContext {
           var bytecodeFuncS =
               annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(filePath, 2));
 
-          var fileLoader =
-              createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var sbTranslator = sbTranslator(fileLoader, bindings(bytecodeFuncS));
+          var filePersister = createFilePersisterMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var sbTranslator = sbTranslator(filePersister, bindings(bytecodeFuncS));
           assertNalMapping(sbTranslator, instantiateS(bytecodeFuncS), "myFunc", location(2));
         }
       }
@@ -523,10 +529,11 @@ public class SbTranslatorTest extends TestContext {
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
       var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", location(filePath, 2));
-      var fileLoader =
-          createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+      var filePersister =
+          createFilePersisterMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertTranslationIsCached(fileLoader, bindings(bytecodeValueS), instantiateS(bytecodeValueS));
+      assertTranslationIsCached(
+          filePersister, bindings(bytecodeValueS), instantiateS(bytecodeValueS));
     }
 
     @Test
@@ -548,10 +555,11 @@ public class SbTranslatorTest extends TestContext {
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
       var bytecodeFuncS = annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(filePath, 2));
-      var fileLoader =
-          createFileLoaderMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+      var filePersister =
+          createFilePersisterMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertTranslationIsCached(fileLoader, bindings(bytecodeFuncS), instantiateS(bytecodeFuncS));
+      assertTranslationIsCached(
+          filePersister, bindings(bytecodeFuncS), instantiateS(bytecodeFuncS));
     }
 
     @Test
@@ -577,9 +585,9 @@ public class SbTranslatorTest extends TestContext {
     }
 
     private void assertTranslationIsCached(
-        FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
+        FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
         throws SbTranslatorException {
-      var sbTranslator = newTranslator(fileLoader, evaluables);
+      var sbTranslator = newTranslator(filePersister, evaluables);
       assertTranslationIsCached(exprS, sbTranslator);
     }
 
@@ -605,12 +613,12 @@ public class SbTranslatorTest extends TestContext {
   }
 
   private void assertTranslation(
-      FileLoader fileLoader,
+      FilePersister filePersister,
       ImmutableBindings<NamedEvaluableS> evaluables,
       ExprS exprS,
       ExprB expected)
       throws SbTranslatorException {
-    var sbTranslator = newTranslator(fileLoader, evaluables);
+    var sbTranslator = newTranslator(filePersister, evaluables);
     assertTranslation(sbTranslator, exprS, expected);
   }
 
@@ -685,23 +693,23 @@ public class SbTranslatorTest extends TestContext {
   private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables)
       throws Exception {
     try {
-      var fileLoader = mock(FileLoader.class);
-      when(fileLoader.load(any())).thenReturn(blobB(1));
-      return sbTranslator(fileLoader, evaluables);
+      var filePersister = mock(FilePersister.class);
+      when(filePersister.persist(any())).thenReturn(blobB(1));
+      return sbTranslator(filePersister, evaluables);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
   private SbTranslator newTranslator(
-      FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables) {
-    return sbTranslator(fileLoader, evaluables);
+      FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(filePersister, evaluables);
   }
 
-  private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {
+  private FilePersister createFilePersisterMock(FilePath filePath, BlobB value) {
     try {
-      FileLoader mock = mock(FileLoader.class);
-      when(mock.load(filePath)).thenReturn(value);
+      FilePersister mock = mock(FilePersister.class);
+      when(mock.persist(filePath)).thenReturn(value);
       return mock;
     } catch (IOException | BytecodeException e) {
       throw new RuntimeException(e);
