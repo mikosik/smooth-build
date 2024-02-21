@@ -30,12 +30,8 @@ public class HashingSink extends ForwardingSink {
     hashMemoizer.apply();
   }
 
-  private okio.HashingSink wrappedSink() {
-    return (okio.HashingSink) delegate();
-  }
-
   private Hash calculateHash() throws IOException {
-    var hashingSink = wrappedSink();
+    var hashingSink = (okio.HashingSink) delegate();
     hashingSink.close();
     var localHash = new Hash(hashingSink.hash());
     var path = dbPathTo(localHash);
