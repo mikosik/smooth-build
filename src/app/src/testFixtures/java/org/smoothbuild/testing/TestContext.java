@@ -141,7 +141,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
 import org.smoothbuild.vm.bytecode.load.BytecodeMethodLoader;
-import org.smoothbuild.vm.bytecode.load.FileLoader;
+import org.smoothbuild.vm.bytecode.load.FilePersister;
 import org.smoothbuild.vm.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.vm.bytecode.load.MethodLoader;
 import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
@@ -287,28 +287,29 @@ public class TestContext {
     return new TaskExecutor(computer, reporter, taskReporter(reporter), threadCount);
   }
 
-  public BackendCompile sbTranslatorFacade(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new BackendCompile(bytecodeF(), fileLoader, bytecodeLoader);
+  public BackendCompile sbTranslatorFacade(
+      FilePersister filePersister, BytecodeLoader bytecodeLoader) {
+    return new BackendCompile(bytecodeF(), filePersister, bytecodeLoader);
   }
 
   public SbTranslator sbTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
-    return sbTranslator(fileLoader(), evaluables);
+    return sbTranslator(filePersister(), evaluables);
   }
 
   public SbTranslator sbTranslator(
-      FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables) {
-    return sbTranslator(fileLoader, bytecodeLoader(), evaluables);
+      FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(filePersister, bytecodeLoader(), evaluables);
   }
 
   private SbTranslator sbTranslator(
-      FileLoader fileLoader,
+      FilePersister filePersister,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables) {
-    return new SbTranslator(bytecodeF(), fileLoader, bytecodeLoader, evaluables);
+    return new SbTranslator(bytecodeF(), filePersister, bytecodeLoader, evaluables);
   }
 
-  private FileLoader fileLoader() {
-    return mock(FileLoader.class);
+  private FilePersister filePersister() {
+    return mock(FilePersister.class);
   }
 
   private BytecodeLoader bytecodeLoader() {

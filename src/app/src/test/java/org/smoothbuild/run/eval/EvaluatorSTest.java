@@ -36,14 +36,14 @@ import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
-import org.smoothbuild.vm.bytecode.load.FileLoader;
+import org.smoothbuild.vm.bytecode.load.FilePersister;
 import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.EvaluatorB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class EvaluatorSTest extends TestContext {
-  private final FileLoader fileLoader = mock(FileLoader.class);
+  private final FilePersister filePersister = mock(FilePersister.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);
 
@@ -115,7 +115,7 @@ public class EvaluatorSTest extends TestContext {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
+          when(filePersister.persist(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
                   EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
@@ -131,7 +131,7 @@ public class EvaluatorSTest extends TestContext {
               nlist(itemS(intTS(), "p")));
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
+          when(filePersister.persist(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
                   EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
@@ -214,7 +214,7 @@ public class EvaluatorSTest extends TestContext {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jar);
+          when(filePersister.persist(filePath(PROJECT, path("build.jar")))).thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
           when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(funcB));
@@ -283,7 +283,7 @@ public class EvaluatorSTest extends TestContext {
 
   private Maybe<List<ValueB>> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
-    var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
+    var sbTranslatorFacade = sbTranslatorFacade(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
     var reporter = reporter();
 

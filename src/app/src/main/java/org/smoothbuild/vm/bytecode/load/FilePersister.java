@@ -13,24 +13,25 @@ import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 
 /**
+ * Stores disk file as BlobB in expression-db.
  * This class is thread-safe.
  */
 @Singleton
-public class FileLoader {
+public class FilePersister {
   private final FileResolver fileResolver;
   private final ExprDb exprDb;
-  private final ConcurrentHashMap<FilePath, CachingLoader> fileCache;
+  private final ConcurrentHashMap<FilePath, CachingLoader> fileBlobCache;
 
   @Inject
-  public FileLoader(FileResolver fileResolver, ExprDb exprDb) {
+  public FilePersister(FileResolver fileResolver, ExprDb exprDb) {
     this.fileResolver = fileResolver;
     this.exprDb = exprDb;
-    this.fileCache = new ConcurrentHashMap<>();
+    this.fileBlobCache = new ConcurrentHashMap<>();
   }
 
-  public BlobB load(FilePath filePath) throws IOException, BytecodeException {
-    var cachingLoader = fileCache.computeIfAbsent(filePath, CachingLoader::new);
-    return cachingLoader.load();
+  public BlobB persist(FilePath filePath) throws IOException, BytecodeException {
+    var cachingLoader = fileBlobCache.computeIfAbsent(filePath, CachingLoader::new);
+    return cachingLoader.persist();
   }
 
   private class CachingLoader {
@@ -41,14 +42,14 @@ public class FileLoader {
       this.filePath = filePath;
     }
 
-    public synchronized BlobB load() throws IOException, BytecodeException {
+    public synchronized BlobB persist() throws IOException, BytecodeException {
       if (blob == null) {
-        blob = loadImpl();
+        blob = persistImpl();
       }
       return blob;
     }
 
-    private BlobB loadImpl() throws BytecodeException, IOException {
+    private BlobB persistImpl() throws BytecodeException, IOException {
       try (BlobBBuilder blobBuilder = exprDb.blobBuilder()) {
         try (BufferedSource source = fileResolver.source(filePath)) {
           source.readAll(blobBuilder);

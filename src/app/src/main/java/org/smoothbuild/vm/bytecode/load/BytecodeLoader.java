@@ -15,6 +15,10 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
+/**
+ * Loads smooth bytecode by executing java method that returns ExprB.
+ * This class is thread-safe.
+ */
 public class BytecodeLoader {
   private final BytecodeMethodLoader methodLoader;
   private final BytecodeF bytecodeF;
