@@ -15,18 +15,16 @@ import org.smoothbuild.compile.frontend.lang.type.StructTS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-public class TypeSbTranslator {
-  private final BytecodeF bytecodeF;
+class TypeSbTranslator {
+  private final ChainingBytecodeFactory bytecodeF;
   private final Map<VarS, TypeB> varMap;
 
-  public TypeSbTranslator(BytecodeF bytecodeF, Map<VarS, TypeB> varMap) {
+  public TypeSbTranslator(ChainingBytecodeFactory bytecodeF, Map<VarS, TypeB> varMap) {
     this.bytecodeF = bytecodeF;
     this.varMap = varMap;
   }
@@ -35,7 +33,7 @@ public class TypeSbTranslator {
     return varMap;
   }
 
-  public TypeB translate(TypeS type) throws BytecodeException {
+  public TypeB translate(TypeS type) throws SbTranslatorException {
     return switch (type) {
       case ArrayTS arrayTS -> translate(arrayTS);
       case BlobTS blobTS -> bytecodeF.blobT();
@@ -59,19 +57,19 @@ public class TypeSbTranslator {
     }
   }
 
-  public TupleTB translate(StructTS struct) throws BytecodeException {
+  public TupleTB translate(StructTS struct) throws SbTranslatorException {
     return bytecodeF.tupleT(listOfAll(struct.fields()).map(isig -> translate(isig.type())));
   }
 
-  public FuncTB translate(FuncTS func) throws BytecodeException {
+  public FuncTB translate(FuncTS func) throws SbTranslatorException {
     return bytecodeF.funcT(translate(func.params()), translate(func.result()));
   }
 
-  public TupleTB translate(TupleTS tuple) throws BytecodeException {
+  public TupleTB translate(TupleTS tuple) throws SbTranslatorException {
     return bytecodeF.tupleT(listOfAll(tuple.elements()).map(this::translate));
   }
 
-  public ArrayTB translate(ArrayTS array) throws BytecodeException {
+  public ArrayTB translate(ArrayTS array) throws SbTranslatorException {
     return bytecodeF.arrayT(translate(array.elem()));
   }
 }

@@ -85,7 +85,7 @@ public class NativeTest extends AcceptanceTestCase {
             result = myFunc();
             """);
         evaluate("result");
-        assertThat(logs()).contains(userFatal(1, "Error loading native jar '{prj}/build.jar'."));
+        assertThat(logs()).contains(userFatal(1, "Error persisting native jar '{prj}/build.jar'."));
       }
 
       @Test

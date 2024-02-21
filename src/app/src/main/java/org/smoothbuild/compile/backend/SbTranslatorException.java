@@ -1,6 +1,12 @@
 package org.smoothbuild.compile.backend;
 
-public class SbTranslatorException extends RuntimeException {
+import org.smoothbuild.vm.bytecode.BytecodeException;
+
+public class SbTranslatorException extends Exception {
+  public SbTranslatorException(BytecodeException bytecodeException) {
+    this(bytecodeException.getMessage());
+  }
+
   public SbTranslatorException(String message) {
     super(message);
   }
