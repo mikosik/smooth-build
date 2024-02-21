@@ -134,8 +134,8 @@ public class BytecodeF {
     return exprDb.pick(pickable, index);
   }
 
-  public VarB var(TypeB evaluationT, BigInteger value) throws BytecodeException {
-    return exprDb.varB(evaluationT, exprDb.int_(value));
+  public VarB var(TypeB evaluationT, BigInteger index) throws BytecodeException {
+    return exprDb.varB(evaluationT, exprDb.int_(index));
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
