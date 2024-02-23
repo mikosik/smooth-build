@@ -5,8 +5,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.function.Function0.memoizer;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingCategoryDbException;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainCategoryDbException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
@@ -234,7 +234,7 @@ public class CategoryDb {
   }
 
   private List<Hash> readCategoryRootChain(Hash hash) throws DecodeCatException {
-    var hashes = invokeTranslatingHashedDbException(
+    var hashes = invokeAndChainHashedDbException(
         () -> hashedDb.readHashChain(hash), e -> new DecodeCatException(hash, e));
     int chainSize = hashes.size();
     if (chainSize != 1 && chainSize != 2) {
@@ -244,7 +244,7 @@ public class CategoryDb {
   }
 
   private CategoryKindB decodeCatMarker(Hash hash, Hash markerHash) throws DecodeCatException {
-    byte marker = invokeTranslatingHashedDbException(
+    byte marker = invokeAndChainHashedDbException(
         () -> hashedDb.readByte(markerHash), e -> new DecodeCatException(hash, e));
     CategoryKindB kind = fromMarker(marker);
     if (kind == null) {
@@ -344,7 +344,7 @@ public class CategoryDb {
       throws CategoryDbException {
     assertCatRootChainSize(rootHash, kind, rootChain, 2);
     var dataHash = rootChain.get(DATA_IDX);
-    var typeComponent = invokeTranslatingCategoryDbException(
+    var typeComponent = invokeAndChainCategoryDbException(
         () -> read(dataHash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
     if (typeComponent instanceof FuncTB funcTB) {
       typeVerifier.accept(funcTB);
@@ -368,7 +368,7 @@ public class CategoryDb {
       throws DecodeCatException {
     assertCatRootChainSize(rootHash, kind, rootChain, 2);
     var hash = rootChain.get(DATA_IDX);
-    var categoryB = invokeTranslatingCategoryDbException(
+    var categoryB = invokeAndChainCategoryDbException(
         () -> get(hash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
     if (typeClass.isAssignableFrom(categoryB.getClass())) {
       @SuppressWarnings("unchecked")
@@ -382,7 +382,7 @@ public class CategoryDb {
 
   private List<TypeB> readDataChainAsTypes(Hash rootHash, CategoryKindB kind, List<Hash> rootChain)
       throws DecodeCatNodeException {
-    var elemHashes = invokeTranslatingHashedDbException(
+    var elemHashes = invokeAndChainHashedDbException(
         () -> hashedDb.readHashChain(rootChain.get(DATA_IDX)),
         e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
     var builder = new ArrayList<TypeB>();
@@ -394,7 +394,7 @@ public class CategoryDb {
 
   private TypeB readDataChainElementAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index)
       throws DecodeCatNodeException {
-    var categoryB = invokeTranslatingCategoryDbException(
+    var categoryB = invokeAndChainCategoryDbException(
         () -> get(hash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, index, e));
     if (categoryB instanceof TypeB typeB) {
       return typeB;
@@ -508,18 +508,18 @@ public class CategoryDb {
   // hashedDb calls with exception translation
 
   private Hash writeByte(byte value) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeByte(value), CategoryDbException::new);
   }
 
   private Hash writeChain(Hash... hashes) throws CategoryDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeHashChain(hashes), CategoryDbException::new);
   }
 
   private Hash writeChain(List<? extends TypeB> types) throws CategoryDbException {
     var hashes = types.map(TypeB::hash);
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeHashChain(hashes), CategoryDbException::new);
   }
 }

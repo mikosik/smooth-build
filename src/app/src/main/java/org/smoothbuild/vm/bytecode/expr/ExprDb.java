@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
@@ -426,32 +426,32 @@ public class ExprDb {
   }
 
   private HashingSink sink() throws ExprDbException {
-    return invokeTranslatingHashedDbException(hashedDb::sink, ExprDbException::new);
+    return invokeAndChainHashedDbException(hashedDb::sink, ExprDbException::new);
   }
 
   private Hash writeBoolean(boolean value) throws ExprDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeBoolean(value), ExprDbException::new);
   }
 
   private Hash writeBigInteger(BigInteger value) throws ExprDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeBigInteger(value), ExprDbException::new);
   }
 
   private Hash writeString(String string) throws ExprDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeString(string), ExprDbException::new);
   }
 
   private Hash writeChain(Hash... hashes) throws ExprDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeHashChain(hashes), ExprDbException::new);
   }
 
   private Hash writeChain(List<? extends ExprB> exprs) throws ExprDbException {
     var hashes = exprs.map(ExprB::hash);
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> hashedDb.writeHashChain(hashes), ExprDbException::new);
   }
 

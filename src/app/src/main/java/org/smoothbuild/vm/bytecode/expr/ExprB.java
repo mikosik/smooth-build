@@ -1,8 +1,8 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingBytecodeException;
-import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeTranslatingHashedDbException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainBytecodeException;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -63,7 +63,7 @@ public abstract class ExprB {
   public abstract String exprToString() throws BytecodeException;
 
   protected <T> T readData(Function0<T, HashedDbException> reader) throws BytecodeException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         reader, e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
@@ -77,7 +77,7 @@ public abstract class ExprB {
   }
 
   protected long readDataSeqSize() throws BytecodeException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChainSize(dataHash()),
         e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
@@ -113,7 +113,7 @@ public abstract class ExprB {
   }
 
   private List<Hash> readDataSeqHashes() throws ExprDbException {
-    return invokeTranslatingHashedDbException(
+    return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChain(dataHash()),
         e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
@@ -130,7 +130,7 @@ public abstract class ExprB {
   }
 
   private ExprB readNode(String nodePath, Hash nodeHash) throws BytecodeException {
-    return invokeTranslatingBytecodeException(
+    return invokeAndChainBytecodeException(
         () -> exprDb.get(nodeHash),
         e -> new DecodeExprNodeException(hash(), category(), nodePath, e));
   }
