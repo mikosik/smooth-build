@@ -123,7 +123,8 @@ public class AcceptanceTestCase extends TestContext {
     var artifactsArray = artifactsArray();
     int size = artifactsArray.size();
     if (size <= index) {
-      fail("Expected at least " + index + " artifacts but evaluation returned only " + size + ".");
+      fail("Expected at least " + (index + 1) + " artifacts but evaluation returned only " + size
+          + ".");
     }
     return artifactsArray.get(index).element2();
   }
