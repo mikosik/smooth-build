@@ -7,34 +7,34 @@ import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.exc.CategoryDbException;
 
 public class Helpers {
-  public static <R, T extends Throwable> R invokeTranslatingBytecodeException(
-      Function0<R, BytecodeException> function0, Function<BytecodeException, T> exceptionTranslator)
+  public static <R, T extends Throwable> R invokeAndChainBytecodeException(
+      Function0<R, BytecodeException> function0, Function<BytecodeException, T> exceptionWrapper)
       throws T {
     try {
       return function0.apply();
     } catch (BytecodeException e) {
-      throw exceptionTranslator.apply(e);
+      throw exceptionWrapper.apply(e);
     }
   }
 
-  public static <R, T extends Throwable> R invokeTranslatingCategoryDbException(
+  public static <R, T extends Throwable> R invokeAndChainCategoryDbException(
       Function0<R, CategoryDbException> function0,
-      Function<CategoryDbException, T> exceptionTranslator)
+      Function<CategoryDbException, T> exceptionWrapper)
       throws T {
     try {
       return function0.apply();
     } catch (CategoryDbException e) {
-      throw exceptionTranslator.apply(e);
+      throw exceptionWrapper.apply(e);
     }
   }
 
-  public static <R, T extends Throwable> R invokeTranslatingHashedDbException(
-      Function0<R, HashedDbException> function0, Function<HashedDbException, T> exceptionTranslator)
+  public static <R, T extends Throwable> R invokeAndChainHashedDbException(
+      Function0<R, HashedDbException> function0, Function<HashedDbException, T> exceptionWrapper)
       throws T {
     try {
       return function0.apply();
     } catch (HashedDbException e) {
-      throw exceptionTranslator.apply(e);
+      throw exceptionWrapper.apply(e);
     }
   }
 }

@@ -701,8 +701,8 @@ public class SbTranslatorTest extends TestContext {
     return sbTranslator(filePersister, evaluables);
   }
 
-  private FilePersister createFilePersisterMock(FilePath filePath, BlobB value) throws
-      BytecodeException {
+  private FilePersister createFilePersisterMock(FilePath filePath, BlobB value)
+      throws BytecodeException {
     FilePersister mock = mock(FilePersister.class);
     when(mock.persist(filePath)).thenReturn(value);
     return mock;

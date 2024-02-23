@@ -135,6 +135,6 @@ class ChainingBytecodeFactory {
 
   private static <R> R invokeTranslatingBytecodeException(Function0<R, BytecodeException> function0)
       throws SbTranslatorException {
-    return Helpers.invokeTranslatingBytecodeException(function0, SbTranslatorException::new);
+    return Helpers.invokeAndChainBytecodeException(function0, SbTranslatorException::new);
   }
 }
