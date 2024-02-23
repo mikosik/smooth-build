@@ -17,8 +17,7 @@ public class ProjectSpaceLayout {
   public static final PathS COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");
   public static final PathS HASHED_DB_PATH = SMOOTH_DIR.appendPart("hashed");
   public static final PathS SMOOTH_LOCK_PATH = SMOOTH_DIR.appendPart("lock");
-  public static final String DEFAULT_MODULE_FILE_NAME = "build.smooth";
-  public static final PathS DEFAULT_MODULE_PATH = path(DEFAULT_MODULE_FILE_NAME);
+  public static final PathS DEFAULT_MODULE_PATH = path("build.smooth");
   public static final FilePath DEFAULT_MODULE_FILE_PATH = filePath(PROJECT, DEFAULT_MODULE_PATH);
 
   private static final List<PathS> dirsToInitialize =
