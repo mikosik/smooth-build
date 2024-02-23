@@ -7,6 +7,10 @@ public class SbTranslatorException extends Exception {
     this(bytecodeException.getMessage());
   }
 
+  public SbTranslatorException(String message, Throwable e) {
+    super(message, e);
+  }
+
   public SbTranslatorException(String message) {
     super(message);
   }

@@ -9,6 +9,7 @@ import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;
+import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 
@@ -29,9 +30,13 @@ public class FilePersister {
     this.fileBlobCache = new ConcurrentHashMap<>();
   }
 
-  public BlobB persist(FilePath filePath) throws IOException, BytecodeException {
+  public BlobB persist(FilePath filePath) throws BytecodeException {
     var cachingLoader = fileBlobCache.computeIfAbsent(filePath, CachingLoader::new);
-    return cachingLoader.persist();
+    try {
+      return cachingLoader.persist();
+    } catch (IOException e) {
+      throw new IoBytecodeException(e);
+    }
   }
 
   private class CachingLoader {

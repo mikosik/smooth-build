@@ -13,7 +13,6 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
 import jakarta.inject.Inject;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -383,9 +382,9 @@ public class SbTranslator {
     var filePath = filePathOf(location).withExtension("jar");
     try {
       return filePersister.persist(filePath);
-    } catch (IOException | BytecodeException e) {
+    } catch (BytecodeException e) {
       var message = location + ": Error persisting native jar %s.".formatted(filePath.q());
-      throw new SbTranslatorException(message);
+      throw new SbTranslatorException(message, e);
     }
   }
 
