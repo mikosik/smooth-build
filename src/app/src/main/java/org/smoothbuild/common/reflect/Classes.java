@@ -54,11 +54,11 @@ public class Classes {
     }
   }
 
-  public static InputStream bytecodeAsInputStream(Class<?> clazz) {
+  public static InputStream bytecodeAsInputStream(Class<?> clazz) throws IOException {
     var binaryPath = binaryPath(clazz);
     var inputStream = clazz.getClassLoader().getResourceAsStream(binaryPath);
     if (inputStream == null) {
-      throw new RuntimeException("Couldn't find class '" + clazz + "' at '" + binaryPath + "'.");
+      throw new IOException("Couldn't find class '" + clazz + "' at '" + binaryPath + "'.");
     }
     return inputStream;
   }
