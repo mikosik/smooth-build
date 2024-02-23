@@ -12,7 +12,6 @@ import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -692,13 +691,9 @@ public class SbTranslatorTest extends TestContext {
 
   private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables)
       throws Exception {
-    try {
-      var filePersister = mock(FilePersister.class);
-      when(filePersister.persist(any())).thenReturn(blobB(1));
-      return sbTranslator(filePersister, evaluables);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    var filePersister = mock(FilePersister.class);
+    when(filePersister.persist(any())).thenReturn(blobB(1));
+    return sbTranslator(filePersister, evaluables);
   }
 
   private SbTranslator newTranslator(
@@ -706,13 +701,10 @@ public class SbTranslatorTest extends TestContext {
     return sbTranslator(filePersister, evaluables);
   }
 
-  private FilePersister createFilePersisterMock(FilePath filePath, BlobB value) {
-    try {
-      FilePersister mock = mock(FilePersister.class);
-      when(mock.persist(filePath)).thenReturn(value);
-      return mock;
-    } catch (IOException | BytecodeException e) {
-      throw new RuntimeException(e);
-    }
+  private FilePersister createFilePersisterMock(FilePath filePath, BlobB value) throws
+      BytecodeException {
+    FilePersister mock = mock(FilePersister.class);
+    when(mock.persist(filePath)).thenReturn(value);
+    return mock;
   }
 }
