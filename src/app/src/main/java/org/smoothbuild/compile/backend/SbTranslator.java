@@ -76,7 +76,7 @@ public class SbTranslator {
   private final FilePersister filePersister;
   private final BytecodeLoader bytecodeLoader;
   private final ImmutableBindings<NamedEvaluableS> evaluables;
-  private final NList<ItemS> environment;
+  private final NList<ItemS> lexicalEnvironment;
   private final HashMap<CacheKey, ExprB> cache;
   private final HashMap<Hash, String> nameMapping;
   private final HashMap<Hash, Location> locationMapping;
@@ -105,7 +105,7 @@ public class SbTranslator {
       FilePersister filePersister,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables,
-      NList<ItemS> environment,
+      NList<ItemS> lexicalEnvironment,
       HashMap<CacheKey, ExprB> cache,
       HashMap<Hash, String> nameMapping,
       HashMap<Hash, Location> locationMapping) {
@@ -114,7 +114,7 @@ public class SbTranslator {
     this.filePersister = filePersister;
     this.bytecodeLoader = bytecodeLoader;
     this.evaluables = evaluables;
-    this.environment = environment;
+    this.lexicalEnvironment = lexicalEnvironment;
     this.cache = cache;
     this.nameMapping = nameMapping;
     this.locationMapping = locationMapping;
@@ -172,7 +172,7 @@ public class SbTranslator {
         filePersister,
         bytecodeLoader,
         evaluables,
-        environment,
+        lexicalEnvironment,
         cache,
         nameMapping,
         locationMapping);
@@ -192,7 +192,7 @@ public class SbTranslator {
   }
 
   private ExprB translateReference(ReferenceS referenceS) throws SbTranslatorException {
-    var itemS = environment.get(referenceS.name());
+    var itemS = lexicalEnvironment.get(referenceS.name());
     if (itemS == null) {
       Maybe<NamedEvaluableS> namedEvaluableS = evaluables.getMaybe(referenceS.name());
       if (namedEvaluableS.isSome()) {
@@ -206,7 +206,7 @@ public class SbTranslator {
       }
     } else {
       var evaluationT = typeF.translate(itemS.type());
-      var index = BigInteger.valueOf(environment.indexOf(referenceS.name()));
+      var index = BigInteger.valueOf(lexicalEnvironment.indexOf(referenceS.name()));
       return saveNalAndReturn(referenceS, bytecodeF.var(evaluationT, index));
     }
   }
@@ -222,7 +222,7 @@ public class SbTranslator {
   }
 
   private SbTranslator funcBodySbTranslator(FuncS funcS) {
-    var newEnvironment = nlistWithShadowing(funcS.params().list().appendAll(environment));
+    var newEnvironment = nlistWithShadowing(funcS.params().list().appendAll(lexicalEnvironment));
     return new SbTranslator(
         bytecodeF,
         typeF,
