@@ -4,8 +4,8 @@ plugins {
 }
 
 def installation = tasks.register('installation', Copy) {
-    dependsOn project(':src:distr').tasks.zip
-    from project(':src:distr').tasks.zip.outputs.files.collect( { zipTree(it) })
+    dependsOn project(':src:distribution').tasks.zip
+    from project(':src:distribution').tasks.zip.outputs.files.collect( { zipTree(it) })
     into file("${buildDir}/installation")
 }
 tasks.test.dependsOn(installation)

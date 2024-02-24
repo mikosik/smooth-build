@@ -3,7 +3,7 @@ rootProject.name = 'smooth-build'
 include 'src:antlr-smooth'
 include 'src:antlr-task-matcher'
 include 'src:app'
-include 'src:distr'
+include 'src:distribution'
 include 'src:standard-library'
 include 'src:system-test'
 
