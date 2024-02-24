@@ -23,7 +23,7 @@ subprojects {
 }
 
 subprojects { subproject ->
-    if (subproject.name in ['app', 'std-lib', "sys-test"]) {
+    if (subproject.name in ['app', 'standard-library', "sys-test"]) {
         apply plugin: 'java'
         java {
             toolchain {
