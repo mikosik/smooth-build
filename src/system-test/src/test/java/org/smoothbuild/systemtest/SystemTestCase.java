@@ -48,7 +48,7 @@ import org.smoothbuild.common.CommandExecutor.CommandResult;
 import org.smoothbuild.common.function.Function1;
 
 public abstract class SystemTestCase {
-  public static final Path SYS_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
+  public static final Path SYSTEM_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
   public static final Path SMOOTH_BINARY = findSmoothBinary();
 
   private static Path findSmoothBinary() {
@@ -105,7 +105,7 @@ public abstract class SystemTestCase {
       Path destinationDir = absolutePath(dirInsideProject);
       createDirectories(destinationDir);
       return Files.copy(
-          SYS_TEST_PROJECT_ROOT.resolve("build/junit4files").resolve(jar),
+          SYSTEM_TEST_PROJECT_ROOT.resolve("build/junit4files").resolve(jar),
           destinationDir.resolve(jar));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
