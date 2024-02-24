@@ -5,7 +5,7 @@ include 'src:antlr-task-matcher'
 include 'src:app'
 include 'src:distr'
 include 'src:standard-library'
-include 'src:sys-test'
+include 'src:system-test'
 
 dependencyResolutionManagement {
   repositories {
