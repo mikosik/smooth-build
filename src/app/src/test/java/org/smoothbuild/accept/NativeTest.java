@@ -122,7 +122,7 @@ public class NativeTest extends AcceptanceTestCase {
         assertLogsContainFailure();
         String timestamp1 = fetchTimestamp(logs().get(0).message());
 
-        resetMemory();
+        restartSmoothWithSameFileSystems();
         evaluate("result");
         assertLogsContainFailure();
         String timestamp2 = fetchTimestamp(logs().get(0).message());
