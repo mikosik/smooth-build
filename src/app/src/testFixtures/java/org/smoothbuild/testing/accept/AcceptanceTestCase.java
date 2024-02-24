@@ -9,10 +9,7 @@ import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MOD_PATH;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_PATH;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
@@ -22,7 +19,6 @@ import static org.smoothbuild.run.step.Step.stepFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.google.inject.Module;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +31,7 @@ import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
 import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
+import org.smoothbuild.filesystem.space.Space;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.EvaluateStepFactory;
@@ -44,29 +41,21 @@ import org.smoothbuild.vm.bytecode.BytecodeModule;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 public class AcceptanceTestCase extends TestContext {
-  private FileSystem stdLibFileSystem;
-  private FileSystem prjFileSystem;
-  private MemoryReporter memoryReporter;
   private Injector injector;
   private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
-    this.memoryReporter = new MemoryReporter();
-    this.injector = createInjector(memoryReporter, new MemoryFileSystemModule());
-
-    this.prjFileSystem = injector.getInstance(Key.get(FileSystem.class, forSpace(PROJECT)));
-    this.stdLibFileSystem =
-        injector.getInstance(Key.get(FileSystem.class, forSpace(STANDARD_LIBRARY)));
-    createEmptyStdLibModules(stdLibFileSystem);
+    this.injector = createInjector(new MemoryFileSystemModule());
+    createEmptyStdLibModules(stdLibFileSystem());
   }
 
   public void createApiNativeJar(Class<?>... classes) throws IOException {
-    createJar(stdLibFileSystem.sink(STD_LIB_MOD_PATH.changeExtension("jar")), classes);
+    createJar(stdLibFileSystem().sink(STD_LIB_MOD_PATH.changeExtension("jar")), classes);
   }
 
   public void createUserNativeJar(Class<?>... classes) throws IOException {
-    createJar(prjFileSystem.sink(DEFAULT_MODULE_PATH.changeExtension("jar")), classes);
+    createJar(prjFileSystem().sink(DEFAULT_MODULE_PATH.changeExtension("jar")), classes);
   }
 
   private void createJar(BufferedSink fileSink, Class<?>... classes) throws IOException {
@@ -86,26 +75,10 @@ public class AcceptanceTestCase extends TestContext {
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
 
-  protected void resetState() {
-    resetDiskData();
-    resetMemory();
-  }
-
-  protected void resetMemory() {
-    memoryReporter = new MemoryReporter();
-    var fixedFileSystemModule = new FixedFileSystemModule(prjFileSystem, stdLibFileSystem);
-    injector = createInjector(memoryReporter, fixedFileSystemModule);
+  protected void restartSmoothWithSameFileSystems() {
+    var fixedFileSystemModule = new FixedFileSystemModule(prjFileSystem(), stdLibFileSystem());
+    injector = createInjector(fixedFileSystemModule);
     artifacts = null;
-  }
-
-  protected void resetDiskData() {
-    try {
-      prjFileSystem.delete(ARTIFACTS_PATH);
-      prjFileSystem.delete(COMPUTATION_CACHE_PATH);
-      prjFileSystem.delete(HASHED_DB_PATH);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   protected ValueB artifact() {
@@ -133,8 +106,9 @@ public class AcceptanceTestCase extends TestContext {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }
-    if (memoryReporter.containsFailure()) {
-      fail("Expected artifact but problems have been reported:\n" + memoryReporter.logs());
+    if (memoryReporter().containsFailure()) {
+      fail("Expected artifact but problems have been reported:\n"
+          + memoryReporter().logs());
     }
     if (artifacts.isNone()) {
       fail("Expected artifact but evaluate() returned null.");
@@ -143,15 +117,27 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected List<Log> logs() {
-    return memoryReporter.logs();
+    return memoryReporter().logs();
   }
 
   protected void assertLogsContainFailure() {
-    assertThat(containsAnyFailure(memoryReporter.logs())).isTrue();
+    assertThat(containsAnyFailure(memoryReporter().logs())).isTrue();
   }
 
   private FileSystem prjFileSystem() {
-    return prjFileSystem;
+    return fileSystem(PROJECT);
+  }
+
+  private FileSystem stdLibFileSystem() {
+    return fileSystem(STANDARD_LIBRARY);
+  }
+
+  private FileSystem fileSystem(Space space) {
+    return injector.getInstance(Key.get(FileSystem.class, forSpace(space)));
+  }
+
+  private MemoryReporter memoryReporter() {
+    return injector.getInstance(MemoryReporter.class);
   }
 
   private void createEmptyStdLibModules(FileSystem stdLibFileSystem) throws IOException {
@@ -164,13 +150,13 @@ public class AcceptanceTestCase extends TestContext {
     }
   }
 
-  public static Injector createInjector(MemoryReporter memoryReporter, Module module) {
+  public static Injector createInjector(com.google.inject.Module fileSystemModule) {
     return Guice.createInjector(
         PRODUCTION,
-        new TestModule(memoryReporter),
+        new TestModule(),
         new ProjectSpaceModule(),
         new StandardLibrarySpaceModule(),
-        module,
+        fileSystemModule,
         new BytecodeModule());
   }
 }

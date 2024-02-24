@@ -23,7 +23,7 @@ public class CachingTest extends AcceptanceTestCase {
           Random.class.getCanonicalName()));
       evaluate("result");
       var resultFromFirstRun = artifact();
-      resetMemory();
+      restartSmoothWithSameFileSystems();
       evaluate("result");
       var resultFromSecondRun = artifact();
 
@@ -57,7 +57,7 @@ public class CachingTest extends AcceptanceTestCase {
           Random.class.getCanonicalName()));
       evaluate("result");
       var resultFromFirstRun = artifact();
-      resetMemory();
+      restartSmoothWithSameFileSystems();
       evaluate("result");
       var resultFromSecondRun = artifact();
 

@@ -11,15 +11,9 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.SandboxHash;
 
 public class TestModule extends AbstractModule {
-  private final MemoryReporter memoryReporter;
-
-  public TestModule(MemoryReporter memoryReporter) {
-    this.memoryReporter = memoryReporter;
-  }
-
   @Override
   protected void configure() {
-    bind(MemoryReporter.class).toInstance(memoryReporter);
+    bind(MemoryReporter.class).toInstance(new MemoryReporter());
     bind(Reporter.class).to(MemoryReporter.class);
     bind(TaskMatcher.class).toInstance(ALL);
   }
