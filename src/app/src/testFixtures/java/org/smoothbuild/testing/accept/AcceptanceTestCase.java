@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MOD_PATH;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
@@ -51,7 +51,8 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   public void createApiNativeJar(Class<?>... classes) throws IOException {
-    createJar(stdLibFileSystem().sink(STD_LIB_MOD_PATH.changeExtension("jar")), classes);
+    createJar(
+        stdLibFileSystem().sink(STANDARD_LIBRARY_MODULE_PATH.changeExtension("jar")), classes);
   }
 
   public void createUserNativeJar(Class<?>... classes) throws IOException {
@@ -141,10 +142,10 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   private void createEmptyStdLibModules(FileSystem stdLibFileSystem) throws IOException {
-    // STD_LIB_MODS has hardcoded list of standard library modules which are loaded
+    // STANDARD_LIBRARY_MODULES has hardcoded list of standard library modules which are loaded
     // upon startup. Until modules are detected automatically we have to provide here
     // at least empty files.
-    for (var filePath : STD_LIB_MODS) {
+    for (var filePath : STANDARD_LIBRARY_MODULES) {
       PathS path = filePath.path();
       writeFile(stdLibFileSystem, path, "");
     }
