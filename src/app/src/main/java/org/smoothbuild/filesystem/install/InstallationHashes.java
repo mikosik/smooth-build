@@ -7,7 +7,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class InstallationHashes {
   }
 
   public HashNode installationNode() throws IOException {
-    return new HashNode("installation", list(smoothJarNode(), standardLibsNode()));
+    return new HashNode("installation", list(smoothJarNode(), standardLibrariesNode()));
   }
 
   public HashNode sandboxNode() throws IOException {
@@ -58,9 +58,9 @@ public class InstallationHashes {
     return Hash.of(properties.getProperty(name));
   }
 
-  private HashNode standardLibsNode() throws IOException {
+  private HashNode standardLibrariesNode() throws IOException {
     var builder = new ArrayList<HashNode>();
-    for (var filePath : STD_LIB_MODS) {
+    for (var filePath : STANDARD_LIBRARY_MODULES) {
       builder.add(moduleNode(filePath));
     }
     return new HashNode("standard libraries", listOfAll(builder));

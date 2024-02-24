@@ -2,7 +2,7 @@ package org.smoothbuild.filesystem.space;
 
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.filesystem.install.InstallationLayout.BIN_DIR_NAME;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_DIR_NAME;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_DIR_NAME;
 import static org.smoothbuild.filesystem.space.Space.BINARY;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
@@ -18,13 +18,13 @@ public class DiskFileSystemModule extends AbstractModule {
   public DiskFileSystemModule(Path installationDir, Path projectDir) {
     this.spaceToPath = map(
         PROJECT, projectDir,
-        STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
+        STANDARD_LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
         BINARY, installationDir.resolve(BIN_DIR_NAME));
   }
 
   public DiskFileSystemModule(Path installationDir) {
     this.spaceToPath = map(
-        STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
+        STANDARD_LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
         BINARY, installationDir.resolve(BIN_DIR_NAME));
   }
 

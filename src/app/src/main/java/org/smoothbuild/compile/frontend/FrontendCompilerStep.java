@@ -2,7 +2,7 @@ package org.smoothbuild.compile.frontend;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
@@ -31,7 +31,7 @@ import org.smoothbuild.run.step.StepFactory;
 
 public class FrontendCompilerStep {
   private static final List<FilePath> MODULES =
-      listOfAll(STD_LIB_MODS).append(DEFAULT_MODULE_FILE_PATH);
+      listOfAll(STANDARD_LIBRARY_MODULES).append(DEFAULT_MODULE_FILE_PATH);
 
   public static Step<Tuple0, ScopeS> frontendCompilerStep() {
     var step = step(LoadInternalModuleMembers.class);
