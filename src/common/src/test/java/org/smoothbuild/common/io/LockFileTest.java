@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.io.Writer.nullWriter;
 import static java.nio.file.Files.createFile;
 import static org.smoothbuild.common.io.LockFile.lockFile;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,7 +41,7 @@ public class LockFileTest {
     public void when_it_is_already_acquired_by_our_jvm(@TempDir Path tempDir) {
       Path lockFile = tempDir.resolve("lockFile");
       assertThat(lockFile(writer, lockFile)).isNotNull();
-      assertCall(() -> lockFile(writer, lockFile)).isNull();
+      assertThat(lockFile(writer, lockFile)).isNull();
     }
   }
 }

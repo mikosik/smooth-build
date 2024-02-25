@@ -8,9 +8,8 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.io.InputStream;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
 
-public class ClassLoadersTest extends TestContext {
+public class ClassLoadersTest {
   @Test
   public void load_class() throws Exception {
     Class<MyClass> clazz = MyClass.class;

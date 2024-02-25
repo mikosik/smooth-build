@@ -10,23 +10,20 @@ import java.util.Map;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 import okio.Buffer;
+import okio.BufferedSource;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 
-public class UnzipTest extends TestContext {
+public class UnzipTest {
   @Test
   public void files_are_unzipped() throws Exception {
     var files = Map.of("file1", "content1", "file2", "content2");
-    var jarBlob = blobB(jarFiles(files).readByteString());
-    assertThat(unzipIntoMap(jarBlob)).isEqualTo(files);
+    Buffer buffer = jarFiles(files);
+    assertThat(unzipIntoMap(buffer)).isEqualTo(files);
   }
 
-  private static Map<String, String> unzipIntoMap(BlobB jarBlob) throws Exception {
+  private static Map<String, String> unzipIntoMap(BufferedSource source) throws Exception {
     Map<String, String> result = new HashMap<>();
-    try (var source = jarBlob.source()) {
-      unzip(source, s -> true, (s, is) -> result.put(s, new String(is.readAllBytes(), UTF_8)));
-    }
+    unzip(source, s -> true, (s1, is) -> result.put(s1, new String(is.readAllBytes(), UTF_8)));
     return result;
   }
 

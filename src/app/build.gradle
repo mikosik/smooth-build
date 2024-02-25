@@ -8,6 +8,7 @@ application {
 }
 
 dependencies {
+    implementation project(':src:common')
     implementation project(':src:antlr-smooth')
     implementation project(':src:antlr-task-matcher')
 
@@ -15,8 +16,8 @@ dependencies {
     implementation libs.guice
     implementation libs.okio
     implementation libs.picocli
-    implementation libs.zip4j
 
+    testFixturesApi project(':src:common')
     testFixturesApi libs.guava
     testFixturesApi libs.guice
     testFixturesApi libs.junit.jupiter.api
