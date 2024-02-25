@@ -1,11 +1,10 @@
-package org.smoothbuild.common.filesystem.base;
+package org.smoothbuild.filesystem.space;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.filesystem.space.Space;
+import org.smoothbuild.common.filesystem.base.PathS;
 
 public class FilePathTest {
   @Test

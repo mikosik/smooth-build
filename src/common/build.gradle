@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation libs.guava
+    implementation libs.okio
+    implementation libs.zip4j
+
+    testImplementation project(':src:common-testing')
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    testImplementation libs.mockito
+    testImplementation libs.truth
+    testImplementation libs.guava.testlib
+}
+
+test {
+    useJUnitPlatform()
+}

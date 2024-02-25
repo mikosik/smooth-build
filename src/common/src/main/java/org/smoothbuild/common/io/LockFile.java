@@ -3,7 +3,6 @@ package org.smoothbuild.common.io;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
-import static org.smoothbuild.out.report.SystemOutReporter.printErrorToWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,5 +50,9 @@ public class LockFile {
       printErrorToWriter(out, "IOException: " + e.getMessage());
       return null;
     }
+  }
+
+  private static void printErrorToWriter(PrintWriter printWriter, String message) {
+    printWriter.println("smooth: error: " + message);
   }
 }

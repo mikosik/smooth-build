@@ -3,9 +3,10 @@ rootProject.name = 'smooth-build'
 include 'src:common-testing'
 include 'src:antlr-smooth'
 include 'src:antlr-task-matcher'
+include 'src:common'
 include 'src:app'
-include 'src:distribution'
 include 'src:standard-library'
+include 'src:distribution'
 include 'src:system-test'
 
 dependencyResolutionManagement {
