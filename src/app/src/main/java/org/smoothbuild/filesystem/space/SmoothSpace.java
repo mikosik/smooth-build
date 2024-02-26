@@ -1,6 +1,8 @@
 package org.smoothbuild.filesystem.space;
 
-public enum Space {
+import org.smoothbuild.common.filesystem.space.Space;
+
+public enum SmoothSpace implements Space {
   PROJECT("prj"),
   STANDARD_LIBRARY("ssl"),
   BINARY("bin"),
@@ -8,10 +10,11 @@ public enum Space {
 
   private final String prefix;
 
-  Space(String prefix) {
+  SmoothSpace(String prefix) {
     this.prefix = prefix;
   }
 
+  @Override
   public String prefix() {
     return prefix;
   }

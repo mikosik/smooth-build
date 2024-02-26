@@ -29,9 +29,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.filesystem.space.Space;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.filesystem.space.Space;
+import org.smoothbuild.filesystem.space.SmoothSpace;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.evaluate.task.Task;
@@ -47,7 +48,7 @@ public class MatcherCreatorTest extends TestContext {
     var tasks =
         list(combineTask(), constTask(), invokeTask(), orderTask(), pickTask(), selectTask());
     for (Task task : tasks) {
-      for (Space space : Space.values()) {
+      for (Space space : SmoothSpace.values()) {
         for (Level level : levels()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = matcher.matches(task, logs);

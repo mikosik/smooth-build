@@ -1,11 +1,11 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.common.filesystem.space;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Map;
 import okio.BufferedSource;
-import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathState;
 
@@ -21,9 +21,9 @@ public class FileResolver {
     this.fileSystems = fileSystems;
   }
 
-  public String contentOf(FilePath filePath) throws IOException {
+  public String contentOf(FilePath filePath, Charset charset) throws IOException {
     try (BufferedSource source = source(filePath)) {
-      return source.readString(SmoothConstants.CHARSET);
+      return source.readString(charset);
     }
   }
 

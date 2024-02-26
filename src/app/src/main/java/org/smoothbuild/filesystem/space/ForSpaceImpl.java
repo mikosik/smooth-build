@@ -4,14 +4,14 @@ import java.lang.annotation.Annotation;
 import java.util.Objects;
 
 public class ForSpaceImpl implements ForSpace {
-  private final Space space;
+  private final SmoothSpace space;
 
-  public ForSpaceImpl(Space space) {
+  public ForSpaceImpl(SmoothSpace space) {
     this.space = space;
   }
 
   @Override
-  public Space value() {
+  public SmoothSpace value() {
     return space;
   }
 

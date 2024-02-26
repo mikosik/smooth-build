@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.common.filesystem.space;
 
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;

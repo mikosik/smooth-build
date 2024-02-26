@@ -2,13 +2,13 @@ package org.smoothbuild.filesystem.install;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.filesystem.space.FilePath.filePath;
-import static org.smoothbuild.filesystem.space.Space.BINARY;
-import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
+import static org.smoothbuild.filesystem.space.SmoothSpace.BINARY;
+import static org.smoothbuild.filesystem.space.SmoothSpace.STANDARD_LIBRARY;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FilePath;
 
 public class InstallationLayout {
   public static final PathS STANDARD_LIBRARY_MODULE_PATH = path("std_lib.smooth");

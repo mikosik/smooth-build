@@ -11,7 +11,7 @@ import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
