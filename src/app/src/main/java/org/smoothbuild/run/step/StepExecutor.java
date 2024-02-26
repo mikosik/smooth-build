@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.Try;
-import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
 import org.smoothbuild.run.step.Step.FunctionKeyStep;
@@ -28,7 +27,7 @@ public class StepExecutor {
     this.fullName = header;
   }
 
-  public <T, R> Maybe<R> execute(Step<T, R> step, T argument, Reporter reporter) {
+  public <T, R> Maybe<R> execute(Step<T, R> step, T argument, StepReporter reporter) {
     return switch (step) {
       case ComposedStep<T, ?, R> c -> composedStep(c, argument, reporter);
       case FunctionStep<T, R> l -> function(l.function(), argument, reporter);
@@ -40,19 +39,19 @@ public class StepExecutor {
   }
 
   private <T, S, R> Maybe<R> composedStep(
-      ComposedStep<T, S, R> composedStep, T argument, Reporter reporter) {
+      ComposedStep<T, S, R> composedStep, T argument, StepReporter reporter) {
     return execute(composedStep.first(), argument, reporter)
         .flatMap(r -> execute(composedStep.second(), r, reporter));
   }
 
-  private <R, T> Maybe<R> namedStep(NamedStep<T, R> namedStep, T argument, Reporter reporter) {
+  private <R, T> Maybe<R> namedStep(NamedStep<T, R> namedStep, T argument, StepReporter reporter) {
     var name = fullName + NAMES_SEPARATOR + namedStep.name();
     reporter.startNewPhase(name);
     return new StepExecutor(injector, name).execute(namedStep.step(), argument, reporter);
   }
 
   private <T, R> Maybe<R> functionKey(
-      Key<? extends Function<T, Try<R>>> key, T argument, Reporter reporter) {
+      Key<? extends Function<T, Try<R>>> key, T argument, StepReporter reporter) {
     var function = injector.getInstance(key);
     return function(function, argument, reporter);
   }
@@ -61,13 +60,15 @@ public class StepExecutor {
     return injector.getInstance(key).apply(argument);
   }
 
-  private <T, R> Maybe<R> function(Function<T, Try<R>> function, T argument, Reporter reporter) {
+  private <T, R> Maybe<R> function(
+      Function<T, Try<R>> function, T argument, StepReporter reporter) {
     var result = function.apply(argument);
     result.logs().forEach(reporter::report);
     return result.toMaybe();
   }
 
-  private <R, T> Maybe<R> factory(StepFactory<T, R> stepFactory, T argument, Reporter reporter) {
+  private <R, T> Maybe<R> factory(
+      StepFactory<T, R> stepFactory, T argument, StepReporter reporter) {
     return execute(stepFactory.create(argument), null, reporter);
   }
 }
