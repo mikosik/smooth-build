@@ -1,4 +1,4 @@
-package org.smoothbuild.run.step;
+package org.smoothbuild.common.step;
 
 import org.smoothbuild.common.log.Log;
 

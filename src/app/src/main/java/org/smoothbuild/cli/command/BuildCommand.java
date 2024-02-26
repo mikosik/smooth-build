@@ -2,9 +2,9 @@ package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 import static org.smoothbuild.run.eval.report.MatcherCreator.createMatcher;
-import static org.smoothbuild.run.step.Step.stepFactory;
 
 import java.nio.file.Path;
 import org.smoothbuild.cli.base.ProjectCommand;

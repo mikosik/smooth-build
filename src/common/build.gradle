@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation libs.guava
+    implementation libs.guice
     implementation libs.okio
     implementation libs.zip4j
 

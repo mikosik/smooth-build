@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
@@ -28,7 +29,6 @@ import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
-import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.accept.MemoryReporter;
 
 public class TestingModuleLoader {

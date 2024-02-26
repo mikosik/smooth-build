@@ -1,4 +1,4 @@
-package org.smoothbuild.run.step;
+package org.smoothbuild.common.step;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -6,11 +6,8 @@ import jakarta.inject.Inject;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.Try;
-import org.smoothbuild.run.step.Step.ComposedStep;
-import org.smoothbuild.run.step.Step.FactoryStep;
-import org.smoothbuild.run.step.Step.FunctionKeyStep;
-import org.smoothbuild.run.step.Step.FunctionStep;
-import org.smoothbuild.run.step.Step.NamedStep;
+import org.smoothbuild.common.step.Step.ComposedStep;
+import org.smoothbuild.common.step.Step.NamedStep;
 
 public class StepExecutor {
   public static final String NAMES_SEPARATOR = "::";
@@ -29,12 +26,12 @@ public class StepExecutor {
 
   public <T, R> Maybe<R> execute(Step<T, R> step, T argument, StepReporter reporter) {
     return switch (step) {
-      case ComposedStep<T, ?, R> c -> composedStep(c, argument, reporter);
-      case FunctionStep<T, R> l -> function(l.function(), argument, reporter);
-      case FunctionKeyStep<T, R> f -> functionKey(f.key(), argument, reporter);
+      case Step.ComposedStep<T, ?, R> c -> composedStep(c, argument, reporter);
+      case Step.FunctionStep<T, R> l -> function(l.function(), argument, reporter);
+      case Step.FunctionKeyStep<T, R> f -> functionKey(f.key(), argument, reporter);
       case Step.MaybeFunctionKeyStep<T, R> f -> maybeFunctionKey(f.key(), argument);
-      case FactoryStep<T, R> i -> factory(i.stepFactory(), argument, reporter);
-      case NamedStep<T, R> namedStep -> namedStep(namedStep, argument, reporter);
+      case Step.FactoryStep<T, R> i -> factory(i.stepFactory(), argument, reporter);
+      case Step.NamedStep<T, R> namedStep -> namedStep(namedStep, argument, reporter);
     };
   }
 

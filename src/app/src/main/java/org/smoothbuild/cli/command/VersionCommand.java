@@ -1,9 +1,9 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
+import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.run.CreateInjector.createInjector;
-import static org.smoothbuild.run.step.Step.step;
 
 import java.util.concurrent.Callable;
 import org.smoothbuild.cli.base.LoggingCommand;
