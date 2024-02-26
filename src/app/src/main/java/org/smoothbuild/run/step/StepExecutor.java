@@ -63,10 +63,7 @@ public class StepExecutor {
 
   private <T, R> Maybe<R> function(Function<T, Try<R>> function, T argument, Reporter reporter) {
     var result = function.apply(argument);
-    var errors = result.logs();
-    if (!errors.isEmpty()) {
-      errors.forEach(reporter::report);
-    }
+    result.logs().forEach(reporter::report);
     return result.toMaybe();
   }
 
