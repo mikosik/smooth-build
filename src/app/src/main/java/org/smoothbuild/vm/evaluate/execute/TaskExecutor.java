@@ -2,7 +2,7 @@ package org.smoothbuild.vm.evaluate.execute;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.out.log.Log.fatal;
+import static org.smoothbuild.common.log.Log.fatal;
 
 import jakarta.inject.Inject;
 import java.util.function.Consumer;

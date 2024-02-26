@@ -1,18 +1,15 @@
-package org.smoothbuild.out.log;
+package org.smoothbuild.common.log;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Log.info;
-import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.out.log.TestingLog.ERROR_LOG;
-import static org.smoothbuild.out.log.TestingLog.INFO_LOG;
-import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
-import static org.smoothbuild.out.log.Try.failure;
-import static org.smoothbuild.out.log.Try.success;
+import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.common.log.Log.info;
+import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.Try.failure;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -24,16 +21,16 @@ public class TryTest {
   class _try_of {
     @Test
     void creation_with_value_and_non_problem() {
-      var tryOf = Try.of("abc", WARNING_LOG);
+      var tryOf = Try.of("abc", warning("warning message"));
       assertThat(tryOf.value()).isEqualTo("abc");
-      assertThat(tryOf.logs()).isEqualTo(list(WARNING_LOG));
+      assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
     }
 
     @Test
     void creation_with_value_and_problem() {
-      var tryOf = Try.of("abc", ERROR_LOG);
+      var tryOf = Try.of("abc", error("error message"));
       assertThat(tryOf.toMaybe()).isEqualTo(none());
-      assertThat(tryOf.logs()).isEqualTo(list(ERROR_LOG));
+      assertThat(tryOf.logs()).isEqualTo(list(error("error message")));
     }
   }
 
@@ -53,13 +50,14 @@ public class TryTest {
 
     @Test
     public void creation_with_non_problem_log_is_allowed() {
-      var success = success("abc", WARNING_LOG);
+      var success = success("abc", warning("warning message"));
       assertThat(success.value()).isEqualTo("abc");
     }
 
     @Test
     public void creation_with_problem_fails() {
-      assertCall(() -> success("abc", ERROR_LOG)).throwsException(IllegalArgumentException.class);
+      assertCall(() -> success("abc", error("error message")))
+          .throwsException(IllegalArgumentException.class);
     }
 
     @Test
@@ -72,19 +70,19 @@ public class TryTest {
   class _failure {
     @Test
     public void creation_with_no_failure_fails() {
-      var logs = list(INFO_LOG);
+      var logs = list(info("info message"));
       assertCall(() -> failure(logs)).throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void has_no_value() {
-      var failure = failure(ERROR_LOG);
+      var failure = failure(error("error message"));
       assertCall(failure::value).throwsException(IllegalStateException.class);
     }
 
     @Test
     public void toMaybe_returns_none() {
-      var failure = failure(ERROR_LOG);
+      var failure = failure(error("error message"));
       assertThat(failure.toMaybe()).isEqualTo(none());
     }
   }

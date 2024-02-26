@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Maybe.maybe;
 import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.out.log.Level;
+import org.smoothbuild.common.log.Level;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
 import org.smoothbuild.vm.evaluate.task.InvokeTask;

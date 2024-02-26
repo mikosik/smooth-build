@@ -1,11 +1,11 @@
-package org.smoothbuild.out.log;
+package org.smoothbuild.common.log;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Log.info;
-import static org.smoothbuild.out.log.Log.warning;
+import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.common.log.Log.info;
+import static org.smoothbuild.common.log.Log.warning;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.BeforeEach;

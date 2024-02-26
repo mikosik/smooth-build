@@ -14,8 +14,8 @@ import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.out.log.Level;
-import org.smoothbuild.out.log.Log;
+import org.smoothbuild.common.log.Level;
+import org.smoothbuild.common.log.Log;
 
 /**
  * This class is thread-safe.

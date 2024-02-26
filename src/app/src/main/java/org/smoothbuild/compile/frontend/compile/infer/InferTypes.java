@@ -9,6 +9,8 @@ import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
@@ -28,8 +30,6 @@ import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.compile.frontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
 import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 /**
  * Type inferring consists of

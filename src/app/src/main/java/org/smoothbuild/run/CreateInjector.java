@@ -1,18 +1,18 @@
 package org.smoothbuild.run;
 
 import static com.google.inject.Stage.PRODUCTION;
-import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.common.log.Level.INFO;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import org.smoothbuild.common.log.Level;
 import org.smoothbuild.filesystem.install.BinarySpaceModule;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
 import org.smoothbuild.filesystem.space.DiskFileSystemModule;
-import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
 import org.smoothbuild.run.eval.report.TaskMatcher;

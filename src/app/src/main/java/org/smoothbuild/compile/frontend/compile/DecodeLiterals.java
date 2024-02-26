@@ -5,13 +5,13 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import java.util.function.Function;
 import org.smoothbuild.common.DecodeHexException;
 import org.smoothbuild.common.UnescapeFailedException;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.IntP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StringP;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 public class DecodeLiterals implements Function<ModuleP, Try<ModuleP>> {
   @Override

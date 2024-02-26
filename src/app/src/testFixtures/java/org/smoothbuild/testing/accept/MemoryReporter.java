@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.accept;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Logger;
+import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.out.report.Reporter;
 
 public class MemoryReporter implements Reporter {

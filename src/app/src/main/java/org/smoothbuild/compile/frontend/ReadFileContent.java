@@ -1,16 +1,16 @@
 package org.smoothbuild.compile.frontend;
 
-import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Try.failure;
-import static org.smoothbuild.out.log.Try.success;
+import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.Try.failure;
+import static org.smoothbuild.common.log.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.function.Function;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
-import org.smoothbuild.out.log.Try;
 
 public class ReadFileContent implements Function<FilePath, Try<String>> {
   private final FileResolver fileResolver;

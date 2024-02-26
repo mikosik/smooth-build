@@ -4,6 +4,7 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
 import org.smoothbuild.compile.frontend.compile.ast.define.EvaluableP;
@@ -27,7 +28,6 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
-import org.smoothbuild.out.log.Logger;
 
 public class TypeInferrerResolve {
   private final Unifier unifier;

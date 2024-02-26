@@ -7,16 +7,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Level.FATAL;
-import static org.smoothbuild.out.log.Level.INFO;
-import static org.smoothbuild.out.log.Level.WARNING;
-import static org.smoothbuild.out.log.TestingLog.ERROR_LOG;
-import static org.smoothbuild.out.log.TestingLog.FATAL_LOG;
-import static org.smoothbuild.out.log.TestingLog.INFO_LOG;
-import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
+import static org.smoothbuild.common.log.Level.ERROR;
+import static org.smoothbuild.common.log.Level.FATAL;
+import static org.smoothbuild.common.log.Level.INFO;
+import static org.smoothbuild.common.log.Level.WARNING;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
+import static org.smoothbuild.testing.TestingLog.ERROR_LOG;
+import static org.smoothbuild.testing.TestingLog.FATAL_LOG;
+import static org.smoothbuild.testing.TestingLog.INFO_LOG;
+import static org.smoothbuild.testing.TestingLog.WARNING_LOG;
+import static org.smoothbuild.testing.TestingLog.logsWithAllLevels;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -26,9 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.out.log.Level;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.TestingLog;
+import org.smoothbuild.common.log.Level;
+import org.smoothbuild.common.log.Log;
 import org.smoothbuild.testing.TestContext;
 
 public class SystemOutReporterTest extends TestContext {
@@ -69,7 +69,7 @@ public class SystemOutReporterTest extends TestContext {
   public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
     var systemOut = mock(PrintWriter.class);
     var reporter = new SystemOutReporter(systemOut, level);
-    reporter.report(true, "header", TestingLog.logsWithAllLevels());
+    reporter.report(true, "header", logsWithAllLevels());
     verify(systemOut, times(1)).println(formatLogs("header", loggedLogs));
   }
 

@@ -3,7 +3,7 @@ package org.smoothbuild.out.report;
 import static org.smoothbuild.common.Strings.indent;
 
 import java.util.List;
-import org.smoothbuild.out.log.Log;
+import org.smoothbuild.common.log.Log;
 
 public class FormatLog {
   private static final String MESSAGE_PREFIX = "  ";

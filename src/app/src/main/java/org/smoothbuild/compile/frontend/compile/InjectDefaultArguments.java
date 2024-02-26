@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -31,9 +34,6 @@ import org.smoothbuild.compile.frontend.lang.define.ItemS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedFuncS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override

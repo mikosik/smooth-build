@@ -20,12 +20,12 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleContext>> {
   @Override

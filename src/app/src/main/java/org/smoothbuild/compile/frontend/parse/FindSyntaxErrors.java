@@ -10,6 +10,8 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
 import java.util.function.Function;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ImplicitTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
@@ -19,8 +21,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.NamedFuncP;
 import org.smoothbuild.compile.frontend.compile.ast.define.NamedValueP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ReferenceableP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 /**
  * Detect syntax errors that are not caught by Antlr.

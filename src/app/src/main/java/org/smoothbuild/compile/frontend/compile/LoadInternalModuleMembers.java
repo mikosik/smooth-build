@@ -4,13 +4,13 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.internalLocation;
 
 import java.util.function.Function;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.compile.frontend.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.frontend.lang.type.TypeFS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 public class LoadInternalModuleMembers implements Function<Tuple0, Try<ScopeS>> {
   @Override
