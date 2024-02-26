@@ -30,6 +30,7 @@ dependencies {
     testImplementation libs.junit.jupiter.params
     testImplementation libs.mockito
     testImplementation libs.truth
+    testImplementation project(':src:common-testing')
 }
 
 def fatJar = tasks.register('fatJar', Jar) {
