@@ -2,14 +2,14 @@ package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.run.step.Step.step;
+import static org.smoothbuild.common.step.Step.step;
 
 import com.google.inject.Injector;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.step.Step;
+import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.run.step.Step;
-import org.smoothbuild.run.step.StepExecutor;
 
 public class RunStepExecutor {
   public static <T> Integer runStepExecutor(Injector injector, Step<T, String> step, T argument) {

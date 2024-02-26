@@ -1,14 +1,14 @@
 package org.smoothbuild.run;
 
+import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.run.step.Step.step;
-import static org.smoothbuild.run.step.Step.stepFactory;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.step.Step;
+import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.run.eval.SaveArtifacts;
-import org.smoothbuild.run.step.Step;
-import org.smoothbuild.run.step.StepFactory;
 
 public class BuildStepFactory implements StepFactory<List<String>, String> {
   @Override

@@ -2,7 +2,7 @@ package org.smoothbuild.out.report;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.run.step.StepReporter;
+import org.smoothbuild.common.step.StepReporter;
 
 public interface Reporter extends StepReporter {
   @Override

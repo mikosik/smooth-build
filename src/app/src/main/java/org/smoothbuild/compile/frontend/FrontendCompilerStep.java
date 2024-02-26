@@ -2,14 +2,16 @@ package org.smoothbuild.compile.frontend;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.step.Step.constStep;
+import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.run.step.Step.constStep;
-import static org.smoothbuild.run.step.Step.step;
-import static org.smoothbuild.run.step.Step.stepFactory;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.step.Step;
+import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ConvertPs;
@@ -26,8 +28,6 @@ import org.smoothbuild.compile.frontend.parse.FindSyntaxErrors;
 import org.smoothbuild.compile.frontend.parse.Parse;
 import org.smoothbuild.compile.frontend.parse.TranslateAp;
 import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.run.step.Step;
-import org.smoothbuild.run.step.StepFactory;
 
 public class FrontendCompilerStep {
   private static final List<FilePath> MODULES =

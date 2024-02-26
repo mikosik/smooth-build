@@ -1,4 +1,4 @@
-package org.smoothbuild.run.step;
+package org.smoothbuild.common.step;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.log.Try.success;
@@ -7,14 +7,14 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import com.google.inject.Key;
 import java.util.function.Function;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.Step.ComposedStep;
+import org.smoothbuild.common.step.Step.FactoryStep;
+import org.smoothbuild.common.step.Step.FunctionKeyStep;
+import org.smoothbuild.common.step.Step.FunctionStep;
+import org.smoothbuild.common.step.Step.MaybeFunctionKeyStep;
+import org.smoothbuild.common.step.Step.NamedStep;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.run.step.Step.ComposedStep;
-import org.smoothbuild.run.step.Step.FactoryStep;
-import org.smoothbuild.run.step.Step.FunctionKeyStep;
-import org.smoothbuild.run.step.Step.FunctionStep;
-import org.smoothbuild.run.step.Step.MaybeFunctionKeyStep;
-import org.smoothbuild.run.step.Step.NamedStep;
 
 public sealed interface Step<T, R>
     permits ComposedStep,
