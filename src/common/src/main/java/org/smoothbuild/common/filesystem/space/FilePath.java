@@ -1,9 +1,6 @@
-package org.smoothbuild.filesystem.space;
-
-import static java.util.Arrays.asList;
+package org.smoothbuild.common.filesystem.space;
 
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 /**
  * This class is immutable.
@@ -25,9 +22,5 @@ public record FilePath(Space space, PathS path) {
   @Override
   public String toString() {
     return "{" + space().prefix() + "}/" + path;
-  }
-
-  public Hash hash() {
-    return Hash.of(asList(Hash.of(path.toString()), Hash.of(space().name())));
   }
 }

@@ -10,6 +10,7 @@ import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIB
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
@@ -27,7 +28,6 @@ import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.compile.frontend.parse.FindSyntaxErrors;
 import org.smoothbuild.compile.frontend.parse.Parse;
 import org.smoothbuild.compile.frontend.parse.TranslateAp;
-import org.smoothbuild.filesystem.space.FilePath;
 
 public class FrontendCompilerStep {
   private static final List<FilePath> MODULES =

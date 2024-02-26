@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.evaluate.compute;
 
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;
 import java.util.ArrayList;

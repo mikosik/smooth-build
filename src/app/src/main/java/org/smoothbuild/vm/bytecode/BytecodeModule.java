@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode;
 
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

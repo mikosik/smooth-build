@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.common.filesystem.space;
 
 import jakarta.inject.Inject;
 import java.nio.file.Path;

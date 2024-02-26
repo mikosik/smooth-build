@@ -4,7 +4,7 @@ import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;
 import java.io.IOException;

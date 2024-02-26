@@ -40,6 +40,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
@@ -68,7 +69,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
 import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
-import org.smoothbuild.filesystem.space.FilePath;
 
 public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Try<ModuleP>> {
   @Override

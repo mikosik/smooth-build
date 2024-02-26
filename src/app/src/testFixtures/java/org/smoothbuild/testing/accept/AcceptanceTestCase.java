@@ -12,8 +12,8 @@ import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendComp
 import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_PATH;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
-import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
+import static org.smoothbuild.filesystem.space.SmoothSpace.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 
 import com.google.inject.Guice;
@@ -26,14 +26,14 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
-import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
-import org.smoothbuild.filesystem.space.Space;
+import org.smoothbuild.filesystem.space.SmoothSpace;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.EvaluateStepFactory;
 import org.smoothbuild.testing.TestContext;
@@ -133,7 +133,7 @@ public class AcceptanceTestCase extends TestContext {
     return fileSystem(STANDARD_LIBRARY);
   }
 
-  private FileSystem fileSystem(Space space) {
+  private FileSystem fileSystem(SmoothSpace space) {
     return injector.getInstance(Key.get(FileSystem.class, forSpace(space)));
   }
 

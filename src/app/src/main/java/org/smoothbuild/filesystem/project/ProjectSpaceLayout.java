@@ -2,14 +2,14 @@ package org.smoothbuild.filesystem.project;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.filesystem.space.FilePath.filePath;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
 
 import java.io.IOException;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FilePath;
 
 public class ProjectSpaceLayout {
   public static final PathS SMOOTH_DIR = path(".smooth");

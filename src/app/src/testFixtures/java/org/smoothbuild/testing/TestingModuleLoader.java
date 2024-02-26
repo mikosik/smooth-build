@@ -5,12 +5,13 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Guice.createInjector;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
-import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
+import static org.smoothbuild.filesystem.space.SmoothSpace.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.testing.TestContext.writeFile;
 
@@ -18,6 +19,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.StepExecutor;
@@ -27,8 +30,7 @@ import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
-import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
+import org.smoothbuild.filesystem.space.SmoothSpace;
 import org.smoothbuild.testing.accept.MemoryReporter;
 
 public class TestingModuleLoader {
@@ -127,14 +129,16 @@ public class TestingModuleLoader {
   private void writeModuleFilesToFileSystems(Injector injector) {
     writeModuleFile(
         injector,
-        new FilePath(STANDARD_LIBRARY, path("std_lib.smooth")),
+        STANDARD_LIBRARY,
+        path("std_lib.smooth"),
         importedSourceCode == null ? "" : importedSourceCode);
-    writeModuleFile(injector, new FilePath(PROJECT, path("build.smooth")), sourceCode);
+    writeModuleFile(injector, PROJECT, path("build.smooth"), sourceCode);
   }
 
-  private static void writeModuleFile(Injector injector, FilePath filePath, String content) {
+  private static void writeModuleFile(
+      Injector injector, SmoothSpace space, PathS path, String content) {
     try {
-      var space = filePath.space();
+      var filePath = filePath(space, path);
       var fileSystem = injector.getInstance(Key.get(FileSystem.class, forSpace(space)));
       writeFile(fileSystem, filePath.path(), content);
     } catch (IOException e) {

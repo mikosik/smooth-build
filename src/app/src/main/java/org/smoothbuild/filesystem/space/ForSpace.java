@@ -10,5 +10,5 @@ import java.lang.annotation.Retention;
 @Documented
 @Retention(RUNTIME)
 public @interface ForSpace {
-  Space value();
+  SmoothSpace value();
 }

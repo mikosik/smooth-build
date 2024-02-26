@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.common.filesystem.space;
 
 import com.google.inject.AbstractModule;
 
