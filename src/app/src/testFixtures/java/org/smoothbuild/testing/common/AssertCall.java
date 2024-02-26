@@ -13,16 +13,15 @@ import com.google.common.truth.Subject.Factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import org.smoothbuild.common.function.Consumer0;
 
 public class AssertCall {
-  public static ThrownExceptionSubject assertCall(Consumer0 consumer0) {
-    return assertAbout(thrownExceptions()).that(runRunnable(consumer0));
+  public static ThrownExceptionSubject assertCall(ThrowingRunnable runnable) {
+    return assertAbout(thrownExceptions()).that(runRunnable(runnable));
   }
 
-  private static Throwable runRunnable(Consumer0 consumer0) {
+  private static Throwable runRunnable(ThrowingRunnable runnable) {
     try {
-      consumer0.accept();
+      runnable.run();
     } catch (Throwable actual) {
       return actual;
     }
