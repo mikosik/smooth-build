@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.frontend.compile;
 
-import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.common.log.Log.error;
 
+import org.smoothbuild.common.log.Log;
 import org.smoothbuild.compile.frontend.lang.base.location.Located;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-import org.smoothbuild.out.log.Log;
 
 public class CompileError {
   public static Log compileError(Located located, String message) {

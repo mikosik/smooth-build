@@ -1,7 +1,7 @@
 package org.smoothbuild.out.report;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.out.log.Log;
+import org.smoothbuild.common.log.Log;
 
 public interface Reporter {
   public void startNewPhase(String name);

@@ -12,6 +12,7 @@ import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
 import org.smoothbuild.compile.frontend.compile.ast.define.EvaluableP;
@@ -43,7 +44,6 @@ import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.compile.frontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
 import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
-import org.smoothbuild.out.log.Logger;
 
 public class ExprTypeUnifier {
   private final Unifier unifier;

@@ -7,6 +7,9 @@ import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptySc
 import com.google.common.annotations.VisibleForTesting;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.MutableBindings;
+import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.FuncP;
@@ -20,9 +23,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.ScopedP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 /**
  * For each syntactic construct that implements WithScope

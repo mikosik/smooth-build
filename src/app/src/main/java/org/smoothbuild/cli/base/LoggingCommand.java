@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.base;
 
-import org.smoothbuild.out.log.Level;
+import org.smoothbuild.common.log.Level;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 

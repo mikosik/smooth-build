@@ -4,7 +4,7 @@ import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
-import static org.smoothbuild.out.log.Log.fatal;
+import static org.smoothbuild.common.log.Log.fatal;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

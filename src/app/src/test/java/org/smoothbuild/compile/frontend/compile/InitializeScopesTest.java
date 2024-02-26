@@ -8,9 +8,9 @@ import static org.smoothbuild.compile.frontend.compile.InitializeScopes.initiali
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.compile.frontend.compile.ast.define.LambdaP;
 import org.smoothbuild.compile.frontend.compile.ast.define.NamedEvaluableP;
-import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.testing.TestContext;
 
 public class InitializeScopesTest extends TestContext {

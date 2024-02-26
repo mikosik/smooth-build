@@ -2,15 +2,16 @@ package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
-import static org.smoothbuild.out.log.Try.success;
 
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -62,7 +63,6 @@ import org.smoothbuild.compile.frontend.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
-import org.smoothbuild.out.log.Try;
 
 public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>> {
   @Override

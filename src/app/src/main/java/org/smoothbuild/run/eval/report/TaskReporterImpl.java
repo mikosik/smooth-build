@@ -4,15 +4,15 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
-import static org.smoothbuild.out.log.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.Log;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;

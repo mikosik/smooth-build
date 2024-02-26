@@ -1,12 +1,12 @@
 package org.smoothbuild.run.eval;
 
-import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Level.FATAL;
-import static org.smoothbuild.out.log.Level.INFO;
-import static org.smoothbuild.out.log.Level.WARNING;
+import static org.smoothbuild.common.log.Level.ERROR;
+import static org.smoothbuild.common.log.Level.FATAL;
+import static org.smoothbuild.common.log.Level.INFO;
+import static org.smoothbuild.common.log.Level.WARNING;
 
 import java.util.Set;
-import org.smoothbuild.out.log.Level;
+import org.smoothbuild.common.log.Level;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;

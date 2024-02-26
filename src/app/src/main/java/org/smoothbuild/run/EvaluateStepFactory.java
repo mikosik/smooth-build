@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.out.log.Try.success;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;

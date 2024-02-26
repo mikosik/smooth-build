@@ -2,20 +2,20 @@ package org.smoothbuild.out.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Log.info;
-import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.out.log.TestingLog.logsWithAllLevels;
+import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.common.log.Log.info;
+import static org.smoothbuild.common.log.Log.warning;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
+import static org.smoothbuild.testing.TestingLog.logsWithAllLevels;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.out.log.Log;
+import org.smoothbuild.common.log.Log;
 
 public class FormatLogTest {
   @Test

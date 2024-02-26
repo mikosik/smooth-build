@@ -1,18 +1,18 @@
 package org.smoothbuild.compile.backend;
 
+import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.common.log.Try.failure;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Try.failure;
-import static org.smoothbuild.out.log.Try.success;
 
 import jakarta.inject.Inject;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.out.log.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;

@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.common.log.Level.ERROR;
 import static org.smoothbuild.run.eval.MessageStruct.messageSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.messageText;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;

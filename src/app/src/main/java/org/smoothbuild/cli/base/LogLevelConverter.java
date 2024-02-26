@@ -1,12 +1,12 @@
 package org.smoothbuild.cli.base;
 
-import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Level.FATAL;
-import static org.smoothbuild.out.log.Level.INFO;
-import static org.smoothbuild.out.log.Level.WARNING;
+import static org.smoothbuild.common.log.Level.ERROR;
+import static org.smoothbuild.common.log.Level.FATAL;
+import static org.smoothbuild.common.log.Level.INFO;
+import static org.smoothbuild.common.log.Level.WARNING;
 
 import com.google.common.collect.ImmutableMap;
-import org.smoothbuild.out.log.Level;
+import org.smoothbuild.common.log.Level;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.TypeConversionException;
 

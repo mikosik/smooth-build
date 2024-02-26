@@ -1,11 +1,11 @@
-package org.smoothbuild.out.log;
+package org.smoothbuild.common.log;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.out.log.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.Log.containsAnyFailure;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -17,7 +17,7 @@ public class Try<V> {
   private final List<Log> logs;
 
   public static <T> Try<T> of(T value, Log... logs) {
-    return Try.of(value, list(logs));
+    return of(value, list(logs));
   }
 
   public static <T> Try<T> of(T value, Collection<Log> logs) {

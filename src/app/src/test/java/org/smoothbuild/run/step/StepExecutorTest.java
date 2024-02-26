@@ -10,13 +10,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.common.log.Log.info;
+import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.Try.failure;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Log.info;
-import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.out.log.Try.failure;
-import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;
@@ -34,10 +34,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.Level;
+import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
-import org.smoothbuild.out.log.Level;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Try;
 import org.smoothbuild.out.report.Reporter;
 
 class StepExecutorTest {
@@ -171,7 +171,7 @@ class StepExecutorTest {
   @Nested
   class _named {
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.out.log.Level#values")
+    @MethodSource("org.smoothbuild.common.log.Level#values")
     void unnamed_step_that_logged_something_uses_empty_string_for_header(Level level) {
       var log = new Log(level, "message");
       var step = step(t -> Try.of("value", log));
@@ -180,7 +180,7 @@ class StepExecutorTest {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.out.log.Level#values")
+    @MethodSource("org.smoothbuild.common.log.Level#values")
     void named_step_that_logged_something_uses_name_for_header(Level level) {
       var log = new Log(level, "message");
       var step = step(t -> Try.of("value", log)).named("name");
@@ -196,7 +196,7 @@ class StepExecutorTest {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.out.log.Level#values")
+    @MethodSource("org.smoothbuild.common.log.Level#values")
     void named_inner_step_that_logged_something_uses_full_name_for_header(Level level) {
       var log = new Log(level, "message");
       var step = step(t -> Try.of("value", log)).named("name").named("outer");

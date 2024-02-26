@@ -1,4 +1,4 @@
-package org.smoothbuild.out.log;
+package org.smoothbuild.common.log;
 
 public enum Level {
   FATAL,

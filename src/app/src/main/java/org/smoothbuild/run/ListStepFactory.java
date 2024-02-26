@@ -1,16 +1,16 @@
 package org.smoothbuild.run;
 
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.step;
 
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
-import org.smoothbuild.out.log.Try;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;
 

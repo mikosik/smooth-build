@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.frontend;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;

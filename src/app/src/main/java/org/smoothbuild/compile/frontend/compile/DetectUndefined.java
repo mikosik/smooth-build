@@ -6,6 +6,8 @@ import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.isVarName;
 
 import java.util.function.Function;
 import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -19,8 +21,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.ScopeP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ScopedP;
 import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 /**
  * Detect undefined referencables and types.

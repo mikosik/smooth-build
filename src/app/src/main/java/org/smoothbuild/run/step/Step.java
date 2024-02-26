@@ -1,14 +1,14 @@
 package org.smoothbuild.run.step;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.out.log.Try.success;
 
 import com.google.inject.Key;
 import java.util.function.Function;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.out.log.Try;
 import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
 import org.smoothbuild.run.step.Step.FunctionKeyStep;

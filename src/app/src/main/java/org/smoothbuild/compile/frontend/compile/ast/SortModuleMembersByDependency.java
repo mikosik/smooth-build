@@ -3,7 +3,7 @@ package org.smoothbuild.compile.frontend.compile.ast;
 import static java.lang.String.join;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
-import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.common.log.Log.error;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,6 +13,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
+import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Try;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.FuncTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
@@ -22,9 +25,6 @@ import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
 import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Try;
 
 /**
  * Sort module Evaluables and Structs based on dependencies between them.
