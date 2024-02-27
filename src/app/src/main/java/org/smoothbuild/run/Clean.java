@@ -1,9 +1,9 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.common.log.Try.success;
-import static org.smoothbuild.layout.ProjectSpaceLayout.ARTIFACTS_PATH;
-import static org.smoothbuild.layout.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.layout.ProjectSpaceLayout.HASHED_DB_PATH;
+import static org.smoothbuild.layout.Layout.ARTIFACTS_PATH;
+import static org.smoothbuild.layout.Layout.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;

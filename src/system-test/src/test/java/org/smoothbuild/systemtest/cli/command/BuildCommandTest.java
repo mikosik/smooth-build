@@ -3,7 +3,7 @@ package org.smoothbuild.systemtest.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.nio.file.Files.exists;
-import static org.smoothbuild.layout.ProjectSpaceLayout.ARTIFACTS_PATH;
+import static org.smoothbuild.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 
 import java.io.IOException;
