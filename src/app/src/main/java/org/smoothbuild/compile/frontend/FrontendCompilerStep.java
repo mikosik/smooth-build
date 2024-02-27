@@ -1,13 +1,10 @@
 package org.smoothbuild.compile.frontend;
 
-import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
-import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULES;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.space.FilePath;
@@ -30,12 +27,10 @@ import org.smoothbuild.compile.frontend.parse.Parse;
 import org.smoothbuild.compile.frontend.parse.TranslateAp;
 
 public class FrontendCompilerStep {
-  private static final List<FilePath> MODULES =
-      listOfAll(STANDARD_LIBRARY_MODULES).append(DEFAULT_MODULE_FILE_PATH);
 
-  public static Step<Tuple0, ScopeS> frontendCompilerStep() {
+  public static Step<Tuple0, ScopeS> createFrontendCompilerStep(List<FilePath> modules) {
     var step = step(LoadInternalModuleMembers.class);
-    for (var filePath : MODULES) {
+    for (var filePath : modules) {
       step = step.append(filePath)
           .then(stepFactory(new FrontendCompilerStepFactory()).named(filePath.toString()));
     }

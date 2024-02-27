@@ -3,7 +3,7 @@ package org.smoothbuild.run;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.step;
-import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
 
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.Step;
