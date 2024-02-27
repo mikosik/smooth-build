@@ -24,8 +24,7 @@ subprojects {
 
 subprojects { subproject ->
     if (subproject.name in ['common-testing', 'common', 'compiler-frontend', 'app',
-            'standard-library',
-                            'system-test']) {
+            'standard-library', 'system-test']) {
         apply plugin: 'java'
         java {
             toolchain {
