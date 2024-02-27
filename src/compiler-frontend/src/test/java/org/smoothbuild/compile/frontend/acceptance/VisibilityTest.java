@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.frontend.compile.component;
+package org.smoothbuild.compile.frontend.acceptance;
 
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.testing.TestFrontendCompiler.err;

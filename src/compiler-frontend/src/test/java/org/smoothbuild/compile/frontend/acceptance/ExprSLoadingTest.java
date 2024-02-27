@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.frontend.compile.component;
+package org.smoothbuild.compile.frontend.acceptance;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
@@ -336,7 +336,8 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void to_poly_value() {
-        module("""
+        module(
+                """
             [A] myValue = [];
             [Int] result =
               myValue;
@@ -396,7 +397,8 @@ public class ExprSLoadingTest extends TestContext {
     class _order {
       @Test
       public void order() {
-        module("""
+        module(
+                """
             result =
             [
               0x07,
@@ -410,7 +412,8 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void order_with_piped_value() {
-        module("""
+        module(
+                """
             result = 0x07 >
             [
               0x08
@@ -538,7 +541,8 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void mono_expression_function_with_param() {
-        module("""
+        module(
+                """
             String myFunc(
               Blob param1)
               = "abc";
@@ -590,7 +594,8 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void mono_native_impure_function() {
-        module("""
+        module(
+                """
             @NativeImpure("Impl.met")
             String myFunc();
             """)
@@ -810,7 +815,8 @@ public class ExprSLoadingTest extends TestContext {
 
     @Test
     public void with_operator() {
-      module("""
+      module(
+              """
           result =
           ([
             0x07,

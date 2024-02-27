@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.frontend.compile.component;
+package org.smoothbuild.compile.frontend.acceptance;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
