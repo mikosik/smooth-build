@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.accept;
 
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
-import static org.smoothbuild.filesystem.space.SmoothSpace.STANDARD_LIBRARY;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 
 import com.google.inject.AbstractModule;
 import org.smoothbuild.common.filesystem.base.FileSystem;

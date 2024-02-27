@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.SMOOTH_DIR;
+import static org.smoothbuild.layout.ProjectSpaceLayout.SMOOTH_DIR;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;

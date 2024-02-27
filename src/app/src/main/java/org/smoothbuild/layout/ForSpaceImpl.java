@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.layout;
 
 import java.lang.annotation.Annotation;
 import java.util.Objects;

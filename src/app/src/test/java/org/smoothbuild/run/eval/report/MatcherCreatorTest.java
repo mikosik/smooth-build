@@ -32,7 +32,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.filesystem.space.Space;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.filesystem.space.SmoothSpace;
+import org.smoothbuild.layout.SmoothSpace;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.evaluate.task.Task;

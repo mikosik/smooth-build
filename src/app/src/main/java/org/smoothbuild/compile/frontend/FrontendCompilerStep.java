@@ -6,8 +6,8 @@ import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
+import static org.smoothbuild.layout.InstallationLayout.STANDARD_LIBRARY_MODULES;
+import static org.smoothbuild.layout.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.space.FilePath;

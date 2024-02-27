@@ -1,7 +1,7 @@
 package org.smoothbuild.systemtest.stdlib.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_PATH;
+import static org.smoothbuild.layout.ProjectSpaceLayout.DEFAULT_MODULE_PATH;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;

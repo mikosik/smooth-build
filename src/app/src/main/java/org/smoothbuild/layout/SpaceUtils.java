@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.layout;
 
 import com.google.inject.Binder;
 import com.google.inject.Key;

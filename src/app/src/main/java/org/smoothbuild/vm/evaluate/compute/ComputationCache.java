@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.evaluate.compute;
 
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
@@ -14,7 +14,7 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.filesystem.space.ForSpace;
+import org.smoothbuild.layout.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;

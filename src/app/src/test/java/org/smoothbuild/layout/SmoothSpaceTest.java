@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.layout;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.stream;

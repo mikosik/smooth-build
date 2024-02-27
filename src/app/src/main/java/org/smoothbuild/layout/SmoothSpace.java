@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.layout;
 
 import org.smoothbuild.common.filesystem.space.Space;
 
