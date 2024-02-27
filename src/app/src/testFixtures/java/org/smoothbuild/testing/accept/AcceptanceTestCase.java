@@ -8,13 +8,13 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.step.Step.stepFactory;
-import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
 import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULE_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 import static org.smoothbuild.layout.SpaceUtils.forSpace;
+import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

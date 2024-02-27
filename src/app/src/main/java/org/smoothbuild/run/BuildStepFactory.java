@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.step.Step.stepFactory;
-import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.step.Step;
