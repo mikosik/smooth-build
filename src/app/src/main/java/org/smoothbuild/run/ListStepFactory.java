@@ -3,6 +3,7 @@ package org.smoothbuild.run;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
 
 import org.smoothbuild.common.log.Try;
@@ -10,6 +11,8 @@ import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
+import org.smoothbuild.compile.frontend.lang.base.location.Location;
+import org.smoothbuild.compile.frontend.lang.base.location.SourceLocation;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
@@ -30,8 +33,12 @@ public class ListStepFactory implements StepFactory<Tuple0, String> {
   }
 
   private static boolean isNoArgNotGenericValue(NamedEvaluableS evaluable) {
-    return evaluable.location().isInProjectSpace()
+    return isInProjectSpace(evaluable.location())
         && evaluable instanceof NamedValueS
         && evaluable.schema().quantifiedVars().isEmpty();
+  }
+
+  private static boolean isInProjectSpace(Location location) {
+    return (location instanceof SourceLocation source) && PROJECT.equals(source.space());
   }
 }

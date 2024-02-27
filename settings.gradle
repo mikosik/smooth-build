@@ -1,9 +1,10 @@
 rootProject.name = 'smooth-build'
 
 include 'src:common-testing'
-include 'src:antlr-smooth'
-include 'src:antlr-task-matcher'
 include 'src:common'
+include 'src:antlr-smooth'
+include 'src:compiler-frontend'
+include 'src:antlr-task-matcher'
 include 'src:app'
 include 'src:standard-library'
 include 'src:distribution'
@@ -16,7 +17,9 @@ dependencyResolutionManagement {
 
   versionCatalogs {
     libs {
-      library('antlr4', 'org.antlr:antlr4:4.13.0')
+      version('antlr4', '4.13.0')
+      library('antlr4', 'org.antlr', 'antlr4').versionRef('antlr4')
+      library('antlr4-runtime', 'org.antlr', 'antlr4-runtime').versionRef('antlr4')
       library('guava', 'com.google.guava:guava:32.1.0-jre')
       library('guice', 'com.google.inject:guice:7.0.0')
       library('okio', 'com.squareup.okio:okio:3.4.0')
