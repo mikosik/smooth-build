@@ -92,7 +92,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
           "Found ambiguity in grammar.",
           "Report this as a bug together with file: " + filePath.path() + ", details:",
           "startIndex=" + startIndex,
-          "stopiIndex=" + stopIndex,
+          "stopIndex=" + stopIndex,
           "exact=" + exact,
           "ambigAlts=" + ambigAlts,
           "dfa=" + dfa);
@@ -112,7 +112,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
           "Attempting full context.",
           "Report this as a bug together with file: " + filePath.path() + ", details:",
           "startIndex=" + startIndex,
-          "stopiIndex=" + stopIndex,
+          "stopIndex=" + stopIndex,
           "conflictingAlts=" + conflictingAlts,
           "configs=" + configs,
           "dfa=" + dfa);
@@ -132,7 +132,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleConte
           "Context sensitivity.",
           "Report this as a bug together with file: " + filePath.path() + ", details:",
           "startIndex=" + startIndex,
-          "stopiIndex=" + stopIndex,
+          "stopIndex=" + stopIndex,
           "configs=" + configs,
           "dfa=" + dfa);
       reportError(recognizer, startIndex, message);
