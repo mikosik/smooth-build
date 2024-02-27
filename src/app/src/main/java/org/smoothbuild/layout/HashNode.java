@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.install;
+package org.smoothbuild.layout;
 
 import static org.smoothbuild.common.collect.List.list;
 

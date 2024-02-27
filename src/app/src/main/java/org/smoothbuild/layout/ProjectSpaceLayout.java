@@ -1,9 +1,8 @@
-package org.smoothbuild.filesystem.project;
+package org.smoothbuild.layout;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
 
 import java.io.IOException;
 import org.smoothbuild.common.collect.List;
@@ -18,7 +17,8 @@ public class ProjectSpaceLayout {
   public static final PathS HASHED_DB_PATH = SMOOTH_DIR.appendPart("hashed");
   public static final PathS SMOOTH_LOCK_PATH = SMOOTH_DIR.appendPart("lock");
   public static final PathS DEFAULT_MODULE_PATH = path("build.smooth");
-  public static final FilePath DEFAULT_MODULE_FILE_PATH = filePath(PROJECT, DEFAULT_MODULE_PATH);
+  public static final FilePath DEFAULT_MODULE_FILE_PATH =
+      filePath(SmoothSpace.PROJECT, DEFAULT_MODULE_PATH);
 
   private static final List<PathS> dirsToInitialize =
       list(HASHED_DB_PATH, COMPUTATION_CACHE_PATH, ARTIFACTS_PATH);

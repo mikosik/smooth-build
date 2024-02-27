@@ -10,9 +10,9 @@ import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
-import org.smoothbuild.filesystem.install.BuildVersion;
-import org.smoothbuild.filesystem.install.HashNode;
-import org.smoothbuild.filesystem.install.InstallationHashes;
+import org.smoothbuild.layout.BuildVersion;
+import org.smoothbuild.layout.HashNode;
+import org.smoothbuild.layout.InstallationHashes;
 
 public class Version implements Function<Tuple0, Try<String>> {
   private final InstallationHashes installationHashes;

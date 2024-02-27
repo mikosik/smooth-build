@@ -1,10 +1,10 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.common.log.Try.success;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.ProjectSpaceLayout.ARTIFACTS_PATH;
+import static org.smoothbuild.layout.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.layout.ProjectSpaceLayout.HASHED_DB_PATH;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
-import org.smoothbuild.filesystem.space.ForSpace;
+import org.smoothbuild.layout.ForSpace;
 
 public class Clean implements Function<Tuple0, Try<String>> {
   private final FileSystem fileSystem;

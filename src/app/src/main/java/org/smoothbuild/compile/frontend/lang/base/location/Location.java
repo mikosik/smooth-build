@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.lang.base.location;
 
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 /**
  * Location.

@@ -10,9 +10,9 @@ import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
-import static org.smoothbuild.filesystem.space.SmoothSpace.STANDARD_LIBRARY;
-import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
+import static org.smoothbuild.layout.SpaceUtils.forSpace;
 import static org.smoothbuild.testing.TestContext.writeFile;
 
 import com.google.inject.Injector;
@@ -28,9 +28,9 @@ import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
-import org.smoothbuild.filesystem.project.ProjectSpaceModule;
-import org.smoothbuild.filesystem.space.SmoothSpace;
+import org.smoothbuild.layout.ProjectSpaceModule;
+import org.smoothbuild.layout.SmoothSpace;
+import org.smoothbuild.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.testing.accept.MemoryReporter;
 
 public class TestingModuleLoader {

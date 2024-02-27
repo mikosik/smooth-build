@@ -12,7 +12,7 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.filesystem.space.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;

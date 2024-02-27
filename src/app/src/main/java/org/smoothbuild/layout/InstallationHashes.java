@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.install;
+package org.smoothbuild.layout;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.List.list;
@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Paths.removeExtension;
-import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STANDARD_LIBRARY_MODULES;
+import static org.smoothbuild.layout.InstallationLayout.SMOOTH_JAR_FILE_PATH;
+import static org.smoothbuild.layout.InstallationLayout.STANDARD_LIBRARY_MODULES;
 
 import jakarta.inject.Inject;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.smoothbuild.filesystem.space;
+package org.smoothbuild.layout;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
