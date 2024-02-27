@@ -9,7 +9,6 @@ application {
 
 dependencies {
     implementation project(':src:common')
-    implementation project(':src:antlr-smooth')
     implementation project(':src:antlr-task-matcher')
     implementation project(':src:compiler-frontend')
 
