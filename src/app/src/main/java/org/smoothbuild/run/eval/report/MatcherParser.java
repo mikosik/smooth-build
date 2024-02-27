@@ -67,7 +67,7 @@ public class MatcherParser {
           "Report this as a bug together with show-tasks=': " + extractSourceCode(recognizer)
               + "', details:",
           "startIndex=" + startIndex,
-          "stopiIndex=" + stopIndex,
+          "stopIndex=" + stopIndex,
           "exact=" + exact,
           "ambigAlts=" + ambigAlts,
           "dfa=" + dfa);
