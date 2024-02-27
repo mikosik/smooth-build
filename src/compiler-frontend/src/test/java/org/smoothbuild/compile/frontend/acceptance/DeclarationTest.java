@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.frontend.compile.component;
+package org.smoothbuild.compile.frontend.acceptance;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.Strings.unlines;
@@ -26,7 +26,8 @@ public class DeclarationTest extends TestContext {
     class _annotation {
       @Test
       public void with_unknown_name_causes_error() {
-        module("""
+        module(
+                """
             @UnknownAnnotation("value")
             Int myFunc() = 3;
             """)
@@ -113,12 +114,11 @@ public class DeclarationTest extends TestContext {
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS testedT) {
             var code = unlines(
-                    testedT.typeDeclarationsAsString(),
-                    "MyStruct(",
-                    "  " + testedT.name() + " field,",
-                    ")");
-            module(code)
-                .loadsWithSuccess();
+                testedT.typeDeclarationsAsString(),
+                "MyStruct(",
+                "  " + testedT.name() + " field,",
+                ")");
+            module(code).loadsWithSuccess();
           }
 
           @Test
@@ -230,7 +230,8 @@ public class DeclarationTest extends TestContext {
         class _name {
           @Test
           public void that_is_legal() {
-            module("""
+            module(
+                    """
                 MyStruct(
                   String field
                 )
@@ -240,7 +241,8 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_is_illegal_fails() {
-            module("""
+            module(
+                    """
                 MyStruct(
                   String field^
                 )
@@ -255,7 +257,8 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_starts_with_large_letter_fails() {
-            module("""
+            module(
+                    """
                 MyStruct(
                   String Field
                 )
@@ -267,7 +270,8 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_is_single_large_letter_fails() {
-            module("""
+            module(
+                    """
                 MyStruct(
                   String A
                 )
@@ -278,7 +282,8 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_is_single_underscore_fails() {
-            module("""
+            module(
+                    """
                 MyStruct(
                   String _
                 )
@@ -292,7 +297,8 @@ public class DeclarationTest extends TestContext {
         class _default_value {
           @Test
           public void is_illegal() {
-            module("""
+            module(
+                    """
                 MyStruct(
                   Int myField = 7
                 )
@@ -353,12 +359,11 @@ public class DeclarationTest extends TestContext {
         @ArgumentsSource(TestedTypes.class)
         public void can_be_monotype(TestedTS type) {
           var code = unlines(
-                  "@Native(\"Impl.met\")",
-                  type.name() + " myFunc();",
-                  type.name() + " myValue = myFunc();",
-                  type.typeDeclarationsAsString());
-          module(code)
-              .loadsWithSuccess();
+              "@Native(\"Impl.met\")",
+              type.name() + " myFunc();",
+              type.name() + " myValue = myFunc();",
+              type.typeDeclarationsAsString());
+          module(code).loadsWithSuccess();
         }
 
         @Test
@@ -451,7 +456,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_bytecode_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @Bytecode("implementation")
             String result = "abc";
             """)
@@ -469,7 +475,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @Native("implementation")
             String result = "abc";
             """)
@@ -487,7 +494,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_impure_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @NativeImpure("implementation")
             String result = "abc";
             """)
@@ -496,7 +504,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_impure_ann_and_without_body_fails() {
-        module("""
+        module(
+                """
             @NativeImpure("implementation")
             String result;
             """)
@@ -505,7 +514,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_unknown_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @Unknown("implementation")
             String result = "abc";
             """)
@@ -514,7 +524,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_unknown_ann_and_without_body_fails() {
-        module("""
+        module(
+                """
             @Unknown("implementation")
             String result;
             """)
@@ -552,7 +563,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_ann_and_with_body_fails() {
-        module("""
+        module(
+                """
             @Native("Impl.met")
             String myFunc() = "abc";
             """)
@@ -571,7 +583,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_bytecode_ann_and_with_body_fails() {
-        module("""
+        module(
+                """
             @Bytecode("Impl.met")
             String myFunc() = "abc";
             """)
@@ -603,9 +616,8 @@ public class DeclarationTest extends TestContext {
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
             var code = unlines(
-                    "@Native(\"impl\")", type.name() + " myFunc();", type.declarationsAsString());
-            module(code)
-                .loadsWithSuccess();
+                "@Native(\"impl\")", type.name() + " myFunc();", type.declarationsAsString());
+            module(code).loadsWithSuccess();
           }
 
           @Test
@@ -688,11 +700,10 @@ public class DeclarationTest extends TestContext {
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
             var code = unlines(
-                    "@Native(\"Impl.met\")",
-                    "String myFunc(" + type.name() + " param);",
-                    type.typeDeclarationsAsString());
-            module(code)
-                .loadsWithSuccess();
+                "@Native(\"Impl.met\")",
+                "String myFunc(" + type.name() + " param);",
+                type.typeDeclarationsAsString());
+            module(code).loadsWithSuccess();
           }
 
           @Test
@@ -795,7 +806,8 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void default_arg_gets_converted_to_param_type() {
-          module("""
+          module(
+                  """
               [String] myFunc(String param1, [String] param2 = []) = param2;
               [String] result = myFunc("abc");
               """)
@@ -1245,7 +1257,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
-        module("""
+        module(
+                """
             myFunc() = "abc";
             result = [
               myFunc(unknown1=""),

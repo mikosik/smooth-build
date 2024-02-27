@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.frontend.compile.component;
+package org.smoothbuild.compile.frontend.acceptance;
 
 import static org.smoothbuild.testing.TestFrontendCompiler.module;
 
@@ -349,7 +349,7 @@ public class TypeCheckingTest extends TestContext {
     }
   }
 
-  abstract class _abstract_param_type_and_arg_type_suite {
+  abstract static class _abstract_param_type_and_arg_type_suite {
     public abstract String buildSourceCode(String params, String argument);
 
     @Test
