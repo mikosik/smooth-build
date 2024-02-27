@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode;
 
-import static org.smoothbuild.layout.ProjectSpaceLayout.HASHED_DB_PATH;
+import static org.smoothbuild.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import com.google.inject.AbstractModule;

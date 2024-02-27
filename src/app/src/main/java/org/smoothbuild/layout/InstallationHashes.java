@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Paths.removeExtension;
-import static org.smoothbuild.layout.InstallationLayout.SMOOTH_JAR_FILE_PATH;
-import static org.smoothbuild.layout.InstallationLayout.STANDARD_LIBRARY_MODULES;
+import static org.smoothbuild.layout.Layout.SMOOTH_JAR_FILE_PATH;
+import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULES;
 
 import jakarta.inject.Inject;
 import java.io.IOException;

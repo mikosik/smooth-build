@@ -4,7 +4,7 @@ import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.layout.ProjectSpaceLayout.ARTIFACTS_PATH;
+import static org.smoothbuild.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;
