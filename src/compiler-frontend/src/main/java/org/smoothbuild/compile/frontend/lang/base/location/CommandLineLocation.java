@@ -1,7 +1,5 @@
 package org.smoothbuild.compile.frontend.lang.base.location;
 
-import static org.smoothbuild.layout.SmoothSpace.PROJECT;
-
 import org.smoothbuild.common.filesystem.space.Space;
 
 public final class CommandLineLocation implements SourceLocation {
@@ -16,7 +14,7 @@ public final class CommandLineLocation implements SourceLocation {
 
   @Override
   public Space space() {
-    return PROJECT;
+    return null;
   }
 
   @Override

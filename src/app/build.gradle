@@ -11,6 +11,7 @@ dependencies {
     implementation project(':src:common')
     implementation project(':src:antlr-smooth')
     implementation project(':src:antlr-task-matcher')
+    implementation project(':src:compiler-frontend')
 
     implementation libs.guava
     implementation libs.guice
@@ -18,6 +19,7 @@ dependencies {
     implementation libs.picocli
 
     testFixturesApi project(':src:common')
+    testFixturesApi project(':src:compiler-frontend')
     testFixturesApi libs.guava
     testFixturesApi libs.guice
     testFixturesApi libs.junit.jupiter.api
