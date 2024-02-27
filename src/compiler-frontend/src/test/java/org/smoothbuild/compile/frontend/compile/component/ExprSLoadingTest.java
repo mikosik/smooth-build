@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.testing.TestFrontendCompiler.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -219,9 +220,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_poly_func_reference_and_arg() {
         module("""
-          A myId(A a) = a;
-          result = myId(7);
-          """)
+            A myId(A a) = a;
+            result = myId(7);
+            """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(
                 2,
@@ -264,10 +265,10 @@ public class ExprSLoadingTest extends TestContext {
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructor = constructorS(1, struct, "MyStruct");
         module("""
-          MyStruct(
-            String field
-          )
-          """)
+            MyStruct(
+              String field
+            )
+            """)
             .loadsWithSuccess()
             .containsEvaluable(constructor);
       }
@@ -292,8 +293,8 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ref() {
         module("""
-          result(()->String f) = f();
-          """)
+            result(()->String f) = f();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(
                 1,
@@ -306,8 +307,8 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ref_and_arg() {
         module("""
-          result((Blob)->String f) = f(0x09);
-          """)
+            result((Blob)->String f) = f(0x09);
+            """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(
                 1,
@@ -335,12 +336,11 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void to_poly_value() {
-        module(
-                """
-          [A] myValue = [];
-          [Int] result =
-            myValue;
-          """)
+        module("""
+            [A] myValue = [];
+            [Int] result =
+              myValue;
+            """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(
                 2,
@@ -396,14 +396,13 @@ public class ExprSLoadingTest extends TestContext {
     class _order {
       @Test
       public void order() {
-        module(
-                """
-          result =
-          [
-            0x07,
-            0x08
-          ];
-          """)
+        module("""
+            result =
+            [
+              0x07,
+              0x08
+            ];
+            """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(
                 1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
@@ -411,13 +410,12 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void order_with_piped_value() {
-        module(
-                """
-          result = 0x07 >
-          [
-            0x08
-          ];
-          """)
+        module("""
+            result = 0x07 >
+            [
+              0x08
+            ];
+            """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(
                 1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(1, 7), blobS(3, 8))));
@@ -521,9 +519,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void mono_expression_function() {
         module("""
-          Blob myFunc() =
-            0x07;
-          """)
+            Blob myFunc() =
+              0x07;
+            """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(1, blobTS(), "myFunc", nlist(), blobS(2, 7)));
       }
@@ -531,21 +529,20 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void poly_expression_function() {
         module("""
-          [A] myFunc() =
-            [];
-          """)
+            [A] myFunc() =
+              [];
+            """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(1, arrayTS(varA()), "myFunc", nlist(), orderS(2, varA())));
       }
 
       @Test
       public void mono_expression_function_with_param() {
-        module(
-                """
-          String myFunc(
-            Blob param1)
-            = "abc";
-          """)
+        module("""
+            String myFunc(
+              Blob param1)
+              = "abc";
+            """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(
                 1, stringTS(), "myFunc", nlist(itemS(2, blobTS(), "param1")), stringS(3, "abc")));
@@ -554,10 +551,10 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void poly_expression_function_with_param() {
         module("""
-          A myFunc(
-            A a)
-            = a;
-          """)
+            A myFunc(
+              A a)
+              = a;
+            """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(
                 1, varA(), "myFunc", nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a")));
@@ -594,9 +591,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void mono_native_impure_function() {
         module("""
-          @NativeImpure("Impl.met")
-          String myFunc();
-          """)
+            @NativeImpure("Impl.met")
+            String myFunc();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(annotatedFuncS(
                 2,
@@ -609,9 +606,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void poly_native_impure_function() {
         module("""
-          @NativeImpure("Impl.met")
-          A myFunc();
-          """)
+            @NativeImpure("Impl.met")
+            A myFunc();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(annotatedFuncS(
                 2, nativeAnnotationS(1, stringS(1, "Impl.met"), false), varA(), "myFunc", nlist()));
@@ -620,9 +617,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void mono_native_pure_function() {
         module("""
-          @Native("Impl.met")
-          String myFunc();
-          """)
+            @Native("Impl.met")
+            String myFunc();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(annotatedFuncS(
                 2,
@@ -635,9 +632,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void poly_native_pure_function() {
         module("""
-          @Native("Impl.met")
-          A myFunc();
-          """)
+            @Native("Impl.met")
+            A myFunc();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(annotatedFuncS(
                 2, nativeAnnotationS(1, stringS(1, "Impl.met"), true), varA(), "myFunc", nlist()));
@@ -676,9 +673,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void mono_bytecode_function() {
         module("""
-          @Bytecode("impl")
-          String myFunc();
-          """)
+            @Bytecode("impl")
+            String myFunc();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(bytecodeFuncS(2, stringTS(), "myFunc", nlist()));
       }
@@ -686,9 +683,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void poly_bytecode_function() {
         module("""
-          @Bytecode("impl")
-          A myFunc();
-          """)
+            @Bytecode("impl")
+            A myFunc();
+            """)
             .loadsWithSuccess()
             .containsEvaluable(bytecodeFuncS(2, varA(), "myFunc", nlist()));
       }
@@ -727,9 +724,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void empty_struct_type() {
         module("""
-          MyStruct(
-          )
-          """)
+            MyStruct(
+            )
+            """)
             .loadsWithSuccess()
             .containsType(structTS("MyStruct", nlist()));
       }
@@ -737,10 +734,10 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void struct_type() {
         module("""
-          MyStruct(
-            String field
-          )
-          """)
+            MyStruct(
+              String field
+            )
+            """)
             .loadsWithSuccess()
             .containsType(structTS("MyStruct", nlist(sigS(stringTS(), "field"))));
       }
@@ -813,8 +810,7 @@ public class ExprSLoadingTest extends TestContext {
 
     @Test
     public void with_operator() {
-      module(
-              """
+      module("""
           result =
           ([
             0x07,

@@ -3,7 +3,8 @@ package org.smoothbuild.compile.frontend.compile.component;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.testing.TestingModuleLoader.err;
+import static org.smoothbuild.testing.TestFrontendCompiler.err;
+import static org.smoothbuild.testing.TestFrontendCompiler.module;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_TYPES;
 
 import java.util.stream.Stream;
@@ -25,8 +26,7 @@ public class DeclarationTest extends TestContext {
     class _annotation {
       @Test
       public void with_unknown_name_causes_error() {
-        module(
-                """
+        module("""
             @UnknownAnnotation("value")
             Int myFunc() = 3;
             """)
@@ -112,11 +112,12 @@ public class DeclarationTest extends TestContext {
           @ParameterizedTest
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS testedT) {
-            module(unlines(
+            var code = unlines(
                     testedT.typeDeclarationsAsString(),
                     "MyStruct(",
                     "  " + testedT.name() + " field,",
-                    ")"))
+                    ")");
+            module(code)
                 .loadsWithSuccess();
           }
 
@@ -229,23 +230,21 @@ public class DeclarationTest extends TestContext {
         class _name {
           @Test
           public void that_is_legal() {
-            module(
-                    """
-             MyStruct(
-               String field
-             )
-             """)
+            module("""
+                MyStruct(
+                  String field
+                )
+                """)
                 .loadsWithSuccess();
           }
 
           @Test
           public void that_is_illegal_fails() {
-            module(
-                    """
-             MyStruct(
-               String field^
-             )
-             """)
+            module("""
+                MyStruct(
+                  String field^
+                )
+                """)
                 .loadsWithError(
                     2,
                     """
@@ -256,12 +255,11 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_starts_with_large_letter_fails() {
-            module(
-                    """
-             MyStruct(
-               String Field
-             )
-             """)
+            module("""
+                MyStruct(
+                  String Field
+                )
+                """)
                 .loadsWithError(
                     2,
                     "`Field` is illegal identifier name. Identifiers should start with lowercase.");
@@ -269,24 +267,22 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_is_single_large_letter_fails() {
-            module(
-                    """
-             MyStruct(
-               String A
-             )
-             """)
+            module("""
+                MyStruct(
+                  String A
+                )
+                """)
                 .loadsWithError(
                     2, "`A` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
           public void that_is_single_underscore_fails() {
-            module(
-                    """
-             MyStruct(
-               String _
-             )
-             """)
+            module("""
+                MyStruct(
+                  String _
+                )
+                """)
                 .loadsWithError(
                     2, "`_` is illegal identifier name. `_` is reserved for future use.");
           }
@@ -296,12 +292,11 @@ public class DeclarationTest extends TestContext {
         class _default_value {
           @Test
           public void is_illegal() {
-            module(
-                    """
-             MyStruct(
-               Int myField = 7
-             )
-             """)
+            module("""
+                MyStruct(
+                  Int myField = 7
+                )
+                """)
                 .loadsWithError(
                     2,
                     "Struct field `myField` has default value. "
@@ -350,18 +345,19 @@ public class DeclarationTest extends TestContext {
         @Test
         public void can_be_omitted() {
           module("""
-            myValue = "abc";
-            """).loadsWithSuccess();
+              myValue = "abc";
+              """).loadsWithSuccess();
         }
 
         @ParameterizedTest
         @ArgumentsSource(TestedTypes.class)
         public void can_be_monotype(TestedTS type) {
-          module(unlines(
+          var code = unlines(
                   "@Native(\"Impl.met\")",
                   type.name() + " myFunc();",
                   type.name() + " myValue = myFunc();",
-                  type.typeDeclarationsAsString()))
+                  type.typeDeclarationsAsString());
+          module(code)
               .loadsWithSuccess();
         }
 
@@ -400,15 +396,15 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_legal() {
           module("""
-             myValue = "abc";
-             """).loadsWithSuccess();
+              myValue = "abc";
+              """).loadsWithSuccess();
         }
 
         @Test
         public void that_is_illegal_fails() {
           module("""
-             myValue^ = "abc";
-             """)
+              myValue^ = "abc";
+              """)
               .loadsWithError(
                   1,
                   """
@@ -420,8 +416,8 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_starts_with_large_letter_fails() {
           module("""
-             MyValue = "abc";
-             """)
+              MyValue = "abc";
+              """)
               .loadsWithError(
                   1,
                   "`MyValue` is illegal identifier name. Identifiers should start with lowercase.");
@@ -430,8 +426,8 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_single_large_letter_fails() {
           module("""
-             A = "abc";
-             """)
+              A = "abc";
+              """)
               .loadsWithError(
                   1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
         }
@@ -439,8 +435,8 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_single_underscore_fails() {
           module("""
-             _ = "abc";
-             """)
+              _ = "abc";
+              """)
               .loadsWithError(1, "`_` is illegal identifier name. `_` is reserved for future use.");
         }
       }
@@ -455,8 +451,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_bytecode_ann_and_body_fails() {
-        module(
-                """
+        module("""
             @Bytecode("implementation")
             String result = "abc";
             """)
@@ -474,8 +469,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_ann_and_body_fails() {
-        module(
-                """
+        module("""
             @Native("implementation")
             String result = "abc";
             """)
@@ -493,8 +487,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_impure_ann_and_body_fails() {
-        module(
-                """
+        module("""
             @NativeImpure("implementation")
             String result = "abc";
             """)
@@ -503,8 +496,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_impure_ann_and_without_body_fails() {
-        module(
-                """
+        module("""
             @NativeImpure("implementation")
             String result;
             """)
@@ -513,8 +505,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_unknown_ann_and_body_fails() {
-        module(
-                """
+        module("""
             @Unknown("implementation")
             String result = "abc";
             """)
@@ -523,8 +514,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_unknown_ann_and_without_body_fails() {
-        module(
-                """
+        module("""
             @Unknown("implementation")
             String result;
             """)
@@ -537,44 +527,44 @@ public class DeclarationTest extends TestContext {
       @Test
       public void without_body_fails() {
         module("""
-          String myFunc();
-          """)
+            String myFunc();
+            """)
             .loadsWithError(1, "Function body is missing.");
       }
 
       @Test
       public void with_unknown_ann_with_body_fails() {
         module("""
-          @Unknown("abc")
-          String myFunc() = "abc";
-          """)
+            @Unknown("abc")
+            String myFunc() = "abc";
+            """)
             .loadsWithError(1, "Unknown annotation `Unknown`.");
       }
 
       @Test
       public void with_unknown_ann_without_body_fails() {
         module("""
-          @Unknown("abc")
-          String myFunc();
-          """)
+            @Unknown("abc")
+            String myFunc();
+            """)
             .loadsWithError(1, "Unknown annotation `Unknown`.");
       }
 
       @Test
       public void with_native_ann_and_with_body_fails() {
         module("""
-          @Native("Impl.met")
-          String myFunc() = "abc";
-          """)
+            @Native("Impl.met")
+            String myFunc() = "abc";
+            """)
             .loadsWithError(2, "Function `myFunc` with @Native annotation cannot have body.");
       }
 
       @Test
       public void with_native_ann_without_declared_result_type_fails() {
         module("""
-          @Native("Impl.met")
-          myFunc();
-          """)
+            @Native("Impl.met")
+            myFunc();
+            """)
             .loadsWithError(
                 2, "Function `myFunc` with @Native annotation must declare result type.");
       }
@@ -582,18 +572,18 @@ public class DeclarationTest extends TestContext {
       @Test
       public void with_bytecode_ann_and_with_body_fails() {
         module("""
-          @Bytecode("Impl.met")
-          String myFunc() = "abc";
-          """)
+            @Bytecode("Impl.met")
+            String myFunc() = "abc";
+            """)
             .loadsWithError(2, "Function `myFunc` with @Bytecode annotation cannot have body.");
       }
 
       @Test
       public void with_bytecode_ann_and_without_declared_result_type_fails() {
         module("""
-          @Bytecode("Impl.met")
-          myFunc();
-          """)
+            @Bytecode("Impl.met")
+            myFunc();
+            """)
             .loadsWithError(
                 2, "Function `myFunc` with @Bytecode annotation must declare result type.");
       }
@@ -605,15 +595,16 @@ public class DeclarationTest extends TestContext {
           @Test
           public void result_type_can_be_omitted() {
             module("""
-            myFunc() = "abc";
-            """).loadsWithSuccess();
+                myFunc() = "abc";
+                """).loadsWithSuccess();
           }
 
           @ParameterizedTest
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
-            module(unlines(
-                    "@Native(\"impl\")", type.name() + " myFunc();", type.declarationsAsString()))
+            var code = unlines(
+                    "@Native(\"impl\")", type.name() + " myFunc();", type.declarationsAsString());
+            module(code)
                 .loadsWithSuccess();
           }
 
@@ -644,15 +635,15 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_legal() {
           module("""
-             myFunc() = "abc";
-             """).loadsWithSuccess();
+              myFunc() = "abc";
+              """).loadsWithSuccess();
         }
 
         @Test
         public void that_is_illegal_fails() {
           module("""
-             myFunc^() = "abc";
-             """)
+              myFunc^() = "abc";
+              """)
               .loadsWithError(
                   1,
                   """
@@ -664,8 +655,8 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_starts_with_large_letter_fails() {
           module("""
-             MyFunc() = "abc";
-             """)
+              MyFunc() = "abc";
+              """)
               .loadsWithError(
                   1,
                   "`MyFunc` is illegal identifier name. Identifiers should start with lowercase.");
@@ -674,8 +665,8 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_single_large_letter_fails() {
           module("""
-             A() = "abc";
-             """)
+              A() = "abc";
+              """)
               .loadsWithError(
                   1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
         }
@@ -683,8 +674,8 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_single_underscore_fails() {
           module("""
-             _() = "abc";
-             """)
+              _() = "abc";
+              """)
               .loadsWithError(1, "`_` is illegal identifier name. `_` is reserved for future use.");
         }
       }
@@ -696,10 +687,11 @@ public class DeclarationTest extends TestContext {
           @ParameterizedTest
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
-            module(unlines(
+            var code = unlines(
                     "@Native(\"Impl.met\")",
                     "String myFunc(" + type.name() + " param);",
-                    type.typeDeclarationsAsString()))
+                    type.typeDeclarationsAsString());
+            module(code)
                 .loadsWithSuccess();
           }
 
@@ -729,16 +721,16 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_legal() {
             module("""
-             String myFunc(String name) = "abc";
-             """)
+                String myFunc(String name) = "abc";
+                """)
                 .loadsWithSuccess();
           }
 
           @Test
           public void that_is_illegal_fails() {
             module("""
-             String myFunc(String name^);
-             """)
+                String myFunc(String name^);
+                """)
                 .loadsWithError(
                     1,
                     """
@@ -750,8 +742,8 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_starts_with_large_letter_fails() {
             module("""
-             Int myFunc(Int Name) = 7;
-             """)
+                Int myFunc(Int Name) = 7;
+                """)
                 .loadsWithError(
                     1,
                     "`Name` is illegal identifier name. Identifiers should start with lowercase.");
@@ -760,8 +752,8 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_single_large_letter_fails() {
             module("""
-             Int myFunc(Int A) = 7;
-             """)
+                Int myFunc(Int A) = 7;
+                """)
                 .loadsWithError(
                     1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
           }
@@ -769,8 +761,8 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_single_underscore_fails() {
             module("""
-             Int myFunc(Int _) = 7;
-             """)
+                Int myFunc(Int _) = 7;
+                """)
                 .loadsWithError(
                     1, "`_` is illegal identifier name. `_` is reserved for future use.");
           }
@@ -803,8 +795,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void default_arg_gets_converted_to_param_type() {
-          module(
-                  """
+          module("""
               [String] myFunc(String param1, [String] param2 = []) = param2;
               [String] result = myFunc("abc");
               """)
@@ -1254,8 +1245,7 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
-        module(
-                """
+        module("""
             myFunc() = "abc";
             result = [
               myFunc(unknown1=""),
@@ -1435,24 +1425,24 @@ public class DeclarationTest extends TestContext {
           @Test
           public void has_no_closing_quote() {
             module("""
-             result = "abc;
-             """).loadsWithProblems();
+                result = "abc;
+                """).loadsWithProblems();
           }
 
           @Test
           public void spans_to_next_line() {
             module("""
-             result = "ab
-             cd";
-             """)
+                result = "ab
+                cd";
+                """)
                 .loadsWithProblems();
           }
 
           @Test
           public void has_illegal_escape_seq() {
             module("""
-             result = "\\A";
-             """)
+                result = "\\A";
+                """)
                 .loadsWithError(
                     1,
                     "Illegal String literal: "
@@ -1635,17 +1625,17 @@ public class DeclarationTest extends TestContext {
     @Test
     public void full_line_comment() {
       module("""
-           # ((( full line comment "
-           result = "";
-           """)
+          # ((( full line comment "
+          result = "";
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void trailing_comment() {
       module("""
-           result = "" ;  # comment at the end of line
-           """)
+          result = "" ;  # comment at the end of line
+          """)
           .loadsWithSuccess();
     }
   }

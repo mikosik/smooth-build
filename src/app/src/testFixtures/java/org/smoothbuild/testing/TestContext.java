@@ -328,10 +328,6 @@ public class TestContext {
     return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
   }
 
-  public TestingModuleLoader module(String code) {
-    return new TestingModuleLoader(code);
-  }
-
   public TaskReporterImpl taskReporter() {
     return taskReporter(reporter());
   }

@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.component;
 
-import static org.smoothbuild.testing.TestingModuleLoader.err;
+import static org.smoothbuild.testing.TestFrontendCompiler.err;
+import static org.smoothbuild.testing.TestFrontendCompiler.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,7 @@ public class ExprSUsageTest extends TestContext {
   class _blob_literal_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
+      module("""
           String myFunc(Blob b) = "abc";
           result = myFunc(0x01);
           """)
@@ -36,15 +36,15 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           result = [0x01];
-           """).loadsWithSuccess();
+          result = [0x01];
+          """).loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
       module("""
-        String myFunc(Blob b = 0x01) = "abc";
-        """).loadsWithSuccess();
+          String myFunc(Blob b = 0x01) = "abc";
+          """).loadsWithSuccess();
     }
 
     @Test
@@ -74,8 +74,7 @@ public class ExprSUsageTest extends TestContext {
   class _int_literal_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
+      module("""
           String myFunc(Int i) = "abc";
           result = myFunc(123);
           """)
@@ -99,15 +98,15 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           result = [123];
-           """).loadsWithSuccess();
+          result = [123];
+          """).loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
       module("""
-        String myFunc(Int i = 123) = "abc";
-        """).loadsWithSuccess();
+          String myFunc(Int i = 123) = "abc";
+          """).loadsWithSuccess();
     }
 
     @Test
@@ -137,11 +136,10 @@ public class ExprSUsageTest extends TestContext {
   class _string_literal_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
-        String myFunc(String param) = "abc";
-        result = myFunc("abc");
-        """)
+      module("""
+          String myFunc(String param) = "abc";
+          result = myFunc("abc");
+          """)
           .loadsWithSuccess();
     }
 
@@ -162,15 +160,15 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           result = ["abc"];
-           """).loadsWithSuccess();
+          result = ["abc"];
+          """).loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
       module("""
-        String myFunc(String s = "abc") = "abc";
-        """).loadsWithSuccess();
+          String myFunc(String s = "abc") = "abc";
+          """).loadsWithSuccess();
     }
 
     @Test
@@ -201,11 +199,10 @@ public class ExprSUsageTest extends TestContext {
   class _array_literal_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
-        myFunc([String] param) = "abc";
-        result = myFunc(["abc"]);
-        """)
+      module("""
+          myFunc([String] param) = "abc";
+          result = myFunc(["abc"]);
+          """)
           .loadsWithSuccess();
     }
 
@@ -226,15 +223,15 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           result = [["abc"]];
-           """).loadsWithSuccess();
+          result = [["abc"]];
+          """).loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
       module("""
-        String myFunc([String] s = ["abc"]) = "abc";
-        """)
+          String myFunc([String] s = ["abc"]) = "abc";
+          """)
           .loadsWithSuccess();
     }
 
@@ -266,22 +263,20 @@ public class ExprSUsageTest extends TestContext {
   class _select_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
-        MyStruct(
-          String field,
-        )
-        myValue = MyStruct("abc");
-        String myFunc(String s) = "abc";
-        result = myFunc(myValue.field);
-        """)
+      module("""
+          MyStruct(
+            String field,
+          )
+          myValue = MyStruct("abc");
+          String myFunc(String s) = "abc";
+          result = myFunc(myValue.field);
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_body() {
-      module(
-              """
+      module("""
           MyStruct(
             String field,
           )
@@ -293,8 +288,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void value_body() {
-      module(
-              """
+      module("""
           MyStruct(
             String field,
           )
@@ -306,52 +300,48 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void array_elem() {
-      module(
-              """
-           MyStruct(
-             String field,
-           )
-           myValue = MyStruct("abc");
-           result = [myValue.field];
-           """)
+      module("""
+          MyStruct(
+            String field,
+          )
+          myValue = MyStruct("abc");
+          result = [myValue.field];
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
-      module(
-              """
-        MyStruct(
-          String field,
-        )
-        value = MyStruct("abc");
-        String myFunc(String value = value.field) = "abc";
-        """)
+      module("""
+          MyStruct(
+            String field,
+          )
+          value = MyStruct("abc");
+          String myFunc(String value = value.field) = "abc";
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_in_call_expression() {
-      module(
-              """
-        MyStruct(
-          ()->String myFunc
-        )
-        String justAbc() = "abc";
-        result = MyStruct(justAbc).myFunc();
-        """)
+      module("""
+          MyStruct(
+            ()->String myFunc
+          )
+          String justAbc() = "abc";
+          result = MyStruct(justAbc).myFunc();
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_in_call_expression_fails_when_field_type_is_not_a_func() {
-      module(
-              """
-        MyStruct(
-          String myField
-        )
-        result = MyStruct("abc").myField();
-        """)
+      module("""
+          MyStruct(
+            String myField
+          )
+          result = MyStruct("abc").myField();
+          """)
           .loadsWithError(4, "Illegal call.");
     }
 
@@ -384,8 +374,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void parens_content() {
-      module(
-              """
+      module("""
           MyStruct(
             String field,
           )
@@ -400,8 +389,7 @@ public class ExprSUsageTest extends TestContext {
   class _pipe_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
+      module("""
           A myIdentity(A a) = a;
           String myFunc(String param) = "abc";
           result = myFunc("abc" > myIdentity());
@@ -423,8 +411,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void func_body() {
-      module(
-              """
+      module("""
           A myIdentity(A a) = a;
           String myFunc(String param) = "abc";
           result() = "abc" > myIdentity();
@@ -434,8 +421,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void value_body() {
-      module(
-              """
+      module("""
           A myIdentity(A a) = a;
           result = "abc" > myIdentity();
           """)
@@ -444,11 +430,10 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void array_elem() {
-      module(
-              """
-             String myIdentity(String string) = string;
-             result = ["abc" > myIdentity()];
-             """)
+      module("""
+          String myIdentity(String string) = string;
+          result = ["abc" > myIdentity()];
+          """)
           .loadsWith(
               err(
                   2,
@@ -466,8 +451,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void param_default_value() {
-      module(
-              """
+      module("""
           A myIdentity(A a) = a;
           String myFunc(String param = "abc" > myIdentity()) = "abc";
           """)
@@ -482,8 +466,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void parens_content() {
-      module(
-              """
+      module("""
           MyStruct(
             String field,
           )
@@ -498,19 +481,17 @@ public class ExprSUsageTest extends TestContext {
   class _call_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
-        String otherFunc() = "abc";
-        String myFunc(String param) = "abc";
-        result = myFunc(otherFunc());
-        """)
+      module("""
+          String otherFunc() = "abc";
+          String myFunc(String param) = "abc";
+          result = myFunc(otherFunc());
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_body() {
-      module(
-              """
+      module("""
           String otherFunc() = "abc";
           result() = otherFunc();
           """)
@@ -519,8 +500,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void value_body() {
-      module(
-              """
+      module("""
           String otherFunc() = "abc";
           result = otherFunc();
           """)
@@ -530,30 +510,28 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           String myFunc() = "abc";
-           result = [myFunc()];
-           """)
+          String myFunc() = "abc";
+          result = [myFunc()];
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
-      module(
-              """
-        String myFunc() = "abc";
-        String otherFunc(String value = myFunc()) = "abc";
-        """)
+      module("""
+          String myFunc() = "abc";
+          String otherFunc(String value = myFunc()) = "abc";
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_in_call_expression() {
-      module(
-              """
-        String justAbc() = "abc";
-        ()->String highOrderFunc() = justAbc;
-        result = highOrderFunc()();
-        """)
+      module("""
+          String justAbc() = "abc";
+          ()->String highOrderFunc() = justAbc;
+          result = highOrderFunc()();
+          """)
           .loadsWithSuccess();
     }
 
@@ -653,8 +631,7 @@ public class ExprSUsageTest extends TestContext {
   class _func_reference_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
+      module("""
           String otherFunc() = "abc";
           String myFunc(()->String param) = "abc";
           result = myFunc(otherFunc);
@@ -664,8 +641,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void func_body() {
-      module(
-              """
+      module("""
           String otherFunc() = "abc";
           result() = otherFunc;
           """)
@@ -684,16 +660,15 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           String myFunc() = "abc";
-           result = [myFunc];
-           """)
+          String myFunc() = "abc";
+          result = [myFunc];
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
-      module(
-              """
+      module("""
           String myFunc() = "abc";
           String otherFunc(()->String value = myFunc) = "abc";
           """)
@@ -733,8 +708,7 @@ public class ExprSUsageTest extends TestContext {
   class _func_param_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
+      module("""
           myIdentity(String string) = string;
           myFunc(String string) = myIdentity(string);
           """)
@@ -802,8 +776,7 @@ public class ExprSUsageTest extends TestContext {
   class _value_reference_used_as {
     @Test
     public void func_arg() {
-      module(
-              """
+      module("""
           String myValue = "abc";
           String myFunc(String param) = "abc";
           result = myFunc(myValue);
@@ -832,16 +805,15 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           String myValue = "abc";
-           result = [myValue];
-           """)
+          String myValue = "abc";
+          result = [myValue];
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void param_default_value() {
-      module(
-              """
+      module("""
           String myValue = "abc";
           String myFunc(String value = myValue) = "abc";
           """)
@@ -850,21 +822,20 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void func_in_call_expression() {
-      module(
-              """
-        String justAbc() = "abc";
-        myValue = justAbc;
-        result = myValue();
-        """)
+      module("""
+          String justAbc() = "abc";
+          myValue = justAbc;
+          result = myValue();
+          """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_in_call_expression_fails_when_value_type_is_not_a_func() {
       module("""
-        myValue = "abc";
-        result = myValue();
-        """)
+          myValue = "abc";
+          result = myValue();
+          """)
           .loadsWithError(2, "Illegal call.");
     }
 
@@ -904,8 +875,7 @@ public class ExprSUsageTest extends TestContext {
   class _struct_type_used_as {
     @Test
     public void field_type() {
-      module(
-              """
+      module("""
           ReferencingStruct(
            MyStruct field
           )
@@ -916,8 +886,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void field_arrayed_type() {
-      module(
-              """
+      module("""
           ReferencingStruct(
            String firstField,
            [MyStruct] field
@@ -929,8 +898,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void value_type() {
-      module(
-              """
+      module("""
           @Native("Impl.met")
           MyStruct myFunc();
           MyStruct myValue = myFunc();
@@ -941,8 +909,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void value_arrayed_type() {
-      module(
-              """
+      module("""
           @Native("Impl.met")
           [MyStruct] myValue();
           MyStruct()
@@ -952,8 +919,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void func_param_type() {
-      module(
-              """
+      module("""
           String myFunc(MyStruct param) = "abc";
           MyStruct()
           """)
@@ -962,8 +928,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void func_arrayed_type() {
-      module(
-              """
+      module("""
           String myFunc([MyStruct] param) = "abc";
           MyStruct()
           """)
@@ -972,8 +937,7 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void func_result_type() {
-      module(
-              """
+      module("""
           @Native("Impl.met")
           MyStruct myFunc(String param);
           MyStruct()
@@ -995,8 +959,7 @@ public class ExprSUsageTest extends TestContext {
   class _type_var_used_as {
     @Test
     public void func_arg_fails() {
-      module(
-              """
+      module("""
           String myFunc(String param) = "abc";
           result = myFunc(A);
           """)
@@ -1035,8 +998,8 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_in_call_expression_fails() {
       module("""
-            result = A();
-            """).loadsWith(err(1, "`A` is undefined."));
+          result = A();
+          """).loadsWith(err(1, "`A` is undefined."));
     }
 
     @Test

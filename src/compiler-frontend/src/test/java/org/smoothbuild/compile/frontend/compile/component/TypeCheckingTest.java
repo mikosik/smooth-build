@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.component;
 
+import static org.smoothbuild.testing.TestFrontendCompiler.module;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -352,42 +354,50 @@ public class TypeCheckingTest extends TestContext {
 
     @Test
     public void mono_to_mono_success() {
-      module(buildSourceCode("Int int", "7")).loadsWithSuccess();
+      var code = buildSourceCode("Int int", "7");
+      module(code).loadsWithSuccess();
     }
 
     @Test
     public void mono_to_mono_error() {
-      module(buildSourceCode("Blob blob", "7")).loadsWithError(1, "Illegal call.");
+      var code = buildSourceCode("Blob blob", "7");
+      module(code).loadsWithError(1, "Illegal call.");
     }
 
     @Test
     public void mono_to_poly_success() {
-      module(buildSourceCode("A a", "7")).loadsWithSuccess();
+      var code = buildSourceCode("A a", "7");
+      module(code).loadsWithSuccess();
     }
 
     @Test
     public void mono_to_poly_error() {
-      module(buildSourceCode("[A] a", "7")).loadsWithError(1, "Illegal call.");
+      var code = buildSourceCode("[A] a", "7");
+      module(code).loadsWithError(1, "Illegal call.");
     }
 
     @Test
     public void poly_to_mono_success() {
-      module(buildSourceCode("[Int] param", "[]")).loadsWithSuccess();
+      var code = buildSourceCode("[Int] param", "[]");
+      module(code).loadsWithSuccess();
     }
 
     @Test
     public void poly_to_mono_error() {
-      module(buildSourceCode("[Int] param", "[[]]")).loadsWithError(1, "Illegal call.");
+      var code = buildSourceCode("[Int] param", "[[]]");
+      module(code).loadsWithError(1, "Illegal call.");
     }
 
     @Test
     public void poly_to_poly_success() {
-      module(buildSourceCode("[A] param", "[]")).loadsWithSuccess();
+      var code = buildSourceCode("[A] param", "[]");
+      module(code).loadsWithSuccess();
     }
 
     @Test
     public void poly_to_poly_error() {
-      module(buildSourceCode("(A)->A param", "[]")).loadsWithError(1, "Illegal call.");
+      var code = buildSourceCode("(A)->A param", "[]");
+      module(code).loadsWithError(1, "Illegal call.");
     }
   }
 
