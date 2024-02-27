@@ -1,7 +1,8 @@
 package org.smoothbuild.compile.frontend.compile.component;
 
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.testing.TestingModuleLoader.err;
+import static org.smoothbuild.testing.TestFrontendCompiler.err;
+import static org.smoothbuild.testing.TestFrontendCompiler.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

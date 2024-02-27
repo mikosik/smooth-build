@@ -33,21 +33,25 @@ import org.smoothbuild.layout.SmoothSpace;
 import org.smoothbuild.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.testing.accept.MemoryReporter;
 
-public class TestingModuleLoader {
+public class TestFrontendCompiler {
   private final String sourceCode;
   private String importedSourceCode;
   private Try<ScopeS> definitions;
 
-  TestingModuleLoader(String sourceCode) {
+  public static TestFrontendCompiler module(String sourceCode) {
+    return new TestFrontendCompiler(sourceCode);
+  }
+
+  private TestFrontendCompiler(String sourceCode) {
     this.sourceCode = sourceCode;
   }
 
-  public TestingModuleLoader withImported(String imported) {
+  public TestFrontendCompiler withImported(String imported) {
     this.importedSourceCode = imported;
     return this;
   }
 
-  public TestingModuleLoader loadsWithSuccess() {
+  public TestFrontendCompiler loadsWithSuccess() {
     definitions = load();
     assertWithMessage(messageWithSourceCode()).that(definitions.logs()).isEmpty();
     return this;
