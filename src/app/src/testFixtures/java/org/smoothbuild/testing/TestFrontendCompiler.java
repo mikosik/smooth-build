@@ -151,6 +151,6 @@ public class TestFrontendCompiler {
   }
 
   public static Log err(int line, String message) {
-    return error("build.smooth:" + line + ": " + message);
+    return error("{prj}/build.smooth:" + line + ": " + message);
   }
 }

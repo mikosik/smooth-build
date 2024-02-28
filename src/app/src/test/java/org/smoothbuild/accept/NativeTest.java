@@ -305,8 +305,9 @@ public class NativeTest extends AcceptanceTestCase {
           clazz.getCanonicalName()));
       evaluate("result");
       assertThat(logs())
-          .containsExactly(fatal("build.smooth:1: Error loading bytecode for `brokenFunc` using "
-              + "provider specified as `org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
+          .containsExactly(fatal("{prj}/build.smooth:1: Error loading bytecode for `brokenFunc`"
+              + " using provider specified as "
+              + "`org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
               + "Providing method is not public."));
     }
 
@@ -336,7 +337,7 @@ public class NativeTest extends AcceptanceTestCase {
           clazz.getCanonicalName()));
       evaluate("result");
       assertThat(logs())
-          .containsExactly(fatal("build.smooth:1: Error loading bytecode for `result` using "
+          .containsExactly(fatal("{prj}/build.smooth:1: Error loading bytecode for `result` using "
               + "provider specified as `org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
               + "Providing method is not public."));
     }

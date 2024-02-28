@@ -19,6 +19,6 @@ public record FileLocation(FilePath file, int line) implements SourceLocation {
 
   @Override
   public String toString() {
-    return file.path() + ":" + line;
+    return file + ":" + line;
   }
 }
