@@ -9,9 +9,9 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class FuncSTest extends TestContext {
+public class FuncSTest extends TestExpressionS {
   @Test
   public void func_without_params_can_be_called_without_args() {
     FuncS func = myFunc(intTS(), list());

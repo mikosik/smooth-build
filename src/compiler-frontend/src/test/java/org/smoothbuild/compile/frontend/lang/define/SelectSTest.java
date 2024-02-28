@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class SelectSTest extends TestContext {
+public class SelectSTest extends TestExpressionS {
   @Test
   public void to_string() {
     var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));

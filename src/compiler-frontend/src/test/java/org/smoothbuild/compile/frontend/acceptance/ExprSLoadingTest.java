@@ -14,9 +14,9 @@ import org.smoothbuild.compile.frontend.lang.define.CallS;
 import org.smoothbuild.compile.frontend.lang.define.EvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedExprValueS;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class ExprSLoadingTest extends TestContext {
+public class ExprSLoadingTest extends TestExpressionS {
   @Nested
   class _literal {
     @Test

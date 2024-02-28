@@ -1,15 +1,12 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.TestContext.importedFilePath;
-import static org.smoothbuild.testing.TestContext.location;
-import static org.smoothbuild.testing.TestContext.smoothFilePath;
-import static org.smoothbuild.testing.TestContext.traceS;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class TraceSTest {
+public class TraceSTest extends TestExpressionS {
   @Test
   public void equals_and_hashCode() {
     var tester = new EqualsTester();

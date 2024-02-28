@@ -6,20 +6,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.testing.TestContext.arrayTS;
-import static org.smoothbuild.testing.TestContext.blobTS;
-import static org.smoothbuild.testing.TestContext.boolTS;
-import static org.smoothbuild.testing.TestContext.funcTS;
-import static org.smoothbuild.testing.TestContext.intTS;
-import static org.smoothbuild.testing.TestContext.interfaceTS;
-import static org.smoothbuild.testing.TestContext.sigS;
-import static org.smoothbuild.testing.TestContext.stringTS;
-import static org.smoothbuild.testing.TestContext.structTS;
-import static org.smoothbuild.testing.TestContext.tupleTS;
-import static org.smoothbuild.testing.TestContext.varA;
-import static org.smoothbuild.testing.TestContext.varB;
-import static org.smoothbuild.testing.TestContext.varC;
-import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -33,8 +19,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class TypeSTest {
+public class TypeSTest extends TestExpressionS {
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(TypeFS.baseTs()).hasSize(4);

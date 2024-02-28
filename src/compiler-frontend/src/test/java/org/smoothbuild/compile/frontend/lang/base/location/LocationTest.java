@@ -5,14 +5,14 @@ import static org.smoothbuild.compile.frontend.lang.base.location.Locations.comm
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.internalLocation;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.unknownLocation;
-import static org.smoothbuild.testing.TestContext.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class LocationTest {
+public class LocationTest extends TestExpressionS {
   @Nested
   class _source_location {
     @Test

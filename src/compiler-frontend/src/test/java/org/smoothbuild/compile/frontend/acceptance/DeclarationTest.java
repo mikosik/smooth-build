@@ -5,7 +5,7 @@ import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.testing.TestFrontendCompiler.err;
 import static org.smoothbuild.testing.TestFrontendCompiler.module;
-import static org.smoothbuild.testing.type.TestedTSF.TESTED_TYPES;
+import static org.smoothbuild.testing.TestedTSF.TESTED_TYPES;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -16,10 +16,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.testing.type.TestedTS;
+import org.smoothbuild.testing.TestExpressionS;
+import org.smoothbuild.testing.TestedTS;
 
-public class DeclarationTest extends TestContext {
+public class DeclarationTest extends TestExpressionS {
   @Nested
   class _members {
     @Nested

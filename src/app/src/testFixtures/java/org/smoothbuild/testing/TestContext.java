@@ -3,7 +3,6 @@ package org.smoothbuild.testing;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.common.Constants.CHARSET;
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.io.Okios.intToByteString;
@@ -23,7 +22,6 @@ import okio.ByteString;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.compile.backend.BackendCompile;
@@ -937,17 +935,5 @@ public class TestContext extends TestExpressionS {
 
   public static BsMapping bsMapping(Hash hash, Location location) {
     return new BsMapping(map(), map(hash, location));
-  }
-
-  @SafeVarargs
-  public static <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(list(nameds).toMap(Named::name, v -> v));
-  }
-
-  public static void writeFile(FileSystem fileSystem, PathS path, String content)
-      throws IOException {
-    try (var bufferedSink = fileSystem.sink(path)) {
-      bufferedSink.writeUtf8(content);
-    }
   }
 }
