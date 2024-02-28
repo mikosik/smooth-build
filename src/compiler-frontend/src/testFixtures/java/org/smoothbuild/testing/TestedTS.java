@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.type;
+package org.smoothbuild.testing;
 
 import static java.lang.String.join;
 

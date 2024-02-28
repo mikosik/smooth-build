@@ -2,6 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
+import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
@@ -18,17 +19,16 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.layout.SmoothSpace.PROJECT;
-import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.function.Function;
+import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
@@ -93,8 +93,14 @@ import org.smoothbuild.compile.frontend.lang.type.VarS;
 import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 
 public class TestExpressionS {
+  public static final Space STANDARD_LIBRARY_SPACE = new MySpace("ssl");
+  public static final Space PROJECT_SPACE = new MySpace("prj");
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
+  static final FilePath STANDARD_LIBRARY_MODULE_FILE_PATH =
+      FilePath.filePath(STANDARD_LIBRARY_SPACE, path("std_lib.smooth"));
+  static final FilePath DEFAULT_MODULE_FILE_PATH =
+      FilePath.filePath(PROJECT_SPACE, path("build.smooth"));
 
   public static java.util.List<TypeS> typesToTest() {
     return nonCompositeTypes().stream()
@@ -826,11 +832,11 @@ public class TestExpressionS {
   }
 
   public static FilePath importedFilePath() {
-    return new FilePath(STANDARD_LIBRARY, path(IMPORTED_FILE_PATH));
+    return new FilePath(STANDARD_LIBRARY_SPACE, path(IMPORTED_FILE_PATH));
   }
 
   public static FilePath filePath(String filePath) {
-    return new FilePath(PROJECT, path(filePath));
+    return new FilePath(PROJECT_SPACE, path(filePath));
   }
 
   public static Log userFatal(int line, String message) {
@@ -851,5 +857,17 @@ public class TestExpressionS {
 
   private static String shortName(String fullName) {
     return fullName.substring(Math.max(0, fullName.lastIndexOf(':')));
+  }
+
+  @SafeVarargs
+  public static <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
+    return immutableBindings(list(nameds).toMap(Named::name, v -> v));
+  }
+
+  record MySpace(String name) implements Space {
+    @Override
+    public String prefix() {
+      return name;
+    }
   }
 }

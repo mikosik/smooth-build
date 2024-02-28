@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
 import org.smoothbuild.compile.frontend.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class InferenceTest extends TestContext {
+public class InferenceTest extends TestExpressionS {
   @Nested
   class _infer_named_value_type {
     @Nested

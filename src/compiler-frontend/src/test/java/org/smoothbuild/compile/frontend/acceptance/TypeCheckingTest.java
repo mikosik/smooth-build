@@ -4,9 +4,9 @@ import static org.smoothbuild.testing.TestFrontendCompiler.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class TypeCheckingTest extends TestContext {
+public class TypeCheckingTest extends TestExpressionS {
   @Nested
   class _named_value_type_and_its_body_type {
     @Test

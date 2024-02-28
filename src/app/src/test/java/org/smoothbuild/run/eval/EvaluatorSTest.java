@@ -12,7 +12,6 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
@@ -115,7 +114,8 @@ public class EvaluatorSTest extends TestContext {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(filePersister.persist(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
+          when(filePersister.persist(filePath(PROJECT_SPACE, path("build.jar"))))
+              .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
                   EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
@@ -131,7 +131,8 @@ public class EvaluatorSTest extends TestContext {
               nlist(itemS(intTS(), "p")));
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(filePersister.persist(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
+          when(filePersister.persist(filePath(PROJECT_SPACE, path("build.jar"))))
+              .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
                   EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
@@ -214,7 +215,8 @@ public class EvaluatorSTest extends TestContext {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(filePersister.persist(filePath(PROJECT, path("build.jar")))).thenReturn(jar);
+          when(filePersister.persist(filePath(PROJECT_SPACE, path("build.jar"))))
+              .thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
           when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(funcB));

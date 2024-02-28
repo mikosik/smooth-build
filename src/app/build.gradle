@@ -18,7 +18,7 @@ dependencies {
     implementation libs.picocli
 
     testFixturesApi project(':src:common')
-    testFixturesApi project(':src:compiler-frontend')
+    testFixturesApi testFixtures(project(':src:compiler-frontend'))
     testFixturesApi libs.guava
     testFixturesApi libs.guice
     testFixturesApi libs.junit.jupiter.api

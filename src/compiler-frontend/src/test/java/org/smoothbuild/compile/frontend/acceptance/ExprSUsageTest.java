@@ -5,9 +5,9 @@ import static org.smoothbuild.testing.TestFrontendCompiler.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.TestExpressionS;
 
-public class ExprSUsageTest extends TestContext {
+public class ExprSUsageTest extends TestExpressionS {
   @Nested
   class _blob_literal_used_as {
     @Test

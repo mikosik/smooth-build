@@ -15,6 +15,7 @@ import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 import static org.smoothbuild.layout.SpaceUtils.forSpace;
 import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.testing.TestFrontendCompiler.writeFile;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
