@@ -5,8 +5,8 @@ import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.canno
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class DecodeExprRootExceptionTest extends TestContext {
   @Test

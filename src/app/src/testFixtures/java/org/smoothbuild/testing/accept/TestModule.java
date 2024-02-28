@@ -5,9 +5,9 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskMatcher;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.SandboxHash;
 
 public class TestModule extends AbstractModule {

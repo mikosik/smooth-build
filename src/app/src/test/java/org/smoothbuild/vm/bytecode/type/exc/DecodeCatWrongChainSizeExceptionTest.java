@@ -3,8 +3,8 @@ package org.smoothbuild.vm.bytecode.type.exc;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.CategoryKinds;
 
 public class DecodeCatWrongChainSizeExceptionTest extends TestContext {

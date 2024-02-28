@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.hashed.exc;
 
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 
 public class DecodeHashChainException extends HashedDbException {
   public DecodeHashChainException(Hash hash, long remainder) {

@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.exc;
 
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 
 public class DecodeExprNoSuchExprException extends DecodeExprException {
   public DecodeExprNoSuchExprException(Hash hash) {

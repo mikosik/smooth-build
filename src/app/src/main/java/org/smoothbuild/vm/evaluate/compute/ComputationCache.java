@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import okio.BufferedSink;
 import okio.BufferedSource;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.layout.ForSpace;
@@ -21,7 +22,6 @@ import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.task.Output;
 

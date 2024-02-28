@@ -15,6 +15,7 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_
 import jakarta.inject.Inject;
 import java.math.BigInteger;
 import java.util.HashMap;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.List;
@@ -64,7 +65,6 @@ import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
 import org.smoothbuild.vm.bytecode.load.FilePersister;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;

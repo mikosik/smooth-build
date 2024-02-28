@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class ExprBCollisionTest extends TestContext {
   @Test

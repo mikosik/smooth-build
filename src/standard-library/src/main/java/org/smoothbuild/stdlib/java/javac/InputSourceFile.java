@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 
@@ -30,6 +30,6 @@ public class InputSourceFile extends SimpleJavaFileObject {
   }
 
   private Scanner scanner() throws BytecodeException {
-    return new Scanner(fileContent(file).source().inputStream(), UTF_8);
+    return new Scanner(fileContent(file).source().inputStream(), CHARSET);
   }
 }

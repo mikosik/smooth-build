@@ -2,9 +2,9 @@ package org.smoothbuild.vm.evaluate.task;
 
 import static java.util.Arrays.asList;
 
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class TaskHashes {

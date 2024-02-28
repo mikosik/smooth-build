@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.string;
 
-import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.common.Constants.CHARSET;
 
 import java.io.IOException;
 import org.smoothbuild.vm.bytecode.BytecodeException;

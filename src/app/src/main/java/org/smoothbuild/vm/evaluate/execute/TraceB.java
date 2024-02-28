@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import java.util.Objects;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 
 public final class TraceB {
   private final Element elements;

@@ -6,10 +6,10 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class BoolBTest extends TestContext {
   @Test

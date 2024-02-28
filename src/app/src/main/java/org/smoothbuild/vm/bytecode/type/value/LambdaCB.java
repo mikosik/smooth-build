@@ -3,10 +3,10 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.LAMBDA;
 
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public final class LambdaCB extends FuncCB {
   public LambdaCB(Hash hash, FuncTB funcTB) {
