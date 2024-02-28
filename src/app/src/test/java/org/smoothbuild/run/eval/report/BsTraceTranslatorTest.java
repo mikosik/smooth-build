@@ -5,11 +5,11 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.unknownLocation;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
 
 public class BsTraceTranslatorTest extends TestContext {

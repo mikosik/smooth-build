@@ -1,7 +1,7 @@
 package org.smoothbuild.common;
 
 import static com.google.common.io.ByteStreams.toByteArray;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.smoothbuild.common.Constants.CHARSET;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -20,8 +20,8 @@ public class CommandExecutor {
     Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
     Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
     int exitCode = process.waitFor();
-    String systemOut = new String(inputStream.get(), UTF_8);
-    String systemErr = new String(errorStream.get(), UTF_8);
+    String systemOut = new String(inputStream.get(), CHARSET);
+    String systemErr = new String(errorStream.get(), CHARSET);
     return new CommandResult(exitCode, systemOut, systemErr);
   }
 

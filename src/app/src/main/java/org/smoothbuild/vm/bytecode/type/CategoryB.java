@@ -1,12 +1,12 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import java.util.Objects;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.Strings;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeIllegalCategoryException;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 /**
  * Category of ExprB.

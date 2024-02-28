@@ -3,10 +3,10 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 /**
  * This class is immutable.

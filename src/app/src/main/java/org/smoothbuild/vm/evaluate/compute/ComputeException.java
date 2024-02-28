@@ -1,8 +1,8 @@
 package org.smoothbuild.vm.evaluate.compute;
 
 import java.io.IOException;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class ComputeException extends Exception {
   public static ComputeException corruptedValueException(Hash hash, String message) {

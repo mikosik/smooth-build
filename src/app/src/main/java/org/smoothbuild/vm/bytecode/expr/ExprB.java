@@ -5,6 +5,7 @@ import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainBytecodeExc
 import static org.smoothbuild.vm.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 
 import java.util.Objects;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.vm.bytecode.BytecodeException;
@@ -13,7 +14,6 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongChainSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.vm.bytecode.expr.exc.ExprDbException;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;

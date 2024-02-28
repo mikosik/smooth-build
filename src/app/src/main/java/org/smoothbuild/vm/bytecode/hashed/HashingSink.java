@@ -5,6 +5,7 @@ import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import java.io.IOException;
 import okio.ForwardingSink;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.function.Function0;

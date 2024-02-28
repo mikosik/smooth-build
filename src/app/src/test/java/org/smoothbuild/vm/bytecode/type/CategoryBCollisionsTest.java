@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class CategoryBCollisionsTest extends TestContext {
   @Test

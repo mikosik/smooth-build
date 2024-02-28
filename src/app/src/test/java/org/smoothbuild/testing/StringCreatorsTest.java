@@ -2,7 +2,7 @@ package org.smoothbuild.testing;
 
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
-import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 

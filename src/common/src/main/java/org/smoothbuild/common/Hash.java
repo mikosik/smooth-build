@@ -1,9 +1,9 @@
-package org.smoothbuild.vm.bytecode.hashed;
+package org.smoothbuild.common;
 
 import static okio.Okio.blackhole;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.common.Constants.CHARSET;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;

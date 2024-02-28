@@ -13,10 +13,10 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class InstallationHashes {
   private final FileResolver fileResolver;

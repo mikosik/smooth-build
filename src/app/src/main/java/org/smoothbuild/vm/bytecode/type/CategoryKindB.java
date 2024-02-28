@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import java.util.function.BiFunction;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
@@ -19,7 +20,6 @@ import org.smoothbuild.vm.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BaseKindB;

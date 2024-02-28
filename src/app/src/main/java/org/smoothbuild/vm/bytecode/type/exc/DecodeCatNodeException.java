@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.type.exc;
 
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB;
 
 public class DecodeCatNodeException extends DecodeCatException {

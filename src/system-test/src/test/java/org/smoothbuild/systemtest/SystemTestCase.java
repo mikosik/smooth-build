@@ -2,15 +2,14 @@ package org.smoothbuild.systemtest;
 
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.createDirectories;
 import static java.util.Locale.ROOT;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.disk.RecursiveDeleter.deleteRecursively;
@@ -82,7 +81,7 @@ public abstract class SystemTestCase {
   public void createFile(String path, String content) throws IOException {
     Path fullPath = absolutePath(path);
     createDirectories(fullPath.getParent());
-    try (FileWriter writer = new FileWriter(fullPath.toString(), UTF_8)) {
+    try (FileWriter writer = new FileWriter(fullPath.toString(), CHARSET)) {
       writer.write(content);
     }
   }

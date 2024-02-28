@@ -7,10 +7,10 @@ import java.util.List;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class BlobBTest extends TestContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");

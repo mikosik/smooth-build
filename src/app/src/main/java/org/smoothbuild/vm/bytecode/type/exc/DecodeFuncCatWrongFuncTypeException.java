@@ -4,7 +4,7 @@ import static org.smoothbuild.vm.bytecode.type.CategoryDb.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.MAP_FUNC;
 
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 

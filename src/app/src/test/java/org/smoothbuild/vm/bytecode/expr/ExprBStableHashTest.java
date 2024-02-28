@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.List.list;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class ExprBStableHashTest extends TestContext {
   @Nested

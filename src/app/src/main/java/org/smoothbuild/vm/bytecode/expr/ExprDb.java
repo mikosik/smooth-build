@@ -7,6 +7,7 @@ import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrong
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import java.math.BigInteger;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
@@ -31,7 +32,6 @@ import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.hashed.HashingSink;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;

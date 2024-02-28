@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.hashed.exc;
 
 import java.io.IOException;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 
 public class HashedDbException extends Exception {
   public HashedDbException(String message) {

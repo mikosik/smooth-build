@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.type.oper;
 
-import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;

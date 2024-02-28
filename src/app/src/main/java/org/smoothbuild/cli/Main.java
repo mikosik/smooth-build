@@ -1,6 +1,6 @@
 package org.smoothbuild.cli;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.smoothbuild.common.Constants.CHARSET;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -28,7 +28,7 @@ public class Main {
   }
 
   private static PrintWriter printWriter(PrintStream printStream) {
-    return new PrintWriter(printStream, true, UTF_8);
+    return new PrintWriter(printStream, true, CHARSET);
   }
 
   private static class ShortErrorMessageHandler implements IParameterExceptionHandler {

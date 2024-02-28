@@ -8,6 +8,7 @@ import static org.smoothbuild.vm.evaluate.compute.ComputeException.corruptedValu
 import java.math.BigInteger;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -15,7 +16,6 @@ import org.smoothbuild.vm.bytecode.expr.value.BoolB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.task.Output;
 
 public class ComputationCacheTest extends TestContext {

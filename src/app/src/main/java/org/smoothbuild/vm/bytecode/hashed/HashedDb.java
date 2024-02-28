@@ -5,7 +5,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
-import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 
@@ -16,6 +16,7 @@ import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import okio.BufferedSink;
 import okio.BufferedSource;
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;

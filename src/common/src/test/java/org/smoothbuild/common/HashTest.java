@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.bytecode.hashed;
+package org.smoothbuild.common;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;

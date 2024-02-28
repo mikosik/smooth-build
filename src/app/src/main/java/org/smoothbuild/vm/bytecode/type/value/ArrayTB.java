@@ -4,10 +4,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 /**
  * This class is immutable.

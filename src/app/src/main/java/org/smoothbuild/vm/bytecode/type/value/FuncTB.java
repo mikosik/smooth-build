@@ -3,11 +3,11 @@ package org.smoothbuild.vm.bytecode.type.value;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.funcTypeName;
 
+import org.smoothbuild.common.Hash;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.ExprDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeIllegalCategoryException;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public final class FuncTB extends TypeB {
   private final TupleTB params;
