@@ -8,6 +8,7 @@ import org.smoothbuild.testing.TestContext;
 public class StringSTest extends TestContext {
   @Test
   public void to_string() {
-    assertThat(stringS(7, "abc").toString()).isEqualTo("StringS(String, \"abc\", build.smooth:7)");
+    assertThat(stringS(7, "abc").toString())
+        .isEqualTo("StringS(String, \"abc\", {prj}/build.smooth:7)");
   }
 }

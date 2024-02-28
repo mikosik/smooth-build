@@ -31,7 +31,7 @@ public class TraceSTest {
     assertThat(trace.toString())
         .isEqualTo(
             """
-            @ build.smooth:17    first-name
-            @ imported.smooth:19 second-name""");
+            @ {prj}/build.smooth:17    first-name
+            @ {ssl}/imported.smooth:19 second-name""");
   }
 }

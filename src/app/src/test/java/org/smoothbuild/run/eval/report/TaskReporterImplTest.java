@@ -74,8 +74,8 @@ public class TaskReporterImplTest extends TestContext {
     testHeader(
         bsMapping(exprHash, location(7)),
         task,
-        padEnd("::Evaluating::{}.", NAME_LENGTH_LIMIT + 1, ' ') + "build.smooth:7                 "
-            + "exec");
+        padEnd("::Evaluating::{}.", NAME_LENGTH_LIMIT + 1, ' ')
+            + "{prj}/build.smooth:7           exec");
   }
 
   @Test

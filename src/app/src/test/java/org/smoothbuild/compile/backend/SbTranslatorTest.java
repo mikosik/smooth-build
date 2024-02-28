@@ -309,10 +309,11 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void param_ref_to_unknown_param_causes_exception() throws Exception {
+      public void param_ref_to_unknown_param_causes_exception() {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(instantiateS(funcS)))
-            .throwsException(new SbTranslatorException("Cannot resolve `p2` at build.smooth:1."));
+            .throwsException(
+                new SbTranslatorException("Cannot resolve `p2` at {prj}/build.smooth:1."));
       }
 
       @Test

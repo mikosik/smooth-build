@@ -18,8 +18,9 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_PATH;
+import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -825,7 +826,7 @@ public class TestExpressionS {
   }
 
   public static FilePath importedFilePath() {
-    return filePath(IMPORTED_FILE_PATH);
+    return new FilePath(STANDARD_LIBRARY, path(IMPORTED_FILE_PATH));
   }
 
   public static FilePath filePath(String filePath) {
@@ -841,7 +842,7 @@ public class TestExpressionS {
   }
 
   private static String userFileMessage(int line, String message) {
-    return DEFAULT_MODULE_PATH.toString() + ":" + line + ": " + message;
+    return DEFAULT_MODULE_FILE_PATH + ":" + line + ": " + message;
   }
 
   public static SynchronizedFileSystem synchronizedMemoryFileSystem() {

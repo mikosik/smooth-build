@@ -176,7 +176,7 @@ public class DeclarationTest extends TestContext {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  build.smooth:2: MyStruct ~> MyStruct""");
+                  {prj}/build.smooth:2: MyStruct ~> MyStruct""");
           }
 
           @Test
@@ -192,7 +192,7 @@ public class DeclarationTest extends TestContext {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  build.smooth:3: MyStruct ~> MyStruct""");
+                  {prj}/build.smooth:3: MyStruct ~> MyStruct""");
           }
 
           @Test
@@ -207,7 +207,7 @@ public class DeclarationTest extends TestContext {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  build.smooth:2: MyStruct ~> MyStruct""");
+                  {prj}/build.smooth:2: MyStruct ~> MyStruct""");
           }
 
           @Test
@@ -222,7 +222,7 @@ public class DeclarationTest extends TestContext {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  build.smooth:2: MyStruct ~> MyStruct""");
+                  {prj}/build.smooth:2: MyStruct ~> MyStruct""");
           }
         }
 

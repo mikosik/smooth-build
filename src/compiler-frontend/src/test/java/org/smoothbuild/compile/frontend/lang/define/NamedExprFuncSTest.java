@@ -23,11 +23,11 @@ public class NamedExprFuncSTest extends TestContext {
                   type = Int
                   name = myParam
                   defaultValue = None
-                  location = build.smooth:1
+                  location = {prj}/build.smooth:1
                 )
               ]
-              location = build.smooth:1
-              body = IntS(Int, 17, build.smooth:1)
+              location = {prj}/build.smooth:1
+              body = IntS(Int, 17, {prj}/build.smooth:1)
             )""");
   }
 }

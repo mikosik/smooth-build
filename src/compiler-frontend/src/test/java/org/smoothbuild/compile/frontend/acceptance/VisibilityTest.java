@@ -355,7 +355,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myValue ~> myValue""";
+            {prj}/build.smooth:1: myValue ~> myValue""";
         module(code).loadsWithError(error);
       }
 
@@ -367,7 +367,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myFunc1 ~> myFunc1""";
+            {prj}/build.smooth:1: myFunc1 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -382,7 +382,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct ~> MyStruct""";
+            {prj}/build.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
 
@@ -397,7 +397,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct ~> MyStruct""";
+            {prj}/build.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
 
@@ -412,7 +412,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct ~> MyStruct""";
+            {prj}/build.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
 
@@ -427,7 +427,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct ~> MyStruct""";
+            {prj}/build.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
     }
@@ -444,8 +444,8 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myValue1 ~> myValue2
-            build.smooth:2: myValue2 ~> myValue1""";
+            {prj}/build.smooth:1: myValue1 ~> myValue2
+            {prj}/build.smooth:2: myValue2 ~> myValue1""";
         module(code).loadsWithError(error);
       }
 
@@ -459,8 +459,8 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myFunc1 ~> myFunc2
-            build.smooth:2: myFunc2 ~> myFunc1""";
+            {prj}/build.smooth:1: myFunc1 ~> myFunc2
+            {prj}/build.smooth:2: myFunc2 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -474,7 +474,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myFunc ~> myFunc""";
+            {prj}/build.smooth:1: myFunc ~> myFunc""";
         module(code).loadsWithError(error);
       }
 
@@ -488,7 +488,7 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:2: myValue ~> myValue""";
+            {prj}/build.smooth:2: myValue ~> myValue""";
         module(code).loadsWithError(error);
       }
 
@@ -506,8 +506,8 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -525,8 +525,8 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -544,8 +544,8 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -563,8 +563,8 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
     }
@@ -582,9 +582,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myValue1 ~> myValue2
-            build.smooth:2: myValue2 ~> myValue3
-            build.smooth:3: myValue3 ~> myValue1""";
+            {prj}/build.smooth:1: myValue1 ~> myValue2
+            {prj}/build.smooth:2: myValue2 ~> myValue3
+            {prj}/build.smooth:3: myValue3 ~> myValue1""";
         module(code).loadsWithError(error);
       }
 
@@ -599,9 +599,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myFunc1 ~> myFunc2
-            build.smooth:2: myFunc2 ~> myFunc3
-            build.smooth:3: myFunc3 ~> myFunc1""";
+            {prj}/build.smooth:1: myFunc1 ~> myFunc2
+            {prj}/build.smooth:2: myFunc2 ~> myFunc3
+            {prj}/build.smooth:3: myFunc3 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -616,9 +616,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myValue1 ~> myFunc
-            build.smooth:2: myFunc ~> myValue2
-            build.smooth:3: myValue2 ~> myValue1""";
+            {prj}/build.smooth:1: myValue1 ~> myFunc
+            {prj}/build.smooth:2: myFunc ~> myValue2
+            {prj}/build.smooth:3: myValue2 ~> myValue1""";
         module(code).loadsWithError(error);
       }
 
@@ -633,9 +633,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Dependency graph contains cycle:
-            build.smooth:1: myFunc1 ~> myValue
-            build.smooth:2: myValue ~> myFunc2
-            build.smooth:3: myFunc2 ~> myFunc1""";
+            {prj}/build.smooth:1: myFunc1 ~> myValue
+            {prj}/build.smooth:2: myValue ~> myFunc2
+            {prj}/build.smooth:3: myFunc2 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -656,9 +656,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct3
-            build.smooth:8: MyStruct3 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct3
+            {prj}/build.smooth:8: MyStruct3 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -679,9 +679,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct3
-            build.smooth:8: MyStruct3 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct3
+            {prj}/build.smooth:8: MyStruct3 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -702,9 +702,9 @@ public class VisibilityTest extends TestContext {
         var error =
             """
             Type hierarchy contains cycle:
-            build.smooth:2: MyStruct1 ~> MyStruct2
-            build.smooth:5: MyStruct2 ~> MyStruct3
-            build.smooth:8: MyStruct3 ~> MyStruct1""";
+            {prj}/build.smooth:2: MyStruct1 ~> MyStruct2
+            {prj}/build.smooth:5: MyStruct2 ~> MyStruct3
+            {prj}/build.smooth:8: MyStruct3 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
     }
@@ -1090,7 +1090,7 @@ public class VisibilityTest extends TestContext {
     }
 
     private static String alreadyDefinedIn(FilePath filePath, int line, String name) {
-      return "`" + name + "` is already defined at " + filePath.path() + ":" + line + ".";
+      return "`" + name + "` is already defined at " + filePath + ":" + line + ".";
     }
   }
 }

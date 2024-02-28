@@ -22,10 +22,10 @@ public class ConstructorSTest extends TestContext {
                   type = Int
                   name = field
                   defaultValue = None
-                  location = build.smooth:2
+                  location = {prj}/build.smooth:2
                 )
               ]
-              location = build.smooth:17
+              location = {prj}/build.smooth:17
             )""");
   }
 }

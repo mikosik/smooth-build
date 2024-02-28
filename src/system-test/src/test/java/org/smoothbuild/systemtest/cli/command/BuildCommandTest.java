@@ -101,7 +101,7 @@ public class BuildCommandTest {
           """;
       private static final String NATIVE_CALL_TASK_HEADER =
           """
-          ::Evaluating::concat()                      build.smooth:1                 exec
+          ::Evaluating::concat()                      {prj}/build.smooth:1           exec
           """;
 
       @Test
@@ -143,7 +143,7 @@ public class BuildCommandTest {
           """;
       private static final String COMBINE_TASK_HEADER =
           """
-          ::Evaluating::(,)                           build.smooth:1                 exec
+          ::Evaluating::(,)                           {prj}/build.smooth:1           exec
           """;
 
       @Test
@@ -170,21 +170,21 @@ public class BuildCommandTest {
           """;
       private static final String BLOB_CONST_TASK_HEADER =
           """
-          ::Evaluating::Blob                          build.smooth:1
+          ::Evaluating::Blob                          {prj}/build.smooth:1
           """;
       private static final String INT_CONST = """
           result = 123;
           """;
       private static final String INT_CONST_TASK_HEADER =
           """
-          ::Evaluating::Int                           build.smooth:1
+          ::Evaluating::Int                           {prj}/build.smooth:1
           """;
       private static final String STRING_CONST = """
           result = "myLiteral";
           """;
       private static final String STRING_CONST_TASK_HEADER =
           """
-          ::Evaluating::String                        build.smooth:1
+          ::Evaluating::String                        {prj}/build.smooth:1
           """;
 
       @Test
@@ -273,7 +273,7 @@ public class BuildCommandTest {
           """;
       private static final String ORDER_TASK_HEADER =
           """
-          ::Evaluating::[,]                           build.smooth:1                 exec
+          ::Evaluating::[,]                           {prj}/build.smooth:1           exec
           """;
 
       @Test
@@ -305,7 +305,7 @@ public class BuildCommandTest {
             """;
       private static final String SELECT_TASK_HEADER =
           """
-          ::Evaluating::{}.                           build.smooth:5                 exec
+          ::Evaluating::{}.                           {prj}/build.smooth:5           exec
           """;
 
       @Test
@@ -535,7 +535,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::myFunc()                      build.smooth:3                 exec
+          ::Evaluating::myFunc()                      {prj}/build.smooth:3           exec
           """);
     }
 
@@ -552,7 +552,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::{}.                           build.smooth:4                 exec
+          ::Evaluating::{}.                           {prj}/build.smooth:4           exec
           """);
     }
 
@@ -566,7 +566,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::myFunc                        build.smooth:1
+          ::Evaluating::myFunc                        {prj}/build.smooth:1
           """);
     }
 
@@ -580,7 +580,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::myValue                       build.smooth:1
+          ::Evaluating::myValue                       {prj}/build.smooth:1
           """);
     }
 
@@ -593,7 +593,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::[,]                           build.smooth:1                 exec
+          ::Evaluating::[,]                           {prj}/build.smooth:1           exec
           """);
     }
 
@@ -606,7 +606,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::Blob                          build.smooth:1
+          ::Evaluating::Blob                          {prj}/build.smooth:1
           """);
     }
 
@@ -619,7 +619,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::String                        build.smooth:1
+          ::Evaluating::String                        {prj}/build.smooth:1
           """);
     }
 
@@ -632,7 +632,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::Int                           build.smooth:1
+          ::Evaluating::Int                           {prj}/build.smooth:1
           """);
     }
   }

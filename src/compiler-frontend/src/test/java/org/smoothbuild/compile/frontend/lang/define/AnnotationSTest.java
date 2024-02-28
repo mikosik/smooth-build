@@ -14,8 +14,8 @@ public class AnnotationSTest extends TestContext {
             """
             AnnotationS(
               name = myAnnotation
-              path = StringS(String, "myPath", build.smooth:7)
-              location = build.smooth:17
+              path = StringS(String, "myPath", {prj}/build.smooth:7)
+              location = {prj}/build.smooth:17
             )""");
   }
 }
