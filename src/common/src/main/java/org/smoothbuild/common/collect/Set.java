@@ -102,16 +102,14 @@ public class Set<E> implements java.util.Set<E> {
     return set.toArray(generator);
   }
 
-  @Deprecated
   @Override
   public boolean add(E element) {
-    return set.add(element);
+    throw new UnsupportedOperationException();
   }
 
-  @Deprecated
   @Override
   public boolean remove(Object element) {
-    return set.remove(element);
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -119,34 +117,29 @@ public class Set<E> implements java.util.Set<E> {
     return set.containsAll(collection);
   }
 
-  @Deprecated
   @Override
   public boolean addAll(@NotNull Collection<? extends E> collection) {
-    return set.addAll(collection);
+    throw new UnsupportedOperationException();
   }
 
-  @Deprecated
   @Override
   public boolean retainAll(@NotNull Collection<?> collection) {
-    return set.retainAll(collection);
+    throw new UnsupportedOperationException();
   }
 
-  @Deprecated
   @Override
   public boolean removeAll(@NotNull Collection<?> collection) {
-    return set.removeAll(collection);
+    throw new UnsupportedOperationException();
   }
 
-  @Deprecated
   @Override
   public boolean removeIf(Predicate<? super E> filter) {
-    return set.removeIf(filter);
+    throw new UnsupportedOperationException();
   }
 
-  @Deprecated
   @Override
   public void clear() {
-    set.clear();
+    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -9,6 +9,7 @@ import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
+import java.util.Iterator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -191,7 +192,7 @@ public class MapTest {
     @ParameterizedTest
     @MethodSource("maps")
     void values_iterator_remove_fails(Map<Integer, String> map) {
-      var iterator = map.values().iterator();
+      Iterator<String> iterator = map.values().iterator();
       if (iterator.hasNext()) {
         iterator.next();
         assertCall(iterator::remove).throwsException(UnsupportedOperationException.class);
@@ -201,7 +202,7 @@ public class MapTest {
     @ParameterizedTest
     @MethodSource("maps")
     void keys_iterator_remove_fails(Map<Integer, String> map) {
-      var iterator = map.keySet().iterator();
+      Iterator<Integer> iterator = map.keySet().iterator();
       if (iterator.hasNext()) {
         iterator.next();
         assertCall(iterator::remove).throwsException(UnsupportedOperationException.class);

@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import javax.annotation.CheckForNull;
-import org.jetbrains.annotations.Nullable;
 import org.smoothbuild.common.function.Function1;
 
 public final class Map<K, V> implements java.util.Map<K, V> {
@@ -114,15 +112,13 @@ public final class Map<K, V> implements java.util.Map<K, V> {
   }
 
   @Override
-  @Deprecated
   public V remove(Object key) {
-    return map.remove(key);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public void clear() {
-    map.clear();
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -131,50 +127,42 @@ public final class Map<K, V> implements java.util.Map<K, V> {
   }
 
   @Override
-  @Deprecated
   public boolean remove(Object key, Object value) {
-    return map.remove(key, value);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V put(K k, V v) {
-    return map.put(k, v);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V putIfAbsent(K key, V value) {
-    return map.putIfAbsent(key, value);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public boolean replace(K key, V oldValue, V newValue) {
-    return map.replace(key, oldValue, newValue);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V replace(K key, V value) {
-    return map.replace(key, value);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-    return map.computeIfAbsent(key, mappingFunction);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V computeIfPresent(
       K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    return map.computeIfPresent(key, remappingFunction);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V compute(
       K key,
       BiFunction<
@@ -182,25 +170,22 @@ public final class Map<K, V> implements java.util.Map<K, V> {
               ? super @org.checkerframework.checker.nullness.qual.Nullable V,
               ? extends V>
           remappingFunction) {
-    return map.compute(key, remappingFunction);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-    return map.merge(key, value, remappingFunction);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public void putAll(java.util.Map<? extends K, ? extends V> map) {
-    this.map.putAll(map);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  @Deprecated
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-    map.replaceAll(function);
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -209,29 +194,27 @@ public final class Map<K, V> implements java.util.Map<K, V> {
   }
 
   @Override
-  public boolean containsKey(@Nullable Object key) {
+  public boolean containsKey(Object key) {
     return map.containsKey(key);
   }
 
   @Override
-  public boolean containsValue(@Nullable Object value) {
+  public boolean containsValue(Object value) {
     return map.containsValue(value);
   }
 
   @Override
-  @CheckForNull
-  public V get(@Nullable Object key) {
+  public V get(Object key) {
     return map.get(key);
   }
 
   @Override
-  @CheckForNull
-  public V getOrDefault(@Nullable Object key, @Nullable V defaultValue) {
+  public V getOrDefault(Object key, V defaultValue) {
     return map.getOrDefault(key, defaultValue);
   }
 
   @Override
-  public boolean equals(@Nullable Object object) {
+  public boolean equals(Object object) {
     return map.equals(object);
   }
 
