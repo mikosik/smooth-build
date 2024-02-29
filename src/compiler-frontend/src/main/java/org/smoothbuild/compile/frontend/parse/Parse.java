@@ -7,7 +7,6 @@ import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 
 import java.util.BitSet;
-import java.util.function.Function;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -23,11 +22,12 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 
-public class Parse implements Function<Tuple2<String, FilePath>, Try<ModuleContext>> {
+public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContext> {
   @Override
   public Try<ModuleContext> apply(Tuple2<String, FilePath> argument) {
     var logger = new Logger();

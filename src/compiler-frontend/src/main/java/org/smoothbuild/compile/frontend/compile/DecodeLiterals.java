@@ -2,18 +2,18 @@ package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 
-import java.util.function.Function;
 import org.smoothbuild.common.DecodeHexException;
 import org.smoothbuild.common.UnescapeFailedException;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.IntP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StringP;
 
-public class DecodeLiterals implements Function<ModuleP, Try<ModuleP>> {
+public class DecodeLiterals implements TryFunction<ModuleP, ModuleP> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

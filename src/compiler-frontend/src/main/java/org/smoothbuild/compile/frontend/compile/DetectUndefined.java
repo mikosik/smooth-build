@@ -4,10 +4,10 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.isVarName;
 
-import java.util.function.Function;
 import org.smoothbuild.common.Strings;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -25,7 +25,7 @@ import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 /**
  * Detect undefined referencables and types.
  */
-public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
+public class DetectUndefined implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleP> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logger = new Logger();

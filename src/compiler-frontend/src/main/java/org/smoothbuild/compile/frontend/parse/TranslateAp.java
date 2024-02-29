@@ -12,7 +12,6 @@ import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -43,6 +42,7 @@ import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
@@ -70,7 +70,7 @@ import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 
-public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Try<ModuleP>> {
+public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>, ModuleP> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
     var logger = new Logger();

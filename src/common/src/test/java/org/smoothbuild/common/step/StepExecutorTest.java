@@ -17,15 +17,14 @@ import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
-import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.step.Step.stepFactory;
+import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import jakarta.inject.Inject;
-import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -62,7 +61,7 @@ class StepExecutorTest {
     void that_returns_success(List<Log> logs) {
       var reporter = mock(StepReporter.class);
 
-      var result = stepExecutor().execute(step(s -> success(s + "b", logs)), "a", reporter);
+      var result = stepExecutor().execute(tryStep(s -> success(s + "b", logs)), "a", reporter);
 
       assertThat(result).isEqualTo(some("ab"));
       verifyReported(reporter, logs);
@@ -77,7 +76,7 @@ class StepExecutorTest {
     @MethodSource
     void that_returns_failure(List<Log> logs) {
       var reporter = mock(StepReporter.class);
-      var step = step(s -> failure(logs));
+      var step = tryStep(s -> failure(logs));
 
       var result = stepExecutor().execute(step, "a", reporter);
 
@@ -92,7 +91,7 @@ class StepExecutorTest {
     @Test
     void that_returns_null_causes_execution_failure() {
       var reporter = mock(StepReporter.class);
-      var step = step(s -> null);
+      var step = tryStep(s -> null);
       assertCall(() -> stepExecutor().execute(step, "a", reporter))
           .throwsException(NullPointerException.class);
     }
@@ -104,7 +103,7 @@ class StepExecutorTest {
     void that_returns_success() {
       var reporter = mock(StepReporter.class);
 
-      var result = stepExecutor("def").execute(step(SuffixWithInjected.class), "abc", reporter);
+      var result = stepExecutor("def").execute(tryStep(SuffixWithInjected.class), "abc", reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
     }
@@ -114,7 +113,7 @@ class StepExecutorTest {
     void that_returns_failure(Log log) {
       var reporter = mock(StepReporter.class);
 
-      var result = stepExecutor(log).execute(step(LogInjectedLog.class), tuple(), reporter);
+      var result = stepExecutor(log).execute(tryStep(LogInjectedLog.class), tuple(), reporter);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(log));
@@ -127,11 +126,11 @@ class StepExecutorTest {
     @Test
     void that_returns_null_causes_execution_failure() {
       var reporter = mock(StepReporter.class);
-      assertCall(() -> stepExecutor().execute(step(ReturnNull.class), tuple(), reporter))
+      assertCall(() -> stepExecutor().execute(tryStep(ReturnNull.class), tuple(), reporter))
           .throwsException(NullPointerException.class);
     }
 
-    private static class SuffixWithInjected implements Function<String, Try<String>> {
+    private static class SuffixWithInjected implements TryFunction<String, String> {
       private final String string;
 
       @Inject
@@ -145,7 +144,7 @@ class StepExecutorTest {
       }
     }
 
-    private static class LogInjectedLog implements Function<Tuple0, Try<String>> {
+    private static class LogInjectedLog implements TryFunction<Tuple0, String> {
       private final Log log;
 
       @Inject
@@ -159,7 +158,7 @@ class StepExecutorTest {
       }
     }
 
-    private static class ReturnNull implements Function<Tuple0, Try<String>> {
+    private static class ReturnNull implements TryFunction<Tuple0, String> {
       @Override
       public Try<String> apply(Tuple0 tuple0) {
         return null;
@@ -173,7 +172,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.common.log.Level#values")
     void unnamed_step_that_logged_something_uses_empty_string_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> Try.of("value", log));
+      var step = tryStep(t -> Try.of("value", log));
 
       assertStepExecutionReports(step, log);
     }
@@ -182,7 +181,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.common.log.Level#values")
     void named_step_that_logged_something_uses_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> Try.of("value", log)).named("name");
+      var step = tryStep(t -> Try.of("value", log)).named("name");
 
       var reporter = mock(StepReporter.class);
 
@@ -198,7 +197,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.common.log.Level#values")
     void named_inner_step_that_logged_something_uses_full_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> Try.of("value", log)).named("name").named("outer");
+      var step = tryStep(t -> Try.of("value", log)).named("name").named("outer");
 
       var reporter = mock(StepReporter.class);
 
@@ -217,7 +216,7 @@ class StepExecutorTest {
     @Test
     void result_from_first_step_is_passed_to_second_step() {
       var reporter = mock(StepReporter.class);
-      var step = constStep("abc").then(step(s -> success(s + "def")));
+      var step = constStep("abc").then(tryStep(s -> success(s + "def")));
 
       var result = stepExecutor().execute(step, tuple(), reporter);
 
@@ -227,8 +226,8 @@ class StepExecutorTest {
     @Test
     void non_failure_logs_from_each_steps_are_logged() {
       var reporter = mock(StepReporter.class);
-      var step = step(v -> success("abc", info("info")))
-          .then(step(s -> success(s + "def", warning("warning"))));
+      var step = tryStep(v -> success("abc", info("info")))
+          .then(tryStep(s -> success(s + "def", warning("warning"))));
 
       var result = stepExecutor().execute(step, tuple(), reporter);
 
@@ -239,8 +238,8 @@ class StepExecutorTest {
     @Test
     void second_step_is_not_executed_when_first_fails() {
       var reporter = mock(StepReporter.class);
-      Function<Object, Try<String>> function = mock();
-      var step = step(v -> failure(error("error"))).then(step(function));
+      TryFunction<Object, String> function = mock();
+      var step = tryStep(v -> failure(error("error"))).then(tryStep(function));
 
       var result = stepExecutor().execute(step, tuple(), reporter);
 
@@ -266,7 +265,7 @@ class StepExecutorTest {
     @Test
     void failures_created_by_step_factory_are_reported() {
       var reporter = mock(StepReporter.class);
-      var step = stepFactory((String s) -> step((Tuple0 t) -> failure(error("error"))));
+      var step = stepFactory((String s) -> tryStep((Tuple0 t) -> failure(error("error"))));
 
       var result = stepExecutor().execute(step, "abc", reporter);
 

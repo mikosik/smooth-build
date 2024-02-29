@@ -8,10 +8,10 @@ import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
 
-import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -64,7 +64,7 @@ import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 
-public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>> {
+public class ConvertPs implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleS> {
   @Override
   public Try<ModuleS> apply(Tuple2<ModuleP, ScopeS> context) {
     var moduleP = context.element1();

@@ -6,15 +6,15 @@ import static org.smoothbuild.common.log.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.layout.BuildVersion;
 import org.smoothbuild.layout.HashNode;
 import org.smoothbuild.layout.InstallationHashes;
 
-public class Version implements Function<Tuple0, Try<String>> {
+public class Version implements TryFunction<Tuple0, String> {
   private final InstallationHashes installationHashes;
 
   @Inject

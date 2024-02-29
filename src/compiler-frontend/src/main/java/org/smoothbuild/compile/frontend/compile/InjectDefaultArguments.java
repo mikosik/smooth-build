@@ -11,12 +11,12 @@ import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.function.Function;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -35,7 +35,7 @@ import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedFuncS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 
-public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
+public class InjectDefaultArguments implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleP> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logger = new Logger();

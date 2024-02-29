@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
-import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 
@@ -17,7 +17,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
   @Override
   public Integer call() {
     var injector = createInjector(out());
-    var step = step(Version.class);
+    var step = tryStep(Version.class);
     var argument = tuple();
     return runStepExecutor(injector, step, argument);
   }

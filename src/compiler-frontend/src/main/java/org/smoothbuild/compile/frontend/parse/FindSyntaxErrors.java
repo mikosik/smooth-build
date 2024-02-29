@@ -9,9 +9,9 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
-import java.util.function.Function;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ImplicitTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
@@ -29,7 +29,7 @@ import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
  * Catching those errors here makes it easier
  * to provide more detailed error message.
  */
-public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
+public class FindSyntaxErrors implements TryFunction<ModuleP, ModuleP> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

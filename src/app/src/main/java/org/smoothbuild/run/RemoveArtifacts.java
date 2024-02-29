@@ -9,13 +9,13 @@ import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import java.util.function.Function;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.layout.ForSpace;
 
-public class RemoveArtifacts implements Function<Tuple0, Try<Tuple0>> {
+public class RemoveArtifacts implements TryFunction<Tuple0, Tuple0> {
   private final FileSystem fileSystem;
 
   @Inject
