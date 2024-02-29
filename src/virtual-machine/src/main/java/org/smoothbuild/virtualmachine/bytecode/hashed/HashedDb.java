@@ -43,6 +43,10 @@ public class HashedDb {
     this.bucket = bucket;
   }
 
+  public void initialize() throws IOException {
+    bucket.createDir(TEMP_DIR_PATH);
+  }
+
   public Hash writeBigInteger(BigInteger value) throws HashedDbException {
     return writeData(bufferedSink -> bufferedSink.write(value.toByteArray()));
   }

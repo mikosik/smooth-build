@@ -41,6 +41,10 @@ public class ComputationCache {
     this.bytecodeFactory = bytecodeFactory;
   }
 
+  public void initialize() throws IOException {
+    bucket.createDir(Path.root());
+  }
+
   public synchronized void write(Hash hash, Output output) throws ComputeException {
     try (BufferedSink sink = bucket.sink(toPath(hash))) {
       var storedLogs = output.storedLogs();
