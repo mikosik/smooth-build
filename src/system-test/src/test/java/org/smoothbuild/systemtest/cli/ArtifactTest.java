@@ -3,8 +3,8 @@ package org.smoothbuild.systemtest.cli;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.io.Okios.intToByteString;
-import static org.smoothbuild.common.testing.BooleanCreators.falseByteString;
-import static org.smoothbuild.common.testing.BooleanCreators.trueByteString;
+import static org.smoothbuild.common.testing.BooleanCreators.byteStringWithSingleByteEqualOne;
+import static org.smoothbuild.common.testing.BooleanCreators.byteStringWithSingleByteEqualZero;
 
 import java.nio.file.Files;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSystemOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactAsByteStrings("result")).isEqualTo(trueByteString());
+    assertThat(artifactAsByteStrings("result")).isEqualTo(byteStringWithSingleByteEqualOne());
   }
 
   @Test
@@ -104,7 +104,7 @@ public class ArtifactTest extends SystemTestCase {
     assertFinishedWithSuccess();
     assertSystemOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactAsByteStrings("result"))
-        .isEqualTo(list(trueByteString(), falseByteString()));
+        .isEqualTo(list(byteStringWithSingleByteEqualOne(), byteStringWithSingleByteEqualZero()));
   }
 
   @Test
