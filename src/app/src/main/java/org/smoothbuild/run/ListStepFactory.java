@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.log.Try.success;
-import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
 
@@ -20,7 +20,7 @@ import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 public class ListStepFactory implements StepFactory<Tuple0, String> {
   @Override
   public Step<Tuple0, String> create(Tuple0 v) {
-    return frontendCompilerStep().then(step(ListStepFactory::printEvaluables));
+    return frontendCompilerStep().then(tryStep(ListStepFactory::printEvaluables));
   }
 
   private static Try<String> printEvaluables(ScopeS scopeS) {

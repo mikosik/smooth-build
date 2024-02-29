@@ -6,11 +6,11 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
@@ -38,7 +38,7 @@ import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
+public class InferTypes implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleP> {
   @Override
   public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logger = new Logger();

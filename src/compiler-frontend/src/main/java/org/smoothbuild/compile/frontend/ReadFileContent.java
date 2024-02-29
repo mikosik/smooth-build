@@ -8,12 +8,12 @@ import static org.smoothbuild.common.log.Try.success;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.util.function.Function;
 import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 
-public class ReadFileContent implements Function<FilePath, Try<String>> {
+public class ReadFileContent implements TryFunction<FilePath, String> {
   private final FileResolver fileResolver;
 
   @Inject

@@ -3,8 +3,8 @@ package org.smoothbuild.run;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
-import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.step.Step.stepFactory;
+import static org.smoothbuild.common.step.Step.tryStep;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.step.Step;
@@ -22,12 +22,12 @@ public class EvaluateStepFactory
   @Override
   public Step<Tuple0, List<Tuple2<ExprS, ValueB>>> create(Tuple2<ScopeS, List<String>> argument) {
     return constStep(argument)
-        .then(step(FindValues.class))
+        .then(tryStep(FindValues.class))
         .append(argument.element1().evaluables())
         .then(stepFactory(arg -> constStep(arg)
-            .then(step(BackendCompile.class))
+            .then(tryStep(BackendCompile.class))
             .then(maybeStep(EvaluatorBFacade.class))
-            .then(step(valueBs -> success(arg.element1().zip(valueBs, Tuple2::new))))))
+            .then(tryStep(valueBs -> success(arg.element1().zip(valueBs, Tuple2::new))))))
         .named("Evaluating");
   }
 }

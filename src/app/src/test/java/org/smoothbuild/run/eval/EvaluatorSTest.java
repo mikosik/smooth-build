@@ -10,7 +10,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
-import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import com.google.common.collect.ImmutableMap;
@@ -297,7 +297,7 @@ public class EvaluatorSTest extends TestContext {
         bind(TaskReporterImpl.class).toInstance(taskReporter());
       }
     });
-    var step = step(sbTranslatorFacade).then(maybeStep(EvaluatorBFacade.class));
+    var step = tryStep(sbTranslatorFacade).then(maybeStep(EvaluatorBFacade.class));
     var argument = tuple(exprs, evaluables);
 
     return new StepExecutor(injector).execute(step, argument, reporter);

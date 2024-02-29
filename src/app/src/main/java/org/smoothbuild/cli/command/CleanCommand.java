@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
-import static org.smoothbuild.common.step.Step.step;
+import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 
@@ -19,7 +19,7 @@ public class CleanCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel);
-    var step = step(Clean.class);
+    var step = tryStep(Clean.class);
     var argument = tuple();
     return runStepExecutor(injector, step, argument);
   }

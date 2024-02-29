@@ -19,7 +19,6 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
-import java.util.function.Function;
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -27,6 +26,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
@@ -40,7 +40,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 
-public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<String>> {
+public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, String> {
   private final FileSystem fileSystem;
 
   @Inject

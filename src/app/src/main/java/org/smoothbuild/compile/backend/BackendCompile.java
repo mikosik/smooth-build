@@ -6,10 +6,10 @@ import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
-import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
@@ -19,9 +19,8 @@ import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 
 public class BackendCompile
-    implements Function<
-        Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>>,
-        Try<Tuple2<List<ExprB>, BsMapping>>> {
+    implements TryFunction<
+        Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>>, Tuple2<List<ExprB>, BsMapping>> {
   private final BytecodeF bytecodeF;
   private final FilePersister filePersister;
   private final BytecodeLoader bytecodeLoader;

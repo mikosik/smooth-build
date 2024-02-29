@@ -2,8 +2,8 @@ package org.smoothbuild.compile.frontend;
 
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
-import static org.smoothbuild.common.step.Step.step;
 import static org.smoothbuild.common.step.Step.stepFactory;
+import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 
 import org.smoothbuild.common.collect.List;
@@ -29,7 +29,7 @@ import org.smoothbuild.compile.frontend.parse.TranslateAp;
 public class FrontendCompilerStep {
 
   public static Step<Tuple0, ScopeS> createFrontendCompilerStep(List<FilePath> modules) {
-    var step = step(LoadInternalModuleMembers.class);
+    var step = tryStep(LoadInternalModuleMembers.class);
     for (var filePath : modules) {
       step = step.append(filePath)
           .then(stepFactory(new FrontendCompilerStepFactory()).named(filePath.toString()));
@@ -44,24 +44,24 @@ public class FrontendCompilerStep {
       var scopeS = argument.element1();
       var filePath = argument.element2();
       return constStep(filePath)
-          .then(step(ReadFileContent.class))
+          .then(tryStep(ReadFileContent.class))
           .append(filePath)
-          .then(step(Parse.class))
+          .then(tryStep(Parse.class))
           .append(filePath)
-          .then(step(TranslateAp.class))
-          .then(step(FindSyntaxErrors.class))
-          .then(step(DecodeLiterals.class))
-          .then(step(InitializeScopes.class))
+          .then(tryStep(TranslateAp.class))
+          .then(tryStep(FindSyntaxErrors.class))
+          .then(tryStep(DecodeLiterals.class))
+          .then(tryStep(InitializeScopes.class))
           .append(scopeS)
-          .then(step(DetectUndefined.class))
+          .then(tryStep(DetectUndefined.class))
           .append(scopeS)
-          .then(step(InjectDefaultArguments.class))
-          .then(step(SortModuleMembersByDependency.class))
+          .then(tryStep(InjectDefaultArguments.class))
+          .then(tryStep(SortModuleMembersByDependency.class))
           .append(scopeS)
-          .then(step(InferTypes.class))
+          .then(tryStep(InferTypes.class))
           .append(scopeS)
-          .then(step(ConvertPs.class))
-          .then(step((ModuleS m) -> success(scopeS(scopeS, m.members()))));
+          .then(tryStep(ConvertPs.class))
+          .then(tryStep((ModuleS m) -> success(scopeS(scopeS, m.members()))));
     }
   }
 }

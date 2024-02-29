@@ -8,15 +8,15 @@ import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import java.util.function.Function;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.layout.ForSpace;
 
-public class Clean implements Function<Tuple0, Try<String>> {
+public class Clean implements TryFunction<Tuple0, String> {
   private final FileSystem fileSystem;
 
   @Inject

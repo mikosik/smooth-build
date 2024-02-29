@@ -5,10 +5,10 @@ import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
@@ -16,7 +16,7 @@ import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
 import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 
-public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Try<List<ExprS>>> {
+public class FindValues implements TryFunction<Tuple2<ScopeS, List<String>>, List<ExprS>> {
 
   @Override
   public Try<List<ExprS>> apply(Tuple2<ScopeS, List<String>> argument) {
