@@ -32,7 +32,6 @@ public class PromisesTest {
       Runnable parent = mock(Runnable.class);
       List<PromisedValue<String>> promised =
           list(new PromisedValue<>(), new PromisedValue<>(), new PromisedValue<>());
-      ;
       for (PromisedValue<String> child : promised) {
         child.accept("abc");
       }
@@ -46,7 +45,6 @@ public class PromisesTest {
       Runnable parent = mock(Runnable.class);
       List<PromisedValue<String>> promised =
           list(new PromisedValue<>(), new PromisedValue<>(), new PromisedValue<>());
-      ;
       runWhenAllAvailable(promised, parent);
       for (int i = 1; i < promised.size(); i++) {
         promised.get(i).accept("abc");
