@@ -3,8 +3,8 @@ package org.smoothbuild.systemtest.cli;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.io.Okios.intToByteString;
-import static org.smoothbuild.testing.BooleanCreators.falseByteString;
-import static org.smoothbuild.testing.BooleanCreators.trueByteString;
+import static org.smoothbuild.common.testing.BooleanCreators.falseByteString;
+import static org.smoothbuild.common.testing.BooleanCreators.trueByteString;
 
 import java.nio.file.Files;
 import org.junit.jupiter.api.Test;
