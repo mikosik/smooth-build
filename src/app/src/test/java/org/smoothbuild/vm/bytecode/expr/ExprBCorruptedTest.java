@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.StringCreators.illegalString;
+import static org.smoothbuild.common.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
