@@ -35,4 +35,5 @@ tasks.assemble.dependsOn(zip)
 
 test {
     useJUnitPlatform()
+    jvmArgs "-Xshare:off"  // to silence JVM warning emitted by gradle
 }

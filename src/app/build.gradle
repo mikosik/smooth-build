@@ -57,4 +57,5 @@ tasks.assemble.dependsOn(fatJar)
 
 test {
     useJUnitPlatform()
+    jvmArgs "-Xshare:off"  // to silence JVM warning emitted by gradle
 }
