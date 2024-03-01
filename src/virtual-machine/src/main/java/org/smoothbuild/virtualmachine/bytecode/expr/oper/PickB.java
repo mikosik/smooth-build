@@ -49,11 +49,11 @@ public class PickB extends OperB {
   }
 
   private ExprB readPickable() throws BytecodeException {
-    return readDataSeqElem(PICKABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
+    return readElementFromDataAsInstanceChain(PICKABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
   private ExprB readIndex() throws BytecodeException {
-    var index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
+    var index = readElementFromDataAsInstanceChain(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
     if (!(index.evaluationT() instanceof IntTB)) {
       throw new DecodeExprWrongNodeTypeException(
           hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationT());

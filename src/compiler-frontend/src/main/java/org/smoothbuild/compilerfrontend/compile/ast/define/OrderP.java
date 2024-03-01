@@ -9,15 +9,15 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 public final class OrderP extends ExprP {
-  private final List<ExprP> elems;
+  private final List<ExprP> elements;
 
-  public OrderP(List<ExprP> elems, Location location) {
+  public OrderP(List<ExprP> elements, Location location) {
     super(location);
-    this.elems = listOfAll(elems);
+    this.elements = listOfAll(elements);
   }
 
-  public List<ExprP> elems() {
-    return elems;
+  public List<ExprP> elements() {
+    return elements;
   }
 
   @Override
@@ -26,18 +26,18 @@ public final class OrderP extends ExprP {
       return true;
     }
     return object instanceof OrderP that
-        && Objects.equals(this.elems, that.elems)
+        && Objects.equals(this.elements, that.elements)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(elems, location());
+    return Objects.hash(elements, location());
   }
 
   @Override
   public String toString() {
-    var fields = list("elems = " + elems, "location = " + location()).toString("\n");
+    var fields = list("elems = " + elements, "location = " + location()).toString("\n");
     return "OrderP(\n" + indent(fields) + "\n)";
   }
 }

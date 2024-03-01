@@ -76,35 +76,35 @@ public abstract class ExprB {
     return readNode(DATA_PATH, dataHash());
   }
 
-  protected long readDataSeqSize() throws BytecodeException {
+  protected long readDataAsHashChainSize() throws BytecodeException {
     return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChainSize(dataHash()),
         e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
-  protected List<ValueB> readDataSeqElems(int expectedSize) throws BytecodeException {
-    var seqHashes = readDataSeqHashes(expectedSize);
-    var exprs = readDataSeqElems(seqHashes);
+  protected List<ValueB> readDataAsValueChain(int expectedSize) throws BytecodeException {
+    var seqHashes = readDataAsHashChain(expectedSize);
+    var exprs = readDataAsExprChain(seqHashes);
     return castDataSeqElements(exprs, ValueB.class);
   }
 
-  protected <T extends ExprB> List<T> readDataSeqElems(Class<T> clazz) throws BytecodeException {
-    var exprs = readDataSeqElems();
+  protected <T extends ExprB> List<T> readDataAsExprChain(Class<T> clazz) throws BytecodeException {
+    var exprs = readDataAsExprChain();
     return castDataSeqElements(exprs, clazz);
   }
 
-  protected List<ExprB> readDataSeqElems() throws BytecodeException {
-    var seqHashes = readDataSeqHashes();
-    return readDataSeqElems(seqHashes);
+  protected List<ExprB> readDataAsExprChain() throws BytecodeException {
+    var seqHashes = readDataAsHashChain();
+    return readDataAsExprChain(seqHashes);
   }
 
-  private List<ExprB> readDataSeqElems(List<Hash> seq) throws BytecodeException {
+  private List<ExprB> readDataAsExprChain(List<Hash> seq) throws BytecodeException {
     return seq.zipWithIndex()
         .map(tuple -> readNode(dataNodePath(tuple.element2()), seq.get(tuple.element2())));
   }
 
-  private List<Hash> readDataSeqHashes(int expectedSize) throws ExprDbException {
-    List<Hash> data = readDataSeqHashes();
+  private List<Hash> readDataAsHashChain(int expectedSize) throws ExprDbException {
+    List<Hash> data = readDataAsHashChain();
     if (data.size() != expectedSize) {
       throw new DecodeExprWrongChainSizeException(
           hash(), category(), DATA_PATH, expectedSize, data.size());
@@ -112,20 +112,20 @@ public abstract class ExprB {
     return data;
   }
 
-  private List<Hash> readDataSeqHashes() throws ExprDbException {
+  private List<Hash> readDataAsHashChain() throws ExprDbException {
     return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChain(dataHash()),
         e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
   }
 
-  protected <T> T readDataSeqElem(int i, int expectedSize, Class<T> clazz)
+  protected <T> T readElementFromDataAsInstanceChain(int i, int expectedSize, Class<T> clazz)
       throws BytecodeException {
-    var expr = readDataSeqElem(i, expectedSize);
+    var expr = readElementFromDataAsExprChain(i, expectedSize);
     return castNode(dataNodePath(i), expr, clazz);
   }
 
-  private ExprB readDataSeqElem(int i, int expectedSize) throws BytecodeException {
-    var elemHash = readDataSeqElemHash(i, expectedSize);
+  private ExprB readElementFromDataAsExprChain(int i, int expectedSize) throws BytecodeException {
+    var elemHash = readHashFromDataAsHashChain(i, expectedSize);
     return readNode(dataNodePath(i), elemHash);
   }
 
@@ -135,9 +135,9 @@ public abstract class ExprB {
         e -> new DecodeExprNodeException(hash(), category(), nodePath, e));
   }
 
-  private Hash readDataSeqElemHash(int i, int expectedSize) throws ExprDbException {
+  private Hash readHashFromDataAsHashChain(int i, int expectedSize) throws ExprDbException {
     checkElementIndex(i, expectedSize);
-    return readDataSeqHashes(expectedSize).get(i);
+    return readDataAsHashChain(expectedSize).get(i);
   }
 
   protected static String exprsToString(List<? extends ExprB> exprs) {

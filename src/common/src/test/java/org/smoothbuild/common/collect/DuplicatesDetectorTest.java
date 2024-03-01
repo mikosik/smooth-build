@@ -23,7 +23,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void adding_elem_for_the_second_time_returns_true() {
+  public void adding_element_for_the_second_time_returns_true() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     assertThat(duplicatesDetector.addValue("string1")).isTrue();
@@ -45,7 +45,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void has_no_duplicates_after_adding_two_different_elems() {
+  public void has_no_duplicates_after_adding_two_different_elements() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
@@ -67,7 +67,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_duplicate_values_returns_empty_set_when_two_different_elems_have_been_added() {
+  public void get_duplicate_values_returns_empty_set_when_two_different_elements_have_been_added() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
@@ -84,7 +84,7 @@ public class DuplicatesDetectorTest {
 
   @Test
   public void
-      get_duplicate_values_returns_set_with_elems_that_have_been_added_twice_without_those_added_once() {
+      get_duplicate_values_returns_set_with_elements_that_have_been_added_twice_without_those_added_once() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
@@ -111,7 +111,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_unique_values_returns_both_added_elems() {
+  public void get_unique_values_returns_both_added_elements() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");

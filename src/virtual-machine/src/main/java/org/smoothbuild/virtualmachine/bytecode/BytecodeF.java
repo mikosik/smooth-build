@@ -70,7 +70,7 @@ public class BytecodeF {
 
   // Objects
 
-  public ArrayBBuilder arrayBuilderWithElems(TypeB elemT) throws BytecodeException {
+  public ArrayBBuilder arrayBuilderWithElements(TypeB elemT) throws BytecodeException {
     return exprDb.arrayBuilder(categoryDb.array(elemT));
   }
 

@@ -245,7 +245,7 @@ public class HashedDbTest extends TestVirtualMachine {
   @Nested
   class _hash_chain {
     @Test
-    public void with_no_elems_can_be_read_back() throws Exception {
+    public void with_no_elements_can_be_read_back() throws Exception {
       var hash = hashedDb().writeHashChain();
       assertThat(hashedDb().readHashChain(hash)).isEqualTo(list());
     }
@@ -257,7 +257,7 @@ public class HashedDbTest extends TestVirtualMachine {
     }
 
     @Test
-    public void with_two_elems_can_be_read_back() throws Exception {
+    public void with_two_elements_can_be_read_back() throws Exception {
       var hash = hashedDb().writeHashChain(Hash.of("abc"), Hash.of("def"));
       assertThat(hashedDb().readHashChain(hash)).isEqualTo(list(Hash.of("abc"), Hash.of("def")));
     }
@@ -280,19 +280,19 @@ public class HashedDbTest extends TestVirtualMachine {
   @Nested
   class _hash_chain_size {
     @Test
-    public void with_no_elems_has_zero_size() throws Exception {
+    public void with_no_elements_has_zero_size() throws Exception {
       var hash = hashedDb().writeHashChain();
       assertThat(hashedDb().readHashChainSize(hash)).isEqualTo(0);
     }
 
     @Test
-    public void with_one_elem_has_size_one() throws Exception {
+    public void with_one_element_has_size_one() throws Exception {
       var hash = hashedDb().writeHashChain(Hash.of("1"));
       assertThat(hashedDb().readHashChainSize(hash)).isEqualTo(1);
     }
 
     @Test
-    public void with_three_elem_has_size_three() throws Exception {
+    public void with_three_element_has_size_three() throws Exception {
       var hash = hashedDb().writeHashChain(Hash.of("1"), Hash.of("2"), Hash.of("3"));
       assertThat(hashedDb().readHashChainSize(hash)).isEqualTo(3);
     }

@@ -29,7 +29,7 @@ public class JarFunc {
     var duplicatesDetector = new HashSet<String>();
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
       try (var jarOutputStream = new JarOutputStream(buffer(blobBuilder).outputStream())) {
-        for (TupleB file : files.elems(TupleB.class)) {
+        for (TupleB file : files.elements(TupleB.class)) {
           var filePath = filePath(file).toJ();
           if (!duplicatesDetector.add(filePath)) {
             nativeApi.log().error("Cannot jar two files with the same path = " + filePath);

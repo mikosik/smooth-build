@@ -55,11 +55,11 @@ public class SelectB extends OperB {
   }
 
   private ExprB readSelectable() throws BytecodeException {
-    return readDataSeqElem(SELECTABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
+    return readElementFromDataAsInstanceChain(SELECTABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
   private IntB readIndex() throws BytecodeException {
-    return readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, IntB.class);
+    return readElementFromDataAsInstanceChain(IDX_IDX, DATA_SEQ_SIZE, IntB.class);
   }
 
   public static record SubExprsB(ExprB selectable, IntB index) implements ExprsB {

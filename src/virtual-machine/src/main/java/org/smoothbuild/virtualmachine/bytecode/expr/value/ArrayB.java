@@ -32,10 +32,10 @@ public final class ArrayB extends ValueB {
   }
 
   public long size() throws BytecodeException {
-    return readDataSeqSize();
+    return readDataAsHashChainSize();
   }
 
-  public <T extends ValueB> List<T> elems(Class<T> elemTJ) throws BytecodeException {
+  public <T extends ValueB> List<T> elements(Class<T> elemTJ) throws BytecodeException {
     assertIsIterableAs(elemTJ);
     @SuppressWarnings("unchecked")
     List<T> result = (List<T>) elementsMemoizer.apply();
@@ -64,7 +64,7 @@ public final class ArrayB extends ValueB {
   }
 
   private List<ValueB> readElements() throws BytecodeException {
-    return readDataSeqElems(ValueB.class);
+    return readDataAsExprChain(ValueB.class);
   }
 
   @Override

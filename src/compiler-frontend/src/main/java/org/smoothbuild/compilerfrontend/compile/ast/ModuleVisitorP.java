@@ -164,7 +164,7 @@ public class ModuleVisitorP {
   }
 
   public void visitOrder(OrderP orderP) {
-    orderP.elems().forEach(this::visitExpr);
+    orderP.elements().forEach(this::visitExpr);
   }
 
   public void visitReference(ReferenceP referenceP) {}

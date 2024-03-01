@@ -66,7 +66,7 @@ public class TaskReporterImpl implements TaskReporter {
     return result
         .output()
         .messages()
-        .elems(TupleB.class)
+        .elements(TupleB.class)
         .map(message -> new Log(level(message), text(message)));
   }
 

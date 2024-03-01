@@ -373,9 +373,9 @@ public class InferenceTest extends TestExpressionS {
   @Nested
   class _infer_order_type {
     @Nested
-    class _when_order_has_zero_elems {
+    class _when_order_has_zero_elements {
       @Test
-      public void zero_elems_order() {
+      public void zero_elements_order() {
         var code = """
           result = [];
           """;
@@ -463,7 +463,7 @@ public class InferenceTest extends TestExpressionS {
     }
 
     @Nested
-    class _when_order_has_two_elems {
+    class _when_order_has_two_elements {
       @Test
       public void with_same_base_type() {
         var code = """

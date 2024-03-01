@@ -75,7 +75,7 @@ public class ComputationCache {
       }
 
       var messageArray = (ArrayB) messages;
-      for (var message : messageArray.elems(TupleB.class)) {
+      for (var message : messageArray.elements(TupleB.class)) {
         var severity = severity(message);
         if (!isValidSeverity(severity)) {
           throw corruptedValueException(

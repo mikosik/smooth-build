@@ -138,7 +138,7 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveOrder(OrderP orderP) {
-    return orderP.elems().stream().allMatch(this::resolveExpr) && resolveExprType(orderP);
+    return orderP.elements().stream().allMatch(this::resolveExpr) && resolveExprType(orderP);
   }
 
   private boolean resolveSelect(SelectP selectP) {

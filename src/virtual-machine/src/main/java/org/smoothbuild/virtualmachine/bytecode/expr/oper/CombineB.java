@@ -39,7 +39,7 @@ public class CombineB extends OperB {
 
   public List<ExprB> items() throws BytecodeException {
     List<TypeB> expectedTypes = category().evaluationT().elements();
-    List<ExprB> items = readDataSeqElems(ExprB.class);
+    List<ExprB> items = readDataAsExprChain(ExprB.class);
     if (items.size() != expectedTypes.size()) {
       throw new DecodeCombineWrongElementsSizeException(hash(), category(), items.size());
     }

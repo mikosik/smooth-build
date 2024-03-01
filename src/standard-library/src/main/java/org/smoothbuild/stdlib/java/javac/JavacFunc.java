@@ -67,7 +67,7 @@ public class JavacFunc {
         return null;
       }
       try (var sandboxedJFM = new SandboxedJavaFileManager(standardJFM, nativeApi, libsClasses)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elems(TupleB.class));
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(TupleB.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -76,7 +76,7 @@ public class JavacFunc {
           nativeApi.log().warning("Param 'srcs' is empty list.");
           return nativeApi
               .factory()
-              .arrayBuilderWithElems(nativeApi.factory().fileT())
+              .arrayBuilderWithElements(nativeApi.factory().fileT())
               .build();
         }
 
@@ -112,7 +112,7 @@ public class JavacFunc {
     }
 
     private List<String> options() throws BytecodeException {
-      return options.elems(StringB.class).map(StringB::toJ);
+      return options.elements(StringB.class).map(StringB::toJ);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles)

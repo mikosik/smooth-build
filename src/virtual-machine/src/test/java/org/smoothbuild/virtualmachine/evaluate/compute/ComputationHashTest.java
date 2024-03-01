@@ -93,7 +93,7 @@ public class ComputationHashTest extends TestVirtualMachine {
   }
 
   @Test
-  public void hash_of_computation_with_combine_task_and_one_elem_input_is_stable()
+  public void hash_of_computation_with_combine_task_and_one_element_input_is_stable()
       throws Exception {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB(stringB("abc"));
@@ -102,7 +102,7 @@ public class ComputationHashTest extends TestVirtualMachine {
   }
 
   @Test
-  public void hash_of_computation_with_combine_task_and_two_elems_input_is_stable()
+  public void hash_of_computation_with_combine_task_and_two_elements_input_is_stable()
       throws Exception {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
@@ -111,7 +111,8 @@ public class ComputationHashTest extends TestVirtualMachine {
   }
 
   @Test
-  public void hash_of_computation_with_select_task_and_one_elem_input_is_stable() throws Exception {
+  public void hash_of_computation_with_select_task_and_one_element_input_is_stable()
+      throws Exception {
     var task = new SelectTask(selectB(), traceB());
     var input = tupleB(stringB("abc"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))

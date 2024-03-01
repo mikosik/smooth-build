@@ -228,12 +228,12 @@ public class ExprTypeUnifier {
   }
 
   private Maybe<TypeS> unifyOrder(OrderP orderP) {
-    var elems = orderP.elems();
+    var elems = orderP.elements();
     var elemTs = pullUpMaybe(elems.map(this::unifyExpr));
-    return elemTs.flatMap(types -> unifyElemsWithArray(listOfAll(types), orderP.location()));
+    return elemTs.flatMap(types -> unifyElementsWithArray(listOfAll(types), orderP.location()));
   }
 
-  private Maybe<TypeS> unifyElemsWithArray(List<TypeS> elemTs, Location location) {
+  private Maybe<TypeS> unifyElementsWithArray(List<TypeS> elemTs, Location location) {
     var elemVar = unifier.newTempVar();
     for (TypeS elemT : elemTs) {
       try {

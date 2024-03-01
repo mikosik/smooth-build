@@ -12,10 +12,10 @@ public class ConcatFunc {
     ArrayB array = (ArrayB) args.get(0);
     var factory = nativeApi.factory();
     var elemT = ((ArrayTB) array.evaluationT().elem()).elem();
-    var resultBuilder = factory.arrayBuilderWithElems(elemT);
-    var elems = array.elems(ArrayB.class);
+    var resultBuilder = factory.arrayBuilderWithElements(elemT);
+    var elems = array.elements(ArrayB.class);
     for (ArrayB elem : elems) {
-      resultBuilder.addAll(elem.elems(ValueB.class));
+      resultBuilder.addAll(elem.elements(ValueB.class));
     }
     return resultBuilder.build();
   }

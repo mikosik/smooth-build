@@ -158,7 +158,7 @@ public class SchedulerB {
 
     private void onMapArrayArgEvaluated(ArrayB arrayB) throws BytecodeException {
       var mappingFuncArg = args().get(1);
-      var callBs = arrayB.elems(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
+      var callBs = arrayB.elements(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
       var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationT()).result();
       var orderB = bytecodeF.order(bytecodeF.arrayT(mappingFuncResultT), callBs);
       scheduleJobEvaluation(newJob(orderB, callJob), callJob.promisedValue());

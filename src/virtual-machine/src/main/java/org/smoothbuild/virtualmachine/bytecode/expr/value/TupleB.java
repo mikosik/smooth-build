@@ -47,7 +47,7 @@ public final class TupleB extends ValueB {
   private List<ValueB> instantiateItems() throws BytecodeException {
     var type = type();
     var expectedElementTs = type.elements();
-    var elements = readDataSeqElems(expectedElementTs.size());
+    var elements = readDataAsValueChain(expectedElementTs.size());
     var elementTs = elements.map(ValueB::type);
     validateTuple(
         type,

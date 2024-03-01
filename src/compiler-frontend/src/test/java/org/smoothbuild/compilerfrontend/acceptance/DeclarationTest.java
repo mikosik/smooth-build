@@ -1200,7 +1200,7 @@ public class DeclarationTest extends TestExpressionS {
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
-      public void with_two_elems(String literal) {
+      public void with_two_elements(String literal) {
         module("result = [" + literal + ", " + literal + "];").loadsWithSuccess();
       }
 
@@ -1212,13 +1212,13 @@ public class DeclarationTest extends TestExpressionS {
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
-      public void with_array_and_empty_array_elems(String literal) {
+      public void with_array_and_empty_array_elements(String literal) {
         module("result = [[" + literal + "], []];").loadsWithSuccess();
       }
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
-      public void with_array_containing_two_elems(String literal) {
+      public void with_array_containing_two_elements(String literal) {
         module("result = [[" + literal + ", " + literal + "]];").loadsWithSuccess();
       }
 
@@ -1256,7 +1256,7 @@ public class DeclarationTest extends TestExpressionS {
       }
 
       @Test
-      public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
+      public void error_in_first_elem_not_suppresses_error_in_second_elem() {
         module(
                 """
             myFunc() = "abc";

@@ -14,9 +14,9 @@ public class Concat {
     var elementT = first.evaluationT().elem();
     return nativeApi
         .factory()
-        .arrayBuilderWithElems(elementT)
-        .addAll(first.elems(ValueB.class))
-        .addAll(second.elems(ValueB.class))
+        .arrayBuilderWithElements(elementT)
+        .addAll(first.elements(ValueB.class))
+        .addAll(second.elements(ValueB.class))
         .build();
   }
 }

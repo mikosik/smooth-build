@@ -433,7 +433,7 @@ public class VisibilityTest extends TestExpressionS {
     }
 
     @Nested
-    class two_elems_cycle {
+    class two_elements_cycle {
       @Test
       public void value_value() {
         var code =

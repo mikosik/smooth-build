@@ -65,11 +65,11 @@ public class CallB extends OperB {
   }
 
   private ExprB readFunc() throws BytecodeException {
-    return readDataSeqElem(CALLABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
+    return readElementFromDataAsInstanceChain(CALLABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
   private CombineB readArgs() throws BytecodeException {
-    return readDataSeqElem(ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
+    return readElementFromDataAsInstanceChain(ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
   }
 
   public static record SubExprsB(ExprB func, CombineB args) implements ExprsB {

@@ -23,15 +23,15 @@ public final class NativeFuncB extends FuncB {
   }
 
   public BlobB jar() throws BytecodeException {
-    return readDataSeqElem(JAR_IDX, DATA_SEQ_SIZE, BlobB.class);
+    return readElementFromDataAsInstanceChain(JAR_IDX, DATA_SEQ_SIZE, BlobB.class);
   }
 
   public StringB classBinaryName() throws BytecodeException {
-    return readDataSeqElem(CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
+    return readElementFromDataAsInstanceChain(CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
   }
 
   public BoolB isPure() throws BytecodeException {
-    return readDataSeqElem(IS_PURE_IDX, DATA_SEQ_SIZE, BoolB.class);
+    return readElementFromDataAsInstanceChain(IS_PURE_IDX, DATA_SEQ_SIZE, BoolB.class);
   }
 
   @Override

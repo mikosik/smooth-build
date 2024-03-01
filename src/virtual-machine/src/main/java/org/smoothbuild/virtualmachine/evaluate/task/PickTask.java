@@ -22,7 +22,7 @@ public final class PickTask extends Task {
     var components = input.elements();
     checkArgument(components.size() == 2);
     int index = index(components).toJ().intValue();
-    var elems = array(components).elems(ValueB.class);
+    var elems = array(components).elements(ValueB.class);
     if (index < 0 || elems.size() <= index) {
       container
           .log()
