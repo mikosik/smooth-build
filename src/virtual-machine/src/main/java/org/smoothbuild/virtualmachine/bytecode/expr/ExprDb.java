@@ -138,16 +138,16 @@ public class ExprDb {
   // validators
 
   private static void validateBodyEvaluationT(FuncTB funcTB, ExprB body) {
-    if (!body.evaluationT().equals(funcTB.result())) {
+    if (!body.evaluationType().equals(funcTB.result())) {
       var message = "body.evaluationT() = %s should be equal to funcTB.res() = %s."
-          .formatted(body.evaluationT().q(), funcTB.result().q());
+          .formatted(body.evaluationType().q(), funcTB.result().q());
       throw new IllegalArgumentException(message);
     }
   }
 
   private void validateOrderElements(TypeB elemT, List<ExprB> elems) {
     for (int i = 0; i < elems.size(); i++) {
-      var iElemT = elems.get(i).evaluationT();
+      var iElemT = elems.get(i).evaluationType();
       if (!elemT.equals(iElemT)) {
         throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
             + " but element at index " + i + " has type " + iElemT.q() + ".");
@@ -156,7 +156,7 @@ public class ExprDb {
   }
 
   private FuncTB castEvaluationTypeToFuncTB(ExprB func) {
-    if (func.evaluationT() instanceof FuncTB funcT) {
+    if (func.evaluationType() instanceof FuncTB funcT) {
       return funcT;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
@@ -165,7 +165,7 @@ public class ExprDb {
 
   private void validateArgsInCall(FuncTB funcTB, CombineB args) {
     validateArgs(
-        funcTB, args.evaluationT().elements(), () -> illegalArgs(funcTB, args.evaluationT()));
+        funcTB, args.evaluationType().elements(), () -> illegalArgs(funcTB, args.evaluationType()));
   }
 
   private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {
@@ -279,7 +279,7 @@ public class ExprDb {
   }
 
   private CombineB newCombine(List<ExprB> items) throws BytecodeException {
-    var evaluationT = categoryDb.tuple(items.map(ExprB::evaluationT));
+    var evaluationT = categoryDb.tuple(items.map(ExprB::evaluationType));
     var combineCB = categoryDb.combine(evaluationT);
     var data = writeCombineData(items);
     var root = newRoot(combineCB, data);
@@ -307,9 +307,9 @@ public class ExprDb {
 
   private PickB newPick(ExprB pickable, ExprB index) throws BytecodeException {
     var evaluationT = pickEvaluationT(pickable);
-    if (!(index.evaluationT() instanceof IntTB)) {
+    if (!(index.evaluationType() instanceof IntTB)) {
       throw new IllegalArgumentException(
-          "index.evaluationT() should be IntTB but is " + index.evaluationT().q() + ".");
+          "index.evaluationT() should be IntTB but is " + index.evaluationType().q() + ".");
     }
     var data = writePickData(pickable, index);
     var category = categoryDb.pick(evaluationT);
@@ -318,7 +318,7 @@ public class ExprDb {
   }
 
   private TypeB pickEvaluationT(ExprB pickable) {
-    var evaluationT = pickable.evaluationT();
+    var evaluationT = pickable.evaluationType();
     if (evaluationT instanceof ArrayTB arrayT) {
       return arrayT.elem();
     } else {
@@ -342,7 +342,7 @@ public class ExprDb {
   }
 
   private TypeB selectEvaluationT(ExprB selectable, IntB index) throws BytecodeException {
-    var evaluationT = selectable.evaluationT();
+    var evaluationT = selectable.evaluationType();
     if (evaluationT instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
       var elements = tuple.elements();

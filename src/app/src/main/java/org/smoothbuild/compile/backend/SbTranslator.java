@@ -359,10 +359,10 @@ public class SbTranslator {
       throw new SbTranslatorException(annotation.location() + ": " + bytecode.left());
     }
     var bytecodeB = bytecode.right();
-    if (!bytecodeB.evaluationT().equals(typeB)) {
+    if (!bytecodeB.evaluationType().equals(typeB)) {
       throw new SbTranslatorException(annotation.location()
           + ": Bytecode provider returned object of wrong type "
-          + bytecodeB.evaluationT().q()
+          + bytecodeB.evaluationType().q()
           + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;

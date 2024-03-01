@@ -76,7 +76,7 @@ public class VarReducerB {
     if (elements.equals(rewrittenElements)) {
       return orderB;
     } else {
-      return bytecodeF.order(orderB.evaluationT(), rewrittenElements);
+      return bytecodeF.order(orderB.evaluationType(), rewrittenElements);
     }
   }
 
@@ -148,12 +148,12 @@ public class VarReducerB {
       int environmentIndex = index - paramCount;
       if (environmentIndex < environment.size()) {
         var referenced = environment.get(environmentIndex);
-        var jobEvaluationT = referenced.evaluationT();
-        if (jobEvaluationT.equals(varB.evaluationT())) {
+        var jobEvaluationT = referenced.evaluationType();
+        if (jobEvaluationT.equals(varB.evaluationType())) {
           return referenced;
         } else {
           throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
-              .formatted(index, jobEvaluationT.q(), varB.evaluationT().q()));
+              .formatted(index, jobEvaluationT.q(), varB.evaluationType().q()));
         }
       }
       throw new VarOutOfBoundsException(index, paramCount + environment.size());

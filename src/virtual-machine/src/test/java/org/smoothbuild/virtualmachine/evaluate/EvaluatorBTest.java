@@ -217,7 +217,7 @@ public class EvaluatorBTest extends TestVirtualMachine {
         @Test
         public void lambda_passed_as_argument() throws Exception {
           var paramFunc = lambdaB(intB(7));
-          var paramFuncT = paramFunc.evaluationT();
+          var paramFuncT = paramFunc.evaluationType();
           var outerLambda = lambdaB(list(paramFuncT), callB(varB(paramFuncT, 0)));
           var call = callB(outerLambda, paramFunc);
           assertThat(evaluate(call)).isEqualTo(intB(7));
@@ -295,7 +295,7 @@ public class EvaluatorBTest extends TestVirtualMachine {
               .thenReturn(right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-          var nativeFuncT = nativeFuncB.evaluationT();
+          var nativeFuncT = nativeFuncB.evaluationType();
           var outerLambda = lambdaB(list(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
           var call = callB(outerLambda, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call)).isEqualTo(intB(7));

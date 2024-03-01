@@ -33,7 +33,7 @@ public abstract sealed class Task
   }
 
   public TypeB outputT() {
-    return exprB.evaluationT();
+    return exprB.evaluationType();
   }
 
   public Purity purity() {

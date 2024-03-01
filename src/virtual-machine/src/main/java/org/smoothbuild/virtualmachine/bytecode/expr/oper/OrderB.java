@@ -26,7 +26,7 @@ public class OrderB extends OperB {
   }
 
   @Override
-  public ArrayTB evaluationT() {
+  public ArrayTB evaluationType() {
     return category().evaluationT();
   }
 
@@ -39,7 +39,7 @@ public class OrderB extends OperB {
     var elements = readDataAsExprChain(ExprB.class);
     var expectedElementT = category().evaluationT().elem();
     for (int i = 0; i < elements.size(); i++) {
-      var actualT = elements.get(i).evaluationT();
+      var actualT = elements.get(i).evaluationType();
       if (!expectedElementT.equals(actualT)) {
         throw new DecodeExprWrongNodeTypeException(
             hash(), category(), "elements", i, expectedElementT, actualT);

@@ -22,7 +22,7 @@ public final class LambdaB extends FuncB {
   public ExprB body() throws BytecodeException {
     var body = readData();
     var resultT = type().result();
-    var bodyT = body.evaluationT();
+    var bodyT = body.evaluationType();
     if (!resultT.equals(bodyT)) {
       throw new DecodeExprWrongNodeTypeException(hash(), category(), DATA_PATH, resultT, bodyT);
     }

@@ -11,7 +11,7 @@ public class ConcatFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     ArrayB array = (ArrayB) args.get(0);
     var factory = nativeApi.factory();
-    var elemT = ((ArrayTB) array.evaluationT().elem()).elem();
+    var elemT = ((ArrayTB) array.evaluationType().elem()).elem();
     var resultBuilder = factory.arrayBuilderWithElements(elemT);
     var elems = array.elements(ArrayB.class);
     for (ArrayB elem : elems) {

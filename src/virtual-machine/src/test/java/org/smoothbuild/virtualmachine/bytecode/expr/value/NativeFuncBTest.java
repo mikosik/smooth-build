@@ -18,7 +18,7 @@ public class NativeFuncBTest extends TestVirtualMachine {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(nativeFuncB.evaluationT()).isEqualTo(funcT);
+    assertThat(nativeFuncB.evaluationType()).isEqualTo(funcT);
   }
 
   @Test

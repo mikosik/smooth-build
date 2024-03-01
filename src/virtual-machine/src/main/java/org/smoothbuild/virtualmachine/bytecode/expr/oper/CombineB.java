@@ -28,7 +28,7 @@ public class CombineB extends OperB {
   }
 
   @Override
-  public TupleTB evaluationT() {
+  public TupleTB evaluationType() {
     return category().evaluationT();
   }
 
@@ -46,14 +46,14 @@ public class CombineB extends OperB {
     for (int i = 0; i < items.size(); i++) {
       ExprB item = items.get(i);
       TypeB type = expectedTypes.get(i);
-      if (!type.equals(item.evaluationT())) {
+      if (!type.equals(item.evaluationType())) {
         throw new DecodeExprWrongNodeTypeException(
             hash(),
             category(),
             "elements",
             i,
             expectedTypes.get(i),
-            items.get(i).evaluationT());
+            items.get(i).evaluationType());
       }
     }
     return items;
