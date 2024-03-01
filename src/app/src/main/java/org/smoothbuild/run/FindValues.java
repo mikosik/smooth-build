@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.Try.failure;
-import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
+import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
@@ -10,11 +10,11 @@ import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.compile.frontend.lang.define.ExprS;
-import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
-import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
-import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
-import org.smoothbuild.compile.frontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.ExprS;
+import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
+import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
+import org.smoothbuild.compilerfrontend.lang.define.ReferenceS;
+import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
 public class FindValues implements TryFunction<Tuple2<ScopeS, List<String>>, List<ExprS>> {
 
