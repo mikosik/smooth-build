@@ -13,13 +13,13 @@ dependencies {
     implementation libs.okio
     implementation libs.zip4j
 
-    testImplementation testFixtures(project(":src:app"))
+    testImplementation testFixtures(project(":src:virtual-machine"))
+    testImplementation project(':src:common-testing')
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params
     testImplementation libs.mockito
     testImplementation libs.truth
-    testImplementation project(':src:common-testing')
 }
 
 def zip = tasks.register('zip', Zip) {
