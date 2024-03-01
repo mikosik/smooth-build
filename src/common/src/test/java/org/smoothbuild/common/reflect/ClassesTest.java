@@ -3,7 +3,7 @@ package org.smoothbuild.common.reflect;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.reflect.Classes.binaryPath;
 import static org.smoothbuild.common.reflect.Classes.binaryPathToBinaryName;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.common;
+package org.smoothbuild.commontesting;
 
 @FunctionalInterface
 public interface ThrowingRunnable {

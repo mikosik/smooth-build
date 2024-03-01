@@ -2,7 +2,7 @@ package org.smoothbuild.common.filesystem.mem;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

@@ -3,7 +3,7 @@ package org.smoothbuild.common;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Locale.ROOT;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.ArrayList;
 import okio.ByteString;

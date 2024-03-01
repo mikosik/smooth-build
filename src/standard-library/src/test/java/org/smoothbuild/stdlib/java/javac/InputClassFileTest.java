@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.net.URI;
 import okio.ByteString;

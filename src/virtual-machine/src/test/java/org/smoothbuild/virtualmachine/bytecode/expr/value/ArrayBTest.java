@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.value;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.List;
 import okio.ByteString;

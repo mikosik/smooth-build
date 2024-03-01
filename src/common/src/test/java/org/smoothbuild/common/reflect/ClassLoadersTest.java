@@ -3,7 +3,7 @@ package org.smoothbuild.common.reflect;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.common.reflect.Classes.binaryPath;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.InputStream;
 import java.util.Map;

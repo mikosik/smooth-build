@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryDb.DATA_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryDb.FUNC_PARAMS_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.ARRAY;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.common.Hash;
-import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
+import org.smoothbuild.commontesting.AssertCall.ThrownExceptionSubject;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.IllegalArrayByteSizesProvider;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
