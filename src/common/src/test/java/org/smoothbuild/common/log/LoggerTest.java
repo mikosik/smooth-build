@@ -6,7 +6,7 @@ import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

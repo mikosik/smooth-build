@@ -4,7 +4,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.testing.StringCreators.illegalString;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.MalformedInputException;

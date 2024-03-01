@@ -2,7 +2,7 @@ package org.smoothbuild.common;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.io.Files;
 import com.google.common.testing.EqualsTester;

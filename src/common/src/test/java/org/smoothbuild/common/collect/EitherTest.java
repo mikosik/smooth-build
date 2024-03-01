@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;

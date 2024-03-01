@@ -1,8 +1,8 @@
-package org.smoothbuild.testing.common;
+package org.smoothbuild.commontesting;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

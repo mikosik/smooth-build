@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.testing.StringCreators.illegalString;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;

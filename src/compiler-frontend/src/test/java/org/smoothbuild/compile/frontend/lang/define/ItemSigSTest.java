@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

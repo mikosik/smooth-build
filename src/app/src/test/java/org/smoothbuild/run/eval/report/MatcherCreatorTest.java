@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.CALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.COMBINE;
@@ -19,7 +20,6 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.SELECT;
 import static org.smoothbuild.run.eval.report.TaskMatchers.WARNING;
 import static org.smoothbuild.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.run.eval.report.TaskMatchers.or;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.ArrayList;
 import java.util.List;

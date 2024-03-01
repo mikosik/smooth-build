@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.common;
+package org.smoothbuild.commontesting;
 
 import static com.google.common.truth.Fact.fact;
 import static com.google.common.truth.Fact.simpleFact;

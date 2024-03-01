@@ -1,11 +1,11 @@
 package org.smoothbuild.compile.frontend.lang.base.location;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.internalLocation;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.unknownLocation;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;

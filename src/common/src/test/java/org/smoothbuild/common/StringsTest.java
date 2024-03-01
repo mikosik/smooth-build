@@ -7,7 +7,7 @@ import static org.smoothbuild.common.Strings.limitedWithEllipsis;
 import static org.smoothbuild.common.Strings.unescaped;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.UnescapeFailedException.illegalEscapeSeqException;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;

@@ -8,7 +8,7 @@ import static okio.ByteString.encodeUtf8;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.StringCreators.illegalString;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 

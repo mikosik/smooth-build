@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compile.frontend.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import java.util.function.Function;

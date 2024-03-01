@@ -2,7 +2,7 @@ package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -10,7 +10,7 @@ import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
 import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.common.log.Try.success;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;

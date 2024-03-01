@@ -3,7 +3,7 @@ package org.smoothbuild.common.function;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.function.Functions.invokeWithTunneling;
 import static org.smoothbuild.common.function.Functions.sneakyFunction;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Nested;
