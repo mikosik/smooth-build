@@ -28,9 +28,9 @@ public class FilterFilesFunc {
       return null;
     }
     ArrayBBuilder builder =
-        nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
+        nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileT());
 
-    for (TupleB file : files.elems(TupleB.class)) {
+    for (TupleB file : files.elements(TupleB.class)) {
       if (filter.test(path(filePath(file).toJ()))) {
         builder.add(file);
       }

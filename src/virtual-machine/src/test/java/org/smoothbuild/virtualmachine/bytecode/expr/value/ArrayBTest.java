@@ -21,14 +21,14 @@ public class ArrayBTest extends TestVirtualMachine {
   @Test
   public void empty_int_array_can_be_iterated_as_int() throws Exception {
     ArrayB array = exprDb().arrayBuilder(arrayTB(intTB())).build();
-    assertThat(array.elems(IntB.class)).isEmpty();
+    assertThat(array.elements(IntB.class)).isEmpty();
   }
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() throws Exception {
     ArrayB array =
         exprDb().arrayBuilder(arrayTB(stringTB())).add(stringB("abc")).build();
-    assertCall(() -> array.elems(TupleB.class))
+    assertCall(() -> array.elements(TupleB.class))
         .throwsException(new IllegalArgumentException(
             "[String] cannot be viewed as Iterable of " + TupleB.class.getCanonicalName() + "."));
   }
@@ -36,7 +36,7 @@ public class ArrayBTest extends TestVirtualMachine {
   @Test
   public void empty_array_is_empty() throws Exception {
     ArrayB array = exprDb().arrayBuilder(arrayTB()).build();
-    assertThat(array.elems(StringB.class)).isEmpty();
+    assertThat(array.elements(StringB.class)).isEmpty();
   }
 
   @Test
@@ -55,7 +55,7 @@ public class ArrayBTest extends TestVirtualMachine {
   @Test
   public void array_contains_added_elem() throws Exception {
     ArrayB array = exprDb().arrayBuilder(arrayTB()).add(stringB("abc")).build();
-    assertThat(array.elems(StringB.class)).containsExactly(stringB("abc"));
+    assertThat(array.elements(StringB.class)).containsExactly(stringB("abc"));
   }
 
   @Test
@@ -63,24 +63,24 @@ public class ArrayBTest extends TestVirtualMachine {
     StringB str = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = exprDb().arrayBuilder(arrayTB()).addAll(list(str, str2)).build();
-    assertThat(array.elems(StringB.class)).containsExactly(str, str2).inOrder();
+    assertThat(array.elements(StringB.class)).containsExactly(str, str2).inOrder();
   }
 
   @Test
-  public void array_contains_added_elems_in_order() throws Exception {
+  public void array_contains_added_elements_in_order() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     StringB str3 = stringB("ghi");
     ArrayB array =
         exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).add(str3).build();
-    assertThat(array.elems(StringB.class)).containsExactly(str1, str2, str3).inOrder();
+    assertThat(array.elements(StringB.class)).containsExactly(str1, str2, str3).inOrder();
   }
 
   @Test
-  public void adding_same_elem_twice_builds_array_with_two_elems() throws Exception {
+  public void adding_same_elem_twice_builds_array_with_two_elements() throws Exception {
     StringB str = stringB("abc");
     ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str).add(str).build();
-    assertThat(array.elems(StringB.class)).containsExactly(str, str);
+    assertThat(array.elements(StringB.class)).containsExactly(str, str);
   }
 
   @Nested
@@ -110,11 +110,11 @@ public class ArrayBTest extends TestVirtualMachine {
   }
 
   @Test
-  public void array_read_by_hash_contains_same_elems() throws Exception {
+  public void array_read_by_hash_contains_same_elements() throws Exception {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     ArrayB array = exprDb().arrayBuilder(arrayTB()).add(str1).add(str2).build();
-    assertThat(((ArrayB) exprDbOther().get(array.hash())).elems(StringB.class))
+    assertThat(((ArrayB) exprDbOther().get(array.hash())).elements(StringB.class))
         .containsExactly(str1, str2)
         .inOrder();
   }

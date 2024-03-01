@@ -67,7 +67,7 @@ public class ComputationCacheTest extends TestVirtualMachine {
     computationCache.write(hash, new Output(arrayB(file), messageArrayEmpty()));
     var arrayT = arrayTB(bytecodeF().fileT());
 
-    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elems(TupleB.class))
+    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elements(TupleB.class))
         .containsExactly(file);
   }
 
@@ -78,7 +78,7 @@ public class ComputationCacheTest extends TestVirtualMachine {
     computationCache.write(hash, new Output(arrayB(blob), messageArrayEmpty()));
     var arrayT = arrayTB(blobTB());
 
-    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elems(BlobB.class))
+    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elements(BlobB.class))
         .containsExactly(blob);
   }
 
@@ -89,7 +89,7 @@ public class ComputationCacheTest extends TestVirtualMachine {
     computationCache.write(hash, new Output(arrayB(boolV), messageArrayEmpty()));
     var arrayT = arrayTB(boolTB());
 
-    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elems(BoolB.class))
+    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elements(BoolB.class))
         .containsExactly(boolV);
   }
 
@@ -100,7 +100,7 @@ public class ComputationCacheTest extends TestVirtualMachine {
     computationCache.write(hash, new Output(arrayB(intV), messageArrayEmpty()));
     var arrayT = arrayTB(intTB());
 
-    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elems(IntB.class))
+    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elements(IntB.class))
         .containsExactly(intV);
   }
 
@@ -112,7 +112,7 @@ public class ComputationCacheTest extends TestVirtualMachine {
     computationCache.write(hash, new Output(array, messageArrayEmpty()));
     var arrayT = arrayTB(stringTB());
 
-    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elems(StringB.class))
+    assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elements(StringB.class))
         .containsExactly(string);
   }
 

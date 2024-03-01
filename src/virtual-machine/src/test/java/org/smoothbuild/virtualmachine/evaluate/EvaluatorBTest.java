@@ -477,8 +477,8 @@ public class EvaluatorBTest extends TestVirtualMachine {
     ArrayB messages = result.output().messages();
     try {
       return messages.size() == 1
-          && MessageStruct.level(messages.elems(TupleB.class).get(0)) == level
-          && MessageStruct.text(messages.elems(TupleB.class).get(0)).startsWith(messageStart);
+          && MessageStruct.level(messages.elements(TupleB.class).get(0)) == level
+          && MessageStruct.text(messages.elements(TupleB.class).get(0)).startsWith(messageStart);
     } catch (BytecodeException e) {
       throw new RuntimeException(e);
     }

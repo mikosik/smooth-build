@@ -32,7 +32,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
     this.resClassFiles =
-        nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
+        nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileT());
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(

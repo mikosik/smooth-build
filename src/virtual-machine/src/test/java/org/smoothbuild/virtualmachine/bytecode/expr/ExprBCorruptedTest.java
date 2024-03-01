@@ -97,7 +97,7 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
     }
 
     @Test
-    public void reading_elems_from_not_stored_object_throws_exception() {
+    public void reading_elements_from_not_stored_object_throws_exception() {
       var hash = Hash.of(33);
       assertCall(() -> exprDb().get(hash))
           .throwsException(new DecodeExprNoSuchExprException(hash))
@@ -116,7 +116,8 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
       var hash = hash(
           hash(arrayTB(stringTB())),
           hash(hash(hash(stringTB()), hash("aaa")), hash(hash(stringTB()), hash("bbb"))));
-      List<String> strings = ((ArrayB) exprDb().get(hash)).elems(StringB.class).map(StringB::toJ);
+      List<String> strings =
+          ((ArrayB) exprDb().get(hash)).elements(StringB.class).map(StringB::toJ);
       assertThat(strings).containsExactly("aaa", "bbb").inOrder();
     }
 
@@ -130,13 +131,13 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
       obj_root_with_two_data_hashes(
           arrayTB(intTB()),
           hashedDb().writeHashChain(),
-          (Hash hash) -> ((ArrayB) exprDb().get(hash)).elems(IntB.class));
+          (Hash hash) -> ((ArrayB) exprDb().get(hash)).elements(IntB.class));
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          arrayTB(intTB()), (Hash hash) -> ((ArrayB) exprDb().get(hash)).elems(IntB.class));
+          arrayTB(intTB()), (Hash hash) -> ((ArrayB) exprDb().get(hash)).elements(IntB.class));
     }
 
     @ParameterizedTest
@@ -146,7 +147,7 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
       var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
       ArrayTB type = arrayTB(stringTB());
       var hash = hash(hash(type), notHashOfChain);
-      assertCall(() -> ((ArrayB) exprDb().get(hash)).elems(ValueB.class))
+      assertCall(() -> ((ArrayB) exprDb().get(hash)).elements(ValueB.class))
           .throwsException(new DecodeExprNodeException(hash, type, DATA_PATH))
           .withCause(
               new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
@@ -158,7 +159,7 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
       var dataHash = hash(nowhereHash);
       var arrayTB = arrayTB(stringTB());
       var hash = hash(hash(arrayTB), dataHash);
-      assertCall(() -> ((ArrayB) exprDb().get(hash)).elems(StringB.class))
+      assertCall(() -> ((ArrayB) exprDb().get(hash)).elements(StringB.class))
           .throwsException(new DecodeExprNodeException(hash, arrayTB, DATA_PATH + "[0]"))
           .withCause(new DecodeExprNoSuchExprException(nowhereHash));
     }
@@ -169,7 +170,7 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
       var hash = hash(
           hash(arrayTB),
           hash(hash(hash(stringTB()), hash("aaa")), hash(hash(boolTB()), hash(true))));
-      assertCall(() -> ((ArrayB) exprDb().get(hash)).elems(StringB.class))
+      assertCall(() -> ((ArrayB) exprDb().get(hash)).elements(StringB.class))
           .throwsException(new DecodeExprWrongNodeTypeException(
               hash, arrayTB, DATA_PATH, 1, stringTB(), boolTB()));
     }
@@ -178,7 +179,7 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
     public void with_one_elem_being_oper() throws Exception {
       var arrayTB = arrayTB(stringTB());
       var hash = hash(hash(arrayTB), hash(hash(hash(stringTB()), hash("aaa")), hash(varB(1))));
-      assertCall(() -> ((ArrayB) exprDb().get(hash)).elems(StringB.class))
+      assertCall(() -> ((ArrayB) exprDb().get(hash)).elements(StringB.class))
           .throwsException(new DecodeExprWrongNodeClassException(
               hash, arrayTB, DATA_PATH, 1, ValueB.class, VarB.class));
     }
@@ -329,7 +330,7 @@ public class ExprBCorruptedTest extends TestVirtualMachine {
     }
 
     @Test
-    public void data_is_chain_with_three_elems() throws Exception {
+    public void data_is_chain_with_three_elements() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = lambdaB(funcT, intB());
       var args = combineB(stringB(), intB());

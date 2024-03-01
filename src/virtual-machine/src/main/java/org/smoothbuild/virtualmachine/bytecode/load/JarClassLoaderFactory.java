@@ -50,7 +50,7 @@ public class JarClassLoaderFactory {
   }
 
   private ClassLoader newClassLoader(ArrayB files) throws BytecodeException {
-    var filesMap = files.elems(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
+    var filesMap = files.elements(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
     return newClassLoader(filesMap);
   }
 

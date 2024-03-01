@@ -20,7 +20,7 @@ public class MessageStruct {
   private static final int SEVERITY_IDX = 1;
 
   public static boolean containsErrorOrAbove(ArrayB messages) throws BytecodeException {
-    return messages.elems(TupleB.class).anyMatches(MessageStruct::isErrorOrAbove);
+    return messages.elements(TupleB.class).anyMatches(MessageStruct::isErrorOrAbove);
   }
 
   private static boolean isErrorOrAbove(TupleB message) throws BytecodeException {
@@ -29,7 +29,7 @@ public class MessageStruct {
   }
 
   public static boolean containsFatal(ArrayB messages) throws BytecodeException {
-    return messages.elems(TupleB.class).anyMatches(m -> severity(m).equals(FATAL.name()));
+    return messages.elements(TupleB.class).anyMatches(m -> severity(m).equals(FATAL.name()));
   }
 
   public static boolean isValidSeverity(String severity) {
@@ -37,7 +37,7 @@ public class MessageStruct {
   }
 
   public static boolean isEmpty(ArrayB messages) throws BytecodeException {
-    return !messages.elems(TupleB.class).iterator().hasNext();
+    return !messages.elements(TupleB.class).iterator().hasNext();
   }
 
   public static Level level(ExprB message) throws BytecodeException {

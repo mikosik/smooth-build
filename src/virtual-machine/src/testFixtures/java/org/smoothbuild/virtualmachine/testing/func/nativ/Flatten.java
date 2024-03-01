@@ -14,8 +14,8 @@ public class Flatten {
 
     ArrayBBuilder builder =
         nativeApi.factory().arrayBuilder((ArrayTB) array.evaluationT().elem());
-    for (ArrayB innerArray : array.elems(ArrayB.class)) {
-      builder.addAll(innerArray.elems(ValueB.class));
+    for (ArrayB innerArray : array.elements(ArrayB.class)) {
+      builder.addAll(innerArray.elements(ValueB.class));
     }
     return builder.build();
   }

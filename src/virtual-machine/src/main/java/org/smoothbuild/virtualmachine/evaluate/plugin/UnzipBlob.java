@@ -21,7 +21,7 @@ public class UnzipBlob {
   public static Either<String, ArrayB> unzipBlob(
       BytecodeF bytecodeF, BlobB blob, Predicate<String> includePredicate)
       throws BytecodeException {
-    var arrayBuilder = bytecodeF.arrayBuilderWithElems(bytecodeF.fileT());
+    var arrayBuilder = bytecodeF.arrayBuilderWithElements(bytecodeF.fileT());
     try (var source = blob.source()) {
       var errors =
           unzip(source, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeF, f, is)));

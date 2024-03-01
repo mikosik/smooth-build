@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.evaluate.task.Task;
 class SystemOutTaskReporter implements TaskReporter {
   @Override
   public void report(Task task, ComputationResult result) throws BytecodeException {
-    for (TupleB message : result.output().messages().elems(TupleB.class)) {
+    for (TupleB message : result.output().messages().elements(TupleB.class)) {
       System.out.println(messageSeverity(message) + " " + messageText(message));
     }
   }

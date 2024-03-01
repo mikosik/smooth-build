@@ -28,7 +28,7 @@ public class ConcatTest extends SystemTestCase {
   }
 
   @Test
-  public void concat_array_with_two_elems() throws Exception {
+  public void concat_array_with_two_elements() throws Exception {
     createUserModule(
         """
             result = concat([["a", "b", "c"], ["d", "e", "f"]]);

@@ -81,7 +81,7 @@ public class UnitTypeInferrer {
   }
 
   private void inferOrder(OrderP order) {
-    order.elems().forEach(this::infer);
+    order.elements().forEach(this::infer);
   }
 
   private void inferSelect(SelectP select) {

@@ -310,7 +310,7 @@ public class CategoryBCorruptedTest extends TestVirtualMachine {
       }
 
       @Test
-      public void with_data_having_three_elems() throws Exception {
+      public void with_data_having_three_elements() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var resultT = intTB();
         var hash = hash(hash(FUNC.marker()), hash(hash(paramTs), hash(resultT), hash(resultT)));
@@ -319,7 +319,7 @@ public class CategoryBCorruptedTest extends TestVirtualMachine {
       }
 
       @Test
-      public void with_data_having_one_elems() throws Exception {
+      public void with_data_having_one_elements() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(hash(FUNC.marker()), hash(hash(paramTs)));
         assertThatGet(hash)

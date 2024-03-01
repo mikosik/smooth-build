@@ -119,7 +119,7 @@ public class ExprDb {
   }
 
   public OrderB order(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
-    validateOrderElems(evaluationT.elem(), elems);
+    validateOrderElements(evaluationT.elem(), elems);
     return newOrder(evaluationT, elems);
   }
 
@@ -145,7 +145,7 @@ public class ExprDb {
     }
   }
 
-  private void validateOrderElems(TypeB elemT, List<ExprB> elems) {
+  private void validateOrderElements(TypeB elemT, List<ExprB> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElemT = elems.get(i).evaluationT();
       if (!elemT.equals(iElemT)) {

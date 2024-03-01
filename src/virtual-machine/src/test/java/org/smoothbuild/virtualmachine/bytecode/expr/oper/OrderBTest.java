@@ -26,7 +26,7 @@ public class OrderBTest extends TestVirtualMachine {
   }
 
   @Test
-  public void elemT_can_be_equal_elemT_specified_in_category() throws Exception {
+  public void elemT_can_be_equal_elementT_specified_in_category() throws Exception {
     orderB(arrayTB(intTB()), arrayB(intB(3)));
   }
 

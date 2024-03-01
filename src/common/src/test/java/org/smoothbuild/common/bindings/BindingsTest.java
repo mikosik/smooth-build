@@ -21,8 +21,8 @@ public class BindingsTest {
     @Nested
     class _bindings_tests extends AbstractBindingsTestSuite {
       @Override
-      public Bindings<Elem> newBindings(Elem... elems) {
-        return immutableBindings(mapOfElems(elems));
+      public Bindings<Element> newBindings(Element... elements) {
+        return immutableBindings(mapOfElems(elements));
       }
     }
   }
@@ -32,8 +32,8 @@ public class BindingsTest {
     @Nested
     class _bindings_tests extends AbstractBindingsTestSuite {
       @Override
-      public Bindings<Elem> newBindings(Elem... elems) {
-        return mutableBindingsWith(elems);
+      public Bindings<Element> newBindings(Element... elements) {
+        return mutableBindingsWith(elements);
       }
     }
 
@@ -51,18 +51,18 @@ public class BindingsTest {
     @Nested
     class _scoped_bindings_tests extends AbstractScopedBindingsTestSuite {
       @Override
-      protected Bindings<Elem> newBindings(Bindings<Elem> outerScope, Elem... elems) {
-        return mutableBindingsWith(outerScope, elems);
+      protected Bindings<Element> newBindings(Bindings<Element> outerScope, Element... elements) {
+        return mutableBindingsWith(outerScope, elements);
       }
 
       @Override
-      protected Bindings<Elem> newBindingsWithInnerScopeWith(Elem... elems) {
-        return immutableBindings(immutableBindings(), mapOfElems(elems));
+      protected Bindings<Element> newBindingsWithInnerScopeWith(Element... elements) {
+        return immutableBindings(immutableBindings(), mapOfElems(elements));
       }
 
       @Override
-      protected Bindings<Elem> newBindingsWithOuterScopeWith(Elem... elems) {
-        return immutableBindings(immutableBindings(mapOfElems(elems)), mapOfElems());
+      protected Bindings<Element> newBindingsWithOuterScopeWith(Element... elements) {
+        return immutableBindings(immutableBindings(mapOfElems(elements)), mapOfElems());
       }
     }
   }
@@ -72,18 +72,18 @@ public class BindingsTest {
     @Nested
     class _scoped_bindings_tests extends AbstractScopedBindingsTestSuite {
       @Override
-      protected Bindings<Elem> newBindings(Bindings<Elem> outerScope, Elem... elems) {
-        return mutableBindingsWith(outerScope, elems);
+      protected Bindings<Element> newBindings(Bindings<Element> outerScope, Element... elements) {
+        return mutableBindingsWith(outerScope, elements);
       }
 
       @Override
-      protected Bindings<Elem> newBindingsWithInnerScopeWith(Elem... elems) {
-        return mutableBindingsWith(immutableBindings(), elems);
+      protected Bindings<Element> newBindingsWithInnerScopeWith(Element... elements) {
+        return mutableBindingsWith(immutableBindings(), elements);
       }
 
       @Override
-      protected Bindings<Elem> newBindingsWithOuterScopeWith(Elem... elems) {
-        return mutableBindingsWith(immutableBindings(mapOfElems(elems)));
+      protected Bindings<Element> newBindingsWithOuterScopeWith(Element... elements) {
+        return mutableBindingsWith(immutableBindings(mapOfElems(elements)));
       }
     }
 
@@ -98,8 +98,8 @@ public class BindingsTest {
 
   @Test
   public void equals_and_hashcode() {
-    var elem1 = elem("1", 1);
-    var elem2 = elem("2", 2);
+    var elem1 = elements("1", 1);
+    var elem2 = elements("2", 2);
 
     var equalsTester = new EqualsTester();
     // flat bindings with no elements
@@ -137,8 +137,8 @@ public class BindingsTest {
   public abstract static class AbstractBindingsTestSuite {
     @Test
     public void getting_element() {
-      var bindings = newBindings(elem("name", 7));
-      assertThat(bindings.get("name")).isEqualTo(elem("name", 7));
+      var bindings = newBindings(elements("name", 7));
+      assertThat(bindings.get("name")).isEqualTo(elements("name", 7));
     }
 
     @Test
@@ -149,8 +149,8 @@ public class BindingsTest {
 
     @Test
     public void getMaybe_element() {
-      var bindings = newBindings(elem("name", 7));
-      assertThat(bindings.getMaybe("name")).isEqualTo(some(elem("name", 7)));
+      var bindings = newBindings(elements("name", 7));
+      assertThat(bindings.getMaybe("name")).isEqualTo(some(elements("name", 7)));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class BindingsTest {
 
     @Test
     public void contains_present_element() {
-      var bindings = newBindings(elem("name", 7));
+      var bindings = newBindings(elements("name", 7));
       assertThat(bindings.contains("name")).isTrue();
     }
 
@@ -173,20 +173,20 @@ public class BindingsTest {
 
     @Test
     public void map() {
-      var bindings = newBindings(elem("name", 7), elem("other", 5));
-      var mapped = bindings.map(elem -> elem.value);
+      var bindings = newBindings(elements("name", 7), elements("other", 5));
+      var mapped = bindings.map(element -> element.value);
       assertThat(mapped.get("name")).isEqualTo(7);
     }
 
     @Test
     public void asMap() {
-      var first = elem("name", 7);
-      var second = elem("other", 5);
+      var first = elements("name", 7);
+      var second = elements("other", 5);
       var bindings = newBindings(first, second);
       assertThat(bindings.toMap()).isEqualTo(Map.map("name", first, "other", second));
     }
 
-    public abstract Bindings<Elem> newBindings(Elem... elems);
+    public abstract Bindings<Element> newBindings(Element... elements);
   }
 
   public abstract static class AbstractMutableBindingsTestSuite {
@@ -215,25 +215,26 @@ public class BindingsTest {
   }
 
   public abstract static class AbstractScopedBindingsTestSuite {
-    protected abstract Bindings<Elem> newBindings(Bindings<Elem> outerScope, Elem... elems);
+    protected abstract Bindings<Element> newBindings(
+        Bindings<Element> outerScope, Element... elements);
 
-    protected abstract Bindings<Elem> newBindingsWithInnerScopeWith(Elem... elems);
+    protected abstract Bindings<Element> newBindingsWithInnerScopeWith(Element... elements);
 
-    protected abstract Bindings<Elem> newBindingsWithOuterScopeWith(Elem... elems);
+    protected abstract Bindings<Element> newBindingsWithOuterScopeWith(Element... elements);
 
     @Nested
     class _bindings_tests_for_inner_scope extends AbstractBindingsTestSuite {
       @Override
-      public Bindings<Elem> newBindings(Elem... elems) {
-        return newBindingsWithInnerScopeWith(elems);
+      public Bindings<Element> newBindings(Element... elements) {
+        return newBindingsWithInnerScopeWith(elements);
       }
     }
 
     @Nested
     class _bindings_tests_for_outer_scope extends AbstractBindingsTestSuite {
       @Override
-      public Bindings<Elem> newBindings(Elem... elems) {
-        return newBindingsWithOuterScopeWith(elems);
+      public Bindings<Element> newBindings(Element... elements) {
+        return newBindingsWithOuterScopeWith(elements);
       }
     }
 
@@ -241,68 +242,68 @@ public class BindingsTest {
     class _to_map {
       @Test
       public void contains_elements_from_outer_and_inner_scope() {
-        var outer = immutableBindings(mapOfElems(elem("1", 1)));
-        var bindings = newBindings(outer, elem("2", 2));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(elem("1", 1), elem("2", 2)));
+        var outer = immutableBindings(mapOfElems(elements("1", 1)));
+        var bindings = newBindings(outer, elements("2", 2));
+        assertThat(bindings.toMap()).isEqualTo(mapOfElems(elements("1", 1), elements("2", 2)));
       }
 
       @Test
       public void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
-        var outer = immutableBindings(mapOfElems(elem("1", 1)));
-        var bindings = newBindings(outer, elem("1", 11));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(elem("1", 11)));
+        var outer = immutableBindings(mapOfElems(elements("1", 1)));
+        var bindings = newBindings(outer, elements("1", 11));
+        assertThat(bindings.toMap()).isEqualTo(mapOfElems(elements("1", 11)));
       }
     }
 
     @Test
     public void element_in_inner_bounds_shadows_element_from_outer_bounds() {
-      var outer = immutableBindings(mapOfElems(elem("value-a", 7)));
-      var shadowing = elem("value-a", 9);
+      var outer = immutableBindings(mapOfElems(elements("value-a", 7)));
+      var shadowing = elements("value-a", 9);
       var inner = newBindings(outer, shadowing);
       assertThat(inner.get(shadowing.name())).isEqualTo(shadowing);
     }
 
     @Test
     public void to_string() {
-      var outer = immutableBindings(mapOfElems(elem("value-a", 7), elem("value-b", 8)));
-      var inner = newBindings(outer, elem("value-c", 9));
+      var outer = immutableBindings(mapOfElems(elements("value-a", 7), elements("value-b", 8)));
+      var inner = newBindings(outer, elements("value-c", 9));
       assertThat(inner.toString())
           .isEqualTo(
               """
-            value-a -> Elem[name=value-a, value=7]
-            value-b -> Elem[name=value-b, value=8]
-              value-c -> Elem[name=value-c, value=9]""");
+            value-a -> Element[name=value-a, value=7]
+            value-b -> Element[name=value-b, value=8]
+              value-c -> Element[name=value-c, value=9]""");
     }
   }
 
-  private static ImmutableBindings<Elem> immutableBindingsWith(Elem elem) {
-    return immutableBindings(map(elem.name(), elem));
+  private static ImmutableBindings<Element> immutableBindingsWith(Element element) {
+    return immutableBindings(map(element.name(), element));
   }
 
-  private static Bindings<Elem> mutableBindingsWith(Elem... elems) {
-    FlatMutableBindings<Elem> bindings = mutableBindings();
-    for (Elem elem : elems) {
-      bindings.add(elem.name(), elem);
+  private static Bindings<Element> mutableBindingsWith(Element... elements) {
+    FlatMutableBindings<Element> bindings = mutableBindings();
+    for (Element element : elements) {
+      bindings.add(element.name(), element);
     }
     return bindings;
   }
 
-  private static Bindings<Elem> mutableBindingsWith(
-      Bindings<Elem> outerScopeBindings, Elem... elems) {
+  private static Bindings<Element> mutableBindingsWith(
+      Bindings<Element> outerScopeBindings, Element... elements) {
     var mutableBindings = mutableBindings(outerScopeBindings);
-    for (Elem elem : elems) {
-      mutableBindings.add(elem.name(), elem);
+    for (Element element : elements) {
+      mutableBindings.add(element.name(), element);
     }
     return mutableBindings;
   }
 
-  public static Map<String, Elem> mapOfElems(Elem... nameables) {
-    return list(nameables).toMap(Elem::name, e -> e);
+  public static Map<String, Element> mapOfElems(Element... nameables) {
+    return list(nameables).toMap(Element::name, e -> e);
   }
 
-  public static Elem elem(String name, int value) {
-    return new Elem(name, value);
+  public static Element elements(String name, int value) {
+    return new Element(name, value);
   }
 
-  protected static record Elem(String name, Integer value) {}
+  protected static record Element(String name, Integer value) {}
 }

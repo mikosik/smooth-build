@@ -224,7 +224,7 @@ public class ConvertPs implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleS> 
     }
 
     private ExprS convertOrder(OrderP order) {
-      var elems = convertExprs(order.elems());
+      var elems = convertExprs(order.elements());
       return new OrderS((ArrayTS) order.typeS(), elems, order.location());
     }
 

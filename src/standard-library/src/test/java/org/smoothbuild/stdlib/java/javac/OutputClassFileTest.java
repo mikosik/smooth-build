@@ -25,7 +25,7 @@ public class OutputClassFileTest extends TestVirtualMachine {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elems(TupleB.class)).containsExactly(fileB(path, bytes));
+    assertThat(fileArrayBuilder.build().elements(TupleB.class)).containsExactly(fileB(path, bytes));
   }
 
   @Test

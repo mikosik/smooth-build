@@ -25,7 +25,7 @@ public class UnzipHelper {
   public static HashMap<String, TupleB> filesFromLibJars(
       NativeApi nativeApi, ArrayB libJars, Predicate<String> filter) throws BytecodeException {
     var result = new HashMap<String, TupleB>();
-    var jars = libJars.elems(TupleB.class);
+    var jars = libJars.elements(TupleB.class);
     for (int i = 0; i < jars.size(); i++) {
       var jarFile = jars.get(i);
       var classes = filesFromJar(nativeApi, jarFile, filter);
@@ -56,7 +56,7 @@ public class UnzipHelper {
     if (files == null) {
       return null;
     }
-    return files.elems(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
+    return files.elements(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
   }
 
   public static ArrayB unzipToArrayB(

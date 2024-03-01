@@ -36,7 +36,7 @@ public class OrderB extends OperB {
   }
 
   public List<ExprB> elements() throws BytecodeException {
-    var elements = readDataSeqElems(ExprB.class);
+    var elements = readDataAsExprChain(ExprB.class);
     var expectedElementT = category().evaluationT().elem();
     for (int i = 0; i < elements.size(); i++) {
       var actualT = elements.get(i).evaluationT();

@@ -53,7 +53,7 @@ public class Container implements NativeApi {
   @Override
   public ArrayB messages() throws BytecodeException {
     return bytecodeF
-        .arrayBuilderWithElems(bytecodeF.messageT())
+        .arrayBuilderWithElements(bytecodeF.messageT())
         .addAll(messageLogger.messages)
         .build();
   }

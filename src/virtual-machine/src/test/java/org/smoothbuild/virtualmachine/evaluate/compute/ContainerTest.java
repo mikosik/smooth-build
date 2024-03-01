@@ -18,7 +18,7 @@ public class ContainerTest extends TestVirtualMachine {
   public void messages_are_logged() throws Exception {
     var container = container();
     container.log().error("message");
-    Iterable<TupleB> iterable = container.messages().elems(TupleB.class);
+    Iterable<TupleB> iterable = container.messages().elements(TupleB.class);
     assertThat(iterable).hasSize(1);
     TupleB tuple = iterable.iterator().next();
     assertThat(text(tuple)).isEqualTo("message");

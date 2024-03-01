@@ -11,12 +11,12 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 public class ArrayBBuilder {
   private final ArrayTB type;
   private final ExprDb exprDb;
-  private final java.util.List<ValueB> elems;
+  private final java.util.List<ValueB> elements;
 
   public ArrayBBuilder(ArrayTB type, ExprDb exprDb) {
     this.type = type;
     this.exprDb = exprDb;
-    this.elems = new ArrayList<>();
+    this.elements = new ArrayList<>();
   }
 
   public ArrayBBuilder addAll(Iterable<? extends ValueB> elems) {
@@ -35,11 +35,11 @@ public class ArrayBBuilder {
           + required.getCanonicalName() + " but it is instance of "
           + elem.getClass().getCanonicalName() + ".");
     }
-    this.elems.add(elem);
+    this.elements.add(elem);
     return this;
   }
 
   public ArrayB build() throws BytecodeException {
-    return exprDb.newArray(type, listOfAll(elems));
+    return exprDb.newArray(type, listOfAll(elements));
   }
 }

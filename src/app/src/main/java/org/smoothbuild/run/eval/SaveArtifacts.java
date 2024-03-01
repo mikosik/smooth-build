@@ -109,12 +109,12 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
     TypeS elemTS = arrayTS.elem();
     if (elemTS instanceof ArrayTS elemArrayTS) {
       int i = 0;
-      for (ArrayB elem : arrayB.elems(ArrayB.class)) {
+      for (ArrayB elem : arrayB.elements(ArrayB.class)) {
         saveArray(elemArrayTS, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
     } else if (elemTS.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, arrayB.elems(TupleB.class));
+      saveFileArray(artifactPath, arrayB.elements(TupleB.class));
     } else {
       saveNonFileArray(artifactPath, arrayB);
     }
@@ -124,7 +124,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
   private void saveNonFileArray(PathS artifactPath, ArrayB arrayB)
       throws IOException, BytecodeException {
     int i = 0;
-    for (var valueB : arrayB.elems(ValueB.class)) {
+    for (var valueB : arrayB.elements(ValueB.class)) {
       PathS sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       PathS targetPath = targetPath(valueB);
       fileSystem.createLink(sourcePath, targetPath);
