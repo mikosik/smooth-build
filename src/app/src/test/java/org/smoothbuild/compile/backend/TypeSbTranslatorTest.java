@@ -7,8 +7,8 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.compile.frontend.lang.type.TypeS;
-import org.smoothbuild.compile.frontend.lang.type.VarS;
+import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.VarS;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 

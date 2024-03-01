@@ -19,7 +19,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
-import org.smoothbuild.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;

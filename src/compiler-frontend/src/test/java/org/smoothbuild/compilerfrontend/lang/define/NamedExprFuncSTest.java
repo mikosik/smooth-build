@@ -1,0 +1,33 @@
+package org.smoothbuild.compilerfrontend.lang.define;
+
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.NList.nlist;
+
+import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+
+public class NamedExprFuncSTest extends TestExpressionS {
+  @Test
+  public void to_string() {
+    var params = nlist(itemS(intTS(), "myParam"));
+    var schema = funcSchemaS(params, stringTS());
+    var func = new NamedExprFuncS(schema, "myFunc", params, intS(17), location(1));
+    assertThat(func.toString())
+        .isEqualTo(
+            """
+            NamedExprFuncS(
+              name = myFunc
+              schema = <>(Int)->String
+              params = [
+                ItemS(
+                  type = Int
+                  name = myParam
+                  defaultValue = None
+                  location = {prj}/build.smooth:1
+                )
+              ]
+              location = {prj}/build.smooth:1
+              body = IntS(Int, 17, {prj}/build.smooth:1)
+            )""");
+  }
+}

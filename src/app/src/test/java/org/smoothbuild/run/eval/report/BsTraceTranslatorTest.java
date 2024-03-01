@@ -2,13 +2,13 @@ package org.smoothbuild.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.compile.frontend.lang.base.location.Locations.unknownLocation;
+import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.backend.BsMapping;
-import org.smoothbuild.compile.frontend.lang.base.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
 import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
