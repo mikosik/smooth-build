@@ -42,21 +42,21 @@ public class CallB extends OperB {
   }
 
   private void validate(ExprB func, CombineB args) throws ExprDbException {
-    if (func.evaluationT() instanceof FuncTB funcTB) {
+    if (func.evaluationType() instanceof FuncTB funcTB) {
       validate(funcTB, args);
     } else {
       throw new DecodeExprWrongNodeTypeException(
-          hash(), this.category(), "func", FuncTB.class, func.evaluationT());
+          hash(), this.category(), "func", FuncTB.class, func.evaluationType());
     }
   }
 
   private void validate(FuncTB funcTB, CombineB args) throws ExprDbException {
-    var argsT = args.evaluationT();
+    var argsT = args.evaluationType();
     validateArgs(funcTB, argsT.elements(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
-    if (!evaluationT().equals(resultT)) {
+    if (!evaluationType().equals(resultT)) {
       throw new DecodeExprWrongNodeTypeException(
-          hash(), this.category(), "call.result", evaluationT(), resultT);
+          hash(), this.category(), "call.result", evaluationType(), resultT);
     }
   }
 

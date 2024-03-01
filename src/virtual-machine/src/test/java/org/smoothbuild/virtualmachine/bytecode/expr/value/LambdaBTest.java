@@ -28,7 +28,7 @@ public class LambdaBTest extends TestVirtualMachine {
   @Test
   public void type_of_func_is_func_type() throws Exception {
     var funcT = funcTB(stringTB(), intTB());
-    assertThat(lambdaB(funcT, intB()).evaluationT()).isEqualTo(funcT);
+    assertThat(lambdaB(funcT, intB()).evaluationType()).isEqualTo(funcT);
   }
 
   @Test

@@ -36,7 +36,7 @@ public class SelectB extends OperB {
   @Override
   public SubExprsB subExprs() throws BytecodeException {
     var selectable = readSelectable();
-    if (selectable.evaluationT() instanceof TupleTB tupleT) {
+    if (selectable.evaluationType() instanceof TupleTB tupleT) {
       var index = readIndex();
       int i = index.toJ().intValue();
       int size = tupleT.elements().size();
@@ -44,13 +44,17 @@ public class SelectB extends OperB {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), category(), i, size);
       }
       var fieldT = tupleT.elements().get(i);
-      if (!evaluationT().equals(fieldT)) {
+      if (!evaluationType().equals(fieldT)) {
         throw new DecodeSelectWrongEvaluationTypeException(hash(), category(), fieldT);
       }
       return new SubExprsB(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassException(
-          hash(), category(), "tuple", TupleTB.class, selectable.evaluationT().getClass());
+          hash(),
+          category(),
+          "tuple",
+          TupleTB.class,
+          selectable.evaluationType().getClass());
     }
   }
 

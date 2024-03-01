@@ -87,11 +87,11 @@ public class ComputationCache {
       } else {
         var valueHash = Hash.read(source);
         var value = exprDb.get(valueHash);
-        if (!type.equals(value.evaluationT())) {
+        if (!type.equals(value.evaluationType())) {
           throw corruptedValueException(
               hash,
               "Expected value of type " + type.q() + " as second child of its Merkle root, but got "
-                  + value.evaluationT().q());
+                  + value.evaluationType().q());
         } else {
           return new Output((ValueB) value, messageArray);
         }

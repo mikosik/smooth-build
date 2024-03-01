@@ -16,7 +16,7 @@ public abstract sealed class ValueB extends ExprB
   }
 
   @Override
-  public TypeB evaluationT() {
+  public TypeB evaluationType() {
     return type();
   }
 

@@ -14,7 +14,7 @@ public abstract sealed class FuncB extends ValueB permits LambdaB, IfFuncB, MapF
   }
 
   @Override
-  public FuncTB evaluationT() {
+  public FuncTB evaluationType() {
     return type();
   }
 

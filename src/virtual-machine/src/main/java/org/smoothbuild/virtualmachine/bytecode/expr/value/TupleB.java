@@ -25,7 +25,7 @@ public final class TupleB extends ValueB {
   }
 
   @Override
-  public TupleTB evaluationT() {
+  public TupleTB evaluationType() {
     return type();
   }
 

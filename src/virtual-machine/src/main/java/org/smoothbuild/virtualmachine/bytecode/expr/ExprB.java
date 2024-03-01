@@ -58,7 +58,7 @@ public abstract class ExprB {
     return merkleRoot.category();
   }
 
-  public abstract TypeB evaluationT();
+  public abstract TypeB evaluationType();
 
   public abstract String exprToString() throws BytecodeException;
 

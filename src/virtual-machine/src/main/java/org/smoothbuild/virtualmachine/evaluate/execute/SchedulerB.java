@@ -159,7 +159,7 @@ public class SchedulerB {
     private void onMapArrayArgEvaluated(ArrayB arrayB) throws BytecodeException {
       var mappingFuncArg = args().get(1);
       var callBs = arrayB.elements(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
-      var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationT()).result();
+      var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationType()).result();
       var orderB = bytecodeF.order(bytecodeF.arrayT(mappingFuncResultT), callBs);
       scheduleJobEvaluation(newJob(orderB, callJob), callJob.promisedValue());
     }
@@ -213,12 +213,12 @@ public class SchedulerB {
   private void scheduleVarB(Job job, VarB varB) throws BytecodeException {
     int index = varB.index().toJ().intValue();
     var referencedJob = job.environment().get(index);
-    var jobEvaluationT = referencedJob.exprB().evaluationT();
-    if (jobEvaluationT.equals(varB.evaluationT())) {
+    var jobEvaluationT = referencedJob.exprB().evaluationType();
+    if (jobEvaluationT.equals(varB.evaluationType())) {
       scheduleJobEvaluation(referencedJob, job.promisedValue());
     } else {
       throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
-          .formatted(index, jobEvaluationT.q(), varB.evaluationT().q()));
+          .formatted(index, jobEvaluationT.q(), varB.evaluationType().q()));
     }
   }
 

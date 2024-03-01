@@ -13,7 +13,7 @@ public class Flatten {
     ArrayB array = (ArrayB) args.get(0);
 
     ArrayBBuilder builder =
-        nativeApi.factory().arrayBuilder((ArrayTB) array.evaluationT().elem());
+        nativeApi.factory().arrayBuilder((ArrayTB) array.evaluationType().elem());
     for (ArrayB innerArray : array.elements(ArrayB.class)) {
       builder.addAll(innerArray.elements(ValueB.class));
     }

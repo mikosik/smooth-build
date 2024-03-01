@@ -25,7 +25,7 @@ public abstract class OperB extends ExprB {
   }
 
   @Override
-  public TypeB evaluationT() {
+  public TypeB evaluationType() {
     return category().evaluationT();
   }
 

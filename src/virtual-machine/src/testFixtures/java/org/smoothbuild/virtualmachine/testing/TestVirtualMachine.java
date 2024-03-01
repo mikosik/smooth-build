@@ -496,7 +496,7 @@ public class TestVirtualMachine extends TestExpressionS {
   }
 
   public ArrayB arrayB(ValueB... elems) throws BytecodeException {
-    return arrayB(elems[0].evaluationT(), elems);
+    return arrayB(elems[0].evaluationType(), elems);
   }
 
   public ArrayB arrayB(TypeB elemT, ValueB... elems) throws BytecodeException {
@@ -586,7 +586,7 @@ public class TestVirtualMachine extends TestExpressionS {
   }
 
   public LambdaB lambdaB(List<TypeB> paramTs, ExprB body) throws BytecodeException {
-    var funcTB = funcTB(paramTs, body.evaluationT());
+    var funcTB = funcTB(paramTs, body.evaluationType());
     return lambdaB(funcTB, body);
   }
 
@@ -753,7 +753,7 @@ public class TestVirtualMachine extends TestExpressionS {
   }
 
   public OrderB orderB(ExprB... elems) throws BytecodeException {
-    return orderB(elems[0].evaluationT(), elems);
+    return orderB(elems[0].evaluationType(), elems);
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) throws BytecodeException {

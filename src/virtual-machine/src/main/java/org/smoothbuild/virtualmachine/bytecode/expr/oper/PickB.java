@@ -36,15 +36,15 @@ public class PickB extends OperB {
   @Override
   public SubExprsB subExprs() throws BytecodeException {
     var pickable = readPickable();
-    if (pickable.evaluationT() instanceof ArrayTB arrayT) {
+    if (pickable.evaluationType() instanceof ArrayTB arrayT) {
       var elementT = arrayT.elem();
-      if (!evaluationT().equals(elementT)) {
+      if (!evaluationType().equals(elementT)) {
         throw new DecodePickWrongEvaluationTypeException(hash(), category(), elementT);
       }
       return new SubExprsB(readPickable(), readIndex());
     } else {
       throw new DecodeExprWrongNodeTypeException(
-          hash(), category(), "array", ArrayTB.class, pickable.evaluationT());
+          hash(), category(), "array", ArrayTB.class, pickable.evaluationType());
     }
   }
 
@@ -54,9 +54,9 @@ public class PickB extends OperB {
 
   private ExprB readIndex() throws BytecodeException {
     var index = readElementFromDataAsInstanceChain(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
-    if (!(index.evaluationT() instanceof IntTB)) {
+    if (!(index.evaluationType() instanceof IntTB)) {
       throw new DecodeExprWrongNodeTypeException(
-          hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationT());
+          hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationType());
     }
     return index;
   }
