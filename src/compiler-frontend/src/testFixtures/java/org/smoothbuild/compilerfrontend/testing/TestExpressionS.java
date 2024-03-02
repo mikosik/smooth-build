@@ -13,6 +13,7 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.common.testing.SpaceCreator.space;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -93,8 +94,8 @@ import org.smoothbuild.compilerfrontend.lang.type.VarS;
 import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
 
 public class TestExpressionS {
-  public static final Space STANDARD_LIBRARY_SPACE = new MySpace("ssl");
-  public static final Space PROJECT_SPACE = new MySpace("prj");
+  public static final Space STANDARD_LIBRARY_SPACE = space("ssl");
+  public static final Space PROJECT_SPACE = space("prj");
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
   static final FilePath STANDARD_LIBRARY_MODULE_FILE_PATH =
@@ -862,12 +863,5 @@ public class TestExpressionS {
   @SafeVarargs
   public static <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
     return immutableBindings(list(nameds).toMap(Named::name, v -> v));
-  }
-
-  record MySpace(String name) implements Space {
-    @Override
-    public String prefix() {
-      return name;
-    }
   }
 }
