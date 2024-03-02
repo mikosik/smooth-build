@@ -2,6 +2,7 @@ package org.smoothbuild.common.filesystem.space;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.testing.SpaceCreator.space;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
@@ -39,9 +40,5 @@ public class FilePathTest {
   public void to_string() {
     var filePath = new FilePath(space("project"), path("abc"));
     assertThat(filePath.toString()).isEqualTo("{project}/abc");
-  }
-
-  private static Space space(String name) {
-    return new MySpace(name);
   }
 }
