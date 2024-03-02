@@ -21,12 +21,9 @@ public class VarReducerB {
     this.bytecodeF = bytecodeF;
   }
 
-  public List<ExprB> inline(List<Job> environment) throws BytecodeException {
-    return environment.map(this::inline);
-  }
-
   public ExprB inline(Job job) throws BytecodeException {
-    return rewriteExpr(job.exprB(), new Resolver(inline(job.environment())));
+    List<ExprB> inlinedEnvironment = job.environment().map(this::inline);
+    return rewriteExpr(job.exprB(), new Resolver(inlinedEnvironment));
   }
 
   private List<ExprB> rewriteExprs(Resolver resolver, List<ExprB> elements)
