@@ -18,6 +18,7 @@ import com.google.inject.AbstractModule;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.app.testing.TestingTaskReporter;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -27,7 +28,6 @@ import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
-import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
@@ -42,7 +42,7 @@ import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 
-public class EvaluatorSTest extends TestContext {
+public class EvaluatorSTest extends TestingTaskReporter {
   private final FilePersister filePersister = mock(FilePersister.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);

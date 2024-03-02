@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB.SubExprsB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class CallBTest extends TestVirtualMachine {
+public class CallBTest extends TestingVirtualMachine {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> callB(intB()))

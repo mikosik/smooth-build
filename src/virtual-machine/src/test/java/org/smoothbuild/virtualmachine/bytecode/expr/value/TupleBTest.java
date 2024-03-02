@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TupleBTest extends TestVirtualMachine {
+public class TupleBTest extends TestingVirtualMachine {
   @Test
   public void setting_element_to_null_throws_exception() {
     assertCall(() -> exprDb().tuple(list(stringB("John"), null)))

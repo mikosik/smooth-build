@@ -8,9 +8,9 @@ import static org.smoothbuild.virtualmachine.bytecode.type.value.TypeNamesB.tupl
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TypeNamesBTest extends TestVirtualMachine {
+public class TypeNamesBTest extends TestingVirtualMachine {
   @Nested
   class _array_type_name {
     @Test

@@ -3,8 +3,8 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.err;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestedTSF.TESTED_TYPES;
 
 import java.util.stream.Stream;
@@ -16,10 +16,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
 import org.smoothbuild.compilerfrontend.testing.TestedTS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class DeclarationTest extends TestExpressionS {
+public class DeclarationTest extends TestingExpressionS {
   @Nested
   class _members {
     @Nested

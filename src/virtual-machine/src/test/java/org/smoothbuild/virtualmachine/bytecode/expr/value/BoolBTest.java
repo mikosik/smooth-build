@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class BoolBTest extends TestVirtualMachine {
+public class BoolBTest extends TestingVirtualMachine {
   @Test
   public void type_of_bool_is_bool_type() throws Exception {
     assertThat(boolB(true).category()).isEqualTo(boolTB());

@@ -16,9 +16,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ComputationCacheTest extends TestVirtualMachine {
+public class ComputationCacheTest extends TestingVirtualMachine {
   private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 

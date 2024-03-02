@@ -6,9 +6,9 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ContainerTest extends TestVirtualMachine {
+public class ContainerTest extends TestingVirtualMachine {
   @Test
   public void file_system() {
     assertThat(container().fileSystem()).isSameInstanceAs(projectFileSystem());

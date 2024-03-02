@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.step.Step.stepFactory;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.writeFile;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.writeFile;
 import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULE_PATH;
@@ -40,9 +40,9 @@ import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.EvaluateStepFactory;
 import org.smoothbuild.virtualmachine.VirtualMachineModule;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class AcceptanceTestCase extends TestVirtualMachine {
+public class AcceptanceTestCase extends TestingVirtualMachine {
   private Injector injector;
   private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
 

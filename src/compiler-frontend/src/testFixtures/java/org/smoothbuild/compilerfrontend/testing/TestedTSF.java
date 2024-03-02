@@ -17,15 +17,15 @@ import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedFuncTS;
 public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(TestExpressionS.varS("A"));
-  public static final TestedTS B = new TestedTS(TestExpressionS.varS("B"));
-  public static final TestedTS BLOB = new TestedTS(TestExpressionS.blobTS());
-  public static final TestedTS BOOL = new TestedTS(TestExpressionS.boolTS());
+  public static final TestedTS A = new TestedTS(TestingExpressionS.varS("A"));
+  public static final TestedTS B = new TestedTS(TestingExpressionS.varS("B"));
+  public static final TestedTS BLOB = new TestedTS(TestingExpressionS.blobTS());
+  public static final TestedTS BOOL = new TestedTS(TestingExpressionS.boolTS());
 
-  public static final TestedTS INT = new TestedTS(TestExpressionS.intTS());
-  public static final TestedTS STRING = new TestedTS(TestExpressionS.stringTS());
+  public static final TestedTS INT = new TestedTS(TestingExpressionS.intTS());
+  public static final TestedTS STRING = new TestedTS(TestingExpressionS.stringTS());
   public static final TestedTS STRUCT = new TestedTS(
-      TestExpressionS.structTS("Person", nlist(itemSigS(TestExpressionS.stringTS(), "name"))),
+      TestingExpressionS.structTS("Person", nlist(itemSigS(TestingExpressionS.stringTS(), "name"))),
       Set.of("Person(String name)"),
       Set.of("Person(String name)"));
   public static final List<TestedTS> TESTED_TYPES = list(
@@ -77,7 +77,7 @@ public class TestedTSF {
   private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
         type,
-        TestExpressionS.arrayTS(type.type()),
+        TestingExpressionS.arrayTS(type.type()),
         type.typeDeclarations(),
         type.allDeclarations());
   }
@@ -109,7 +109,7 @@ public class TestedTSF {
     return new TestedFuncTS(
         resultT,
         paramTestedTs,
-        TestExpressionS.funcTS(paramSigs.map(ItemSigS::type), resultT.type()),
+        TestingExpressionS.funcTS(paramSigs.map(ItemSigS::type), resultT.type()),
         typeDeclarations,
         declarations);
   }

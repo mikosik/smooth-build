@@ -1,15 +1,15 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.err;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.space.FilePath;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class VisibilityTest extends TestExpressionS {
+public class VisibilityTest extends TestingExpressionS {
   @Nested
   class _visibility {
     @Nested

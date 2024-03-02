@@ -7,9 +7,9 @@ import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class VarSetSTest extends TestExpressionS {
+public class VarSetSTest extends TestingExpressionS {
   @Nested
   class _filter {
     @Test

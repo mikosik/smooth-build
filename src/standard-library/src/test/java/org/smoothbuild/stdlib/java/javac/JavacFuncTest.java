@@ -7,9 +7,9 @@ import static org.smoothbuild.virtualmachine.testing.JarTester.jarByteString;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class JavacFuncTest extends TestVirtualMachine {
+public class JavacFuncTest extends TestingVirtualMachine {
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
     TupleB file1 = fileB(path("my/package/MyKlass.class"));

@@ -9,9 +9,9 @@ import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ComputationHashTest extends TestVirtualMachine {
+public class ComputationHashTest extends TestingVirtualMachine {
   @Test
   public void hashes_of_computations_with_same_task_runtime_and_input_are_equal() throws Exception {
     var task = new ConstTask(intB(7), traceB());

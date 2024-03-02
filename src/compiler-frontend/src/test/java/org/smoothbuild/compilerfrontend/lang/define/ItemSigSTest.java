@@ -5,9 +5,9 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ItemSigSTest extends TestExpressionS {
+public class ItemSigSTest extends TestingExpressionS {
   private final String name = "name";
   private ItemSigS item;
 

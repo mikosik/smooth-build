@@ -65,9 +65,9 @@ import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class EvaluatorBTest extends TestVirtualMachine {
+public class EvaluatorBTest extends TestingVirtualMachine {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS =
       new ConcurrentHashMap<>();
@@ -504,7 +504,7 @@ public class EvaluatorBTest extends TestVirtualMachine {
       }
 
       public static List<ValueB> report_const_task_cases() throws Exception {
-        var t = new TestVirtualMachine();
+        var t = new TestingVirtualMachine();
         return list(
             t.arrayB(t.intB(17)),
             t.blobB(17),

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class MapFuncBTest extends TestVirtualMachine {
+public class MapFuncBTest extends TestingVirtualMachine {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<MapFuncB> {
     @Override

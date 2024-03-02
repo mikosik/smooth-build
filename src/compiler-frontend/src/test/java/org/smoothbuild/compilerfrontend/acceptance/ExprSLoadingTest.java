@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,9 @@ import org.smoothbuild.compilerfrontend.lang.define.CallS;
 import org.smoothbuild.compilerfrontend.lang.define.EvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedExprValueS;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ExprSLoadingTest extends TestExpressionS {
+public class ExprSLoadingTest extends TestingExpressionS {
   @Nested
   class _literal {
     @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.testing.StringCreators.illegalString;
+import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
@@ -62,9 +62,9 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ExprBCorruptedTest extends TestVirtualMachine {
+public class ExprBCorruptedTest extends TestingVirtualMachine {
   @Nested
   class _expr {
     @Test

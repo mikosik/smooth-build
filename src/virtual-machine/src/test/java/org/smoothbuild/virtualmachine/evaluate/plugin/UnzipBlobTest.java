@@ -7,9 +7,9 @@ import static org.smoothbuild.virtualmachine.testing.JarTester.jar;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class UnzipBlobTest extends TestVirtualMachine {
+public class UnzipBlobTest extends TestingVirtualMachine {
   @Test
   public void unzip_blob() throws Exception {
     TupleB file1 = fileB("file1.txt", "abc");

@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeCatWrongChainSizeExceptionTest extends TestVirtualMachine {
+public class DecodeCatWrongChainSizeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() {
     var exception =

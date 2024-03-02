@@ -6,24 +6,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class AssertStructuresAreEqualTest extends TestExpressionS {
+public class AssertStructuresAreEqualTest extends TestingExpressionS {
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#nonCompositeTypes")
+  @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingExpressionS#nonCompositeTypes")
   public void concrete_non_composite_types_have_equal_structure_to_itself(TypeS typeS) {
     structuresAreEqualReturnsTrue(typeS, typeS);
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+  @MethodSource(
+      "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
   public void concrete_composite_types_have_equal_structure_to_itself(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsTrue(composedFactory.apply(intTS()), composedFactory.apply(intTS()));
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+  @MethodSource(
+      "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
   public void types_have_equal_structure_when_only_temp_var_names_differ(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsTrue(
@@ -31,7 +33,8 @@ public class AssertStructuresAreEqualTest extends TestExpressionS {
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+  @MethodSource(
+      "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
   public void types_have_not_equal_structure_when_temp_var_is_replaced_with_concrete_type(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsFalse(
@@ -39,7 +42,8 @@ public class AssertStructuresAreEqualTest extends TestExpressionS {
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+  @MethodSource(
+      "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
   public void
       types_have_not_equal_structure_when_concrete_type_is_replaced_with_other_concrete_type(
           Function<TypeS, TypeS> composedFactory) {

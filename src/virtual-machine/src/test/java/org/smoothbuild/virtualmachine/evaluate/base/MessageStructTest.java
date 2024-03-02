@@ -5,9 +5,9 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.conta
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class MessageStructTest extends TestVirtualMachine {
+public class MessageStructTest extends TestingVirtualMachine {
   private ArrayB messages;
 
   @Test

@@ -9,9 +9,9 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class InjectDefaultArgumentsTest extends TestExpressionS {
+public class InjectDefaultArgumentsTest extends TestingExpressionS {
   @Test
   public void missing_call_argument_is_filled_with_reference_to_default_argument() {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));

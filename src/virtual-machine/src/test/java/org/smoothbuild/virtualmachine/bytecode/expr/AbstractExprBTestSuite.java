@@ -7,9 +7,9 @@ import com.google.common.testing.EqualsTester;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestVirtualMachine {
+public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestingVirtualMachine {
   protected abstract List<T> equalExprs() throws BytecodeException;
 
   protected abstract List<T> nonEqualExprs() throws BytecodeException;

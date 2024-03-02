@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.LambdaP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class InitializeScopesTest extends TestExpressionS {
+public class InitializeScopesTest extends TestingExpressionS {
   @Nested
   class _module {
     @Test

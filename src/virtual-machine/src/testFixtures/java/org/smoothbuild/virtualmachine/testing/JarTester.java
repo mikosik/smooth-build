@@ -14,7 +14,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 
 public class JarTester {
   public static BlobB jar(TupleB... files) throws Exception {
-    return new TestVirtualMachine().blobB(jarByteString(files));
+    return new TestingVirtualMachine().blobB(jarByteString(files));
   }
 
   public static ByteString jarByteString(TupleB... files) throws Exception {

@@ -10,9 +10,9 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TypeSbTranslatorTest extends TestVirtualMachine {
+public class TypeSbTranslatorTest extends TestingVirtualMachine {
   @Nested
   class _mono {
     @Test

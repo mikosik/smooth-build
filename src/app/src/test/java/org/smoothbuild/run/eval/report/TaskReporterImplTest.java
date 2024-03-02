@@ -18,14 +18,14 @@ import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.MEMOR
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.app.testing.TestingTaskReporter;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.evaluate.compute.ResultSource;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
-public class TaskReporterImplTest extends TestContext {
+public class TaskReporterImplTest extends TestingTaskReporter {
   @Test
   public void combineTaskHeader() throws Exception {
     testHeader(combineTask(), header("(,)"));

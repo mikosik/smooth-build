@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TaskHashesCollisionTest extends TestVirtualMachine {
+public class TaskHashesCollisionTest extends TestingVirtualMachine {
   @Test
   public void each_task_has_different_hash() throws Exception {
     List<Hash> list = new ArrayList<>();

@@ -8,10 +8,10 @@ import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
-import static org.smoothbuild.compilerfrontend.testing.TestExpressionS.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.compilerfrontend.testing.TestExpressionS.PROJECT_SPACE;
-import static org.smoothbuild.compilerfrontend.testing.TestExpressionS.STANDARD_LIBRARY_MODULE_FILE_PATH;
-import static org.smoothbuild.compilerfrontend.testing.TestExpressionS.STANDARD_LIBRARY_SPACE;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.DEFAULT_MODULE_FILE_PATH;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_SPACE;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_MODULE_FILE_PATH;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_SPACE;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -33,16 +33,16 @@ import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 
-public class TestFrontendCompiler {
+public class FrontendCompilerTester {
   private final String sourceCode;
   private String importedSourceCode;
   private Try<ScopeS> definitions;
 
-  public static TestFrontendCompiler module(String sourceCode) {
-    return new TestFrontendCompiler(sourceCode);
+  public static FrontendCompilerTester module(String sourceCode) {
+    return new FrontendCompilerTester(sourceCode);
   }
 
-  private TestFrontendCompiler(String sourceCode) {
+  private FrontendCompilerTester(String sourceCode) {
     this.sourceCode = sourceCode;
   }
 
@@ -53,12 +53,12 @@ public class TestFrontendCompiler {
     }
   }
 
-  public TestFrontendCompiler withImported(String imported) {
+  public FrontendCompilerTester withImported(String imported) {
     this.importedSourceCode = imported;
     return this;
   }
 
-  public TestFrontendCompiler loadsWithSuccess() {
+  public FrontendCompilerTester loadsWithSuccess() {
     definitions = load();
     assertWithMessage(messageWithSourceCode()).that(definitions.logs()).isEmpty();
     return this;

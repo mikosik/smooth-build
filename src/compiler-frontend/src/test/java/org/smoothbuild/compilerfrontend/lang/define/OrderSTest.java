@@ -3,9 +3,9 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class OrderSTest extends TestExpressionS {
+public class OrderSTest extends TestingExpressionS {
   @Test
   public void to_string() {
     var orderS = orderS(3, intS(4, 44), intS(5, 55));
