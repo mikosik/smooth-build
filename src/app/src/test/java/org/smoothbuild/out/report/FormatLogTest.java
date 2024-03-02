@@ -6,9 +6,9 @@ import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
-import static org.smoothbuild.testing.TestingLog.logsWithAllLevels;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
