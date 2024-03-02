@@ -11,7 +11,7 @@ import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.compile.backend.BackendCompile;
+import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.run.eval.EvaluatorBFacade;

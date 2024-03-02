@@ -14,7 +14,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.text;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.compile.backend.BsMapping;
+import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;

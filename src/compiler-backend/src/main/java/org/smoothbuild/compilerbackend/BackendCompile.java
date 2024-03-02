@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.backend;
+package org.smoothbuild.compilerbackend;
 
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Try.failure;

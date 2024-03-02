@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.backend;
+package org.smoothbuild.compilerbackend;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,9 +8,9 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.testing.SpaceCreator.space;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,18 +19,19 @@ import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
+import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnReturnAbcFunc;
 
-public class SbTranslatorTest extends TestContext {
+public class SbTranslatorTest extends TestVirtualMachine {
   @Nested
   class _translate {
     @Nested
@@ -83,7 +84,7 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void mono_native_value() throws Exception {
-          var filePath = filePath(PROJECT, path("my/path"));
+          var filePath = filePath(space("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
           var nativeValueS =
@@ -100,7 +101,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var filePath = filePath(PROJECT, path("my/path"));
+          var filePath = filePath(space("prj"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
           var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(filePath, 2));
@@ -166,7 +167,7 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void mono_native_function() throws Exception {
-          var filePath = filePath(PROJECT, path("my/path"));
+          var filePath = filePath(space("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
@@ -182,7 +183,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void poly_native_function() throws Exception {
           var a = varA();
-          var filePath = filePath(PROJECT, path("my/path"));
+          var filePath = filePath(space("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, a, "myIdentity", nlist(itemS(a, "param")));
@@ -198,7 +199,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var filePath = filePath(PROJECT, path("my/path"));
+          var filePath = filePath(space("prj"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var annotationS = bytecodeS(stringS(classBinaryName), location(filePath, 1));
           var bytecodeFuncS =
@@ -525,7 +526,7 @@ public class SbTranslatorTest extends TestContext {
     @Test
     public void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
-      var filePath = filePath(PROJECT, path("my/path"));
+      var filePath = filePath(space("prj"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
       var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", location(filePath, 2));
@@ -551,7 +552,7 @@ public class SbTranslatorTest extends TestContext {
     @Test
     public void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
-      var filePath = filePath(PROJECT, path("my/path"));
+      var filePath = filePath(space("prj"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
       var bytecodeFuncS = annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(filePath, 2));
@@ -707,5 +708,21 @@ public class SbTranslatorTest extends TestContext {
     FilePersister mock = mock(FilePersister.class);
     when(mock.persist(filePath)).thenReturn(value);
     return mock;
+  }
+
+  public SbTranslator sbTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(filePersister(), evaluables);
+  }
+
+  public SbTranslator sbTranslator(
+      FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(filePersister, bytecodeLoader(), evaluables);
+  }
+
+  private SbTranslator sbTranslator(
+      FilePersister filePersister,
+      BytecodeLoader bytecodeLoader,
+      ImmutableBindings<NamedEvaluableS> evaluables) {
+    return new SbTranslator(bytecodeF(), filePersister, bytecodeLoader, evaluables);
   }
 }

@@ -22,6 +22,7 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.step.StepExecutor;
+import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.report.Reporter;
@@ -285,7 +286,7 @@ public class EvaluatorSTest extends TestContext {
 
   private Maybe<List<ValueB>> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
-    var sbTranslatorFacade = sbTranslatorFacade(filePersister, bytecodeLoader);
+    var sbTranslatorFacade = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
     var reporter = reporter();
 
@@ -313,5 +314,10 @@ public class EvaluatorSTest extends TestContext {
 
   public static ArrayB returnArrayParam(NativeApi nativeApi, TupleB args) throws BytecodeException {
     return (ArrayB) args.get(0);
+  }
+
+  private BackendCompile backendCompile(
+      FilePersister filePersister, BytecodeLoader bytecodeLoader) {
+    return new BackendCompile(bytecodeF(), filePersister, bytecodeLoader);
   }
 }

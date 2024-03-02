@@ -12,6 +12,7 @@ dependencies {
     implementation project(':src:antlr-task-matcher')
     implementation project(':src:compiler-frontend')
     implementation project(':src:virtual-machine')
+    implementation project(':src:compiler-backend')
 
     implementation libs.guava
     implementation libs.guice
@@ -20,6 +21,7 @@ dependencies {
 
     testFixturesApi project(':src:common')
     testFixturesApi testFixtures(project(':src:compiler-frontend'))
+    testFixturesApi testFixtures(project(':src:compiler-backend'))
     testFixturesApi testFixtures(project(':src:virtual-machine'))
     testFixturesApi libs.guava
     testFixturesApi libs.guice

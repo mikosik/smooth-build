@@ -3,7 +3,7 @@ package org.smoothbuild.run.eval.report;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 
 import org.smoothbuild.common.Hash;
-import org.smoothbuild.compile.backend.BsMapping;
+import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.TraceS;
 import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
