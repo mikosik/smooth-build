@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.backend;
+package org.smoothbuild.compilerbackend;
 
 import java.io.IOException;
 import java.math.BigInteger;

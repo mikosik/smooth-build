@@ -7,7 +7,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.step.MaybeFunction;
 import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.compile.backend.BsMapping;
+import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;

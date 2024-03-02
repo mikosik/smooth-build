@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.backend;
+package org.smoothbuild.compilerbackend;
 
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.List.list;

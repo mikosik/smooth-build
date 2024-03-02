@@ -3,6 +3,7 @@ package org.smoothbuild.run.eval.report;
 import static com.google.common.base.Strings.padEnd;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
@@ -17,7 +18,7 @@ import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.MEMOR
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.backend.BsMapping;
+import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;

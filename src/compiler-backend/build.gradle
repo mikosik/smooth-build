@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'java-test-fixtures'
+}
+
+dependencies {
+    implementation project(':src:common')
+    implementation project(':src:compiler-frontend')
+    implementation project(':src:virtual-machine')
+    implementation libs.guava
+    implementation libs.guice
+    implementation libs.okio
+
+    testFixturesApi project(':src:common')
+    testFixturesApi project(':src:virtual-machine')
+    testFixturesApi testFixtures(project(':src:compiler-frontend'))
+    testFixturesApi testFixtures(project(':src:virtual-machine'))
+
+    testImplementation project(':src:common-testing')
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    testImplementation libs.mockito
+    testImplementation libs.truth
+    testImplementation libs.guava.testlib
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs "-Xshare:off"  // to silence JVM warning emitted by gradle
+}
