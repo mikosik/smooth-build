@@ -272,7 +272,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void lambda_with_body_referencing_param_of_enclosing_function() throws Exception {
+      public void lambda_with_param_and_referencing_param_of_enclosing_function() throws Exception {
         // myFunc(Int i) = (Blob b) -> i;
         var monoLambdaS =
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
