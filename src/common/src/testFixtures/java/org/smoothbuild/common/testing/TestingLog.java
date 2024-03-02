@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.common.testing;
 
 import static org.smoothbuild.common.collect.List.list;
 

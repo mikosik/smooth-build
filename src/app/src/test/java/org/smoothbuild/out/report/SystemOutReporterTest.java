@@ -11,13 +11,13 @@ import static org.smoothbuild.common.log.Level.ERROR;
 import static org.smoothbuild.common.log.Level.FATAL;
 import static org.smoothbuild.common.log.Level.INFO;
 import static org.smoothbuild.common.log.Level.WARNING;
+import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
+import static org.smoothbuild.common.testing.TestingLog.FATAL_LOG;
+import static org.smoothbuild.common.testing.TestingLog.INFO_LOG;
+import static org.smoothbuild.common.testing.TestingLog.WARNING_LOG;
+import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
-import static org.smoothbuild.testing.TestingLog.ERROR_LOG;
-import static org.smoothbuild.testing.TestingLog.FATAL_LOG;
-import static org.smoothbuild.testing.TestingLog.INFO_LOG;
-import static org.smoothbuild.testing.TestingLog.WARNING_LOG;
-import static org.smoothbuild.testing.TestingLog.logsWithAllLevels;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
