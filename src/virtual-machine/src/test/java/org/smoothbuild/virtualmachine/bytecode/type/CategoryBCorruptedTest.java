@@ -50,9 +50,9 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.StringTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class CategoryBCorruptedTest extends TestVirtualMachine {
+public class CategoryBCorruptedTest extends TestingVirtualMachine {
   @Nested
   class _illegal_type_marker {
     @Test

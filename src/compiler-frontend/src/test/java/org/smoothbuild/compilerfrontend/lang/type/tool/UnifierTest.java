@@ -24,9 +24,9 @@ import org.smoothbuild.compilerfrontend.lang.type.TempVarS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class UnifierTest extends TestExpressionS {
+public class UnifierTest extends TestingExpressionS {
   private final Unifier unifier = new Unifier();
 
   @Nested
@@ -113,7 +113,7 @@ public class UnifierTest extends TestExpressionS {
 
       @ParameterizedTest
       @MethodSource(
-          "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+          "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
       public void temp_vs_composed_with_that_temp_fails(Function<TypeS, TypeS> composedFactory)
           throws UnifierException {
         var unifier = new Unifier();
@@ -123,7 +123,7 @@ public class UnifierTest extends TestExpressionS {
 
       @ParameterizedTest
       @MethodSource(
-          "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+          "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
       public void temp_vs_composed_with_different_temp_succeeds(
           Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var unifier = new Unifier();
@@ -134,7 +134,7 @@ public class UnifierTest extends TestExpressionS {
 
       @ParameterizedTest
       @MethodSource(
-          "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+          "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
       public void composed_with_temp_vs_same_composed_with_other_temp_succeeds(
           Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var unifier = new Unifier();
@@ -148,7 +148,7 @@ public class UnifierTest extends TestExpressionS {
     @Nested
     class _temp_vs_non_temp {
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#typesToTest")
+      @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingExpressionS#typesToTest")
       public void temp_vs_concrete_type(TypeS type) throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
@@ -159,7 +159,7 @@ public class UnifierTest extends TestExpressionS {
       class _temp_as_component {
         @ParameterizedTest
         @MethodSource(
-            "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+            "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
         public void composed_with_temp_vs_same_composed_with_base_type_instead_temp(
             Function<TypeS, TypeS> factory) throws UnifierException {
           var unifier = new Unifier();
@@ -630,7 +630,7 @@ public class UnifierTest extends TestExpressionS {
   class _cycles {
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void one_element_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierException {
       var a = unifier.newTempVar();
@@ -640,7 +640,7 @@ public class UnifierTest extends TestExpressionS {
 
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void two_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierException {
       var a = unifier.newTempVar();
@@ -653,7 +653,7 @@ public class UnifierTest extends TestExpressionS {
 
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void three_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierException {
       var a = unifier.newTempVar();
@@ -715,7 +715,7 @@ public class UnifierTest extends TestExpressionS {
     class _join_separate_unified_groups {
       @ParameterizedTest
       @MethodSource(
-          "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+          "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_different_temp(
           Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var a = unifier.newTempVar();
@@ -731,7 +731,7 @@ public class UnifierTest extends TestExpressionS {
 
       @ParameterizedTest
       @MethodSource(
-          "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+          "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_int(Function<TypeS, TypeS> composedFactory)
           throws UnifierException {
         var a = unifier.newTempVar();
@@ -746,7 +746,7 @@ public class UnifierTest extends TestExpressionS {
 
       @ParameterizedTest
       @MethodSource(
-          "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+          "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
       public void join_composed_of_int_vs_composed_of_blob_fails(
           Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var a = unifier.newTempVar();
@@ -837,7 +837,7 @@ public class UnifierTest extends TestExpressionS {
 
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void composed_type(Function<TypeS, TypeS> composedFactory) throws UnifierException {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
@@ -850,7 +850,7 @@ public class UnifierTest extends TestExpressionS {
   @Nested
   class _schema_instantiation {
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#typesToTest")
+    @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingExpressionS#typesToTest")
     public void concrete_type_instantiated_to_itself_succeeds(TypeS type) throws UnifierException {
       var schema = unifier.newTempVar();
       var instantiation = unifier.newTempVar();
@@ -862,7 +862,7 @@ public class UnifierTest extends TestExpressionS {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#typesToTest")
+    @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingExpressionS#typesToTest")
     public void concrete_type_instantiated_to_different_type_fails(TypeS type)
         throws UnifierException {
       var differentType = type.equals(intTS()) ? blobTS() : intTS();
@@ -876,7 +876,7 @@ public class UnifierTest extends TestExpressionS {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.compilerfrontend.testing.TestExpressionS#typesToTest")
+    @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingExpressionS#typesToTest")
     public void concrete_type_instantiated_to_x_infers_x(TypeS type) throws UnifierException {
       var x = unifier.newTempVar();
       var schema = unifier.newTempVar();
@@ -890,7 +890,7 @@ public class UnifierTest extends TestExpressionS {
 
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void concrete_composed_type_instantiated_to_composed_with_x_infers_x(
         Function<TypeS, TypeS> factory) throws UnifierException {
       var x = unifier.newTempVar();
@@ -905,7 +905,7 @@ public class UnifierTest extends TestExpressionS {
 
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void composed_with_temp_instantiated_to_x_infers_x_structure_from_composed(
         Function<TypeS, TypeS> factory) throws UnifierException {
       var temp = unifier.newTempVar();
@@ -920,7 +920,7 @@ public class UnifierTest extends TestExpressionS {
 
     @ParameterizedTest
     @MethodSource(
-        "org.smoothbuild.compilerfrontend.testing.TestExpressionS#compositeTypeSFactories")
+        "org.smoothbuild.compilerfrontend.testing.TestingExpressionS#compositeTypeSFactories")
     public void
         composed_with_temp_instantiated_many_times_to_same_composed_with_different_concrete_types_succeeds(
             Function<TypeS, TypeS> factory) throws UnifierException {

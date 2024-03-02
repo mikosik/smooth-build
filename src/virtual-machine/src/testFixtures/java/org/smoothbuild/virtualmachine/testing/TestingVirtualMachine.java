@@ -19,7 +19,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
@@ -92,7 +92,7 @@ import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
-public class TestVirtualMachine extends TestExpressionS {
+public class TestingVirtualMachine extends TestingExpressionS {
   private BytecodeF bytecodeF;
   private ExprDb exprDb;
   private CategoryDb categoryDb;
@@ -313,7 +313,7 @@ public class TestVirtualMachine extends TestExpressionS {
   // Job related
 
   public static Job job(ExprB exprB, ExprB... environment) {
-    return new Job(exprB, list(environment).map(TestVirtualMachine::job), new TraceB());
+    return new Job(exprB, list(environment).map(TestingVirtualMachine::job), new TraceB());
   }
 
   public static Job job(ExprB exprB, Job... environment) {

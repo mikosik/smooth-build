@@ -11,9 +11,9 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class VarReducerBTest extends TestVirtualMachine {
+public class VarReducerBTest extends TestingVirtualMachine {
   @Nested
   class _without_references {
 

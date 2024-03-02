@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.app.testing;
 
 import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
@@ -8,10 +8,9 @@ import org.smoothbuild.common.log.Level;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.out.report.SystemOutReporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TestContext extends TestVirtualMachine {
-
+public class TestingTaskReporter extends TestingVirtualMachine {
   @Override
   public TaskReporterImpl taskReporter() {
     return taskReporter(reporter());

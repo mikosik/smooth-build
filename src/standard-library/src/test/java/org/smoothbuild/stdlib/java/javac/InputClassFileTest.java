@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class InputClassFileTest extends TestVirtualMachine {
+public class InputClassFileTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private final PathS path = path("a/b/MyClass.class");
 

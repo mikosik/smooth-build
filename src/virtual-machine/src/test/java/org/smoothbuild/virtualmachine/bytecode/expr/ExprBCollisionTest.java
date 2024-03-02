@@ -8,9 +8,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ExprBCollisionTest extends TestVirtualMachine {
+public class ExprBCollisionTest extends TestingVirtualMachine {
   @Test
   public void collisions() throws Exception {
     HashMap<Hash, ExprB> map = new HashMap<>();

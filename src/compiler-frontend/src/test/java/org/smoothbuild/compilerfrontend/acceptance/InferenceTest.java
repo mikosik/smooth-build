@@ -3,16 +3,16 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedExprValueS;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class InferenceTest extends TestExpressionS {
+public class InferenceTest extends TestingExpressionS {
   @Nested
   class _infer_named_value_type {
     @Nested

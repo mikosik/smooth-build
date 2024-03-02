@@ -11,8 +11,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
-public class TestCategoryB {
-  public static final TestVirtualMachine CONTEXT = new TestVirtualMachine();
+public class TestingCategoryB {
+  public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();
 
   public static final List<TypeB> BASE_CATS_TO_TEST = wrapException(() -> list(
       CONTEXT.blobTB(),
@@ -40,7 +40,7 @@ public class TestCategoryB {
       ARRAY_CATS_TO_TEST.appendAll(BASE_CATS_TO_TEST);
 
   public static final List<CategoryB> ALL_CATS_TO_TEST =
-      wrapException(TestCategoryB::createAllCats);
+      wrapException(TestingCategoryB::createAllCats);
 
   private static <R, T extends Throwable> R wrapException(Function0<R, T> function0) {
     try {

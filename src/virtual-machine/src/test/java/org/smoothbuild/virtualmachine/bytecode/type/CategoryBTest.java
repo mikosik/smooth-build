@@ -37,10 +37,10 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.LambdaCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.testing.TestCategoryB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingCategoryB;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class CategoryBTest extends TestVirtualMachine {
+public class CategoryBTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("names")
   public void name(Function1<CategoryDb, CategoryB, BytecodeException> factoryCall, String name)
@@ -265,7 +265,7 @@ public class CategoryBTest extends TestVirtualMachine {
   }
 
   public static java.util.List<Arguments> typeJ_test_data() throws BytecodeException {
-    TestVirtualMachine test = new TestVirtualMachine();
+    TestingVirtualMachine test = new TestingVirtualMachine();
     return list(
         arguments(test.blobTB(), BlobB.class),
         arguments(test.boolTB(), BoolB.class),
@@ -305,7 +305,7 @@ public class CategoryBTest extends TestVirtualMachine {
     }
 
     public static java.util.List<Arguments> combine_cases() throws BytecodeException {
-      TestVirtualMachine test = new TestVirtualMachine();
+      TestingVirtualMachine test = new TestingVirtualMachine();
       CategoryDb db = test.categoryDb();
       return list(
           arguments(db.combine(db.tuple()), db.tuple()),
@@ -338,7 +338,7 @@ public class CategoryBTest extends TestVirtualMachine {
     }
 
     public static List<CategoryB> types() {
-      return TestCategoryB.CATS_TO_TEST;
+      return TestingCategoryB.CATS_TO_TEST;
     }
   }
 

@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class TraceSTest extends TestExpressionS {
+public class TraceSTest extends TestingExpressionS {
   @Test
   public void equals_and_hashCode() {
     var tester = new EqualsTester();

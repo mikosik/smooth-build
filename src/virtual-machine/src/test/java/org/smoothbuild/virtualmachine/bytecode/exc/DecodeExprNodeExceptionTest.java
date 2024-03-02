@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeExprNodeExceptionTest extends TestVirtualMachine {
+public class DecodeExprNodeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() throws Exception {
     var exception =

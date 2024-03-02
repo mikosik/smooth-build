@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class TypeNamesSTest extends TestExpressionS {
+public class TypeNamesSTest extends TestingExpressionS {
   @Test
   public void is_upper_case() {
     for (char i = 'A'; i <= 'Z'; i++) {

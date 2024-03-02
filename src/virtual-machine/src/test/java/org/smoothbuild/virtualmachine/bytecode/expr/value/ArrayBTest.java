@@ -14,10 +14,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.testing.TestCategoryB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingCategoryB;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ArrayBTest extends TestVirtualMachine {
+public class ArrayBTest extends TestingVirtualMachine {
   @Test
   public void empty_int_array_can_be_iterated_as_int() throws Exception {
     ArrayB array = exprDb().arrayBuilder(arrayTB(intTB())).build();
@@ -136,7 +136,7 @@ public class ArrayBTest extends TestVirtualMachine {
   }
 
   private static List<CategoryB> type_test_data() {
-    return TestCategoryB.CATS_TO_TEST;
+    return TestingCategoryB.CATS_TO_TEST;
   }
 
   @Test

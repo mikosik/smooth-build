@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeExprWrongNodeTypeExceptionTest extends TestVirtualMachine {
+public class DecodeExprWrongNodeTypeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message_with_types() throws Exception {
     var exception = new DecodeExprWrongNodeTypeException(

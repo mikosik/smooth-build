@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class StringBTest extends TestVirtualMachine {
+public class StringBTest extends TestingVirtualMachine {
   private final String string = "my string";
   private final String otherString = "my string 2";
 

@@ -6,9 +6,9 @@ import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootExc
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeExprRootExceptionTest extends TestVirtualMachine {
+public class DecodeExprRootExceptionTest extends TestingVirtualMachine {
   @Test
   public void cannot_read_root_exception() {
     var exception = cannotReadRootException(Hash.of(123), new RuntimeException());

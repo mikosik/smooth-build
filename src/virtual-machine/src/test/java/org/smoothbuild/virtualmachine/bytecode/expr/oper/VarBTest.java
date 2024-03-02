@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class VarBTest extends TestVirtualMachine {
+public class VarBTest extends TestingVirtualMachine {
   @Test
   public void type_of_var_expr_is_var_type() throws Exception {
     assertThat(varB(intTB(), 123).category()).isEqualTo(varCB(intTB()));

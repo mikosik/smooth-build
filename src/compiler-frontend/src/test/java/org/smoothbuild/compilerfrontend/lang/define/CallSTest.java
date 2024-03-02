@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class CallSTest extends TestExpressionS {
+public class CallSTest extends TestingExpressionS {
   @Test
   public void to_string() {
     var funcS = instantiateS(4, list(intTS()), idFuncS());

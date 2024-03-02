@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class LambdaBTest extends TestVirtualMachine {
+public class LambdaBTest extends TestingVirtualMachine {
   @Test
   public void creating_func_with_body_evaluation_type_not_equal_result_type_causes_exception()
       throws Exception {

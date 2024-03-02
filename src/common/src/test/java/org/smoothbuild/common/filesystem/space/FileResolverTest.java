@@ -8,7 +8,7 @@ import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
-import static org.smoothbuild.common.testing.SpaceCreator.space;
+import static org.smoothbuild.common.testing.TestingSpace.space;
 
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;

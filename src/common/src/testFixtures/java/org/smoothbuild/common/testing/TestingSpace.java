@@ -2,7 +2,7 @@ package org.smoothbuild.common.testing;
 
 import org.smoothbuild.common.filesystem.space.Space;
 
-public class SpaceCreator {
+public class TestingSpace {
   public static Space space(String name) {
     return new MySpace(name);
   }

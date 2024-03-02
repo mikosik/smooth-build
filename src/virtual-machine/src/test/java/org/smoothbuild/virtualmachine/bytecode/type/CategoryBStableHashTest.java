@@ -9,9 +9,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class CategoryBStableHashTest extends TestVirtualMachine {
+public class CategoryBStableHashTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("hash_is_stable_cases")
   public void hash_is_stable(CategoryB categoryB, String hash) {
@@ -19,7 +19,7 @@ public class CategoryBStableHashTest extends TestVirtualMachine {
   }
 
   public static List<Arguments> hash_is_stable_cases() throws BytecodeException {
-    var t = new TestVirtualMachine();
+    var t = new TestingVirtualMachine();
     return List.of(
         arguments(t.blobTB(), "1406e05881e299367766d313e26c05564ec91bf721d31726bd6e46e60689539a"),
         arguments(t.boolTB(), "9c12cfdc04c74584d787ac3d23772132c18524bc7ab28dec4219b8fc5b425f70"),

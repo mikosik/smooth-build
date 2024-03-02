@@ -19,9 +19,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.define.ItemSigS;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class TypeSTest extends TestExpressionS {
+public class TypeSTest extends TestingExpressionS {
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(TypeFS.baseTs()).hasSize(4);

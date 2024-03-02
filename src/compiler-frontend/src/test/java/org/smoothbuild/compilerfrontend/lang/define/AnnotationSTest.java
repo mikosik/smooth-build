@@ -3,9 +3,9 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class AnnotationSTest extends TestExpressionS {
+public class AnnotationSTest extends TestingExpressionS {
   @Test
   public void to_string() {
     var annS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));

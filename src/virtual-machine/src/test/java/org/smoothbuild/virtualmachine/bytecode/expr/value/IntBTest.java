@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class IntBTest extends TestVirtualMachine {
+public class IntBTest extends TestingVirtualMachine {
   @Test
   public void type_of_int_is_int_type() throws Exception {
     assertThat(intB(123).category()).isEqualTo(intTB());

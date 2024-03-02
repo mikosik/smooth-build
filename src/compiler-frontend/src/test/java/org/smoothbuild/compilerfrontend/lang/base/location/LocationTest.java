@@ -10,9 +10,9 @@ import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unkn
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class LocationTest extends TestExpressionS {
+public class LocationTest extends TestingExpressionS {
   @Nested
   class _source_location {
     @Test

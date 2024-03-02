@@ -3,9 +3,9 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class NamedExprValueSTest extends TestExpressionS {
+public class NamedExprValueSTest extends TestingExpressionS {
   @Test
   public void to_string() {
     var namedExprValueS = new NamedExprValueS(schemaS(stringTS()), "myVal", intS(9), location(7));

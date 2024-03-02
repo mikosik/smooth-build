@@ -9,9 +9,9 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class CategoryBCachingTest extends TestVirtualMachine {
+public class CategoryBCachingTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("factories")
   public void created_type_is_cached(Function1<CategoryDb, CategoryB, BytecodeException> factory)

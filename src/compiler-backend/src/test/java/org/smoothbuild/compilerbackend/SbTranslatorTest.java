@@ -8,7 +8,7 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.common.testing.SpaceCreator.space;
+import static org.smoothbuild.common.testing.TestingSpace.space;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 
@@ -26,12 +26,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnReturnAbcFunc;
 
-public class SbTranslatorTest extends TestVirtualMachine {
+public class SbTranslatorTest extends TestingVirtualMachine {
   @Nested
   class _translate {
     @Nested

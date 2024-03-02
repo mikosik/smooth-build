@@ -2,7 +2,7 @@ package org.smoothbuild.common.testing;
 
 import okio.ByteString;
 
-public class BooleanCreators {
+public class TestingByteString {
   public static ByteString byteStringWithSingleByteEqualZero() {
     return ByteString.of((byte) 0);
   }

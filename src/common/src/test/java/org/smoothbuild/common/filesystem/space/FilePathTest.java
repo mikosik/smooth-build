@@ -2,7 +2,7 @@ package org.smoothbuild.common.filesystem.space;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.common.testing.SpaceCreator.space;
+import static org.smoothbuild.common.testing.TestingSpace.space;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

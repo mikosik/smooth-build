@@ -7,7 +7,7 @@ import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.testing.StringCreators.illegalString;
+import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
@@ -30,9 +30,9 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class HashedDbTest extends TestVirtualMachine {
+public class HashedDbTest extends TestingVirtualMachine {
   private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
   private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
 

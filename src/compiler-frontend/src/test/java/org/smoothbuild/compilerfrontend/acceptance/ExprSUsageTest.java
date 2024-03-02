@@ -1,13 +1,13 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.err;
-import static org.smoothbuild.compilerfrontend.testing.TestFrontendCompiler.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ExprSUsageTest extends TestExpressionS {
+public class ExprSUsageTest extends TestingExpressionS {
   @Nested
   class _blob_literal_used_as {
     @Test

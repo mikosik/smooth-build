@@ -13,7 +13,7 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.testing.SpaceCreator.space;
+import static org.smoothbuild.common.testing.TestingSpace.space;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -93,7 +93,7 @@ import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
 import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
 
-public class TestExpressionS {
+public class TestingExpressionS {
   public static final Space STANDARD_LIBRARY_SPACE = space("ssl");
   public static final Space PROJECT_SPACE = space("prj");
   public static final String BUILD_FILE_PATH = "build.smooth";
@@ -115,12 +115,12 @@ public class TestExpressionS {
 
   public static java.util.List<Function<TypeS, TypeS>> compositeTypeSFactories() {
     java.util.List<Function<TypeS, TypeS>> simpleFactories = java.util.List.of(
-        TestExpressionS::arrayTS,
-        TestExpressionS::funcTS,
+        TestingExpressionS::arrayTS,
+        TestingExpressionS::funcTS,
         t -> funcTS(t, intTS()),
-        TestExpressionS::tupleTS,
-        TestExpressionS::structTS,
-        TestExpressionS::interfaceTS);
+        TestingExpressionS::tupleTS,
+        TestingExpressionS::structTS,
+        TestingExpressionS::interfaceTS);
     java.util.List<Function<TypeS, TypeS>> factories = new ArrayList<>();
     factories.addAll(simpleFactories);
     for (var simpleFactory : simpleFactories) {

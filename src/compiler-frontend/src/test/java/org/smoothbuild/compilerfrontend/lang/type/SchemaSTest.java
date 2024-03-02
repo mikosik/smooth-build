@@ -5,9 +5,9 @@ import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class SchemaSTest extends TestExpressionS {
+public class SchemaSTest extends TestingExpressionS {
   @Test
   public void equals_and_hashcode() {
     new EqualsTester()

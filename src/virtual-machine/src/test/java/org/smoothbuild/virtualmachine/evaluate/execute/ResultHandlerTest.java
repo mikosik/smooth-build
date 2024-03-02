@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ResultHandlerTest extends TestVirtualMachine {
+public class ResultHandlerTest extends TestingVirtualMachine {
   private TaskReporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<ValueB> consumer;

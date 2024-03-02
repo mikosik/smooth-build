@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.compress;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ZipFuncTest extends TestVirtualMachine {
+public class ZipFuncTest extends TestingVirtualMachine {
   @Test
   public void zip_produces_bit_level_equal_file_independent_of_its_creation_time()
       throws Exception {

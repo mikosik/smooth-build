@@ -5,9 +5,9 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ItemSTest extends TestExpressionS {
+public class ItemSTest extends TestingExpressionS {
   private final String name = "name";
   private ItemS param;
 

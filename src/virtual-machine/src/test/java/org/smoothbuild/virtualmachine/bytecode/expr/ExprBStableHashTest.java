@@ -7,9 +7,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ExprBStableHashTest extends TestVirtualMachine {
+public class ExprBStableHashTest extends TestingVirtualMachine {
   @Nested
   class _array {
     @Test

@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class SelectBTest extends TestVirtualMachine {
+public class SelectBTest extends TestingVirtualMachine {
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> selectB(intB(3), intB(2)))

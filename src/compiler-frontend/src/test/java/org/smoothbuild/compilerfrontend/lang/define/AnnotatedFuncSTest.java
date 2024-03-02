@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestExpressionS;
+import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class AnnotatedFuncSTest extends TestExpressionS {
+public class AnnotatedFuncSTest extends TestingExpressionS {
   @Test
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));

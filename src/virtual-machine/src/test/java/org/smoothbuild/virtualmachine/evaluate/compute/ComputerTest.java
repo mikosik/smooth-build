@@ -25,9 +25,9 @@ import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ComputerTest extends TestVirtualMachine {
+public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _combine_task {
     @Test

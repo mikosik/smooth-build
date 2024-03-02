@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class BlobBTest extends TestVirtualMachine {
+public class BlobBTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test
