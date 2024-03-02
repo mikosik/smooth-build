@@ -8,6 +8,7 @@ import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
+import static org.smoothbuild.common.testing.SpaceCreator.space;
 
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,9 +66,5 @@ public class FileResolverTest {
     try (var bufferedSink = fileSystem.sink(path)) {
       bufferedSink.writeUtf8(string);
     }
-  }
-
-  private static Space space(String name) {
-    return new MySpace(name);
   }
 }

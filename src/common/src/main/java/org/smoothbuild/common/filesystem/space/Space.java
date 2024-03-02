@@ -1,5 +1,5 @@
 package org.smoothbuild.common.filesystem.space;
 
 public interface Space {
-  String prefix();
+  public String prefix();
 }
