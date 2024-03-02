@@ -295,13 +295,13 @@ public class CategoryBTest extends TestingVirtualMachine {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) throws Exception {
-      assertThat(categoryDb().call(type).evaluationT()).isEqualTo(type);
+      assertThat(categoryDb().call(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("combine_cases")
     public void combine(CombineCB type, TupleTB expected) throws Exception {
-      assertThat(type.evaluationT()).isEqualTo(expected);
+      assertThat(type.evaluationType()).isEqualTo(expected);
     }
 
     public static java.util.List<Arguments> combine_cases() throws BytecodeException {
@@ -316,25 +316,25 @@ public class CategoryBTest extends TestingVirtualMachine {
     @MethodSource("types")
     public void order(TypeB type) throws Exception {
       var array = arrayTB(type);
-      assertThat(orderCB(type).evaluationT()).isEqualTo(array);
+      assertThat(orderCB(type).evaluationType()).isEqualTo(array);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void pick(TypeB type) throws Exception {
-      assertThat(pickCB(type).evaluationT()).isEqualTo(type);
+      assertThat(pickCB(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void reference(TypeB type) throws Exception {
-      assertThat(varCB(type).evaluationT()).isEqualTo(type);
+      assertThat(varCB(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) throws Exception {
-      assertThat(selectCB(type).evaluationT()).isEqualTo(type);
+      assertThat(selectCB(type).evaluationType()).isEqualTo(type);
     }
 
     public static List<CategoryB> types() {

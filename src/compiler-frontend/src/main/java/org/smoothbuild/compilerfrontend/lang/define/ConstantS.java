@@ -7,7 +7,7 @@ import org.smoothbuild.compilerfrontend.lang.type.TypeS;
  */
 public sealed interface ConstantS extends ExprS permits BlobS, IntS, StringS {
   @Override
-  public default TypeS evaluationT() {
+  public default TypeS evaluationType() {
     return type();
   }
 

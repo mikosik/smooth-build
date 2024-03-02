@@ -27,7 +27,7 @@ public class OrderB extends OperB {
 
   @Override
   public ArrayTB evaluationType() {
-    return category().evaluationT();
+    return category().evaluationType();
   }
 
   @Override
@@ -37,7 +37,7 @@ public class OrderB extends OperB {
 
   public List<ExprB> elements() throws BytecodeException {
     var elements = readDataAsExprChain(ExprB.class);
-    var expectedElementT = category().evaluationT().elem();
+    var expectedElementT = category().evaluationType().elem();
     for (int i = 0; i < elements.size(); i++) {
       var actualT = elements.get(i).evaluationType();
       if (!expectedElementT.equals(actualT)) {

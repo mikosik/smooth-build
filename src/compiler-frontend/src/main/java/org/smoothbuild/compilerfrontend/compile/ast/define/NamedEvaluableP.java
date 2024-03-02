@@ -50,7 +50,7 @@ public abstract sealed class NamedEvaluableP extends NalImpl implements Referenc
     return annotation;
   }
 
-  public abstract TypeP evaluationT();
+  public abstract TypeP evaluationType();
 
   @Override
   public String q() {

@@ -14,14 +14,14 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  * This class is immutable.
  */
 public class CombineCB extends OperCB {
-  public CombineCB(Hash hash, TypeB evaluationT) {
-    super(hash, COMBINE, evaluationT);
-    checkArgument(evaluationT instanceof TupleTB);
+  public CombineCB(Hash hash, TypeB evaluationType) {
+    super(hash, COMBINE, evaluationType);
+    checkArgument(evaluationType instanceof TupleTB);
   }
 
   @Override
-  public TupleTB evaluationT() {
-    return (TupleTB) super.evaluationT();
+  public TupleTB evaluationType() {
+    return (TupleTB) super.evaluationType();
   }
 
   @Override

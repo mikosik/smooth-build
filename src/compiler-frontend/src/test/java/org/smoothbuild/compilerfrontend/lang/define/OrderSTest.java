@@ -13,7 +13,7 @@ public class OrderSTest extends TestingExpressionS {
         .isEqualTo(
             """
             OrderS(
-              evaluationT = [Int]
+              evaluationType = [Int]
               elems = [
                 IntS(Int, 44, {prj}/build.smooth:4)
                 IntS(Int, 55, {prj}/build.smooth:5)

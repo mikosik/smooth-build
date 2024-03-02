@@ -7,11 +7,12 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.ArrayTS;
 
-public record OrderS(ArrayTS evaluationT, List<ExprS> elems, Location location) implements ExprS {
+public record OrderS(ArrayTS evaluationType, List<ExprS> elems, Location location)
+    implements ExprS {
   @Override
   public String toString() {
     var fields = list(
-            "evaluationT = " + evaluationT,
+            "evaluationType = " + evaluationType,
             "elems = [\n" + indent(elems.toString("\n")) + "\n]",
             "location = " + location)
         .toString("\n");

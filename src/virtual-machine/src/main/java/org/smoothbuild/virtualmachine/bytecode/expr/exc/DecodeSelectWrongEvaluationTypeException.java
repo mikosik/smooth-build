@@ -12,6 +12,6 @@ public class DecodeSelectWrongEvaluationTypeException extends DecodeExprExceptio
   private static String buildMessage(Hash hash, SelectCB category, TypeB actual) {
     return ("Cannot decode %s object at %s. Its index points to item with %s type while this "
             + "expression defines its evaluation type as %s.")
-        .formatted(category.q(), hash, actual.q(), category.evaluationT().q());
+        .formatted(category.q(), hash, actual.q(), category.evaluationType().q());
   }
 }

@@ -77,7 +77,7 @@ public class Computer {
       newPromised.addConsumer(consumer);
       var isPure = task.purity() == PURE;
       if (isPure && diskCache.contains(hash)) {
-        var output = diskCache.read(hash, task.outputT());
+        var output = diskCache.read(hash, task.outputType());
         newPromised.accept(new ComputationResult(output, DISK));
         memoryCache.remove(hash);
       } else {

@@ -40,7 +40,7 @@ public sealed class NamedFuncP extends NamedEvaluableP implements FuncP permits 
   }
 
   @Override
-  public TypeP evaluationT() {
+  public TypeP evaluationType() {
     return resultT();
   }
 

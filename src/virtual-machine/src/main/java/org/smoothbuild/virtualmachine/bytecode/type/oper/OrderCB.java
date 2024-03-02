@@ -14,14 +14,14 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  * This class is immutable.
  */
 public class OrderCB extends OperCB {
-  public OrderCB(Hash hash, TypeB evaluationT) {
-    super(hash, ORDER, evaluationT);
-    checkArgument(evaluationT instanceof ArrayTB);
+  public OrderCB(Hash hash, TypeB evaluationType) {
+    super(hash, ORDER, evaluationType);
+    checkArgument(evaluationType instanceof ArrayTB);
   }
 
   @Override
-  public ArrayTB evaluationT() {
-    return (ArrayTB) super.evaluationT();
+  public ArrayTB evaluationType() {
+    return (ArrayTB) super.evaluationType();
   }
 
   @Override

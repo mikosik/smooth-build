@@ -148,12 +148,12 @@ public class VarReducerB {
       int environmentIndex = index - paramCount;
       if (environmentIndex < environment.size()) {
         var referenced = environment.get(environmentIndex);
-        var jobEvaluationT = referenced.evaluationType();
-        if (jobEvaluationT.equals(varB.evaluationType())) {
+        var jobEvaluationType = referenced.evaluationType();
+        if (jobEvaluationType.equals(varB.evaluationType())) {
           return referenced;
         } else {
-          throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
-              .formatted(index, jobEvaluationT.q(), varB.evaluationType().q()));
+          throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
+              .formatted(index, jobEvaluationType.q(), varB.evaluationType().q()));
         }
       }
       throw new VarOutOfBoundsException(index, paramCount + environment.size());

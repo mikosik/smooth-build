@@ -10,8 +10,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
 public class VarCB extends OperCB {
-  public VarCB(Hash hash, TypeB evaluationT) {
-    super(hash, VAR, evaluationT);
+  public VarCB(Hash hash, TypeB evaluationType) {
+    super(hash, VAR, evaluationType);
   }
 
   @Override

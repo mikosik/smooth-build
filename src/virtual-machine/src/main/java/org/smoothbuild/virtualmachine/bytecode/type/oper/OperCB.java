@@ -6,14 +6,14 @@ import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
 public abstract class OperCB extends CategoryB {
-  private final TypeB evaluationT;
+  private final TypeB evaluationType;
 
-  protected OperCB(Hash hash, CategoryKindB kind, TypeB evaluationT) {
-    super(hash, kind.name() + ":" + evaluationT.name(), kind);
-    this.evaluationT = evaluationT;
+  protected OperCB(Hash hash, CategoryKindB kind, TypeB evaluationType) {
+    super(hash, kind.name() + ":" + evaluationType.name(), kind);
+    this.evaluationType = evaluationType;
   }
 
-  public TypeB evaluationT() {
-    return evaluationT;
+  public TypeB evaluationType() {
+    return evaluationType;
   }
 }

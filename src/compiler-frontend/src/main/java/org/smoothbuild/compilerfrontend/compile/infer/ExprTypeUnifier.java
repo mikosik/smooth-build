@@ -101,10 +101,10 @@ public class ExprTypeUnifier {
   }
 
   private boolean unifyValue(NamedValueP namedValueP) {
-    return translateOrGenerateTempVar(namedValueP.evaluationT())
-        .map(evaluationT -> {
-          namedValueP.setTypeS(evaluationT);
-          return unifyEvaluableBody(namedValueP, evaluationT, evaluationT, typeTeller);
+    return translateOrGenerateTempVar(namedValueP.evaluationType())
+        .map(evaluationType -> {
+          namedValueP.setTypeS(evaluationType);
+          return unifyEvaluableBody(namedValueP, evaluationType, evaluationType, typeTeller);
         })
         .getOr(false);
   }
@@ -129,16 +129,16 @@ public class ExprTypeUnifier {
   }
 
   private Boolean unifyEvaluableBody(
-      EvaluableP evaluableP, TypeS evaluationT, TypeS type, TypeTeller typeTeller) {
+      EvaluableP evaluableP, TypeS evaluationType, TypeS type, TypeTeller typeTeller) {
     var vars = outerScopeVars.withAddedAll(type.vars());
     return new ExprTypeUnifier(unifier, typeTeller, vars, logger)
-        .unifyEvaluableBody(evaluableP, evaluationT);
+        .unifyEvaluableBody(evaluableP, evaluationType);
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evaluationT) {
+  private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evaluationType) {
     return evaluableP
         .body()
-        .map(body -> unifyBodyExprAndEvaluationType(evaluableP, evaluationT, body))
+        .map(body -> unifyBodyExprAndEvaluationType(evaluableP, evaluationType, body))
         .getOr(true);
   }
 

@@ -12,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.TypeS;
  * Instantiation of polymorphic entity.
  */
 public record InstantiateS(
-    List<TypeS> typeArgs, PolymorphicS polymorphicS, TypeS evaluationT, Location location)
+    List<TypeS> typeArgs, PolymorphicS polymorphicS, TypeS evaluationType, Location location)
     implements ExprS {
 
   public InstantiateS(PolymorphicS polymorphicS, Location location) {
@@ -29,7 +29,7 @@ public record InstantiateS(
     var fields = list(
             "typeArgs = " + "<" + typeArgs.toString(",") + ">",
             "polymorphicS = " + polymorphicS,
-            "evaluationT = " + evaluationT,
+            "evaluationType = " + evaluationType,
             "location = " + location)
         .toString("\n");
     return "InstantiateS(\n" + indent(fields) + "\n)";

@@ -13,6 +13,6 @@ public class DecodePickWrongEvaluationTypeException extends DecodeExprException 
     return ("Cannot decode %s object at %s. Its pickable is array with elem type %s while this "
             + "expression defines its evaluation type as %s.")
         .formatted(
-            category.q(), hash, actualElemType.q(), category.evaluationT().q());
+            category.q(), hash, actualElemType.q(), category.evaluationType().q());
   }
 }

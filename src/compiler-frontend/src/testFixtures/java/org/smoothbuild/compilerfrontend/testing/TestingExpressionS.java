@@ -328,8 +328,8 @@ public class TestingExpressionS {
 
   private static CombineS combineS(int line, ExprS... args) {
     var argsList = list(args);
-    var evaluationT = new TupleTS(argsList.map(ExprS::evaluationT));
-    return new CombineS(evaluationT, argsList, location(line));
+    var evaluationType = new TupleTS(argsList.map(ExprS::evaluationType));
+    return new CombineS(evaluationType, argsList, location(line));
   }
 
   public static IntS intS(int value) {
@@ -395,7 +395,7 @@ public class TestingExpressionS {
 
   public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
     return new OrderS(
-        arrayTS(headElem.evaluationT()), list(headElem).append(tailElems), location(line));
+        arrayTS(headElem.evaluationType()), list(headElem).append(tailElems), location(line));
   }
 
   public static OrderS orderS(TypeS elemT, ExprS... exprs) {
@@ -503,7 +503,7 @@ public class TestingExpressionS {
   }
 
   public static ItemS itemS(String name, ExprS body) {
-    return itemS(body.evaluationT(), name, some(body));
+    return itemS(body.evaluationType(), name, some(body));
   }
 
   public static ItemS itemS(TypeS type, String name, Maybe<ExprS> body) {
@@ -541,7 +541,7 @@ public class TestingExpressionS {
   }
 
   public static NamedExprValueS valueS(int line, String name, ExprS body) {
-    return valueS(line, body.evaluationT(), name, body);
+    return valueS(line, body.evaluationType(), name, body);
   }
 
   public static NamedExprValueS valueS(int line, TypeS type, String name, ExprS body) {
@@ -605,11 +605,11 @@ public class TestingExpressionS {
   }
 
   public static NamedExprFuncS funcS(int line, String name, NList<ItemS> params, ExprS body) {
-    return funcS(line, body.evaluationT(), name, params, body);
+    return funcS(line, body.evaluationType(), name, params, body);
   }
 
   public static NamedExprFuncS funcS(String name, NList<ItemS> params, ExprS body) {
-    return funcS(body.evaluationT(), name, params, body);
+    return funcS(body.evaluationType(), name, params, body);
   }
 
   public static NamedExprFuncS funcS(TypeS resultT, String name, NList<ItemS> params, ExprS body) {
@@ -631,7 +631,7 @@ public class TestingExpressionS {
   }
 
   public static LambdaS lambdaS(int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
-    var funcTS = funcTS(toTypes(params.list()), body.evaluationT());
+    var funcTS = funcTS(toTypes(params.list()), body.evaluationType());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
     return new LambdaS(funcSchemaS, params, body, location(line));
   }
@@ -645,7 +645,7 @@ public class TestingExpressionS {
   }
 
   public static LambdaS lambdaS(int line, NList<ItemS> params, ExprS body) {
-    var funcSchemaS = funcSchemaS(toTypes(params.list()), body.evaluationT());
+    var funcSchemaS = funcSchemaS(toTypes(params.list()), body.evaluationType());
     return new LambdaS(funcSchemaS, params, body, location(line));
   }
 

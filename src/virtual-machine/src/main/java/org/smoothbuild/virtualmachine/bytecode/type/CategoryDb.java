@@ -187,28 +187,28 @@ public class CategoryDb {
 
   // methods for getting ExprB types
 
-  public CallCB call(TypeB evaluationT) throws CategoryDbException {
-    return newOper(CALL, evaluationT);
+  public CallCB call(TypeB evaluationType) throws CategoryDbException {
+    return newOper(CALL, evaluationType);
   }
 
-  public CombineCB combine(TupleTB evaluationT) throws CategoryDbException {
-    return newOper(COMBINE, evaluationT);
+  public CombineCB combine(TupleTB evaluationType) throws CategoryDbException {
+    return newOper(COMBINE, evaluationType);
   }
 
-  public OrderCB order(ArrayTB evaluationT) throws CategoryDbException {
-    return newOper(ORDER, evaluationT);
+  public OrderCB order(ArrayTB evaluationType) throws CategoryDbException {
+    return newOper(ORDER, evaluationType);
   }
 
-  public PickCB pick(TypeB evaluationT) throws CategoryDbException {
-    return newOper(PICK, evaluationT);
+  public PickCB pick(TypeB evaluationType) throws CategoryDbException {
+    return newOper(PICK, evaluationType);
   }
 
-  public VarCB var(TypeB evaluationT) throws CategoryDbException {
-    return newOper(VAR, evaluationT);
+  public VarCB var(TypeB evaluationType) throws CategoryDbException {
+    return newOper(VAR, evaluationType);
   }
 
-  public SelectCB select(TypeB evaluationT) throws CategoryDbException {
-    return newOper(SELECT, evaluationT);
+  public SelectCB select(TypeB evaluationType) throws CategoryDbException {
+    return newOper(SELECT, evaluationType);
   }
 
   // methods for reading from db
@@ -266,8 +266,8 @@ public class CategoryDb {
 
   private OperCB readOperCat(Hash hash, List<Hash> rootChain, OperKindB<?> operKind)
       throws DecodeCatException {
-    var evaluationT = readDataAsType(hash, rootChain, operKind, operKind.dataClass());
-    return newOper(operKind.constructor(), hash, evaluationT);
+    var evaluationType = readDataAsType(hash, rootChain, operKind, operKind.dataClass());
+    return newOper(operKind.constructor(), hash, evaluationType);
   }
 
   private FuncTB readFuncT(Hash rootHash, List<Hash> rootChain) throws DecodeCatException {
@@ -454,15 +454,15 @@ public class CategoryDb {
     return cache(new TupleTB(rootHash, items));
   }
 
-  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT)
+  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationType)
       throws CategoryDbException {
-    var rootHash = writeRoot(kind, evaluationT);
-    return newOper(kind.constructor(), rootHash, evaluationT);
+    var rootHash = writeRoot(kind, evaluationType);
+    return newOper(kind.constructor(), rootHash, evaluationType);
   }
 
   private <T extends OperCB> T newOper(
-      BiFunction<Hash, TypeB, T> constructor, Hash rootHash, TypeB evaluationT) {
-    return cache(constructor.apply(rootHash, evaluationT));
+      BiFunction<Hash, TypeB, T> constructor, Hash rootHash, TypeB evaluationType) {
+    return cache(constructor.apply(rootHash, evaluationType));
   }
 
   private <T extends CategoryB> T cache(T type) {

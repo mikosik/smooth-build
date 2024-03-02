@@ -75,7 +75,7 @@ public class ExprDb {
   }
 
   public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
-    validateBodyEvaluationT(type, body);
+    validateBodyEvaluationType(type, body);
     var cat = categoryDb.lambda(type);
     return newLambda(cat, body);
   }
@@ -118,17 +118,17 @@ public class ExprDb {
     return newMapFunc(r, s);
   }
 
-  public OrderB order(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
-    validateOrderElements(evaluationT.elem(), elems);
-    return newOrder(evaluationT, elems);
+  public OrderB order(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
+    validateOrderElements(evaluationType.elem(), elems);
+    return newOrder(evaluationType, elems);
   }
 
   public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
     return newPick(pickable, index);
   }
 
-  public VarB varB(TypeB evaluationT, IntB index) throws BytecodeException {
-    return newVar(evaluationT, index);
+  public VarB varB(TypeB evaluationType, IntB index) throws BytecodeException {
+    return newVar(evaluationType, index);
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
@@ -137,9 +137,9 @@ public class ExprDb {
 
   // validators
 
-  private static void validateBodyEvaluationT(FuncTB funcTB, ExprB body) {
+  private static void validateBodyEvaluationType(FuncTB funcTB, ExprB body) {
     if (!body.evaluationType().equals(funcTB.result())) {
-      var message = "body.evaluationT() = %s should be equal to funcTB.res() = %s."
+      var message = "body.evaluationType() = %s should be equal to funcTB.res() = %s."
           .formatted(body.evaluationType().q(), funcTB.result().q());
       throw new IllegalArgumentException(message);
     }
@@ -279,8 +279,8 @@ public class ExprDb {
   }
 
   private CombineB newCombine(List<ExprB> items) throws BytecodeException {
-    var evaluationT = categoryDb.tuple(items.map(ExprB::evaluationType));
-    var combineCB = categoryDb.combine(evaluationT);
+    var evaluationType = categoryDb.tuple(items.map(ExprB::evaluationType));
+    var combineCB = categoryDb.combine(evaluationType);
     var data = writeCombineData(items);
     var root = newRoot(combineCB, data);
     return combineCB.newExpr(root, this);
@@ -298,59 +298,59 @@ public class ExprDb {
     return mapFuncCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
-    var orderCB = categoryDb.order(evaluationT);
+  private OrderB newOrder(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
+    var orderCB = categoryDb.order(evaluationType);
     var data = writeOrderData(elems);
     var root = newRoot(orderCB, data);
     return orderCB.newExpr(root, this);
   }
 
   private PickB newPick(ExprB pickable, ExprB index) throws BytecodeException {
-    var evaluationT = pickEvaluationT(pickable);
+    var evaluationType = pickEvaluationType(pickable);
     if (!(index.evaluationType() instanceof IntTB)) {
-      throw new IllegalArgumentException(
-          "index.evaluationT() should be IntTB but is " + index.evaluationType().q() + ".");
+      throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
+          + index.evaluationType().q() + ".");
     }
     var data = writePickData(pickable, index);
-    var category = categoryDb.pick(evaluationT);
+    var category = categoryDb.pick(evaluationType);
     var root = newRoot(category, data);
     return category.newExpr(root, this);
   }
 
-  private TypeB pickEvaluationT(ExprB pickable) {
-    var evaluationT = pickable.evaluationType();
-    if (evaluationT instanceof ArrayTB arrayT) {
+  private TypeB pickEvaluationType(ExprB pickable) {
+    var evaluationType = pickable.evaluationType();
+    if (evaluationType instanceof ArrayTB arrayT) {
       return arrayT.elem();
     } else {
       throw new IllegalArgumentException(
-          "pickable.evaluationT() should be ArrayTB but is " + evaluationT.q() + ".");
+          "pickable.evaluationType() should be ArrayTB but is " + evaluationType.q() + ".");
     }
   }
 
-  private VarB newVar(TypeB evaluationT, IntB index) throws BytecodeException {
-    VarCB type = categoryDb.var(evaluationT);
+  private VarB newVar(TypeB evaluationType, IntB index) throws BytecodeException {
+    VarCB type = categoryDb.var(evaluationType);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }
 
   private SelectB newSelect(ExprB selectable, IntB index) throws BytecodeException {
-    var evaluationT = selectEvaluationT(selectable, index);
+    var evaluationType = selectEvaluationType(selectable, index);
     var data = writeSelectData(selectable, index);
-    var category = categoryDb.select(evaluationT);
+    var category = categoryDb.select(evaluationType);
     var root = newRoot(category, data);
     return category.newExpr(root, this);
   }
 
-  private TypeB selectEvaluationT(ExprB selectable, IntB index) throws BytecodeException {
-    var evaluationT = selectable.evaluationType();
-    if (evaluationT instanceof TupleTB tuple) {
+  private TypeB selectEvaluationType(ExprB selectable, IntB index) throws BytecodeException {
+    var evaluationType = selectable.evaluationType();
+    if (evaluationType instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
       var elements = tuple.elements();
       checkElementIndex(intIndex, elements.size());
       return elements.get(intIndex);
     } else {
       throw new IllegalArgumentException(
-          "selectable.evaluationT() should be TupleTB but is " + evaluationT.q() + ".");
+          "selectable.evaluationType() should be TupleTB but is " + evaluationType.q() + ".");
     }
   }
 

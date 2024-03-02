@@ -13,7 +13,7 @@ public class TaskHashes {
       case CombineTask combineTask -> combineHash();
       case ConstTask constTask -> constHash(constTask.valueB());
       case InvokeTask invokeTask -> invokeHash(invokeTask.nativeFunc());
-      case OrderTask orderTask -> orderHash(orderTask.outputT());
+      case OrderTask orderTask -> orderHash(orderTask.outputType());
       case PickTask pickTask -> pickHash();
       case SelectTask selectTask -> selectHash();
     };

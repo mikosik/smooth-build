@@ -12,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.TypeS;
  */
 public record CallS(ExprS callee, CombineS args, Location location) implements ExprS {
   public CallS {
-    if (callee.evaluationT() instanceof FuncTS funcTS) {
+    if (callee.evaluationType() instanceof FuncTS funcTS) {
       validateArgsSize(funcTS, args);
     } else {
       throw new IllegalArgumentException();
@@ -29,8 +29,8 @@ public record CallS(ExprS callee, CombineS args, Location location) implements E
   }
 
   @Override
-  public TypeS evaluationT() {
-    return ((FuncTS) callee.evaluationT()).result();
+  public TypeS evaluationType() {
+    return ((FuncTS) callee.evaluationType()).result();
   }
 
   @Override
