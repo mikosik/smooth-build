@@ -235,9 +235,9 @@ public class EvaluatorBTest extends TestingVirtualMachine {
         public void lambda_returning_param_of_enclosing_lambda() throws Exception {
           var innerLambda = lambdaB(varB(intTB(), 0));
           var outerLambda = lambdaB(list(intTB()), innerLambda);
-          var innerReturnedByOuter = callB(outerLambda, intB(17));
-          var callB = callB(innerReturnedByOuter);
-          assertThat(evaluate(callB)).isEqualTo(intB(17));
+          var callToOuter = callB(outerLambda, intB(17));
+          var callToInnerReturnedByOuter = callB(callToOuter);
+          assertThat(evaluate(callToInnerReturnedByOuter)).isEqualTo(intB(17));
         }
 
         @Test
