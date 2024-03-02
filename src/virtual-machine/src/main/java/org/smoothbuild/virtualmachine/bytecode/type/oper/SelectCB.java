@@ -13,8 +13,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  * This class is immutable.
  */
 public class SelectCB extends OperCB {
-  public SelectCB(Hash hash, TypeB evaluationT) {
-    super(hash, SELECT, evaluationT);
+  public SelectCB(Hash hash, TypeB evaluationType) {
+    super(hash, SELECT, evaluationType);
   }
 
   @Override

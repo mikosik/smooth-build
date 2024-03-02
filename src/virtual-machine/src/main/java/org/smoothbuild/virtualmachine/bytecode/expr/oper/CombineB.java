@@ -29,7 +29,7 @@ public class CombineB extends OperB {
 
   @Override
   public TupleTB evaluationType() {
-    return category().evaluationT();
+    return category().evaluationType();
   }
 
   @Override
@@ -38,7 +38,7 @@ public class CombineB extends OperB {
   }
 
   public List<ExprB> items() throws BytecodeException {
-    List<TypeB> expectedTypes = category().evaluationT().elements();
+    List<TypeB> expectedTypes = category().evaluationType().elements();
     List<ExprB> items = readDataAsExprChain(ExprB.class);
     if (items.size() != expectedTypes.size()) {
       throw new DecodeCombineWrongElementsSizeException(hash(), category(), items.size());

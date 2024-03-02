@@ -8,5 +8,5 @@ import org.smoothbuild.compilerfrontend.lang.type.TypeS;
  */
 public sealed interface ExprS extends Located
     permits CallS, CombineS, ConstantS, InstantiateS, OrderS, SelectS {
-  public TypeS evaluationT();
+  public TypeS evaluationType();
 }

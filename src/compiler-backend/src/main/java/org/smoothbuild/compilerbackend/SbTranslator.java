@@ -205,9 +205,9 @@ public class SbTranslator {
             "Cannot resolve `" + referenceS.name() + "` at " + referenceS.location() + ".");
       }
     } else {
-      var evaluationT = typeF.translate(itemS.type());
+      var evaluationType = typeF.translate(itemS.type());
       var index = BigInteger.valueOf(lexicalEnvironment.indexOf(referenceS.name()));
-      return saveNalAndReturn(referenceS, bytecodeF.var(evaluationT, index));
+      return saveNalAndReturn(referenceS, bytecodeF.var(evaluationType, index));
     }
   }
 
@@ -283,14 +283,14 @@ public class SbTranslator {
   }
 
   private OrderB translateOrder(OrderS orderS) throws SbTranslatorException {
-    var arrayTB = typeF.translate(orderS.evaluationT());
+    var arrayTB = typeF.translate(orderS.evaluationType());
     var elementsB = translateExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elementsB);
   }
 
   private SelectB translateSelect(SelectS selectS) throws SbTranslatorException {
     var selectableB = translateExpr(selectS.selectable());
-    var structTS = (StructTS) selectS.selectable().evaluationT();
+    var structTS = (StructTS) selectS.selectable().evaluationType();
     var indexJ = structTS.fields().indexOf(selectS.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var indexB = bytecodeF.int_(bigInteger);

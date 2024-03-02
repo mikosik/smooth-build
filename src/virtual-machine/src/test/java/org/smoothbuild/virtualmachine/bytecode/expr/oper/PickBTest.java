@@ -15,15 +15,15 @@ public class PickBTest extends TestingVirtualMachine {
   @Test
   public void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
     assertCall(() -> pickB(intB(3), intB(2)))
-        .throwsException(
-            new IllegalArgumentException("pickable.evaluationT() should be ArrayTB but is `Int`."));
+        .throwsException(new IllegalArgumentException(
+            "pickable.evaluationType() should be ArrayTB but is `Int`."));
   }
 
   @Test
   public void creating_pick_with_non_int_expr_as_index_causes_exception() {
     assertCall(() -> pickB(arrayB(boolTB()), stringB()))
-        .throwsException(
-            new IllegalArgumentException("index.evaluationT() should be IntTB but is `String`."));
+        .throwsException(new IllegalArgumentException(
+            "index.evaluationType() should be IntTB but is `String`."));
   }
 
   @Test

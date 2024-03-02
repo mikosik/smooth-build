@@ -198,8 +198,8 @@ public class ConvertPs implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleS> 
 
     private CombineS convertArgs(CallP call) {
       var args = convertExprs(call.positionedArgs());
-      var evaluationT = new TupleTS(args.map(ExprS::evaluationT));
-      return new CombineS(evaluationT, args, call.location());
+      var evaluationType = new TupleTS(args.map(ExprS::evaluationType));
+      return new CombineS(evaluationType, args, call.location());
     }
 
     private ExprS convertFuncBody(FuncP funcP, ExprP body) {

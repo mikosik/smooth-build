@@ -32,7 +32,7 @@ public abstract sealed class Task
     return trace;
   }
 
-  public TypeB outputT() {
+  public TypeB outputType() {
     return exprB.evaluationType();
   }
 

@@ -91,8 +91,8 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeF.tuple(items));
   }
 
-  public VarB var(TypeB evaluationT, BigInteger index) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeF.var(evaluationT, index));
+  public VarB var(TypeB evaluationType, BigInteger index) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeF.var(evaluationType, index));
   }
 
   // types

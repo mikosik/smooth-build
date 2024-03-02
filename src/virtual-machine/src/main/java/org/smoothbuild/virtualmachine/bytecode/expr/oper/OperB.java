@@ -26,7 +26,7 @@ public abstract class OperB extends ExprB {
 
   @Override
   public TypeB evaluationType() {
-    return category().evaluationT();
+    return category().evaluationType();
   }
 
   public abstract ExprsB subExprs() throws BytecodeException;

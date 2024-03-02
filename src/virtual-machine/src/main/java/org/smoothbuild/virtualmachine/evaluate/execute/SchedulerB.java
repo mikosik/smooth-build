@@ -213,12 +213,12 @@ public class SchedulerB {
   private void scheduleVarB(Job job, VarB varB) throws BytecodeException {
     int index = varB.index().toJ().intValue();
     var referencedJob = job.environment().get(index);
-    var jobEvaluationT = referencedJob.exprB().evaluationType();
-    if (jobEvaluationT.equals(varB.evaluationType())) {
+    var jobEvaluationType = referencedJob.exprB().evaluationType();
+    if (jobEvaluationType.equals(varB.evaluationType())) {
       scheduleJobEvaluation(referencedJob, job.promisedValue());
     } else {
-      throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
-          .formatted(index, jobEvaluationT.q(), varB.evaluationType().q()));
+      throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
+          .formatted(index, jobEvaluationType.q(), varB.evaluationType().q()));
     }
   }
 

@@ -17,7 +17,7 @@ public final class OrderTask extends Task {
   public Output run(TupleB input, Container container) throws BytecodeException {
     ArrayB array = container
         .factory()
-        .arrayBuilder((ArrayTB) outputT())
+        .arrayBuilder((ArrayTB) outputType())
         .addAll(input.elements())
         .build();
     return new Output(array, container.messages());

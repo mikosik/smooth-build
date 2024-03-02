@@ -425,8 +425,8 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return callCB(intTB());
   }
 
-  public CallCB callCB(TypeB evaluationT) throws BytecodeException {
-    return categoryDb().call(evaluationT);
+  public CallCB callCB(TypeB evaluationType) throws BytecodeException {
+    return categoryDb().call(evaluationType);
   }
 
   public CombineCB combineCB(TypeB... itemTs) throws BytecodeException {
@@ -461,24 +461,24 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return pickCB(intTB());
   }
 
-  public PickCB pickCB(TypeB evaluationT) throws BytecodeException {
-    return categoryDb().pick(evaluationT);
+  public PickCB pickCB(TypeB evaluationType) throws BytecodeException {
+    return categoryDb().pick(evaluationType);
   }
 
   public VarCB varCB() throws BytecodeException {
     return varCB(intTB());
   }
 
-  public VarCB varCB(TypeB evaluationT) throws BytecodeException {
-    return categoryDb().var(evaluationT);
+  public VarCB varCB(TypeB evaluationType) throws BytecodeException {
+    return categoryDb().var(evaluationType);
   }
 
   public SelectCB selectCB() throws BytecodeException {
     return selectCB(intTB());
   }
 
-  public SelectCB selectCB(TypeB evaluationT) throws BytecodeException {
-    return categoryDb().select(evaluationT);
+  public SelectCB selectCB(TypeB evaluationType) throws BytecodeException {
+    return categoryDb().select(evaluationType);
   }
 
   // ValueB-s
@@ -773,8 +773,8 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return varB(intTB(), index);
   }
 
-  public VarB varB(TypeB evaluationT, int index) throws BytecodeException {
-    return exprDb().varB(evaluationT, intB(index));
+  public VarB varB(TypeB evaluationType, int index) throws BytecodeException {
+    return exprDb().varB(evaluationType, intB(index));
   }
 
   public SelectB selectB() throws BytecodeException {

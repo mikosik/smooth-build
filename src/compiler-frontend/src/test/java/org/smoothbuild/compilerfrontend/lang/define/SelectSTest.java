@@ -24,7 +24,7 @@ public class SelectSTest extends TestingExpressionS {
                   name = structValue
                   location = {prj}/build.smooth:12
                 )
-                evaluationT = MyStruct(Int field)
+                evaluationType = MyStruct(Int field)
                 location = {prj}/build.smooth:12
               )
               field = field

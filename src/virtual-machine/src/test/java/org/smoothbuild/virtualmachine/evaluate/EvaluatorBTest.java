@@ -412,7 +412,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(evaluatorB(taskReporter), callB);
           verify(taskReporter).reportEvaluationException(argThat(e -> e.getMessage()
-              .equals("environment(0) evaluationT is `Blob` but expected `Int`.")));
+              .equals("environment(0) evaluationType is `Blob` but expected `Int`.")));
         }
       }
 

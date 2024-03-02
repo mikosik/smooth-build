@@ -134,8 +134,8 @@ public class BytecodeF {
     return exprDb.pick(pickable, index);
   }
 
-  public VarB var(TypeB evaluationT, BigInteger index) throws BytecodeException {
-    return exprDb.varB(evaluationT, exprDb.int_(index));
+  public VarB var(TypeB evaluationType, BigInteger index) throws BytecodeException {
+    return exprDb.varB(evaluationType, exprDb.int_(index));
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
@@ -150,8 +150,8 @@ public class BytecodeF {
     return exprDb.tuple(items);
   }
 
-  public OrderB order(ArrayTB evaluationT, List<ExprB> elems) throws BytecodeException {
-    return exprDb.order(evaluationT, elems);
+  public OrderB order(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
+    return exprDb.order(evaluationType, elems);
   }
 
   // Types

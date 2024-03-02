@@ -16,7 +16,7 @@ public class SelectBTest extends TestingVirtualMachine {
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> selectB(intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
-            "selectable.evaluationT() should be TupleTB but is `Int`."));
+            "selectable.evaluationType() should be TupleTB but is `Int`."));
   }
 
   @Test

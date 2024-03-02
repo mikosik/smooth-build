@@ -22,11 +22,11 @@ public class CallSTest extends TestingExpressionS {
                   name = myId
                   location = {prj}/build.smooth:4
                 )
-                evaluationT = (Int)->Int
+                evaluationType = (Int)->Int
                 location = {prj}/build.smooth:4
               )
               args = CombineS(
-                evaluationT = (Int)
+                evaluationType = (Int)
                 elems = [
                   IntS(Int, 7, {prj}/build.smooth:3)
                 ]
