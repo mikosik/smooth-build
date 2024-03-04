@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.isValidSeverity;
 import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.severity;
@@ -21,6 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.evaluate.ComputationCacheFs;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 
 /**
@@ -28,14 +30,13 @@ import org.smoothbuild.virtualmachine.evaluate.task.Output;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final Path diskCachePath;
   private final ExprDb exprDb;
   private final BytecodeF bytecodeF;
 
   @Inject
-  public ComputationCache(ComputationCacheConfig config, ExprDb exprDb, BytecodeF bytecodeF) {
-    this.fileSystem = config.fileSystem();
-    this.diskCachePath = config.diskCachePath();
+  public ComputationCache(
+      @ComputationCacheFs FileSystem fileSystem, ExprDb exprDb, BytecodeF bytecodeF) {
+    this.fileSystem = fileSystem;
     this.exprDb = exprDb;
     this.bytecodeF = bytecodeF;
   }
@@ -105,6 +106,6 @@ public class ComputationCache {
 
   @VisibleForTesting
   Path toPath(Hash hash) {
-    return diskCachePath.appendPart(hash.toHexString());
+    return path(hash.toHexString());
   }
 }
