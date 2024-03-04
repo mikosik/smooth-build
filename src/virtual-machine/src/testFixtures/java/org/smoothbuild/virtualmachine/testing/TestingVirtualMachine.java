@@ -18,6 +18,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
@@ -72,7 +73,6 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCacheConfig;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -252,8 +252,11 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public ComputationCache computationCache() {
-    return new ComputationCache(
-        new ComputationCacheConfig(projectFileSystem(), Path.path("cache")), exprDb(), bytecodeF());
+    return new ComputationCache(computationCacheFileSystem(), exprDb(), bytecodeF());
+  }
+
+  public FileSystem computationCacheFileSystem() {
+    return new SubFileSystem(projectFileSystem(), Path.path("cache"));
   }
 
   public FileSystem projectFileSystem() {

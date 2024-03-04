@@ -10,14 +10,14 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.layout.ForSpace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeDb;
+import org.smoothbuild.virtualmachine.evaluate.ComputationCacheFs;
 import org.smoothbuild.virtualmachine.evaluate.ProjectFs;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCacheConfig;
 
 public class VirtualMachineConfigurationModule extends AbstractModule {
   @Provides
-  public ComputationCacheConfig provideComputationCacheConfig(
-      @ForSpace(PROJECT) FileSystem fileSystem) {
-    return new ComputationCacheConfig(fileSystem, COMPUTATION_CACHE_PATH);
+  @ComputationCacheFs
+  public FileSystem provideComputationCacheFileSystem(@ForSpace(PROJECT) FileSystem fileSystem) {
+    return new SubFileSystem(fileSystem, COMPUTATION_CACHE_PATH);
   }
 
   @Provides
