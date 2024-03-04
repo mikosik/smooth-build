@@ -27,7 +27,7 @@ import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.run.eval.report.TaskMatchers;
-import org.smoothbuild.virtualmachine.VirtualMachineModule;
+import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {

@@ -9,8 +9,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.evaluate.Project;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.wire.Project;
 
 /**
  * This class is NOT thread-safe.

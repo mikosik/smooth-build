@@ -22,8 +22,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.evaluate.ComputationDb;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
+import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 /**
  * This class is thread-safe.

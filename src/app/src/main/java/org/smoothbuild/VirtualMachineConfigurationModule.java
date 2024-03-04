@@ -9,9 +9,9 @@ import com.google.inject.Provides;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.layout.ForSpace;
-import org.smoothbuild.virtualmachine.evaluate.BytecodeDb;
-import org.smoothbuild.virtualmachine.evaluate.ComputationDb;
-import org.smoothbuild.virtualmachine.evaluate.Project;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.wire.ComputationDb;
+import org.smoothbuild.virtualmachine.wire.Project;
 
 public class VirtualMachineConfigurationModule extends AbstractModule {
   @Provides
