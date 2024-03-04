@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class VarReducerBTest extends TestingVirtualMachine {
+public class ReferenceInlinerBTest extends TestingVirtualMachine {
   @Nested
   class _without_references {
 
@@ -139,12 +139,12 @@ public class VarReducerBTest extends TestingVirtualMachine {
 
     @Test
     public void combine() throws Exception {
-      assertReferenceInliningReplacesReference(VarReducerBTest.this::combineB);
+      assertReferenceInliningReplacesReference(ReferenceInlinerBTest.this::combineB);
     }
 
     @Test
     public void order() throws Exception {
-      assertReferenceInliningReplacesReference(VarReducerBTest.this::orderB);
+      assertReferenceInliningReplacesReference(ReferenceInlinerBTest.this::orderB);
     }
 
     @Test
@@ -165,14 +165,16 @@ public class VarReducerBTest extends TestingVirtualMachine {
 
   @Test
   public void reference_with_index_equal_to_environment_size_causes_exception() throws Exception {
-    var job = job(varB(stringTB(), 3), intB(), intB(), intB(17));
-    assertCall(() -> varReducerB().inline(job)).throwsException(new VarOutOfBoundsException(3, 3));
+    var job = job(referenceB(stringTB(), 3), intB(), intB(), intB(17));
+    assertCall(() -> varReducerB().inline(job))
+        .throwsException(new ReferenceIndexOutOfBoundsException(3, 3));
   }
 
   @Test
   public void reference_with_negative_index_causes_exception() throws Exception {
-    var job = job(varB(stringTB(), -1), intB(), intB(), intB(17));
-    assertCall(() -> varReducerB().inline(job)).throwsException(new VarOutOfBoundsException(-1, 3));
+    var job = job(referenceB(stringTB(), -1), intB(), intB(), intB(17));
+    assertCall(() -> varReducerB().inline(job))
+        .throwsException(new ReferenceIndexOutOfBoundsException(-1, 3));
   }
 
   private void assertReferenceInliningReplacesReference(
@@ -190,7 +192,7 @@ public class VarReducerBTest extends TestingVirtualMachine {
       int referencedIndex, Function1<ExprB, ExprB, BytecodeException> factory, IntB replacement)
       throws BytecodeException {
     assertReferenceInlining(
-        factory.apply(varB(intTB(), referencedIndex)), factory.apply(replacement));
+        factory.apply(referenceB(intTB(), referencedIndex)), factory.apply(replacement));
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(
@@ -201,7 +203,7 @@ public class VarReducerBTest extends TestingVirtualMachine {
   private void assertReferenceInliningDoesNotChangeExpression(
       int referencedIndex, Function1<ExprB, ExprB, BytecodeException> factory)
       throws BytecodeException {
-    var exprB = factory.apply(varB(intTB(), referencedIndex));
+    var exprB = factory.apply(referenceB(intTB(), referencedIndex));
     var job = job(exprB, intB(1), intB(2), intB(3));
     assertThat(varReducerB().inline(job)).isSameInstanceAs(exprB);
   }

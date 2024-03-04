@@ -144,7 +144,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         public void poly_expression_function() throws Exception {
           var funcS = idFuncS();
           var instantiateS = instantiateS(list(intTS()), funcS);
-          var lambdaB = lambdaB(funcTB(intTB(), intTB()), varB(intTB(), 0));
+          var lambdaB = lambdaB(funcTB(intTB(), intTB()), referenceB(intTB(), 0));
           assertTranslation(bindings(funcS), instantiateS, lambdaB);
         }
 
@@ -160,8 +160,8 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var wrapFuncS = funcS(b, "wrap", nlist(itemS(b, "p")), bodyS);
           var wrapMonoFuncS = instantiateS(list(intTS()), wrapFuncS);
 
-          var idFuncB = lambdaB(funcTB(intTB(), intTB()), varB(intTB(), 0));
-          var wrapFuncB = lambdaB(funcTB(intTB(), intTB()), callB(idFuncB, varB(intTB(), 0)));
+          var idFuncB = lambdaB(funcTB(intTB(), intTB()), referenceB(intTB(), 0));
+          var wrapFuncB = lambdaB(funcTB(intTB(), intTB()), callB(idFuncB, referenceB(intTB(), 0)));
           assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, wrapFuncB);
         }
 
@@ -257,7 +257,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       public void lambda() throws Exception {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
+        assertTranslation(monoLambdaS, lambdaB(list(intTB()), referenceB(intTB(), 0)));
       }
 
       @Test
@@ -265,7 +265,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var monoLambdaS = instantiateS(lambdaS(paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
-        var bodyB = lambdaB(varB(intTB(), 0));
+        var bodyB = lambdaB(referenceB(intTB(), 0));
         var lambdaB = lambdaB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
@@ -278,7 +278,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "i")), monoLambdaS);
 
-        var bodyB = lambdaB(list(blobTB()), varB(intTB(), 1));
+        var bodyB = lambdaB(list(blobTB()), referenceB(intTB(), 1));
         var lambdaB = lambdaB(list(intTB()), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
@@ -324,7 +324,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var callS = callS(instantiateS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
-        var ctorB = lambdaB(list(stringTB()), combineB(varB(stringTB(), 0)));
+        var ctorB = lambdaB(list(stringTB()), combineB(referenceB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
       }
@@ -337,7 +337,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoLambdaS);
         var instantiateS = instantiateS(list(intTS()), funcS);
 
-        var bodyB = lambdaB(varB(intTB(), 0));
+        var bodyB = lambdaB(referenceB(intTB(), 0));
         var lambdaB = lambdaB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(bindings(funcS), instantiateS, lambdaB);

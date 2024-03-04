@@ -39,8 +39,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
@@ -178,10 +178,11 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     @Test
     public void with_one_elem_being_oper() throws Exception {
       var arrayTB = arrayTB(stringTB());
-      var hash = hash(hash(arrayTB), hash(hash(hash(stringTB()), hash("aaa")), hash(varB(1))));
+      var hash =
+          hash(hash(arrayTB), hash(hash(hash(stringTB()), hash("aaa")), hash(referenceB(1))));
       assertCall(() -> ((ArrayB) exprDb().get(hash)).elements(StringB.class))
           .throwsException(new DecodeExprWrongNodeClassException(
-              hash, arrayTB, DATA_PATH, 1, ValueB.class, VarB.class));
+              hash, arrayTB, DATA_PATH, 1, ValueB.class, ReferenceB.class));
     }
   }
 
@@ -369,10 +370,10 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
       var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = lambdaB(funcT, intB());
       var type = callCB(intTB());
-      var hash = hash(hash(type), hash(hash(func), hash(varB(1))));
+      var hash = hash(hash(type), hash(hash(func), hash(referenceB(1))));
       assertCall(() -> ((CallB) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprWrongNodeClassException(
-              hash, type, DATA_PATH + "[1]", CombineB.class, VarB.class));
+              hash, type, DATA_PATH + "[1]", CombineB.class, ReferenceB.class));
     }
 
     @Test
@@ -779,7 +780,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
        * pick in HashedDb.
        */
       var pickable = orderB(stringB("abc"));
-      var index = varB(intTB(), 7);
+      var index = referenceB(intTB(), 7);
       var hash = hash(hash(pickCB(stringTB())), hash(hash(pickable), hash(index)));
       assertThat(((PickB) exprDb().get(hash)).subExprs())
           .isEqualTo(new PickB.SubExprsB(pickable, index));
@@ -840,7 +841,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     public void index_is_not_int_expr() throws Exception {
       var type = pickCB(stringTB());
       var pickable = arrayB(stringB("abc"));
-      var index = varB(stringTB(), 7);
+      var index = referenceB(stringTB(), 7);
       var hash = hash(hash(type), hash(hash(pickable), hash(index)));
       assertCall(() -> ((PickB) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprWrongNodeTypeException(
@@ -869,7 +870,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
        */
       var index = intB(34);
       var hash = hash(hash(varCB(stringTB())), hash(index));
-      assertThat(((VarB) exprDb().get(hash)).index()).isEqualTo(index);
+      assertThat(((ReferenceB) exprDb().get(hash)).index()).isEqualTo(index);
     }
 
     @Test
@@ -882,13 +883,13 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
       var index = intB(0);
       var dataHash = hash(index);
       obj_root_with_two_data_hashes(
-          varCB(intTB()), dataHash, (Hash hash) -> ((VarB) exprDb().get(hash)).index());
+          varCB(intTB()), dataHash, (Hash hash) -> ((ReferenceB) exprDb().get(hash)).index());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-          varCB(intTB()), (Hash hash) -> ((VarB) exprDb().get(hash)).index());
+          varCB(intTB()), (Hash hash) -> ((ReferenceB) exprDb().get(hash)).index());
     }
   }
 
@@ -1120,11 +1121,11 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void with_element_being_oper() throws Exception {
-      var hash = hash(hash(personTB()), hash(hash(stringB("John")), hash(varB(1))));
+      var hash = hash(hash(personTB()), hash(hash(stringB("John")), hash(referenceB(1))));
       var tuple = (TupleB) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeClassException(
-              hash, personTB(), DATA_PATH + "[1]", ValueB.class, VarB.class));
+              hash, personTB(), DATA_PATH + "[1]", ValueB.class, ReferenceB.class));
     }
   }
 

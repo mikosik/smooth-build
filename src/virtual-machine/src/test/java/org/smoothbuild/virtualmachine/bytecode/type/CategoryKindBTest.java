@@ -45,7 +45,7 @@ public class CategoryKindBTest {
         arguments(11, CategoryKinds.CALL),
         arguments(12, CategoryKinds.PICK),
         arguments(13, CategoryKinds.IF_FUNC),
-        arguments(14, CategoryKinds.VAR),
+        arguments(14, CategoryKinds.REFERENCE),
         arguments(15, CategoryKinds.MAP_FUNC),
         arguments(16, CategoryKinds.FUNC));
   }

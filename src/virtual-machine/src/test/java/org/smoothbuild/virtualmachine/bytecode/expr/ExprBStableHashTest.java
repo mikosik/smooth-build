@@ -283,21 +283,21 @@ public class ExprBStableHashTest extends TestingVirtualMachine {
   class _reference {
     @Test
     public void zero_reference() throws Exception {
-      assertThat(varB(intTB(), 0).hash())
+      assertThat(referenceB(intTB(), 0).hash())
           .isEqualTo(
               Hash.decode("ddeb39ceb0da343b6e43e79988a72b9022c6326834faa98bc6386a63f6250b47"));
     }
 
     @Test
     public void positive_reference() throws Exception {
-      assertThat(varB(intTB(), 123).hash())
+      assertThat(referenceB(intTB(), 123).hash())
           .isEqualTo(
               Hash.decode("835fd9277c4aa2efb281e2e777cc65e74be8d939758e7454a4a6041c47aa4887"));
     }
 
     @Test
     public void negative_reference() throws Exception {
-      assertThat(varB(intTB(), -123).hash())
+      assertThat(referenceB(intTB(), -123).hash())
           .isEqualTo(
               Hash.decode("c73a5244ba1777a62f7d35167d267791cfacd2b222b4fc52f3bea334f19c809a"));
     }

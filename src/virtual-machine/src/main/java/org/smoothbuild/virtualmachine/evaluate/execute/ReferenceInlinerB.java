@@ -9,15 +9,15 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
 
-public class VarReducerB {
+public class ReferenceInlinerB {
   private final BytecodeF bytecodeF;
 
   @Inject
-  public VarReducerB(BytecodeF bytecodeF) {
+  public ReferenceInlinerB(BytecodeF bytecodeF) {
     this.bytecodeF = bytecodeF;
   }
 
@@ -37,7 +37,7 @@ public class VarReducerB {
       case CombineB combineB -> rewriteCombine(combineB, resolver);
       case OrderB orderB -> rewriteOrder(orderB, resolver);
       case PickB pickB -> rewritePick(pickB, resolver);
-      case VarB varB -> rewriteVar(varB, resolver);
+      case ReferenceB referenceB -> rewriteVar(referenceB, resolver);
       case SelectB selectB -> rewriteSelect(selectB, resolver);
       case LambdaB lambdaB -> rewriteLambda(lambdaB, resolver);
       default -> exprB;
@@ -90,7 +90,7 @@ public class VarReducerB {
     }
   }
 
-  private ExprB rewriteVar(VarB var, Resolver resolver) throws BytecodeException {
+  private ExprB rewriteVar(ReferenceB var, Resolver resolver) throws BytecodeException {
     return resolver.resolve(var);
   }
 
@@ -134,26 +134,27 @@ public class VarReducerB {
       return new Resolver(paramCount + delta, environment);
     }
 
-    public ExprB resolve(VarB varB) throws BytecodeException {
-      int index = varB.index().toJavaBigInteger().intValue();
+    public ExprB resolve(ReferenceB referenceB) throws BytecodeException {
+      int index = referenceB.index().toJavaBigInteger().intValue();
       if (index < 0) {
-        throw new VarOutOfBoundsException(index, paramCount + environment.size());
+        throw new ReferenceIndexOutOfBoundsException(index, paramCount + environment.size());
       }
       if (index < paramCount) {
-        return varB;
+        return referenceB;
       }
       int environmentIndex = index - paramCount;
       if (environmentIndex < environment.size()) {
         var referenced = environment.get(environmentIndex);
         var jobEvaluationType = referenced.evaluationType();
-        if (jobEvaluationType.equals(varB.evaluationType())) {
+        if (jobEvaluationType.equals(referenceB.evaluationType())) {
           return referenced;
         } else {
           throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
-              .formatted(index, jobEvaluationType.q(), varB.evaluationType().q()));
+              .formatted(
+                  index, jobEvaluationType.q(), referenceB.evaluationType().q()));
         }
       }
-      throw new VarOutOfBoundsException(index, paramCount + environment.size());
+      throw new ReferenceIndexOutOfBoundsException(index, paramCount + environment.size());
     }
   }
 }

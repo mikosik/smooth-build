@@ -193,7 +193,7 @@ public class EvaluatorSTest extends TestingTaskReporter {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
-          assertEvaluation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
+          assertEvaluation(monoLambdaS, lambdaB(list(intTB()), referenceB(intTB(), 0)));
         }
       }
 
@@ -231,7 +231,7 @@ public class EvaluatorSTest extends TestingTaskReporter {
         @Test
         public void constructor() throws BytecodeException {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertEvaluation(constructorS, lambdaB(list(intTB()), combineB(varB(intTB(), 0))));
+          assertEvaluation(constructorS, lambdaB(list(intTB()), combineB(referenceB(intTB(), 0))));
         }
       }
 
@@ -258,7 +258,7 @@ public class EvaluatorSTest extends TestingTaskReporter {
         public void constructor() throws BytecodeException {
           assertEvaluation(
               constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field")))),
-              lambdaB(funcTB(intTB(), tupleTB(intTB())), combineB(varB(intTB(), 0))));
+              lambdaB(funcTB(intTB(), tupleTB(intTB())), combineB(referenceB(intTB(), 0))));
         }
       }
     }

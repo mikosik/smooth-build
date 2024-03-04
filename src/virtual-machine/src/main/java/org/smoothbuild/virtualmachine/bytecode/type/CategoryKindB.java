@@ -7,8 +7,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
@@ -31,8 +31,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.oper.CombineCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.OperCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.OrderCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.PickCB;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.SelectCB;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.VarCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
@@ -53,7 +53,7 @@ public abstract sealed class CategoryKindB
   }
 
   public static sealed class OperKindB<T extends OperCB> extends CategoryKindB
-      permits CallKindB, CombineKindB, OrderKindB, PickKindB, SelectKindB, VarKindB {
+      permits CallKindB, CombineKindB, OrderKindB, PickKindB, SelectKindB, ReferenceKindB {
     private final BiFunction<Hash, TypeB, T> constructor;
     private final Class<? extends TypeB> dataClass;
 
@@ -184,9 +184,9 @@ public abstract sealed class CategoryKindB
     }
   }
 
-  public static final class VarKindB extends OperKindB<VarCB> {
-    VarKindB() {
-      super("VAR", (byte) 14, VarCB::new, TypeB.class, VarB.class);
+  public static final class ReferenceKindB extends OperKindB<ReferenceCB> {
+    ReferenceKindB() {
+      super("VAR", (byte) 14, ReferenceCB::new, TypeB.class, ReferenceB.class);
     }
   }
 
@@ -234,7 +234,7 @@ public abstract sealed class CategoryKindB
       case 11 -> CategoryKinds.CALL;
       case 12 -> CategoryKinds.PICK;
       case 13 -> CategoryKinds.IF_FUNC;
-      case 14 -> CategoryKinds.VAR;
+      case 14 -> CategoryKinds.REFERENCE;
       case 15 -> CategoryKinds.MAP_FUNC;
       case 16 -> CategoryKinds.FUNC;
       default -> null;
