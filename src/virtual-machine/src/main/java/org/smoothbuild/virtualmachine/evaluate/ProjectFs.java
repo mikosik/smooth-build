@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.bytecode;
+package org.smoothbuild.virtualmachine.evaluate;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

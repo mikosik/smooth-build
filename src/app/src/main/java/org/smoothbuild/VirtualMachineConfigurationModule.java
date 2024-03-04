@@ -10,7 +10,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.layout.ForSpace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeDb;
-import org.smoothbuild.virtualmachine.bytecode.ProjectFs;
+import org.smoothbuild.virtualmachine.evaluate.ProjectFs;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCacheConfig;
 
 public class VirtualMachineConfigurationModule extends AbstractModule {

@@ -6,10 +6,10 @@ import java.util.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
-import org.smoothbuild.virtualmachine.bytecode.ProjectFs;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
+import org.smoothbuild.virtualmachine.evaluate.ProjectFs;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 /**
