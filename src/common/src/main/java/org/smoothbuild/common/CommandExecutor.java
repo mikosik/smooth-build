@@ -16,13 +16,14 @@ public class CommandExecutor {
     ProcessBuilder processBuilder = new ProcessBuilder(allArgs);
     processBuilder.directory(workingDir.toFile());
     Process process = processBuilder.start();
-    ExecutorService executor = Executors.newFixedThreadPool(2);
-    Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
-    Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
-    int exitCode = process.waitFor();
-    String systemOut = new String(inputStream.get(), CHARSET);
-    String systemErr = new String(errorStream.get(), CHARSET);
-    return new CommandResult(exitCode, systemOut, systemErr);
+    try (ExecutorService executor = Executors.newFixedThreadPool(2)) {
+      Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
+      Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
+      int exitCode = process.waitFor();
+      String systemOut = new String(inputStream.get(), CHARSET);
+      String systemErr = new String(errorStream.get(), CHARSET);
+      return new CommandResult(exitCode, systemOut, systemErr);
+    }
   }
 
   public static record CommandResult(int exitCode, String systemOut, String systemErr) {}
