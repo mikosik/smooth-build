@@ -1,7 +1,7 @@
 
 ### Glossary of terms used in documentation and code
 
- - __actual type__ - Type created from polytype by replacing its type variables with some types.
+ - __actual type__ - Type created from polytype by replacing its type variables with monotypes.
  - __assignable__ - Value is assignable to different value if they have the same type
    or type of former is convertible to the type of latter.
  - __array type__ - Type that represents sequence of elements.
