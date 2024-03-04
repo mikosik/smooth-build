@@ -38,7 +38,7 @@ public class SelectB extends OperB {
     var selectable = readSelectable();
     if (selectable.evaluationType() instanceof TupleTB tupleT) {
       var index = readIndex();
-      int i = index.toJ().intValue();
+      int i = index.toJavaBigInteger().intValue();
       int size = tupleT.elements().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), category(), i, size);

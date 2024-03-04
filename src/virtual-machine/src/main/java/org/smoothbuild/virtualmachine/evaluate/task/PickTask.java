@@ -21,7 +21,7 @@ public final class PickTask extends Task {
   public Output run(TupleB input, Container container) throws BytecodeException {
     var components = input.elements();
     checkArgument(components.size() == 2);
-    int index = index(components).toJ().intValue();
+    int index = index(components).toJavaBigInteger().intValue();
     var elems = array(components).elements(ValueB.class);
     if (index < 0 || elems.size() <= index) {
       container

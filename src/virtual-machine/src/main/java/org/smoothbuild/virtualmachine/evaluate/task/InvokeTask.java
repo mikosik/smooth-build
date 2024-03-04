@@ -18,7 +18,7 @@ public final class InvokeTask extends Task {
   private final NativeFuncB nativeFuncB;
 
   public InvokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) throws BytecodeException {
-    super(callB, trace, nativeFuncB.isPure().toJ() ? PURE : IMPURE);
+    super(callB, trace, nativeFuncB.isPure().toJavaBoolean() ? PURE : IMPURE);
     this.nativeFuncB = nativeFuncB;
   }
 

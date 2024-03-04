@@ -344,7 +344,7 @@ public class ExprDb {
   private TypeB selectEvaluationType(ExprB selectable, IntB index) throws BytecodeException {
     var evaluationType = selectable.evaluationType();
     if (evaluationType instanceof TupleTB tuple) {
-      int intIndex = index.toJ().intValue();
+      int intIndex = index.toJavaBigInteger().intValue();
       var elements = tuple.elements();
       checkElementIndex(intIndex, elements.size());
       return elements.get(intIndex);

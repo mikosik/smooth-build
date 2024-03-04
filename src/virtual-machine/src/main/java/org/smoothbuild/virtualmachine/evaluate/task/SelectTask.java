@@ -22,7 +22,7 @@ public final class SelectTask extends Task {
     checkArgument(components.size() == 2);
     var tuple = selectable(components);
     var index = index(components);
-    return new Output(tuple.get(index.toJ().intValue()), container.messages());
+    return new Output(tuple.get(index.toJavaBigInteger().intValue()), container.messages());
   }
 
   private TupleB selectable(List<ValueB> components) {

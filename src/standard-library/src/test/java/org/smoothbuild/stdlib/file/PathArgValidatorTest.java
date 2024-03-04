@@ -43,9 +43,9 @@ public class PathArgValidatorTest extends TestingVirtualMachine {
     PathS name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name).isNull();
     var elements = container().messages().elements(TupleB.class);
-    elements.map(e -> messageText(e).toJ()).forEach(t -> assertThat(t)
+    elements.map(e -> messageText(e).toJavaString()).forEach(t -> assertThat(t)
         .startsWith("Param `name` has illegal value."));
-    elements.map(e -> messageSeverity(e).toJ()).forEach(s -> assertThat(s)
+    elements.map(e -> messageSeverity(e).toJavaString()).forEach(s -> assertThat(s)
         .startsWith(ERROR.name()));
   }
 

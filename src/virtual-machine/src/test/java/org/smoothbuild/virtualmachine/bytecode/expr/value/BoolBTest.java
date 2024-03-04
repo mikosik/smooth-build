@@ -20,13 +20,13 @@ public class BoolBTest extends TestingVirtualMachine {
   @Test
   public void to_j_returns_java_true_from_true_bool() throws Exception {
     BoolB bool = boolB(true);
-    assertThat(bool.toJ()).isTrue();
+    assertThat(bool.toJavaBoolean()).isTrue();
   }
 
   @Test
   public void javlue_returns_java_false_from_false_bool() throws Exception {
     BoolB bool = boolB(false);
-    assertThat(bool.toJ()).isFalse();
+    assertThat(bool.toJavaBoolean()).isFalse();
   }
 
   @Nested
@@ -52,7 +52,7 @@ public class BoolBTest extends TestingVirtualMachine {
   @Test
   public void bool_read_back_by_hash_has_same_to_j() throws Exception {
     BoolB bool = boolB(true);
-    assertThat(((BoolB) exprDbOther().get(bool.hash())).toJ()).isTrue();
+    assertThat(((BoolB) exprDbOther().get(bool.hash())).toJavaBoolean()).isTrue();
   }
 
   @Test

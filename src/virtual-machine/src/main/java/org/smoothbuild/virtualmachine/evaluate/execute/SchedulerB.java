@@ -144,7 +144,7 @@ public class SchedulerB {
 
     private void onConditionEvaluated(ValueB conditionB, List<ExprB> args)
         throws BytecodeException {
-      var exprB = args.get(((BoolB) conditionB).toJ() ? 1 : 2);
+      var exprB = args.get(((BoolB) conditionB).toJavaBoolean() ? 1 : 2);
       scheduleJobEvaluation(newJob(exprB, callJob), callJob.promisedValue());
     }
 
@@ -211,7 +211,7 @@ public class SchedulerB {
   }
 
   private void scheduleVarB(Job job, VarB varB) throws BytecodeException {
-    int index = varB.index().toJ().intValue();
+    int index = varB.index().toJavaBigInteger().intValue();
     var referencedJob = job.environment().get(index);
     var jobEvaluationType = referencedJob.exprB().evaluationType();
     if (jobEvaluationType.equals(varB.evaluationType())) {

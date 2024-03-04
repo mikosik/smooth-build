@@ -12,12 +12,12 @@ public final class BoolB extends ValueB {
     super(merkleRoot, exprDb);
   }
 
-  public boolean toJ() throws BytecodeException {
+  public boolean toJavaBoolean() throws BytecodeException {
     return readData(() -> hashedDb().readBoolean(dataHash()));
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    return Boolean.toString(toJ());
+    return Boolean.toString(toJavaBoolean());
   }
 }

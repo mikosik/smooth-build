@@ -9,6 +9,6 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class NotFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     BoolB value = (BoolB) args.get(0);
-    return nativeApi.factory().bool(!value.toJ());
+    return nativeApi.factory().bool(!value.toJavaBoolean());
   }
 }

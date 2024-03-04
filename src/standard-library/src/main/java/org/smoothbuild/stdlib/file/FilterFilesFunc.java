@@ -22,7 +22,7 @@ public class FilterFilesFunc {
 
     Predicate<PathS> filter;
     try {
-      filter = new PathMatcher(pattern.toJ());
+      filter = new PathMatcher(pattern.toJavaString());
     } catch (IllegalPathPatternException e) {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
@@ -31,7 +31,7 @@ public class FilterFilesFunc {
         nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileT());
 
     for (TupleB file : files.elements(TupleB.class)) {
-      if (filter.test(path(filePath(file).toJ()))) {
+      if (filter.test(path(filePath(file).toJavaString()))) {
         builder.add(file);
       }
     }

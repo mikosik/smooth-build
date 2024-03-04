@@ -21,12 +21,12 @@ public class StringBTest extends TestingVirtualMachine {
 
   @Test
   public void to_j_returns_java_string() throws Exception {
-    assertThat(stringB(string).toJ()).isEqualTo(string);
+    assertThat(stringB(string).toJavaString()).isEqualTo(string);
   }
 
   @Test
   public void to_j_returns_empty_java_string_for_empty_str() throws Exception {
-    assertThat(stringB("").toJ()).isEqualTo("");
+    assertThat(stringB("").toJavaString()).isEqualTo("");
   }
 
   @Nested
@@ -51,7 +51,7 @@ public class StringBTest extends TestingVirtualMachine {
   @Test
   public void str_read_back_by_hash_has_same_to_j() throws Exception {
     StringB stringB = stringB(string);
-    assertThat(((StringB) exprDbOther().get(stringB.hash())).toJ()).isEqualTo(string);
+    assertThat(((StringB) exprDbOther().get(stringB.hash())).toJavaString()).isEqualTo(string);
   }
 
   @Test

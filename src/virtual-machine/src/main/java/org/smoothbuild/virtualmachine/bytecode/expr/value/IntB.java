@@ -13,12 +13,12 @@ public final class IntB extends ValueB {
     super(merkleRoot, exprDb);
   }
 
-  public BigInteger toJ() throws BytecodeException {
+  public BigInteger toJavaBigInteger() throws BytecodeException {
     return readData(() -> hashedDb().readBigInteger(dataHash()));
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    return toJ().toString();
+    return toJavaBigInteger().toString();
   }
 }

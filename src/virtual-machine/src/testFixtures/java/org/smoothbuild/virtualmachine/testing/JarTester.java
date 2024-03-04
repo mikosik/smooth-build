@@ -29,7 +29,7 @@ public class JarTester {
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, TupleB file) throws Exception {
-    JarEntry entry = new JarEntry(filePath(file).toJ());
+    JarEntry entry = new JarEntry(filePath(file).toJavaString());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {
       var sink = sink(jarOutputStream);

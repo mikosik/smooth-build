@@ -112,7 +112,7 @@ public class JavacFunc {
     }
 
     private List<String> options() throws BytecodeException {
-      return options.elements(StringB.class).map(StringB::toJ);
+      return options.elements(StringB.class).map(StringB::toJavaString);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles)
