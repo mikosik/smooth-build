@@ -665,8 +665,8 @@ public class EvaluatorBTest extends TestingVirtualMachine {
 
     public static class ExecuteCommands {
       public static ValueB func(NativeApi nativeApi, TupleB args) throws Exception {
-        String name = ((StringB) args.get(0)).toJ();
-        String commands = ((StringB) args.get(1)).toJ();
+        String name = ((StringB) args.get(0)).toJavaString();
+        String commands = ((StringB) args.get(1)).toJavaString();
         int result = 0;
         for (String command : commands.split(",")) {
           char index = command.charAt(command.length() - 1);

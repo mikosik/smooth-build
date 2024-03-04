@@ -135,7 +135,7 @@ public class VarReducerB {
     }
 
     public ExprB resolve(VarB varB) throws BytecodeException {
-      int index = varB.index().toJ().intValue();
+      int index = varB.index().toJavaBigInteger().intValue();
       if (index < 0) {
         throw new VarOutOfBoundsException(index, paramCount + environment.size());
       }

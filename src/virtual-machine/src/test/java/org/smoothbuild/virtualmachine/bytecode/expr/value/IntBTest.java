@@ -19,7 +19,7 @@ public class IntBTest extends TestingVirtualMachine {
 
   @Test
   public void to_j_returns_java_big_integer() throws Exception {
-    assertThat(intB(123).toJ()).isEqualTo(BigInteger.valueOf(123));
+    assertThat(intB(123).toJavaBigInteger()).isEqualTo(BigInteger.valueOf(123));
   }
 
   @Nested
@@ -44,7 +44,8 @@ public class IntBTest extends TestingVirtualMachine {
   @Test
   public void int_read_back_by_hash_has_same_to_J() throws Exception {
     IntB i = intB(123);
-    assertThat(((IntB) exprDbOther().get(i.hash())).toJ()).isEqualTo(BigInteger.valueOf(123));
+    assertThat(((IntB) exprDbOther().get(i.hash())).toJavaBigInteger())
+        .isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test

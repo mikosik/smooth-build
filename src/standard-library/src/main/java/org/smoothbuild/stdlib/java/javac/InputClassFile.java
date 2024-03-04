@@ -20,7 +20,7 @@ public class InputClassFile extends SimpleJavaFileObject {
   private final String aPackage;
 
   public InputClassFile(TupleB file) throws BytecodeException {
-    this(file, filePath(file).toJ());
+    this(file, filePath(file).toJavaString());
   }
 
   public InputClassFile(TupleB file, String filePath) {

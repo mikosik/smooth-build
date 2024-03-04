@@ -45,11 +45,11 @@ public class MessageStruct {
   }
 
   public static String severity(ExprB message) throws BytecodeException {
-    return messageSeverity((TupleB) message).toJ();
+    return messageSeverity((TupleB) message).toJavaString();
   }
 
   public static String text(ExprB message) throws BytecodeException {
-    return messageText((TupleB) message).toJ();
+    return messageText((TupleB) message).toJavaString();
   }
 
   public static StringB messageText(TupleB message) throws BytecodeException {

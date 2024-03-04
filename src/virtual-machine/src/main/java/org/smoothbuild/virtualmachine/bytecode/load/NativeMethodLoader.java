@@ -36,7 +36,7 @@ public class NativeMethodLoader {
   }
 
   private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) throws BytecodeException {
-    var classBinaryName = nativeFuncB.classBinaryName().toJ();
+    var classBinaryName = nativeFuncB.classBinaryName().toJavaString();
     var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader
         .load(methodSpec)

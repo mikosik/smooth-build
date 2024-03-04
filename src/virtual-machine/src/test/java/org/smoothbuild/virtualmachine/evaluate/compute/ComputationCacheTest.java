@@ -140,7 +140,8 @@ public class ComputationCacheTest extends TestingVirtualMachine {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(boolV, messageArrayEmpty()));
 
-    assertThat(((BoolB) computationCache.read(hash, boolTB()).valueB()).toJ()).isTrue();
+    assertThat(((BoolB) computationCache.read(hash, boolTB()).valueB()).toJavaBoolean())
+        .isTrue();
   }
 
   @Test
@@ -149,7 +150,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(intV, messageArrayEmpty()));
 
-    assertThat(((IntB) computationCache.read(hash, intTB()).valueB()).toJ())
+    assertThat(((IntB) computationCache.read(hash, intTB()).valueB()).toJavaBigInteger())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -159,7 +160,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
     var strV = stringB(string);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(strV, messageArrayEmpty()));
-    assertThat(((StringB) computationCache.read(hash, stringTB()).valueB()).toJ())
+    assertThat(((StringB) computationCache.read(hash, stringTB()).valueB()).toJavaString())
         .isEqualTo(string);
   }
 }

@@ -166,7 +166,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
   }
 
   private static PathS fileValuePath(TupleB file) throws BytecodeException {
-    return path(filePath(file).toJ());
+    return path(filePath(file).toJavaString());
   }
 
   private static PathS targetPath(ValueB valueB) {

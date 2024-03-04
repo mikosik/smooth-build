@@ -31,7 +31,7 @@ public class VarB extends OperB {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return category().name() + "(" + index().toJ() + ")";
+    return category().name() + "(" + index().toJavaBigInteger() + ")";
   }
 
   public static record SubExprsB() implements ExprsB {

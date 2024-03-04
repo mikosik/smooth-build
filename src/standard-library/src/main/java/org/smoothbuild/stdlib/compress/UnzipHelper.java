@@ -56,7 +56,7 @@ public class UnzipHelper {
     if (files == null) {
       return null;
     }
-    return files.elements(TupleB.class).toMap(f -> filePath(f).toJ(), x -> x);
+    return files.elements(TupleB.class).toMap(f -> filePath(f).toJavaString(), x -> x);
   }
 
   public static ArrayB unzipToArrayB(

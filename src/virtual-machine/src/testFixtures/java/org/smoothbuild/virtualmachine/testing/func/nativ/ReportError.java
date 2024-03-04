@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class ReportError {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     StringB message = (StringB) args.get(0);
-    nativeApi.log().error(message.toJ());
+    nativeApi.log().error(message.toJavaString());
     return null;
   }
 }

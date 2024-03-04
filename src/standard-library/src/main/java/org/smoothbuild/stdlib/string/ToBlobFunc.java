@@ -13,7 +13,7 @@ public class ToBlobFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args)
       throws IOException, BytecodeException {
     var stringB = (StringB) args.get(0);
-    var string = stringB.toJ();
+    var string = stringB.toJavaString();
     return nativeApi.factory().blob(sink -> sink.writeString(string, CHARSET));
   }
 }

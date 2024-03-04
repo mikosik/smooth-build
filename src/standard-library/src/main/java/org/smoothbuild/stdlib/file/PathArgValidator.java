@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class PathArgValidator {
   public static PathS validatedProjectPath(NativeApi nativeApi, String name, StringB path)
       throws BytecodeException {
-    String value = path.toJ();
+    String value = path.toJavaString();
     switch (value) {
       case ".":
         return PathS.root();

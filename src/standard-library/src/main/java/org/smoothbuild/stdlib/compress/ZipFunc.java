@@ -25,7 +25,7 @@ public class ZipFunc {
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
       try (var zipOutputStream = new ZipOutputStream(buffer(blobBuilder).outputStream())) {
         for (TupleB file : files.elements(TupleB.class)) {
-          String path = filePath(file).toJ();
+          String path = filePath(file).toJavaString();
           if (!duplicatesDetector.add(path)) {
             nativeApi.log().error("Cannot zip two files with the same path = " + path);
             return null;
@@ -43,7 +43,7 @@ public class ZipFunc {
 
   private static void addZipEntry(ZipOutputStream zipOutputStream, TupleB file)
       throws IOException, BytecodeException {
-    var zipEntry = new ZipEntry(filePath(file).toJ());
+    var zipEntry = new ZipEntry(filePath(file).toJavaString());
     zipEntry.setLastModifiedTime(FileTime.fromMillis(0));
     zipOutputStream.putNextEntry(zipEntry);
     try (BufferedSource source = fileContent(file).source()) {

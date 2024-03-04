@@ -15,7 +15,7 @@ public class InputSourceFile extends SimpleJavaFileObject {
   private final TupleB file;
 
   public InputSourceFile(TupleB file) throws BytecodeException {
-    super(URI.create("string:///" + filePath(file).toJ()), Kind.SOURCE);
+    super(URI.create("string:///" + filePath(file).toJavaString()), Kind.SOURCE);
     this.file = file;
   }
 

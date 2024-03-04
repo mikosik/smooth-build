@@ -48,7 +48,7 @@ public class JunitFunc {
       var filter = createFilter(include);
       int testCount = 0;
       for (var file : filesFromTests.keySet()) {
-        var path = path(filePath(filesFromTests.get(file)).toJ());
+        var path = path(filePath(filesFromTests.get(file)).toJavaString());
         if (filter.test(path)) {
           testCount++;
           var testClass = loadClass(classLoader, toBinaryName(file));
@@ -122,7 +122,7 @@ public class JunitFunc {
   private static Predicate<PathS> createFilter(StringB includeParam)
       throws JunitException, BytecodeException {
     try {
-      return new PathMatcher(includeParam.toJ());
+      return new PathMatcher(includeParam.toJavaString());
     } catch (IllegalPathPatternException e) {
       throw new JunitException("Parameter 'include' has illegal value. " + e.getMessage());
     }

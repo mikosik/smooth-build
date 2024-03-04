@@ -15,12 +15,12 @@ public final class StringB extends ValueB {
     super(merkleRoot, exprDb);
   }
 
-  public String toJ() throws BytecodeException {
+  public String toJavaString() throws BytecodeException {
     return readData(() -> hashedDb().readString(dataHash()));
   }
 
   @Override
   public String exprToString() throws BytecodeException {
-    return limitedWithEllipsis("\"" + escaped(toJ()) + "\"", 30);
+    return limitedWithEllipsis("\"" + escaped(toJavaString()) + "\"", 30);
   }
 }

@@ -74,7 +74,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
        * in HashedDb.
        */
       var hash = hash(hash(stringTB()), hash("aaa"));
-      assertThat(((StringB) exprDb().get(hash)).toJ()).isEqualTo("aaa");
+      assertThat(((StringB) exprDb().get(hash)).toJavaString()).isEqualTo("aaa");
     }
 
     @ParameterizedTest
@@ -117,7 +117,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
           hash(arrayTB(stringTB())),
           hash(hash(hash(stringTB()), hash("aaa")), hash(hash(stringTB()), hash("bbb"))));
       List<String> strings =
-          ((ArrayB) exprDb().get(hash)).elements(StringB.class).map(StringB::toJ);
+          ((ArrayB) exprDb().get(hash)).elements(StringB.class).map(StringB::toJavaString);
       assertThat(strings).containsExactly("aaa", "bbb").inOrder();
     }
 
@@ -230,7 +230,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     @ValueSource(booleans = {true, false})
     public void learning_test(boolean value) throws Exception {
       var hash = hash(hash(boolTB()), hash(value));
-      assertThat(((BoolB) exprDb().get(hash)).toJ()).isEqualTo(value);
+      assertThat(((BoolB) exprDb().get(hash)).toJavaBoolean()).isEqualTo(value);
     }
 
     @Test
@@ -242,20 +242,20 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(boolTB(), hashedDb().writeBoolean(true), (Hash hash) -> ((BoolB)
               exprDb().get(hash))
-          .toJ());
+          .toJavaBoolean());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          boolTB(), (Hash hash) -> ((BoolB) exprDb().get(hash)).toJ());
+          boolTB(), (Hash hash) -> ((BoolB) exprDb().get(hash)).toJavaBoolean());
     }
 
     @Test
     public void empty_bytes_as_data() throws Exception {
       var dataHash = hash(ByteString.of());
       var hash = hash(hash(boolTB()), dataHash);
-      assertCall(() -> ((BoolB) exprDb().get(hash)).toJ())
+      assertCall(() -> ((BoolB) exprDb().get(hash)).toJavaBoolean())
           .throwsException(new DecodeExprNodeException(hash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
@@ -264,7 +264,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     public void more_than_one_byte_as_data() throws Exception {
       var dataHash = hash(ByteString.of((byte) 0, (byte) 0));
       var hash = hash(hash(boolTB()), dataHash);
-      assertCall(() -> ((BoolB) exprDb().get(hash)).toJ())
+      assertCall(() -> ((BoolB) exprDb().get(hash)).toJavaBoolean())
           .throwsException(new DecodeExprNodeException(hash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
@@ -274,7 +274,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     public void one_byte_data_not_equal_zero_nor_one(byte value) throws Exception {
       var dataHash = hash(ByteString.of(value));
       var hash = hash(hash(boolTB()), dataHash);
-      assertCall(() -> ((BoolB) exprDb().get(hash)).toJ())
+      assertCall(() -> ((BoolB) exprDb().get(hash)).toJavaBoolean())
           .throwsException(new DecodeExprNodeException(hash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash));
     }
@@ -554,7 +554,8 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
        */
       var byteString = ByteString.of((byte) 3, (byte) 2);
       var hash = hash(hash(intTB()), hash(byteString));
-      assertThat(((IntB) exprDb().get(hash)).toJ()).isEqualTo(BigInteger.valueOf(3 * 256 + 2));
+      assertThat(((IntB) exprDb().get(hash)).toJavaBigInteger())
+          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
     @Test
@@ -566,13 +567,13 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(intTB(), hashedDb().writeByte((byte) 1), (Hash hash) -> ((IntB)
               exprDb().get(hash))
-          .toJ());
+          .toJavaBigInteger());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          intTB(), (Hash hash) -> ((IntB) exprDb().get(hash)).toJ());
+          intTB(), (Hash hash) -> ((IntB) exprDb().get(hash)).toJavaBigInteger());
     }
   }
 
@@ -1004,7 +1005,7 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
        * in HashedDb.
        */
       var hash = hash(hash(stringTB()), hash("aaa"));
-      assertThat(((StringB) exprDb().get(hash)).toJ()).isEqualTo("aaa");
+      assertThat(((StringB) exprDb().get(hash)).toJavaString()).isEqualTo("aaa");
     }
 
     @Test
@@ -1017,20 +1018,20 @@ public class ExprBCorruptedTest extends TestingVirtualMachine {
       obj_root_with_two_data_hashes(
           stringTB(),
           hashedDb().writeBoolean(true),
-          (Hash hash) -> ((StringB) exprDb().get(hash)).toJ());
+          (Hash hash) -> ((StringB) exprDb().get(hash)).toJavaString());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          stringTB(), (Hash hash) -> ((StringB) exprDb().get(hash)).toJ());
+          stringTB(), (Hash hash) -> ((StringB) exprDb().get(hash)).toJavaString());
     }
 
     @Test
     public void data_being_invalid_utf8_chain() throws Exception {
       var notStringHash = hash(illegalString());
       var hash = hash(hash(stringTB()), notStringHash);
-      assertCall(() -> ((StringB) exprDb().get(hash)).toJ())
+      assertCall(() -> ((StringB) exprDb().get(hash)).toJavaString())
           .throwsException(new DecodeExprNodeException(hash, stringTB(), DATA_PATH))
           .withCause(new DecodeStringException(notStringHash, null));
     }

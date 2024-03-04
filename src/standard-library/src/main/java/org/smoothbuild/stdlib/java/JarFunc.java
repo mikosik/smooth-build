@@ -30,12 +30,12 @@ public class JarFunc {
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
       try (var jarOutputStream = new JarOutputStream(buffer(blobBuilder).outputStream())) {
         for (TupleB file : files.elements(TupleB.class)) {
-          var filePath = filePath(file).toJ();
+          var filePath = filePath(file).toJavaString();
           if (!duplicatesDetector.add(filePath)) {
             nativeApi.log().error("Cannot jar two files with the same path = " + filePath);
             return null;
           }
-          addJarEntry(jarOutputStream, filePath(file).toJ(), fileContent(file));
+          addJarEntry(jarOutputStream, filePath(file).toJavaString(), fileContent(file));
         }
         addJarEntry(jarOutputStream, MANIFEST_FILE_PATH, manifest);
       }
