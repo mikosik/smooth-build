@@ -200,10 +200,10 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public TaskReporter taskReporter() {
-    return new SystemOutTaskReporter(new PrintWriter(systemOut()));
+    return new SystemOutTaskReporter(new PrintWriter(inMemorySystemOut()));
   }
 
-  public ByteArrayOutputStream systemOut() {
+  public ByteArrayOutputStream inMemorySystemOut() {
     if (systemOut == null) {
       systemOut = new ByteArrayOutputStream();
     }

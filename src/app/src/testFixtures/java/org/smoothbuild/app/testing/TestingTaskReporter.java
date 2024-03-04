@@ -21,6 +21,6 @@ public class TestingTaskReporter extends TestingVirtualMachine {
   }
 
   public SystemOutReporter reporter() {
-    return new SystemOutReporter(new PrintWriter(systemOut(), true), Level.INFO);
+    return new SystemOutReporter(new PrintWriter(inMemorySystemOut(), true), Level.INFO);
   }
 }
