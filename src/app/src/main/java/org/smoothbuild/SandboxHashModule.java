@@ -6,12 +6,12 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.layout.InstallationHashes;
-import org.smoothbuild.virtualmachine.evaluate.SandboxHash;
+import org.smoothbuild.virtualmachine.evaluate.Sandbox;
 
 public class SandboxHashModule extends AbstractModule {
   @Provides
   @Singleton
-  @SandboxHash
+  @Sandbox
   public Hash provideSandboxHash(InstallationHashes installationHashes) throws IOException {
     return installationHashes.sandboxNode().hash();
   }

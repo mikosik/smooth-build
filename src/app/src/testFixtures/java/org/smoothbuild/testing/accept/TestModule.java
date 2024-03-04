@@ -8,7 +8,7 @@ import com.google.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskMatcher;
-import org.smoothbuild.virtualmachine.evaluate.SandboxHash;
+import org.smoothbuild.virtualmachine.evaluate.Sandbox;
 
 public class TestModule extends AbstractModule {
   @Override
@@ -20,7 +20,7 @@ public class TestModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @SandboxHash
+  @Sandbox
   public Hash provideSandboxHash() {
     return Hash.of(33);
   }
