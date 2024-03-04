@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.evaluate.ProjectFs;
+import org.smoothbuild.virtualmachine.evaluate.Project;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 /**
@@ -23,9 +23,7 @@ public class Container implements NativeApi {
 
   @Inject
   public Container(
-      @ProjectFs FileSystem fileSystem,
-      BytecodeF bytecodeF,
-      NativeMethodLoader nativeMethodLoader) {
+      @Project FileSystem fileSystem, BytecodeF bytecodeF, NativeMethodLoader nativeMethodLoader) {
     this.fileSystem = fileSystem;
     this.bytecodeF = bytecodeF;
     this.messageLogger = new ContainerMessageLoggerImpl(bytecodeF);
