@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
-import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 

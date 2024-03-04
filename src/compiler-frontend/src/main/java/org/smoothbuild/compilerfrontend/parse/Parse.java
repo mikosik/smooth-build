@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.parse;
 import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.BitSet;

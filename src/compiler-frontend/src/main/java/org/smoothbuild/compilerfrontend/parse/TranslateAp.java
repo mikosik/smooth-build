@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.parse;
 
-import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;

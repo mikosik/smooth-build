@@ -11,7 +11,7 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import okio.BufferedSink;
 import okio.BufferedSource;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;

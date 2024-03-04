@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import java.io.IOException;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 
 public class ComputeException extends Exception {

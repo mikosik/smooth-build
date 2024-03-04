@@ -1,6 +1,6 @@
 package org.smoothbuild.common.collect;
 
-import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.base.Strings;
 
 public interface Named {
   public String name();

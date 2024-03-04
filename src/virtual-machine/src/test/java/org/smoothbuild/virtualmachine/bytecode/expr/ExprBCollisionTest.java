@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 

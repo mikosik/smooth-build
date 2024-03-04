@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.type.value;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.type.value.TypeNamesB.funcTypeName;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;

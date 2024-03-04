@@ -1,7 +1,7 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
-import static org.smoothbuild.common.UnescapeFailedException.illegalEscapeSeqException;
-import static org.smoothbuild.common.UnescapeFailedException.missingEscapeCodeException;
+import static org.smoothbuild.common.base.UnescapeFailedException.illegalEscapeSeqException;
+import static org.smoothbuild.common.base.UnescapeFailedException.missingEscapeCodeException;
 
 public class Strings {
   private static final char TAB = '\t';

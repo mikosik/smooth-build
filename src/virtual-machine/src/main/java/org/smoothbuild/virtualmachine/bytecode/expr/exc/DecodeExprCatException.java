@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 
 public class DecodeExprCatException extends DecodeExprException {
   public DecodeExprCatException(Hash hash) {

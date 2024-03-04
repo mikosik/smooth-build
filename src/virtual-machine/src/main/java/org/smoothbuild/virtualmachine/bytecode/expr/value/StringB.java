@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.value;
 
-import static org.smoothbuild.common.Strings.escaped;
-import static org.smoothbuild.common.Strings.limitedWithEllipsis;
+import static org.smoothbuild.common.base.Strings.escaped;
+import static org.smoothbuild.common.base.Strings.limitedWithEllipsis;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;

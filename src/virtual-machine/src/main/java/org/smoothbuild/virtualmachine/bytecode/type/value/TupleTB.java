@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.virtualmachine.bytecode.type.value.TypeNamesB.tupleTypeName;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;

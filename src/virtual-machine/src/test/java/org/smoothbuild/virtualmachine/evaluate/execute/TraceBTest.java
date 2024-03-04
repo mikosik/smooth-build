@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.execute;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 
 public class TraceBTest {
   @Test

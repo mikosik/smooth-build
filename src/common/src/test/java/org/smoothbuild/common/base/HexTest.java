@@ -1,4 +1,4 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Locale.ROOT;

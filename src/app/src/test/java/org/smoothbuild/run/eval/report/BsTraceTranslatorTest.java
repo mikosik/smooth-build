@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;

@@ -2,7 +2,7 @@ package org.smoothbuild.run.eval.report;
 
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.TraceS;

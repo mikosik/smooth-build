@@ -1,7 +1,7 @@
 package org.smoothbuild.common.bindings;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;

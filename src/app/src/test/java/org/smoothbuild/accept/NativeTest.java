@@ -3,7 +3,7 @@ package org.smoothbuild.accept;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
-import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.log.Level.FATAL;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;

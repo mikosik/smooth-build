@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB;
 
 public class DecodeCatWrongChainSizeException extends DecodeCatNodeException {

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.Constants.CHARSET;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;

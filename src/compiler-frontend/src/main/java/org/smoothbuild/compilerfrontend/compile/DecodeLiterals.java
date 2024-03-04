@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
-import org.smoothbuild.common.DecodeHexException;
-import org.smoothbuild.common.UnescapeFailedException;
+import org.smoothbuild.common.base.DecodeHexException;
+import org.smoothbuild.common.base.UnescapeFailedException;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;

@@ -2,7 +2,7 @@ package org.smoothbuild.systemtest.cli.command.common;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;

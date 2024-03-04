@@ -2,7 +2,7 @@ package org.smoothbuild.layout;
 
 import static org.smoothbuild.common.collect.List.list;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 
 public record HashNode(String name, Hash hash, List<HashNode> children) {

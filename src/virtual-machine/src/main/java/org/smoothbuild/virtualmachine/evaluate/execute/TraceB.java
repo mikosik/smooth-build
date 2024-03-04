@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import java.util.Objects;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 
 public final class TraceB {
   private final Element elements;

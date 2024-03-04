@@ -1,4 +1,4 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
 public class DecodeHexException extends Exception {
   public static DecodeHexException expectedEvenNumberOfDigits() {

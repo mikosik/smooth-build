@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import org.smoothbuild.common.Strings;
-import org.smoothbuild.common.UnescapeFailedException;
+import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.base.UnescapeFailedException;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 public final class StringP extends LiteralP {

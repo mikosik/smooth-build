@@ -8,7 +8,7 @@ import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.c
 import java.math.BigInteger;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;

@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.hashed.exc;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 
 public class DecodeBooleanException extends HashedDbException {
   public DecodeBooleanException(Hash hash) {

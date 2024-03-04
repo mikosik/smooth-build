@@ -1,6 +1,6 @@
 package org.smoothbuild.out.report;
 
-import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.List;
 import org.smoothbuild.common.log.Log;
