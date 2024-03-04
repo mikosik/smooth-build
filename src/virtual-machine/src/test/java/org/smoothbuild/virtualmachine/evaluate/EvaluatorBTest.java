@@ -702,7 +702,8 @@ public class EvaluatorBTest extends TestingVirtualMachine {
 
   private ValueB evaluate(EvaluatorB evaluatorB, ExprB expr) {
     var maybeResult = evaluatorB.evaluate(list(expr));
-    assertWithMessage(" ==== Console logs ==== \n" + systemOut().toString() + "\n ==========\n")
+    assertWithMessage(
+            " ==== Console logs ==== \n" + inMemorySystemOut().toString() + "\n ==========\n")
         .that(maybeResult.isSome())
         .isTrue();
     var results = maybeResult.get();
