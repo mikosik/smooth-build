@@ -21,8 +21,8 @@ import java.util.Map;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
-import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.common.filesystem.space.Space;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Try;
@@ -154,9 +154,9 @@ public class FrontendCompilerTester {
   }
 
   private static void writeModuleFile(
-      Map<Space, FileSystem> spaces, FilePath filePath, String content) {
+      Map<Space, FileSystem> spaces, FullPath fullPath, String content) {
     try {
-      writeFile(spaces.get(filePath.space()), filePath.path(), content);
+      writeFile(spaces.get(fullPath.space()), fullPath.path(), content);
     } catch (IOException e) {
       throw new RuntimeException("Can't happen for in memory filesystem.", e);
     }

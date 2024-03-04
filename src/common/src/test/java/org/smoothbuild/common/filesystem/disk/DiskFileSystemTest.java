@@ -23,9 +23,9 @@ public class DiskFileSystemTest extends AbstractFileSystemTestSuite {
 
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
-    java.nio.file.Path filePath = tempDir.resolve(path.toString());
-    createDirectories(filePath.getParent());
-    try (BufferedSink sink = buffer(sink(filePath))) {
+    java.nio.file.Path resolvedJdkPath = tempDir.resolve(path.toString());
+    createDirectories(resolvedJdkPath.getParent());
+    try (BufferedSink sink = buffer(sink(resolvedJdkPath))) {
       sink.write(content);
     }
   }

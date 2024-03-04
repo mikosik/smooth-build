@@ -15,7 +15,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
@@ -84,14 +84,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void mono_native_value() throws Exception {
-          var filePath = filePath(space("prj"), path("my/path"));
+          var fullPath = fullPath(space("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
-          var nativeAnnotation = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
+          var nativeAnnotation = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeValueS =
-              annotatedValueS(nativeAnnotation, stringTS(), "myValue", location(filePath, 2));
+              annotatedValueS(nativeAnnotation, stringTS(), "myValue", location(fullPath, 2));
 
           var jar = blobB(37);
-          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), jar);
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), jar);
           var translator = sbTranslator(filePersister, bindings(nativeValueS));
 
           assertCall(() -> translator.translateExpr(instantiateS(nativeValueS)))
@@ -101,13 +101,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var filePath = filePath(space("prj"), path("my/path"));
+          var fullPath = fullPath(space("prj"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
-          var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
-          var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(filePath, 2));
+          var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
+          var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(fullPath, 2));
 
           var filePersister = createFilePersisterMock(
-              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
               filePersister,
               bindings(bytecodeValueS),
@@ -120,13 +120,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = funcTS(a, a);
-          var filePath = smoothFilePath();
+          var fullPath = buildFileFullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
+          var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
           var bytecodeValueS = annotatedValueS(2, ann, funcTS, "myFunc");
 
           var filePersister = createFilePersisterMock(
-              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = instantiateS(list(intTS()), bytecodeValueS);
           assertTranslation(filePersister, bindings(bytecodeValueS), instantiateS, idFuncB());
         }
@@ -167,15 +167,15 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void mono_native_function() throws Exception {
-          var filePath = filePath(space("prj"), path("my/path"));
+          var fullPath = fullPath(space("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
-          var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
+          var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var funcTB = funcTB(blobTB(), intTB());
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
-          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), blobB(37));
           assertTranslation(
               filePersister, bindings(nativeFuncS), instantiateS(nativeFuncS), nativeFuncB);
         }
@@ -183,15 +183,15 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void poly_native_function() throws Exception {
           var a = varA();
-          var filePath = filePath(space("prj"), path("my/path"));
+          var fullPath = fullPath(space("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
-          var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
+          var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, a, "myIdentity", nlist(itemS(a, "param")));
 
           var funcTB = funcTB(intTB(), intTB());
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
-          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), blobB(37));
           var instantiateS = instantiateS(list(intTS()), nativeFuncS);
           assertTranslation(filePersister, bindings(nativeFuncS), instantiateS, nativeFuncB);
         }
@@ -199,14 +199,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var filePath = filePath(space("prj"), path("my/path"));
+          var fullPath = fullPath(space("prj"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
-          var annotationS = bytecodeS(stringS(classBinaryName), location(filePath, 1));
+          var annotationS = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
-              annotatedFuncS(annotationS, stringTS(), "myFunc", nlist(), location(filePath, 2));
+              annotatedFuncS(annotationS, stringTS(), "myFunc", nlist(), location(fullPath, 2));
 
           var filePersister = createFilePersisterMock(
-              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
               filePersister,
               bindings(bytecodeFuncS),
@@ -219,14 +219,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = funcTS(a, a);
-          var filePath = smoothFilePath();
+          var fullPath = buildFileFullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var ann = bytecodeS(classBinaryName, location(filePath, 1));
+          var ann = bytecodeS(classBinaryName, location(fullPath, 1));
           var bytecodeFuncS =
               annotatedFuncS(1, ann, funcTS.result(), "myFunc", nlist(itemS(a, "p")));
 
           var filePersister = createFilePersisterMock(
-              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = instantiateS(list(intTS()), bytecodeFuncS);
           assertTranslation(filePersister, bindings(bytecodeFuncS), instantiateS, idFuncB());
         }
@@ -373,13 +373,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var filePath = filePath();
+          var fullPath = fullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var ann = bytecodeS(stringS(classBinaryName), location(filePath, 7));
-          var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(filePath, 8));
+          var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 7));
+          var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(fullPath, 8));
 
           var filePersister = createFilePersisterMock(
-              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = sbTranslator(filePersister, bindings(bytecodeValueS));
           var exprB = sbTranslator.translateExpr(instantiateS(3, bytecodeValueS));
           assertNalMapping(sbTranslator, exprB, "myValue", location(8));
@@ -405,13 +405,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void native_func() throws Exception {
-          var filePath = filePath();
+          var fullPath = fullPath();
           var classBinaryName = "class.binary.name";
-          var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
+          var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS =
               annotatedFuncS(2, annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
-          var filePersister = createFilePersisterMock(filePath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), blobB(37));
           var sbTranslator = sbTranslator(filePersister, bindings(nativeFuncS));
           assertNalMapping(sbTranslator, instantiateS(3, nativeFuncS), "myFunc", location(2));
         }
@@ -419,14 +419,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void bytecode_func() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var filePath = filePath();
+          var fullPath = fullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
+          var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
-              annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(filePath, 2));
+              annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(fullPath, 2));
 
           var filePersister = createFilePersisterMock(
-              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = sbTranslator(filePersister, bindings(bytecodeFuncS));
           assertNalMapping(sbTranslator, instantiateS(bytecodeFuncS), "myFunc", location(2));
         }
@@ -526,12 +526,12 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Test
     public void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
-      var filePath = filePath(space("prj"), path("my/path"));
+      var fullPath = fullPath(space("prj"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
-      var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
-      var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", location(filePath, 2));
+      var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
+      var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", location(fullPath, 2));
       var filePersister =
-          createFilePersisterMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          createFilePersisterMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
       assertTranslationIsCached(
           filePersister, bindings(bytecodeValueS), instantiateS(bytecodeValueS));
@@ -552,12 +552,12 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Test
     public void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
-      var filePath = filePath(space("prj"), path("my/path"));
+      var fullPath = fullPath(space("prj"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
-      var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
-      var bytecodeFuncS = annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(filePath, 2));
+      var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
+      var bytecodeFuncS = annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(fullPath, 2));
       var filePersister =
-          createFilePersisterMock(filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          createFilePersisterMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
       assertTranslationIsCached(
           filePersister, bindings(bytecodeFuncS), instantiateS(bytecodeFuncS));
@@ -703,10 +703,10 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     return sbTranslator(filePersister, evaluables);
   }
 
-  private FilePersister createFilePersisterMock(FilePath filePath, BlobB value)
+  private FilePersister createFilePersisterMock(FullPath fullPath, BlobB value)
       throws BytecodeException {
     FilePersister mock = mock(FilePersister.class);
-    when(mock.persist(filePath)).thenReturn(value);
+    when(mock.persist(fullPath)).thenReturn(value);
     return mock;
   }
 

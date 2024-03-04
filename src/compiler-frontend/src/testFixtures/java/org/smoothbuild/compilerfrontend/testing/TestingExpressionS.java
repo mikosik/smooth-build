@@ -33,7 +33,7 @@ import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.common.filesystem.space.Space;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
@@ -98,10 +98,10 @@ public class TestingExpressionS {
   public static final Space PROJECT_SPACE = space("prj");
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
-  static final FilePath STANDARD_LIBRARY_MODULE_FILE_PATH =
-      FilePath.filePath(STANDARD_LIBRARY_SPACE, path("std_lib.smooth"));
-  static final FilePath DEFAULT_MODULE_FILE_PATH =
-      FilePath.filePath(PROJECT_SPACE, path("build.smooth"));
+  static final FullPath STANDARD_LIBRARY_MODULE_FILE_PATH =
+      FullPath.fullPath(STANDARD_LIBRARY_SPACE, path("std_lib.smooth"));
+  static final FullPath DEFAULT_MODULE_FILE_PATH =
+      FullPath.fullPath(PROJECT_SPACE, path("build.smooth"));
 
   public static java.util.List<TypeS> typesToTest() {
     return nonCompositeTypes().stream()
@@ -805,39 +805,39 @@ public class TestingExpressionS {
   }
 
   public static Location location(int line) {
-    return location(filePath(), line);
+    return location(fullPath(), line);
   }
 
   public static Location location(Space space) {
-    return location(filePath(space, path("path")), 17);
+    return location(fullPath(space, path("path")), 17);
   }
 
-  public static Location location(FilePath filePath, int line) {
-    return fileLocation(filePath, line);
+  public static Location location(FullPath fullPath, int line) {
+    return fileLocation(fullPath, line);
   }
 
-  public static FilePath filePath(Space space, Path path) {
-    return FilePath.filePath(space, path);
+  public static FullPath fullPath(Space space, Path path) {
+    return FullPath.fullPath(space, path);
   }
 
-  public static FilePath filePath() {
-    return smoothFilePath();
+  public static FullPath fullPath() {
+    return buildFileFullPath();
   }
 
-  public static FilePath smoothFilePath() {
-    return filePath(BUILD_FILE_PATH);
+  public static FullPath buildFileFullPath() {
+    return fullPath(BUILD_FILE_PATH);
   }
 
-  public static FilePath nativeFilePath() {
-    return smoothFilePath().withExtension("jar");
+  public static FullPath nativeFileFullPath() {
+    return buildFileFullPath().withExtension("jar");
   }
 
-  public static FilePath importedFilePath() {
-    return new FilePath(STANDARD_LIBRARY_SPACE, path(IMPORTED_FILE_PATH));
+  public static FullPath importedBuildFullPath() {
+    return new FullPath(STANDARD_LIBRARY_SPACE, path(IMPORTED_FILE_PATH));
   }
 
-  public static FilePath filePath(String filePath) {
-    return new FilePath(PROJECT_SPACE, path(filePath));
+  public static FullPath fullPath(String path) {
+    return new FullPath(PROJECT_SPACE, path(path));
   }
 
   public static Log userFatal(int line, String message) {

@@ -6,7 +6,7 @@ import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.common.step.Step.tryStep;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
@@ -27,26 +27,26 @@ import org.smoothbuild.compilerfrontend.parse.TranslateAp;
 
 public class FrontendCompilerStep {
 
-  public static Step<Tuple0, ScopeS> createFrontendCompilerStep(List<FilePath> modules) {
+  public static Step<Tuple0, ScopeS> createFrontendCompilerStep(List<FullPath> modules) {
     var step = Step.tryStep(LoadInternalModuleMembers.class);
-    for (var filePath : modules) {
-      step = step.append(filePath)
-          .then(stepFactory(new FrontendCompilerStepFactory()).named(filePath.toString()));
+    for (var fullPath : modules) {
+      step = step.append(fullPath)
+          .then(stepFactory(new FrontendCompilerStepFactory()).named(fullPath.toString()));
     }
     return step.named("Parsing");
   }
 
   public static class FrontendCompilerStepFactory
-      implements StepFactory<Tuple2<ScopeS, FilePath>, ScopeS> {
+      implements StepFactory<Tuple2<ScopeS, FullPath>, ScopeS> {
     @Override
-    public Step<Tuple0, ScopeS> create(Tuple2<ScopeS, FilePath> argument) {
+    public Step<Tuple0, ScopeS> create(Tuple2<ScopeS, FullPath> argument) {
       var scopeS = argument.element1();
-      var filePath = argument.element2();
-      return constStep(filePath)
+      var fullPath = argument.element2();
+      return constStep(fullPath)
           .then(tryStep(ReadFileContent.class))
-          .append(filePath)
+          .append(fullPath)
           .then(tryStep(Parse.class))
-          .append(filePath)
+          .append(fullPath)
           .then(tryStep(TranslateAp.class))
           .then(tryStep(FindSyntaxErrors.class))
           .then(tryStep(DecodeLiterals.class))

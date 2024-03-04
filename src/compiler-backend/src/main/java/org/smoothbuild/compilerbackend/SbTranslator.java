@@ -22,7 +22,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.FileLocation;
 import org.smoothbuild.compilerfrontend.lang.base.location.Located;
@@ -379,16 +379,16 @@ public class SbTranslator {
   }
 
   private BlobB persistNativeJar(Location location) throws SbTranslatorException {
-    var filePath = filePathOf(location).withExtension("jar");
+    var fullPath = fullPathOf(location).withExtension("jar");
     try {
-      return filePersister.persist(filePath);
+      return filePersister.persist(fullPath);
     } catch (BytecodeException e) {
-      var message = location + ": Error persisting native jar %s.".formatted(filePath.q());
+      var message = location + ": Error persisting native jar %s.".formatted(fullPath.q());
       throw new SbTranslatorException(message, e);
     }
   }
 
-  private static FilePath filePathOf(Location location) throws SbTranslatorException {
+  private static FullPath fullPathOf(Location location) throws SbTranslatorException {
     if (location instanceof FileLocation sourceLocation) {
       return sourceLocation.file();
     } else {

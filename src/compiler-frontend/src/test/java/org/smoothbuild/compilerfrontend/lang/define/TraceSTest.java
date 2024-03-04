@@ -22,9 +22,9 @@ public class TraceSTest extends TestingExpressionS {
   public void to_string() {
     var trace = traceS(
         "first-name",
-        location(smoothFilePath(), 17),
+        location(buildFileFullPath(), 17),
         "second-name",
-        location(importedFilePath(), 19));
+        location(importedBuildFullPath(), 19));
     assertThat(trace.toString())
         .isEqualTo(
             """

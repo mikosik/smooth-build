@@ -21,22 +21,22 @@ public class FileResolver {
     this.fileSystems = fileSystems;
   }
 
-  public String contentOf(FilePath filePath, Charset charset) throws IOException {
-    try (BufferedSource source = source(filePath)) {
+  public String contentOf(FullPath fullPath, Charset charset) throws IOException {
+    try (BufferedSource source = source(fullPath)) {
       return source.readString(charset);
     }
   }
 
-  public BufferedSource source(FilePath filePath) throws IOException {
-    return fileSystemFor(filePath).source(filePath.path());
+  public BufferedSource source(FullPath fullPath) throws IOException {
+    return fileSystemFor(fullPath).source(fullPath.path());
   }
 
-  public PathState pathState(FilePath filePath) {
-    return fileSystemFor(filePath).pathState(filePath.path());
+  public PathState pathState(FullPath fullPath) {
+    return fileSystemFor(fullPath).pathState(fullPath.path());
   }
 
-  private FileSystem fileSystemFor(FilePath filePath) {
-    return fileSystemFor(filePath.space());
+  private FileSystem fileSystemFor(FullPath fullPath) {
+    return fileSystemFor(fullPath.space());
   }
 
   private FileSystem fileSystemFor(Space space) {
