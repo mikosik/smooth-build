@@ -9,6 +9,7 @@ import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECU
 import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import okio.ByteString;
 import org.mockito.Mockito;
@@ -199,7 +200,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public TaskReporter taskReporter() {
-    return new SystemOutTaskReporter();
+    return new SystemOutTaskReporter(new PrintWriter(systemOut()));
   }
 
   public ByteArrayOutputStream systemOut() {
