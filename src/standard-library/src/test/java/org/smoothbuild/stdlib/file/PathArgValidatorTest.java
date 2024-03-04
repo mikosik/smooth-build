@@ -9,7 +9,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messa
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -40,7 +40,7 @@ public class PathArgValidatorTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) throws Exception {
-    PathS name = validatedProjectPath(container(), "name", stringB(path));
+    Path name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name).isNull();
     var elements = container().messages().elements(TupleB.class);
     elements.map(e -> messageText(e).toJavaString()).forEach(t -> assertThat(t)

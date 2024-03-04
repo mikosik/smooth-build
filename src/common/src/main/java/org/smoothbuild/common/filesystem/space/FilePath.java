@@ -1,13 +1,13 @@
 package org.smoothbuild.common.filesystem.space;
 
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 /**
  * This class is immutable.
  */
-public record FilePath(Space space, PathS path) {
+public record FilePath(Space space, Path path) {
 
-  public static FilePath filePath(Space space, PathS path) {
+  public static FilePath filePath(Space space, Path path) {
     return new FilePath(space, path);
   }
 

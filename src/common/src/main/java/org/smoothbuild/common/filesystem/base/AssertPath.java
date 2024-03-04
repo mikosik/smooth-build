@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class AssertPath {
 
-  public static void assertPathIsDir(FileSystem fileSystem, PathS path) throws IOException {
+  public static void assertPathIsDir(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case DIR -> {}
@@ -13,7 +13,7 @@ public class AssertPath {
     }
   }
 
-  public static void assertPathIsFile(FileSystem fileSystem, PathS path) throws IOException {
+  public static void assertPathIsFile(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE -> {}
@@ -22,7 +22,7 @@ public class AssertPath {
     }
   }
 
-  public static void assertPathExists(FileSystem fileSystem, PathS path) throws IOException {
+  public static void assertPathExists(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE, DIR -> {}
@@ -30,7 +30,7 @@ public class AssertPath {
     }
   }
 
-  public static void assertPathIsUnused(FileSystem fileSystem, PathS path) throws IOException {
+  public static void assertPathIsUnused(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE, DIR -> throw new IOException(

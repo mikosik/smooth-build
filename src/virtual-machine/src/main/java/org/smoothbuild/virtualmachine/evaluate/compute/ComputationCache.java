@@ -13,7 +13,7 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -28,7 +28,7 @@ import org.smoothbuild.virtualmachine.evaluate.task.Output;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final PathS diskCachePath;
+  private final Path diskCachePath;
   private final ExprDb exprDb;
   private final BytecodeF bytecodeF;
 
@@ -104,7 +104,7 @@ public class ComputationCache {
   }
 
   @VisibleForTesting
-  PathS toPath(Hash hash) {
+  Path toPath(Hash hash) {
     return diskCachePath.appendPart(hash.toHexString());
   }
 }

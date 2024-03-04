@@ -14,14 +14,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 
-public class PathSTest {
+public class PathTest {
   @ParameterizedTest
   @MethodSource("paths")
   public void path_creation(String value, boolean isValid) {
     if (isValid) {
-      PathS.path(value);
+      Path.path(value);
     } else {
-      assertCall(() -> PathS.path(value)).throwsException(IllegalPathException.class);
+      assertCall(() -> Path.path(value)).throwsException(IllegalPathException.class);
     }
   }
 
@@ -29,45 +29,45 @@ public class PathSTest {
   @MethodSource("paths")
   public void fail_if_not_legal_path(String value, boolean isValid) {
     if (!isValid) {
-      assertCall(() -> PathS.failIfNotLegalPath(value)).throwsException(IllegalPathException.class);
+      assertCall(() -> Path.failIfNotLegalPath(value)).throwsException(IllegalPathException.class);
     }
   }
 
   @Test
   public void single_dot_string_path_is_root() {
-    Truth.assertThat(PathS.path(".").isRoot()).isTrue();
+    Truth.assertThat(Path.path(".").isRoot()).isTrue();
   }
 
   @Test
   public void simple_path_is_not_root() {
-    Truth.assertThat(PathS.path("file.txt").isRoot()).isFalse();
+    Truth.assertThat(Path.path("file.txt").isRoot()).isFalse();
   }
 
   @Test
   public void parent_of_root_dir_throws_exception() {
-    assertCall(() -> PathS.root().parent()).throwsException(IllegalArgumentException.class);
+    assertCall(() -> Path.root().parent()).throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("parentArguments")
-  public void parent_of_normal_path(PathS path, PathS expectedParent) {
+  public void parent_of_normal_path(Path path, Path expectedParent) {
     assertThat(path.parent()).isEqualTo(expectedParent);
   }
 
   public static Stream<Arguments> parentArguments() {
     return Stream.of(
-        arguments(PathS.path("abc"), PathS.root()),
-        arguments(PathS.path(" "), PathS.root()),
-        arguments(PathS.path("abc/def"), PathS.path("abc")),
-        arguments(PathS.path("abc/def/ghi"), PathS.path("abc/def")),
-        arguments(PathS.path("abc/def/ghi/ijk"), PathS.path("abc/def/ghi")));
+        arguments(Path.path("abc"), Path.root()),
+        arguments(Path.path(" "), Path.root()),
+        arguments(Path.path("abc/def"), Path.path("abc")),
+        arguments(Path.path("abc/def/ghi"), Path.path("abc/def")),
+        arguments(Path.path("abc/def/ghi/ijk"), Path.path("abc/def/ghi")));
   }
 
   @ParameterizedTest
   @MethodSource("append_cases")
   public void append(String path, String appendedPath, String expected) {
-    Truth.assertThat(PathS.path(path).append(PathS.path(appendedPath)))
-        .isEqualTo(PathS.path(expected));
+    Truth.assertThat(Path.path(path).append(Path.path(appendedPath)))
+        .isEqualTo(Path.path(expected));
   }
 
   public static Stream<Arguments> append_cases() {
@@ -97,7 +97,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("appendPart_cases")
   public void appendPart(String path, String part, String expected) {
-    Truth.assertThat(PathS.path(path).appendPart(part)).isEqualTo(PathS.path(expected));
+    Truth.assertThat(Path.path(path).appendPart(part)).isEqualTo(Path.path(expected));
   }
 
   public static Stream<Arguments> appendPart_cases() {
@@ -113,7 +113,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("appendPart_fails_for_cases")
   public void appendPart_fails_for(String path, String part) {
-    assertCall(() -> PathS.path(path).appendPart(part))
+    assertCall(() -> Path.path(path).appendPart(part))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -158,7 +158,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("changeExtension_cases")
   public void changeExtension(String path, String extension, String expected) {
-    Truth.assertThat(PathS.path(path).changeExtension(extension)).isEqualTo(PathS.path(expected));
+    Truth.assertThat(Path.path(path).changeExtension(extension)).isEqualTo(Path.path(expected));
   }
 
   public static Stream<Arguments> changeExtension_cases() {
@@ -177,7 +177,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("changeExtension_fails_for_cases")
   public void changeExtension_fails_for(String path, String part) {
-    assertCall(() -> PathS.path(path).changeExtension(part))
+    assertCall(() -> Path.path(path).changeExtension(part))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -214,8 +214,8 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("parts_cases")
   public void parts(String path, List<String> expectedParts) {
-    List<PathS> actualParts = PathS.path(path).parts();
-    assertThat(actualParts.map(PathS::toString)).isEqualTo(expectedParts);
+    List<Path> actualParts = Path.path(path).parts();
+    assertThat(actualParts.map(Path::toString)).isEqualTo(expectedParts);
   }
 
   public static Stream<Arguments> parts_cases() {
@@ -231,13 +231,13 @@ public class PathSTest {
 
   @Test
   public void last_part_of_root_dir_throws_exception() {
-    assertCall(() -> PathS.root().lastPart()).throwsException(IllegalArgumentException.class);
+    assertCall(() -> Path.root().lastPart()).throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("lastPart_cases")
   public void lastPart(String path, String expectedLastPart) {
-    Truth.assertThat(PathS.path(path).lastPart()).isEqualTo(PathS.path(expectedLastPart));
+    Truth.assertThat(Path.path(path).lastPart()).isEqualTo(Path.path(expectedLastPart));
   }
 
   public static Stream<Arguments> lastPart_cases() {
@@ -251,13 +251,13 @@ public class PathSTest {
 
   @Test
   public void first_part_of_root_dir_throws_exception() {
-    assertCall(() -> PathS.root().firstPart()).throwsException(IllegalArgumentException.class);
+    assertCall(() -> Path.root().firstPart()).throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("firstPart_cases")
   public void firstPart(String path, String expectedfirstPart) {
-    Truth.assertThat(PathS.path(path).firstPart()).isEqualTo(PathS.path(expectedfirstPart));
+    Truth.assertThat(Path.path(path).firstPart()).isEqualTo(Path.path(expectedfirstPart));
   }
 
   public static Stream<Arguments> firstPart_cases() {
@@ -272,7 +272,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("startWith_cases")
   public void startsWith(String path, String head, boolean expected) {
-    Truth.assertThat(PathS.path(path).startsWith(PathS.path(head))).isEqualTo(expected);
+    Truth.assertThat(Path.path(path).startsWith(Path.path(head))).isEqualTo(expected);
   }
 
   public static Stream<Arguments> startWith_cases() {
@@ -295,18 +295,18 @@ public class PathSTest {
   public void test_equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(PathS.path("."));
-    tester.addEqualityGroup(PathS.path("abc"));
-    tester.addEqualityGroup(PathS.path("abc/def"), PathS.path("abc/def"));
-    tester.addEqualityGroup(PathS.path("abc/def/ghi"));
-    tester.addEqualityGroup(PathS.path("abc/def/ghi/ijk"));
+    tester.addEqualityGroup(Path.path("."));
+    tester.addEqualityGroup(Path.path("abc"));
+    tester.addEqualityGroup(Path.path("abc/def"), Path.path("abc/def"));
+    tester.addEqualityGroup(Path.path("abc/def/ghi"));
+    tester.addEqualityGroup(Path.path("abc/def/ghi/ijk"));
 
     // These paths look really strange but Linux allows creating them.
     // I cannot see any good reason for forbidding them.
-    tester.addEqualityGroup(PathS.path("..."));
-    tester.addEqualityGroup(PathS.path(".../abc"));
-    tester.addEqualityGroup(PathS.path("abc/..."));
-    tester.addEqualityGroup(PathS.path("abc/.../def"));
+    tester.addEqualityGroup(Path.path("..."));
+    tester.addEqualityGroup(Path.path(".../abc"));
+    tester.addEqualityGroup(Path.path("abc/..."));
+    tester.addEqualityGroup(Path.path("abc/.../def"));
 
     tester.testEquals();
   }
@@ -315,7 +315,7 @@ public class PathSTest {
   @MethodSource("paths")
   public void test_to_string(String value, boolean isValid) {
     if (isValid) {
-      Truth.assertThat(PathS.path(value).toString()).isEqualTo(value);
+      Truth.assertThat(Path.path(value).toString()).isEqualTo(value);
     }
   }
 

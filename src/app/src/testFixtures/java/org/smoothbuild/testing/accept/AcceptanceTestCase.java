@@ -27,7 +27,7 @@ import org.smoothbuild.VirtualMachineConfigurationModule;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.step.StepExecutor;
@@ -148,7 +148,7 @@ public class AcceptanceTestCase extends TestingVirtualMachine {
     // upon startup. Until modules are detected automatically we have to provide here
     // at least empty files.
     for (var filePath : STANDARD_LIBRARY_MODULES) {
-      PathS path = filePath.path();
+      Path path = filePath.path();
       writeFile(stdLibFileSystem, path, "");
     }
   }

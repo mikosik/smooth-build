@@ -9,20 +9,20 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.ForwardingSink;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryFile implements MemoryElement {
   private final MemoryDir parent;
-  private final PathS name;
+  private final Path name;
   private ByteString data;
 
-  public MemoryFile(MemoryDir parent, PathS name) {
+  public MemoryFile(MemoryDir parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
 
   @Override
-  public PathS name() {
+  public Path name() {
     return name;
   }
 
@@ -42,17 +42,17 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(PathS name) {
+  public boolean hasChild(Path name) {
     return false;
   }
 
   @Override
-  public MemoryElement child(PathS name) {
+  public MemoryElement child(Path name) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public List<PathS> childNames() {
+  public List<Path> childNames() {
     throw new UnsupportedOperationException();
   }
 

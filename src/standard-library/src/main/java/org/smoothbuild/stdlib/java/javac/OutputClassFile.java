@@ -6,7 +6,7 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 import okio.ForwardingSink;
 import okio.Okio;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
@@ -16,11 +16,11 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBBuilder fileArrayBuilder;
-  private final PathS path;
+  private final Path path;
   private final BlobBBuilder contentBuilder;
   private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBBuilder fileArrayBuilder, PathS path, NativeApi nativeApi)
+  public OutputClassFile(ArrayBBuilder fileArrayBuilder, Path path, NativeApi nativeApi)
       throws BytecodeException {
     super(URI.create("class:///" + path.toString()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;

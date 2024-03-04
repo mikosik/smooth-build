@@ -16,52 +16,52 @@ public class SynchronizedFileSystem implements FileSystem {
   }
 
   @Override
-  public synchronized PathState pathState(PathS path) {
+  public synchronized PathState pathState(Path path) {
     return fileSystem.pathState(path);
   }
 
   @Override
-  public synchronized Iterable<PathS> files(PathS dir) throws IOException {
+  public synchronized Iterable<Path> files(Path dir) throws IOException {
     return fileSystem.files(dir);
   }
 
   @Override
-  public synchronized void move(PathS source, PathS target) throws IOException {
+  public synchronized void move(Path source, Path target) throws IOException {
     fileSystem.move(source, target);
   }
 
   @Override
-  public synchronized void delete(PathS path) throws IOException {
+  public synchronized void delete(Path path) throws IOException {
     fileSystem.delete(path);
   }
 
   @Override
-  public synchronized long size(PathS path) throws IOException {
+  public synchronized long size(Path path) throws IOException {
     return fileSystem.size(path);
   }
 
   @Override
-  public synchronized BufferedSource source(PathS path) throws IOException {
+  public synchronized BufferedSource source(Path path) throws IOException {
     return fileSystem.source(path);
   }
 
   @Override
-  public synchronized BufferedSink sink(PathS path) throws IOException {
+  public synchronized BufferedSink sink(Path path) throws IOException {
     return fileSystem.sink(path);
   }
 
   @Override
-  public synchronized Sink sinkWithoutBuffer(PathS path) throws IOException {
+  public synchronized Sink sinkWithoutBuffer(Path path) throws IOException {
     return fileSystem.sinkWithoutBuffer(path);
   }
 
   @Override
-  public synchronized void createLink(PathS link, PathS target) throws IOException {
+  public synchronized void createLink(Path link, Path target) throws IOException {
     fileSystem.createLink(link, target);
   }
 
   @Override
-  public synchronized void createDir(PathS path) throws IOException {
+  public synchronized void createDir(Path path) throws IOException {
     fileSystem.createDir(path);
   }
 }

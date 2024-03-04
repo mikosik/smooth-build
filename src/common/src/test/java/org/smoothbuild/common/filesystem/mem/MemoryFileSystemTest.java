@@ -5,7 +5,7 @@ import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.filesystem.base.AbstractFileSystemTestSuite;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryFileSystemTest extends AbstractFileSystemTestSuite {
   @BeforeEach
@@ -16,14 +16,14 @@ public class MemoryFileSystemTest extends AbstractFileSystemTestSuite {
   // helpers
 
   @Override
-  protected void createFile(PathS path, ByteString content) throws IOException {
+  protected void createFile(Path path, ByteString content) throws IOException {
     try (BufferedSink sink = fileSystem.sink(path)) {
       sink.write(content);
     }
   }
 
   @Override
-  protected String resolve(PathS path) {
+  protected String resolve(Path path) {
     return path.q();
   }
 }

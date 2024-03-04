@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.testing.TestingSpace.space;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;

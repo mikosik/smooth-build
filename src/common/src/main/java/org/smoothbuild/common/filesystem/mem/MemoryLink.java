@@ -5,21 +5,21 @@ import java.util.List;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryLink implements MemoryElement {
   private final MemoryDir parent;
-  private final PathS name;
+  private final Path name;
   private final MemoryElement target;
 
-  public MemoryLink(MemoryDir parent, PathS name, MemoryElement target) {
+  public MemoryLink(MemoryDir parent, Path name, MemoryElement target) {
     this.parent = parent;
     this.name = name;
     this.target = target;
   }
 
   @Override
-  public PathS name() {
+  public Path name() {
     return name;
   }
 
@@ -39,17 +39,17 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(PathS name) {
+  public boolean hasChild(Path name) {
     return target.hasChild(name);
   }
 
   @Override
-  public MemoryElement child(PathS name) {
+  public MemoryElement child(Path name) {
     return target.child(name);
   }
 
   @Override
-  public List<PathS> childNames() {
+  public List<Path> childNames() {
     return target.childNames();
   }
 

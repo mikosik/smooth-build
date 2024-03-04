@@ -9,12 +9,12 @@ import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryFileTest {
   private final MemoryDir parent = Mockito.mock(MemoryDir.class);
-  private final PathS name = PathS.path("some/path");
-  private final PathS otherName = PathS.path("other/path");
+  private final Path name = Path.path("some/path");
+  private final Path otherName = Path.path("other/path");
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
   private MemoryFile file;
   private BufferedSink sink;

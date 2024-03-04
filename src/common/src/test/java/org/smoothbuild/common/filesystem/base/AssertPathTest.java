@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 public class AssertPathTest {
-  private final PathS path = PathS.path("some/path");
+  private final Path path = Path.path("some/path");
 
   @Test
   public void assert_path_is_dir_returns_normally_for_dir_path() throws Exception {
@@ -92,7 +92,7 @@ public class AssertPathTest {
     AssertPath.assertPathIsUnused(fileSystem, path);
   }
 
-  private static FileSystem fileSystemWith(PathS path, PathState state) {
+  private static FileSystem fileSystemWith(Path path, PathState state) {
     FileSystem fileSystem = mock(FileSystem.class);
     when(fileSystem.pathState(path)).thenReturn(state);
     return fileSystem;

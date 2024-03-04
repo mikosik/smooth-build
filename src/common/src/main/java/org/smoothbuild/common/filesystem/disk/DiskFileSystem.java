@@ -14,7 +14,6 @@ import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Objects;
 import okio.BufferedSink;
@@ -22,22 +21,22 @@ import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathState;
 
 /**
  * This class is NOT thread-safe.
  */
 public class DiskFileSystem implements FileSystem {
-  private final Path rootDir;
+  private final java.nio.file.Path rootDir;
 
-  public DiskFileSystem(Path path) {
+  public DiskFileSystem(java.nio.file.Path path) {
     this.rootDir = Objects.requireNonNull(path);
   }
 
   @Override
-  public PathState pathState(PathS path) {
-    Path jdkPath = jdkPath(path);
+  public PathState pathState(Path path) {
+    java.nio.file.Path jdkPath = jdkPath(path);
     if (!Files.exists(jdkPath)) {
       return NOTHING;
     }
@@ -48,19 +47,19 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<PathS> files(PathS dir) throws IOException {
+  public Iterable<Path> files(Path dir) throws IOException {
     assertPathIsDir(this, dir);
-    try (DirectoryStream<Path> stream = Files.newDirectoryStream(jdkPath(dir))) {
-      var builder = new ArrayList<PathS>();
-      for (Path path : stream) {
-        builder.add(PathS.path(path.getFileName().toString()));
+    try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(dir))) {
+      var builder = new ArrayList<Path>();
+      for (java.nio.file.Path path : stream) {
+        builder.add(Path.path(path.getFileName().toString()));
       }
       return listOfAll(builder);
     }
   }
 
   @Override
-  public void move(PathS source, PathS target) throws IOException {
+  public void move(Path source, Path target) throws IOException {
     if (pathState(source) == NOTHING) {
       throw new IOException("Cannot move " + source.q() + ". It doesn't exist.");
     }
@@ -70,7 +69,7 @@ public class DiskFileSystem implements FileSystem {
     if (pathState(target) == DIR) {
       throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
-    PathS targetParent = target.parent();
+    Path targetParent = target.parent();
     if (pathState(targetParent) == NOTHING) {
       createDir(targetParent);
     }
@@ -78,24 +77,24 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public long size(PathS path) throws IOException {
+  public long size(Path path) throws IOException {
     assertPathIsFile(this, path);
     return jdkPath(path).toFile().length();
   }
 
   @Override
-  public BufferedSource source(PathS path) throws IOException {
+  public BufferedSource source(Path path) throws IOException {
     assertPathIsFile(this, path);
     return Okio.buffer(Okio.source(jdkPath(path)));
   }
 
   @Override
-  public BufferedSink sink(PathS path) throws IOException {
+  public BufferedSink sink(Path path) throws IOException {
     return Okio.buffer(sinkWithoutBuffer(path));
   }
 
   @Override
-  public Sink sinkWithoutBuffer(PathS path) throws IOException {
+  public Sink sinkWithoutBuffer(Path path) throws IOException {
     if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
@@ -104,12 +103,12 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public void createDir(PathS path) throws IOException {
+  public void createDir(Path path) throws IOException {
     Files.createDirectories(jdkPath(path));
   }
 
   @Override
-  public void delete(PathS path) throws IOException {
+  public void delete(Path path) throws IOException {
     if (pathState(path) == NOTHING) {
       return;
     }
@@ -117,7 +116,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public void createLink(PathS link, PathS target) throws IOException {
+  public void createLink(Path link, Path target) throws IOException {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);
 
@@ -133,7 +132,7 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  private Path jdkPath(PathS path) {
+  private java.nio.file.Path jdkPath(Path path) {
     if (path.isRoot()) {
       return rootDir;
     } else {

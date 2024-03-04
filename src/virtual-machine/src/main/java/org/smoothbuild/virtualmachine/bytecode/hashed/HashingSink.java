@@ -7,15 +7,15 @@ import java.io.IOException;
 import okio.ForwardingSink;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.function.Function0;
 
 public class HashingSink extends ForwardingSink {
   private final FileSystem fileSystem;
-  private final PathS tempPath;
+  private final Path tempPath;
   private final Function0<Hash, IOException> hashMemoizer;
 
-  HashingSink(FileSystem fileSystem, PathS tempPath) throws IOException {
+  HashingSink(FileSystem fileSystem, Path tempPath) throws IOException {
     super(Hash.hashingSink(fileSystem.sinkWithoutBuffer(tempPath)));
     this.fileSystem = fileSystem;
     this.tempPath = tempPath;

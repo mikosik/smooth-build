@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;

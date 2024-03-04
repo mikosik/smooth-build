@@ -3,20 +3,20 @@ package org.smoothbuild.stdlib.java.javac;
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.net.URI;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class InputClassFileTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
-  private final PathS path = path("a/b/MyClass.class");
+  private final Path path = path("a/b/MyClass.class");
 
   @Test
   public void file_without_class_extension_is_forbidden() {

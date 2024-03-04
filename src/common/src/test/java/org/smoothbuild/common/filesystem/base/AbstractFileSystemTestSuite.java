@@ -1,7 +1,7 @@
 package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
@@ -20,7 +20,7 @@ public abstract class AbstractFileSystemTestSuite {
 
   @Test
   public void root_path_is_a_nothing() {
-    assertThat(fileSystem.pathState(PathS.root())).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(Path.root())).isEqualTo(NOTHING);
   }
 
   @Test
@@ -175,8 +175,8 @@ public abstract class AbstractFileSystemTestSuite {
 
   @Test
   public void source_throws_exception_when_path_is_root_dir() {
-    assertCall(() -> fileSystem.source(PathS.root()))
-        .throwsException(new IOException("File " + resolve(PathS.root()) + " doesn't exist."));
+    assertCall(() -> fileSystem.source(Path.root()))
+        .throwsException(new IOException("File " + resolve(Path.root()) + " doesn't exist."));
   }
 
   // sink()
@@ -325,7 +325,7 @@ public abstract class AbstractFileSystemTestSuite {
     createEmptyFile(file);
     createEmptyFile(file2);
 
-    fileSystem.delete(PathS.root());
+    fileSystem.delete(Path.root());
 
     assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
     assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
@@ -454,7 +454,7 @@ public abstract class AbstractFileSystemTestSuite {
 
   // helpers
 
-  protected void createEmptyFile(PathS path) throws IOException {
+  protected void createEmptyFile(Path path) throws IOException {
     createFile(path, ByteString.of());
   }
 
@@ -462,7 +462,7 @@ public abstract class AbstractFileSystemTestSuite {
     return ByteString.encodeUtf8("abc");
   }
 
-  protected abstract void createFile(PathS path, ByteString content) throws IOException;
+  protected abstract void createFile(Path path, ByteString content) throws IOException;
 
-  protected abstract String resolve(PathS path);
+  protected abstract String resolve(Path path);
 }
