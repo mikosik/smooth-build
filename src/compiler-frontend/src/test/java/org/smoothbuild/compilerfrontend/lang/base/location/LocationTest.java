@@ -17,25 +17,25 @@ public class LocationTest extends TestingExpressionS {
   class _source_location {
     @Test
     public void line_returns_value_passed_during_construction() {
-      var location = fileLocation(filePath("abc"), 13);
+      var location = fileLocation(fullPath("abc"), 13);
       assertThat(location.line()).isEqualTo(13);
     }
 
     @Test
     public void zero_line_is_forbidden() {
-      assertCall(() -> fileLocation(filePath("abc"), 0))
+      assertCall(() -> fileLocation(fullPath("abc"), 0))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void negative_line_is_forbidden() {
-      assertCall(() -> fileLocation(filePath("abc"), -1))
+      assertCall(() -> fileLocation(fullPath("abc"), -1))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void to_string() {
-      var location = fileLocation(filePath("abc"), 2);
+      var location = fileLocation(fullPath("abc"), 2);
       assertThat(location.toString()).isEqualTo("{prj}/abc:2");
     }
   }
@@ -46,9 +46,9 @@ public class LocationTest extends TestingExpressionS {
     tester.addEqualityGroup(unknownLocation(), unknownLocation());
     tester.addEqualityGroup(internalLocation(), internalLocation());
     tester.addEqualityGroup(commandLineLocation(), commandLineLocation());
-    tester.addEqualityGroup(fileLocation(filePath("abc"), 7), fileLocation(filePath("abc"), 7));
-    tester.addEqualityGroup(fileLocation(filePath("abc"), 11), fileLocation(filePath("abc"), 11));
-    tester.addEqualityGroup(fileLocation(filePath("def"), 11), fileLocation(filePath("def"), 11));
+    tester.addEqualityGroup(fileLocation(fullPath("abc"), 7), fileLocation(fullPath("abc"), 7));
+    tester.addEqualityGroup(fileLocation(fullPath("abc"), 11), fileLocation(fullPath("abc"), 11));
+    tester.addEqualityGroup(fileLocation(fullPath("def"), 11), fileLocation(fullPath("def"), 11));
     tester.testEquals();
   }
 

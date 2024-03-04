@@ -7,7 +7,7 @@ import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
-import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
+import static org.smoothbuild.common.filesystem.space.FullPath.fullPath;
 import static org.smoothbuild.common.testing.TestingSpace.space;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class FileResolverTest {
       var path = path("file.txt");
       var content = "some string";
       createFile(path, content);
-      assertThat(fileResolver.contentOf(filePath(space("project"), path), UTF_8))
+      assertThat(fileResolver.contentOf(fullPath(space("project"), path), UTF_8))
           .isEqualTo(content);
     }
   }
@@ -45,20 +45,20 @@ public class FileResolverTest {
     public void of_file() throws IOException {
       var path = path("file.txt");
       createFile(path, "some string");
-      assertThat(fileResolver.pathState(filePath(space("project"), path))).isEqualTo(FILE);
+      assertThat(fileResolver.pathState(fullPath(space("project"), path))).isEqualTo(FILE);
     }
 
     @Test
     public void of_directory() throws IOException {
       var path = path("directory");
       fileSystem.createDir(path);
-      assertThat(fileResolver.pathState(filePath(space("project"), path))).isEqualTo(DIR);
+      assertThat(fileResolver.pathState(fullPath(space("project"), path))).isEqualTo(DIR);
     }
 
     @Test
     public void of_nothing() {
       var path = path("file.txt");
-      assertThat(fileResolver.pathState(filePath(space("project"), path))).isEqualTo(NOTHING);
+      assertThat(fileResolver.pathState(fullPath(space("project"), path))).isEqualTo(NOTHING);
     }
   }
 

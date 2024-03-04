@@ -8,12 +8,12 @@ import static org.smoothbuild.common.log.Try.success;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;
 
-public class ReadFileContent implements TryFunction<FilePath, String> {
+public class ReadFileContent implements TryFunction<FullPath, String> {
   private final FileResolver fileResolver;
 
   @Inject
@@ -22,13 +22,13 @@ public class ReadFileContent implements TryFunction<FilePath, String> {
   }
 
   @Override
-  public Try<String> apply(FilePath filePath) {
+  public Try<String> apply(FullPath fullPath) {
     try {
-      return success(fileResolver.contentOf(filePath, CHARSET));
+      return success(fileResolver.contentOf(fullPath, CHARSET));
     } catch (NoSuchFileException e) {
-      return failure(error(filePath.q() + " doesn't exist."));
+      return failure(error(fullPath.q() + " doesn't exist."));
     } catch (IOException e) {
-      return failure(error("Cannot read build script file " + filePath.q() + "."));
+      return failure(error("Cannot read build script file " + fullPath.q() + "."));
     }
   }
 }

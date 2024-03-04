@@ -115,7 +115,7 @@ public class EvaluatorSTest extends TestingTaskReporter {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(filePersister.persist(filePath(PROJECT_SPACE, path("build.jar"))))
+          when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
@@ -132,7 +132,7 @@ public class EvaluatorSTest extends TestingTaskReporter {
               nlist(itemS(intTS(), "p")));
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(filePersister.persist(filePath(PROJECT_SPACE, path("build.jar"))))
+          when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
@@ -216,7 +216,7 @@ public class EvaluatorSTest extends TestingTaskReporter {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(filePersister.persist(filePath(PROJECT_SPACE, path("build.jar"))))
+          when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);

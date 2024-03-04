@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;
@@ -27,13 +27,13 @@ import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContext> {
+public class Parse implements TryFunction<Tuple2<String, FullPath>, ModuleContext> {
   @Override
-  public Try<ModuleContext> apply(Tuple2<String, FilePath> argument) {
+  public Try<ModuleContext> apply(Tuple2<String, FullPath> argument) {
     var logger = new Logger();
     String sourceCode = argument.element1();
-    FilePath filePath = argument.element2();
-    var errorListener = new ErrorListener(filePath, logger);
+    FullPath fullPath = argument.element2();
+    var errorListener = new ErrorListener(fullPath, logger);
     var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
     smoothAntlrLexer.removeErrorListeners();
     smoothAntlrLexer.addErrorListener(errorListener);
@@ -46,11 +46,11 @@ public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContex
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final FilePath filePath;
+    private final FullPath fullPath;
     private final Logger logger;
 
-    public ErrorListener(FilePath filePath, Logger logger) {
-      this.filePath = filePath;
+    public ErrorListener(FullPath fullPath, Logger logger) {
+      this.fullPath = fullPath;
       this.logger = logger;
     }
 
@@ -72,9 +72,9 @@ public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContex
 
     private Location createLoc(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return Locations.fileLocation(filePath, line);
+        return Locations.fileLocation(fullPath, line);
       } else {
-        return locOf(filePath, (Token) offendingSymbol);
+        return locOf(fullPath, (Token) offendingSymbol);
       }
     }
 
@@ -90,7 +90,7 @@ public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContex
       String message = join(
           "\n",
           "Found ambiguity in grammar.",
-          "Report this as a bug together with file: " + filePath.path() + ", details:",
+          "Report this as a bug together with file: " + fullPath.path() + ", details:",
           "startIndex=" + startIndex,
           "stopIndex=" + stopIndex,
           "exact=" + exact,
@@ -110,7 +110,7 @@ public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContex
       var message = join(
           "\n",
           "Attempting full context.",
-          "Report this as a bug together with file: " + filePath.path() + ", details:",
+          "Report this as a bug together with file: " + fullPath.path() + ", details:",
           "startIndex=" + startIndex,
           "stopIndex=" + stopIndex,
           "conflictingAlts=" + conflictingAlts,
@@ -130,7 +130,7 @@ public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContex
       var message = join(
           "\n",
           "Context sensitivity.",
-          "Report this as a bug together with file: " + filePath.path() + ", details:",
+          "Report this as a bug together with file: " + fullPath.path() + ", details:",
           "startIndex=" + startIndex,
           "stopIndex=" + stopIndex,
           "configs=" + configs,
@@ -140,11 +140,11 @@ public class Parse implements TryFunction<Tuple2<String, FilePath>, ModuleContex
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      logger.log(compileError(locOf(filePath, token), message));
+      logger.log(compileError(locOf(fullPath, token), message));
     }
   }
 
-  private static Location locOf(FilePath filePath, Token token) {
-    return Locations.fileLocation(filePath, token.getLine());
+  private static Location locOf(FullPath fullPath, Token token) {
+    return Locations.fileLocation(fullPath, token.getLine());
   }
 }

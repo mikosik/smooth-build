@@ -38,7 +38,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;
@@ -70,17 +70,17 @@ import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>, ModuleP> {
+public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FullPath>, ModuleP> {
   @Override
-  public Try<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
+  public Try<ModuleP> apply(Tuple2<ModuleContext, FullPath> context) {
     var logger = new Logger();
     var module = context.element1();
-    var filePath = context.element2();
+    var fullPath = context.element2();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
-    var apTranslatingVisitor = new ApTranslatingVisitor(filePath, structs, evaluables, logger);
+    var apTranslatingVisitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
     apTranslatingVisitor.visit(module);
-    var name = filePath.withExtension("").path().lastPart().toString();
+    var name = fullPath.withExtension("").path().lastPart().toString();
     var moduleP = new ModuleP(name, listOfAll(structs), listOfAll(evaluables));
     return Try.of(moduleP, logger);
   }
@@ -89,20 +89,20 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     return quotedString.substring(1, quotedString.length() - 1);
   }
 
-  private static Location fileLocation(FilePath filePath, ParserRuleContext parserRuleContext) {
-    return fileLocation(filePath, parserRuleContext.getStart());
+  private static Location fileLocation(FullPath fullPath, ParserRuleContext parserRuleContext) {
+    return fileLocation(fullPath, parserRuleContext.getStart());
   }
 
-  private static Location fileLocation(FilePath filePath, TerminalNode node) {
-    return fileLocation(filePath, node.getSymbol());
+  private static Location fileLocation(FullPath fullPath, TerminalNode node) {
+    return fileLocation(fullPath, node.getSymbol());
   }
 
-  private static Location fileLocation(FilePath filePath, Token token) {
-    return Locations.fileLocation(filePath, token.getLine());
+  private static Location fileLocation(FullPath fullPath, Token token) {
+    return Locations.fileLocation(fullPath, token.getLine());
   }
 
   private static class ApTranslatingVisitor extends SmoothAntlrBaseVisitor<Void> {
-    private final FilePath filePath;
+    private final FullPath fullPath;
     private final ArrayList<StructP> structs;
     private final ArrayList<NamedEvaluableP> evaluables;
     private final Logger logger;
@@ -110,20 +110,20 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     private int lambdaCount;
 
     public ApTranslatingVisitor(
-        FilePath filePath,
+        FullPath fullPath,
         ArrayList<StructP> structs,
         ArrayList<NamedEvaluableP> evaluables,
         Logger logger) {
-      this(filePath, structs, evaluables, logger, null);
+      this(fullPath, structs, evaluables, logger, null);
     }
 
     public ApTranslatingVisitor(
-        FilePath filePath,
+        FullPath fullPath,
         ArrayList<StructP> structs,
         ArrayList<NamedEvaluableP> evaluables,
         Logger logger,
         String scopeName) {
-      this.filePath = filePath;
+      this.fullPath = fullPath;
       this.structs = structs;
       this.evaluables = evaluables;
       this.logger = logger;
@@ -134,7 +134,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     @Override
     public Void visitStruct(StructContext struct) {
       var name = struct.NAME().getText();
-      var location = fileLocation(filePath, struct.NAME().getSymbol());
+      var location = fileLocation(fullPath, struct.NAME().getSymbol());
       var fields = createItems(name, struct.itemList());
       structs.add(new StructP(name, fields, location));
       return null;
@@ -143,7 +143,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     @Override
     public Void visitNamedFunc(NamedFuncContext namedFunc) {
       var nameNode = namedFunc.NAME();
-      var location = fileLocation(filePath, nameNode);
+      var location = fileLocation(fullPath, nameNode);
       visitChildren(namedFunc);
       var type = createTypeSane(namedFunc.type(), location);
       var name = nameNode.getText();
@@ -158,7 +158,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     @Override
     public Void visitNamedValue(NamedValueContext namedValue) {
       var nameNode = namedValue.NAME();
-      var location = fileLocation(filePath, nameNode);
+      var location = fileLocation(fullPath, nameNode);
       visitChildren(namedValue);
       var type = createTypeSane(namedValue.type(), location);
       var name = nameNode.getText();
@@ -176,7 +176,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
         return some(new AnnotationP(
             name,
             createStringNode(annotation, annotation.STRING()),
-            fileLocation(filePath, annotation)));
+            fileLocation(fullPath, annotation)));
       }
     }
 
@@ -197,7 +197,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
       var type = createT(item.type());
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
-      var location = fileLocation(filePath, nameNode);
+      var location = fileLocation(fullPath, nameNode);
       var defaultValue = createDefaultValue(ownerName, itemName, item, location);
       return new ItemP(type, itemName, defaultValue, location);
     }
@@ -239,7 +239,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     }
 
     private void logPipedValueNotConsumedError(ExprContext parserRuleContext) {
-      var location = fileLocation(filePath, parserRuleContext);
+      var location = fileLocation(fullPath, parserRuleContext);
       logger.log(compileError(location, "Piped value is not consumed."));
     }
 
@@ -267,7 +267,7 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     }
 
     private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
-      var location = fileLocation(filePath, chainHead);
+      var location = fileLocation(fullPath, chainHead);
       if (chainHead.NAME() != null) {
         var referenceP = new ReferenceP(chainHead.NAME().getText(), location);
         return new InstantiateP(referenceP, location);
@@ -320,20 +320,20 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
       var fullName = createFullName("^" + (++lambdaCount));
       var params = createItems(fullName, lambdaFunc.itemList());
       var body = createExpr(lambdaFunc.expr());
-      var location = fileLocation(filePath, lambdaFunc);
+      var location = fileLocation(fullPath, lambdaFunc);
       var lambdaFuncP = new LambdaP(fullName, params, body, location);
       return new InstantiateP(lambdaFuncP, location);
     }
 
     private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
       var unquoted = unquote(quotedString.getText());
-      var location = fileLocation(filePath, expr);
+      var location = fileLocation(fullPath, expr);
       return new StringP(unquoted, location);
     }
 
     private SelectP createSelect(ExprP selectable, SelectContext fieldRead) {
       var name = fieldRead.NAME().getText();
-      var location = fileLocation(filePath, fieldRead);
+      var location = fileLocation(fullPath, fieldRead);
       return new SelectP(selectable, name, location);
     }
 
@@ -346,14 +346,14 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
         if (nameNode == null) {
           result.add(exprP);
         } else {
-          result.add(new NamedArgP(nameNode.getText(), exprP, fileLocation(filePath, arg)));
+          result.add(new NamedArgP(nameNode.getText(), exprP, fileLocation(fullPath, arg)));
         }
       }
       return listOfAll(result);
     }
 
     private ExprP createCall(ExprP callable, List<ExprP> args, ArgListContext argListContext) {
-      var location = fileLocation(filePath, argListContext);
+      var location = fileLocation(fullPath, argListContext);
       return new CallP(callable, args, location);
     }
 
@@ -371,19 +371,19 @@ public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FilePath>,
     }
 
     private TypeP createT(TypeNameContext type) {
-      return new ExplicitTP(type.getText(), fileLocation(filePath, type.NAME()));
+      return new ExplicitTP(type.getText(), fileLocation(fullPath, type.NAME()));
     }
 
     private TypeP createArrayT(ArrayTContext arrayT) {
       var elemType = createT(arrayT.type());
-      return new ArrayTP(elemType, fileLocation(filePath, arrayT));
+      return new ArrayTP(elemType, fileLocation(fullPath, arrayT));
     }
 
     private TypeP createFuncT(FuncTContext funcT) {
       var types = listOfAll(funcT.type()).map(this::createT);
       var resultType = types.get(types.size() - 1);
       var paramTypesS = types.subList(0, types.size() - 1);
-      return new FuncTP(resultType, paramTypesS, fileLocation(filePath, funcT));
+      return new FuncTP(resultType, paramTypesS, fileLocation(fullPath, funcT));
     }
 
     private String createFullName(String shortName) {

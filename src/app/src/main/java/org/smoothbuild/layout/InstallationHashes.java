@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
+import org.smoothbuild.common.filesystem.space.FullPath;
 
 public class InstallationHashes {
   private final FileResolver fileResolver;
@@ -35,8 +35,8 @@ public class InstallationHashes {
   }
 
   private HashNode smoothJarNode() throws IOException {
-    var filePath = SMOOTH_JAR_FILE_PATH;
-    return new HashNode(filePath.path().lastPart().toString(), hashOf(filePath));
+    var fullPath = SMOOTH_JAR_FILE_PATH;
+    return new HashNode(fullPath.path().lastPart().toString(), hashOf(fullPath));
   }
 
   private static HashNode javaPlatformNode() {
@@ -60,33 +60,33 @@ public class InstallationHashes {
 
   private HashNode standardLibrariesNode() throws IOException {
     var builder = new ArrayList<HashNode>();
-    for (var filePath : STANDARD_LIBRARY_MODULES) {
-      builder.add(moduleNode(filePath));
+    for (var fullPath : STANDARD_LIBRARY_MODULES) {
+      builder.add(moduleNode(fullPath));
     }
     return new HashNode("standard libraries", listOfAll(builder));
   }
 
-  private HashNode moduleNode(FilePath filePath) throws IOException {
-    var smoothNode = nodeFor(filePath);
-    var nativeNode = nodeForNativeJarFor(filePath);
+  private HashNode moduleNode(FullPath fullPath) throws IOException {
+    var smoothNode = nodeFor(fullPath);
+    var nativeNode = nodeForNativeJarFor(fullPath);
     var nodes = nativeNode.isSome() ? list(smoothNode, nativeNode.get()) : list(smoothNode);
-    var moduleName = removeExtension(filePath.toString());
+    var moduleName = removeExtension(fullPath.toString());
     return new HashNode(moduleName + " module", nodes);
   }
 
-  private Maybe<HashNode> nodeForNativeJarFor(FilePath filePath) throws IOException {
-    FilePath nativeFilePath = filePath.withExtension("jar");
-    return switch (fileResolver.pathState(nativeFilePath)) {
-      case FILE -> some(nodeFor(nativeFilePath));
+  private Maybe<HashNode> nodeForNativeJarFor(FullPath fullPath) throws IOException {
+    FullPath nativeFileFullPath = fullPath.withExtension("jar");
+    return switch (fileResolver.pathState(nativeFileFullPath)) {
+      case FILE -> some(nodeFor(nativeFileFullPath));
       case DIR, NOTHING -> none();
     };
   }
 
-  private HashNode nodeFor(FilePath filePath) throws IOException {
-    return new HashNode(filePath.toString(), hashOf(filePath));
+  private HashNode nodeFor(FullPath fullPath) throws IOException {
+    return new HashNode(fullPath.toString(), hashOf(fullPath));
   }
 
-  private Hash hashOf(FilePath filePath) throws IOException {
-    return Hash.of(fileResolver.source(filePath));
+  private Hash hashOf(FullPath fullPath) throws IOException {
+    return Hash.of(fileResolver.source(fullPath));
   }
 }

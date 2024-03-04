@@ -5,14 +5,14 @@ import org.smoothbuild.common.filesystem.base.Path;
 /**
  * This class is immutable.
  */
-public record FilePath(Space space, Path path) {
+public record FullPath(Space space, Path path) {
 
-  public static FilePath filePath(Space space, Path path) {
-    return new FilePath(space, path);
+  public static FullPath fullPath(Space space, Path path) {
+    return new FullPath(space, path);
   }
 
-  public FilePath withExtension(String extension) {
-    return filePath(space, path.changeExtension(extension));
+  public FullPath withExtension(String extension) {
+    return fullPath(space, path.changeExtension(extension));
   }
 
   public String q() {

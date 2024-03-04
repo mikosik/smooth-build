@@ -6,7 +6,7 @@ import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.mo
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.space.FilePath;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
 public class VisibilityTest extends TestingExpressionS {
@@ -756,7 +756,7 @@ public class VisibilityTest extends TestingExpressionS {
               myValue = "abc";
               myValue = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
+          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myValue"));
         }
 
         @Test
@@ -766,7 +766,7 @@ public class VisibilityTest extends TestingExpressionS {
               myFunc() = "abc";
               myFunc = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
+          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myFunc"));
         }
       }
     }
@@ -815,7 +815,7 @@ public class VisibilityTest extends TestingExpressionS {
               myValue = "abc";
               myValue() = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
+          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myValue"));
         }
 
         @Test
@@ -825,7 +825,7 @@ public class VisibilityTest extends TestingExpressionS {
               myFunc() = "abc";
               myFunc() = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
+          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myFunc"));
         }
       }
     }
@@ -840,7 +840,7 @@ public class VisibilityTest extends TestingExpressionS {
               String param,
               String param) = "abc";
               """;
-        module(code).loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
+        module(code).loadsWithError(3, alreadyDefinedIn(fullPath(), 2, "param"));
       }
 
       @Nested
@@ -911,7 +911,7 @@ public class VisibilityTest extends TestingExpressionS {
               String param,
               String param) -> 7;
               """;
-        module(code).loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
+        module(code).loadsWithError(3, alreadyDefinedIn(fullPath(), 2, "param"));
       }
 
       @Nested
@@ -1002,7 +1002,7 @@ public class VisibilityTest extends TestingExpressionS {
               OtherModuleStruct()
               OtherModuleStruct()
               """;
-          module(code).loadsWith(err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")));
+          module(code).loadsWith(err(2, alreadyDefinedIn(fullPath(), "OtherModuleStruct")));
         }
       }
     }
@@ -1018,7 +1018,7 @@ public class VisibilityTest extends TestingExpressionS {
               String field
             )
             """;
-        module(code).loadsWithError(3, alreadyDefinedIn(filePath(), 2, "field"));
+        module(code).loadsWithError(3, alreadyDefinedIn(fullPath(), 2, "field"));
       }
 
       @Nested
@@ -1085,12 +1085,12 @@ public class VisibilityTest extends TestingExpressionS {
       }
     }
 
-    private static String alreadyDefinedIn(FilePath filePath, String name) {
-      return alreadyDefinedIn(filePath, 1, name);
+    private static String alreadyDefinedIn(FullPath fullPath, String name) {
+      return alreadyDefinedIn(fullPath, 1, name);
     }
 
-    private static String alreadyDefinedIn(FilePath filePath, int line, String name) {
-      return "`" + name + "` is already defined at " + filePath + ":" + line + ".";
+    private static String alreadyDefinedIn(FullPath fullPath, int line, String name) {
+      return "`" + name + "` is already defined at " + fullPath + ":" + line + ".";
     }
   }
 }

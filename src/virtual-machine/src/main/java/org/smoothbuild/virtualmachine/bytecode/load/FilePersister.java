@@ -5,8 +5,8 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import okio.BufferedSource;
-import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
+import org.smoothbuild.common.filesystem.space.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
@@ -21,7 +21,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
 public class FilePersister {
   private final FileResolver fileResolver;
   private final ExprDb exprDb;
-  private final ConcurrentHashMap<FilePath, CachingLoader> fileBlobCache;
+  private final ConcurrentHashMap<FullPath, CachingLoader> fileBlobCache;
 
   @Inject
   public FilePersister(FileResolver fileResolver, ExprDb exprDb) {
@@ -30,8 +30,8 @@ public class FilePersister {
     this.fileBlobCache = new ConcurrentHashMap<>();
   }
 
-  public BlobB persist(FilePath filePath) throws BytecodeException {
-    var cachingLoader = fileBlobCache.computeIfAbsent(filePath, CachingLoader::new);
+  public BlobB persist(FullPath fullPath) throws BytecodeException {
+    var cachingLoader = fileBlobCache.computeIfAbsent(fullPath, CachingLoader::new);
     try {
       return cachingLoader.persist();
     } catch (IOException e) {
@@ -40,11 +40,11 @@ public class FilePersister {
   }
 
   private class CachingLoader {
-    private final FilePath filePath;
+    private final FullPath fullPath;
     private BlobB blob;
 
-    private CachingLoader(FilePath filePath) {
-      this.filePath = filePath;
+    private CachingLoader(FullPath fullPath) {
+      this.fullPath = fullPath;
     }
 
     public synchronized BlobB persist() throws IOException, BytecodeException {
@@ -56,7 +56,7 @@ public class FilePersister {
 
     private BlobB persistImpl() throws BytecodeException, IOException {
       try (BlobBBuilder blobBuilder = exprDb.blobBuilder()) {
-        try (BufferedSource source = fileResolver.source(filePath)) {
+        try (BufferedSource source = fileResolver.source(fullPath)) {
           source.readAll(blobBuilder);
         }
         return blobBuilder.build();
