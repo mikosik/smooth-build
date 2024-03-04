@@ -9,7 +9,7 @@ import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;
@@ -33,7 +33,7 @@ public class Clean implements TryFunction<Tuple0, String> {
     return success("Cache and artifacts removed.");
   }
 
-  private void deleteDir(Logger logger, PathS path) {
+  private void deleteDir(Logger logger, Path path) {
     try {
       fileSystem.delete(path);
     } catch (IOException e) {

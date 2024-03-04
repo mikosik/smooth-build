@@ -1,10 +1,10 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import java.util.function.Predicate;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -20,7 +20,7 @@ public class FilterFilesFunc {
     ArrayB files = (ArrayB) args.get(0);
     StringB pattern = (StringB) args.get(1);
 
-    Predicate<PathS> filter;
+    Predicate<Path> filter;
     try {
       filter = new PathMatcher(pattern.toJavaString());
     } catch (IllegalPathPatternException e) {

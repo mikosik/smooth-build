@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
@@ -55,7 +55,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       Location location, String className, Kind kind, FileObject sibling) throws IOException {
     try {
       if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
-        PathS classFilePath = path(className.replace('.', '/') + ".class");
+        Path classFilePath = path(className.replace('.', '/') + ".class");
         return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
       } else {
         return super.getJavaFileForOutput(location, className, kind, sibling);

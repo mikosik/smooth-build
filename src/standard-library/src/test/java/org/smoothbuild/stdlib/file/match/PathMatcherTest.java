@@ -2,19 +2,19 @@ package org.smoothbuild.stdlib.file.match;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class PathMatcherTest {
   @ParameterizedTest
   @MethodSource("data_set")
-  public void test_matching(String pattern, PathS path, boolean expected) {
+  public void test_matching(String pattern, Path path, boolean expected) {
     assertThat(new PathMatcher(pattern).test(path)).isEqualTo(expected);
   }
 

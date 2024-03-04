@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
@@ -38,7 +38,7 @@ public class CleanCommandTest {
           .containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
     }
 
-    private void createDirInProject(PathS path) throws IOException {
+    private void createDirInProject(Path path) throws IOException {
       createDirectories(absolutePath(path.toString()));
     }
 

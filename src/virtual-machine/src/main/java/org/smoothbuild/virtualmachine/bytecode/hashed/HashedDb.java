@@ -7,7 +7,7 @@ import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -20,7 +20,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBigIntegerException;
@@ -35,7 +35,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
  * This class is thread-safe.
  */
 public class HashedDb {
-  static final PathS TEMP_DIR_PATH = path("tmp");
+  static final Path TEMP_DIR_PATH = path("tmp");
   private final FileSystem fileSystem;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
@@ -146,7 +146,7 @@ public class HashedDb {
     };
   }
 
-  private long readHashChainSize(Hash hash, PathS path) throws HashedDbException {
+  private long readHashChainSize(Hash hash, Path path) throws HashedDbException {
     try {
       var sizeInBytes = fileSystem.size(path);
       long remainder = sizeInBytes % Hash.lengthInBytes();
@@ -198,7 +198,7 @@ public class HashedDb {
     };
   }
 
-  private BufferedSource sourceFile(Hash hash, PathS path) throws HashedDbException {
+  private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbException {
     try {
       return fileSystem.source(path);
     } catch (IOException e) {
@@ -214,11 +214,11 @@ public class HashedDb {
     }
   }
 
-  public static PathS dbPathTo(Hash hash) {
+  public static Path dbPathTo(Hash hash) {
     return path(hash.toHexString());
   }
 
-  private PathS newTempFileProjectPath() {
+  private Path newTempFileProjectPath() {
     return TEMP_DIR_PATH.appendPart(tempFileCounter.incrementAndGet().toString());
   }
 }

@@ -1,14 +1,14 @@
 package org.smoothbuild.stdlib.file;
 
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathIterator;
-import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
@@ -18,12 +18,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FilesFunc {
-  private static final PathS SMOOTH_DIR = path(".smooth");
+  private static final Path SMOOTH_DIR = path(".smooth");
 
   public static ValueB func(Container container, TupleB args)
       throws IOException, BytecodeException {
     StringB dir = (StringB) args.get(0);
-    PathS path = validatedProjectPath(container, "dir", dir);
+    Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;
     }
@@ -47,20 +47,20 @@ public class FilesFunc {
     };
   }
 
-  private static ArrayB readFiles(Container container, FileSystem fileSystem, PathS dir)
+  private static ArrayB readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException, BytecodeException {
     var fileArrayBuilder =
         container.factory().arrayBuilderWithElements(container.factory().fileT());
     var reader = new FileReader(container);
     if (dir.isRoot()) {
-      for (PathS path : fileSystem.files(PathS.root())) {
+      for (Path path : fileSystem.files(Path.root())) {
         if (!path.equals(SMOOTH_DIR)) {
           PathState pathState = fileSystem.pathState(path);
           switch (pathState) {
             case DIR:
               for (PathIterator it = recursivePathsIterator(fileSystem, path); it.hasNext(); ) {
-                PathS currentPath = it.next();
-                PathS projectPath = path.append(currentPath);
+                Path currentPath = it.next();
+                Path projectPath = path.append(currentPath);
                 fileArrayBuilder.add(reader.createFile(projectPath, projectPath));
               }
               break;
@@ -74,7 +74,7 @@ public class FilesFunc {
       }
     } else {
       for (PathIterator it = recursivePathsIterator(fileSystem, dir); it.hasNext(); ) {
-        PathS path = it.next();
+        Path path = it.next();
         fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
       }
     }

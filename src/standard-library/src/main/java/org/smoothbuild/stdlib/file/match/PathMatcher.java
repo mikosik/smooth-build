@@ -4,9 +4,9 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
-public class PathMatcher implements Predicate<PathS> {
+public class PathMatcher implements Predicate<Path> {
   private final FileSystem fileSystem;
   private final java.nio.file.PathMatcher pathMatcher;
 
@@ -21,8 +21,8 @@ public class PathMatcher implements Predicate<PathS> {
   }
 
   @Override
-  public boolean test(PathS pathS) {
-    return pathMatcher.matches(fileSystem.getPath(pathS.value()));
+  public boolean test(Path path) {
+    return pathMatcher.matches(fileSystem.getPath(path.value()));
   }
 
   private static void validatePattern(String pattern) {

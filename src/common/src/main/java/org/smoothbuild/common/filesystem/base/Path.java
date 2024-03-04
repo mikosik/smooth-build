@@ -6,18 +6,18 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;
 
-public class PathS {
+public class Path {
   public static final String SEPARATOR = "/";
-  private static final PathS ROOT = new PathS(".");
+  private static final Path ROOT = new Path(".");
 
   private final String value;
 
-  public static PathS path(String value) {
+  public static Path path(String value) {
     if (value.equals(ROOT.value)) {
       return ROOT;
     }
     failIfNotLegalPath(value);
-    return new PathS(value);
+    return new Path(value);
   }
 
   public static void failIfNotLegalPath(String value) {
@@ -50,11 +50,11 @@ public class PathS {
     return null;
   }
 
-  public static PathS root() {
+  public static Path root() {
     return ROOT;
   }
 
-  private PathS(String value) {
+  private Path(String value) {
     this.value = value;
   }
 
@@ -66,7 +66,7 @@ public class PathS {
     return this == ROOT;
   }
 
-  public PathS parent() {
+  public Path parent() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return parent of root path");
     }
@@ -74,13 +74,13 @@ public class PathS {
     if (index == -1) {
       return root();
     } else {
-      return new PathS(value.substring(0, index));
+      return new Path(value.substring(0, index));
     }
   }
 
-  public boolean startsWith(PathS path) {
-    List<PathS> thisParts = parts();
-    List<PathS> thatParts = path.parts();
+  public boolean startsWith(Path path) {
+    List<Path> thisParts = parts();
+    List<Path> thatParts = path.parts();
     if (thisParts.size() < thatParts.size()) {
       return false;
     }
@@ -92,17 +92,17 @@ public class PathS {
     return true;
   }
 
-  public PathS append(PathS path) {
+  public Path append(Path path) {
     if (isRoot()) {
       return path;
     } else if (path.isRoot()) {
       return this;
     } else {
-      return new PathS(this.value + SEPARATOR + path.value);
+      return new Path(this.value + SEPARATOR + path.value);
     }
   }
 
-  public PathS appendPart(String part) {
+  public Path appendPart(String part) {
     if (part.contains(SEPARATOR)) {
       throw new IllegalArgumentException(
           "Part cannot contain '" + SEPARATOR + "' (part='" + part + "').");
@@ -111,13 +111,13 @@ public class PathS {
       throw new IllegalArgumentException("Part cannot be equal to '" + part + "'.");
     }
     if (isRoot()) {
-      return new PathS(part);
+      return new Path(part);
     } else {
-      return new PathS(this.value + SEPARATOR + part);
+      return new Path(this.value + SEPARATOR + part);
     }
   }
 
-  public PathS changeExtension(String extension) {
+  public Path changeExtension(String extension) {
     failWithIllegalArgumentIf(isRoot(), "Cannot change extension of '.'.");
     failWithIllegalArgumentIf(
         extension.contains("."), "Extension cannot contain '.', but = " + extension);
@@ -125,9 +125,9 @@ public class PathS {
         extension.contains("/"), "Extension cannot contain '/', but = " + extension);
     String withoutExtension = removeExtension(value);
     if (extension.isEmpty()) {
-      return new PathS(withoutExtension);
+      return new Path(withoutExtension);
     } else {
-      return new PathS(withoutExtension + "." + extension);
+      return new Path(withoutExtension + "." + extension);
     }
   }
 
@@ -146,15 +146,15 @@ public class PathS {
     }
   }
 
-  public List<PathS> parts() {
+  public List<Path> parts() {
     if (isRoot()) {
       return list();
     } else {
-      return list(value.split(quote(SEPARATOR))).map(PathS::path);
+      return list(value.split(quote(SEPARATOR))).map(Path::path);
     }
   }
 
-  public PathS firstPart() {
+  public Path firstPart() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return first part of root path.");
     }
@@ -162,11 +162,11 @@ public class PathS {
     if (index == -1) {
       return this;
     } else {
-      return new PathS(value.substring(0, index));
+      return new Path(value.substring(0, index));
     }
   }
 
-  public PathS lastPart() {
+  public Path lastPart() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return last part of root path.");
     }
@@ -174,7 +174,7 @@ public class PathS {
     if (index == -1) {
       return this;
     } else {
-      return new PathS(value.substring(index + 1));
+      return new Path(value.substring(index + 1));
     }
   }
 
@@ -187,7 +187,7 @@ public class PathS {
     if (this == object) {
       return true;
     }
-    return object instanceof PathS that && this.value.equals(that.value);
+    return object instanceof Path that && this.value.equals(that.value);
   }
 
   @Override

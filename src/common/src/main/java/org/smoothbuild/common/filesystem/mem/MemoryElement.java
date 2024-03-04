@@ -5,10 +5,10 @@ import java.util.List;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public interface MemoryElement {
-  public PathS name();
+  public Path name();
 
   public MemoryDir parent();
 
@@ -16,11 +16,11 @@ public interface MemoryElement {
 
   public boolean isDir();
 
-  public boolean hasChild(PathS name);
+  public boolean hasChild(Path name);
 
-  public MemoryElement child(PathS name);
+  public MemoryElement child(Path name);
 
-  public List<PathS> childNames();
+  public List<Path> childNames();
 
   public void addChild(MemoryElement elem);
 

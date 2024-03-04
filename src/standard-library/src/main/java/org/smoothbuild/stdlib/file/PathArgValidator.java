@@ -1,20 +1,20 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import org.smoothbuild.common.filesystem.base.IllegalPathException;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class PathArgValidator {
-  public static PathS validatedProjectPath(NativeApi nativeApi, String name, StringB path)
+  public static Path validatedProjectPath(NativeApi nativeApi, String name, StringB path)
       throws BytecodeException {
     String value = path.toJavaString();
     switch (value) {
       case ".":
-        return PathS.root();
+        return Path.root();
       case "":
         nativeApi.log().error("Param `" + name + "` has illegal value. Path cannot be empty.");
         return null;

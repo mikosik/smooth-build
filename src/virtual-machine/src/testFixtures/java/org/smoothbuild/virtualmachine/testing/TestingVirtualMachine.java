@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.testing;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECUTION;
 
@@ -17,7 +17,7 @@ import org.smoothbuild.common.Constants;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
@@ -253,9 +253,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
 
   public ComputationCache computationCache() {
     return new ComputationCache(
-        new ComputationCacheConfig(projectFileSystem(), PathS.path("cache")),
-        exprDb(),
-        bytecodeF());
+        new ComputationCacheConfig(projectFileSystem(), Path.path("cache")), exprDb(), bytecodeF());
   }
 
   public FileSystem projectFileSystem() {
@@ -275,12 +273,12 @@ public class TestingVirtualMachine extends TestingExpressionS {
   public static void initializeDirs(FileSystem projectFileSystem) throws IOException {
     var dirs =
         list(path(".smooth/hashed"), path(".smooth/computations"), path(".smooth/artifacts"));
-    for (PathS pathS : dirs) {
-      initializeDir(projectFileSystem, pathS);
+    for (Path path : dirs) {
+      initializeDir(projectFileSystem, path);
     }
   }
 
-  public static void initializeDir(FileSystem fileSystem, PathS dir) throws IOException {
+  public static void initializeDir(FileSystem fileSystem, Path dir) throws IOException {
     switch (fileSystem.pathState(dir)) {
       case DIR -> {}
       case FILE -> throw new IOException(
@@ -553,11 +551,11 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return exprDb().bool(value);
   }
 
-  public TupleB fileB(PathS path) throws BytecodeException {
+  public TupleB fileB(Path path) throws BytecodeException {
     return fileB(path, path.toString());
   }
 
-  public TupleB fileB(PathS path, String content) throws BytecodeException {
+  public TupleB fileB(Path path, String content) throws BytecodeException {
     return fileB(path.toString(), content);
   }
 
@@ -565,7 +563,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return fileB(path, ByteString.encodeString(content, Constants.CHARSET));
   }
 
-  public TupleB fileB(PathS path, ByteString content) throws BytecodeException {
+  public TupleB fileB(Path path, ByteString content) throws BytecodeException {
     return fileB(path.toString(), content);
   }
 

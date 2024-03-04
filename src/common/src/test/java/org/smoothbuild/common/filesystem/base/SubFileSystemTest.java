@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class SubFileSystemTest extends AbstractFileSystemTestSuite {
-  private static final PathS ROOT = PathS.path("some/dir");
+  private static final Path ROOT = Path.path("some/dir");
   private MemoryFileSystem rootFileSystem;
 
   @BeforeEach
@@ -17,14 +17,14 @@ public class SubFileSystemTest extends AbstractFileSystemTestSuite {
   }
 
   @Override
-  protected void createFile(PathS path, ByteString content) throws IOException {
+  protected void createFile(Path path, ByteString content) throws IOException {
     try (BufferedSink sink = rootFileSystem.sink(ROOT.append(path))) {
       sink.write(content);
     }
   }
 
   @Override
-  protected String resolve(PathS path) {
+  protected String resolve(Path path) {
     return ROOT.append(path).q();
   }
 }

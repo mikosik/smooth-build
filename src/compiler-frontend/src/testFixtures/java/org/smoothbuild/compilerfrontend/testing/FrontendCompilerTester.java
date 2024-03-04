@@ -19,7 +19,7 @@ import com.google.inject.Provides;
 import java.io.IOException;
 import java.util.Map;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.filesystem.space.FilePath;
 import org.smoothbuild.common.filesystem.space.FileResolver;
@@ -46,7 +46,7 @@ public class FrontendCompilerTester {
     this.sourceCode = sourceCode;
   }
 
-  public static void writeFile(FileSystem fileSystem, PathS path, String content)
+  public static void writeFile(FileSystem fileSystem, Path path, String content)
       throws IOException {
     try (var bufferedSink = fileSystem.sink(path)) {
       bufferedSink.writeUtf8(content);

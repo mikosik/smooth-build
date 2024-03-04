@@ -6,12 +6,12 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryDirTest {
-  private final MemoryElement child = createChild(PathS.path("childName1"));
-  private final MemoryElement child2 = createChild(PathS.path("childName2"));
-  private final PathS path = PathS.path("name");
+  private final MemoryElement child = createChild(Path.path("childName1"));
+  private final MemoryElement child2 = createChild(Path.path("childName2"));
+  private final Path path = Path.path("name");
   private final MemoryDir parent = Mockito.mock(MemoryDir.class);
   private MemoryDir memoryDir;
 
@@ -101,7 +101,7 @@ public class MemoryDirTest {
     assertCall(() -> memoryDir.sink()).throwsException(UnsupportedOperationException.class);
   }
 
-  private static MemoryElement createChild(PathS name) {
+  private static MemoryElement createChild(Path name) {
     MemoryElement childMock = Mockito.mock(MemoryElement.class);
     when(childMock.name()).thenReturn(name);
     return childMock;

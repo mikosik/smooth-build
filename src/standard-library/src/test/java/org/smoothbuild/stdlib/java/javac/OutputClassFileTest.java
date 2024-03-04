@@ -7,13 +7,13 @@ import static okio.Okio.sink;
 import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class OutputClassFileTest extends TestingVirtualMachine {
-  private final PathS path = PathS.path("my/path");
+  private final Path path = Path.path("my/path");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test

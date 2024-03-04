@@ -7,64 +7,64 @@ import okio.Sink;
 
 public class SubFileSystem implements FileSystem {
   private final FileSystem fileSystem;
-  private final PathS root;
+  private final Path root;
 
-  public SubFileSystem(FileSystem fileSystem, PathS root) {
+  public SubFileSystem(FileSystem fileSystem, Path root) {
     this.fileSystem = fileSystem;
     this.root = root;
   }
 
   @Override
-  public PathState pathState(PathS path) {
+  public PathState pathState(Path path) {
     return fileSystem.pathState(fullPath(path));
   }
 
   @Override
-  public Iterable<PathS> files(PathS dir) throws IOException {
+  public Iterable<Path> files(Path dir) throws IOException {
     return fileSystem.files(fullPath(dir));
   }
 
   @Override
-  public void move(PathS source, PathS target) throws IOException {
+  public void move(Path source, Path target) throws IOException {
     fileSystem.move(fullPath(source), fullPath(target));
   }
 
   @Override
-  public void delete(PathS path) throws IOException {
+  public void delete(Path path) throws IOException {
     fileSystem.delete(fullPath(path));
   }
 
   @Override
-  public long size(PathS path) throws IOException {
+  public long size(Path path) throws IOException {
     return fileSystem.size(fullPath(path));
   }
 
   @Override
-  public BufferedSource source(PathS path) throws IOException {
+  public BufferedSource source(Path path) throws IOException {
     return fileSystem.source(fullPath(path));
   }
 
   @Override
-  public BufferedSink sink(PathS path) throws IOException {
+  public BufferedSink sink(Path path) throws IOException {
     return fileSystem.sink(fullPath(path));
   }
 
   @Override
-  public Sink sinkWithoutBuffer(PathS path) throws IOException {
+  public Sink sinkWithoutBuffer(Path path) throws IOException {
     return fileSystem.sinkWithoutBuffer(fullPath(path));
   }
 
   @Override
-  public void createLink(PathS link, PathS target) throws IOException {
+  public void createLink(Path link, Path target) throws IOException {
     fileSystem.createLink(fullPath(link), fullPath(target));
   }
 
   @Override
-  public void createDir(PathS path) throws IOException {
+  public void createDir(Path path) throws IOException {
     fileSystem.createDir(fullPath(path));
   }
 
-  private PathS fullPath(PathS path) {
+  private Path fullPath(Path path) {
     return root.append(path);
   }
 }

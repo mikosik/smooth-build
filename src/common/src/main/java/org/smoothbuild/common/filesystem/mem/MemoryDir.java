@@ -8,20 +8,20 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class MemoryDir implements MemoryElement {
   private final MemoryDir parent;
-  private final PathS name;
-  private final Map<PathS, MemoryElement> map = new HashMap<>();
+  private final Path name;
+  private final Map<Path, MemoryElement> map = new HashMap<>();
 
-  public MemoryDir(MemoryDir parent, PathS name) {
+  public MemoryDir(MemoryDir parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
 
   @Override
-  public PathS name() {
+  public Path name() {
     return name;
   }
 
@@ -41,12 +41,12 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(PathS name) {
+  public boolean hasChild(Path name) {
     return map.containsKey(name);
   }
 
   @Override
-  public MemoryElement child(PathS name) {
+  public MemoryElement child(Path name) {
     MemoryElement result = map.get(name);
     if (result == null) {
       throw new IllegalArgumentException("Element '" + name + "' does not exist.");
@@ -55,13 +55,13 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public List<PathS> childNames() {
+  public List<Path> childNames() {
     return listOfAll(map.keySet());
   }
 
   @Override
   public void addChild(MemoryElement elem) {
-    PathS elemName = elem.name();
+    Path elemName = elem.name();
     if (map.containsKey(elemName)) {
       throw new IllegalStateException("Dir already contains child with name '" + elemName + "'.");
     }

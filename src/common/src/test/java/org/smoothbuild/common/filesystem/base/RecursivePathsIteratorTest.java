@@ -38,7 +38,7 @@ public class RecursivePathsIteratorTest {
   @Test
   public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    var path = PathS.path("my/file");
+    var path = Path.path("my/file");
     Truth.assertThat(
             RecursivePathsIterator.recursivePathsIterator(fileSystem, path).hasNext())
         .isFalse();
@@ -47,11 +47,11 @@ public class RecursivePathsIteratorTest {
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    try (BufferedSink sink = fileSystem.sink(PathS.path("my/file"))) {
+    try (BufferedSink sink = fileSystem.sink(Path.path("my/file"))) {
       sink.write(ByteString.encodeUtf8("abc"));
     }
     try {
-      RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path("my/file"));
+      RecursivePathsIterator.recursivePathsIterator(fileSystem, Path.path("my/file"));
       fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -64,9 +64,9 @@ public class RecursivePathsIteratorTest {
     createFiles(fileSystem, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
     PathIterator iterator =
-        RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path("dir"));
+        RecursivePathsIterator.recursivePathsIterator(fileSystem, Path.path("dir"));
     iterator.next();
-    fileSystem.delete(PathS.path("dir/subdir"));
+    fileSystem.delete(Path.path("dir/subdir"));
 
     assertCall(iterator::next)
         .throwsException(
@@ -81,7 +81,7 @@ public class RecursivePathsIteratorTest {
     createFiles(fileSystem, rootDir, names);
 
     PathIterator iterator =
-        RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path(expectedRootDir));
+        RecursivePathsIterator.recursivePathsIterator(fileSystem, Path.path(expectedRootDir));
     List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
       created.add(iterator.next().toString());
@@ -92,7 +92,7 @@ public class RecursivePathsIteratorTest {
   private void createFiles(FileSystem fileSystem, String rootDir, List<String> names)
       throws IOException {
     for (String name : names) {
-      PathS path = PathS.path(rootDir).append(PathS.path(name));
+      Path path = Path.path(rootDir).append(Path.path(name));
       fileSystem.sink(path).close();
     }
   }

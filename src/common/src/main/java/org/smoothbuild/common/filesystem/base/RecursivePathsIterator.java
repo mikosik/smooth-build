@@ -10,12 +10,12 @@ import java.util.NoSuchElementException;
 
 public class RecursivePathsIterator implements PathIterator {
   private final FileSystem fileSystem;
-  private final PathS baseDir;
-  private final Deque<PathS> dirStack;
-  private final Deque<PathS> pathStack;
-  private PathS nextFile;
+  private final Path baseDir;
+  private final Deque<Path> dirStack;
+  private final Deque<Path> pathStack;
+  private Path nextFile;
 
-  public static PathIterator recursivePathsIterator(FileSystem fileSystem, PathS dir)
+  public static PathIterator recursivePathsIterator(FileSystem fileSystem, Path dir)
       throws IOException {
     PathState state = fileSystem.pathState(dir);
     return switch (state) {
@@ -28,19 +28,19 @@ public class RecursivePathsIterator implements PathIterator {
         }
 
         @Override
-        public PathS next() {
+        public Path next() {
           throw new NoSuchElementException();
         }
       };
     };
   }
 
-  public RecursivePathsIterator(FileSystem fileSystem, PathS baseDir) throws IOException {
+  public RecursivePathsIterator(FileSystem fileSystem, Path baseDir) throws IOException {
     this.fileSystem = fileSystem;
     this.baseDir = baseDir;
     this.dirStack = new ArrayDeque<>();
     this.pathStack = new ArrayDeque<>();
-    this.dirStack.push(PathS.root());
+    this.dirStack.push(Path.root());
     this.nextFile = fetchNextFile();
   }
 
@@ -50,18 +50,18 @@ public class RecursivePathsIterator implements PathIterator {
   }
 
   @Override
-  public PathS next() throws IOException {
+  public Path next() throws IOException {
     checkState(hasNext());
-    PathS result = nextFile;
+    Path result = nextFile;
     nextFile = fetchNextFile();
     return result;
   }
 
-  private PathS fetchNextFile() throws IOException {
+  private Path fetchNextFile() throws IOException {
     while (!pathStack.isEmpty() || !dirStack.isEmpty()) {
       if (pathStack.isEmpty()) {
         var path = dirStack.remove();
-        for (PathS name : fileSystem.files(baseDir.append(path))) {
+        for (Path name : fileSystem.files(baseDir.append(path))) {
           pathStack.push(path.append(name));
         }
       } else {
