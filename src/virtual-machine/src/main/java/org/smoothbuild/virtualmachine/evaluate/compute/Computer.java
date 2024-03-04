@@ -19,9 +19,9 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.evaluate.Sandbox;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.wire.Sandbox;
 
 /**
  * This class is thread-safe.

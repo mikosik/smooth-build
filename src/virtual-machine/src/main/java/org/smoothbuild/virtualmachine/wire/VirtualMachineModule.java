@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine;
+package org.smoothbuild.virtualmachine.wire;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -7,7 +7,6 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
-import org.smoothbuild.virtualmachine.evaluate.BytecodeDb;
 
 public class VirtualMachineModule extends AbstractModule {
   @Override

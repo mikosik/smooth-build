@@ -6,7 +6,7 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.layout.InstallationHashes;
-import org.smoothbuild.virtualmachine.evaluate.Sandbox;
+import org.smoothbuild.virtualmachine.wire.Sandbox;
 
 public class SandboxHashModule extends AbstractModule {
   @Provides

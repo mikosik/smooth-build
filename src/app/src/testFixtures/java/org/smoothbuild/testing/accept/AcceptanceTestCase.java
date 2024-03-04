@@ -37,9 +37,9 @@ import org.smoothbuild.layout.ProjectSpaceModule;
 import org.smoothbuild.layout.SmoothSpace;
 import org.smoothbuild.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.virtualmachine.VirtualMachineModule;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
 public class AcceptanceTestCase extends TestingVirtualMachine {
   private Injector injector;
