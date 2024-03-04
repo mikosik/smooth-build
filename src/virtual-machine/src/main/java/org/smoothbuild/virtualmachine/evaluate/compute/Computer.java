@@ -19,7 +19,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.evaluate.SandboxHash;
+import org.smoothbuild.virtualmachine.evaluate.Sandbox;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
@@ -34,14 +34,14 @@ public class Computer {
 
   @Inject
   public Computer(
-      @SandboxHash Hash sandboxHash,
+      @Sandbox Hash sandboxHash,
       Provider<Container> containerProvider,
       ComputationCache diskCache) {
     this(sandboxHash, containerProvider, diskCache, new ConcurrentHashMap<>());
   }
 
   public Computer(
-      @SandboxHash Hash sandboxHash,
+      @Sandbox Hash sandboxHash,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
       ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache) {
