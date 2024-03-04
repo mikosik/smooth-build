@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import java.nio.file.Path;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.filesystem.base.Space;
 
 public class DiskFileSystemModule extends AbstractModule {
   private final Map<Space, Path> spaceToPath;

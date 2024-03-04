@@ -1,6 +1,4 @@
-package org.smoothbuild.common.filesystem.space;
-
-import org.smoothbuild.common.filesystem.base.Path;
+package org.smoothbuild.common.filesystem.base;
 
 /**
  * This class is immutable.

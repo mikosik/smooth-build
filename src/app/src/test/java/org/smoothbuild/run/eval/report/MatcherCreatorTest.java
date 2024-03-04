@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.filesystem.space.Space;
+import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.layout.SmoothSpace;

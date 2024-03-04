@@ -1,20 +1,19 @@
-package org.smoothbuild.common.filesystem.space;
+package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
-import static org.smoothbuild.common.filesystem.space.FullPath.fullPath;
 import static org.smoothbuild.common.testing.TestingSpace.space;
 
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class FileResolverTest {

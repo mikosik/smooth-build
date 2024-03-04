@@ -6,7 +6,7 @@ import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.mo
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.space.FullPath;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
 public class VisibilityTest extends TestingExpressionS {

@@ -8,8 +8,8 @@ import static org.smoothbuild.common.log.Try.success;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import org.smoothbuild.common.filesystem.space.FileResolver;
-import org.smoothbuild.common.filesystem.space.FullPath;
+import org.smoothbuild.common.filesystem.base.FileResolver;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;
 
