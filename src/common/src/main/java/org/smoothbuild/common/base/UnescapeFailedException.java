@@ -1,4 +1,4 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
 public class UnescapeFailedException extends RuntimeException {
   public static UnescapeFailedException missingEscapeCodeException(int charIndex) {

@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;

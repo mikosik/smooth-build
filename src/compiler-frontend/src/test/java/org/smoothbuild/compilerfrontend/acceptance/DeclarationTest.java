@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;

@@ -1,12 +1,12 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.Strings.escaped;
-import static org.smoothbuild.common.Strings.indent;
-import static org.smoothbuild.common.Strings.limitedWithEllipsis;
-import static org.smoothbuild.common.Strings.unescaped;
-import static org.smoothbuild.common.Strings.unlines;
-import static org.smoothbuild.common.UnescapeFailedException.illegalEscapeSeqException;
+import static org.smoothbuild.common.base.Strings.escaped;
+import static org.smoothbuild.common.base.Strings.indent;
+import static org.smoothbuild.common.base.Strings.limitedWithEllipsis;
+import static org.smoothbuild.common.base.Strings.unescaped;
+import static org.smoothbuild.common.base.Strings.unlines;
+import static org.smoothbuild.common.base.UnescapeFailedException.illegalEscapeSeqException;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.collect.ImmutableMap;

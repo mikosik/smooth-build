@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 
 public class DecodeIllegalCategoryException extends DecodeExprException {

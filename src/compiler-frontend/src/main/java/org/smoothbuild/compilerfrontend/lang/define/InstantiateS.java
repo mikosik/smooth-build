@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;

@@ -3,7 +3,7 @@ package org.smoothbuild.run.eval.report;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;

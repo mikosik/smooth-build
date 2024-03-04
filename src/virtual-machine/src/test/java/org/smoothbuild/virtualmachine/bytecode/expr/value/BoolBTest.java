@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;

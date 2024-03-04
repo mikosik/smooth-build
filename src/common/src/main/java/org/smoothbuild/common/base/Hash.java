@@ -1,4 +1,4 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
 import static okio.Okio.blackhole;
 import static okio.Okio.buffer;

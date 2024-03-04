@@ -1,8 +1,8 @@
 package org.smoothbuild.virtualmachine.bytecode.type;
 
 import java.util.Objects;
-import org.smoothbuild.common.Hash;
-import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;

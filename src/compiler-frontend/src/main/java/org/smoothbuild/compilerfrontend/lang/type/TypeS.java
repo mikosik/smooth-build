@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.compilerfrontend.lang.define.ItemSigS;
 
 /**

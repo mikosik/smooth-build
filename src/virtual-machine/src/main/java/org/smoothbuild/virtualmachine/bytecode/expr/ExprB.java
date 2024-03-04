@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChai
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 
 import java.util.Objects;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;

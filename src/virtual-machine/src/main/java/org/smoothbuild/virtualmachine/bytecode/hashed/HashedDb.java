@@ -16,7 +16,7 @@ import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import okio.BufferedSink;
 import okio.BufferedSource;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;

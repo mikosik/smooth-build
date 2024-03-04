@@ -1,7 +1,7 @@
 package org.smoothbuild.common.concurrent;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 
 import java.util.ArrayList;
 import java.util.List;

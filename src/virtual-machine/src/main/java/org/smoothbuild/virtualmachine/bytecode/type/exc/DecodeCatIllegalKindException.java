@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 
 public class DecodeCatIllegalKindException extends DecodeCatException {
   public DecodeCatIllegalKindException(Hash hash, byte marker) {

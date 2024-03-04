@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerbackend;
 
-import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import org.smoothbuild.common.collect.Map;

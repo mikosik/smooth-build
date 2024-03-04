@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootExc
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class DecodeExprRootExceptionTest extends TestingVirtualMachine {

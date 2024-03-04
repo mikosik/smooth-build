@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;

@@ -5,7 +5,7 @@ import static org.antlr.v4.runtime.CharStreams.fromString;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.extractSourceCode;
 import static org.smoothbuild.common.Antlr.markingLine;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 
 import java.util.BitSet;
 import org.antlr.v4.runtime.ANTLRErrorListener;

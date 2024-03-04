@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.function.Consumer;

@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP.emptyScope;
 
-import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.Logger;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.TryFunction;

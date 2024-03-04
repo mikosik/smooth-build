@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.ArrayList;

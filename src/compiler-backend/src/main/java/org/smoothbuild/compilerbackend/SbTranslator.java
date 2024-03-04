@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerbackend;
 
-import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
@@ -15,7 +15,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_
 import jakarta.inject.Inject;
 import java.math.BigInteger;
 import java.util.HashMap;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.List;

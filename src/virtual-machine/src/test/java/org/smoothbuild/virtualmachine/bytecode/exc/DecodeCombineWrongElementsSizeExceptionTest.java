@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.exc;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 

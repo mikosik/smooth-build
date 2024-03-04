@@ -1,4 +1,4 @@
-package org.smoothbuild.common;
+package org.smoothbuild.common.base;
 
 import static com.google.common.base.CharMatcher.noneOf;
 import static okio.ByteString.decodeHex;

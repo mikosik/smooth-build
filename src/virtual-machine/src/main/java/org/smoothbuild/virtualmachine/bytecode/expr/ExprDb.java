@@ -7,7 +7,7 @@ import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootExc
 import static org.smoothbuild.virtualmachine.bytecode.type.Validator.validateArgs;
 
 import java.math.BigInteger;
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprCatException;

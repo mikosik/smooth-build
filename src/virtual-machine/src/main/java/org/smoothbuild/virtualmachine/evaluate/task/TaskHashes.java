@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.task;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;

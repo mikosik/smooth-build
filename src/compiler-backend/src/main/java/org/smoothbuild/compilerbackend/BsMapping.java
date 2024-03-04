@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerbackend;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 

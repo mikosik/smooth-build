@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
-import org.smoothbuild.common.Hash;
+import org.smoothbuild.common.base.Hash;
 
 public class DecodeCatException extends CategoryDbException {
   public DecodeCatException(Hash hash) {

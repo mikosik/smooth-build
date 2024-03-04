@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;

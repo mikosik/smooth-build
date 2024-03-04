@@ -2,7 +2,7 @@ package org.smoothbuild.out.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
-import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
