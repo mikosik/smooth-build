@@ -11,7 +11,7 @@ import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.layout.ForSpace;
 import org.smoothbuild.virtualmachine.evaluate.BytecodeDb;
 import org.smoothbuild.virtualmachine.evaluate.ComputationDb;
-import org.smoothbuild.virtualmachine.evaluate.ProjectFs;
+import org.smoothbuild.virtualmachine.evaluate.Project;
 
 public class VirtualMachineConfigurationModule extends AbstractModule {
   @Provides
@@ -27,7 +27,7 @@ public class VirtualMachineConfigurationModule extends AbstractModule {
   }
 
   @Provides
-  @ProjectFs
+  @Project
   public FileSystem provideProjectFileSystem(@ForSpace(PROJECT) FileSystem fileSystem) {
     return fileSystem;
   }

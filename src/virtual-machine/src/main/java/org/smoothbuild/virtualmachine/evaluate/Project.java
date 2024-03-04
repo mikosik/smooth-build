@@ -10,4 +10,4 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @BindingAnnotation
-public @interface ProjectFs {}
+public @interface Project {}
