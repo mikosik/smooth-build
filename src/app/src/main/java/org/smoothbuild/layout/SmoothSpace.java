@@ -1,6 +1,6 @@
 package org.smoothbuild.layout;
 
-import org.smoothbuild.common.filesystem.space.Space;
+import org.smoothbuild.common.filesystem.base.Space;
 
 public enum SmoothSpace implements Space {
   PROJECT("prj"),

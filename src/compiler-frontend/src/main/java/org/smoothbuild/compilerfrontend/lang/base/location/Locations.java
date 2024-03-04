@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.base.location;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.common.filesystem.space.FullPath;
+import org.smoothbuild.common.filesystem.base.FullPath;
 
 public class Locations {
   public static Location commandLineLocation() {

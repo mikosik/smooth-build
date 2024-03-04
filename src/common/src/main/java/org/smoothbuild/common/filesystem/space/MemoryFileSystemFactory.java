@@ -1,6 +1,7 @@
 package org.smoothbuild.common.filesystem.space;
 
 import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 

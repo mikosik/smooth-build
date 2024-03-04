@@ -1,4 +1,4 @@
-package org.smoothbuild.common.filesystem.space;
+package org.smoothbuild.common.filesystem.base;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 import okio.BufferedSource;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathState;
 
 /**
  * This class is thread-safe.

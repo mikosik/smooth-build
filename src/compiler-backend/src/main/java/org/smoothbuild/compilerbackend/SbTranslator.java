@@ -22,7 +22,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.filesystem.space.FullPath;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.FileLocation;
 import org.smoothbuild.compilerfrontend.lang.base.location.Located;

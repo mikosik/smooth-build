@@ -2,12 +2,12 @@ package org.smoothbuild.layout;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.filesystem.space.FullPath.fullPath;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.space.FullPath;
 
 public class Layout {
   public static final Path SMOOTH_DIR = path(".smooth");

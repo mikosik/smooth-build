@@ -1,6 +1,6 @@
 package org.smoothbuild.common.testing;
 
-import org.smoothbuild.common.filesystem.space.Space;
+import org.smoothbuild.common.filesystem.base.Space;
 
 public class TestingSpace {
   public static Space space(String name) {

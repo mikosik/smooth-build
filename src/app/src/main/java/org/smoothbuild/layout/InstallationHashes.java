@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.space.FileResolver;
-import org.smoothbuild.common.filesystem.space.FullPath;
+import org.smoothbuild.common.filesystem.base.FileResolver;
+import org.smoothbuild.common.filesystem.base.FullPath;
 
 public class InstallationHashes {
   private final FileResolver fileResolver;

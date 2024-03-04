@@ -1,4 +1,4 @@
-package org.smoothbuild.common.filesystem.space;
+package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.filesystem.base.Path.path;

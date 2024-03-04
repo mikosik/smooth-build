@@ -4,7 +4,7 @@ import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.multibindings.MapBinder;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.space.Space;
+import org.smoothbuild.common.filesystem.base.Space;
 
 public class SpaceUtils {
   public static void addMapBindingForSpaceFileSystem(Binder binder, SmoothSpace space) {
