@@ -22,7 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.evaluate.ComputationCacheFs;
+import org.smoothbuild.virtualmachine.evaluate.ComputationDb;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 
 /**
@@ -35,7 +35,7 @@ public class ComputationCache {
 
   @Inject
   public ComputationCache(
-      @ComputationCacheFs FileSystem fileSystem, ExprDb exprDb, BytecodeF bytecodeF) {
+      @ComputationDb FileSystem fileSystem, ExprDb exprDb, BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
     this.exprDb = exprDb;
     this.bytecodeF = bytecodeF;
