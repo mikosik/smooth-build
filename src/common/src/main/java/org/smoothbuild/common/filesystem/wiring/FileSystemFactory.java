@@ -1,4 +1,4 @@
-package org.smoothbuild.common.filesystem.space;
+package org.smoothbuild.common.filesystem.wiring;
 
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Space;

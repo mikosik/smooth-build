@@ -27,7 +27,7 @@ import org.smoothbuild.VirtualMachineConfigurationModule;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.space.MemoryFileSystemModule;
+import org.smoothbuild.common.filesystem.wiring.MemoryFileSystemModule;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.tuple.Tuple2;

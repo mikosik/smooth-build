@@ -18,7 +18,7 @@ import org.smoothbuild.SandboxHashModule;
 import org.smoothbuild.VirtualMachineConfigurationModule;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Space;
-import org.smoothbuild.common.filesystem.space.DiskFileSystemModule;
+import org.smoothbuild.common.filesystem.wiring.DiskFileSystemModule;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.layout.BinarySpaceModule;
 import org.smoothbuild.layout.ProjectSpaceModule;

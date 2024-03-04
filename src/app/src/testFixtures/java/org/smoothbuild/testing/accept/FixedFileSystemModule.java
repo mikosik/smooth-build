@@ -5,7 +5,7 @@ import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 
 import com.google.inject.AbstractModule;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.space.FileSystemFactory;
+import org.smoothbuild.common.filesystem.wiring.FileSystemFactory;
 
 public class FixedFileSystemModule extends AbstractModule {
   private final FileSystem prjFileSystem;

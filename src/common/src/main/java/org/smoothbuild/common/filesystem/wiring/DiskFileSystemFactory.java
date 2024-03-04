@@ -1,4 +1,4 @@
-package org.smoothbuild.common.filesystem.space;
+package org.smoothbuild.common.filesystem.wiring;
 
 import jakarta.inject.Inject;
 import java.nio.file.Path;

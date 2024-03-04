@@ -1,4 +1,4 @@
-package org.smoothbuild.common.filesystem.space;
+package org.smoothbuild.common.filesystem.wiring;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;

@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.space.FileSystemFactory;
+import org.smoothbuild.common.filesystem.wiring.FileSystemFactory;
 
 public class ProjectSpaceModule extends AbstractModule {
   @Override
