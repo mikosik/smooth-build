@@ -28,7 +28,7 @@ import org.smoothbuild.compilerfrontend.parse.TranslateAp;
 public class FrontendCompilerStep {
 
   public static Step<Tuple0, ScopeS> createFrontendCompilerStep(List<FullPath> modules) {
-    var step = Step.tryStep(LoadInternalModuleMembers.class);
+    var step = tryStep(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
       step = step.append(fullPath)
           .then(stepFactory(new FrontendCompilerStepFactory()).named(fullPath.toString()));
@@ -59,7 +59,7 @@ public class FrontendCompilerStep {
           .append(scopeS)
           .then(tryStep(InferTypes.class))
           .append(scopeS)
-          .then(Step.tryStep(ConvertPs.class))
+          .then(tryStep(ConvertPs.class))
           .then(tryStep((ModuleS m) -> success(ScopeS.scopeS(scopeS, m.members()))));
     }
   }
