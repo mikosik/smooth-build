@@ -17,8 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
@@ -39,7 +39,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.CategoryDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.VarCB;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
@@ -127,8 +127,8 @@ public class ExprDb {
     return newPick(pickable, index);
   }
 
-  public VarB varB(TypeB evaluationType, IntB index) throws BytecodeException {
-    return newVar(evaluationType, index);
+  public ReferenceB referenceB(TypeB evaluationType, IntB index) throws BytecodeException {
+    return newReference(evaluationType, index);
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
@@ -327,8 +327,8 @@ public class ExprDb {
     }
   }
 
-  private VarB newVar(TypeB evaluationType, IntB index) throws BytecodeException {
-    VarCB type = categoryDb.var(evaluationType);
+  private ReferenceB newReference(TypeB evaluationType, IntB index) throws BytecodeException {
+    ReferenceCB type = categoryDb.reference(evaluationType);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }

@@ -54,12 +54,12 @@ import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.compute.ResultSource;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
+import org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException;
+import org.smoothbuild.virtualmachine.evaluate.execute.ReferenceInlinerB;
 import org.smoothbuild.virtualmachine.evaluate.execute.SchedulerB;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
-import org.smoothbuild.virtualmachine.evaluate.execute.VarOutOfBoundsException;
-import org.smoothbuild.virtualmachine.evaluate.execute.VarReducerB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
@@ -117,7 +117,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
           throws Exception {
         var innerLambda = lambdaB(list(arrayTB(boolTB())), intB(7));
         var outerLambda =
-            lambdaB(list(arrayTB(boolTB())), callB(innerLambda, varB(arrayTB(boolTB()), 0)));
+            lambdaB(list(arrayTB(boolTB())), callB(innerLambda, referenceB(arrayTB(boolTB()), 0)));
         var call = callB(outerLambda, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
@@ -129,7 +129,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
       @Test
       public void task_for_func_arg_that_is_used_twice_is_executed_only_once() throws Exception {
         var arrayT = arrayTB(intTB());
-        var lambdaB = lambdaB(list(arrayT), combineB(varB(arrayT, 0), varB(arrayT, 0)));
+        var lambdaB = lambdaB(list(arrayT), combineB(referenceB(arrayT, 0), referenceB(arrayT, 0)));
         var call = callB(lambdaB, orderB(intB(7)));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
@@ -218,7 +218,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
         public void lambda_passed_as_argument() throws Exception {
           var paramFunc = lambdaB(intB(7));
           var paramFuncT = paramFunc.evaluationType();
-          var outerLambda = lambdaB(list(paramFuncT), callB(varB(paramFuncT, 0)));
+          var outerLambda = lambdaB(list(paramFuncT), callB(referenceB(paramFuncT, 0)));
           var call = callB(outerLambda, paramFunc);
           assertThat(evaluate(call)).isEqualTo(intB(7));
         }
@@ -233,7 +233,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
 
         @Test
         public void lambda_returning_param_of_enclosing_lambda() throws Exception {
-          var innerLambda = lambdaB(varB(intTB(), 0));
+          var innerLambda = lambdaB(referenceB(intTB(), 0));
           var outerLambda = lambdaB(list(intTB()), innerLambda);
           var callToOuter = callB(outerLambda, intB(17));
           var callToInnerReturnedByOuter = callB(callToOuter);
@@ -243,9 +243,9 @@ public class EvaluatorBTest extends TestingVirtualMachine {
         @Test
         public void lambda_returning_value_from_environment_that_references_another_environment()
             throws Exception {
-          var innerLambda = lambdaB(varB(intTB(), 0));
+          var innerLambda = lambdaB(referenceB(intTB(), 0));
           var middleLambda = lambdaB(list(intTB()), innerLambda);
-          var outerLambda = lambdaB(list(intTB()), callB(middleLambda, varB(intTB(), 0)));
+          var outerLambda = lambdaB(list(intTB()), callB(middleLambda, referenceB(intTB(), 0)));
           var middleReturnedByOuter = callB(outerLambda, intB(17));
           assertThat(evaluate(callB(middleReturnedByOuter))).isEqualTo(intB(17));
         }
@@ -268,7 +268,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
         public void map_func() throws Exception {
           var s = intTB();
           var r = tupleTB(s);
-          var lambda = lambdaB(funcTB(s, r), combineB(varB(s, 0)));
+          var lambda = lambdaB(funcTB(s, r), combineB(referenceB(s, 0)));
           var mapFunc = mapFuncB(r, s);
           var map = callB(mapFunc, arrayB(intB(1), intB(2)), lambda);
           assertThat(evaluate(map)).isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
@@ -296,7 +296,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var nativeFuncT = nativeFuncB.evaluationType();
-          var outerLambda = lambdaB(list(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
+          var outerLambda = lambdaB(list(nativeFuncT), callB(referenceB(nativeFuncT, 0), intB(7)));
           var call = callB(outerLambda, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call)).isEqualTo(intB(7));
         }
@@ -370,7 +370,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
       class _reference {
         @Test
         public void var_referencing_func_param() throws Exception {
-          var lambdaB = lambdaB(list(intTB()), varB(intTB(), 0));
+          var lambdaB = lambdaB(list(intTB()), referenceB(intTB(), 0));
           var callB = callB(lambdaB, intB(7));
           assertThat(evaluate(callB)).isEqualTo(intB(7));
         }
@@ -378,7 +378,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
         @Test
         public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
-          var innerLambda = lambdaB(list(), varB(intTB(), 0));
+          var innerLambda = lambdaB(list(), referenceB(intTB(), 0));
           var outerLambda = lambdaB(list(intTB()), callB(innerLambda));
           assertThat(evaluate(callB(outerLambda, intB(7)))).isEqualTo(intB(7));
         }
@@ -386,7 +386,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
         @Test
         public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
-          var innerLambdaB = lambdaB(list(intTB()), varB(intTB(), 1));
+          var innerLambdaB = lambdaB(list(intTB()), referenceB(intTB(), 1));
           var outerLambdaB = lambdaB(list(intTB()), innerLambdaB);
           var callOuter = callB(outerLambdaB, intB(7));
           var callInner = callB(callOuter, intB(8));
@@ -396,18 +396,19 @@ public class EvaluatorBTest extends TestingVirtualMachine {
 
         @Test
         public void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
-          var lambdaB = lambdaB(list(intTB()), varB(intTB(), 2));
+          var lambdaB = lambdaB(list(intTB()), referenceB(intTB(), 2));
           var callB = callB(lambdaB, intB(7));
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(evaluatorB(taskReporter), callB);
-          verify(taskReporter).reportEvaluationException(any(VarOutOfBoundsException.class));
+          verify(taskReporter)
+              .reportEvaluationException(any(ReferenceIndexOutOfBoundsException.class));
         }
 
         @Test
         public void
             reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
                 throws Exception {
-          var lambdaB = lambdaB(list(blobTB()), varB(intTB(), 0));
+          var lambdaB = lambdaB(list(blobTB()), referenceB(intTB(), 0));
           var callB = callB(lambdaB, blobB());
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(evaluatorB(taskReporter), callB);
@@ -746,8 +747,8 @@ public class EvaluatorBTest extends TestingVirtualMachine {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingSchedulerB(
-        TaskExecutor taskExecutor, BytecodeF bytecodeF, VarReducerB varReducerB) {
-      super(taskExecutor, bytecodeF, varReducerB);
+        TaskExecutor taskExecutor, BytecodeF bytecodeF, ReferenceInlinerB referenceInlinerB) {
+      super(taskExecutor, bytecodeF, referenceInlinerB);
     }
 
     @Override

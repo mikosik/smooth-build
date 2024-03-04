@@ -25,8 +25,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
@@ -134,8 +134,8 @@ public class BytecodeF {
     return exprDb.pick(pickable, index);
   }
 
-  public VarB var(TypeB evaluationType, BigInteger index) throws BytecodeException {
-    return exprDb.varB(evaluationType, exprDb.int_(index));
+  public ReferenceB var(TypeB evaluationType, BigInteger index) throws BytecodeException {
+    return exprDb.referenceB(evaluationType, exprDb.int_(index));
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {

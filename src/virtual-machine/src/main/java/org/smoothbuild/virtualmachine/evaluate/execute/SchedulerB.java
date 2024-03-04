@@ -17,8 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OperB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
@@ -40,13 +40,14 @@ import org.smoothbuild.virtualmachine.evaluate.task.Task;
 public class SchedulerB {
   private final TaskExecutor taskExecutor;
   private final BytecodeF bytecodeF;
-  private final VarReducerB varReducerB;
+  private final ReferenceInlinerB referenceInlinerB;
 
   @Inject
-  public SchedulerB(TaskExecutor taskExecutor, BytecodeF bytecodeF, VarReducerB varReducerB) {
+  public SchedulerB(
+      TaskExecutor taskExecutor, BytecodeF bytecodeF, ReferenceInlinerB referenceInlinerB) {
     this.taskExecutor = taskExecutor;
     this.bytecodeF = bytecodeF;
-    this.varReducerB = varReducerB;
+    this.referenceInlinerB = referenceInlinerB;
   }
 
   public void terminate() {
@@ -85,11 +86,11 @@ public class SchedulerB {
     switch (job.exprB()) {
       case CallB call -> new CallScheduler(job, call).scheduleCall();
       case CombineB combine -> scheduleOperTask(job, combine, CombineTask::new);
-      case LambdaB lambda -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
+      case LambdaB lambda -> scheduleConstTask(job, (ValueB) referenceInlinerB.inline(job));
       case ValueB value -> scheduleConstTask(job, value);
       case OrderB order -> scheduleOperTask(job, order, OrderTask::new);
       case PickB pick -> scheduleOperTask(job, pick, PickTask::new);
-      case VarB var -> scheduleVarB(job, var);
+      case ReferenceB var -> scheduleVarB(job, var);
       case SelectB select -> scheduleOperTask(job, select, SelectTask::new);
         // `default` is needed because ExprB is not sealed because it is in different package
         // than its subclasses and code is not modularized.
@@ -210,15 +211,15 @@ public class SchedulerB {
     scheduleJobTask(job, operTask, subExprJobs);
   }
 
-  private void scheduleVarB(Job job, VarB varB) throws BytecodeException {
-    int index = varB.index().toJavaBigInteger().intValue();
+  private void scheduleVarB(Job job, ReferenceB referenceB) throws BytecodeException {
+    int index = referenceB.index().toJavaBigInteger().intValue();
     var referencedJob = job.environment().get(index);
     var jobEvaluationType = referencedJob.exprB().evaluationType();
-    if (jobEvaluationType.equals(varB.evaluationType())) {
+    if (jobEvaluationType.equals(referenceB.evaluationType())) {
       scheduleJobEvaluation(referencedJob, job.promisedValue());
     } else {
       throw new RuntimeException("environment(%d) evaluationType is %s but expected %s."
-          .formatted(index, jobEvaluationType.q(), varB.evaluationType().q()));
+          .formatted(index, jobEvaluationType.q(), referenceB.evaluationType().q()));
     }
   }
 

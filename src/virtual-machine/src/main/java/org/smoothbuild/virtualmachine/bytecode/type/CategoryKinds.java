@@ -14,16 +14,16 @@ import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.NativeFuncKind
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.OrderKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.PickKindB;
+import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.ReferenceKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.SelectKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.StringKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.TupleKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.VarKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.CallCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.CombineCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.OrderCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.PickCB;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.SelectCB;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.VarCB;
 
 public class CategoryKinds {
   public static final CategoryKindB BLOB = new BlobKindB();
@@ -42,6 +42,6 @@ public class CategoryKinds {
   public static final OperKindB<CombineCB> COMBINE = new CombineKindB();
   public static final OperKindB<OrderCB> ORDER = new OrderKindB();
   public static final OperKindB<PickCB> PICK = new PickKindB();
-  public static final OperKindB<VarCB> VAR = new VarKindB();
+  public static final OperKindB<ReferenceCB> REFERENCE = new ReferenceKindB();
   public static final OperKindB<SelectCB> SELECT = new SelectKindB();
 }

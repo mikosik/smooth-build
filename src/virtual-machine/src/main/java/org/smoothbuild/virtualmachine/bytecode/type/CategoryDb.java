@@ -21,10 +21,10 @@ import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.MAP_FUN
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.PICK;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.REFERENCE;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.STRING;
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.TUPLE;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.VAR;
 import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
@@ -63,8 +63,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.oper.CombineCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.OperCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.OrderCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.PickCB;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.SelectCB;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.VarCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BlobTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BoolTB;
@@ -203,8 +203,8 @@ public class CategoryDb {
     return newOper(PICK, evaluationType);
   }
 
-  public VarCB var(TypeB evaluationType) throws CategoryDbException {
-    return newOper(VAR, evaluationType);
+  public ReferenceCB reference(TypeB evaluationType) throws CategoryDbException {
+    return newOper(REFERENCE, evaluationType);
   }
 
   public SelectCB select(TypeB evaluationType) throws CategoryDbException {

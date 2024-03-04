@@ -30,8 +30,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
@@ -56,8 +56,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.oper.CallCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.CombineCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.OrderCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.PickCB;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.SelectCB;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.VarCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BlobTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BoolTB;
@@ -78,11 +78,11 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.ResultSource;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
+import org.smoothbuild.virtualmachine.evaluate.execute.ReferenceInlinerB;
 import org.smoothbuild.virtualmachine.evaluate.execute.SchedulerB;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
-import org.smoothbuild.virtualmachine.evaluate.execute.VarReducerB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
@@ -138,8 +138,8 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return new SchedulerB(taskExecutor, bytecodeF(), varReducerB());
   }
 
-  public VarReducerB varReducerB() {
-    return new VarReducerB(bytecodeF());
+  public ReferenceInlinerB varReducerB() {
+    return new ReferenceInlinerB(bytecodeF());
   }
 
   public SchedulerB schedulerB(int threadCount) {
@@ -464,12 +464,12 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return categoryDb().pick(evaluationType);
   }
 
-  public VarCB varCB() throws BytecodeException {
+  public ReferenceCB varCB() throws BytecodeException {
     return varCB(intTB());
   }
 
-  public VarCB varCB(TypeB evaluationType) throws BytecodeException {
-    return categoryDb().var(evaluationType);
+  public ReferenceCB varCB(TypeB evaluationType) throws BytecodeException {
+    return categoryDb().reference(evaluationType);
   }
 
   public SelectCB selectCB() throws BytecodeException {
@@ -594,7 +594,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public LambdaB idFuncB() throws BytecodeException {
-    return lambdaB(list(intTB()), varB(intTB(), 0));
+    return lambdaB(list(intTB()), referenceB(intTB(), 0));
   }
 
   public LambdaB returnAbcFuncB() throws BytecodeException {
@@ -768,12 +768,12 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return exprDb().pick(array, index);
   }
 
-  public VarB varB(int index) throws BytecodeException {
-    return varB(intTB(), index);
+  public ReferenceB referenceB(int index) throws BytecodeException {
+    return referenceB(intTB(), index);
   }
 
-  public VarB varB(TypeB evaluationType, int index) throws BytecodeException {
-    return exprDb().varB(evaluationType, intB(index));
+  public ReferenceB referenceB(TypeB evaluationType, int index) throws BytecodeException {
+    return exprDb().referenceB(evaluationType, intB(index));
   }
 
   public SelectB selectB() throws BytecodeException {

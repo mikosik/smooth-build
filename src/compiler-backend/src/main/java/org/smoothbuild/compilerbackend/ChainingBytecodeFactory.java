@@ -13,8 +13,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.Helpers;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
@@ -91,7 +91,7 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeF.tuple(items));
   }
 
-  public VarB var(TypeB evaluationType, BigInteger index) throws SbTranslatorException {
+  public ReferenceB var(TypeB evaluationType, BigInteger index) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeF.var(evaluationType, index));
   }
 

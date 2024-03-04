@@ -10,13 +10,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
 
 /**
- * Variable that references bound value using De Bruijn indexing with zero-based numbering.
+ * References bound value using De Bruijn indexing with zero-based numbering.
  * <a href="https://en.wikipedia.org/wiki/De_Bruijn_index">De Bruijn index article</a> in wikipedia.
  * <p>
  * This class is thread-safe.
  */
-public class VarB extends OperB {
-  public VarB(MerkleRoot merkleRoot, ExprDb exprDb) {
+public class ReferenceB extends OperB {
+  public ReferenceB(MerkleRoot merkleRoot, ExprDb exprDb) {
     super(merkleRoot, exprDb);
   }
 

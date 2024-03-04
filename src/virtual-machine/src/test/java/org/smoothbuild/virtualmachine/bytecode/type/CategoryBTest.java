@@ -18,8 +18,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.VarB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
@@ -95,7 +95,7 @@ public class CategoryBTest extends TestingVirtualMachine {
         args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
         args(f -> f.pick(f.int_()), "PICK:Int"),
         args(f -> f.select(f.int_()), "SELECT:Int"),
-        args(f -> f.var(f.int_()), "VAR:Int"));
+        args(f -> f.reference(f.int_()), "VAR:Int"));
   }
 
   @Nested
@@ -286,7 +286,7 @@ public class CategoryBTest extends TestingVirtualMachine {
         arguments(test.orderCB(), OrderB.class),
         arguments(test.combineCB(test.intTB(), test.stringTB()), CombineB.class),
         arguments(test.pickCB(), PickB.class),
-        arguments(test.varCB(test.intTB()), VarB.class),
+        arguments(test.varCB(test.intTB()), ReferenceB.class),
         arguments(test.selectCB(test.intTB()), SelectB.class));
   }
 

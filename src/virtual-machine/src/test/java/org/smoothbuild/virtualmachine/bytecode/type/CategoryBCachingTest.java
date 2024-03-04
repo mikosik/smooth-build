@@ -44,7 +44,7 @@ public class CategoryBCachingTest extends TestingVirtualMachine {
         categoryDb -> categoryDb.mapFunc(categoryDb.int_(), categoryDb.string()),
         categoryDb -> categoryDb.order(categoryDb.array(categoryDb.int_())),
         categoryDb -> categoryDb.pick(categoryDb.int_()),
-        categoryDb -> categoryDb.var(categoryDb.int_()),
+        categoryDb -> categoryDb.reference(categoryDb.int_()),
         categoryDb -> categoryDb.select(categoryDb.int_()),
         categoryDb -> categoryDb.array(categoryDb.blob()),
         categoryDb -> categoryDb.array(categoryDb.bool()),
