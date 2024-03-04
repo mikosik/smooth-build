@@ -3,11 +3,12 @@ package org.smoothbuild.testing.accept;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.writeFile;
 import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULES;
@@ -15,7 +16,7 @@ import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULE_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.layout.SmoothSpace.STANDARD_LIBRARY;
 import static org.smoothbuild.layout.SpaceUtils.forSpace;
-import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.run.EvaluateStep.evaluateStep;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -36,7 +37,6 @@ import org.smoothbuild.layout.ProjectSpaceModule;
 import org.smoothbuild.layout.SmoothSpace;
 import org.smoothbuild.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.run.EvaluateStepFactory;
 import org.smoothbuild.virtualmachine.VirtualMachineModule;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -71,8 +71,7 @@ public class AcceptanceTestCase extends TestingVirtualMachine {
   }
 
   protected void evaluate(String... names) {
-    var steps =
-        frontendCompilerStep().append(list(names)).then(stepFactory(new EvaluateStepFactory()));
+    var steps = evaluateStep(listOfAll(asList(names)));
     var reporter = injector.getInstance(Reporter.class);
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
