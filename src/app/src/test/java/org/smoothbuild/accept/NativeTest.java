@@ -36,26 +36,26 @@ public class NativeTest extends AcceptanceTestCase {
     class _value {
       @Test
       public void without_body_is_not_legal() throws Exception {
-        createUserNativeJar(ReturnAbc.class);
-        createUserModule(format(
+        var userModule = format(
             """
-          @Native("%s")
-          String illegalValue;
-          """,
-            ReturnAbc.class.getCanonicalName()));
+                @Native("%s")
+                String illegalValue;
+                """,
+            ReturnAbc.class.getCanonicalName());
+        createUserModule(userModule, ReturnAbc.class);
         evaluate("result");
         assertThat(logs()).contains(userError(1, "Value cannot have @Native annotation."));
       }
 
       @Test
       public void with_body_is_not_legal() throws Exception {
-        createUserNativeJar(ReturnAbc.class);
-        createUserModule(format(
+        var userModule = format(
             """
-          @Native("%s")
-          String illegalValue = "abc";
-          """,
-            ReturnAbc.class.getCanonicalName()));
+                @Native("%s")
+                String illegalValue = "abc";
+                """,
+            ReturnAbc.class.getCanonicalName());
+        createUserModule(userModule, ReturnAbc.class);
         evaluate("result");
         assertThat(logs()).contains(userError(1, "Value cannot have @Native annotation."));
       }
@@ -65,14 +65,14 @@ public class NativeTest extends AcceptanceTestCase {
     class _func {
       @Test
       public void can_return_passed_arg() throws Exception {
-        createUserNativeJar(StringIdentity.class);
-        createUserModule(format(
+        var userModule = format(
             """
-            @Native("%s")
-            String stringIdentity(String string);
-            result = stringIdentity("abc");
-            """,
-            StringIdentity.class.getCanonicalName()));
+                @Native("%s")
+                String stringIdentity(String string);
+                result = stringIdentity("abc");
+                """,
+            StringIdentity.class.getCanonicalName());
+        createUserModule(userModule, StringIdentity.class);
         evaluate("result");
         assertThat(artifact()).isEqualTo(stringB("abc"));
       }
@@ -86,19 +86,20 @@ public class NativeTest extends AcceptanceTestCase {
             result = myFunc();
             """);
         evaluate("result");
-        assertThat(logs()).contains(userFatal(1, "Error persisting native jar '{prj}/build.jar'."));
+        assertThat(logs())
+            .contains(userFatal(1, "Error persisting native jar '{module-space}/userModule.jar'."));
       }
 
       @Test
       public void exception_from_native_is_reported_as_fatal() throws Exception {
-        createUserNativeJar(ThrowException.class);
-        createUserModule(format(
+        var userModule = format(
             """
-            @Native("%s")
-            A throwException();
-            Int result = throwException();
-            """,
-            ThrowException.class.getCanonicalName()));
+                @Native("%s")
+                A throwException();
+                Int result = throwException();
+                """,
+            ThrowException.class.getCanonicalName());
+        createUserModule(userModule, ThrowException.class);
         evaluate("result");
         assertThat(logs().size()).isEqualTo(1);
         var log = logs().get(0);
@@ -110,14 +111,14 @@ public class NativeTest extends AcceptanceTestCase {
 
       @Test
       public void fatal_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
-        createUserNativeJar(ThrowRandomException.class);
-        createUserModule(format(
+        var userModule = format(
             """
-            @Native("%s")
-            String throwRandomException();
-            result = throwRandomException();
-            """,
-            ThrowRandomException.class.getCanonicalName()));
+                @Native("%s")
+                String throwRandomException();
+                result = throwRandomException();
+                """,
+            ThrowRandomException.class.getCanonicalName());
+        createUserModule(userModule, ThrowRandomException.class);
 
         evaluate("result");
         assertLogsContainFailure();
@@ -133,30 +134,29 @@ public class NativeTest extends AcceptanceTestCase {
 
       @Test
       public void error_reported_is_logged() throws Exception {
-        createUserNativeJar(ReportFixedError.class);
-        createUserModule(format(
+        var userModule = format(
             """
-            @Native("%s")
-            A reportFixedError();
-            Int result = reportFixedError();
-            """,
-            ReportFixedError.class.getCanonicalName()));
+                @Native("%s")
+                A reportFixedError();
+                Int result = reportFixedError();
+                """,
+            ReportFixedError.class.getCanonicalName());
+        createUserModule(userModule, ReportFixedError.class);
         evaluate("result");
         assertThat(logs()).containsExactly(error("some error message"));
       }
 
       @Test
       public void func_with_illegal_impl_causes_error() throws Exception {
-        var clazz = MissingMethod.class;
-        createUserNativeJar(clazz);
-        String className = clazz.getCanonicalName();
-        createUserModule(format(
+        String className = MissingMethod.class.getCanonicalName();
+        var userModule = format(
             """
-              @Native("%s")
-              String wrongMethodName();
-              result = wrongMethodName();
-              """,
-            className));
+                @Native("%s")
+                String wrongMethodName();
+                result = wrongMethodName();
+                """,
+            className);
+        createUserModule(userModule, MissingMethod.class);
         evaluate("result");
         assertThat(logs())
             .containsExactly(methodLoadingFatal(
@@ -167,75 +167,75 @@ public class NativeTest extends AcceptanceTestCase {
       class _fatal_is_reported_when_java_method_returns {
         @Test
         public void null_without_logging_error() throws Exception {
-          createUserNativeJar(ReturnNull.class);
           String className = ReturnNull.class.getCanonicalName();
-          createUserModule(format(
+          var userModule = format(
               """
-            @Native("%s")
-            String returnNull();
-            result = returnNull();
-            """,
-              className));
+                  @Native("%s")
+                  String returnNull();
+                  result = returnNull();
+                  """,
+              className);
+          createUserModule(userModule, ReturnNull.class);
           evaluate("result");
           assertThat(logs()).containsExactly(faultyNullReturnedFatal());
         }
 
         @Test
         public void null_and_logs_only_warning() throws Exception {
-          createUserNativeJar(ReportWarningAndReturnNull.class);
-          createUserModule(format(
+          var userModule = format(
               """
-            @Native("%s")
-            String reportWarning();
-            result = reportWarning();
-            """,
-              ReportWarningAndReturnNull.class.getCanonicalName()));
+                  @Native("%s")
+                  String reportWarning();
+                  result = reportWarning();
+                  """,
+              ReportWarningAndReturnNull.class.getCanonicalName());
+          createUserModule(userModule, ReportWarningAndReturnNull.class);
           evaluate("result");
           assertThat(logs()).contains(faultyNullReturnedFatal());
         }
 
         @Test
         public void non_null_and_logs_error() throws Exception {
-          createUserNativeJar(ReportErrorAndReturnNonNull.class);
-          createUserModule(format(
+          var userModule = format(
               """
-            @Native("%s")
-            String reportErrorAndReturnValue();
-            result = reportErrorAndReturnValue();
-            """,
-              ReportErrorAndReturnNonNull.class.getCanonicalName()));
+                  @Native("%s")
+                  String reportErrorAndReturnValue();
+                  result = reportErrorAndReturnValue();
+                  """,
+              ReportErrorAndReturnNonNull.class.getCanonicalName());
+          createUserModule(userModule, ReportErrorAndReturnNonNull.class);
           evaluate("result");
           assertThat(logs()).contains(nonNullValueAndError());
         }
 
         @Test
         public void object_of_wrong_type() throws Exception {
-          createUserNativeJar(BrokenIdentity.class);
-          createUserModule(format(
+          var userModule = format(
               """
-            @Native("%s")
-            A brokenIdentity(A value);
-            Int result = brokenIdentity(7);
-            """,
-              BrokenIdentity.class.getCanonicalName()));
+                  @Native("%s")
+                  A brokenIdentity(A value);
+                  Int result = brokenIdentity(7);
+                  """,
+              BrokenIdentity.class.getCanonicalName());
+          createUserModule(userModule, BrokenIdentity.class);
           evaluate("result");
           assertThat(logs()).containsExactly(faultyTypeOfReturnedObject("Int", "String"));
         }
 
         @Test
         public void struct_of_wrong_type() throws Exception {
-          createUserNativeJar(ReturnStringStruct.class);
-          createUserModule(format(
+          var userModule = format(
               """
-            Person(
-              String firstName,
-              String lastName,
-            )
-            @Native("%s")
-            Person returnStringStruct();
-            result = returnStringStruct();
-            """,
-              ReturnStringStruct.class.getCanonicalName()));
+                  Person(
+                    String firstName,
+                    String lastName,
+                  )
+                  @Native("%s")
+                  Person returnStringStruct();
+                  result = returnStringStruct();
+                  """,
+              ReturnStringStruct.class.getCanonicalName());
+          createUserModule(userModule, ReturnStringStruct.class);
           evaluate("result");
           assertThat(logs())
               .containsExactly(faultyTypeOfReturnedObject("{String,String}", "{String}"));
@@ -243,28 +243,28 @@ public class NativeTest extends AcceptanceTestCase {
 
         @Test
         public void array_of_wrong_type() throws Exception {
-          createUserNativeJar(EmptyStringArray.class);
-          createUserModule(format(
+          var userModule = format(
               """
-            @Native("%s")
-            [Blob] emptyStringArray();
-            result = emptyStringArray();
-            """,
-              EmptyStringArray.class.getCanonicalName()));
+                  @Native("%s")
+                  [Blob] emptyStringArray();
+                  result = emptyStringArray();
+                  """,
+              EmptyStringArray.class.getCanonicalName());
+          createUserModule(userModule, EmptyStringArray.class);
           evaluate("result");
           assertThat(logs()).containsExactly(faultyTypeOfReturnedObject("[Blob]", "[String]"));
         }
 
         @Test
         public void array_with_added_elem_of_wrong_type() throws Exception {
-          createUserNativeJar(AddElementOfWrongTypeToArray.class);
-          createUserModule(format(
+          var userModule = format(
               """
-            @Native("%s")
-            [Blob] addElementOfWrongTypeToArray();
-            result = addElementOfWrongTypeToArray();
-            """,
-              AddElementOfWrongTypeToArray.class.getCanonicalName()));
+                  @Native("%s")
+                  [Blob] addElementOfWrongTypeToArray();
+                  result = addElementOfWrongTypeToArray();
+                  """,
+              AddElementOfWrongTypeToArray.class.getCanonicalName());
+          createUserModule(userModule, AddElementOfWrongTypeToArray.class);
           evaluate("result");
           String message = logs().get(0).message();
           assertThat(message)
@@ -281,65 +281,66 @@ public class NativeTest extends AcceptanceTestCase {
   class _bytecode {
     @Test
     public void func_call_can_be_evaluated() throws Exception {
-      createUserNativeJar(ReturnIdFunc.class);
-      createUserModule(format(
+      var userModule = format(
           """
-            @Bytecode("%s")
-            A myId(A a);
-            result = myId(77);
-            """,
-          ReturnIdFunc.class.getCanonicalName()));
+              @Bytecode("%s")
+              A myId(A a);
+              result = myId(77);
+              """,
+          ReturnIdFunc.class.getCanonicalName());
+      createUserModule(userModule, ReturnIdFunc.class);
       evaluate("result");
       assertThat(artifact()).isEqualTo(intB(77));
     }
 
     @Test
     public void func_with_illegal_impl_causes_fatal() throws Exception {
-      Class<?> clazz = NonPublicMethod.class;
-      createUserNativeJar(clazz);
-      createUserModule(format(
+      var userModule = format(
           """
-            @Bytecode("%s")
-            Int brokenFunc();
-            result = brokenFunc();
-            """,
-          clazz.getCanonicalName()));
+              @Bytecode("%s")
+              Int brokenFunc();
+              result = brokenFunc();
+              """,
+          NonPublicMethod.class.getCanonicalName());
+      createUserModule(userModule, NonPublicMethod.class);
       evaluate("result");
       assertThat(logs())
-          .containsExactly(fatal("{prj}/build.smooth:1: Error loading bytecode for `brokenFunc`"
-              + " using provider specified as `" + clazz.getCanonicalName()
-              + "`: Providing method is not public."));
+          .containsExactly(userFatal(
+              1,
+              "Error loading bytecode for `brokenFunc`"
+                  + " using provider specified as `" + NonPublicMethod.class.getCanonicalName()
+                  + "`: Providing method is not public."));
     }
 
     @Test
     public void value_can_be_evaluated() throws Exception {
-      Class<?> clazz = ReturnAbc.class;
-      createUserNativeJar(clazz);
-      createUserModule(format(
+      var userModule = format(
           """
-            @Bytecode("%s")
-            String result;
-            """,
-          clazz.getCanonicalName()));
+              @Bytecode("%s")
+              String result;
+              """,
+          ReturnAbc.class.getCanonicalName());
+      createUserModule(userModule, ReturnAbc.class);
       evaluate("result");
       assertThat(artifact()).isEqualTo(stringB("abc"));
     }
 
     @Test
     public void value_with_illegal_impl_causes_fatal() throws Exception {
-      Class<?> clazz = NonPublicMethod.class;
-      createUserNativeJar(clazz);
-      createUserModule(format(
+      var userModule = format(
           """
-            @Bytecode("%s")
-            Int result;
-            """,
-          clazz.getCanonicalName()));
+              @Bytecode("%s")
+              Int result;
+              """,
+          NonPublicMethod.class.getCanonicalName());
+      createUserModule(userModule, NonPublicMethod.class);
       evaluate("result");
       assertThat(logs())
-          .containsExactly(fatal("{prj}/build.smooth:1: Error loading bytecode for `result` using "
-              + "provider specified as `" + NonPublicMethod.class.getCanonicalName()
-              + "`: Providing method is not public."));
+          .containsExactly(userFatal(
+              1,
+              "Error loading bytecode for `result` using "
+                  + "provider specified as `" + NonPublicMethod.class.getCanonicalName()
+                  + "`: Providing method is not public."));
     }
   }
 

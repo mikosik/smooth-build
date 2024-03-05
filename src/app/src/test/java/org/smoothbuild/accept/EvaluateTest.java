@@ -140,37 +140,37 @@ public class EvaluateTest extends AcceptanceTestCase {
         @Test
         public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
             throws Exception {
-          createUserNativeJar(ThrowException.class);
-          createUserModule(
+          var userModule =
               """
-            @Native("impl")
-            A throwException();
-            result = ((String notUsedParameter) -> "abc")(throwException());
-            """);
+              @Native("impl")
+              A throwException();
+              result = ((String notUsedParameter) -> "abc")(throwException());
+              """;
+          createUserModule(userModule, ThrowException.class);
           evaluate("result");
           assertThat(artifact()).isEqualTo(stringB("abc"));
         }
 
         @Test
         public void func_passed_as_argument() throws Exception {
-          createUserNativeJar(ThrowException.class);
-          createUserModule(
+          var userModule =
               """
-            A invokeProducer(()->A producer) = producer();
-            result = invokeProducer(() -> "abc");
-            """);
+              A invokeProducer(()->A producer) = producer();
+              result = invokeProducer(() -> "abc");
+              """;
+          createUserModule(userModule, ThrowException.class);
           evaluate("result");
           assertThat(artifact()).isEqualTo(stringB("abc"));
         }
 
         @Test
         public void func_returned_by_other_func() throws Exception {
-          createUserNativeJar(ThrowException.class);
-          createUserModule(
+          var userModule =
               """
-            ()->String createProducer() = () -> "abc";
-            result = createProducer()();
-            """);
+              ()->String createProducer() = () -> "abc";
+              result = createProducer()();
+              """;
+          createUserModule(userModule, ThrowException.class);
           evaluate("result");
           assertThat(artifact()).isEqualTo(stringB("abc"));
         }
@@ -214,40 +214,40 @@ public class EvaluateTest extends AcceptanceTestCase {
         @Test
         public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
             throws Exception {
-          createUserNativeJar(ThrowException.class);
-          createUserModule(
+          var userModule =
               """
-            @Native("impl")
-            A throwException();
-            func(String notUsedParameter) = "abc";
-            result = func(throwException());
-            """);
+              @Native("impl")
+              A throwException();
+              func(String notUsedParameter) = "abc";
+              result = func(throwException());
+              """;
+          createUserModule(userModule, ThrowException.class);
           evaluate("result");
           assertThat(artifact()).isEqualTo(stringB("abc"));
         }
 
         @Test
         public void func_passed_as_argument() throws Exception {
-          createUserNativeJar(ThrowException.class);
-          createUserModule(
+          var userModule =
               """
-            String returnAbc() = "abc";
-            A invokeProducer(()->A producer) = producer();
-            result = invokeProducer(returnAbc);
-            """);
+              String returnAbc() = "abc";
+              A invokeProducer(()->A producer) = producer();
+              result = invokeProducer(returnAbc);
+              """;
+          createUserModule(userModule, ThrowException.class);
           evaluate("result");
           assertThat(artifact()).isEqualTo(stringB("abc"));
         }
 
         @Test
         public void func_returned_by_other_func() throws Exception {
-          createUserNativeJar(ThrowException.class);
-          createUserModule(
+          var userModule =
               """
-            String returnAbc() = "abc";
-            ()->String createProducer() = returnAbc;
-            result = createProducer()();
-            """);
+              String returnAbc() = "abc";
+              ()->String createProducer() = returnAbc;
+              result = createProducer()();
+              """;
+          createUserModule(userModule, ThrowException.class);
           evaluate("result");
           assertThat(artifact()).isEqualTo(stringB("abc"));
         }
@@ -295,15 +295,15 @@ public class EvaluateTest extends AcceptanceTestCase {
 
           @Test
           public void is_not_evaluated_when_not_needed() throws Exception {
-            createUserNativeJar(ThrowException.class);
-            createUserModule(format(
+            var userModule = format(
                 """
-          @Native("%s")
-          A throwException();
-          func(String withDefault = throwException()) = withDefault;
-          result = func("def");
-          """,
-                ThrowException.class.getCanonicalName()));
+                    @Native("%s")
+                    A throwException();
+                    func(String withDefault = throwException()) = withDefault;
+                    result = func("def");
+                    """,
+                ThrowException.class.getCanonicalName());
+            createUserModule(userModule, ThrowException.class);
             evaluate("result");
             assertThat(artifact()).isEqualTo(stringB("def"));
           }
@@ -313,44 +313,44 @@ public class EvaluateTest extends AcceptanceTestCase {
         class _in_native_func {
           @Test
           public void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
-            createUserNativeJar(StringIdentity.class);
-            createUserModule(format(
+            var userModule = format(
                 """
-            @Native("%s")
-            String stringIdentity(String value = "abc");
-            result = stringIdentity();
-            """,
-                StringIdentity.class.getCanonicalName()));
+                    @Native("%s")
+                    String stringIdentity(String value = "abc");
+                    result = stringIdentity();
+                    """,
+                StringIdentity.class.getCanonicalName());
+            createUserModule(userModule, StringIdentity.class);
             evaluate("result");
             assertThat(artifact()).isEqualTo(stringB("abc"));
           }
 
           @Test
           public void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
-            createUserNativeJar(StringIdentity.class);
-            createUserModule(format(
+            var userModule = format(
                 """
-            @Native("%s")
-            String stringIdentity(String value = "abc");
-            result = stringIdentity("def");
-            """,
-                StringIdentity.class.getCanonicalName()));
+                    @Native("%s")
+                    String stringIdentity(String value = "abc");
+                    result = stringIdentity("def");
+                    """,
+                StringIdentity.class.getCanonicalName());
+            createUserModule(userModule, StringIdentity.class);
             evaluate("result");
             assertThat(artifact()).isEqualTo(stringB("def"));
           }
 
           @Test
           public void is_not_evaluated_when_not_needed() throws Exception {
-            createUserNativeJar(StringIdentity.class, ThrowException.class);
-            createUserModule(format(
+            var userModule = format(
                 """
-            @Native("%s")
-            String stringIdentity(String value = throwException());
-            @Native("%s")
-            A throwException();
-            result = stringIdentity("def");
-            """,
-                StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName()));
+                    @Native("%s")
+                    String stringIdentity(String value = throwException());
+                    @Native("%s")
+                    A throwException();
+                    result = stringIdentity("def");
+                    """,
+                StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName());
+            createUserModule(userModule, StringIdentity.class, ThrowException.class);
             evaluate("result");
             assertThat(artifact()).isEqualTo(stringB("def"));
           }

@@ -11,8 +11,6 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.testing.TestingSpace.space;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.define.ItemS.toTypes;
@@ -35,7 +33,6 @@ import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
-import org.smoothbuild.common.log.Log;
 import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ExplicitTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ExprP;
@@ -838,18 +835,6 @@ public class TestingExpressionS {
 
   public static FullPath fullPath(String path) {
     return new FullPath(PROJECT_SPACE, path(path));
-  }
-
-  public static Log userFatal(int line, String message) {
-    return fatal(userFileMessage(line, message));
-  }
-
-  public static Log userError(int line, String message) {
-    return error(userFileMessage(line, message));
-  }
-
-  private static String userFileMessage(int line, String message) {
-    return DEFAULT_MODULE_FILE_PATH + ":" + line + ": " + message;
   }
 
   public static SynchronizedFileSystem synchronizedMemoryFileSystem() {

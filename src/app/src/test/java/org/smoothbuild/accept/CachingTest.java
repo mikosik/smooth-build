@@ -13,14 +13,14 @@ public class CachingTest extends AcceptanceTestCase {
   class _result_from_eval_which_is_ {
     @Test
     public void pure_func_result_is_cached_on_disk() throws Exception {
-      createUserNativeJar(Random.class);
-      createUserModule(format(
+      var userModule = format(
           """
-            @Native("%s")
-            String cachedRandom();
-            result = cachedRandom();
-            """,
-          Random.class.getCanonicalName()));
+              @Native("%s")
+              String cachedRandom();
+              result = cachedRandom();
+              """,
+          Random.class.getCanonicalName());
+      createUserModule(userModule, Random.class);
       evaluate("result");
       var resultFromFirstRun = artifact();
       restartSmoothWithSameFileSystems();
@@ -32,29 +32,29 @@ public class CachingTest extends AcceptanceTestCase {
 
     @Test
     public void impure_func_result_is_cached_in_single_build() throws Exception {
-      createUserNativeJar(Random.class);
-      createUserModule(format(
+      var userModule = format(
           """
-            @NativeImpure("%s")
-            String cachedInMemoryRandom();
-            resultA = cachedInMemoryRandom();
-            resultB = cachedInMemoryRandom();
-            """,
-          Random.class.getCanonicalName()));
+              @NativeImpure("%s")
+              String cachedInMemoryRandom();
+              resultA = cachedInMemoryRandom();
+              resultB = cachedInMemoryRandom();
+              """,
+          Random.class.getCanonicalName());
+      createUserModule(userModule, Random.class);
       evaluate("resultA", "resultB");
       assertThat(artifact(0)).isEqualTo(artifact(1));
     }
 
     @Test
     public void impure_func_result_is_not_cached_on_disk() throws Exception {
-      createUserNativeJar(Random.class);
-      createUserModule(format(
+      var userModule = format(
           """
-            @NativeImpure("%s")
-            String cachedInMemoryRandom();
-            result = cachedInMemoryRandom();
-            """,
-          Random.class.getCanonicalName()));
+              @NativeImpure("%s")
+              String cachedInMemoryRandom();
+              result = cachedInMemoryRandom();
+              """,
+          Random.class.getCanonicalName());
+      createUserModule(userModule, Random.class);
       evaluate("result");
       var resultFromFirstRun = artifact();
       restartSmoothWithSameFileSystems();
@@ -67,8 +67,7 @@ public class CachingTest extends AcceptanceTestCase {
 
   @Test
   public void native_func_with_same_pure_native_share_cache_results() throws Exception {
-    createUserNativeJar(Random.class);
-    createUserModule(format(
+    var userModule = format(
         """
             @Native("%s")
             String first();
@@ -77,7 +76,8 @@ public class CachingTest extends AcceptanceTestCase {
             random1 = first();
             random2 = second();
             """,
-        Random.class.getCanonicalName(), Random.class.getCanonicalName()));
+        Random.class.getCanonicalName(), Random.class.getCanonicalName());
+    createUserModule(userModule, Random.class);
     evaluate("random1", "random2");
     var random1 = artifact(0);
     var random2 = artifact(1);
@@ -87,8 +87,7 @@ public class CachingTest extends AcceptanceTestCase {
 
   @Test
   public void native_func_with_same_impure_native_share_cache_results() throws Exception {
-    createUserNativeJar(Random.class);
-    createUserModule(format(
+    var userModule = format(
         """
             @NativeImpure("%s")
             String first();
@@ -97,7 +96,8 @@ public class CachingTest extends AcceptanceTestCase {
             random1 = first();
             random2 = second();
             """,
-        Random.class.getCanonicalName(), Random.class.getCanonicalName()));
+        Random.class.getCanonicalName(), Random.class.getCanonicalName());
+    createUserModule(userModule, Random.class);
     evaluate("random1", "random2");
     var random1 = artifact(0);
     var random2 = artifact(1);
@@ -108,8 +108,7 @@ public class CachingTest extends AcceptanceTestCase {
   @Test
   public void native_func_with_same_native_but_different_pureness_dont_share_cache_results()
       throws Exception {
-    createUserNativeJar(Random.class);
-    createUserModule(format(
+    var userModule = format(
         """
             @NativeImpure("%s")
             String first();
@@ -118,7 +117,8 @@ public class CachingTest extends AcceptanceTestCase {
             random1 = first();
             random2 = second();
             """,
-        Random.class.getCanonicalName(), Random.class.getCanonicalName()));
+        Random.class.getCanonicalName(), Random.class.getCanonicalName());
+    createUserModule(userModule, Random.class);
 
     evaluate("random1", "random2");
     var random1 = artifact(0);
