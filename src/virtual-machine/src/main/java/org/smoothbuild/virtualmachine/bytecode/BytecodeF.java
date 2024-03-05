@@ -65,7 +65,7 @@ public class BytecodeF {
     this.exprDb = exprDb;
     this.categoryDb = categoryDb;
     this.storedLogTypeMemoizer = memoizer(() -> createStoredLogType(categoryDb));
-    this.fileTypeMemoizer = memoizer(() -> createFileT(categoryDb));
+    this.fileTypeMemoizer = memoizer(() -> createFileType(categoryDb));
   }
 
   // Objects
@@ -156,49 +156,49 @@ public class BytecodeF {
 
   // Types
 
-  public ArrayTB arrayT(TypeB elemT) throws BytecodeException {
-    return categoryDb.array(elemT);
+  public ArrayTB arrayType(TypeB elementType) throws BytecodeException {
+    return categoryDb.array(elementType);
   }
 
-  public BlobTB blobT() throws BytecodeException {
+  public BlobTB blobType() throws BytecodeException {
     return categoryDb.blob();
   }
 
-  public BoolTB boolT() throws BytecodeException {
+  public BoolTB boolType() throws BytecodeException {
     return categoryDb.bool();
   }
 
-  public FuncTB funcT(List<TypeB> paramTs, TypeB resultT) throws BytecodeException {
-    return categoryDb.funcT(listOfAll(paramTs), resultT);
+  public FuncTB funcType(List<TypeB> paramTypes, TypeB resultType) throws BytecodeException {
+    return categoryDb.funcT(listOfAll(paramTypes), resultType);
   }
 
-  public FuncTB funcT(TupleTB paramTs, TypeB resultT) throws BytecodeException {
-    return categoryDb.funcT(paramTs, resultT);
+  public FuncTB funcType(TupleTB paramTypes, TypeB resultType) throws BytecodeException {
+    return categoryDb.funcT(paramTypes, resultType);
   }
 
-  public IntTB intT() throws BytecodeException {
+  public IntTB intType() throws BytecodeException {
     return categoryDb.int_();
   }
 
-  public TupleTB storedLogT() throws BytecodeException {
+  public TupleTB storedLogType() throws BytecodeException {
     return storedLogTypeMemoizer.apply();
   }
 
-  public StringTB stringT() throws BytecodeException {
+  public StringTB stringType() throws BytecodeException {
     return categoryDb.string();
   }
 
-  public TupleTB tupleT(TypeB... itemTs) throws BytecodeException {
+  public TupleTB tupleType(TypeB... itemTs) throws BytecodeException {
     return categoryDb.tuple(itemTs);
   }
 
-  public TupleTB tupleT(List<TypeB> itemTs) throws BytecodeException {
+  public TupleTB tupleType(List<TypeB> itemTs) throws BytecodeException {
     return categoryDb.tuple(itemTs);
   }
 
   // other values and its types
 
-  public TupleTB fileT() throws BytecodeException {
+  public TupleTB fileType() throws BytecodeException {
     return fileTypeMemoizer.apply();
   }
 
@@ -229,7 +229,7 @@ public class BytecodeF {
     return categoryDb.tuple(stringType, stringType);
   }
 
-  private static TupleTB createFileT(CategoryDb categoryDb) throws BytecodeException {
+  private static TupleTB createFileType(CategoryDb categoryDb) throws BytecodeException {
     return categoryDb.tuple(categoryDb.blob(), categoryDb.string());
   }
 }

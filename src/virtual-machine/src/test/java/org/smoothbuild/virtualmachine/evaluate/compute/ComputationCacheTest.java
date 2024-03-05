@@ -65,7 +65,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
     var file = fileB(path("file/path"), bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(arrayB(file), messageArrayEmpty()));
-    var arrayT = arrayTB(bytecodeF().fileT());
+    var arrayT = arrayTB(bytecodeF().fileType());
 
     assertThat(((ArrayB) computationCache.read(hash, arrayT).valueB()).elements(TupleB.class))
         .containsExactly(file);
@@ -122,7 +122,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(file, messageArrayEmpty()));
 
-    assertThat(computationCache.read(hash, bytecodeF().fileT()).valueB()).isEqualTo(file);
+    assertThat(computationCache.read(hash, bytecodeF().fileType()).valueB()).isEqualTo(file);
   }
 
   @Test

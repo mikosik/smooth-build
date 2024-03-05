@@ -13,13 +13,13 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 public class ElemFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) throws BytecodeException {
     var varA = varMap.get("A");
-    var arrayParamT = f.arrayT(varA);
-    var indexParamT = f.intT();
-    var paramTs = f.tupleT(arrayParamT, indexParamT);
-    var arrayParamRef = f.reference(arrayParamT, BigInteger.ZERO);
-    var indexParamRef = f.reference(indexParamT, BigInteger.ONE);
-    var body = f.pick(arrayParamRef, indexParamRef);
-    var funcT = f.funcT(paramTs, varA);
-    return f.lambda(funcT, body);
+    var arrayParamType = f.arrayType(varA);
+    var indexParamType = f.intType();
+    var paramTypes = f.tupleType(arrayParamType, indexParamType);
+    var arrayParamReference = f.reference(arrayParamType, BigInteger.ZERO);
+    var indexParamReference = f.reference(indexParamType, BigInteger.ONE);
+    var body = f.pick(arrayParamReference, indexParamReference);
+    var funcType = f.funcType(paramTypes, varA);
+    return f.lambda(funcType, body);
   }
 }

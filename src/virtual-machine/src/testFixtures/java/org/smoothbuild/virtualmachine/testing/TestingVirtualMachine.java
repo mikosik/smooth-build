@@ -689,7 +689,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public ArrayB messageArrayEmpty() throws BytecodeException {
-    return arrayB(bytecodeF().storedLogT());
+    return arrayB(bytecodeF().storedLogType());
   }
 
   public TupleB fatalMessage() throws BytecodeException {

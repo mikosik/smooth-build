@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 public class ReturnIdFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) throws BytecodeException {
     var a = varMap.get("A");
-    var funcT = f.funcT(list(a), a);
+    var funcT = f.funcType(list(a), a);
     return f.lambda(funcT, f.reference(a, ZERO));
   }
 }

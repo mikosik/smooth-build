@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
 public class ReturnReturnAbcFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) throws BytecodeException {
-    var funcT = f.funcT(list(), f.stringT());
+    var funcT = f.funcType(list(), f.stringType());
     return f.lambda(funcT, f.string("abc"));
   }
 }

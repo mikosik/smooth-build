@@ -161,7 +161,7 @@ public class SchedulerB {
       var mappingFuncArg = args().get(1);
       var callBs = arrayB.elements(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
       var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationType()).result();
-      var orderB = bytecodeF.order(bytecodeF.arrayT(mappingFuncResultT), callBs);
+      var orderB = bytecodeF.order(bytecodeF.arrayType(mappingFuncResultT), callBs);
       scheduleJobEvaluation(newJob(orderB, callJob), callJob.promisedValue());
     }
 

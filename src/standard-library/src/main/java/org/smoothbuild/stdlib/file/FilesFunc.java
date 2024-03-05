@@ -50,7 +50,7 @@ public class FilesFunc {
   private static ArrayB readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException, BytecodeException {
     var fileArrayBuilder =
-        container.factory().arrayBuilderWithElements(container.factory().fileT());
+        container.factory().arrayBuilderWithElements(container.factory().fileType());
     var reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {
