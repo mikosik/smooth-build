@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.common.io.LockFile.lockFile;
 import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.layout.Layout.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.out.report.SystemOutReporter.printErrorToWriter;
+import static org.smoothbuild.out.report.PrintWriterReporter.printErrorToWriter;
 
 import java.io.IOException;
 import java.nio.channels.Channel;

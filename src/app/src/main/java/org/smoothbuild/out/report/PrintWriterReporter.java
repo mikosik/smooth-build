@@ -21,13 +21,13 @@ import org.smoothbuild.common.log.Log;
  * This class is thread-safe.
  */
 @Singleton
-public class SystemOutReporter implements Reporter {
+public class PrintWriterReporter implements Reporter {
   private final PrintWriter systemOut;
   private final Level logLevel;
   private final ImmutableMap<Level, AtomicInteger> counters = createCounters();
 
   @Inject
-  public SystemOutReporter(PrintWriter systemOut, Level logLevel) {
+  public PrintWriterReporter(PrintWriter systemOut, Level logLevel) {
     this.systemOut = systemOut;
     this.logLevel = logLevel;
   }

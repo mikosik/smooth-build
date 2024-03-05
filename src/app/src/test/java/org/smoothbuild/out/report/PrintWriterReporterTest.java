@@ -31,7 +31,7 @@ import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class SystemOutReporterTest extends TestingVirtualMachine {
+public class PrintWriterReporterTest extends TestingVirtualMachine {
   private static final String HEADER = "TASK NAME";
 
   @ParameterizedTest
@@ -39,7 +39,7 @@ public class SystemOutReporterTest extends TestingVirtualMachine {
   public void report_single_log_logs_log_when_it_exceeds_threshold(
       Log log, Level level, boolean logged) {
     var systemOut = mock(PrintWriter.class);
-    var reporter = new SystemOutReporter(systemOut, level);
+    var reporter = new PrintWriterReporter(systemOut, level);
     reporter.report(log);
     verify(systemOut, times(logged ? 1 : 0)).println(formatLog(log));
   }
@@ -68,7 +68,7 @@ public class SystemOutReporterTest extends TestingVirtualMachine {
   @MethodSource("filtered_logs_cases")
   public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
     var systemOut = mock(PrintWriter.class);
-    var reporter = new SystemOutReporter(systemOut, level);
+    var reporter = new PrintWriterReporter(systemOut, level);
     reporter.report(true, "header", logsWithAllLevels());
     verify(systemOut, times(1)).println(formatLogs("header", loggedLogs));
   }
@@ -84,7 +84,7 @@ public class SystemOutReporterTest extends TestingVirtualMachine {
   @Test
   void reportResult() {
     var systemOut = mock(PrintWriter.class);
-    var reporter = new SystemOutReporter(systemOut, INFO);
+    var reporter = new PrintWriterReporter(systemOut, INFO);
     reporter.reportResult("result message");
     verify(systemOut).println("result message");
   }
@@ -103,7 +103,7 @@ public class SystemOutReporterTest extends TestingVirtualMachine {
 
     private void doTestSummary(Level logLevel) {
       var systemOut = mock(PrintWriter.class);
-      var reporter = new SystemOutReporter(systemOut, logLevel);
+      var reporter = new PrintWriterReporter(systemOut, logLevel);
 
       List<Log> logs = new ArrayList<>();
       logs.add(FATAL_LOG);
@@ -131,7 +131,7 @@ public class SystemOutReporterTest extends TestingVirtualMachine {
     @Test
     public void skips_levels_with_zero_logs() {
       var systemOut = mock(PrintWriter.class);
-      var reporter = new SystemOutReporter(systemOut, INFO);
+      var reporter = new PrintWriterReporter(systemOut, INFO);
 
       List<Log> logs = new ArrayList<>();
       logs.add(FATAL_LOG);
