@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
@@ -21,12 +21,12 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  */
 public class BytecodeLoader {
   private final BytecodeMethodLoader methodLoader;
-  private final BytecodeF bytecodeF;
+  private final BytecodeFactory bytecodeFactory;
 
   @Inject
-  public BytecodeLoader(BytecodeMethodLoader methodLoader, BytecodeF bytecodeF) {
+  public BytecodeLoader(BytecodeMethodLoader methodLoader, BytecodeFactory bytecodeFactory) {
     this.methodLoader = methodLoader;
-    this.bytecodeF = bytecodeF;
+    this.bytecodeFactory = bytecodeFactory;
   }
 
   public Either<String, ExprB> load(
@@ -40,7 +40,7 @@ public class BytecodeLoader {
 
   private Either<String, ExprB> invoke(Method method, Map<String, TypeB> varMap) {
     try {
-      return right((ExprB) method.invoke(null, bytecodeF, varMap));
+      return right((ExprB) method.invoke(null, bytecodeFactory, varMap));
     } catch (IllegalAccessException e) {
       return left("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {

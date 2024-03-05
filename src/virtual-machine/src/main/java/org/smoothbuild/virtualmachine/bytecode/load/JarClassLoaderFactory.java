@@ -13,7 +13,7 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
@@ -24,17 +24,17 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
  */
 @Singleton
 public class JarClassLoaderFactory {
-  private final BytecodeF bytecodeF;
+  private final BytecodeFactory bytecodeFactory;
   private final ClassLoader parentClassLoader;
   private final Function1<BlobB, Either<String, ClassLoader>, BytecodeException> memoizer;
 
   @Inject
-  public JarClassLoaderFactory(BytecodeF bytecodeF) {
-    this(bytecodeF, getSystemClassLoader());
+  public JarClassLoaderFactory(BytecodeFactory bytecodeFactory) {
+    this(bytecodeFactory, getSystemClassLoader());
   }
 
-  public JarClassLoaderFactory(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
-    this.bytecodeF = bytecodeF;
+  public JarClassLoaderFactory(BytecodeFactory bytecodeFactory, ClassLoader parentClassLoader) {
+    this.bytecodeFactory = bytecodeFactory;
     this.parentClassLoader = parentClassLoader;
     this.memoizer = memoizer(this::newClassLoader);
   }
@@ -44,7 +44,7 @@ public class JarClassLoaderFactory {
   }
 
   private Either<String, ClassLoader> newClassLoader(BlobB jar) throws BytecodeException {
-    return unzipBlob(bytecodeF, jar, s -> true)
+    return unzipBlob(bytecodeFactory, jar, s -> true)
         .mapRight(this::newClassLoader)
         .mapLeft(error -> "Error unpacking jar with native code: " + error);
   }

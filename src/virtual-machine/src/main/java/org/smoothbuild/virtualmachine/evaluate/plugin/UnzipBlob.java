@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.function.Predicate;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
@@ -19,12 +19,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 
 public class UnzipBlob {
   public static Either<String, ArrayB> unzipBlob(
-      BytecodeF bytecodeF, BlobB blob, Predicate<String> includePredicate)
+      BytecodeFactory bytecodeFactory, BlobB blob, Predicate<String> includePredicate)
       throws BytecodeException {
-    var arrayBuilder = bytecodeF.arrayBuilderWithElements(bytecodeF.fileType());
+    var arrayBuilder = bytecodeFactory.arrayBuilderWithElements(bytecodeFactory.fileType());
     try (var source = blob.source()) {
-      var errors =
-          unzip(source, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeF, f, is)));
+      var errors = unzip(
+          source, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeFactory, f, is)));
       if (errors.isSome()) {
         return left(errors.get());
       }
@@ -34,10 +34,11 @@ public class UnzipBlob {
     return right(arrayBuilder.build());
   }
 
-  private static TupleB fileB(BytecodeF bytecodeF, String fileName, InputStream inputStream)
+  private static TupleB fileB(
+      BytecodeFactory bytecodeFactory, String fileName, InputStream inputStream)
       throws BytecodeException {
-    StringB path = bytecodeF.string(fileName);
-    BlobB content = bytecodeF.blob(sink -> sink.writeAll(source(inputStream)));
-    return bytecodeF.file(content, path);
+    StringB path = bytecodeFactory.string(fileName);
+    BlobB content = bytecodeFactory.blob(sink -> sink.writeAll(source(inputStream)));
+    return bytecodeFactory.file(content, path);
   }
 }

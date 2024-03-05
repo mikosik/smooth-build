@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.execute;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
@@ -14,11 +14,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
 
 public class ReferenceInlinerB {
-  private final BytecodeF bytecodeF;
+  private final BytecodeFactory bytecodeFactory;
 
   @Inject
-  public ReferenceInlinerB(BytecodeF bytecodeF) {
-    this.bytecodeF = bytecodeF;
+  public ReferenceInlinerB(BytecodeFactory bytecodeFactory) {
+    this.bytecodeFactory = bytecodeFactory;
   }
 
   public ExprB inline(Job job) throws BytecodeException {
@@ -53,7 +53,7 @@ public class ReferenceInlinerB {
     if (func.equals(inlinedFunc) && args.equals(inlinedArgs)) {
       return callB;
     } else {
-      return bytecodeF.call(inlinedFunc, inlinedArgs);
+      return bytecodeFactory.call(inlinedFunc, inlinedArgs);
     }
   }
 
@@ -63,7 +63,7 @@ public class ReferenceInlinerB {
     if (items.equals(rewrittenItems)) {
       return combineB;
     } else {
-      return bytecodeF.combine(rewrittenItems);
+      return bytecodeFactory.combine(rewrittenItems);
     }
   }
 
@@ -73,7 +73,7 @@ public class ReferenceInlinerB {
     if (elements.equals(rewrittenElements)) {
       return orderB;
     } else {
-      return bytecodeF.order(orderB.evaluationType(), rewrittenElements);
+      return bytecodeFactory.order(orderB.evaluationType(), rewrittenElements);
     }
   }
 
@@ -86,7 +86,7 @@ public class ReferenceInlinerB {
     if (pickable.equals(rewrittenPickable) && index.equals(rewrittenIndex)) {
       return pickB;
     } else {
-      return bytecodeF.pick(rewrittenPickable, rewrittenIndex);
+      return bytecodeFactory.pick(rewrittenPickable, rewrittenIndex);
     }
   }
 
@@ -101,7 +101,7 @@ public class ReferenceInlinerB {
     if (selectable.equals(rewrittenSelectable)) {
       return selectB;
     } else {
-      return bytecodeF.select(rewrittenSelectable, subExprsB.index());
+      return bytecodeFactory.select(rewrittenSelectable, subExprsB.index());
     }
   }
 
@@ -113,7 +113,7 @@ public class ReferenceInlinerB {
     if (body.equals(rewrittenBody)) {
       return lambdaB;
     } else {
-      return bytecodeF.lambda(funcTB, rewrittenBody);
+      return bytecodeFactory.lambda(funcTB, rewrittenBody);
     }
   }
 

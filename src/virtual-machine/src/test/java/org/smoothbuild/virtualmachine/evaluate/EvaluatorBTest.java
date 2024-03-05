@@ -39,7 +39,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
@@ -748,8 +748,10 @@ public class EvaluatorBTest extends TestingVirtualMachine {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingSchedulerB(
-        TaskExecutor taskExecutor, BytecodeF bytecodeF, ReferenceInlinerB referenceInlinerB) {
-      super(taskExecutor, bytecodeF, referenceInlinerB);
+        TaskExecutor taskExecutor,
+        BytecodeFactory bytecodeFactory,
+        ReferenceInlinerB referenceInlinerB) {
+      super(taskExecutor, bytecodeFactory, referenceInlinerB);
     }
 
     @Override

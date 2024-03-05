@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
@@ -51,8 +51,8 @@ public class BytecodeMethodLoader {
       return left("Providing method is not static.");
     }
     if (!hasBytecodeFactoryParam(method)) {
-      return left(
-          "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
+      return left("Providing method parameter is not of type "
+          + BytecodeFactory.class.getCanonicalName() + ".");
     }
     if (method.getParameterTypes().length != 2) {
       return left("Providing method parameter count is different than 2.");
@@ -65,6 +65,6 @@ public class BytecodeMethodLoader {
 
   private static boolean hasBytecodeFactoryParam(Method method) {
     Class<?>[] types = method.getParameterTypes();
-    return types.length != 0 && (types[0] == BytecodeF.class);
+    return types.length != 0 && (types[0] == BytecodeFactory.class);
   }
 }
