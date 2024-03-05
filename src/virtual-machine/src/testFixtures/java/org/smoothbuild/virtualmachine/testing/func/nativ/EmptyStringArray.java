@@ -9,7 +9,7 @@ public class EmptyStringArray {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     return nativeApi
         .factory()
-        .arrayBuilderWithElements(nativeApi.factory().stringT())
+        .arrayBuilderWithElements(nativeApi.factory().stringType())
         .build();
   }
 }

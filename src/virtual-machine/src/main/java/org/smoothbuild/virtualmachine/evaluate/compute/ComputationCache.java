@@ -67,7 +67,7 @@ public class ComputationCache {
     try (BufferedSource source = fileSystem.source(toPath(hash))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
-      var storedLogsArrayT = bytecodeF.arrayT(bytecodeF.storedLogT());
+      var storedLogsArrayT = bytecodeF.arrayType(bytecodeF.storedLogType());
       if (!storedLogs.category().equals(storedLogsArrayT)) {
         throw corruptedValueException(
             hash,

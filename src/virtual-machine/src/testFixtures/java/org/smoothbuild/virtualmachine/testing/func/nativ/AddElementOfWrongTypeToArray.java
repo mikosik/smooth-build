@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class AddElementOfWrongTypeToArray {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
     var factory = nativeApi.factory();
-    var arrayBuilder = factory.arrayBuilderWithElements(factory.blobT());
+    var arrayBuilder = factory.arrayBuilderWithElements(factory.blobType());
     var string = factory.string("abc");
     arrayBuilder.add(string);
     return arrayBuilder.build();

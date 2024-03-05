@@ -76,7 +76,7 @@ public class JavacFunc {
           nativeApi.log().warning("Param 'srcs' is empty list.");
           return nativeApi
               .factory()
-              .arrayBuilderWithElements(nativeApi.factory().fileT())
+              .arrayBuilderWithElements(nativeApi.factory().fileType())
               .build();
         }
 

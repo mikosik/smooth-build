@@ -28,7 +28,7 @@ public class FilterFilesFunc {
       return null;
     }
     ArrayBBuilder builder =
-        nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileT());
+        nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileType());
 
     for (TupleB file : files.elements(TupleB.class)) {
       if (filter.test(path(filePath(file).toJavaString()))) {

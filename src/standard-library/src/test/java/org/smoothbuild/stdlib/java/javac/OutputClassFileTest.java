@@ -19,7 +19,7 @@ public class OutputClassFileTest extends TestingVirtualMachine {
   public void open_output_stream() throws Exception {
     var nativeApi = nativeApi();
     var factory = nativeApi.factory();
-    var fileArrayBuilder = exprDb().newArrayBuilder(factory.arrayT(factory.fileT()));
+    var fileArrayBuilder = exprDb().newArrayBuilder(factory.arrayType(factory.fileType()));
     var outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi);
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);

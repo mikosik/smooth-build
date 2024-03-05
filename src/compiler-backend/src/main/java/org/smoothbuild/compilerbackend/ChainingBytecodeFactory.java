@@ -98,39 +98,39 @@ class ChainingBytecodeFactory {
   // types
 
   public ArrayTB arrayT(TypeB elemT) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeF.arrayT(elemT));
+    return invokeTranslatingBytecodeException(() -> bytecodeF.arrayType(elemT));
   }
 
   public BlobTB blobT() throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(bytecodeF::blobT);
+    return invokeTranslatingBytecodeException(bytecodeF::blobType);
   }
 
   public BoolTB boolT() throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(bytecodeF::boolT);
+    return invokeTranslatingBytecodeException(bytecodeF::boolType);
   }
 
   public FuncTB funcT(List<TypeB> paramTs, TypeB resultT) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeF.funcT(paramTs, resultT));
+    return invokeTranslatingBytecodeException(() -> bytecodeF.funcType(paramTs, resultT));
   }
 
   public FuncTB funcT(TupleTB paramTs, TypeB resultT) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeF.funcT(paramTs, resultT));
+    return invokeTranslatingBytecodeException(() -> bytecodeF.funcType(paramTs, resultT));
   }
 
   public IntTB intT() throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(bytecodeF::intT);
+    return invokeTranslatingBytecodeException(bytecodeF::intType);
   }
 
   public StringTB stringT() throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(bytecodeF::stringT);
+    return invokeTranslatingBytecodeException(bytecodeF::stringType);
   }
 
   public TupleTB tupleT(TypeB... itemTs) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeF.tupleT(itemTs));
+    return invokeTranslatingBytecodeException(() -> bytecodeF.tupleType(itemTs));
   }
 
   public TupleTB tupleT(List<TypeB> itemTs) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeF.tupleT(itemTs));
+    return invokeTranslatingBytecodeException(() -> bytecodeF.tupleType(itemTs));
   }
 
   private static <R> R invokeTranslatingBytecodeException(Function0<R, BytecodeException> function0)
