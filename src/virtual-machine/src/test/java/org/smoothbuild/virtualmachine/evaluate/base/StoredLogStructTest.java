@@ -1,13 +1,13 @@
 package org.smoothbuild.virtualmachine.evaluate.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.containsErrorOrAbove;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class MessageStructTest extends TestingVirtualMachine {
+public class StoredLogStructTest extends TestingVirtualMachine {
   private ArrayB messages;
 
   @Test

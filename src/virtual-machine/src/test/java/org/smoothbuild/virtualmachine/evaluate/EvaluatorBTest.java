@@ -48,7 +48,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct;
+import org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
@@ -475,11 +475,12 @@ public class EvaluatorBTest extends TestingVirtualMachine {
 
   private static boolean computationResultWith(
       ComputationResult result, Level level, String messageStart) {
-    ArrayB messages = result.output().messages();
+    ArrayB messages = result.output().storedLogs();
     try {
       return messages.size() == 1
-          && MessageStruct.level(messages.elements(TupleB.class).get(0)) == level
-          && MessageStruct.text(messages.elements(TupleB.class).get(0)).startsWith(messageStart);
+          && StoredLogStruct.level(messages.elements(TupleB.class).get(0)) == level
+          && StoredLogStruct.message(messages.elements(TupleB.class).get(0))
+              .startsWith(messageStart);
     } catch (BytecodeException e) {
       throw new RuntimeException(e);
     }

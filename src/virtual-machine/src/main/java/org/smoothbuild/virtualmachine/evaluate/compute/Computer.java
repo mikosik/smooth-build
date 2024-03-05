@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.containsFatal;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECUTION;
@@ -95,7 +95,7 @@ public class Computer {
 
   private static boolean outputContainsFatalMessage(Output output) throws ComputeException {
     try {
-      return containsFatal(output.messages());
+      return containsFatal(output.storedLogs());
     } catch (BytecodeException e) {
       throw computeException(e);
     }

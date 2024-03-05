@@ -23,13 +23,13 @@ public class OutputTest extends TestingVirtualMachine {
   @Test
   public void messages_returns_messages() throws Exception {
     Output output = new Output(aString(), messages());
-    assertThat(output.messages()).isEqualTo(messages());
+    assertThat(output.storedLogs()).isEqualTo(messages());
   }
 
   @Test
   public void output_created_without_messages_has_no_messages() throws Exception {
     Output output = new Output(aString(), messageArrayEmpty());
-    assertThat(output.messages()).isEqualTo(messageArrayEmpty());
+    assertThat(output.storedLogs()).isEqualTo(messageArrayEmpty());
   }
 
   @Test

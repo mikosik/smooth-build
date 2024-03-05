@@ -1,9 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.containsErrorOrAbove;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.isValidSeverity;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.severity;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.corruptedValueException;
 
@@ -43,8 +43,8 @@ public class ComputationCache {
 
   public synchronized void write(Hash hash, Output output) throws ComputeException {
     try (BufferedSink sink = fileSystem.sink(toPath(hash))) {
-      var messages = output.messages();
-      sink.write(messages.hash().toByteString());
+      var storedLogs = output.storedLogs();
+      sink.write(storedLogs.hash().toByteString());
       var valueB = output.valueB();
       if (valueB != null) {
         sink.write(valueB.hash().toByteString());
@@ -65,26 +65,26 @@ public class ComputationCache {
 
   public synchronized Output read(Hash hash, TypeB type) throws ComputeException {
     try (BufferedSource source = fileSystem.source(toPath(hash))) {
-      var messagesHash = Hash.read(source);
-      var messages = exprDb.get(messagesHash);
-      var messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
-      if (!messages.category().equals(messageArrayT)) {
+      var storedLogsHash = Hash.read(source);
+      var storedLogs = exprDb.get(storedLogsHash);
+      var storedLogsArrayT = bytecodeF.arrayT(bytecodeF.storedLogT());
+      if (!storedLogs.category().equals(storedLogsArrayT)) {
         throw corruptedValueException(
             hash,
-            "Expected " + messageArrayT.q() + " as first child of its Merkle root, but got "
-                + messages.category().q());
+            "Expected " + storedLogsArrayT.q() + " as first child of its Merkle root, but got "
+                + storedLogs.category().q());
       }
 
-      var messageArray = (ArrayB) messages;
-      for (var message : messageArray.elements(TupleB.class)) {
-        var severity = severity(message);
-        if (!isValidSeverity(severity)) {
+      var storedLogArray = (ArrayB) storedLogs;
+      for (var storedLog : storedLogArray.elements(TupleB.class)) {
+        var level = levelAsString(storedLog);
+        if (!isValidLevel(level)) {
           throw corruptedValueException(
-              hash, "One of messages has invalid severity = '" + severity + "'");
+              hash, "One of storedLogs has invalid level = '" + level + "'");
         }
       }
-      if (containsErrorOrAbove(messageArray)) {
-        return new Output(null, messageArray);
+      if (containsErrorOrAbove(storedLogArray)) {
+        return new Output(null, storedLogArray);
       } else {
         var valueHash = Hash.read(source);
         var value = exprDb.get(valueHash);
@@ -94,7 +94,7 @@ public class ComputationCache {
               "Expected value of type " + type.q() + " as second child of its Merkle root, but got "
                   + value.evaluationType().q());
         } else {
-          return new Output((ValueB) value, messageArray);
+          return new Output((ValueB) value, storedLogArray);
         }
       }
     } catch (IOException e) {

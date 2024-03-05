@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNull;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
-public record Output(ValueB valueB, ArrayB messages) {
+public record Output(ValueB valueB, ArrayB storedLogs) {
   public Output {
-    requireNonNull(messages);
+    requireNonNull(storedLogs);
   }
 }

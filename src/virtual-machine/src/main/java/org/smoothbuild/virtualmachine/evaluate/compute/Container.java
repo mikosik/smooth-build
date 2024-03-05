@@ -51,7 +51,7 @@ public class Container implements NativeApi {
   @Override
   public ArrayB messages() throws BytecodeException {
     return bytecodeF
-        .arrayBuilderWithElements(bytecodeF.messageT())
+        .arrayBuilderWithElements(bytecodeF.storedLogT())
         .addAll(messageLogger.messages)
         .build();
   }
@@ -71,24 +71,24 @@ public class Container implements NativeApi {
 
     @Override
     public void fatal(String message) throws BytecodeException {
-      messages.add(bytecodeF.fatalMessage(message));
+      messages.add(bytecodeF.fatalLog(message));
       containsErrorOrAbove = true;
     }
 
     @Override
     public void error(String message) throws BytecodeException {
-      messages.add(bytecodeF.errorMessage(message));
+      messages.add(bytecodeF.errorLog(message));
       containsErrorOrAbove = true;
     }
 
     @Override
     public void warning(String message) throws BytecodeException {
-      messages.add(bytecodeF.warningMessage(message));
+      messages.add(bytecodeF.warningLog(message));
     }
 
     @Override
     public void info(String message) throws BytecodeException {
-      messages.add(bytecodeF.infoMessage(message));
+      messages.add(bytecodeF.infoLog(message));
     }
   }
 }
