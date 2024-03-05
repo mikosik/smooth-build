@@ -16,7 +16,7 @@ public class ReportModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(Level.class).toInstance(logLevel);
-    bind(Reporter.class).to(SystemOutReporter.class);
+    bind(Reporter.class).to(PrintWriterReporter.class);
     bind(PrintWriter.class).toInstance(out);
   }
 }
