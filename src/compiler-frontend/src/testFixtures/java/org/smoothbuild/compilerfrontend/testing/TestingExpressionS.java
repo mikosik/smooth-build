@@ -9,6 +9,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.testing.TestingSpace.space;
@@ -29,7 +30,6 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
@@ -96,9 +96,8 @@ public class TestingExpressionS {
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
   static final FullPath STANDARD_LIBRARY_MODULE_FILE_PATH =
-      FullPath.fullPath(STANDARD_LIBRARY_SPACE, path("std_lib.smooth"));
-  static final FullPath DEFAULT_MODULE_FILE_PATH =
-      FullPath.fullPath(PROJECT_SPACE, path("build.smooth"));
+      fullPath(STANDARD_LIBRARY_SPACE, path("std_lib.smooth"));
+  static final FullPath DEFAULT_MODULE_FILE_PATH = fullPath(PROJECT_SPACE, path("build.smooth"));
 
   public static java.util.List<TypeS> typesToTest() {
     return nonCompositeTypes().stream()
@@ -802,7 +801,7 @@ public class TestingExpressionS {
   }
 
   public static Location location(int line) {
-    return location(fullPath(), line);
+    return location(userModuleFullPath(), line);
   }
 
   public static Location location(Space space) {
@@ -813,27 +812,19 @@ public class TestingExpressionS {
     return fileLocation(fullPath, line);
   }
 
-  public static FullPath fullPath(Space space, Path path) {
-    return FullPath.fullPath(space, path);
-  }
-
-  public static FullPath fullPath() {
-    return buildFileFullPath();
-  }
-
-  public static FullPath buildFileFullPath() {
-    return fullPath(BUILD_FILE_PATH);
+  public static FullPath userModuleFullPath() {
+    return projectPath(BUILD_FILE_PATH);
   }
 
   public static FullPath nativeFileFullPath() {
-    return buildFileFullPath().withExtension("jar");
+    return userModuleFullPath().withExtension("jar");
   }
 
   public static FullPath importedBuildFullPath() {
     return new FullPath(STANDARD_LIBRARY_SPACE, path(IMPORTED_FILE_PATH));
   }
 
-  public static FullPath fullPath(String path) {
+  public static FullPath projectPath(String path) {
     return new FullPath(PROJECT_SPACE, path(path));
   }
 

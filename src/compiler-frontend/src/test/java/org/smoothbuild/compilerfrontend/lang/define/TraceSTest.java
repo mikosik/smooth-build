@@ -22,7 +22,7 @@ public class TraceSTest extends TestingExpressionS {
   public void to_string() {
     var trace = traceS(
         "first-name",
-        location(buildFileFullPath(), 17),
+        location(userModuleFullPath(), 17),
         "second-name",
         location(importedBuildFullPath(), 19));
     assertThat(trace.toString())
