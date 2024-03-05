@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.plugin;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 
 /**
@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
  * from one thread by native funcs.
  */
 public interface NativeApi {
-  public BytecodeF factory();
+  public BytecodeFactory factory();
 
   public MessageLogger log();
 

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -51,7 +51,7 @@ public class BytecodeLoaderTest extends TestingVirtualMachine {
 
   private static Either<String, Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
     return right(clazz.getDeclaredMethod(
-        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, java.util.Map.class));
+        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeFactory.class, java.util.Map.class));
   }
 
   private Either<String, Object> loadingError(String message) {

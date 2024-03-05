@@ -54,7 +54,7 @@ import org.smoothbuild.compilerfrontend.lang.define.StringS;
 import org.smoothbuild.compilerfrontend.lang.type.StructTS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
@@ -83,13 +83,13 @@ public class SbTranslator {
 
   @Inject
   public SbTranslator(
-      BytecodeF bytecodeF,
+      BytecodeFactory bytecodeFactory,
       FilePersister filePersister,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables) {
     this(
-        new ChainingBytecodeFactory(bytecodeF),
-        new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF), map()),
+        new ChainingBytecodeFactory(bytecodeFactory),
+        new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeFactory), map()),
         filePersister,
         bytecodeLoader,
         evaluables,

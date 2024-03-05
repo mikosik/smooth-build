@@ -16,7 +16,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
@@ -31,14 +31,14 @@ import org.smoothbuild.virtualmachine.wire.ComputationDb;
 public class ComputationCache {
   private final FileSystem fileSystem;
   private final ExprDb exprDb;
-  private final BytecodeF bytecodeF;
+  private final BytecodeFactory bytecodeFactory;
 
   @Inject
   public ComputationCache(
-      @ComputationDb FileSystem fileSystem, ExprDb exprDb, BytecodeF bytecodeF) {
+      @ComputationDb FileSystem fileSystem, ExprDb exprDb, BytecodeFactory bytecodeFactory) {
     this.fileSystem = fileSystem;
     this.exprDb = exprDb;
-    this.bytecodeF = bytecodeF;
+    this.bytecodeFactory = bytecodeFactory;
   }
 
   public synchronized void write(Hash hash, Output output) throws ComputeException {
@@ -67,7 +67,7 @@ public class ComputationCache {
     try (BufferedSource source = fileSystem.source(toPath(hash))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
-      var storedLogsArrayT = bytecodeF.arrayType(bytecodeF.storedLogType());
+      var storedLogsArrayT = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());
       if (!storedLogs.category().equals(storedLogsArrayT)) {
         throw corruptedValueException(
             hash,

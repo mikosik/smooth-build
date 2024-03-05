@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
@@ -17,16 +17,18 @@ import org.smoothbuild.virtualmachine.wire.Project;
  */
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
-  private final BytecodeF bytecodeF;
+  private final BytecodeFactory bytecodeFactory;
   private final ContainerMessageLoggerImpl messageLogger;
   private final NativeMethodLoader nativeMethodLoader;
 
   @Inject
   public Container(
-      @Project FileSystem fileSystem, BytecodeF bytecodeF, NativeMethodLoader nativeMethodLoader) {
+      @Project FileSystem fileSystem,
+      BytecodeFactory bytecodeFactory,
+      NativeMethodLoader nativeMethodLoader) {
     this.fileSystem = fileSystem;
-    this.bytecodeF = bytecodeF;
-    this.messageLogger = new ContainerMessageLoggerImpl(bytecodeF);
+    this.bytecodeFactory = bytecodeFactory;
+    this.messageLogger = new ContainerMessageLoggerImpl(bytecodeFactory);
     this.nativeMethodLoader = nativeMethodLoader;
   }
 
@@ -35,8 +37,8 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public BytecodeF factory() {
-    return bytecodeF;
+  public BytecodeFactory factory() {
+    return bytecodeFactory;
   }
 
   public NativeMethodLoader nativeMethodLoader() {
@@ -50,8 +52,8 @@ public class Container implements NativeApi {
 
   @Override
   public ArrayB messages() throws BytecodeException {
-    return bytecodeF
-        .arrayBuilderWithElements(bytecodeF.storedLogType())
+    return bytecodeFactory
+        .arrayBuilderWithElements(bytecodeFactory.storedLogType())
         .addAll(messageLogger.messages)
         .build();
   }
@@ -62,33 +64,33 @@ public class Container implements NativeApi {
 
   private static class ContainerMessageLoggerImpl implements ContainerMessageLogger {
     private final List<ValueB> messages = new ArrayList<>();
-    private final BytecodeF bytecodeF;
+    private final BytecodeFactory bytecodeFactory;
     private boolean containsErrorOrAbove = false;
 
-    public ContainerMessageLoggerImpl(BytecodeF bytecodeF) {
-      this.bytecodeF = bytecodeF;
+    public ContainerMessageLoggerImpl(BytecodeFactory bytecodeFactory) {
+      this.bytecodeFactory = bytecodeFactory;
     }
 
     @Override
     public void fatal(String message) throws BytecodeException {
-      messages.add(bytecodeF.fatalLog(message));
+      messages.add(bytecodeFactory.fatalLog(message));
       containsErrorOrAbove = true;
     }
 
     @Override
     public void error(String message) throws BytecodeException {
-      messages.add(bytecodeF.errorLog(message));
+      messages.add(bytecodeFactory.errorLog(message));
       containsErrorOrAbove = true;
     }
 
     @Override
     public void warning(String message) throws BytecodeException {
-      messages.add(bytecodeF.warningLog(message));
+      messages.add(bytecodeFactory.warningLog(message));
     }
 
     @Override
     public void info(String message) throws BytecodeException {
-      messages.add(bytecodeF.infoLog(message));
+      messages.add(bytecodeFactory.infoLog(message));
     }
   }
 }

@@ -54,14 +54,14 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  * Builders returned by xxxBuilder() methods are not thread-safe.
  */
 @Singleton
-public class BytecodeF {
+public class BytecodeFactory {
   private final ExprDb exprDb;
   private final CategoryDb categoryDb;
   private final Function0<TupleTB, BytecodeException> storedLogTypeMemoizer;
   private final Function0<TupleTB, BytecodeException> fileTypeMemoizer;
 
   @Inject
-  public BytecodeF(ExprDb exprDb, CategoryDb categoryDb) {
+  public BytecodeFactory(ExprDb exprDb, CategoryDb categoryDb) {
     this.exprDb = exprDb;
     this.categoryDb = categoryDb;
     this.storedLogTypeMemoizer = memoizer(() -> createStoredLogType(categoryDb));

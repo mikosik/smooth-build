@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -76,13 +76,14 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
         WithoutBytecodeF.class.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME);
     assertLoadingCausesError(
         method,
-        "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
+        "Providing method parameter is not of type " + BytecodeFactory.class.getCanonicalName()
+            + ".");
   }
 
   @Test
   public void loading_method_with_three_params_causes_error() throws Exception {
     var method = WithThreeParams.class.getDeclaredMethod(
-        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, Map.class, Map.class);
+        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class, Map.class);
     assertLoadingCausesError(method, "Providing method parameter count is different than 2.");
   }
 
@@ -113,6 +114,6 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {
     return clazz.getDeclaredMethod(
-        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, Map.class);
+        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class);
   }
 }

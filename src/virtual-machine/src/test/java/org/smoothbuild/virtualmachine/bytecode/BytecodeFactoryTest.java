@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class BytecodeFTest extends TestingVirtualMachine {
+public class BytecodeFactoryTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test

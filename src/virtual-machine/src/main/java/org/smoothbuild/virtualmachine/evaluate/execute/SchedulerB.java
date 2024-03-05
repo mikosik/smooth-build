@@ -10,7 +10,7 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
@@ -39,14 +39,16 @@ import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class SchedulerB {
   private final TaskExecutor taskExecutor;
-  private final BytecodeF bytecodeF;
+  private final BytecodeFactory bytecodeFactory;
   private final ReferenceInlinerB referenceInlinerB;
 
   @Inject
   public SchedulerB(
-      TaskExecutor taskExecutor, BytecodeF bytecodeF, ReferenceInlinerB referenceInlinerB) {
+      TaskExecutor taskExecutor,
+      BytecodeFactory bytecodeFactory,
+      ReferenceInlinerB referenceInlinerB) {
     this.taskExecutor = taskExecutor;
-    this.bytecodeF = bytecodeF;
+    this.bytecodeFactory = bytecodeFactory;
     this.referenceInlinerB = referenceInlinerB;
   }
 
@@ -161,16 +163,16 @@ public class SchedulerB {
       var mappingFuncArg = args().get(1);
       var callBs = arrayB.elements(ValueB.class).map(e -> newCallB(mappingFuncArg, e));
       var mappingFuncResultT = ((FuncTB) mappingFuncArg.evaluationType()).result();
-      var orderB = bytecodeF.order(bytecodeF.arrayType(mappingFuncResultT), callBs);
+      var orderB = bytecodeFactory.order(bytecodeFactory.arrayType(mappingFuncResultT), callBs);
       scheduleJobEvaluation(newJob(orderB, callJob), callJob.promisedValue());
     }
 
     private ExprB newCallB(ExprB funcExprB, ValueB valueB) throws BytecodeException {
-      return bytecodeF.call(funcExprB, singleArg(valueB));
+      return bytecodeFactory.call(funcExprB, singleArg(valueB));
     }
 
     private CombineB singleArg(ValueB valueB) throws BytecodeException {
-      return bytecodeF.combine(list(valueB));
+      return bytecodeFactory.combine(list(valueB));
     }
 
     // handling NativeFunc
@@ -235,7 +237,7 @@ public class SchedulerB {
   }
 
   private TupleB toInput(List<? extends Promise<ValueB>> depResults) throws BytecodeException {
-    return bytecodeF.tuple(depResults.map(Promise::get));
+    return bytecodeFactory.tuple(depResults.map(Promise::get));
   }
 
   private Job newJob(ExprB exprB) {

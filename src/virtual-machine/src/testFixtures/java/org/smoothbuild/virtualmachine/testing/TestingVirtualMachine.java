@@ -23,7 +23,7 @@ import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
@@ -94,7 +94,7 @@ import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TestingVirtualMachine extends TestingExpressionS {
-  private BytecodeF bytecodeF;
+  private BytecodeFactory bytecodeFactory;
   private ExprDb exprDb;
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
@@ -230,11 +230,11 @@ public class TestingVirtualMachine extends TestingExpressionS {
     return new Container(hashedDbFileSystem(), bytecodeF(), nativeMethodLoader);
   }
 
-  public BytecodeF bytecodeF() {
-    if (bytecodeF == null) {
-      bytecodeF = new BytecodeF(exprDb(), categoryDb());
+  public BytecodeFactory bytecodeF() {
+    if (bytecodeFactory == null) {
+      bytecodeFactory = new BytecodeFactory(exprDb(), categoryDb());
     }
-    return bytecodeF;
+    return bytecodeFactory;
   }
 
   public CategoryDb categoryDb() {
