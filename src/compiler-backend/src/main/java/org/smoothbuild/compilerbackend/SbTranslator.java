@@ -207,7 +207,7 @@ public class SbTranslator {
     } else {
       var evaluationType = typeF.translate(itemS.type());
       var index = BigInteger.valueOf(lexicalEnvironment.indexOf(referenceS.name()));
-      return saveNalAndReturn(referenceS, bytecodeF.var(evaluationType, index));
+      return saveNalAndReturn(referenceS, bytecodeF.reference(evaluationType, index));
     }
   }
 
@@ -270,16 +270,16 @@ public class SbTranslator {
 
   private LambdaB translateConstructor(ConstructorS constructorS) throws SbTranslatorException {
     var funcTB = typeF.translate(constructorS.schema().type());
-    var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
+    var bodyB = bytecodeF.combine(createReferenceB(funcTB.params()));
     saveLoc(bodyB, constructorS);
     return bytecodeF.lambda(funcTB, bodyB);
   }
 
-  private List<ExprB> createRefsB(TupleTB paramTs) throws SbTranslatorException {
+  private List<ExprB> createReferenceB(TupleTB paramTs) throws SbTranslatorException {
     return paramTs
         .elements()
         .zipWithIndex()
-        .map(tuple -> bytecodeF.var(tuple.element1(), BigInteger.valueOf(tuple.element2())));
+        .map(tuple -> bytecodeF.reference(tuple.element1(), BigInteger.valueOf(tuple.element2())));
   }
 
   private OrderB translateOrder(OrderS orderS) throws SbTranslatorException {
