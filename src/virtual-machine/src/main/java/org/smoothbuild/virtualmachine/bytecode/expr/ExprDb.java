@@ -43,8 +43,6 @@ import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.LambdaCB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
@@ -71,31 +69,47 @@ public class ExprDb {
   }
 
   public BoolB bool(boolean value) throws BytecodeException {
-    return newBool(value);
+    var data = writeBoolData(value);
+    var boolTB = categoryDb.bool();
+    var root = newRoot(boolTB, data);
+    return boolTB.newExpr(root, this);
   }
 
   public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
     validateBodyEvaluationType(type, body);
     var cat = categoryDb.lambda(type);
-    return newLambda(cat, body);
+    var dataHash = body.hash();
+    var root = newRoot(cat, dataHash);
+    return cat.newExpr(root, this);
   }
 
   public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
     var cat = categoryDb.nativeFunc(type);
-    return newNativeFunc(cat, jar, classBinaryName, isPure);
+    var data = writeNativeFuncData(jar, classBinaryName, isPure);
+    var root = newRoot(cat, data);
+    return cat.newExpr(root, this);
   }
 
   public IntB int_(BigInteger value) throws BytecodeException {
-    return newInt(value);
+    var data = writeIntData(value);
+    var intTB = categoryDb.int_();
+    var root = newRoot(intTB, data);
+    return intTB.newExpr(root, this);
   }
 
   public StringB string(String value) throws BytecodeException {
-    return newString(value);
+    var data = writeStringData(value);
+    var stringTB = categoryDb.string();
+    var root = newRoot(stringTB, data);
+    return stringTB.newExpr(root, this);
   }
 
   public TupleB tuple(List<? extends ValueB> items) throws BytecodeException {
-    return newTuple(items);
+    var type = categoryDb.tuple(items.map(ValueB::type));
+    var data = writeTupleData(items);
+    var root = newRoot(type, data);
+    return type.newExpr(root, this);
   }
 
   // methods for creating OperB subclasses
@@ -103,37 +117,65 @@ public class ExprDb {
   public CallB call(ExprB func, CombineB args) throws BytecodeException {
     var funcTB = castEvaluationTypeToFuncTB(func);
     validateArgsInCall(funcTB, args);
-    return newCall(funcTB, func, args);
+    var callCB = categoryDb.call(funcTB.result());
+    var data = writeCallData(func, args);
+    var root = newRoot(callCB, data);
+    return callCB.newExpr(root, this);
   }
 
   public CombineB combine(List<? extends ExprB> items) throws BytecodeException {
-    return newCombine(items);
+    var evaluationType = categoryDb.tuple(items.map(ExprB::evaluationType));
+    var combineCB = categoryDb.combine(evaluationType);
+    var data = writeCombineData(items);
+    var root = newRoot(combineCB, data);
+    return combineCB.newExpr(root, this);
   }
 
   public IfFuncB ifFunc(TypeB t) throws BytecodeException {
-    return newIfFunc(t);
+    var ifFuncCB = categoryDb.ifFunc(t);
+    var root = newRoot(ifFuncCB);
+    return ifFuncCB.newExpr(root, this);
   }
 
   public MapFuncB mapFunc(TypeB r, TypeB s) throws BytecodeException {
-    return newMapFunc(r, s);
+    var mapFuncCB = categoryDb.mapFunc(r, s);
+    var root = newRoot(mapFuncCB);
+    return mapFuncCB.newExpr(root, this);
   }
 
   public OrderB order(ArrayTB evaluationType, List<? extends ExprB> elems)
       throws BytecodeException {
     validateOrderElements(evaluationType.elem(), elems);
-    return newOrder(evaluationType, elems);
+    var orderCB = categoryDb.order(evaluationType);
+    var data = writeOrderData(elems);
+    var root = newRoot(orderCB, data);
+    return orderCB.newExpr(root, this);
   }
 
   public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
-    return newPick(pickable, index);
+    var evaluationType = pickEvaluationType(pickable);
+    if (!(index.evaluationType() instanceof IntTB)) {
+      throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
+          + index.evaluationType().q() + ".");
+    }
+    var data = writePickData(pickable, index);
+    var category = categoryDb.pick(evaluationType);
+    var root = newRoot(category, data);
+    return category.newExpr(root, this);
   }
 
   public ReferenceB referenceB(TypeB evaluationType, IntB index) throws BytecodeException {
-    return newReference(evaluationType, index);
+    ReferenceCB type = categoryDb.reference(evaluationType);
+    var root = newRoot(type, index.hash());
+    return type.newExpr(root, this);
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
-    return newSelect(selectable, index);
+    var evaluationType = selectEvaluationType(selectable, index);
+    var data = writeSelectData(selectable, index);
+    var category = categoryDb.select(evaluationType);
+    var root = newRoot(category, data);
+    return category.newExpr(root, this);
   }
 
   // validators
@@ -214,7 +256,7 @@ public class ExprDb {
     return readRootChain(rootHash);
   }
 
-  // methods for creating ValueBs
+  // methods accessed by builders
 
   public ArrayB newArray(ArrayTB type, List<? extends ValueB> elems) throws BytecodeException {
     var data = writeArrayData(elems);
@@ -228,96 +270,7 @@ public class ExprDb {
     return blobTB.newExpr(root, this);
   }
 
-  private BoolB newBool(boolean value) throws BytecodeException {
-    var data = writeBoolData(value);
-    var boolTB = categoryDb.bool();
-    var root = newRoot(boolTB, data);
-    return boolTB.newExpr(root, this);
-  }
-
-  private LambdaB newLambda(LambdaCB type, ExprB body) throws BytecodeException {
-    var dataHash = body.hash();
-    var root = newRoot(type, dataHash);
-    return type.newExpr(root, this);
-  }
-
-  private IntB newInt(BigInteger value) throws BytecodeException {
-    var data = writeIntData(value);
-    var intTB = categoryDb.int_();
-    var root = newRoot(intTB, data);
-    return intTB.newExpr(root, this);
-  }
-
-  private NativeFuncB newNativeFunc(
-      NativeFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
-      throws BytecodeException {
-    var data = writeNativeFuncData(jar, classBinaryName, isPure);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
-  }
-
-  private StringB newString(String string) throws BytecodeException {
-    var data = writeStringData(string);
-    var stringTB = categoryDb.string();
-    var root = newRoot(stringTB, data);
-    return stringTB.newExpr(root, this);
-  }
-
-  private TupleB newTuple(List<? extends ValueB> items) throws BytecodeException {
-    var type = categoryDb.tuple(items.map(ValueB::type));
-    var data = writeTupleData(items);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
-  }
-
-  // methods for creating OperBs
-
-  private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws BytecodeException {
-    var callCB = categoryDb.call(funcTB.result());
-    var data = writeCallData(func, args);
-    var root = newRoot(callCB, data);
-    return callCB.newExpr(root, this);
-  }
-
-  private CombineB newCombine(List<? extends ExprB> items) throws BytecodeException {
-    var evaluationType = categoryDb.tuple(items.map(ExprB::evaluationType));
-    var combineCB = categoryDb.combine(evaluationType);
-    var data = writeCombineData(items);
-    var root = newRoot(combineCB, data);
-    return combineCB.newExpr(root, this);
-  }
-
-  private IfFuncB newIfFunc(TypeB t) throws BytecodeException {
-    var ifFuncCB = categoryDb.ifFunc(t);
-    var root = newRoot(ifFuncCB);
-    return ifFuncCB.newExpr(root, this);
-  }
-
-  private MapFuncB newMapFunc(TypeB r, TypeB s) throws BytecodeException {
-    var mapFuncCB = categoryDb.mapFunc(r, s);
-    var root = newRoot(mapFuncCB);
-    return mapFuncCB.newExpr(root, this);
-  }
-
-  private OrderB newOrder(ArrayTB evaluationType, List<? extends ExprB> elems)
-      throws BytecodeException {
-    var orderCB = categoryDb.order(evaluationType);
-    var data = writeOrderData(elems);
-    var root = newRoot(orderCB, data);
-    return orderCB.newExpr(root, this);
-  }
-
-  private PickB newPick(ExprB pickable, ExprB index) throws BytecodeException {
-    var evaluationType = pickEvaluationType(pickable);
-    if (!(index.evaluationType() instanceof IntTB)) {
-      throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
-          + index.evaluationType().q() + ".");
-    }
-    var data = writePickData(pickable, index);
-    var category = categoryDb.pick(evaluationType);
-    var root = newRoot(category, data);
-    return category.newExpr(root, this);
-  }
+  // methods for creating types
 
   private TypeB pickEvaluationType(ExprB pickable) {
     var evaluationType = pickable.evaluationType();
@@ -327,20 +280,6 @@ public class ExprDb {
       throw new IllegalArgumentException(
           "pickable.evaluationType() should be ArrayTB but is " + evaluationType.q() + ".");
     }
-  }
-
-  private ReferenceB newReference(TypeB evaluationType, IntB index) throws BytecodeException {
-    ReferenceCB type = categoryDb.reference(evaluationType);
-    var root = newRoot(type, index.hash());
-    return type.newExpr(root, this);
-  }
-
-  private SelectB newSelect(ExprB selectable, IntB index) throws BytecodeException {
-    var evaluationType = selectEvaluationType(selectable, index);
-    var data = writeSelectData(selectable, index);
-    var category = categoryDb.select(evaluationType);
-    var root = newRoot(category, data);
-    return category.newExpr(root, this);
   }
 
   private TypeB selectEvaluationType(ExprB selectable, IntB index) throws BytecodeException {
@@ -366,7 +305,7 @@ public class ExprDb {
     return new MerkleRoot(rootHash, cat, null);
   }
 
-  // methods for writing data of Expr-s
+  // methods for writing data of Operations
 
   private Hash writeCallData(ExprB func, CombineB args) throws BytecodeException {
     return writeChain(func.hash(), args.hash());
@@ -388,7 +327,7 @@ public class ExprDb {
     return writeChain(selectable.hash(), index.hash());
   }
 
-  // methods for writing data of InstB-s
+  // methods for writing data of Values
 
   private Hash writeArrayData(List<? extends ValueB> elems) throws BytecodeException {
     return writeChain(elems);
@@ -415,7 +354,7 @@ public class ExprDb {
     return writeChain(items);
   }
 
-  // hashedDb calls with exception translation
+  // hashedDb calls with exception chaining
 
   private List<Hash> readRootChain(Hash rootHash) throws ExprDbException {
     try {
