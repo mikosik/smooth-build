@@ -756,7 +756,7 @@ public class VisibilityTest extends TestingExpressionS {
               myValue = "abc";
               myValue = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myValue"));
+          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myValue"));
         }
 
         @Test
@@ -766,7 +766,7 @@ public class VisibilityTest extends TestingExpressionS {
               myFunc() = "abc";
               myFunc = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myFunc"));
+          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myFunc"));
         }
       }
     }
@@ -815,7 +815,7 @@ public class VisibilityTest extends TestingExpressionS {
               myValue = "abc";
               myValue() = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myValue"));
+          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myValue"));
         }
 
         @Test
@@ -825,7 +825,7 @@ public class VisibilityTest extends TestingExpressionS {
               myFunc() = "abc";
               myFunc() = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(fullPath(), "myFunc"));
+          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myFunc"));
         }
       }
     }
@@ -840,7 +840,7 @@ public class VisibilityTest extends TestingExpressionS {
               String param,
               String param) = "abc";
               """;
-        module(code).loadsWithError(3, alreadyDefinedIn(fullPath(), 2, "param"));
+        module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "param"));
       }
 
       @Nested
@@ -911,7 +911,7 @@ public class VisibilityTest extends TestingExpressionS {
               String param,
               String param) -> 7;
               """;
-        module(code).loadsWithError(3, alreadyDefinedIn(fullPath(), 2, "param"));
+        module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "param"));
       }
 
       @Nested
@@ -1002,7 +1002,8 @@ public class VisibilityTest extends TestingExpressionS {
               OtherModuleStruct()
               OtherModuleStruct()
               """;
-          module(code).loadsWith(err(2, alreadyDefinedIn(fullPath(), "OtherModuleStruct")));
+          module(code)
+              .loadsWith(err(2, alreadyDefinedIn(userModuleFullPath(), "OtherModuleStruct")));
         }
       }
     }
@@ -1018,7 +1019,7 @@ public class VisibilityTest extends TestingExpressionS {
               String field
             )
             """;
-        module(code).loadsWithError(3, alreadyDefinedIn(fullPath(), 2, "field"));
+        module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "field"));
       }
 
       @Nested

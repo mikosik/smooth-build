@@ -9,6 +9,7 @@ import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.tryStep;
