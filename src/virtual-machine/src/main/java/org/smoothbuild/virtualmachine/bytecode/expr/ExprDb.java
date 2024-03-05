@@ -94,7 +94,7 @@ public class ExprDb {
     return newString(value);
   }
 
-  public TupleB tuple(List<ValueB> items) throws BytecodeException {
+  public TupleB tuple(List<? extends ValueB> items) throws BytecodeException {
     return newTuple(items);
   }
 
@@ -106,7 +106,7 @@ public class ExprDb {
     return newCall(funcTB, func, args);
   }
 
-  public CombineB combine(List<ExprB> items) throws BytecodeException {
+  public CombineB combine(List<? extends ExprB> items) throws BytecodeException {
     return newCombine(items);
   }
 
@@ -118,7 +118,8 @@ public class ExprDb {
     return newMapFunc(r, s);
   }
 
-  public OrderB order(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
+  public OrderB order(ArrayTB evaluationType, List<? extends ExprB> elems)
+      throws BytecodeException {
     validateOrderElements(evaluationType.elem(), elems);
     return newOrder(evaluationType, elems);
   }
@@ -145,7 +146,7 @@ public class ExprDb {
     }
   }
 
-  private void validateOrderElements(TypeB elemT, List<ExprB> elems) {
+  private void validateOrderElements(TypeB elemT, List<? extends ExprB> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElemT = elems.get(i).evaluationType();
       if (!elemT.equals(iElemT)) {
@@ -215,7 +216,7 @@ public class ExprDb {
 
   // methods for creating ValueBs
 
-  public ArrayB newArray(ArrayTB type, List<ValueB> elems) throws BytecodeException {
+  public ArrayB newArray(ArrayTB type, List<? extends ValueB> elems) throws BytecodeException {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -262,7 +263,7 @@ public class ExprDb {
     return stringTB.newExpr(root, this);
   }
 
-  private TupleB newTuple(List<ValueB> items) throws BytecodeException {
+  private TupleB newTuple(List<? extends ValueB> items) throws BytecodeException {
     var type = categoryDb.tuple(items.map(ValueB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
@@ -278,7 +279,7 @@ public class ExprDb {
     return callCB.newExpr(root, this);
   }
 
-  private CombineB newCombine(List<ExprB> items) throws BytecodeException {
+  private CombineB newCombine(List<? extends ExprB> items) throws BytecodeException {
     var evaluationType = categoryDb.tuple(items.map(ExprB::evaluationType));
     var combineCB = categoryDb.combine(evaluationType);
     var data = writeCombineData(items);
@@ -298,7 +299,8 @@ public class ExprDb {
     return mapFuncCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
+  private OrderB newOrder(ArrayTB evaluationType, List<? extends ExprB> elems)
+      throws BytecodeException {
     var orderCB = categoryDb.order(evaluationType);
     var data = writeOrderData(elems);
     var root = newRoot(orderCB, data);
@@ -370,11 +372,11 @@ public class ExprDb {
     return writeChain(func.hash(), args.hash());
   }
 
-  private Hash writeCombineData(List<ExprB> items) throws BytecodeException {
+  private Hash writeCombineData(List<? extends ExprB> items) throws BytecodeException {
     return writeChain(items);
   }
 
-  private Hash writeOrderData(List<ExprB> elems) throws BytecodeException {
+  private Hash writeOrderData(List<? extends ExprB> elems) throws BytecodeException {
     return writeChain(elems);
   }
 
@@ -388,7 +390,7 @@ public class ExprDb {
 
   // methods for writing data of InstB-s
 
-  private Hash writeArrayData(List<ValueB> elems) throws BytecodeException {
+  private Hash writeArrayData(List<? extends ValueB> elems) throws BytecodeException {
     return writeChain(elems);
   }
 
@@ -409,7 +411,7 @@ public class ExprDb {
     return writeString(string);
   }
 
-  private Hash writeTupleData(List<ValueB> items) throws BytecodeException {
+  private Hash writeTupleData(List<? extends ValueB> items) throws BytecodeException {
     return writeChain(items);
   }
 
