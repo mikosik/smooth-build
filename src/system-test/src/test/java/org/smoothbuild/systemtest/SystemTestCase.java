@@ -26,7 +26,6 @@ import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
 import com.google.common.base.Splitter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -92,23 +91,6 @@ public abstract class SystemTestCase {
 
   public void createDir(String path) throws IOException {
     createDirectories(absolutePath(path));
-  }
-
-  public void createJunitLibs() {
-    copyLib("junit-4.13.2.jar", "junit/");
-    copyLib("hamcrest-core-1.3.jar", "junit/");
-  }
-
-  private Path copyLib(String jar, String dirInsideProject) {
-    try {
-      Path destinationDir = absolutePath(dirInsideProject);
-      createDirectories(destinationDir);
-      return Files.copy(
-          SYSTEM_TEST_PROJECT_ROOT.resolve("build/junit4files").resolve(jar),
-          destinationDir.resolve(jar));
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
   }
 
   public void runSmoothBuild(String... args) {
