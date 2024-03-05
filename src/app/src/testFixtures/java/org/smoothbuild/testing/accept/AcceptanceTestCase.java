@@ -9,7 +9,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.writeFile;
+import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
 import static org.smoothbuild.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.layout.Layout.STANDARD_LIBRARY_MODULE_PATH;

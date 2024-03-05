@@ -7,6 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_SPACE;
@@ -21,7 +22,6 @@ import java.util.Map;
 import org.smoothbuild.common.filesystem.base.FileResolver;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
@@ -44,13 +44,6 @@ public class FrontendCompilerTester {
 
   private FrontendCompilerTester(String sourceCode) {
     this.sourceCode = sourceCode;
-  }
-
-  public static void writeFile(FileSystem fileSystem, Path path, String content)
-      throws IOException {
-    try (var bufferedSink = fileSystem.sink(path)) {
-      bufferedSink.writeUtf8(content);
-    }
   }
 
   public FrontendCompilerTester withImported(String imported) {
