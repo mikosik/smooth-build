@@ -60,22 +60,22 @@ public class ExprDb {
 
   // methods for creating InstB subclasses
 
-  public ArrayBBuilder arrayBuilder(ArrayTB type) {
+  public ArrayBBuilder newArrayBuilder(ArrayTB type) {
     return new ArrayBBuilder(type, this);
   }
 
-  public BlobBBuilder blobBuilder() throws BytecodeException {
+  public BlobBBuilder newBlobBuilder() throws BytecodeException {
     return new BlobBBuilder(this, sink());
   }
 
-  public BoolB bool(boolean value) throws BytecodeException {
+  public BoolB newBool(boolean value) throws BytecodeException {
     var data = writeBoolData(value);
     var boolTB = categoryDb.bool();
     var root = newRoot(boolTB, data);
     return boolTB.newExpr(root, this);
   }
 
-  public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
+  public LambdaB newLambda(FuncTB type, ExprB body) throws BytecodeException {
     validateBodyEvaluationType(type, body);
     var cat = categoryDb.lambda(type);
     var dataHash = body.hash();
@@ -83,7 +83,7 @@ public class ExprDb {
     return cat.newExpr(root, this);
   }
 
-  public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
+  public NativeFuncB newNativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
     var cat = categoryDb.nativeFunc(type);
     var data = writeNativeFuncData(jar, classBinaryName, isPure);
@@ -91,21 +91,21 @@ public class ExprDb {
     return cat.newExpr(root, this);
   }
 
-  public IntB int_(BigInteger value) throws BytecodeException {
+  public IntB newInt(BigInteger value) throws BytecodeException {
     var data = writeIntData(value);
     var intTB = categoryDb.int_();
     var root = newRoot(intTB, data);
     return intTB.newExpr(root, this);
   }
 
-  public StringB string(String value) throws BytecodeException {
+  public StringB newString(String value) throws BytecodeException {
     var data = writeStringData(value);
     var stringTB = categoryDb.string();
     var root = newRoot(stringTB, data);
     return stringTB.newExpr(root, this);
   }
 
-  public TupleB tuple(List<? extends ValueB> items) throws BytecodeException {
+  public TupleB newTuple(List<? extends ValueB> items) throws BytecodeException {
     var type = categoryDb.tuple(items.map(ValueB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
@@ -114,7 +114,7 @@ public class ExprDb {
 
   // methods for creating OperB subclasses
 
-  public CallB call(ExprB func, CombineB args) throws BytecodeException {
+  public CallB newCall(ExprB func, CombineB args) throws BytecodeException {
     var funcTB = castEvaluationTypeToFuncTB(func);
     validateArgsInCall(funcTB, args);
     var callCB = categoryDb.call(funcTB.result());
@@ -123,7 +123,7 @@ public class ExprDb {
     return callCB.newExpr(root, this);
   }
 
-  public CombineB combine(List<? extends ExprB> items) throws BytecodeException {
+  public CombineB newCombine(List<? extends ExprB> items) throws BytecodeException {
     var evaluationType = categoryDb.tuple(items.map(ExprB::evaluationType));
     var combineCB = categoryDb.combine(evaluationType);
     var data = writeCombineData(items);
@@ -131,19 +131,19 @@ public class ExprDb {
     return combineCB.newExpr(root, this);
   }
 
-  public IfFuncB ifFunc(TypeB t) throws BytecodeException {
+  public IfFuncB newIfFunc(TypeB t) throws BytecodeException {
     var ifFuncCB = categoryDb.ifFunc(t);
     var root = newRoot(ifFuncCB);
     return ifFuncCB.newExpr(root, this);
   }
 
-  public MapFuncB mapFunc(TypeB r, TypeB s) throws BytecodeException {
+  public MapFuncB newMapFunc(TypeB r, TypeB s) throws BytecodeException {
     var mapFuncCB = categoryDb.mapFunc(r, s);
     var root = newRoot(mapFuncCB);
     return mapFuncCB.newExpr(root, this);
   }
 
-  public OrderB order(ArrayTB evaluationType, List<? extends ExprB> elems)
+  public OrderB newOrder(ArrayTB evaluationType, List<? extends ExprB> elems)
       throws BytecodeException {
     validateOrderElements(evaluationType.elem(), elems);
     var orderCB = categoryDb.order(evaluationType);
@@ -152,7 +152,7 @@ public class ExprDb {
     return orderCB.newExpr(root, this);
   }
 
-  public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
+  public PickB newPick(ExprB pickable, ExprB index) throws BytecodeException {
     var evaluationType = pickEvaluationType(pickable);
     if (!(index.evaluationType() instanceof IntTB)) {
       throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
@@ -164,13 +164,13 @@ public class ExprDb {
     return category.newExpr(root, this);
   }
 
-  public ReferenceB referenceB(TypeB evaluationType, IntB index) throws BytecodeException {
+  public ReferenceB newReferenceB(TypeB evaluationType, IntB index) throws BytecodeException {
     ReferenceCB type = categoryDb.reference(evaluationType);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }
 
-  public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
+  public SelectB newSelect(ExprB selectable, IntB index) throws BytecodeException {
     var evaluationType = selectEvaluationType(selectable, index);
     var data = writeSelectData(selectable, index);
     var category = categoryDb.select(evaluationType);

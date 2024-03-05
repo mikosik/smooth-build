@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class TupleBTest extends TestingVirtualMachine {
   @Test
   public void setting_element_to_null_throws_exception() {
-    assertCall(() -> exprDb().tuple(list(stringB("John"), null)))
+    assertCall(() -> exprDb().newTuple(list(stringB("John"), null)))
         .throwsException(NullPointerException.class);
   }
 

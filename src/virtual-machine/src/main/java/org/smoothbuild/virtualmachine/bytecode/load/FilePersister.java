@@ -55,7 +55,7 @@ public class FilePersister {
     }
 
     private BlobB persistImpl() throws BytecodeException, IOException {
-      try (BlobBBuilder blobBuilder = exprDb.blobBuilder()) {
+      try (BlobBBuilder blobBuilder = exprDb.newBlobBuilder()) {
         try (BufferedSource source = fileResolver.source(fullPath)) {
           source.readAll(blobBuilder);
         }
