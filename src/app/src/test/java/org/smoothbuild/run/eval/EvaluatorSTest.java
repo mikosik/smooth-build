@@ -5,6 +5,7 @@ import static com.google.inject.Guice.createInjector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
@@ -12,20 +13,23 @@ import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
+import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.app.testing.TestingTaskReporter;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
+import org.smoothbuild.out.report.PrintWriterReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -40,9 +44,10 @@ import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 
-public class EvaluatorSTest extends TestingTaskReporter {
+public class EvaluatorSTest extends TestingVirtualMachine {
   private final FilePersister filePersister = mock(FilePersister.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);
@@ -288,14 +293,15 @@ public class EvaluatorSTest extends TestingTaskReporter {
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var sbTranslatorFacade = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
-    var reporter = reporter();
+    var reporter = new PrintWriterReporter(new PrintWriter(inMemorySystemOut(), true), Level.INFO);
+    var taskReporter = new TaskReporterImpl(ALL, reporter, bsMapping());
 
     var injector = createInjector(new AbstractModule() {
       @Override
       protected void configure() {
         bind(EvaluatorB.class).toInstance(evaluatorB);
         bind(Reporter.class).toInstance(reporter);
-        bind(TaskReporterImpl.class).toInstance(taskReporter());
+        bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
     var step = tryStep(sbTranslatorFacade).then(maybeStep(EvaluatorBFacade.class));
