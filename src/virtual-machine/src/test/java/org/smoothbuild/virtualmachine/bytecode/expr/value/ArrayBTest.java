@@ -60,27 +60,34 @@ public class ArrayBTest extends TestingVirtualMachine {
 
   @Test
   public void array_contains_added_elem_via_add_all_method() throws Exception {
-    StringB str = stringB("abc");
-    StringB str2 = stringB("def");
-    var array = exprDb().newArrayBuilder(arrayTB()).addAll(list(str, str2)).build();
-    assertThat(array.elements(StringB.class)).containsExactly(str, str2).inOrder();
+    var string = stringB("abc");
+    var string2 = stringB("def");
+    var array =
+        exprDb().newArrayBuilder(arrayTB()).addAll(list(string, string2)).build();
+    assertThat(array.elements(StringB.class)).containsExactly(string, string2).inOrder();
   }
 
   @Test
   public void array_contains_added_elements_in_order() throws Exception {
-    StringB str1 = stringB("abc");
-    StringB str2 = stringB("def");
-    StringB str3 = stringB("ghi");
-    var array =
-        exprDb().newArrayBuilder(arrayTB()).add(str1).add(str2).add(str3).build();
-    assertThat(array.elements(StringB.class)).containsExactly(str1, str2, str3).inOrder();
+    var string1 = stringB("abc");
+    var string2 = stringB("def");
+    var string3 = stringB("ghi");
+    var array = exprDb()
+        .newArrayBuilder(arrayTB())
+        .add(string1)
+        .add(string2)
+        .add(string3)
+        .build();
+    assertThat(array.elements(StringB.class))
+        .containsExactly(string1, string2, string3)
+        .inOrder();
   }
 
   @Test
   public void adding_same_elem_twice_builds_array_with_two_elements() throws Exception {
-    StringB str = stringB("abc");
-    var array = exprDb().newArrayBuilder(arrayTB()).add(str).add(str).build();
-    assertThat(array.elements(StringB.class)).containsExactly(str, str);
+    var string = stringB("abc");
+    var array = exprDb().newArrayBuilder(arrayTB()).add(string).add(string).build();
+    assertThat(array.elements(StringB.class)).containsExactly(string, string);
   }
 
   @Nested
@@ -103,27 +110,27 @@ public class ArrayBTest extends TestingVirtualMachine {
 
   @Test
   public void array_can_be_read_by_hash() throws Exception {
-    StringB str1 = stringB("abc");
-    StringB str2 = stringB("def");
-    var array = exprDb().newArrayBuilder(arrayTB()).add(str1).add(str2).build();
+    var string1 = stringB("abc");
+    var string2 = stringB("def");
+    var array = exprDb().newArrayBuilder(arrayTB()).add(string1).add(string2).build();
     assertThat(exprDbOther().get(array.hash())).isEqualTo(array);
   }
 
   @Test
   public void array_read_by_hash_contains_same_elements() throws Exception {
-    StringB str1 = stringB("abc");
-    StringB str2 = stringB("def");
-    var array = exprDb().newArrayBuilder(arrayTB()).add(str1).add(str2).build();
+    var string1 = stringB("abc");
+    var string2 = stringB("def");
+    var array = exprDb().newArrayBuilder(arrayTB()).add(string1).add(string2).build();
     assertThat(((ArrayB) exprDbOther().get(array.hash())).elements(StringB.class))
-        .containsExactly(str1, str2)
+        .containsExactly(string1, string2)
         .inOrder();
   }
 
   @Test
   public void array_read_by_hash_has_same_hash() throws Exception {
-    StringB str1 = stringB("abc");
-    StringB str2 = stringB("def");
-    var array = exprDb().newArrayBuilder(arrayTB()).add(str1).add(str2).build();
+    var string1 = stringB("abc");
+    var string2 = stringB("def");
+    var array = exprDb().newArrayBuilder(arrayTB()).add(string1).add(string2).build();
     assertThat(exprDbOther().get(array.hash()).hash()).isEqualTo(array.hash());
   }
 
@@ -141,9 +148,9 @@ public class ArrayBTest extends TestingVirtualMachine {
 
   @Test
   public void to_string() throws Exception {
-    StringB str1 = stringB("abc");
-    StringB str2 = stringB("def");
-    var array = exprDb().newArrayBuilder(arrayTB()).add(str1).add(str2).build();
+    var string1 = stringB("abc");
+    var string2 = stringB("def");
+    var array = exprDb().newArrayBuilder(arrayTB()).add(string1).add(string2).build();
     assertThat(array.toString()).isEqualTo("""
             ["abc","def"]@""" + array.hash());
   }
