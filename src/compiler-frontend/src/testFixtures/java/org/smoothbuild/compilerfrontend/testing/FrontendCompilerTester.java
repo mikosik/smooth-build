@@ -23,6 +23,7 @@ import org.smoothbuild.common.filesystem.base.FileResolver;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Space;
+import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Try;
@@ -118,8 +119,10 @@ public class FrontendCompilerTester {
   }
 
   private Try<ScopeS> load() {
-    Map<Space, FileSystem> spaces = Map.of(
-        PROJECT_SPACE, new MemoryFileSystem(), STANDARD_LIBRARY_SPACE, new MemoryFileSystem());
+    var projectFs = new SynchronizedFileSystem(new MemoryFileSystem());
+    var standardLibraryFs = new SynchronizedFileSystem(new MemoryFileSystem());
+    Map<Space, FileSystem> spaces =
+        Map.of(PROJECT_SPACE, projectFs, STANDARD_LIBRARY_SPACE, standardLibraryFs);
     var fileResolver = new FileResolver(spaces);
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
       @Override

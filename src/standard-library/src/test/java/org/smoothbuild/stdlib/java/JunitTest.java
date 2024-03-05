@@ -1,79 +1,86 @@
-package org.smoothbuild.systemtest.stdlib.java;
+package org.smoothbuild.stdlib.java;
 
+import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
-public class JunitTest extends SystemTestCase {
+public class JunitTest extends StandardLibraryTestCase {
   private static final String FAILING_TEST_CLASS = "MyClassFailingTest";
   private static final String SUCCESSFUL_TEST_CLASS = "MyClassTest";
 
   @Test
   public void junit_fails_when_deps_doesnt_contain_junit_jar() throws Exception {
     createJunitLibs();
-    createFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
+    createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule(
         """
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("test.jar");
             result = junit(tests=srcJar, deps=[]);
             """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSystemOutContains(
-        "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
+    evaluate("result");
+    assertThat(logs())
+        .contains(error("Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?"));
   }
 
   @Test
   public void junit_func_succeeds_when_all_junit_tests_succeed() throws Exception {
     createJunitLibs();
-    createFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
+    createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule(
         """
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("src.jar");
             result = junit(tests=srcJar, deps=junitJars);
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
+    evaluate("result");
+    assertThat(artifact()).isNotNull();
   }
 
   @Test
   public void junit_func_fails_when_junit_test_fails() throws Exception {
     createJunitLibs();
-    createFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
+    createProjectFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     createUserModule(
         """
             junitJars = files("junit");
             srcJar = files("src") > javac(libs=junitJars) > jar() > File("src.jar");
             result = junit(tests=srcJar, deps=junitJars);
             """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSystemOutContains("test failed");
+    evaluate("result");
+    var filtered =
+        logs().filter(l -> l.message().startsWith("test failed: testMyMethod(MyClassFailingTest)"));
+    assertThat(filtered).isNotEmpty();
   }
 
   @Test
   public void warning_is_logged_when_no_test_is_found() throws Exception {
     createJunitLibs();
-    createDir("src");
+    createProjectFile("src/empty", "");
     createUserModule(
         """
             junitJars = files("junit");
-            srcJar = files("src") > javac(libs=junitJars) > jar() > File("src.jar");
+            srcJar = [] > jar() > File("src.jar");
             result = junit(tests=srcJar, deps=junitJars);
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertSystemOutContains("No junit tests found.");
+    evaluate("result");
+    assertThat(logs()).contains(warning("No junit tests found."));
   }
 
   @Test
   public void only_test_matching_pattern_are_executed() throws Exception {
     createJunitLibs();
-    createFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
-    createFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
+    createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
+    createProjectFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     createUserModule(format(
         """
             junitJars = files("junit");
@@ -81,8 +88,8 @@ public class JunitTest extends SystemTestCase {
             result = junit(include="%s", tests=srcJar, deps=junitJars);
             """,
         SUCCESSFUL_TEST_CLASS));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
+    evaluate("result");
+    assertThat(artifact()).isNotNull();
   }
 
   private static String successfulTestSourceCode() {
@@ -108,5 +115,19 @@ public class JunitTest extends SystemTestCase {
         }
         """,
         FAILING_TEST_CLASS);
+  }
+
+  private void createJunitLibs() throws IOException {
+    copyLib("junit-4.13.2.jar", "junit");
+    copyLib("hamcrest-core-1.3.jar", "junit");
+  }
+
+  private void copyLib(String jarFileName, String dirInsideProject) throws IOException {
+    var sourcePath = java.nio.file.Path.of("./build/junit4files").resolve(jarFileName);
+    try (var source = buffer(source(sourcePath.toAbsolutePath()))) {
+      var destinationPath =
+          path(dirInsideProject).appendPart(sourcePath.getFileName().toString());
+      writeFile(projectFileSystem(), destinationPath, source);
+    }
   }
 }

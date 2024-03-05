@@ -11,22 +11,6 @@ def installation = tasks.register('installation', Copy) {
 tasks.test.dependsOn(installation)
 tasks.test.getInputs().dir('../../doc')
 
-// JunitTest needs access to junit4 jar and its dependencies.
-// Below separate `junit4` configuration is created that depends
-// on junit4 and `junit4files` resolves dependencies and stores
-// files in `junit4files` directory
-configurations {
-    junit4
-}
-dependencies {
-    junit4 'junit:junit:4.13.2'
-}
-def junit4files = tasks.register('junit4files', Copy) {
-    from configurations.getByName("junit4").resolvedConfiguration.files
-    into file("${buildDir}/junit4files")
-}
-tasks.test.dependsOn(junit4files)
-
 dependencies {
     implementation project(':src:app')
     implementation libs.guava
@@ -37,6 +21,7 @@ dependencies {
     testImplementation project(':src:common-testing')
     testImplementation testFixtures(project(':src:common'))
     testImplementation testFixtures(project(':src:virtual-machine'))
+    testImplementation testFixtures(project(':src:app'))
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params

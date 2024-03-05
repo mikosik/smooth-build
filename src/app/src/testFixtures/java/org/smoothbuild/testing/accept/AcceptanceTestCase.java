@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static java.util.Arrays.asList;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -26,7 +28,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
-import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
@@ -35,6 +36,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.Space;
+import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.step.StepExecutor;
@@ -42,48 +44,70 @@ import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskMatcher;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
+import org.smoothbuild.virtualmachine.testing.TestingBytecode;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
-public class AcceptanceTestCase extends TestingVirtualMachine {
+public class AcceptanceTestCase extends TestingBytecode {
   private static final Space MODULES_SPACE = space("module-space");
+  private static final Path LIB_MODULE_PATH = path("libraryModule.smooth");
+  private static final FullPath LIB_MODULE_FULL_PATH =
+      FullPath.fullPath(MODULES_SPACE, LIB_MODULE_PATH);
   private static final Path USER_MODULE_PATH = path("userModule.smooth");
   private static final FullPath USER_MODULE_FULL_PATH = fullPath(MODULES_SPACE, USER_MODULE_PATH);
-  private MemoryFileSystem projectFileSystem;
-  private MemoryFileSystem bytecodeDbFileSystem;
-  private MemoryFileSystem modulesFileSystem;
-  private MemoryFileSystem computationCacheFileSystem;
+  private FileSystem projectFileSystem;
+  private FileSystem bytecodeDbFileSystem;
+  private FileSystem modulesFileSystem;
+  private FileSystem computationCacheFileSystem;
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
 
   @BeforeEach
-  public void beforeEach() {
-    this.projectFileSystem = new MemoryFileSystem();
-    this.modulesFileSystem = new MemoryFileSystem();
-    this.bytecodeDbFileSystem = new MemoryFileSystem();
-    this.computationCacheFileSystem = new MemoryFileSystem();
+  public void beforeEach() throws IOException {
+    this.projectFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
+    this.modulesFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
+    this.bytecodeDbFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
+    this.computationCacheFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
     this.modules = list();
     this.injector = createInjector();
   }
 
+  protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
+      throws IOException {
+    try (var sink = modulesFileSystem.sink(LIB_MODULE_PATH.changeExtension("jar"))) {
+      try (var source = buffer(source(jar))) {
+        sink.writeAll(source);
+      }
+    }
+    try (var source = buffer(source(code))) {
+      writeFile(modulesFileSystem, LIB_MODULE_PATH, source.readUtf8());
+    }
+    modules = modules.append(LIB_MODULE_FULL_PATH);
+  }
+
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
     if (classes.length != 0) {
-      createJar(modulesFileSystem.sink(USER_MODULE_PATH.changeExtension("jar")), classes);
+      try (var sink = modulesFileSystem.sink(USER_MODULE_PATH.changeExtension("jar"))) {
+        saveBytecodeInJar(sink, list(classes));
+      }
     }
     writeFile(modulesFileSystem, USER_MODULE_PATH, code);
     modules = modules.append(USER_MODULE_FULL_PATH);
   }
 
-  private void createJar(BufferedSink fileSink, Class<?>... classes) throws IOException {
-    try (var sink = fileSink) {
-      saveBytecodeInJar(sink, list(classes));
-    }
+  protected void createProjectFile(String path, String content) throws IOException {
+    writeFile(projectFileSystem, path(path), content);
+  }
+
+  protected FileSystem projectFileSystem() {
+    return projectFileSystem;
   }
 
   protected void evaluate(String... names) {
@@ -146,6 +170,16 @@ public class AcceptanceTestCase extends TestingVirtualMachine {
 
   private Injector createInjector() {
     return Guice.createInjector(PRODUCTION, new TestModule(), new VirtualMachineModule());
+  }
+
+  @Override
+  public CategoryDb categoryDb() {
+    return injector.getInstance(CategoryDb.class);
+  }
+
+  @Override
+  public BytecodeFactory bytecodeF() {
+    return injector.getInstance(BytecodeFactory.class);
   }
 
   public class TestModule extends AbstractModule {
