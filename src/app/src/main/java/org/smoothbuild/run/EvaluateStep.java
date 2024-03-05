@@ -5,9 +5,10 @@ import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.common.step.Step.tryStep;
-import static org.smoothbuild.run.CreateFrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;
@@ -19,8 +20,11 @@ import org.smoothbuild.run.eval.EvaluatorBFacade;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
 public class EvaluateStep {
-  public static Step<Tuple0, List<Tuple2<ExprS, ValueB>>> evaluateStep(List<String> names) {
-    return frontendCompilerStep().append(names).then(stepFactory(new EvaluateStepFactory()));
+  public static Step<Tuple0, List<Tuple2<ExprS, ValueB>>> evaluateStep(
+      List<FullPath> modules, List<String> names) {
+    return createFrontendCompilerStep(modules)
+        .append(names)
+        .then(stepFactory(new EvaluateStepFactory()));
   }
 
   public static class EvaluateStepFactory
