@@ -502,7 +502,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public ArrayB arrayB(TypeB elemT, ValueB... elems) throws BytecodeException {
-    return exprDb().arrayBuilder(arrayTB(elemT)).addAll(list(elems)).build();
+    return exprDb().newArrayBuilder(arrayTB(elemT)).addAll(list(elems)).build();
   }
 
   public BlobB blobBJarWithPluginApi(Class<?>... classes) throws BytecodeException {
@@ -522,7 +522,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   private BlobB blobBWith(java.util.List<Class<?>> list) throws BytecodeException {
-    try (var blobBBuilder = exprDb().blobBuilder()) {
+    try (var blobBBuilder = exprDb().newBlobBuilder()) {
       Classes.saveBytecodeInJar(blobBBuilder, list);
       return blobBBuilder.build();
     } catch (IOException e) {
@@ -543,7 +543,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public BlobBBuilder blobBBuilder() throws BytecodeException {
-    return exprDb().blobBuilder();
+    return exprDb().newBlobBuilder();
   }
 
   public BoolB boolB() throws BytecodeException {
@@ -551,7 +551,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public BoolB boolB(boolean value) throws BytecodeException {
-    return exprDb().bool(value);
+    return exprDb().newBool(value);
   }
 
   public TupleB fileB(Path path) throws BytecodeException {
@@ -593,7 +593,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public LambdaB lambdaB(FuncTB type, ExprB body) throws BytecodeException {
-    return exprDb().lambda(type, body);
+    return exprDb().newLambda(type, body);
   }
 
   public LambdaB idFuncB() throws BytecodeException {
@@ -621,7 +621,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public IntB intB(BigInteger value) throws BytecodeException {
-    return exprDb().int_(value);
+    return exprDb().newInt(value);
   }
 
   public NativeFuncB returnAbcNativeFunc() throws IOException, BytecodeException {
@@ -665,7 +665,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
 
   public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
-    return exprDb().nativeFunc(type, jar, classBinaryName, isPure);
+    return exprDb().newNativeFunc(type, jar, classBinaryName, isPure);
   }
 
   public TupleB personB(String firstName, String lastName) throws BytecodeException {
@@ -673,15 +673,15 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public StringB stringB() throws BytecodeException {
-    return exprDb().string("abc");
+    return exprDb().newString("abc");
   }
 
   public StringB stringB(String string) throws BytecodeException {
-    return exprDb().string(string);
+    return exprDb().newString(string);
   }
 
   public TupleB tupleB(ValueB... items) throws BytecodeException {
-    return exprDb().tuple(list(items));
+    return exprDb().newTuple(list(items));
   }
 
   public ArrayB messageArrayWithOneError() throws BytecodeException {
@@ -735,19 +735,19 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public CallB callB(ExprB func, CombineB args) throws BytecodeException {
-    return exprDb().call(func, args);
+    return exprDb().newCall(func, args);
   }
 
   public CombineB combineB(ExprB... items) throws BytecodeException {
-    return exprDb().combine(list(items));
+    return exprDb().newCombine(list(items));
   }
 
   public IfFuncB ifFuncB(TypeB t) throws BytecodeException {
-    return exprDb().ifFunc(t);
+    return exprDb().newIfFunc(t);
   }
 
   public MapFuncB mapFuncB(TypeB r, TypeB s) throws BytecodeException {
-    return exprDb().mapFunc(r, s);
+    return exprDb().newMapFunc(r, s);
   }
 
   public OrderB orderB() throws BytecodeException {
@@ -760,7 +760,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
 
   public OrderB orderB(TypeB elemT, ExprB... elems) throws BytecodeException {
     var elemList = list(elems);
-    return exprDb().order(arrayTB(elemT), elemList);
+    return exprDb().newOrder(arrayTB(elemT), elemList);
   }
 
   public PickB pickB() throws BytecodeException {
@@ -768,7 +768,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public PickB pickB(ExprB array, ExprB index) throws BytecodeException {
-    return exprDb().pick(array, index);
+    return exprDb().newPick(array, index);
   }
 
   public ReferenceB referenceB(int index) throws BytecodeException {
@@ -776,15 +776,15 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public ReferenceB referenceB(TypeB evaluationType, int index) throws BytecodeException {
-    return exprDb().referenceB(evaluationType, intB(index));
+    return exprDb().newReferenceB(evaluationType, intB(index));
   }
 
   public SelectB selectB() throws BytecodeException {
-    return exprDb().select(tupleB(intB()), intB(0));
+    return exprDb().newSelect(tupleB(intB()), intB(0));
   }
 
   public SelectB selectB(ExprB tuple, IntB index) throws BytecodeException {
-    return exprDb().select(tuple, index);
+    return exprDb().newSelect(tuple, index);
   }
 
   public static TraceB traceB() {

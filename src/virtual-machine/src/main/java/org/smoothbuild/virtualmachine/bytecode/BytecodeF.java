@@ -71,11 +71,11 @@ public class BytecodeF {
   // Objects
 
   public ArrayBBuilder arrayBuilderWithElements(TypeB elemT) throws BytecodeException {
-    return exprDb.arrayBuilder(categoryDb.array(elemT));
+    return exprDb.newArrayBuilder(categoryDb.array(elemT));
   }
 
   public ArrayBBuilder arrayBuilder(ArrayTB type) {
-    return exprDb.arrayBuilder(type);
+    return exprDb.newArrayBuilder(type);
   }
 
   public BlobB blob(Consumer1<BufferedSink, IOException> writer) throws BytecodeException {
@@ -90,68 +90,68 @@ public class BytecodeF {
   }
 
   public BlobBBuilder blobBuilder() throws BytecodeException {
-    return exprDb.blobBuilder();
+    return exprDb.newBlobBuilder();
   }
 
   public BoolB bool(boolean value) throws BytecodeException {
-    return exprDb.bool(value);
+    return exprDb.newBool(value);
   }
 
   public CallB call(ExprB func, CombineB args) throws BytecodeException {
-    return exprDb.call(func, args);
+    return exprDb.newCall(func, args);
   }
 
   public CombineB combine(List<ExprB> items) throws BytecodeException {
-    return exprDb.combine(items);
+    return exprDb.newCombine(items);
   }
 
   public TupleB file(BlobB content, StringB path) throws BytecodeException {
-    return exprDb.tuple(list(content, path));
+    return exprDb.newTuple(list(content, path));
   }
 
   public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
-    return exprDb.lambda(type, body);
+    return exprDb.newLambda(type, body);
   }
 
   public IfFuncB ifFunc(TypeB t) throws BytecodeException {
-    return exprDb.ifFunc(t);
+    return exprDb.newIfFunc(t);
   }
 
   public IntB int_(BigInteger value) throws BytecodeException {
-    return exprDb.int_(value);
+    return exprDb.newInt(value);
   }
 
   public MapFuncB mapFunc(TypeB r, TypeB s) throws BytecodeException {
-    return exprDb.mapFunc(r, s);
+    return exprDb.newMapFunc(r, s);
   }
 
   public NativeFuncB nativeFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws BytecodeException {
-    return exprDb.nativeFunc(funcTB, jar, classBinaryName, isPure);
+    return exprDb.newNativeFunc(funcTB, jar, classBinaryName, isPure);
   }
 
   public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
-    return exprDb.pick(pickable, index);
+    return exprDb.newPick(pickable, index);
   }
 
   public ReferenceB var(TypeB evaluationType, BigInteger index) throws BytecodeException {
-    return exprDb.referenceB(evaluationType, exprDb.int_(index));
+    return exprDb.newReferenceB(evaluationType, exprDb.newInt(index));
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
-    return exprDb.select(selectable, index);
+    return exprDb.newSelect(selectable, index);
   }
 
   public StringB string(String string) throws BytecodeException {
-    return exprDb.string(string);
+    return exprDb.newString(string);
   }
 
   public TupleB tuple(List<ValueB> items) throws BytecodeException {
-    return exprDb.tuple(items);
+    return exprDb.newTuple(items);
   }
 
   public OrderB order(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
-    return exprDb.order(evaluationType, elems);
+    return exprDb.newOrder(evaluationType, elems);
   }
 
   // Types
@@ -219,9 +219,9 @@ public class BytecodeF {
   }
 
   private TupleB storedLog(Level level, String message) throws BytecodeException {
-    var messageValue = exprDb.string(message);
-    var levelValue = exprDb.string(level.name());
-    return exprDb.tuple(list(messageValue, levelValue));
+    var messageValue = exprDb.newString(message);
+    var levelValue = exprDb.newString(level.name());
+    return exprDb.newTuple(list(messageValue, levelValue));
   }
 
   private static TupleTB createStoredLogType(CategoryDb categoryDb) throws BytecodeException {
