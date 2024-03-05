@@ -134,7 +134,7 @@ public class BytecodeF {
     return exprDb.newPick(pickable, index);
   }
 
-  public ReferenceB var(TypeB evaluationType, BigInteger index) throws BytecodeException {
+  public ReferenceB reference(TypeB evaluationType, BigInteger index) throws BytecodeException {
     return exprDb.newReferenceB(evaluationType, exprDb.newInt(index));
   }
 
