@@ -97,39 +97,39 @@ class ChainingBytecodeFactory {
 
   // types
 
-  public ArrayTB arrayT(TypeB elemT) throws SbTranslatorException {
+  public ArrayTB arrayType(TypeB elemT) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeF.arrayType(elemT));
   }
 
-  public BlobTB blobT() throws SbTranslatorException {
+  public BlobTB blobType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeF::blobType);
   }
 
-  public BoolTB boolT() throws SbTranslatorException {
+  public BoolTB boolType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeF::boolType);
   }
 
-  public FuncTB funcT(List<TypeB> paramTs, TypeB resultT) throws SbTranslatorException {
+  public FuncTB funcType(List<TypeB> paramTs, TypeB resultT) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeF.funcType(paramTs, resultT));
   }
 
-  public FuncTB funcT(TupleTB paramTs, TypeB resultT) throws SbTranslatorException {
+  public FuncTB funcType(TupleTB paramTs, TypeB resultT) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeF.funcType(paramTs, resultT));
   }
 
-  public IntTB intT() throws SbTranslatorException {
+  public IntTB intType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeF::intType);
   }
 
-  public StringTB stringT() throws SbTranslatorException {
+  public StringTB stringType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeF::stringType);
   }
 
-  public TupleTB tupleT(TypeB... itemTs) throws SbTranslatorException {
+  public TupleTB tupleType(TypeB... itemTs) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeF.tupleType(itemTs));
   }
 
-  public TupleTB tupleT(List<TypeB> itemTs) throws SbTranslatorException {
+  public TupleTB tupleType(List<TypeB> itemTs) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeF.tupleType(itemTs));
   }
 

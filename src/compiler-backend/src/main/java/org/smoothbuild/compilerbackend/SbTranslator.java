@@ -330,7 +330,7 @@ public class SbTranslator {
   private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS)
       throws SbTranslatorException {
     var resultTB = typeF.translate(namedExprValueS.schema().type());
-    var funcTB = bytecodeF.funcT(list(), resultTB);
+    var funcTB = bytecodeF.funcType(list(), resultTB);
     var funcB = bytecodeF.lambda(funcTB, translateExpr(namedExprValueS.body()));
     saveNal(funcB, namedExprValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
