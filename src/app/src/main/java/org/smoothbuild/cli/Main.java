@@ -33,13 +33,13 @@ public class Main {
 
   private static class ShortErrorMessageHandler implements IParameterExceptionHandler {
     @Override
-    public int handleParseException(ParameterException ex, String[] args) {
-      CommandLine cmd = ex.getCommandLine();
+    public int handleParseException(ParameterException parameterException, String[] args) {
+      CommandLine cmd = parameterException.getCommandLine();
       PrintWriter writer = cmd.getErr();
 
-      writer.println(ex.getMessage());
+      writer.println(parameterException.getMessage());
       writer.println();
-      UnmatchedArgumentException.printSuggestions(ex, writer);
+      UnmatchedArgumentException.printSuggestions(parameterException, writer);
       writer.print(cmd.getHelp().fullSynopsis());
 
       CommandSpec spec = cmd.getCommandSpec();
@@ -47,7 +47,7 @@ public class Main {
       writer.printf("Try 'smooth help%s' for more information.%n", commandName);
 
       return cmd.getExitCodeExceptionMapper() != null
-          ? cmd.getExitCodeExceptionMapper().getExitCode(ex)
+          ? cmd.getExitCodeExceptionMapper().getExitCode(parameterException)
           : spec.exitCodeOnInvalidInput();
     }
   }
