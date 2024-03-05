@@ -36,12 +36,12 @@ class TypeSbTranslator {
   public TypeB translate(TypeS type) throws SbTranslatorException {
     return switch (type) {
       case ArrayTS arrayTS -> translate(arrayTS);
-      case BlobTS blobTS -> bytecodeF.blobT();
-      case BoolTS boolTS -> bytecodeF.boolT();
+      case BlobTS blobTS -> bytecodeF.blobType();
+      case BoolTS boolTS -> bytecodeF.boolType();
       case FuncTS funcTS -> translate(funcTS);
-      case IntTS intTS -> bytecodeF.intT();
+      case IntTS intTS -> bytecodeF.intType();
       case VarS varS -> translate(varS);
-      case StringTS stringTS -> bytecodeF.stringT();
+      case StringTS stringTS -> bytecodeF.stringType();
       case StructTS structTS -> translate(structTS);
       case TupleTS tupleTS -> translate(tupleTS);
       case InterfaceTS interfaceTS -> throw unexpectedCaseExc(interfaceTS);
@@ -58,18 +58,18 @@ class TypeSbTranslator {
   }
 
   public TupleTB translate(StructTS struct) throws SbTranslatorException {
-    return bytecodeF.tupleT(listOfAll(struct.fields()).map(isig -> translate(isig.type())));
+    return bytecodeF.tupleType(listOfAll(struct.fields()).map(isig -> translate(isig.type())));
   }
 
   public FuncTB translate(FuncTS func) throws SbTranslatorException {
-    return bytecodeF.funcT(translate(func.params()), translate(func.result()));
+    return bytecodeF.funcType(translate(func.params()), translate(func.result()));
   }
 
   public TupleTB translate(TupleTS tuple) throws SbTranslatorException {
-    return bytecodeF.tupleT(listOfAll(tuple.elements()).map(this::translate));
+    return bytecodeF.tupleType(listOfAll(tuple.elements()).map(this::translate));
   }
 
   public ArrayTB translate(ArrayTS array) throws SbTranslatorException {
-    return bytecodeF.arrayT(translate(array.elem()));
+    return bytecodeF.arrayType(translate(array.elem()));
   }
 }
