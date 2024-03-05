@@ -8,7 +8,7 @@ import static org.smoothbuild.common.log.Level.WARNING;
 
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct;
+import org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BytecodeFTest extends TestingVirtualMachine {
@@ -23,27 +23,27 @@ public class BytecodeFTest extends TestingVirtualMachine {
 
   @Test
   public void fatal_severity_is_fatal() throws Exception {
-    assertThat(MessageStruct.severity(bytecodeF().fatalMessage("text"))).isEqualTo(FATAL.name());
+    assertThat(StoredLogStruct.levelAsString(bytecodeF().fatalLog("text"))).isEqualTo(FATAL.name());
   }
 
   @Test
   public void error_severity_is_error() throws Exception {
-    assertThat(MessageStruct.severity(bytecodeF().errorMessage("text"))).isEqualTo(ERROR.name());
+    assertThat(StoredLogStruct.levelAsString(bytecodeF().errorLog("text"))).isEqualTo(ERROR.name());
   }
 
   @Test
   public void warning_severity_is_warning() throws Exception {
-    assertThat(MessageStruct.severity(bytecodeF().warningMessage("text")))
+    assertThat(StoredLogStruct.levelAsString(bytecodeF().warningLog("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
   public void info_severity_is_info() throws Exception {
-    assertThat(MessageStruct.severity(bytecodeF().infoMessage("text"))).isEqualTo(INFO.name());
+    assertThat(StoredLogStruct.levelAsString(bytecodeF().infoLog("text"))).isEqualTo(INFO.name());
   }
 
   @Test
   public void text_returns_text() throws Exception {
-    assertThat(MessageStruct.text(bytecodeF().errorMessage("text"))).isEqualTo("text");
+    assertThat(StoredLogStruct.message(bytecodeF().errorLog("text"))).isEqualTo("text");
   }
 }

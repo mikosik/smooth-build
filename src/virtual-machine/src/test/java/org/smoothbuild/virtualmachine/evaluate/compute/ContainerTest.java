@@ -1,8 +1,8 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.severity;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.text;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
@@ -21,7 +21,7 @@ public class ContainerTest extends TestingVirtualMachine {
     Iterable<TupleB> iterable = container.messages().elements(TupleB.class);
     assertThat(iterable).hasSize(1);
     TupleB tuple = iterable.iterator().next();
-    assertThat(text(tuple)).isEqualTo("message");
-    assertThat(severity(tuple)).isEqualTo("ERROR");
+    assertThat(message(tuple)).isEqualTo("message");
+    assertThat(levelAsString(tuple)).isEqualTo("ERROR");
   }
 }

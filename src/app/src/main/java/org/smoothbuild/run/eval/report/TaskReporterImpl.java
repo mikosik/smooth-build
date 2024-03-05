@@ -8,8 +8,8 @@ import static org.smoothbuild.common.base.Strings.limitedWithEllipsis;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.level;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.text;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
@@ -65,9 +65,9 @@ public class TaskReporterImpl implements TaskReporter {
   private static List<Log> logsFrom(ComputationResult result) throws BytecodeException {
     return result
         .output()
-        .messages()
+        .storedLogs()
         .elements(TupleB.class)
-        .map(message -> new Log(level(message), text(message)));
+        .map(message -> new Log(level(message), message(message)));
   }
 
   private String header(Task task, ResultSource resultSource) {

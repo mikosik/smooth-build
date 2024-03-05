@@ -3,8 +3,8 @@ package org.smoothbuild.stdlib.file;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.log.Level.ERROR;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messageSeverity;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messageText;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.storedLogLevel;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.storedLogMessage;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,9 +43,9 @@ public class PathArgValidatorTest extends TestingVirtualMachine {
     Path name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name).isNull();
     var elements = container().messages().elements(TupleB.class);
-    elements.map(e -> messageText(e).toJavaString()).forEach(t -> assertThat(t)
+    elements.map(e -> storedLogMessage(e).toJavaString()).forEach(t -> assertThat(t)
         .startsWith("Param `name` has illegal value."));
-    elements.map(e -> messageSeverity(e).toJavaString()).forEach(s -> assertThat(s)
+    elements.map(e -> storedLogLevel(e).toJavaString()).forEach(s -> assertThat(s)
         .startsWith(ERROR.name()));
   }
 

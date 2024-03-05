@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.testing;
 
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messageSeverity;
-import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messageText;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.storedLogLevel;
+import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.storedLogMessage;
 
 import java.io.PrintWriter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -19,8 +19,8 @@ class SystemOutTaskReporter implements TaskReporter {
 
   @Override
   public void report(Task task, ComputationResult result) throws BytecodeException {
-    for (TupleB message : result.output().messages().elements(TupleB.class)) {
-      printWriter.println(messageSeverity(message) + " " + messageText(message));
+    for (TupleB message : result.output().storedLogs().elements(TupleB.class)) {
+      printWriter.println(storedLogLevel(message) + " " + storedLogMessage(message));
     }
   }
 

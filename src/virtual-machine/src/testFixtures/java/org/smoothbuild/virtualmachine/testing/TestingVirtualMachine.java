@@ -685,11 +685,11 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public ArrayB messageArrayWithOneError() throws BytecodeException {
-    return arrayB(bytecodeF().errorMessage("error message"));
+    return arrayB(bytecodeF().errorLog("error message"));
   }
 
   public ArrayB messageArrayEmpty() throws BytecodeException {
-    return arrayB(bytecodeF().messageT());
+    return arrayB(bytecodeF().storedLogT());
   }
 
   public TupleB fatalMessage() throws BytecodeException {
@@ -697,7 +697,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public TupleB fatalMessage(String text) throws BytecodeException {
-    return bytecodeF().fatalMessage(text);
+    return bytecodeF().fatalLog(text);
   }
 
   public TupleB errorMessage() throws BytecodeException {
@@ -705,7 +705,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public TupleB errorMessage(String text) throws BytecodeException {
-    return bytecodeF().errorMessage(text);
+    return bytecodeF().errorLog(text);
   }
 
   public TupleB warningMessage() throws BytecodeException {
@@ -713,7 +713,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public TupleB warningMessage(String text) throws BytecodeException {
-    return bytecodeF().warningMessage(text);
+    return bytecodeF().warningLog(text);
   }
 
   public TupleB infoMessage() throws BytecodeException {
@@ -721,7 +721,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public TupleB infoMessage(String text) throws BytecodeException {
-    return bytecodeF().infoMessage(text);
+    return bytecodeF().infoLog(text);
   }
 
   // OperB-s

@@ -57,14 +57,14 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 public class BytecodeF {
   private final ExprDb exprDb;
   private final CategoryDb categoryDb;
-  private final Function0<TupleTB, BytecodeException> messageTypeMemoizer;
+  private final Function0<TupleTB, BytecodeException> storedLogTypeMemoizer;
   private final Function0<TupleTB, BytecodeException> fileTypeMemoizer;
 
   @Inject
   public BytecodeF(ExprDb exprDb, CategoryDb categoryDb) {
     this.exprDb = exprDb;
     this.categoryDb = categoryDb;
-    this.messageTypeMemoizer = memoizer(() -> createMessageT(categoryDb));
+    this.storedLogTypeMemoizer = memoizer(() -> createStoredLogType(categoryDb));
     this.fileTypeMemoizer = memoizer(() -> createFileT(categoryDb));
   }
 
@@ -180,8 +180,8 @@ public class BytecodeF {
     return categoryDb.int_();
   }
 
-  public TupleTB messageT() throws BytecodeException {
-    return messageTypeMemoizer.apply();
+  public TupleTB storedLogT() throws BytecodeException {
+    return storedLogTypeMemoizer.apply();
   }
 
   public StringTB stringT() throws BytecodeException {
@@ -202,31 +202,31 @@ public class BytecodeF {
     return fileTypeMemoizer.apply();
   }
 
-  public TupleB fatalMessage(String text) throws BytecodeException {
-    return message(FATAL, text);
+  public TupleB fatalLog(String text) throws BytecodeException {
+    return storedLog(FATAL, text);
   }
 
-  public TupleB errorMessage(String text) throws BytecodeException {
-    return message(ERROR, text);
+  public TupleB errorLog(String text) throws BytecodeException {
+    return storedLog(ERROR, text);
   }
 
-  public TupleB warningMessage(String text) throws BytecodeException {
-    return message(WARNING, text);
+  public TupleB warningLog(String text) throws BytecodeException {
+    return storedLog(WARNING, text);
   }
 
-  public TupleB infoMessage(String text) throws BytecodeException {
-    return message(INFO, text);
+  public TupleB infoLog(String text) throws BytecodeException {
+    return storedLog(INFO, text);
   }
 
-  private TupleB message(Level level, String text) throws BytecodeException {
-    ValueB textValue = exprDb.string(text);
-    ValueB severityValue = exprDb.string(level.name());
-    return exprDb.tuple(list(textValue, severityValue));
+  private TupleB storedLog(Level level, String message) throws BytecodeException {
+    var messageValue = exprDb.string(message);
+    var levelValue = exprDb.string(level.name());
+    return exprDb.tuple(list(messageValue, levelValue));
   }
 
-  private static TupleTB createMessageT(CategoryDb categoryDb) throws BytecodeException {
-    var stringT = categoryDb.string();
-    return categoryDb.tuple(stringT, stringT);
+  private static TupleTB createStoredLogType(CategoryDb categoryDb) throws BytecodeException {
+    var stringType = categoryDb.string();
+    return categoryDb.tuple(stringType, stringType);
   }
 
   private static TupleTB createFileT(CategoryDb categoryDb) throws BytecodeException {

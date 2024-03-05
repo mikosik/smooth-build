@@ -57,7 +57,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(strV, messages));
 
-    assertThat(computationCache.read(hash, stringTB()).messages()).isEqualTo(messages);
+    assertThat(computationCache.read(hash, stringTB()).storedLogs()).isEqualTo(messages);
   }
 
   @Test
