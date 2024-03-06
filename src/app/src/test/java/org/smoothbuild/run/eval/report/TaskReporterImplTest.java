@@ -143,7 +143,7 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
   private void testVisibility(TaskMatcher taskMatcher, boolean visible) throws Exception {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(taskMatcher, reporter, bsMapping());
-    var messages = arrayB(fatalMessage(), errorMessage(), warningMessage(), infoMessage());
+    var messages = arrayB(fatalLog(), errorLog(), warningLog(), infoLog());
     taskReporter.report(task(), computationResultWithMessages(messages));
     var header =
         """
