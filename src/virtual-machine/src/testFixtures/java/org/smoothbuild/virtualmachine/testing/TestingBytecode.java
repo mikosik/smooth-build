@@ -84,7 +84,7 @@ public abstract class TestingBytecode {
   }
 
   public TupleTB fileTB() throws BytecodeException {
-    return tupleTB(stringTB(), blobTB());
+    return bytecodeF().fileType();
   }
 
   public LambdaCB lambdaCB() throws BytecodeException {
