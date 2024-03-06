@@ -135,7 +135,7 @@ public class BytecodeFactory {
   }
 
   public ReferenceB reference(TypeB evaluationType, IntB index) throws BytecodeException {
-    return exprDb.newReferenceB(evaluationType, index);
+    return exprDb.newReference(evaluationType, index);
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {

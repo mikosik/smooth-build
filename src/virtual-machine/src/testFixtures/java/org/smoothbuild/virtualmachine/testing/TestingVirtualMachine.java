@@ -776,7 +776,7 @@ public class TestingVirtualMachine extends TestingExpressionS {
   }
 
   public ReferenceB referenceB(TypeB evaluationType, int index) throws BytecodeException {
-    return exprDb().newReferenceB(evaluationType, intB(index));
+    return exprDb().newReference(evaluationType, intB(index));
   }
 
   public SelectB selectB() throws BytecodeException {
