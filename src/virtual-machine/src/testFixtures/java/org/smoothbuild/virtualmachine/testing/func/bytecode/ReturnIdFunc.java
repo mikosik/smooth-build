@@ -14,6 +14,6 @@ public class ReturnIdFunc {
       throws BytecodeException {
     var a = varMap.get("A");
     var funcT = f.funcType(list(a), a);
-    return f.lambda(funcT, f.reference(a, ZERO));
+    return f.lambda(funcT, f.reference(a, f.int_(ZERO)));
   }
 }
