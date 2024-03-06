@@ -7,6 +7,36 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bytecodeFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bytecodeValueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.constructorS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.idFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intIdFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemSPoly;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.lambdaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.paramRefS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.returnIntFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.selectS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.valueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,9 +44,8 @@ import org.smoothbuild.compilerfrontend.lang.define.CallS;
 import org.smoothbuild.compilerfrontend.lang.define.EvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedExprValueS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ExprSLoadingTest extends TestingExpressionS {
+public class ExprSLoadingTest {
   @Nested
   class _literal {
     @Test

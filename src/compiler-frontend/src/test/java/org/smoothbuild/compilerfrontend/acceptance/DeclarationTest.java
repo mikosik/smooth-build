@@ -6,6 +6,24 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestedTSF.TESTED_TYPES;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intIdFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.valueS;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -17,9 +35,8 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.compilerfrontend.testing.TestedTS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class DeclarationTest extends TestingExpressionS {
+public class DeclarationTest {
   @Nested
   class _members {
     @Nested

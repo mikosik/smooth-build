@@ -2,12 +2,16 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class SchemaSTest extends TestingExpressionS {
+public class SchemaSTest {
   @Test
   public void equals_and_hashcode() {
     new EqualsTester()

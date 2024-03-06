@@ -3,6 +3,17 @@ package org.smoothbuild.compilerbackend;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varC;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

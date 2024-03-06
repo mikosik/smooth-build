@@ -5,13 +5,17 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcSchemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class FuncSTest extends TestingExpressionS {
+public class FuncSTest {
   @Test
   public void func_without_params_can_be_called_without_args() {
     FuncS func = myFunc(intTS(), list());

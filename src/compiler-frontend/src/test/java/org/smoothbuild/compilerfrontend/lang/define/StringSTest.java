@@ -1,11 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class StringSTest extends TestingExpressionS {
+public class StringSTest {
   @Test
   public void to_string() {
     assertThat(stringS(7, "abc").toString())

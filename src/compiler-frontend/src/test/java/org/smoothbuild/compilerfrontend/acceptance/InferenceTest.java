@@ -4,15 +4,34 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcSchemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.idFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.lambdaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.schemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.valueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedExprValueS;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class InferenceTest extends TestingExpressionS {
+public class InferenceTest {
   @Nested
   class _infer_named_value_type {
     @Nested

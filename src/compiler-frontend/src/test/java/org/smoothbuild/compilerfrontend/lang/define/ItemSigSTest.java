@@ -2,12 +2,13 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ItemSigSTest extends TestingExpressionS {
+public class ItemSigSTest {
   private final String name = "name";
   private ItemSigS item;
 

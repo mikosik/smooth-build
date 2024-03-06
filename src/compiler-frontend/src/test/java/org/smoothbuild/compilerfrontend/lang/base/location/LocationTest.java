@@ -6,13 +6,13 @@ import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.comm
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.internalLocation;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.projectPath;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class LocationTest extends TestingExpressionS {
+public class LocationTest {
   @Nested
   class _source_location {
     @Test

@@ -7,6 +7,20 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.interfaceTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varC;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varS;
 
 import com.google.common.testing.EqualsTester;
 import java.util.function.Function;
@@ -19,9 +33,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.define.ItemSigS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class TypeSTest extends TestingExpressionS {
+public class TypeSTest {
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(TypeFS.baseTs()).hasSize(4);
