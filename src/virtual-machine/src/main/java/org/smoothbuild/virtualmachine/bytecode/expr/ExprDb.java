@@ -164,7 +164,7 @@ public class ExprDb {
     return category.newExpr(root, this);
   }
 
-  public ReferenceB newReferenceB(TypeB evaluationType, IntB index) throws BytecodeException {
+  public ReferenceB newReference(TypeB evaluationType, IntB index) throws BytecodeException {
     ReferenceCB type = categoryDb.reference(evaluationType);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
