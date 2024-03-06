@@ -9,6 +9,7 @@ import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.NONE;
 import static org.smoothbuild.run.eval.report.TaskReporterImpl.NAME_LENGTH_LIMIT;

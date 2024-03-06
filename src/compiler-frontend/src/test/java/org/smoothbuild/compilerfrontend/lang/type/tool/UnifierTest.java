@@ -6,6 +6,19 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.interfaceTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tempVarA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varX;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -24,9 +37,8 @@ import org.smoothbuild.compilerfrontend.lang.type.TempVarS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class UnifierTest extends TestingExpressionS {
+public class UnifierTest {
   private final Unifier unifier = new Unifier();
 
   @Nested

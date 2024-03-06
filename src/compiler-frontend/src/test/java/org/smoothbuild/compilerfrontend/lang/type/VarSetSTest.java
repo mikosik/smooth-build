@@ -3,13 +3,15 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varC;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class VarSetSTest extends TestingExpressionS {
+public class VarSetSTest {
   @Nested
   class _filter {
     @Test

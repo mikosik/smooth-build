@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.testing;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.synchronizedMemoryFileSystem;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECUTION;
 
@@ -21,7 +22,6 @@ import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SubFileSystem;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
@@ -93,7 +93,7 @@ import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
-public class TestingVirtualMachine extends TestingExpressionS {
+public class TestingVirtualMachine {
   private BytecodeFactory bytecodeFactory;
   private ExprDb exprDb;
   private CategoryDb categoryDb;

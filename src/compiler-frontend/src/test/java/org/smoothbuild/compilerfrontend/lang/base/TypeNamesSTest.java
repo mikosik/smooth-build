@@ -1,12 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class TypeNamesSTest extends TestingExpressionS {
+public class TypeNamesSTest {
   @Test
   public void is_upper_case() {
     for (char i = 'A'; i <= 'Z'; i++) {

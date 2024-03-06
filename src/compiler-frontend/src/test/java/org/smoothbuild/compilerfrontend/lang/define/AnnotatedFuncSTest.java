@@ -2,11 +2,16 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcSchemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class AnnotatedFuncSTest extends TestingExpressionS {
+public class AnnotatedFuncSTest {
   @Test
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));

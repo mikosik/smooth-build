@@ -1,10 +1,11 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.namedFuncP;
+
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class NamedFuncPTest extends TestingExpressionS {
+public class NamedFuncPTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();

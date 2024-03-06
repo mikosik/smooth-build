@@ -2,11 +2,14 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.constructorS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class ConstructorSTest extends TestingExpressionS {
+public class ConstructorSTest {
   @Test
   public void to_string() {
     var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));

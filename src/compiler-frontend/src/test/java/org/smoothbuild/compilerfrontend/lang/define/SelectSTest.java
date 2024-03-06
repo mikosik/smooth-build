@@ -2,11 +2,18 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedValueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.selectS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 
-public class SelectSTest extends TestingExpressionS {
+public class SelectSTest {
   @Test
   public void to_string() {
     var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));
