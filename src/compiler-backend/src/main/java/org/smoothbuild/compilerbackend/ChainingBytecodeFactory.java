@@ -93,7 +93,7 @@ class ChainingBytecodeFactory {
 
   public ReferenceB reference(TypeB evaluationType, BigInteger index) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.reference(evaluationType, index));
+        () -> bytecodeFactory.reference(evaluationType, bytecodeFactory.int_(index)));
   }
 
   // types

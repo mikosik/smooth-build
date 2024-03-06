@@ -134,8 +134,8 @@ public class BytecodeFactory {
     return exprDb.newPick(pickable, index);
   }
 
-  public ReferenceB reference(TypeB evaluationType, BigInteger index) throws BytecodeException {
-    return exprDb.newReferenceB(evaluationType, exprDb.newInt(index));
+  public ReferenceB reference(TypeB evaluationType, IntB index) throws BytecodeException {
+    return exprDb.newReferenceB(evaluationType, index);
   }
 
   public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
