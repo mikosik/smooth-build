@@ -28,8 +28,8 @@ public class OutputTest extends TestingVirtualMachine {
 
   @Test
   public void output_created_without_messages_has_no_messages() throws Exception {
-    Output output = new Output(aString(), messageArrayEmpty());
-    assertThat(output.storedLogs()).isEqualTo(messageArrayEmpty());
+    Output output = new Output(aString(), logArrayEmpty());
+    assertThat(output.storedLogs()).isEqualTo(logArrayEmpty());
   }
 
   @Test
@@ -40,8 +40,8 @@ public class OutputTest extends TestingVirtualMachine {
 
   @Test
   public void outputs_with_same_value_and_no_messages_are_equal() throws Exception {
-    Output output = new Output(aString(), messageArrayEmpty());
-    assertThat(output).isEqualTo(new Output(aString(), messageArrayEmpty()));
+    Output output = new Output(aString(), logArrayEmpty());
+    assertThat(output).isEqualTo(new Output(aString(), logArrayEmpty()));
   }
 
   @Test
@@ -53,7 +53,7 @@ public class OutputTest extends TestingVirtualMachine {
   @Test
   public void outputs_with_same_value_but_different_messages_are_not_equal() throws Exception {
     Output output = new Output(aString(), messages());
-    assertThat(output).isNotEqualTo(new Output(aString(), messageArrayEmpty()));
+    assertThat(output).isNotEqualTo(new Output(aString(), logArrayEmpty()));
   }
 
   @Test
@@ -75,7 +75,7 @@ public class OutputTest extends TestingVirtualMachine {
   }
 
   private ArrayB messages() throws BytecodeException {
-    return messageArrayWithOneError();
+    return logArrayWithOneError();
   }
 
   private StringB aString() throws BytecodeException {

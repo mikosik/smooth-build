@@ -421,43 +421,43 @@ public abstract class TestingBytecode {
     return bytecodeF().tuple(list(items));
   }
 
-  public ArrayB messageArrayWithOneError() throws BytecodeException {
+  public ArrayB logArrayWithOneError() throws BytecodeException {
     return arrayB(bytecodeF().errorLog("error message"));
   }
 
-  public ArrayB messageArrayEmpty() throws BytecodeException {
+  public ArrayB logArrayEmpty() throws BytecodeException {
     return arrayB(bytecodeF().storedLogType());
   }
 
-  public TupleB fatalMessage() throws BytecodeException {
-    return fatalMessage("fatal message");
+  public TupleB fatalLog() throws BytecodeException {
+    return fatalLog("fatal message");
   }
 
-  public TupleB fatalMessage(String text) throws BytecodeException {
+  public TupleB fatalLog(String text) throws BytecodeException {
     return bytecodeF().fatalLog(text);
   }
 
-  public TupleB errorMessage() throws BytecodeException {
-    return errorMessage("error message");
+  public TupleB errorLog() throws BytecodeException {
+    return errorLog("error message");
   }
 
-  public TupleB errorMessage(String text) throws BytecodeException {
+  public TupleB errorLog(String text) throws BytecodeException {
     return bytecodeF().errorLog(text);
   }
 
-  public TupleB warningMessage() throws BytecodeException {
-    return warningMessage("warning message");
+  public TupleB warningLog() throws BytecodeException {
+    return warningLog("warning message");
   }
 
-  public TupleB warningMessage(String text) throws BytecodeException {
+  public TupleB warningLog(String text) throws BytecodeException {
     return bytecodeF().warningLog(text);
   }
 
-  public TupleB infoMessage() throws BytecodeException {
-    return infoMessage("info message");
+  public TupleB infoLog() throws BytecodeException {
+    return infoLog("info message");
   }
 
-  public TupleB infoMessage(String text) throws BytecodeException {
+  public TupleB infoLog(String text) throws BytecodeException {
     return bytecodeF().infoLog(text);
   }
 

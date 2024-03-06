@@ -374,7 +374,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Output output(ValueB valueB) throws BytecodeException {
-    return output(valueB, messageArrayEmpty());
+    return output(valueB, logArrayEmpty());
   }
 
   public Output output(ValueB valueB, ArrayB messages) {

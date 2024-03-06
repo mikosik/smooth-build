@@ -27,7 +27,7 @@ public class JavacFuncTest extends TestingVirtualMachine {
     var nativeApi = nativeApi();
     assertThat(classesFromJarFiles(nativeApi, arrayB(jar, jar))).isNull();
     assertThat(nativeApi.messages())
-        .isEqualTo(arrayB(
-            errorMessage("File " + name + " is contained by two different library jar files.")));
+        .isEqualTo(
+            arrayB(errorLog("File " + name + " is contained by two different library jar files.")));
   }
 }
