@@ -14,8 +14,7 @@ import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import org.smoothbuild.SandboxHashModule;
-import org.smoothbuild.VirtualMachineConfigurationModule;
+import org.smoothbuild.AppModule;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.wiring.DiskFileSystemModule;
@@ -42,8 +41,7 @@ public class CreateInjector {
         BINARY, installationDir().resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new VirtualMachineConfigurationModule(),
-        new SandboxHashModule(),
+        new AppModule(),
         new EvaluatorSModule(taskMatcher),
         new VirtualMachineModule(),
         new ProjectSpaceModule(),
