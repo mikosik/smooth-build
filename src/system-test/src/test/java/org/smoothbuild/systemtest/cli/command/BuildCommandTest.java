@@ -59,11 +59,6 @@ public class BuildCommandTest {
     protected String commandName() {
       return BuildCommand.NAME;
     }
-
-    @Override
-    protected String sectionName() {
-      return "Building";
-    }
   }
 
   @Nested

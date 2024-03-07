@@ -95,6 +95,4 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   protected abstract String commandName();
-
-  protected abstract String sectionName();
 }
