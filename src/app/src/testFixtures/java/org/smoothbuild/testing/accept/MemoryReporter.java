@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.accept;
 
+import org.smoothbuild.app.report.Reporter;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.testing.MemoryStepReporter;
-import org.smoothbuild.out.report.Reporter;
 
 public class MemoryReporter extends MemoryStepReporter implements Reporter {
   @Override
