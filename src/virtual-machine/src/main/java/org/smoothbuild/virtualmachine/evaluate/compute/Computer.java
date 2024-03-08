@@ -1,12 +1,12 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.common.log.ResultSource.DISK;
+import static org.smoothbuild.common.log.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.ResultSource.MEMORY;
+import static org.smoothbuild.common.log.ResultSource.NOOP;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.DISK;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.MEMORY;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.NOOP;
 import static org.smoothbuild.virtualmachine.evaluate.task.Purity.FAST;
 import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
 import static org.smoothbuild.virtualmachine.evaluate.task.TaskHashes.taskHash;
