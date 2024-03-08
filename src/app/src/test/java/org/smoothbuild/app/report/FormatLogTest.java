@@ -4,10 +4,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.app.report.FormatLog.formatLog;
 import static org.smoothbuild.app.report.FormatLog.formatLogs;
+import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.ResultSource.EXECUTION;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 
 import java.util.List;
@@ -20,10 +22,11 @@ import org.smoothbuild.common.log.Log;
 public class FormatLogTest {
   @Test
   void test_format_logs() {
-    assertThat(formatLogs("header", logsWithAllLevels()) + "\n")
+    assertThat(formatLogs(label("label-name"), "details", EXECUTION, logsWithAllLevels()) + "\n")
         .isEqualTo(
             """
-            header
+            ::label-name                                                               exec
+              details
               [FATAL] fatal message
               [ERROR] error message
               [WARNING] warning message

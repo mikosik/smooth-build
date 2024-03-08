@@ -6,13 +6,16 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
@@ -30,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.Level;
@@ -188,8 +190,7 @@ class StepExecutorTest {
       stepExecutor().execute(step, tuple(), reporter);
 
       var inOrder = inOrder(reporter);
-      inOrder.verify(reporter).startNewPhase("::name");
-      inOrder.verify(reporter).report(log);
+      inOrder.verify(reporter).report(label("name"), "", EXECUTION, list(log));
       inOrder.verifyNoMoreInteractions();
     }
 
@@ -204,9 +205,7 @@ class StepExecutorTest {
       stepExecutor().execute(step, tuple(), reporter);
 
       var inOrder = inOrder(reporter);
-      inOrder.verify(reporter).startNewPhase("::outer");
-      inOrder.verify(reporter).startNewPhase("::outer::name");
-      inOrder.verify(reporter).report(log);
+      inOrder.verify(reporter).report(label("outer", "name"), "", EXECUTION, list(log));
       inOrder.verifyNoMoreInteractions();
     }
   }
@@ -232,7 +231,9 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, tuple(), reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
-      verifyReported(reporter, list(info("info"), warning("warning")));
+      verify(reporter).report(label(), "", EXECUTION, list(info("info")));
+      verify(reporter).report(label(), "", EXECUTION, list(warning("warning")));
+      verifyNoMoreInteractions(reporter);
     }
 
     @Test
@@ -275,7 +276,7 @@ class StepExecutorTest {
   }
 
   @Nested
-  class _option_step {
+  class _maybe_step {
     @Test
     void that_returns_some() {
       var reporter = mock(StepReporter.class);
@@ -284,7 +285,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, 3, reporter);
 
       assertThat(result).isEqualTo(some("3"));
-      verifyReported(reporter, list());
+      verifyNoInteractions(reporter);
     }
 
     @Test
@@ -295,7 +296,7 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, 3, reporter);
 
       assertThat(result).isEqualTo(none());
-      verifyReported(reporter, list());
+      verifyNoInteractions(reporter);
     }
 
     private static class OptionFunctionReturningSome implements MaybeFunction<Integer, String> {
@@ -332,8 +333,8 @@ class StepExecutorTest {
   }
 
   private static void verifyReported(StepReporter reporter, List<Log> logs) {
-    logs.forEach(log -> verify(reporter).report(log));
-    Mockito.verifyNoMoreInteractions(reporter);
+    verify(reporter).report(label(), "", EXECUTION, logs);
+    verifyNoMoreInteractions(reporter);
   }
 
   private static StepExecutor stepExecutor() {

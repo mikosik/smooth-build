@@ -337,7 +337,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public OrderTask orderTask() throws BytecodeException {
-    return orderTask(orderB(), traceB(Hash.of(7), Hash.of(9)));
+    return orderTask(orderB(), traceB());
   }
 
   public OrderTask orderTask(OrderB orderB, TraceB trace) {

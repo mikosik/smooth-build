@@ -1,5 +1,8 @@
 package org.smoothbuild.common.step;
 
+import static org.smoothbuild.common.log.Label.label;
+import static org.smoothbuild.common.log.ResultSource.EXECUTION;
+
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import jakarta.inject.Inject;
@@ -8,18 +11,11 @@ import org.smoothbuild.common.step.Step.ComposedStep;
 import org.smoothbuild.common.step.Step.NamedStep;
 
 public class StepExecutor {
-  public static final String NAMES_SEPARATOR = "::";
   private final Injector injector;
-  private final String fullName;
 
   @Inject
   public StepExecutor(Injector injector) {
-    this(injector, "");
-  }
-
-  private StepExecutor(Injector injector, String header) {
     this.injector = injector;
-    this.fullName = header;
   }
 
   public <T, R> Maybe<R> execute(Step<T, R> step, T argument, StepReporter reporter) {
@@ -40,9 +36,8 @@ public class StepExecutor {
   }
 
   private <R, T> Maybe<R> namedStep(NamedStep<T, R> namedStep, T argument, StepReporter reporter) {
-    var name = fullName + NAMES_SEPARATOR + namedStep.name();
-    reporter.startNewPhase(name);
-    return new StepExecutor(injector, name).execute(namedStep.step(), argument, reporter);
+    var newReporter = new PrefixingStepReporter(reporter, label(namedStep.name()));
+    return execute(namedStep.step(), argument, newReporter);
   }
 
   private <T, R> Maybe<R> tryFunctionKey(
@@ -58,7 +53,7 @@ public class StepExecutor {
   private <T, R> Maybe<R> tryFunction(
       TryFunction<T, R> function, T argument, StepReporter reporter) {
     var result = function.apply(argument);
-    result.logs().forEach(reporter::report);
+    reporter.report(label(), "", EXECUTION, result.logs());
     return result.toMaybe();
   }
 
