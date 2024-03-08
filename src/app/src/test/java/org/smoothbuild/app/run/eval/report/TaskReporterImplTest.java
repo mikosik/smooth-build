@@ -12,17 +12,17 @@ import static org.smoothbuild.common.log.Log.error;
 import static org.smoothbuild.common.log.Log.fatal;
 import static org.smoothbuild.common.log.Log.info;
 import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.ResultSource.DISK;
+import static org.smoothbuild.common.log.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.ResultSource.MEMORY;
+import static org.smoothbuild.common.log.ResultSource.NOOP;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.DISK;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.MEMORY;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.app.report.Reporter;
+import org.smoothbuild.common.log.ResultSource;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.evaluate.compute.ResultSource;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 

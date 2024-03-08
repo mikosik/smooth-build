@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.compute;
+package org.smoothbuild.common.log;
 
 public enum ResultSource {
   DISK("cache"),
