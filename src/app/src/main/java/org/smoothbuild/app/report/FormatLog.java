@@ -1,15 +1,25 @@
 package org.smoothbuild.app.report;
 
+import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.common.base.Strings.indent;
+import static org.smoothbuild.common.log.Log.containsAnyFailure;
 
 import java.util.List;
+import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.ResultSource;
 
 public class FormatLog {
-  private static final String MESSAGE_PREFIX = "  ";
+  public static String formatLogs(
+      Label label, String details, ResultSource source, List<Log> logs) {
+    var labelString = label.toString();
+    var builder = new StringBuilder(labelString);
+    builder.append(padStart(source.toString(), 79 - labelString.length(), ' '));
+    if (containsAnyFailure(logs) && !details.isEmpty()) {
+      builder.append("\n");
+      builder.append(indent(details));
+    }
 
-  public static String formatLogs(String header, List<Log> logs) {
-    var builder = new StringBuilder(header);
     for (Log log : logs) {
       builder.append("\n");
       builder.append(formatLog(log));
@@ -17,14 +27,7 @@ public class FormatLog {
     return builder.toString();
   }
 
-  public static String formatLog(Log log) {
+  static String formatLog(Log log) {
     return indent(log.toPrettyString());
-  }
-
-  private static String prefixMultiline(String[] lines) {
-    for (int i = 0; i < lines.length; i++) {
-      lines[i] = MESSAGE_PREFIX + lines[i];
-    }
-    return String.join("\n", lines);
   }
 }

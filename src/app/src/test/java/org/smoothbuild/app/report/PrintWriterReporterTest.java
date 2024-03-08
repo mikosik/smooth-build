@@ -5,14 +5,15 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.app.report.FormatLog.formatLog;
 import static org.smoothbuild.app.report.FormatLog.formatLogs;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Level.ERROR;
 import static org.smoothbuild.common.log.Level.FATAL;
 import static org.smoothbuild.common.log.Level.INFO;
 import static org.smoothbuild.common.log.Level.WARNING;
+import static org.smoothbuild.common.log.ResultSource.EXECUTION;
 import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 import static org.smoothbuild.common.testing.TestingLog.FATAL_LOG;
 import static org.smoothbuild.common.testing.TestingLog.INFO_LOG;
@@ -32,16 +33,18 @@ import org.smoothbuild.common.log.Log;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class PrintWriterReporterTest extends TestingVirtualMachine {
-  private static final String HEADER = "TASK NAME";
 
   @ParameterizedTest
   @MethodSource(value = "single_log_cases")
-  public void report_single_log_logs_log_when_it_exceeds_threshold(
+  public void report_single_log_prints_log_when_its_level_exceeds_threshold(
       Log log, Level level, boolean logged) {
     var systemOut = mock(PrintWriter.class);
     var reporter = new PrintWriterReporter(systemOut, level);
-    reporter.report(log);
-    verify(systemOut, times(logged ? 1 : 0)).println(formatLog(log));
+    var label = label("name");
+    var details = "details";
+    reporter.report(label, details, EXECUTION, list(log));
+    verify(systemOut, times(logged ? 1 : 0))
+        .println(formatLogs(label, details, EXECUTION, list(log)));
   }
 
   private static List<Arguments> single_log_cases() {
@@ -69,8 +72,10 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
   public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
     var systemOut = mock(PrintWriter.class);
     var reporter = new PrintWriterReporter(systemOut, level);
-    reporter.report(true, "header", logsWithAllLevels());
-    verify(systemOut, times(1)).println(formatLogs("header", loggedLogs));
+    var label = label("label-name");
+    var details = "details";
+    reporter.report(true, label, details, EXECUTION, logsWithAllLevels());
+    verify(systemOut, times(1)).println(formatLogs(label, details, EXECUTION, loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -117,7 +122,7 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
         logs.add(INFO_LOG);
       }
 
-      reporter.report(true, HEADER, listOfAll(logs));
+      reporter.report(true, label("label-name"), "", EXECUTION, listOfAll(logs));
       reporter.printSummary();
 
       var inOrder = inOrder(systemOut);
@@ -139,7 +144,7 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
         logs.add(INFO_LOG);
       }
 
-      reporter.report(true, HEADER, listOfAll(logs));
+      reporter.report(true, label("label-name"), "", EXECUTION, listOfAll(logs));
       reporter.printSummary();
 
       var inOrder = inOrder(systemOut);

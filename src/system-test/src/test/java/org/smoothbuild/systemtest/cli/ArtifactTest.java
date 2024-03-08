@@ -196,7 +196,7 @@ public class ArtifactTest extends SystemTestCase {
     assertFinishedWithError();
     assertSystemOutContains(
         """
-        ::Saving artifact(s)
+        ::Saving artifact(s)                                                       exec
           [ERROR] Can't store array of Files as it contains files with duplicated paths:
             'file.txt'
             """);
@@ -216,7 +216,7 @@ public class ArtifactTest extends SystemTestCase {
     assertFinishedWithSuccess();
     assertSystemOutContains(
         """
-        ::Saving artifact(s)
+        ::Saving artifact(s)                                                       exec
         result1 -> '.smooth/artifacts/result1'
         result2 -> '.smooth/artifacts/result2'
         result3 -> '.smooth/artifacts/result3'

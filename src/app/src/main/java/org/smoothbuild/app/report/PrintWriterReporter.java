@@ -2,8 +2,8 @@ package org.smoothbuild.app.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
+import static org.smoothbuild.app.report.FormatLog.formatLogs;
 import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
@@ -12,8 +12,10 @@ import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.ResultSource;
 
 /**
  * This class is thread-safe.
@@ -35,34 +37,22 @@ public class PrintWriterReporter implements Reporter {
   }
 
   @Override
-  public void startNewPhase(String name) {
-    systemOut.println(name);
-  }
-
-  @Override
-  public void report(boolean visible, String header, List<Log> logs) {
+  public void report(
+      boolean visible, Label label, String details, ResultSource source, List<Log> logs) {
     increaseCounts(logs);
     if (visible) {
-      reportFiltered(header, logs);
+      reportFiltered(label, details, source, logs);
     }
   }
 
   @Override
-  public void report(Log log) {
-    increaseCount(log.level());
-    if (passesLevelThreshold(log)) {
-      print(log);
-    }
-  }
-
-  @Override
-  public void report(String header, List<Log> logs) {
+  public void report(Label label, String details, ResultSource source, List<Log> logs) {
     increaseCounts(logs);
-    reportFiltered(header, logs);
+    reportFiltered(label, details, source, logs);
   }
 
-  private void reportFiltered(String header, List<Log> logs) {
-    print(header, logsPassingLevelThreshold(logs));
+  private void reportFiltered(Label label, String details, ResultSource source, List<Log> logs) {
+    print(label, details, source, logsPassingLevelThreshold(logs));
   }
 
   private List<Log> logsPassingLevelThreshold(List<Log> logs) {
@@ -83,12 +73,8 @@ public class PrintWriterReporter implements Reporter {
     counters.get(level).incrementAndGet();
   }
 
-  private void print(Log log) {
-    systemOut.println(FormatLog.formatLog(log));
-  }
-
-  private void print(String header, List<Log> logs) {
-    systemOut.println(FormatLog.formatLogs(header, logs));
+  private void print(Label label, String details, ResultSource source, List<Log> logs) {
+    systemOut.println(formatLogs(label, details, source, logs));
   }
 
   @Override
@@ -104,7 +90,7 @@ public class PrintWriterReporter implements Reporter {
       total += count;
     }
     if (total == 0) {
-      print("No logs reported.", list());
+      systemOut.println("No logs reported");
     }
   }
 

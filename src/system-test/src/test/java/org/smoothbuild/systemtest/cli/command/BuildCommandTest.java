@@ -96,7 +96,7 @@ public class BuildCommandTest {
           """;
       private static final String NATIVE_CALL_TASK_HEADER =
           """
-          ::Evaluating::concat()                      {prj}/build.smooth:1           exec
+          ::Evaluating::call::concat                                                 exec
           """;
 
       @Test
@@ -138,7 +138,7 @@ public class BuildCommandTest {
           """;
       private static final String COMBINE_TASK_HEADER =
           """
-          ::Evaluating::(,)                           {prj}/build.smooth:1           exec
+          ::Evaluating::combine                                                      exec
           """;
 
       @Test
@@ -165,22 +165,18 @@ public class BuildCommandTest {
           """;
       private static final String BLOB_CONST_TASK_HEADER =
           """
-          ::Evaluating::Blob                          {prj}/build.smooth:1
-          """;
+          ::Evaluating::const::Blob""";
       private static final String INT_CONST = """
           result = 123;
           """;
-      private static final String INT_CONST_TASK_HEADER =
-          """
-          ::Evaluating::Int                           {prj}/build.smooth:1
-          """;
+      private static final String INT_CONST_TASK_HEADER = """
+          ::Evaluating::const::Int""";
       private static final String STRING_CONST = """
           result = "myLiteral";
           """;
       private static final String STRING_CONST_TASK_HEADER =
           """
-          ::Evaluating::String                        {prj}/build.smooth:1
-          """;
+          ::Evaluating::const::String""";
 
       @Test
       public void shows_blob_when_consts_enabled() throws IOException {
@@ -237,7 +233,7 @@ public class BuildCommandTest {
             """;
       private static final String PICK_TASK_HEADER =
           """
-          ::Evaluating::[].                           unknown                        exec
+          ::Evaluating::pick                                                         exec
           """;
 
       @Test
@@ -268,7 +264,7 @@ public class BuildCommandTest {
           """;
       private static final String ORDER_TASK_HEADER =
           """
-          ::Evaluating::[,]                           {prj}/build.smooth:1           exec
+          ::Evaluating::order                                                        exec
           """;
 
       @Test
@@ -300,7 +296,7 @@ public class BuildCommandTest {
             """;
       private static final String SELECT_TASK_HEADER =
           """
-          ::Evaluating::{}.                           {prj}/build.smooth:5           exec
+          ::Evaluating::select                                                       exec
           """;
 
       @Test
@@ -530,7 +526,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::myFunc()                      {prj}/build.smooth:3           exec
+          ::Evaluating::call::myFunc                                                 exec
           """);
     }
 
@@ -547,7 +543,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::{}.                           {prj}/build.smooth:4           exec
+          ::Evaluating::select                                                       exec
           """);
     }
 
@@ -559,10 +555,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          ::Evaluating::myFunc                        {prj}/build.smooth:1
-          """);
+      assertSystemOutContains("""
+          ::Evaluating::const::()->Int""");
     }
 
     @Test
@@ -573,10 +567,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          ::Evaluating::myValue                       {prj}/build.smooth:1
-          """);
+      assertSystemOutContains("""
+          ::Evaluating::const::()->String""");
     }
 
     @Test
@@ -588,7 +580,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          ::Evaluating::[,]                           {prj}/build.smooth:1           exec
+          ::Evaluating::order                                                        exec
           """);
     }
 
@@ -599,10 +591,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          ::Evaluating::Blob                          {prj}/build.smooth:1
-          """);
+      assertSystemOutContains("""
+          ::Evaluating::const::Blob""");
     }
 
     @Test
@@ -612,10 +602,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          ::Evaluating::String                        {prj}/build.smooth:1
-          """);
+      assertSystemOutContains("""
+          ::Evaluating::const::String""");
     }
 
     @Test
@@ -625,10 +613,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          ::Evaluating::Int                           {prj}/build.smooth:1
-          """);
+      assertSystemOutContains("""
+          ::Evaluating::const::Int""");
     }
   }
 }
