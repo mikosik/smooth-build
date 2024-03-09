@@ -15,7 +15,5 @@ public interface Reporter extends StepReporter {
   public void report(
       boolean visible, Label label, String details, ResultSource source, List<Log> logs);
 
-  public void printSummary();
-
   public void reportResult(String string);
 }
