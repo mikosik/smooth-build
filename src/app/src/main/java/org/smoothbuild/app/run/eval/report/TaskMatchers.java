@@ -1,20 +1,15 @@
 package org.smoothbuild.app.run.eval.report;
 
 import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.log.Label.label;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
-import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
-import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
-import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TaskMatchers {
+  private static final Label EVALUATING = label("Evaluating");
   public static final TaskMatcher ALL = (task, logs) -> true;
   public static final TaskMatcher NONE = (task, logs) -> false;
 
@@ -23,12 +18,12 @@ public class TaskMatchers {
   static final TaskMatcher WARNING = logLevelMatcher(Level.WARNING);
   static final TaskMatcher INFO = logLevelMatcher(Level.INFO);
 
-  static final TaskMatcher CALL = kindMatcher(InvokeTask.class);
-  static final TaskMatcher COMBINE = kindMatcher(CombineTask.class);
-  static final TaskMatcher CONST = kindMatcher(ConstTask.class);
-  static final TaskMatcher ORDER = kindMatcher(OrderTask.class);
-  static final TaskMatcher PICK = kindMatcher(PickTask.class);
-  static final TaskMatcher SELECT = kindMatcher(SelectTask.class);
+  static final TaskMatcher CALL = labelPrefixMatcher(EVALUATING.append(label("call")));
+  static final TaskMatcher COMBINE = labelPrefixMatcher(EVALUATING.append(label("combine")));
+  static final TaskMatcher CONST = labelPrefixMatcher(EVALUATING.append(label("const")));
+  static final TaskMatcher ORDER = labelPrefixMatcher(EVALUATING.append(label("order")));
+  static final TaskMatcher PICK = labelPrefixMatcher(EVALUATING.append(label("pick")));
+  static final TaskMatcher SELECT = labelPrefixMatcher(EVALUATING.append(label("select")));
 
   static final TaskMatcher DEFAULT = or(INFO, CALL);
 
@@ -67,18 +62,18 @@ public class TaskMatchers {
   }
 
   public static TaskMatcher and(TaskMatcher left, TaskMatcher right) {
-    return (task, logs) -> left.matches(task, logs) && right.matches(task, logs);
+    return (label, logs) -> left.matches(label, logs) && right.matches(label, logs);
   }
 
   public static TaskMatcher or(TaskMatcher left, TaskMatcher right) {
-    return (task, logs) -> left.matches(task, logs) || right.matches(task, logs);
+    return (label, logs) -> left.matches(label, logs) || right.matches(label, logs);
   }
 
   private static TaskMatcher logLevelMatcher(Level level) {
-    return (task, logs) -> logs.stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
+    return (label, logs) -> logs.stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
   }
 
-  private static TaskMatcher kindMatcher(Class<? extends Task> taskClass) {
-    return (task, logs) -> Objects.equals(task.getClass(), taskClass);
+  private static TaskMatcher labelPrefixMatcher(Label prefix) {
+    return (label, logs) -> label.startsWith(prefix);
   }
 }

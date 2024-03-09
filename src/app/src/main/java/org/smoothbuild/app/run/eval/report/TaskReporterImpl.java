@@ -51,8 +51,9 @@ public class TaskReporterImpl implements TaskReporter {
     var traceS = bsTraceTranslator.translate(task.trace());
     var details = traceS == null ? "" : traceS.toString();
     var logs = logsFrom(result);
-    boolean visible = taskMatcher.matches(task, logs);
-    reporter.report(visible, taskLabel(task), details, source, logs);
+    var label = taskLabel(task);
+    boolean visible = taskMatcher.matches(label, logs);
+    reporter.report(visible, label, details, source, logs);
   }
 
   @Override
