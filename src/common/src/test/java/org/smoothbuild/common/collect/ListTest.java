@@ -3,6 +3,7 @@ package org.smoothbuild.common.collect;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -19,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
@@ -673,6 +676,28 @@ public class ListTest {
     void returns_false_for_empty_list_even_when_predicate_returns_always_true() {
       assertThat(list().anyMatches(x -> true)).isFalse();
     }
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  void startsWith(List<String> label, List<String> prefix, boolean expected) {
+    assertThat(label.startsWith(prefix)).isEqualTo(expected);
+  }
+
+  public static java.util.List<Arguments> startsWith() {
+    return java.util.List.of(
+        arguments(list(), list(), true),
+        arguments(list(), list("a"), false),
+        arguments(list("a"), list(), true),
+        arguments(list("a"), list("a"), true),
+        arguments(list("a"), list("b"), false),
+        arguments(list("a"), list("a", "b"), false),
+        arguments(list("a", "b"), list(), true),
+        arguments(list("a", "b"), list("a"), true),
+        arguments(list("a", "b"), list("b"), false),
+        arguments(list("a", "b"), list("a", "b"), true),
+        arguments(list("a", "b"), list("a", "c"), false),
+        arguments(list("a", "b"), list("a", "b", "c"), false));
   }
 
   @Nested

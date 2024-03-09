@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.function.Function2;
@@ -222,6 +223,19 @@ public final class List<E> extends AbstractList<E> {
       }
     }
     return false;
+  }
+
+  public boolean startsWith(List<E> prefix) {
+    var thatArray = prefix.array;
+    if (this.array.length < thatArray.length) {
+      return false;
+    }
+    for (int i = 0; i < thatArray.length; i++) {
+      if (!Objects.equals(this.array[i], thatArray[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public Set<E> toSet() {
