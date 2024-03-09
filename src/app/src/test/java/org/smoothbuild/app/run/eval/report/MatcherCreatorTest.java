@@ -19,6 +19,7 @@ import static org.smoothbuild.app.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.or;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.ArrayList;
@@ -31,10 +32,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.app.layout.SmoothSpace;
 import org.smoothbuild.common.filesystem.base.Space;
+import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import picocli.CommandLine.TypeConversionException;
 
@@ -45,17 +46,17 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
     TaskMatcher matcher = MatcherCreator.createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
-    var tasks =
-        list(combineTask(), constTask(), invokeTask(), orderTask(), pickTask(), selectTask());
-    for (Task task : tasks) {
+    var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
+        .map(s -> label("Evaluating", s));
+    for (Label label : taskLabels) {
       for (Space space : SmoothSpace.values()) {
         for (Level level : levels()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
-          boolean actual = matcher.matches(task, logs);
-          boolean expected = expectedMatcher.matches(task, logs);
+          boolean actual = matcher.matches(label, logs);
+          boolean expected = expectedMatcher.matches(label, logs);
           if (actual != expected) {
             builder
-                .append(task)
+                .append(label)
                 .append(" ")
                 .append(space)
                 .append(" ")
