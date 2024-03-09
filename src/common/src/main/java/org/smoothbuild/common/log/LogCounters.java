@@ -1,0 +1,28 @@
+package org.smoothbuild.common.log;
+
+import static com.google.common.collect.Maps.toImmutableEnumMap;
+import static java.util.Arrays.stream;
+
+import java.util.EnumMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Holds count of each reported log in each log level.
+ * This class is thread-safe.
+ */
+public class LogCounters {
+  private final EnumMap<Level, AtomicInteger> counters = createCountersMap();
+
+  public void increment(Level level) {
+    counters.get(level).getAndIncrement();
+  }
+
+  public int get(Level level) {
+    return counters.get(level).get();
+  }
+
+  private static EnumMap<Level, AtomicInteger> createCountersMap() {
+    var map = stream(Level.values()).collect(toImmutableEnumMap(v -> v, v -> new AtomicInteger()));
+    return new EnumMap<>(map);
+  }
+}

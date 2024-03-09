@@ -54,6 +54,7 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.Level;
+import org.smoothbuild.common.log.LogCounters;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
@@ -319,7 +320,8 @@ public class EvaluatorSTest extends TestingVirtualMachine {
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var sbTranslatorFacade = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
-    var reporter = new PrintWriterReporter(new PrintWriter(inMemorySystemOut(), true), Level.INFO);
+    var printWriter = new PrintWriter(inMemorySystemOut(), true);
+    var reporter = new PrintWriterReporter(printWriter, new LogCounters(), Level.INFO);
     var taskReporter = new TaskReporterImpl(ALL, reporter, bsMapping());
 
     var injector = createInjector(new AbstractModule() {
