@@ -16,8 +16,5 @@ public class MemoryReporter extends MemoryStepReporter implements Reporter {
   }
 
   @Override
-  public void printSummary() {}
-
-  @Override
   public void reportResult(String string) {}
 }

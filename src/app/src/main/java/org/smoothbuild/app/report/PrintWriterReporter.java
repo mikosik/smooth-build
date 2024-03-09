@@ -1,12 +1,10 @@
 package org.smoothbuild.app.report;
 
 import static org.smoothbuild.app.report.FormatLog.formatLogs;
-import static org.smoothbuild.common.base.Strings.indent;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.PrintWriter;
-import java.util.Locale;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
@@ -72,32 +70,7 @@ public class PrintWriterReporter implements Reporter {
   }
 
   @Override
-  public void printSummary() {
-    printWriter.println("::Summary");
-    int total = 0;
-    for (Level level : Level.values()) {
-      int count = counters.get(level);
-      if (count != 0) {
-        int value = counters.get(level);
-        printWriter.println(indent(statText(level, value)));
-      }
-      total += count;
-    }
-    if (total == 0) {
-      printWriter.println("No logs reported");
-    }
-  }
-
-  @Override
   public void reportResult(String resultMessage) {
     this.printWriter.println(resultMessage);
-  }
-
-  private String statText(Level level, int value) {
-    var name = level.name().toLowerCase(Locale.ROOT);
-    if (1 < value) {
-      name = name + "s";
-    }
-    return value + " " + name;
   }
 }
