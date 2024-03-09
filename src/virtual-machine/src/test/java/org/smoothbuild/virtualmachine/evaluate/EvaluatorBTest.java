@@ -489,7 +489,7 @@ public class EvaluatorBTest extends TestingVirtualMachine {
   private static ArgumentMatcher<List<Log>> isLogListWithFatalMessageStartingWith(
       String messageStart) {
     return argument -> argument.size() == 1
-        && argument.get(0).level() == Level.FATAL
+        && argument.get(0).level() == FATAL
         && argument.get(0).message().startsWith(messageStart);
   }
 
