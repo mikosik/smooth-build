@@ -1,6 +1,10 @@
 package org.smoothbuild.common.log;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.common.log.Level.ERROR;
+import static org.smoothbuild.common.log.Level.FATAL;
+import static org.smoothbuild.common.log.Level.INFO;
+import static org.smoothbuild.common.log.Level.WARNING;
 
 import java.util.Collection;
 
@@ -11,23 +15,23 @@ public record Log(Level level, String message) {
   }
 
   public static Log fatal(String log) {
-    return new Log(Level.FATAL, log);
+    return new Log(FATAL, log);
   }
 
   public static Log error(String log) {
-    return new Log(Level.ERROR, log);
+    return new Log(ERROR, log);
   }
 
   public static Log warning(String log) {
-    return new Log(Level.WARNING, log);
+    return new Log(WARNING, log);
   }
 
   public static Log info(String log) {
-    return new Log(Level.INFO, log);
+    return new Log(INFO, log);
   }
 
   public static boolean containsAnyFailure(Collection<Log> list) {
-    return list.stream().anyMatch(l -> l.level().hasPriorityAtLeast(Level.ERROR));
+    return list.stream().anyMatch(l -> l.level().hasPriorityAtLeast(ERROR));
   }
 
   public String toPrettyString() {

@@ -15,6 +15,6 @@ public class BuildStepFactory implements StepFactory<List<String>, String> {
   public Step<Tuple0, String> create(List<String> names) {
     return tryStep(RemoveArtifacts.class)
         .then(evaluateStep(Layout.MODULES, names))
-        .then(Step.tryStep(SaveArtifacts.class).named("Saving artifact(s)"));
+        .then(tryStep(SaveArtifacts.class).named("Saving artifact(s)"));
   }
 }

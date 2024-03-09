@@ -2,6 +2,10 @@ package org.smoothbuild.common.log;
 
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.Level.ERROR;
+import static org.smoothbuild.common.log.Level.FATAL;
+import static org.smoothbuild.common.log.Level.INFO;
+import static org.smoothbuild.common.log.Level.WARNING;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
@@ -26,19 +30,19 @@ public class Logger extends AbstractCollection<Log> {
   }
 
   public void fatal(String message) {
-    log(new Log(Level.FATAL, message));
+    log(new Log(FATAL, message));
   }
 
   public void error(String message) {
-    log(new Log(Level.ERROR, message));
+    log(new Log(ERROR, message));
   }
 
   public void warning(String message) {
-    log(new Log(Level.WARNING, message));
+    log(new Log(WARNING, message));
   }
 
   public void info(String message) {
-    log(new Log(Level.INFO, message));
+    log(new Log(INFO, message));
   }
 
   public void log(Log log) {
