@@ -50,12 +50,12 @@ public class BuildCommand extends ProjectCommand {
             lw, warning        - contains a log with at least warning level
             li, info           - contains any log
 
-            c, call            - evaluates function call
-            t, tuple           - evaluates tuple creation
-            o, const           - evaluates compile time constant
-            r, array           - evaluates array creation
-            p, pick            - evaluates array element picking
-            s, select          - evaluates field selection
+            call               - evaluates function call
+            combine            - evaluates tuple creation
+            const              - evaluates compile time constant
+            order              - evaluates array creation
+            pick               - evaluates array element picking
+            select             - evaluates field selection
           """)
   TaskMatcher showTasks;
 

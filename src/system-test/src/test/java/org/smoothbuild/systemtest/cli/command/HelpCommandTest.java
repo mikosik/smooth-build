@@ -89,14 +89,14 @@ public class HelpCommandTest extends SystemTestCase {
                                       warning level
                                       li, info           - contains any log
 
-                                      c, call            - evaluates function call
-                                      t, tuple           - evaluates tuple creation
-                                      o, const           - evaluates compile time
+                                      call               - evaluates function call
+                                      combine            - evaluates tuple creation
+                                      const              - evaluates compile time
                                       constant
-                                      r, array           - evaluates array creation
-                                      p, pick            - evaluates array element
+                                      order              - evaluates array creation
+                                      pick               - evaluates array element
                                       picking
-                                      s, select          - evaluates field selection
+                                      select             - evaluates field selection
            """);
   }
 

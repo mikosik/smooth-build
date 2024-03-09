@@ -144,7 +144,7 @@ public class BuildCommandTest {
       @Test
       public void shows_when_enabled() throws IOException {
         createUserModule(COMBINE);
-        runSmooth(buildCommand("--show-tasks=tuple", "result"));
+        runSmooth(buildCommand("--show-tasks=combine", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(COMBINE_TASK_HEADER);
       }
@@ -270,7 +270,7 @@ public class BuildCommandTest {
       @Test
       public void shows_when_enabled() throws IOException {
         createUserModule(ORDER);
-        runSmooth(buildCommand("--show-tasks=array", "result"));
+        runSmooth(buildCommand("--show-tasks=order", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(ORDER_TASK_HEADER);
       }
