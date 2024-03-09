@@ -35,14 +35,13 @@ import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreatorTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("provideArguments")
-  public void matcher(String expression, TaskMatcher expectedMatcher) throws BytecodeException {
+  public void matcher(String expression, TaskMatcher expectedMatcher) {
     TaskMatcher matcher = MatcherCreator.createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
@@ -100,20 +99,14 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
         arguments("info", INFO),
         arguments("li", INFO),
         arguments("call", CALL),
-        arguments("c", CALL),
-        arguments("tuple", COMBINE),
-        arguments("t", COMBINE),
+        arguments("combine", COMBINE),
         arguments("const", CONST),
-        arguments("o", CONST),
-        arguments("array", ORDER),
-        arguments("r", ORDER),
+        arguments("order", ORDER),
         arguments("pick", PICK),
-        arguments("p", PICK),
         arguments("select", SELECT),
-        arguments("s", SELECT),
-        arguments("   array", ORDER),
-        arguments("array   ", ORDER),
-        arguments("   array   ", ORDER),
+        arguments("   order", ORDER),
+        arguments("order   ", ORDER),
+        arguments("   order   ", ORDER),
         arguments("call & error", and(CALL, ERROR)),
         arguments("call | error", or(CALL, ERROR)),
         arguments("call | select | warning", or(CALL, or(SELECT, WARNING))),

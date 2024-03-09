@@ -44,17 +44,11 @@ public class TaskMatchers {
           .put("info", INFO)
           .put("li", INFO)
           .put("call", CALL)
-          .put("c", CALL)
-          .put("tuple", COMBINE)
-          .put("t", COMBINE)
+          .put("combine", COMBINE)
           .put("const", CONST)
-          .put("o", CONST)
-          .put("array", ORDER)
-          .put("r", ORDER)
+          .put("order", ORDER)
           .put("pick", PICK)
-          .put("p", PICK)
           .put("select", SELECT)
-          .put("s", SELECT)
           .build();
 
   public static Maybe<TaskMatcher> findMatcher(String name) {
