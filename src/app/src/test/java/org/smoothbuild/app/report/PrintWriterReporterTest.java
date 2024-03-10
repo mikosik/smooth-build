@@ -20,7 +20,6 @@ import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 
 import java.io.PrintWriter;
 import java.util.List;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -81,13 +80,5 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
         arguments(ERROR, list(FATAL_LOG, ERROR_LOG)),
         arguments(WARNING, list(FATAL_LOG, ERROR_LOG, WARNING_LOG)),
         arguments(INFO, list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG)));
-  }
-
-  @Test
-  void reportResult() {
-    var systemOut = mock(PrintWriter.class);
-    var reporter = new PrintWriterReporter(systemOut, new LogCounters(), INFO);
-    reporter.reportResult("result message");
-    verify(systemOut).println("result message");
   }
 }

@@ -68,9 +68,4 @@ public class PrintWriterReporter implements Reporter {
   private void print(Label label, String details, ResultSource source, List<Log> logs) {
     printWriter.println(formatLogs(label, details, source, logs));
   }
-
-  @Override
-  public void reportResult(String resultMessage) {
-    this.printWriter.println(resultMessage);
-  }
 }
