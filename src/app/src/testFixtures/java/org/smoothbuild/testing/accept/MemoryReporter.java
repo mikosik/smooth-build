@@ -14,7 +14,4 @@ public class MemoryReporter extends MemoryStepReporter implements Reporter {
     System.out.println("taskHeader = " + label);
     report(label, details, source, logs);
   }
-
-  @Override
-  public void reportResult(String string) {}
 }
