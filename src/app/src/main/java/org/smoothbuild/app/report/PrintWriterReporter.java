@@ -9,14 +9,14 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
-import org.smoothbuild.common.step.StepReporter;
 
 /**
  * This class is thread-safe.
  */
 @Singleton
-public class PrintWriterReporter implements StepReporter {
+public class PrintWriterReporter implements Reporter {
   private final PrintWriter printWriter;
   private final Level logLevel;
 

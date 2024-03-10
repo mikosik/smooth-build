@@ -37,6 +37,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple0;
 
@@ -45,7 +46,7 @@ class StepExecutorTest {
   class _constant_step {
     @Test
     void executing_return_its_value() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var result = stepExecutor().execute(constStep("a"), null, reporter);
       assertThat(result).isEqualTo(some("a"));
     }
@@ -61,7 +62,7 @@ class StepExecutorTest {
     @ParameterizedTest
     @MethodSource
     void that_returns_success(List<Log> logs) {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
 
       var result = stepExecutor().execute(tryStep(s -> success(s + "b", logs)), "a", reporter);
 
@@ -77,7 +78,7 @@ class StepExecutorTest {
     @ParameterizedTest
     @MethodSource
     void that_returns_failure(List<Log> logs) {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = tryStep(s -> failure(logs));
 
       var result = stepExecutor().execute(step, "a", reporter);
@@ -92,7 +93,7 @@ class StepExecutorTest {
 
     @Test
     void that_returns_null_causes_execution_failure() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = tryStep(s -> null);
       assertCall(() -> stepExecutor().execute(step, "a", reporter))
           .throwsException(NullPointerException.class);
@@ -103,7 +104,7 @@ class StepExecutorTest {
   class _function_key_step {
     @Test
     void that_returns_success() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
 
       var result = stepExecutor("def").execute(tryStep(SuffixWithInjected.class), "abc", reporter);
 
@@ -113,7 +114,7 @@ class StepExecutorTest {
     @ParameterizedTest
     @MethodSource
     void that_returns_failure(Log log) {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
 
       var result = stepExecutor(log).execute(tryStep(LogInjectedLog.class), tuple(), reporter);
 
@@ -127,7 +128,7 @@ class StepExecutorTest {
 
     @Test
     void that_returns_null_causes_execution_failure() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       assertCall(() -> stepExecutor().execute(tryStep(ReturnNull.class), tuple(), reporter))
           .throwsException(NullPointerException.class);
     }
@@ -185,7 +186,7 @@ class StepExecutorTest {
       var log = new Log(level, "message");
       var step = tryStep(t -> Try.of("value", log)).named("name");
 
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
 
       stepExecutor().execute(step, tuple(), reporter);
 
@@ -200,7 +201,7 @@ class StepExecutorTest {
       var log = new Log(level, "message");
       var step = tryStep(t -> Try.of("value", log)).named("name").named("outer");
 
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
 
       stepExecutor().execute(step, tuple(), reporter);
 
@@ -214,7 +215,7 @@ class StepExecutorTest {
   class _composed_step {
     @Test
     void result_from_first_step_is_passed_to_second_step() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = constStep("abc").then(tryStep(s -> success(s + "def")));
 
       var result = stepExecutor().execute(step, tuple(), reporter);
@@ -224,7 +225,7 @@ class StepExecutorTest {
 
     @Test
     void non_failure_logs_from_each_steps_are_logged() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = tryStep(v -> success("abc", info("info")))
           .then(tryStep(s -> success(s + "def", warning("warning"))));
 
@@ -238,7 +239,7 @@ class StepExecutorTest {
 
     @Test
     void second_step_is_not_executed_when_first_fails() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       TryFunction<Object, String> function = mock();
       var step = tryStep(v -> failure(error("error"))).then(tryStep(function));
 
@@ -254,7 +255,7 @@ class StepExecutorTest {
   class _factory_step {
     @Test
     void step_created_by_step_factory_is_executed() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = stepFactory((String s) -> constStep(s + "def"));
 
       var result = stepExecutor().execute(step, "abc", reporter);
@@ -265,7 +266,7 @@ class StepExecutorTest {
 
     @Test
     void failures_created_by_step_factory_are_reported() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = stepFactory((String s) -> tryStep((Tuple0 t) -> failure(error("error"))));
 
       var result = stepExecutor().execute(step, "abc", reporter);
@@ -279,7 +280,7 @@ class StepExecutorTest {
   class _maybe_step {
     @Test
     void that_returns_some() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = maybeStep(OptionFunctionReturningSome.class);
 
       var result = stepExecutor().execute(step, 3, reporter);
@@ -290,7 +291,7 @@ class StepExecutorTest {
 
     @Test
     void that_returns_none() {
-      var reporter = mock(StepReporter.class);
+      var reporter = mock(Reporter.class);
       var step = maybeStep(OptionFunctionReturningNone.class);
 
       var result = stepExecutor().execute(step, 3, reporter);
@@ -325,14 +326,14 @@ class StepExecutorTest {
   }
 
   private static void assertStepExecutionReports(Step<Object, String> step, Log log) {
-    var reporter = mock(StepReporter.class);
+    var reporter = mock(Reporter.class);
 
     stepExecutor().execute(step, tuple(), reporter);
 
     verifyReported(reporter, list(log));
   }
 
-  private static void verifyReported(StepReporter reporter, List<Log> logs) {
+  private static void verifyReported(Reporter reporter, List<Log> logs) {
     verify(reporter).report(label(), "", EXECUTION, logs);
     verifyNoMoreInteractions(reporter);
   }

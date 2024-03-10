@@ -1,14 +1,13 @@
 package org.smoothbuild.common.log;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.step.StepReporter;
 
-public class CountingReporter implements StepReporter {
-  private final StepReporter stepReporter;
+public class CountingReporter implements Reporter {
+  private final Reporter reporter;
   private final LogCounters logCounters;
 
-  public CountingReporter(StepReporter stepReporter, LogCounters logCounters) {
-    this.stepReporter = stepReporter;
+  public CountingReporter(Reporter reporter, LogCounters logCounters) {
+    this.reporter = reporter;
     this.logCounters = logCounters;
   }
 
@@ -17,6 +16,6 @@ public class CountingReporter implements StepReporter {
     for (Log log : logs) {
       logCounters.increment(log.level());
     }
-    stepReporter.report(label, details, source, logs);
+    reporter.report(label, details, source, logs);
   }
 }

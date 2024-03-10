@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.step.StepReporter;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
@@ -32,12 +32,12 @@ public class TaskReporterImpl implements TaskReporter {
   private static final String LABEL_PREFIX = "Evaluating";
   // visible for testing
   static final int NAME_LENGTH_LIMIT = 43;
-  private final StepReporter reporter;
+  private final Reporter reporter;
   private final BsMapping bsMapping;
   private final BsTraceTranslator bsTraceTranslator;
 
   @Inject
-  public TaskReporterImpl(StepReporter reporter, BsMapping bsMapping) {
+  public TaskReporterImpl(Reporter reporter, BsMapping bsMapping) {
     this.reporter = reporter;
     this.bsMapping = bsMapping;
     this.bsTraceTranslator = new BsTraceTranslator(bsMapping);

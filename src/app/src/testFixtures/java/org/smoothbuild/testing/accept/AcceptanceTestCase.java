@@ -40,9 +40,9 @@ import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.step.StepExecutor;
-import org.smoothbuild.common.step.StepReporter;
-import org.smoothbuild.common.testing.MemoryStepReporter;
+import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -113,7 +113,7 @@ public class AcceptanceTestCase extends TestingBytecode {
 
   protected void evaluate(String... names) {
     var steps = evaluateStep(modules, listOfAll(asList(names)));
-    var reporter = injector.getInstance(StepReporter.class);
+    var reporter = injector.getInstance(Reporter.class);
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
 
@@ -165,8 +165,8 @@ public class AcceptanceTestCase extends TestingBytecode {
     assertThat(containsAnyFailure(memoryReporter().logs())).isTrue();
   }
 
-  private MemoryStepReporter memoryReporter() {
-    return injector.getInstance(MemoryStepReporter.class);
+  private MemoryReporter memoryReporter() {
+    return injector.getInstance(MemoryReporter.class);
   }
 
   private Injector createInjector() {
@@ -186,8 +186,8 @@ public class AcceptanceTestCase extends TestingBytecode {
   public class TestModule extends AbstractModule {
     @Override
     protected void configure() {
-      bind(MemoryStepReporter.class).toInstance(new MemoryStepReporter());
-      bind(StepReporter.class).to(MemoryStepReporter.class);
+      bind(MemoryReporter.class).toInstance(new MemoryReporter());
+      bind(Reporter.class).to(MemoryReporter.class);
       bind(TaskMatcher.class).toInstance(ALL);
     }
 

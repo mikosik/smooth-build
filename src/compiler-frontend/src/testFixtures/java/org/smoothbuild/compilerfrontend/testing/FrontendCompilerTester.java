@@ -28,7 +28,7 @@ import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.step.StepExecutor;
-import org.smoothbuild.common.testing.MemoryStepReporter;
+import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
@@ -136,7 +136,7 @@ public class FrontendCompilerTester {
     writeModuleFilesToFileSystems(spaces);
     var steps = createFrontendCompilerStep(
         list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
-    var memoryReporter = new MemoryStepReporter();
+    var memoryReporter = new MemoryReporter();
     var module = injector.getInstance(StepExecutor.class).execute(steps, null, memoryReporter);
     return success(module.getOr(null), memoryReporter.logs());
   }

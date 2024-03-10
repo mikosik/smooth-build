@@ -52,8 +52,8 @@ import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.step.StepExecutor;
-import org.smoothbuild.common.step.StepReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
@@ -326,7 +326,7 @@ public class EvaluatorSTest extends TestingVirtualMachine {
       @Override
       protected void configure() {
         bind(EvaluatorB.class).toInstance(evaluatorB);
-        bind(StepReporter.class).toInstance(reporter);
+        bind(Reporter.class).toInstance(reporter);
         bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
