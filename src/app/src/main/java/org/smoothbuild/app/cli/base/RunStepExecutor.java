@@ -6,15 +6,15 @@ import static org.smoothbuild.common.step.Step.tryStep;
 
 import com.google.inject.Injector;
 import org.smoothbuild.app.report.LogSummaryPrinter;
-import org.smoothbuild.app.report.Reporter;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepExecutor;
+import org.smoothbuild.common.step.StepReporter;
 import org.smoothbuild.common.tuple.Tuple0;
 
 public class RunStepExecutor {
   public static <T> Integer runStepExecutor(Injector injector, Step<T, String> step, T argument) {
-    var reporter = injector.getInstance(Reporter.class);
+    var reporter = injector.getInstance(StepReporter.class);
     Maybe<Tuple0> message = injector
         .getInstance(StepExecutor.class)
         .execute(step.then(tryStep(ReportResult.class)), argument, reporter);

@@ -10,10 +10,10 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.lev
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
 import jakarta.inject.Inject;
-import org.smoothbuild.app.report.Reporter;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.step.StepReporter;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
@@ -32,14 +32,12 @@ public class TaskReporterImpl implements TaskReporter {
   private static final String LABEL_PREFIX = "Evaluating";
   // visible for testing
   static final int NAME_LENGTH_LIMIT = 43;
-  private final TaskMatcher taskMatcher;
-  private final Reporter reporter;
+  private final StepReporter reporter;
   private final BsMapping bsMapping;
   private final BsTraceTranslator bsTraceTranslator;
 
   @Inject
-  public TaskReporterImpl(TaskMatcher taskMatcher, Reporter reporter, BsMapping bsMapping) {
-    this.taskMatcher = taskMatcher;
+  public TaskReporterImpl(StepReporter reporter, BsMapping bsMapping) {
     this.reporter = reporter;
     this.bsMapping = bsMapping;
     this.bsTraceTranslator = new BsTraceTranslator(bsMapping);
@@ -52,8 +50,7 @@ public class TaskReporterImpl implements TaskReporter {
     var details = traceS == null ? "" : traceS.toString();
     var logs = logsFrom(result);
     var label = taskLabel(task);
-    boolean visible = taskMatcher.matches(label, logs);
-    reporter.report(visible, label, details, source, logs);
+    reporter.report(label, details, source, logs);
   }
 
   @Override

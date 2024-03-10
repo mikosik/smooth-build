@@ -5,13 +5,13 @@ import static com.google.inject.Guice.createInjector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.log.Level.INFO;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
@@ -48,14 +48,12 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.app.report.PrintWriterReporter;
-import org.smoothbuild.app.report.Reporter;
 import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.LogCounters;
 import org.smoothbuild.common.step.StepExecutor;
+import org.smoothbuild.common.step.StepReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
@@ -321,14 +319,14 @@ public class EvaluatorSTest extends TestingVirtualMachine {
     var sbTranslatorFacade = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
     var printWriter = new PrintWriter(inMemorySystemOut(), true);
-    var reporter = new PrintWriterReporter(printWriter, new LogCounters(), Level.INFO);
-    var taskReporter = new TaskReporterImpl(ALL, reporter, bsMapping());
+    var reporter = new PrintWriterReporter(printWriter, INFO);
+    var taskReporter = new TaskReporterImpl(reporter, bsMapping());
 
     var injector = createInjector(new AbstractModule() {
       @Override
       protected void configure() {
         bind(EvaluatorB.class).toInstance(evaluatorB);
-        bind(Reporter.class).toInstance(reporter);
+        bind(StepReporter.class).toInstance(reporter);
         bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
