@@ -2,7 +2,6 @@ package org.smoothbuild.app.run.eval.report;
 
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.Level.FATAL;
 
 import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.Maybe;

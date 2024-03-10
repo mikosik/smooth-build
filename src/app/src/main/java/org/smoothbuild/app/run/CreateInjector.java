@@ -18,7 +18,6 @@ import org.smoothbuild.app.layout.BinarySpaceModule;
 import org.smoothbuild.app.layout.ProjectSpaceModule;
 import org.smoothbuild.app.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.app.report.ReportModule;
-import org.smoothbuild.app.run.eval.EvaluatorSModule;
 import org.smoothbuild.app.run.eval.report.TaskMatcher;
 import org.smoothbuild.app.run.eval.report.TaskMatchers;
 import org.smoothbuild.app.wire.AppModule;
@@ -42,13 +41,12 @@ public class CreateInjector {
     return Guice.createInjector(
         PRODUCTION,
         new AppModule(),
-        new EvaluatorSModule(taskMatcher),
         new VirtualMachineModule(),
         new ProjectSpaceModule(),
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
-        new ReportModule(out, logLevel));
+        new ReportModule(out, taskMatcher, logLevel));
   }
 
   public static Injector createInjector(PrintWriter out) {
@@ -60,7 +58,7 @@ public class CreateInjector {
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
-        new ReportModule(out, INFO));
+        new ReportModule(out, TaskMatchers.ALL, INFO));
   }
 
   private static Path installationDir() {

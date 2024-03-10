@@ -29,7 +29,6 @@ import com.google.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.app.report.Reporter;
 import org.smoothbuild.app.run.eval.report.TaskMatcher;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
@@ -42,6 +41,8 @@ import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.step.StepExecutor;
+import org.smoothbuild.common.step.StepReporter;
+import org.smoothbuild.common.testing.MemoryStepReporter;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -112,7 +113,7 @@ public class AcceptanceTestCase extends TestingBytecode {
 
   protected void evaluate(String... names) {
     var steps = evaluateStep(modules, listOfAll(asList(names)));
-    var reporter = injector.getInstance(Reporter.class);
+    var reporter = injector.getInstance(StepReporter.class);
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
 
@@ -164,8 +165,8 @@ public class AcceptanceTestCase extends TestingBytecode {
     assertThat(containsAnyFailure(memoryReporter().logs())).isTrue();
   }
 
-  private MemoryReporter memoryReporter() {
-    return injector.getInstance(MemoryReporter.class);
+  private MemoryStepReporter memoryReporter() {
+    return injector.getInstance(MemoryStepReporter.class);
   }
 
   private Injector createInjector() {
@@ -185,8 +186,8 @@ public class AcceptanceTestCase extends TestingBytecode {
   public class TestModule extends AbstractModule {
     @Override
     protected void configure() {
-      bind(MemoryReporter.class).toInstance(new MemoryReporter());
-      bind(Reporter.class).to(MemoryReporter.class);
+      bind(MemoryStepReporter.class).toInstance(new MemoryStepReporter());
+      bind(StepReporter.class).to(MemoryStepReporter.class);
       bind(TaskMatcher.class).toInstance(ALL);
     }
 
