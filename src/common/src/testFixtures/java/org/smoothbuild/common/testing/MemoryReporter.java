@@ -4,10 +4,10 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
-import org.smoothbuild.common.step.StepReporter;
 
-public class MemoryStepReporter implements StepReporter {
+public class MemoryReporter implements Reporter {
   private final Logger buffer = new Logger();
 
   @Override

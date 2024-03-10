@@ -21,13 +21,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.step.StepReporter;
 
 public class CountingReporterTest {
   @Test
   void report_call_is_forwarded_to_wrapped_reporter() {
     var logCounters = new LogCounters();
-    var stepReporter = mock(StepReporter.class);
+    var stepReporter = mock(Reporter.class);
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");
@@ -41,7 +40,7 @@ public class CountingReporterTest {
   @MethodSource
   void counters_are_incremented(Log log, Level reportedLevel) {
     var logCounters = mock(LogCounters.class);
-    var stepReporter = mock(StepReporter.class);
+    var stepReporter = mock(Reporter.class);
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");

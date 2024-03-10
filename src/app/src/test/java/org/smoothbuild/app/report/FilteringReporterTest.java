@@ -12,30 +12,33 @@ import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.app.run.eval.report.TaskMatcher;
-import org.smoothbuild.common.step.StepReporter;
+import org.smoothbuild.common.log.Label;
+import org.smoothbuild.common.log.Reporter;
 
 public class FilteringReporterTest {
   @Test
-  public void when_filter_matches() throws Exception {
-    testVisibility(ALL, true);
+  public void when_task_matcher_matches_then_report_is_forwarded() {
+    testVisibility(ALL, true, label("Evaluating", "name"));
   }
 
   @Test
-  public void when_filter_not_matches() throws Exception {
-    testVisibility(NONE, false);
+  public void when_task_matcher_not_matches_then_report_is_suppressed() {
+    testVisibility(NONE, false, label("Evaluating", "name"));
   }
 
-  private void testVisibility(TaskMatcher taskMatcher, boolean matched) throws Exception {
-    var label = label("name");
+  @Test
+  public void when_label_not_starts_with_evaluating_then_report_is_forwarded() {
+    testVisibility(NONE, true, label("not-Evaluating", "name"));
+  }
+
+  private void testVisibility(TaskMatcher taskMatcher, boolean matched, Label label) {
     var details = "details";
     var logs = list(ERROR_LOG);
-    var wrappedReporter = mock(StepReporter.class);
+    var wrappedReporter = mock(Reporter.class);
     var reporter = new FilteringReporter(wrappedReporter, taskMatcher);
 
     reporter.report(label, details, DISK, logs);
 
-    if (matched) {
-      verify(wrappedReporter, times(matched ? 1 : 0)).report(label, details, DISK, logs);
-    }
+    verify(wrappedReporter, times(matched ? 1 : 0)).report(label, details, DISK, logs);
   }
 }

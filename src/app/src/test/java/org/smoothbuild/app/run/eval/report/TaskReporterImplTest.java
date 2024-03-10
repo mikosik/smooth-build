@@ -14,8 +14,8 @@ import static org.smoothbuild.common.log.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.Label;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
-import org.smoothbuild.common.step.StepReporter;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
@@ -107,7 +107,7 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
 
   private void testHeader(BsMapping bsMapping, Task task, ResultSource source, Label label)
       throws BytecodeException {
-    var reporter = mock(StepReporter.class);
+    var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(reporter, bsMapping);
     taskReporter.report(task, computationResult(intB(), source));
     verify(reporter).report(label("Evaluating").append(label), "", source, list());

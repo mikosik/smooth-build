@@ -1,4 +1,4 @@
-package org.smoothbuild.common.step;
+package org.smoothbuild.common.log;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -9,11 +9,11 @@ import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 
 import org.junit.jupiter.api.Test;
 
-public class PrefixingStepReporterTest {
+public class PrefixingReporterTest {
   @Test
   void report_call_is_forwarded_with_prefixed_label() {
-    var stepReporter = mock(StepReporter.class);
-    var prefixingStepReporter = new PrefixingStepReporter(stepReporter, label("prefix"));
+    var stepReporter = mock(Reporter.class);
+    var prefixingStepReporter = new PrefixingReporter(stepReporter, label("prefix"));
     var details = "details";
     var resultSource = EXECUTION;
     var logs = list(ERROR_LOG);

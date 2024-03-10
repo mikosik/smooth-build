@@ -8,7 +8,7 @@ import org.smoothbuild.app.run.eval.report.TaskMatcher;
 import org.smoothbuild.common.log.CountingReporter;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.LogCounters;
-import org.smoothbuild.common.step.StepReporter;
+import org.smoothbuild.common.log.Reporter;
 
 public class ReportModule extends AbstractModule {
   private final PrintWriter out;
@@ -30,7 +30,7 @@ public class ReportModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public StepReporter provideReporter(
+  public Reporter provideReporter(
       PrintWriterReporter printWriterReporter, LogCounters logCounters, TaskMatcher taskMatcher) {
     var filtering = new FilteringReporter(printWriterReporter, taskMatcher);
     return new CountingReporter(filtering, logCounters);
