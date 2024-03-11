@@ -2,6 +2,7 @@ package org.smoothbuild.app.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.or;
 import static org.smoothbuild.common.collect.List.list;
@@ -27,7 +28,6 @@ public class TaskMatchersTest extends TestingVirtualMachine {
   }
 
   public static List<Arguments> matcher_matches_cases() {
-    var t = new TestingVirtualMachine();
     return list(
         arguments(matcher("all"), null, null, true),
         arguments(matcher("none"), null, null, false),
@@ -55,18 +55,18 @@ public class TaskMatchersTest extends TestingVirtualMachine {
         arguments(or(matcher("all"), matcher("none")), null, null, true),
         arguments(or(matcher("none"), matcher("all")), null, null, true),
         arguments(or(matcher("none"), matcher("none")), null, null, false),
-        arguments(matcher("call"), label("evaluate", "call"), null, true),
-        arguments(matcher("call"), label("evaluate", "order"), null, false),
-        arguments(matcher("combine"), label("evaluate", "combine"), null, true),
-        arguments(matcher("combine"), label("evaluate", "order"), null, false),
-        arguments(matcher("const"), label("evaluate", "const"), null, true),
-        arguments(matcher("const"), label("evaluate", "order"), null, false),
-        arguments(matcher("order"), label("evaluate", "order"), null, true),
-        arguments(matcher("order"), label("evaluate", "invoke"), null, false),
-        arguments(matcher("pick"), label("evaluate", "pick"), null, true),
-        arguments(matcher("pick"), label("evaluate", "order"), null, false),
-        arguments(matcher("select"), label("evaluate", "select"), null, true),
-        arguments(matcher("select"), label("evaluate", "order"), null, false));
+        arguments(matcher("call"), EVALUATE.append(label("call")), null, true),
+        arguments(matcher("call"), EVALUATE.append(label("order")), null, false),
+        arguments(matcher("combine"), EVALUATE.append(label("combine")), null, true),
+        arguments(matcher("combine"), EVALUATE.append(label("order")), null, false),
+        arguments(matcher("const"), EVALUATE.append(label("const")), null, true),
+        arguments(matcher("const"), EVALUATE.append(label("order")), null, false),
+        arguments(matcher("order"), EVALUATE.append(label("order")), null, true),
+        arguments(matcher("order"), EVALUATE.append(label("invoke")), null, false),
+        arguments(matcher("pick"), EVALUATE.append(label("pick")), null, true),
+        arguments(matcher("pick"), EVALUATE.append(label("order")), null, false),
+        arguments(matcher("select"), EVALUATE.append(label("select")), null, true),
+        arguments(matcher("select"), EVALUATE.append(label("order")), null, false));
   }
 
   private static TaskMatcher matcher(String name) {

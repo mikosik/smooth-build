@@ -2,6 +2,7 @@ package org.smoothbuild.app.run.eval.report;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Objects.requireNonNullElse;
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Log.fatal;
@@ -29,7 +30,6 @@ import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TaskReporterImpl implements TaskReporter {
-  private static final String LABEL_PREFIX = "evaluate";
   // visible for testing
   static final int NAME_LENGTH_LIMIT = 43;
   private final Reporter reporter;
@@ -56,7 +56,7 @@ public class TaskReporterImpl implements TaskReporter {
   @Override
   public void reportEvaluationException(Throwable throwable) {
     reporter.report(
-        label(LABEL_PREFIX),
+        EVALUATE,
         "",
         NOOP,
         list(fatal("Evaluation failed with: " + getStackTraceAsString(throwable))));
@@ -72,13 +72,13 @@ public class TaskReporterImpl implements TaskReporter {
 
   private Label taskLabel(Task task) {
     return switch (task) {
-      case CombineTask combineTask -> label(LABEL_PREFIX, "combine");
-      case ConstTask constTask -> label(
-          LABEL_PREFIX, "const", constTask.valueB().type().name());
-      case InvokeTask invokeTask -> label(LABEL_PREFIX, "call", nameOf(invokeTask.nativeFunc()));
-      case OrderTask orderTask -> label(LABEL_PREFIX, "order");
-      case PickTask pickTask -> label(LABEL_PREFIX, "pick");
-      case SelectTask selectTask -> label(LABEL_PREFIX, "select");
+      case CombineTask combineTask -> EVALUATE.append(label("combine"));
+      case ConstTask constTask -> EVALUATE.append(
+          label("const", constTask.valueB().type().name()));
+      case InvokeTask invokeTask -> EVALUATE.append(label("call", nameOf(invokeTask.nativeFunc())));
+      case OrderTask orderTask -> EVALUATE.append(label("order"));
+      case PickTask pickTask -> EVALUATE.append(label("pick"));
+      case SelectTask selectTask -> EVALUATE.append(label("select"));
     };
   }
 

@@ -3,6 +3,7 @@ package org.smoothbuild.app.run.eval.report;
 import static com.google.common.base.Strings.padEnd;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.TaskReporterImpl.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.collect.List.list;
@@ -110,6 +111,6 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(reporter, bsMapping);
     taskReporter.report(task, computationResult(intB(), source));
-    verify(reporter).report(label("evaluate").append(label), "", source, list());
+    verify(reporter).report(EVALUATE.append(label), "", source, list());
   }
 }

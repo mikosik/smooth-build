@@ -1,5 +1,6 @@
 package org.smoothbuild.app.run;
 
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
@@ -38,7 +39,7 @@ public class EvaluateStep {
               .then(tryStep(BackendCompile.class))
               .then(maybeStep(EvaluatorBFacade.class))
               .then(tryStep(valueBs -> success(arg.element1().zip(valueBs, Tuple2::new))))))
-          .labelled("evaluate");
+          .labelled(EVALUATE);
     }
   }
 }
