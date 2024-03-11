@@ -40,7 +40,6 @@ public class LogFilteringReporterTest {
         arguments(FATAL, logsWithAllLevels(), list(FATAL_LOG)),
         arguments(ERROR, logsWithAllLevels(), list(FATAL_LOG, ERROR_LOG)),
         arguments(WARNING, logsWithAllLevels(), list(FATAL_LOG, ERROR_LOG, WARNING_LOG)),
-        arguments(INFO, logsWithAllLevels(), logsWithAllLevels())
-    );
+        arguments(INFO, logsWithAllLevels(), logsWithAllLevels()));
   }
 }

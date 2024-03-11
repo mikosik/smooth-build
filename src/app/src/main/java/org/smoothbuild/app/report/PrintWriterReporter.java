@@ -7,7 +7,6 @@ import jakarta.inject.Singleton;
 import java.io.PrintWriter;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
@@ -18,12 +17,10 @@ import org.smoothbuild.common.log.ResultSource;
 @Singleton
 public class PrintWriterReporter implements Reporter {
   private final PrintWriter printWriter;
-  private final Level logLevel;
 
   @Inject
-  public PrintWriterReporter(PrintWriter printWriter, Level logLevel) {
+  public PrintWriterReporter(PrintWriter printWriter) {
     this.printWriter = printWriter;
-    this.logLevel = logLevel;
   }
 
   public static void printErrorToWriter(PrintWriter printWriter, String message) {
@@ -32,18 +29,6 @@ public class PrintWriterReporter implements Reporter {
 
   @Override
   public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    print(label, details, source, logsPassingLevelThreshold(logs));
-  }
-
-  private List<Log> logsPassingLevelThreshold(List<Log> logs) {
-    return logs.filter(this::passesLevelThreshold);
-  }
-
-  private boolean passesLevelThreshold(Log log) {
-    return log.level().hasPriorityAtLeast(logLevel);
-  }
-
-  private void print(Label label, String details, ResultSource source, List<Log> logs) {
     printWriter.println(formatLogs(label, details, source, logs));
   }
 }
