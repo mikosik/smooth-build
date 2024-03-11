@@ -10,7 +10,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.PrefixingReporter;
 import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.step.Step.ComposedStep;
-import org.smoothbuild.common.step.Step.NamedStep;
+import org.smoothbuild.common.step.Step.LabelledStep;
 
 public class StepExecutor {
   private final Injector injector;
@@ -27,7 +27,7 @@ public class StepExecutor {
       case Step.TryFunctionKeyStep<T, R> f -> tryFunctionKey(f.key(), argument, reporter);
       case Step.MaybeFunctionKeyStep<T, R> f -> maybeFunctionKey(f.key(), argument);
       case Step.FactoryStep<T, R> i -> factory(i.stepFactory(), argument, reporter);
-      case Step.NamedStep<T, R> namedStep -> namedStep(namedStep, argument, reporter);
+      case Step.LabelledStep<T, R> labelledStep -> namedStep(labelledStep, argument, reporter);
     };
   }
 
@@ -37,9 +37,10 @@ public class StepExecutor {
         .flatMap(r -> execute(composedStep.second(), r, reporter));
   }
 
-  private <R, T> Maybe<R> namedStep(NamedStep<T, R> namedStep, T argument, Reporter reporter) {
-    var newReporter = new PrefixingReporter(reporter, label(namedStep.name()));
-    return execute(namedStep.step(), argument, newReporter);
+  private <R, T> Maybe<R> namedStep(
+      LabelledStep<T, R> labelledStep, T argument, Reporter reporter) {
+    var newReporter = new PrefixingReporter(reporter, labelledStep.label());
+    return execute(labelledStep.step(), argument, newReporter);
   }
 
   private <T, R> Maybe<R> tryFunctionKey(

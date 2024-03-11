@@ -31,9 +31,9 @@ public class FrontendCompilerStep {
     var step = tryStep(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
       step = step.append(fullPath)
-          .then(stepFactory(new FrontendCompilerStepFactory()).named(fullPath.toString()));
+          .then(stepFactory(new FrontendCompilerStepFactory()).labelled(fullPath.toString()));
     }
-    return step.named("parse");
+    return step.labelled("parse");
   }
 
   public static class FrontendCompilerStepFactory

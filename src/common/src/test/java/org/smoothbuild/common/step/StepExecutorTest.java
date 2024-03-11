@@ -184,7 +184,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.common.log.Level#values")
     void named_step_that_logged_something_uses_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = tryStep(t -> Try.of("value", log)).named("name");
+      var step = tryStep(t -> Try.of("value", log)).labelled("name");
 
       var reporter = mock(Reporter.class);
 
@@ -199,7 +199,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.common.log.Level#values")
     void named_inner_step_that_logged_something_uses_full_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = tryStep(t -> Try.of("value", log)).named("name").named("outer");
+      var step = tryStep(t -> Try.of("value", log)).labelled("name").labelled("outer");
 
       var reporter = mock(Reporter.class);
 

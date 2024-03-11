@@ -1,14 +1,16 @@
 package org.smoothbuild.common.step;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import com.google.inject.Key;
+import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.step.Step.ComposedStep;
 import org.smoothbuild.common.step.Step.FactoryStep;
+import org.smoothbuild.common.step.Step.LabelledStep;
 import org.smoothbuild.common.step.Step.MaybeFunctionKeyStep;
-import org.smoothbuild.common.step.Step.NamedStep;
 import org.smoothbuild.common.step.Step.TryFunctionKeyStep;
 import org.smoothbuild.common.step.Step.TryFunctionStep;
 import org.smoothbuild.common.tuple.Tuple0;
@@ -20,12 +22,16 @@ public sealed interface Step<T, R>
         TryFunctionKeyStep,
         TryFunctionStep,
         MaybeFunctionKeyStep,
-        NamedStep {
-  public default Step<T, R> named(String name) {
-    return new NamedStep<>(name, this);
+        LabelledStep {
+  public default Step<T, R> labelled(Label label) {
+    return new LabelledStep<>(label, this);
   }
 
-  record NamedStep<T, R>(String name, Step<T, R> step) implements Step<T, R> {}
+  public default Step<T, R> labelled(String name) {
+    return labelled(label(name));
+  }
+
+  record LabelledStep<T, R>(Label label, Step<T, R> step) implements Step<T, R> {}
 
   public static <T, R> Step<T, R> tryStep(Class<? extends TryFunction<T, R>> clazz) {
     return new TryFunctionKeyStep<>(Key.get(clazz));

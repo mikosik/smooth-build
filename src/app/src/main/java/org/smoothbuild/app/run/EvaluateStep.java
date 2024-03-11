@@ -38,7 +38,7 @@ public class EvaluateStep {
               .then(tryStep(BackendCompile.class))
               .then(maybeStep(EvaluatorBFacade.class))
               .then(tryStep(valueBs -> success(arg.element1().zip(valueBs, Tuple2::new))))))
-          .named("evaluate");
+          .labelled("evaluate");
     }
   }
 }
