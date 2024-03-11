@@ -12,6 +12,12 @@ public record Label(List<String> parts) {
     return new Label(listOfAll(asList(parts)));
   }
 
+  public Label {
+    if (parts.anyMatches(p -> p.contains(":"))) {
+      throw new IllegalArgumentException("Label part cannot contain `:`.");
+    }
+  }
+
   public Label append(Label suffix) {
     return new Label(parts.appendAll(suffix.parts));
   }
