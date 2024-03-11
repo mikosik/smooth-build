@@ -1,7 +1,6 @@
 package org.smoothbuild.app.run.eval.report;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Log.fatal;
@@ -9,12 +8,10 @@ import static org.smoothbuild.common.log.ResultSource.NOOP;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
-import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Reporter;
-import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
@@ -32,20 +29,17 @@ public class TaskReporterImpl implements TaskReporter {
   // visible for testing
   static final int NAME_LENGTH_LIMIT = 43;
   private final Reporter reporter;
-  private final BsMapping bsMapping;
-  private final BsTraceTranslator bsTraceTranslator;
+  private final BsTranslator bsTranslator;
 
-  @Inject
-  public TaskReporterImpl(Reporter reporter, BsMapping bsMapping) {
+  public TaskReporterImpl(Reporter reporter, BsTranslator bsTranslator) {
     this.reporter = reporter;
-    this.bsMapping = bsMapping;
-    this.bsTraceTranslator = new BsTraceTranslator(bsMapping);
+    this.bsTranslator = bsTranslator;
   }
 
   @Override
   public void report(Task task, ComputationResult result) throws BytecodeException {
     var source = result.source();
-    var traceS = bsTraceTranslator.translate(task.trace());
+    var traceS = bsTranslator.translate(task.trace());
     var details = traceS == null ? "" : traceS.toString();
     var logs = logsFrom(result);
     var label = taskLabel(task);
@@ -81,6 +75,6 @@ public class TaskReporterImpl implements TaskReporter {
   }
 
   private String nameOf(FuncB funcB) {
-    return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "???");
+    return bsTranslator.nameFor(funcB.hash());
   }
 }

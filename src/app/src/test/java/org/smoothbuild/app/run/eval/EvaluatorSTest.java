@@ -48,6 +48,7 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.app.report.PrintWriterReporter;
+import org.smoothbuild.app.run.eval.report.BsTranslator;
 import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
@@ -316,11 +317,11 @@ public class EvaluatorSTest extends TestingVirtualMachine {
 
   private Maybe<List<ValueB>> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
-    var sbTranslatorFacade = backendCompile(filePersister, bytecodeLoader);
+    var backendCompile = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
     var printWriter = new PrintWriter(inMemorySystemOut(), true);
     var reporter = new PrintWriterReporter(printWriter, INFO);
-    var taskReporter = new TaskReporterImpl(reporter, bsMapping());
+    var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping()));
 
     var injector = createInjector(new AbstractModule() {
       @Override
@@ -330,7 +331,7 @@ public class EvaluatorSTest extends TestingVirtualMachine {
         bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
-    var step = tryStep(sbTranslatorFacade).then(maybeStep(EvaluatorBFacade.class));
+    var step = tryStep(backendCompile).then(maybeStep(EvaluatorBFacade.class));
     var argument = tuple(exprs, evaluables);
 
     return new StepExecutor(injector).execute(step, argument, reporter);

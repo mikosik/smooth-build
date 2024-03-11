@@ -108,7 +108,7 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
   private void testHeader(BsMapping bsMapping, Task task, ResultSource source, Label label)
       throws BytecodeException {
     var reporter = mock(Reporter.class);
-    var taskReporter = new TaskReporterImpl(reporter, bsMapping);
+    var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping));
     taskReporter.report(task, computationResult(intB(), source));
     verify(reporter).report(label, "", source, list());
   }

@@ -2,16 +2,18 @@ package org.smoothbuild.app.run.eval.report;
 
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 
+import jakarta.inject.Inject;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.TraceS;
 import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
 
-public class BsTraceTranslator {
+public class BsTranslator {
   private final BsMapping bsMapping;
 
-  public BsTraceTranslator(BsMapping bsMapping) {
+  @Inject
+  public BsTranslator(BsMapping bsMapping) {
     this.bsMapping = bsMapping;
   }
 
@@ -30,7 +32,7 @@ public class BsTraceTranslator {
     }
   }
 
-  private String nameFor(Hash funcHash) {
+  public String nameFor(Hash funcHash) {
     return bsMapping.nameMapping().getOrDefault(funcHash, "???");
   }
 
