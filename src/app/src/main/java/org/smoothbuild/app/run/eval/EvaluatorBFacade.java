@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import jakarta.inject.Inject;
+import org.smoothbuild.app.run.eval.report.BsTranslator;
 import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -39,8 +40,8 @@ public class EvaluatorBFacade
       }
 
       @Provides
-      public TaskReporter provideTaskReporter(Reporter reporter) {
-        return new TaskReporterImpl(new PrefixingReporter(reporter, EVALUATE), bsMapping);
+      public TaskReporter provideTaskReporter(Reporter reporter, BsTranslator bsTranslator) {
+        return new TaskReporterImpl(new PrefixingReporter(reporter, EVALUATE), bsTranslator);
       }
     });
     var evaluatorB = childInjector.getInstance(EvaluatorB.class);

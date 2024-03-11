@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class BsTraceTranslatorTest extends TestingVirtualMachine {
+public class BsTranslatorTest extends TestingVirtualMachine {
   private static final Hash HASH1 = Hash.of(1);
   private static final Hash HASH2 = Hash.of(2);
   private static final Hash HASH3 = Hash.of(3);
@@ -25,20 +25,20 @@ public class BsTraceTranslatorTest extends TestingVirtualMachine {
   @Test
   public void empty_trace() {
     var bsMapping = new BsMapping();
-    var bsTraceTranslator = new BsTraceTranslator(bsMapping);
+    var bsTraceTranslator = new BsTranslator(bsMapping);
     assertThat(bsTraceTranslator.translate(new TraceB())).isEqualTo(traceS());
   }
 
   @Test
   public void one_elem_trace() {
-    var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
+    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = traceB(HASH1, HASH2);
     assertThat(bsTraceTranslator.translate(trace)).isEqualTo(traceS("name2", location(1)));
   }
 
   @Test
   public void two_elem_trace() {
-    var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
+    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = traceB(HASH3, HASH4, traceB(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(traceS("name4", location(3), "name2", location(1)));
@@ -46,7 +46,7 @@ public class BsTraceTranslatorTest extends TestingVirtualMachine {
 
   @Test
   public void trace_with_unknown_name() {
-    var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
+    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = traceB(HASH3, HASH4, traceB(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(traceS("name4", location(3), "???", location(1)));
@@ -54,7 +54,7 @@ public class BsTraceTranslatorTest extends TestingVirtualMachine {
 
   @Test
   public void trace_with_unknown_loc() {
-    var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
+    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = traceB(HASH3, HASH4, traceB(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(traceS("name4", location(3), "name2", unknownLocation()));
