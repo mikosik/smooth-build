@@ -33,7 +33,7 @@ public class FrontendCompilerStep {
       step = step.append(fullPath)
           .then(stepFactory(new FrontendCompilerStepFactory()).named(fullPath.toString()));
     }
-    return step.named("Parsing");
+    return step.named("parse");
   }
 
   public static class FrontendCompilerStepFactory

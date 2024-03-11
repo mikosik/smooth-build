@@ -9,7 +9,7 @@ import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 
 public class TaskMatchers {
-  private static final Label EVALUATING = label("Evaluating");
+  private static final Label EVALUATE = label("evaluate");
   public static final TaskMatcher ALL = (task, logs) -> true;
   public static final TaskMatcher NONE = (task, logs) -> false;
 
@@ -18,12 +18,12 @@ public class TaskMatchers {
   static final TaskMatcher WARNING = logLevelMatcher(Level.WARNING);
   static final TaskMatcher INFO = logLevelMatcher(Level.INFO);
 
-  static final TaskMatcher CALL = labelPrefixMatcher(EVALUATING.append(label("call")));
-  static final TaskMatcher COMBINE = labelPrefixMatcher(EVALUATING.append(label("combine")));
-  static final TaskMatcher CONST = labelPrefixMatcher(EVALUATING.append(label("const")));
-  static final TaskMatcher ORDER = labelPrefixMatcher(EVALUATING.append(label("order")));
-  static final TaskMatcher PICK = labelPrefixMatcher(EVALUATING.append(label("pick")));
-  static final TaskMatcher SELECT = labelPrefixMatcher(EVALUATING.append(label("select")));
+  static final TaskMatcher CALL = labelPrefixMatcher(EVALUATE.append(label("call")));
+  static final TaskMatcher COMBINE = labelPrefixMatcher(EVALUATE.append(label("combine")));
+  static final TaskMatcher CONST = labelPrefixMatcher(EVALUATE.append(label("const")));
+  static final TaskMatcher ORDER = labelPrefixMatcher(EVALUATE.append(label("order")));
+  static final TaskMatcher PICK = labelPrefixMatcher(EVALUATE.append(label("pick")));
+  static final TaskMatcher SELECT = labelPrefixMatcher(EVALUATE.append(label("select")));
 
   static final TaskMatcher DEFAULT = or(INFO, CALL);
 

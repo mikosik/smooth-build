@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import org.smoothbuild.common.collect.List;
 
 public record Label(List<String> parts) {
-  private static final String DELIMITER = "::";
+  private static final String DELIMITER = ":";
 
   public static Label label(String... parts) {
     return new Label(listOfAll(asList(parts)));

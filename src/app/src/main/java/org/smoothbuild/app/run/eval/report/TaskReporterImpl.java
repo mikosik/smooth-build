@@ -29,7 +29,7 @@ import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TaskReporterImpl implements TaskReporter {
-  private static final String LABEL_PREFIX = "Evaluating";
+  private static final String LABEL_PREFIX = "evaluate";
   // visible for testing
   static final int NAME_LENGTH_LIMIT = 43;
   private final Reporter reporter;

@@ -89,7 +89,7 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
   }
 
   private static String header(String string, String result) {
-    return padEnd("::Evaluating::" + string, NAME_LENGTH_LIMIT + 1, ' ') + "unknown              "
+    return padEnd(":evaluate::" + string, NAME_LENGTH_LIMIT + 1, ' ') + "unknown              "
         + "          " + result;
   }
 
@@ -110,6 +110,6 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(reporter, bsMapping);
     taskReporter.report(task, computationResult(intB(), source));
-    verify(reporter).report(label("Evaluating").append(label), "", source, list());
+    verify(reporter).report(label("evaluate").append(label), "", source, list());
   }
 }

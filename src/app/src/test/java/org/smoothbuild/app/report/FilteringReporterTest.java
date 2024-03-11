@@ -18,17 +18,17 @@ import org.smoothbuild.common.log.Reporter;
 public class FilteringReporterTest {
   @Test
   public void when_task_matcher_matches_then_report_is_forwarded() {
-    testVisibility(ALL, true, label("Evaluating", "name"));
+    testVisibility(ALL, true, label("evaluate", "name"));
   }
 
   @Test
   public void when_task_matcher_not_matches_then_report_is_suppressed() {
-    testVisibility(NONE, false, label("Evaluating", "name"));
+    testVisibility(NONE, false, label("evaluate", "name"));
   }
 
   @Test
   public void when_label_not_starts_with_evaluating_then_report_is_forwarded() {
-    testVisibility(NONE, true, label("not-Evaluating", "name"));
+    testVisibility(NONE, true, label("not-evaluate", "name"));
   }
 
   private void testVisibility(TaskMatcher taskMatcher, boolean matched, Label label) {

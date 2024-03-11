@@ -25,7 +25,7 @@ public class FormatLogTest {
     assertThat(formatLogs(label("label-name"), "details", EXECUTION, logsWithAllLevels()) + "\n")
         .isEqualTo(
             """
-            ::label-name                                                               exec
+            :label-name                                                                exec
               details
               [FATAL] fatal message
               [ERROR] error message

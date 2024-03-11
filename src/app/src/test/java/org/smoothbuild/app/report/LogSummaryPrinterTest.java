@@ -37,7 +37,7 @@ public class LogSummaryPrinterTest {
     reporter.printSummary();
 
     var inOrder = inOrder(systemOut);
-    inOrder.verify(systemOut).println("::Summary");
+    inOrder.verify(systemOut).println(":Summary");
     inOrder.verify(systemOut).println("  1 fatal");
     inOrder.verify(systemOut).println("  4 infos");
   }
@@ -60,7 +60,7 @@ public class LogSummaryPrinterTest {
     reporter.printSummary();
 
     var inOrder = inOrder(systemOut);
-    inOrder.verify(systemOut).println("::Summary");
+    inOrder.verify(systemOut).println(":Summary");
     inOrder.verify(systemOut).println("  1 fatal");
     inOrder.verify(systemOut).println("  2 errors");
     inOrder.verify(systemOut).println("  3 warnings");
