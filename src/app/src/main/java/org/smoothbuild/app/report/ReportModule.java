@@ -32,7 +32,7 @@ public class ReportModule extends AbstractModule {
   @Singleton
   public Reporter provideReporter(
       PrintWriterReporter printWriterReporter, LogCounters logCounters, TaskMatcher taskMatcher) {
-    var filtering = new FilteringReporter(printWriterReporter, taskMatcher);
+    var filtering = new TaskFilteringReporter(printWriterReporter, taskMatcher);
     return new CountingReporter(filtering, logCounters);
   }
 

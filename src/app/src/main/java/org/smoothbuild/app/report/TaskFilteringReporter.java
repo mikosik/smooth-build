@@ -9,11 +9,11 @@ import org.smoothbuild.common.log.Log;
 import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
 
-public class FilteringReporter implements Reporter {
+public class TaskFilteringReporter implements Reporter {
   private final Reporter reporter;
   private final TaskMatcher taskMatcher;
 
-  public FilteringReporter(Reporter reporter, TaskMatcher taskMatcher) {
+  public TaskFilteringReporter(Reporter reporter, TaskMatcher taskMatcher) {
     this.reporter = reporter;
     this.taskMatcher = taskMatcher;
   }
