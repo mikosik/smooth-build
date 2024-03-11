@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import org.smoothbuild.common.log.CountingReporter;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.LogCounters;
+import org.smoothbuild.common.log.LogFilteringReporter;
 import org.smoothbuild.common.log.ReportMatcher;
 import org.smoothbuild.common.log.Reporter;
 
@@ -32,10 +33,12 @@ public class ReportModule extends AbstractModule {
   @Singleton
   public Reporter provideReporter(
       PrintWriterReporter printWriterReporter,
+      Level level,
       LogCounters logCounters,
       ReportMatcher reportMatcher) {
-    var filtering = new TaskFilteringReporter(printWriterReporter, reportMatcher);
-    return new CountingReporter(filtering, logCounters);
+    var logFiltering = new LogFilteringReporter(printWriterReporter, level);
+    var taskFiltering = new TaskFilteringReporter(logFiltering, reportMatcher);
+    return new CountingReporter(taskFiltering, logCounters);
   }
 
   @Provides

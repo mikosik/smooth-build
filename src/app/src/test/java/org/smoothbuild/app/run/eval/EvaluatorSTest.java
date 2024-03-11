@@ -11,7 +11,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.log.Level.INFO;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
@@ -320,7 +319,7 @@ public class EvaluatorSTest extends TestingVirtualMachine {
     var backendCompile = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
     var printWriter = new PrintWriter(inMemorySystemOut(), true);
-    var reporter = new PrintWriterReporter(printWriter, INFO);
+    var reporter = new PrintWriterReporter(printWriter);
     var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping()));
 
     var injector = createInjector(new AbstractModule() {
