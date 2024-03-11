@@ -1,11 +1,16 @@
 package org.smoothbuild.app.run.eval;
 
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
 import jakarta.inject.Inject;
 import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.PrefixingReporter;
+import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.step.MaybeFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerbackend.BsMapping;
@@ -30,8 +35,12 @@ public class EvaluatorBFacade
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
-        bind(TaskReporter.class).to(TaskReporterImpl.class);
         bind(BsMapping.class).toInstance(bsMapping);
+      }
+
+      @Provides
+      public TaskReporter provideTaskReporter(Reporter reporter) {
+        return new TaskReporterImpl(new PrefixingReporter(reporter, EVALUATE), bsMapping);
       }
     });
     var evaluatorB = childInjector.getInstance(EvaluatorB.class);

@@ -2,7 +2,6 @@ package org.smoothbuild.app.run.eval.report;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Objects.requireNonNullElse;
-import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Log.fatal;
@@ -56,7 +55,7 @@ public class TaskReporterImpl implements TaskReporter {
   @Override
   public void reportEvaluationException(Throwable throwable) {
     reporter.report(
-        EVALUATE,
+        label(),
         "",
         NOOP,
         list(fatal("Evaluation failed with: " + getStackTraceAsString(throwable))));
@@ -72,13 +71,12 @@ public class TaskReporterImpl implements TaskReporter {
 
   private Label taskLabel(Task task) {
     return switch (task) {
-      case CombineTask combineTask -> EVALUATE.append(label("combine"));
-      case ConstTask constTask -> EVALUATE.append(
-          label("const", constTask.valueB().type().name()));
-      case InvokeTask invokeTask -> EVALUATE.append(label("call", nameOf(invokeTask.nativeFunc())));
-      case OrderTask orderTask -> EVALUATE.append(label("order"));
-      case PickTask pickTask -> EVALUATE.append(label("pick"));
-      case SelectTask selectTask -> EVALUATE.append(label("select"));
+      case CombineTask combineTask -> label("combine");
+      case ConstTask constTask -> label("const", constTask.valueB().type().name());
+      case InvokeTask invokeTask -> label("call", nameOf(invokeTask.nativeFunc()));
+      case OrderTask orderTask -> label("order");
+      case PickTask pickTask -> label("pick");
+      case SelectTask selectTask -> label("select");
     };
   }
 
