@@ -2,16 +2,43 @@ package org.smoothbuild.common.log;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
-import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 
 public class LabelTest {
+  @ParameterizedTest
+  @MethodSource
+  void colon_is_forbidden_inside_part_string(String... parts) {
+    assertCall(() -> label(parts))
+        .throwsException(new IllegalArgumentException("Label part cannot contain `:`."));
+  }
+
+  public static List<Arguments> colon_is_forbidden_inside_part_string() {
+    return list(
+        arguments((Object) arrayOf(":")),
+        arguments((Object) arrayOf(":part")),
+        arguments((Object) arrayOf("part:")),
+        arguments((Object) arrayOf(":part:")),
+        arguments((Object) arrayOf("part:part")),
+        arguments((Object) arrayOf("::")),
+        arguments((Object) arrayOf("::part")),
+        arguments((Object) arrayOf("part::")),
+        arguments((Object) arrayOf("::part::")),
+        arguments((Object) arrayOf("part::part")));
+  }
+
+  private static String[] arrayOf(String... strings) {
+    return strings;
+  }
+
   @Nested
   class _toString {
     @Test
@@ -40,7 +67,7 @@ public class LabelTest {
   }
 
   public static List<Arguments> startsWith() {
-    return List.of(
+    return list(
         arguments(label(), label(), true),
         arguments(label(), label("a"), false),
         arguments(label("a"), label(), true),
