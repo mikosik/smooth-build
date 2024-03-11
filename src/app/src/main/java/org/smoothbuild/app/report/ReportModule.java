@@ -4,20 +4,20 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.PrintWriter;
-import org.smoothbuild.app.run.eval.report.TaskMatcher;
 import org.smoothbuild.common.log.CountingReporter;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.LogCounters;
+import org.smoothbuild.common.log.ReportMatcher;
 import org.smoothbuild.common.log.Reporter;
 
 public class ReportModule extends AbstractModule {
   private final PrintWriter out;
-  private final TaskMatcher taskMatcher;
+  private final ReportMatcher reportMatcher;
   private final Level logLevel;
 
-  public ReportModule(PrintWriter out, TaskMatcher taskMatcher, Level logLevel) {
+  public ReportModule(PrintWriter out, ReportMatcher reportMatcher, Level logLevel) {
     this.out = out;
-    this.taskMatcher = taskMatcher;
+    this.reportMatcher = reportMatcher;
     this.logLevel = logLevel;
   }
 
@@ -25,14 +25,16 @@ public class ReportModule extends AbstractModule {
   protected void configure() {
     bind(Level.class).toInstance(logLevel);
     bind(PrintWriter.class).toInstance(out);
-    bind(TaskMatcher.class).toInstance(taskMatcher);
+    bind(ReportMatcher.class).toInstance(reportMatcher);
   }
 
   @Provides
   @Singleton
   public Reporter provideReporter(
-      PrintWriterReporter printWriterReporter, LogCounters logCounters, TaskMatcher taskMatcher) {
-    var filtering = new TaskFilteringReporter(printWriterReporter, taskMatcher);
+      PrintWriterReporter printWriterReporter,
+      LogCounters logCounters,
+      ReportMatcher reportMatcher) {
+    var filtering = new TaskFilteringReporter(printWriterReporter, reportMatcher);
     return new CountingReporter(filtering, logCounters);
   }
 

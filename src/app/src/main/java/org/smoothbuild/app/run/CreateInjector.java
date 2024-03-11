@@ -18,22 +18,22 @@ import org.smoothbuild.app.layout.BinarySpaceModule;
 import org.smoothbuild.app.layout.ProjectSpaceModule;
 import org.smoothbuild.app.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.app.report.ReportModule;
-import org.smoothbuild.app.run.eval.report.TaskMatcher;
-import org.smoothbuild.app.run.eval.report.TaskMatchers;
+import org.smoothbuild.app.run.eval.report.ReportMatchers;
 import org.smoothbuild.app.wire.AppModule;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.wiring.DiskFileSystemModule;
 import org.smoothbuild.common.log.Level;
+import org.smoothbuild.common.log.ReportMatcher;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {
-    return createInjector(projectDir, out, logLevel, TaskMatchers.ALL);
+    return createInjector(projectDir, out, logLevel, ReportMatchers.ALL);
   }
 
   public static Injector createInjector(
-      Path projectDir, PrintWriter out, Level logLevel, TaskMatcher taskMatcher) {
+      Path projectDir, PrintWriter out, Level logLevel, ReportMatcher reportMatcher) {
     Map<Space, Path> spaceToPath = map(
         PROJECT, projectDir,
         STANDARD_LIBRARY, installationDir().resolve(STANDARD_LIBRARY_DIR_NAME),
@@ -46,7 +46,7 @@ public class CreateInjector {
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
-        new ReportModule(out, taskMatcher, logLevel));
+        new ReportModule(out, reportMatcher, logLevel));
   }
 
   public static Injector createInjector(PrintWriter out) {
@@ -58,7 +58,7 @@ public class CreateInjector {
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
-        new ReportModule(out, TaskMatchers.ALL, INFO));
+        new ReportModule(out, ReportMatchers.ALL, INFO));
   }
 
   private static Path installationDir() {
