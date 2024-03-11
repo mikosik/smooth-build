@@ -8,7 +8,7 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.app.run.EvaluateStep.evaluateStep;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.ALL;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.ALL;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
@@ -29,7 +29,6 @@ import com.google.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.app.run.eval.report.TaskMatcher;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -40,6 +39,7 @@ import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.ReportMatcher;
 import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
@@ -188,7 +188,7 @@ public class AcceptanceTestCase extends TestingBytecode {
     protected void configure() {
       bind(MemoryReporter.class).toInstance(new MemoryReporter());
       bind(Reporter.class).to(MemoryReporter.class);
-      bind(TaskMatcher.class).toInstance(ALL);
+      bind(ReportMatcher.class).toInstance(ALL);
     }
 
     @Provides

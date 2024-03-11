@@ -3,8 +3,8 @@ package org.smoothbuild.app.run.eval.report;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.and;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.or;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.common.log.Log.error;
@@ -18,12 +18,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.ReportMatcher;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TaskMatchersTest extends TestingVirtualMachine {
+public class ReportMatchersTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("matcher_matches_cases")
-  public void matcher_matches(TaskMatcher matcher, Label label, List<Log> logs, boolean expected) {
+  public void matcher_matches(
+      ReportMatcher matcher, Label label, List<Log> logs, boolean expected) {
     assertThat(matcher.matches(label, logs)).isEqualTo(expected);
   }
 
@@ -69,11 +71,11 @@ public class TaskMatchersTest extends TestingVirtualMachine {
         arguments(matcher("select"), EVALUATE.append(label("order")), null, false));
   }
 
-  private static TaskMatcher matcher(String name) {
+  private static ReportMatcher matcher(String name) {
     return switch (name) {
       case "true" -> (task, logs) -> true;
       case "false" -> (task, logs) -> false;
-      default -> TaskMatchers.findMatcher(name).get();
+      default -> ReportMatchers.findMatcher(name).get();
     };
   }
 }

@@ -9,7 +9,7 @@ import static org.smoothbuild.common.step.Step.stepFactory;
 import java.nio.file.Path;
 import org.smoothbuild.app.cli.base.ProjectCommand;
 import org.smoothbuild.app.run.BuildStepFactory;
-import org.smoothbuild.app.run.eval.report.TaskMatcher;
+import org.smoothbuild.common.log.ReportMatcher;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Parameters;
@@ -57,11 +57,11 @@ public class BuildCommand extends ProjectCommand {
             pick               - evaluates array element picking
             select             - evaluates field selection
           """)
-  TaskMatcher showTasks;
+  ReportMatcher showTasks;
 
-  public static class ShowTasksConverter implements ITypeConverter<TaskMatcher> {
+  public static class ShowTasksConverter implements ITypeConverter<ReportMatcher> {
     @Override
-    public TaskMatcher convert(String value) {
+    public ReportMatcher convert(String value) {
       return createMatcher(value);
     }
   }

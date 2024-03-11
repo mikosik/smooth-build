@@ -4,20 +4,20 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.ALL;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.CALL;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.COMBINE;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.CONST;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.ERROR;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.FATAL;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.INFO;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.NONE;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.ORDER;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.PICK;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.SELECT;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.WARNING;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.and;
-import static org.smoothbuild.app.run.eval.report.TaskMatchers.or;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.ALL;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.CALL;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.COMBINE;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.CONST;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.ERROR;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.FATAL;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.INFO;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.NONE;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.ORDER;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.PICK;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.SELECT;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.WARNING;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
@@ -36,14 +36,15 @@ import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.ReportMatcher;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreatorTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("provideArguments")
-  public void matcher(String expression, TaskMatcher expectedMatcher) {
-    TaskMatcher matcher = MatcherCreator.createMatcher(expression);
+  public void matcher(String expression, ReportMatcher expectedMatcher) {
+    ReportMatcher matcher = MatcherCreator.createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")

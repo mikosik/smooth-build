@@ -21,7 +21,7 @@ import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherContext;
 import picocli.CommandLine.TypeConversionException;
 
-public class MatcherParser {
+public class ReportMatcherParser {
   public static MatcherContext parseMatcher(String expression) {
     ErrorListener errorListener = new ErrorListener();
 
