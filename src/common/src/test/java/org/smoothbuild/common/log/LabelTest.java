@@ -66,19 +66,19 @@ public class LabelTest {
     @Test
     void with_zero_parts() {
       var label = label();
-      assertThat(label.toString()).isEqualTo("::");
+      assertThat(label.toString()).isEqualTo(":");
     }
 
     @Test
     void with_one_part() {
       var label = label("name");
-      assertThat(label.toString()).isEqualTo("::name");
+      assertThat(label.toString()).isEqualTo(":name");
     }
 
     @Test
     void with_two_parts() {
       var label = label("name").append(label("second"));
-      assertThat(label.toString()).isEqualTo("::name::second");
+      assertThat(label.toString()).isEqualTo(":name:second");
     }
   }
 }

@@ -10,7 +10,7 @@ import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
 
 public class FilteringReporter implements Reporter {
-  private static final Label EVALUATING = label("Evaluating");
+  private static final Label EVALUATE = label("evaluate");
   private final Reporter reporter;
   private final TaskMatcher taskMatcher;
 
@@ -21,7 +21,7 @@ public class FilteringReporter implements Reporter {
 
   @Override
   public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    if (taskMatcher.matches(label, logs) || !label.startsWith(EVALUATING)) {
+    if (taskMatcher.matches(label, logs) || !label.startsWith(EVALUATE)) {
       reporter.report(label, details, source, logs);
     }
   }

@@ -46,7 +46,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
 
     StringBuilder builder = new StringBuilder();
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
-        .map(s -> label("Evaluating", s));
+        .map(s -> label("evaluate", s));
     for (Label label : taskLabels) {
       for (Space space : SmoothSpace.values()) {
         for (Level level : levels()) {

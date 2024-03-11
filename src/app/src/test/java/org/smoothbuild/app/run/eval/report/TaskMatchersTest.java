@@ -17,7 +17,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class TaskMatchersTest extends TestingVirtualMachine {
@@ -27,7 +26,7 @@ public class TaskMatchersTest extends TestingVirtualMachine {
     assertThat(matcher.matches(label, logs)).isEqualTo(expected);
   }
 
-  public static List<Arguments> matcher_matches_cases() throws BytecodeException {
+  public static List<Arguments> matcher_matches_cases() {
     var t = new TestingVirtualMachine();
     return list(
         arguments(matcher("all"), null, null, true),
@@ -56,18 +55,18 @@ public class TaskMatchersTest extends TestingVirtualMachine {
         arguments(or(matcher("all"), matcher("none")), null, null, true),
         arguments(or(matcher("none"), matcher("all")), null, null, true),
         arguments(or(matcher("none"), matcher("none")), null, null, false),
-        arguments(matcher("call"), label("Evaluating", "call"), null, true),
-        arguments(matcher("call"), label("Evaluating", "order"), null, false),
-        arguments(matcher("combine"), label("Evaluating", "combine"), null, true),
-        arguments(matcher("combine"), label("Evaluating", "order"), null, false),
-        arguments(matcher("const"), label("Evaluating", "const"), null, true),
-        arguments(matcher("const"), label("Evaluating", "order"), null, false),
-        arguments(matcher("order"), label("Evaluating", "order"), null, true),
-        arguments(matcher("order"), label("Evaluating", "invoke"), null, false),
-        arguments(matcher("pick"), label("Evaluating", "pick"), null, true),
-        arguments(matcher("pick"), label("Evaluating", "order"), null, false),
-        arguments(matcher("select"), label("Evaluating", "select"), null, true),
-        arguments(matcher("select"), label("Evaluating", "order"), null, false));
+        arguments(matcher("call"), label("evaluate", "call"), null, true),
+        arguments(matcher("call"), label("evaluate", "order"), null, false),
+        arguments(matcher("combine"), label("evaluate", "combine"), null, true),
+        arguments(matcher("combine"), label("evaluate", "order"), null, false),
+        arguments(matcher("const"), label("evaluate", "const"), null, true),
+        arguments(matcher("const"), label("evaluate", "order"), null, false),
+        arguments(matcher("order"), label("evaluate", "order"), null, true),
+        arguments(matcher("order"), label("evaluate", "invoke"), null, false),
+        arguments(matcher("pick"), label("evaluate", "pick"), null, true),
+        arguments(matcher("pick"), label("evaluate", "order"), null, false),
+        arguments(matcher("select"), label("evaluate", "select"), null, true),
+        arguments(matcher("select"), label("evaluate", "order"), null, false));
   }
 
   private static TaskMatcher matcher(String name) {

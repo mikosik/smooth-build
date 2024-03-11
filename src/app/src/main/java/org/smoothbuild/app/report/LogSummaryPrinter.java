@@ -19,7 +19,7 @@ public class LogSummaryPrinter {
   }
 
   public void printSummary() {
-    printWriter.println("::Summary");
+    printWriter.println(":Summary");
     int total = 0;
     for (Level level : Level.values()) {
       int count = logCounters.get(level);
