@@ -1,6 +1,6 @@
 package org.smoothbuild.app.report;
 
-import static org.smoothbuild.common.log.Label.label;
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 
 import org.smoothbuild.app.run.eval.report.TaskMatcher;
 import org.smoothbuild.common.collect.List;
@@ -10,7 +10,6 @@ import org.smoothbuild.common.log.Reporter;
 import org.smoothbuild.common.log.ResultSource;
 
 public class FilteringReporter implements Reporter {
-  private static final Label EVALUATE = label("evaluate");
   private final Reporter reporter;
   private final TaskMatcher taskMatcher;
 

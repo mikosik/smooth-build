@@ -3,6 +3,7 @@ package org.smoothbuild.app.report;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.NONE;
 import static org.smoothbuild.common.collect.List.list;
@@ -18,12 +19,12 @@ import org.smoothbuild.common.log.Reporter;
 public class FilteringReporterTest {
   @Test
   public void when_task_matcher_matches_then_report_is_forwarded() {
-    testVisibility(ALL, true, label("evaluate", "name"));
+    testVisibility(ALL, true, EVALUATE.append(label("name")));
   }
 
   @Test
   public void when_task_matcher_not_matches_then_report_is_suppressed() {
-    testVisibility(NONE, false, label("evaluate", "name"));
+    testVisibility(NONE, false, EVALUATE.append(label("name")));
   }
 
   @Test

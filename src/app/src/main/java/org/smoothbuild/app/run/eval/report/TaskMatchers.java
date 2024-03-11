@@ -1,5 +1,6 @@
 package org.smoothbuild.app.run.eval.report;
 
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.log.Label.label;
 
@@ -9,7 +10,6 @@ import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
 
 public class TaskMatchers {
-  private static final Label EVALUATE = label("evaluate");
   public static final TaskMatcher ALL = (task, logs) -> true;
   public static final TaskMatcher NONE = (task, logs) -> false;
 

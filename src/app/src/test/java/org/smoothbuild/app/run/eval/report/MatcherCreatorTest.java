@@ -3,6 +3,7 @@ package org.smoothbuild.app.run.eval.report;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.CALL;
 import static org.smoothbuild.app.run.eval.report.TaskMatchers.COMBINE;
@@ -46,7 +47,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
 
     StringBuilder builder = new StringBuilder();
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
-        .map(s -> label("evaluate", s));
+        .map(s -> EVALUATE.append(label(s)));
     for (Label label : taskLabels) {
       for (Space space : SmoothSpace.values()) {
         for (Level level : levels()) {
