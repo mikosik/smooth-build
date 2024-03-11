@@ -1,9 +1,7 @@
 package org.smoothbuild.app.run.eval.report;
 
-import static com.google.common.base.Strings.padEnd;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.app.run.eval.report.TaskReporterImpl.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
@@ -82,15 +80,6 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
   @Test
   public void header_with_memory_source() throws Exception {
     testHeader(selectTask(), MEMORY, label("select"));
-  }
-
-  private static String header(String string) {
-    return header(string, "exec");
-  }
-
-  private static String header(String string, String result) {
-    return padEnd(":evaluate::" + string, NAME_LENGTH_LIMIT + 1, ' ') + "unknown              "
-        + "          " + result;
   }
 
   private void testHeader(Task task, Label label) throws Exception {
