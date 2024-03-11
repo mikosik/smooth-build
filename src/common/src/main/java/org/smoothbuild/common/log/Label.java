@@ -22,12 +22,12 @@ public record Label(List<String> parts) {
     return new Label(parts.appendAll(suffix.parts));
   }
 
+  public boolean startsWith(Label prefix) {
+    return parts.startsWith(prefix.parts);
+  }
+
   @Override
   public String toString() {
     return parts.isEmpty() ? DELIMITER : parts.toString(DELIMITER, DELIMITER, "");
-  }
-
-  public boolean startsWith(Label prefix) {
-    return parts.startsWith(prefix.parts);
   }
 }

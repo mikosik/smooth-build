@@ -39,27 +39,6 @@ public class LabelTest {
     return strings;
   }
 
-  @Nested
-  class _toString {
-    @Test
-    void with_zero_parts() {
-      var label = label();
-      assertThat(label.toString()).isEqualTo("::");
-    }
-
-    @Test
-    void with_one_part() {
-      var label = label("name");
-      assertThat(label.toString()).isEqualTo("::name");
-    }
-
-    @Test
-    void with_two_parts() {
-      var label = label("name").append(label("second"));
-      assertThat(label.toString()).isEqualTo("::name::second");
-    }
-  }
-
   @ParameterizedTest
   @MethodSource
   void startsWith(Label label, Label prefix, boolean expected) {
@@ -80,5 +59,26 @@ public class LabelTest {
         arguments(label("a", "b"), label("a", "b"), true),
         arguments(label("a", "b"), label("a", "c"), false),
         arguments(label("a", "b"), label("a", "b", "c"), false));
+  }
+
+  @Nested
+  class _toString {
+    @Test
+    void with_zero_parts() {
+      var label = label();
+      assertThat(label.toString()).isEqualTo("::");
+    }
+
+    @Test
+    void with_one_part() {
+      var label = label("name");
+      assertThat(label.toString()).isEqualTo("::name");
+    }
+
+    @Test
+    void with_two_parts() {
+      var label = label("name").append(label("second"));
+      assertThat(label.toString()).isEqualTo("::name::second");
+    }
   }
 }
