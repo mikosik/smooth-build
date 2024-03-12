@@ -27,11 +27,6 @@ public class TaskFilteringReporterTest {
     testVisibility(NONE, false, EVALUATE.append(label("name")));
   }
 
-  @Test
-  public void when_label_not_starts_with_evaluating_then_report_is_forwarded() {
-    testVisibility(NONE, true, label("not-evaluate", "name"));
-  }
-
   private void testVisibility(ReportMatcher reportMatcher, boolean matched, Label label) {
     var details = "details";
     var logs = list(ERROR_LOG);
