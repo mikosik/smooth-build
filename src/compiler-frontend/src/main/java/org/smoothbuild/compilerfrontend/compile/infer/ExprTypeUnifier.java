@@ -12,7 +12,7 @@ import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.EvaluableP;

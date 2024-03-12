@@ -1,10 +1,10 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.log.Level.ERROR;
-import static org.smoothbuild.common.log.Level.FATAL;
-import static org.smoothbuild.common.log.Level.INFO;
-import static org.smoothbuild.common.log.Level.WARNING;
+import static org.smoothbuild.common.log.base.Level.ERROR;
+import static org.smoothbuild.common.log.base.Level.FATAL;
+import static org.smoothbuild.common.log.base.Level.INFO;
+import static org.smoothbuild.common.log.base.Level.WARNING;
 
 import java.util.Collection;
 

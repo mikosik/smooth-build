@@ -4,12 +4,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.app.report.FormatLog.formatLog;
 import static org.smoothbuild.app.report.FormatLog.formatLogs;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.Log.info;
-import static org.smoothbuild.common.log.Log.warning;
-import static org.smoothbuild.common.log.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Log.info;
+import static org.smoothbuild.common.log.base.Log.warning;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.base.Log;
 
 public class FormatLogTest {
   @Test

@@ -1,10 +1,11 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
 
 import java.util.EnumMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.smoothbuild.common.log.base.Level;
 
 /**
  * Holds count of each reported log in each log level.

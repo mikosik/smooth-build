@@ -1,7 +1,7 @@
 package org.smoothbuild.app.run;
 
 import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.stepFactory;

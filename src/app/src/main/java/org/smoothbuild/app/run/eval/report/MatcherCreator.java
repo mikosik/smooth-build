@@ -13,7 +13,7 @@ import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.BracketsContext;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherContext;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherNameContext;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.OrContext;
-import org.smoothbuild.common.log.ReportMatcher;
+import org.smoothbuild.common.log.report.ReportMatcher;
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreator {

@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.common.log.ResultSource;
+import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 
 /**

@@ -5,8 +5,8 @@ import static org.smoothbuild.common.base.Strings.indent;
 import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.Locale;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.LogCounters;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.report.LogCounters;
 
 public class LogSummaryPrinter {
   private final PrintWriter printWriter;

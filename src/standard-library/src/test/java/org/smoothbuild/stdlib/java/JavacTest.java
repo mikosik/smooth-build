@@ -1,8 +1,8 @@
 package org.smoothbuild.stdlib.java;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.warning;
 
 import java.lang.reflect.InvocationTargetException;
 import okio.ByteString;

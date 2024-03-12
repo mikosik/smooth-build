@@ -5,8 +5,8 @@ import static java.lang.String.format;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.warning;
 import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
 
 import java.io.IOException;

@@ -2,15 +2,15 @@ package org.smoothbuild.app.report;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.common.log.Level.ERROR;
-import static org.smoothbuild.common.log.Level.FATAL;
-import static org.smoothbuild.common.log.Level.INFO;
-import static org.smoothbuild.common.log.Level.WARNING;
+import static org.smoothbuild.common.log.base.Level.ERROR;
+import static org.smoothbuild.common.log.base.Level.FATAL;
+import static org.smoothbuild.common.log.base.Level.INFO;
+import static org.smoothbuild.common.log.base.Level.WARNING;
 
 import java.io.PrintWriter;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.LogCounters;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.report.LogCounters;
 
 public class LogSummaryPrinterTest {
   @Test

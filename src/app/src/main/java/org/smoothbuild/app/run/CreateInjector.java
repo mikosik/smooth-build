@@ -7,7 +7,7 @@ import static org.smoothbuild.app.layout.SmoothSpace.BINARY;
 import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
 import static org.smoothbuild.app.layout.SmoothSpace.STANDARD_LIBRARY;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.log.Level.INFO;
+import static org.smoothbuild.common.log.base.Level.INFO;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -23,8 +23,8 @@ import org.smoothbuild.app.wire.AppModule;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.filesystem.wiring.DiskFileSystemModule;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.ReportMatcher;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
 public class CreateInjector {

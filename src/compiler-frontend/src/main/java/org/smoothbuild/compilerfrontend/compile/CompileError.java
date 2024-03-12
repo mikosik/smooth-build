@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile;
 
-import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.base.Log.error;
 
-import org.smoothbuild.common.log.Log;
+import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.compilerfrontend.lang.base.location.Located;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 

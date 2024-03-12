@@ -1,15 +1,15 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.Log.info;
-import static org.smoothbuild.common.log.Log.warning;
-import static org.smoothbuild.common.log.Try.failure;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Log.info;
+import static org.smoothbuild.common.log.base.Log.warning;
+import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;

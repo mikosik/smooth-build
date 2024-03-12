@@ -1,4 +1,4 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 public enum ResultSource {
   DISK("cache"),

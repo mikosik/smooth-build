@@ -1,11 +1,11 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.log.Level.ERROR;
-import static org.smoothbuild.common.log.Level.FATAL;
-import static org.smoothbuild.common.log.Level.INFO;
-import static org.smoothbuild.common.log.Level.WARNING;
+import static org.smoothbuild.common.log.base.Level.ERROR;
+import static org.smoothbuild.common.log.base.Level.FATAL;
+import static org.smoothbuild.common.log.base.Level.INFO;
+import static org.smoothbuild.common.log.base.Level.WARNING;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;

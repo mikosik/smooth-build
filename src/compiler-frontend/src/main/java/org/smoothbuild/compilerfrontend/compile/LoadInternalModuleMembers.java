@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 
-import org.smoothbuild.common.log.Logger;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;

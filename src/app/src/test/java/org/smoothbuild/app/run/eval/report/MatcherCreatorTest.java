@@ -21,7 +21,7 @@ import static org.smoothbuild.app.run.eval.report.ReportMatchers.not;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.Label.label;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.stream.Stream;
@@ -33,10 +33,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.app.layout.SmoothSpace;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Space;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.ReportMatcher;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import picocli.CommandLine.TypeConversionException;
 

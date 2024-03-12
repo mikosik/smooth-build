@@ -1,10 +1,10 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.report;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 
 import org.junit.jupiter.api.Test;

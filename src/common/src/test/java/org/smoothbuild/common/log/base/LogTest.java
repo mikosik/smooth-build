@@ -1,11 +1,11 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.log.Level.ERROR;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.Log.info;
-import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.base.Level.ERROR;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Log.info;
+import static org.smoothbuild.common.log.base.Log.warning;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

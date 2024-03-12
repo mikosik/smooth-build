@@ -9,7 +9,7 @@ import static org.smoothbuild.common.step.Step.stepFactory;
 import java.nio.file.Path;
 import org.smoothbuild.app.cli.base.ProjectCommand;
 import org.smoothbuild.app.run.BuildStepFactory;
-import org.smoothbuild.common.log.ReportMatcher;
+import org.smoothbuild.common.log.report.ReportMatcher;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Parameters;
