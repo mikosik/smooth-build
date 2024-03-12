@@ -1,17 +1,12 @@
-package org.smoothbuild.app.report;
+package org.smoothbuild.common.log;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.ReportMatcher;
-import org.smoothbuild.common.log.Reporter;
-import org.smoothbuild.common.log.ResultSource;
 
-public class TaskFilteringReporter implements Reporter {
+public class FilteringReporter implements Reporter {
   private final Reporter reporter;
   private final ReportMatcher reportMatcher;
 
-  public TaskFilteringReporter(Reporter reporter, ReportMatcher reportMatcher) {
+  public FilteringReporter(Reporter reporter, ReportMatcher reportMatcher) {
     this.reporter = reporter;
     this.reportMatcher = reportMatcher;
   }

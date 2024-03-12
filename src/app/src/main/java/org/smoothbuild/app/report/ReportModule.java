@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.PrintWriter;
 import org.smoothbuild.common.log.CountingReporter;
+import org.smoothbuild.common.log.FilteringReporter;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.LogCounters;
 import org.smoothbuild.common.log.LogFilteringReporter;
@@ -37,7 +38,7 @@ public class ReportModule extends AbstractModule {
       LogCounters logCounters,
       ReportMatcher reportMatcher) {
     var logFiltering = new LogFilteringReporter(printWriterReporter, level);
-    var taskFiltering = new TaskFilteringReporter(logFiltering, reportMatcher);
+    var taskFiltering = new FilteringReporter(logFiltering, reportMatcher);
     return new CountingReporter(taskFiltering, logCounters);
   }
 
