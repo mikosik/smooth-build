@@ -1,6 +1,5 @@
 package org.smoothbuild.app.run.eval.report;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
@@ -23,7 +22,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -43,7 +41,8 @@ import picocli.CommandLine.TypeConversionException;
 public class MatcherCreatorTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("provideArguments")
-  public void matcher(String expression, ReportMatcher expectedMatcher) {
+  public void matcher_instances_matches_same_reports_as_expected_matcher(
+      String expression, ReportMatcher expectedMatcher) {
     ReportMatcher matcher = MatcherCreator.createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
@@ -51,7 +50,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
         .map(s -> EVALUATE.append(label(s)));
     for (Label label : taskLabels) {
       for (Space space : SmoothSpace.values()) {
-        for (Level level : levels()) {
+        for (Level level : Level.values()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = matcher.matches(label, logs);
           boolean expected = expectedMatcher.matches(label, logs);
@@ -76,12 +75,6 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
       fail("Matcher built from parsed expression '" + expression + "' doesn't work as expected:\n"
           + failures);
     }
-  }
-
-  private static List<Level> levels() {
-    ArrayList<Level> levels = new ArrayList<>(asList(Level.values()));
-    levels.add(null);
-    return levels;
   }
 
   public static Stream<Arguments> provideArguments() {
