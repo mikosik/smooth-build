@@ -1,7 +1,10 @@
 package org.smoothbuild.app.run.eval.report;
 
+import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.findMatcher;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.labelPrefixMatcher;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.not;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherBaseVisitor;
@@ -15,7 +18,11 @@ import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreator {
   public static ReportMatcher createMatcher(String expression) {
-    return buildMatcher(ReportMatcherParser.parseMatcher(expression));
+    var matcher = buildMatcher(ReportMatcherParser.parseMatcher(expression));
+    // For the time being (until `smooth build --show-tasks` is updated to handle more detailed
+    // label matching) we always match reports with label prefixed with something different than
+    // evaluate.
+    return or(matcher, not(labelPrefixMatcher(EVALUATE)));
   }
 
   private static ReportMatcher buildMatcher(MatcherContext matcherContext) {

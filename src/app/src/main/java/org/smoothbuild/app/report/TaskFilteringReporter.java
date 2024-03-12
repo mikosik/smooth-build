@@ -1,7 +1,5 @@
 package org.smoothbuild.app.report;
 
-import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
-
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Log;
@@ -20,7 +18,7 @@ public class TaskFilteringReporter implements Reporter {
 
   @Override
   public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    if (reportMatcher.matches(label, logs) || !label.startsWith(EVALUATE)) {
+    if (reportMatcher.matches(label, logs)) {
       reporter.report(label, details, source, logs);
     }
   }

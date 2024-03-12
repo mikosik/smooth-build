@@ -16,13 +16,14 @@ import static org.smoothbuild.app.run.eval.report.ReportMatchers.PICK;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.SELECT;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.WARNING;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.labelPrefixMatcher;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.not;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
-import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.app.layout.SmoothSpace;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.log.Label;
 import org.smoothbuild.common.log.Level;
@@ -43,11 +45,20 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
   @MethodSource("provideArguments")
   public void matcher_instances_matches_same_reports_as_expected_matcher(
       String expression, ReportMatcher expectedMatcher) {
-    ReportMatcher matcher = MatcherCreator.createMatcher(expression);
 
-    StringBuilder builder = new StringBuilder();
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
-        .map(s -> EVALUATE.append(label(s)));
+        .map(s -> EVALUATE.append(label(s)))
+        .append(label("not-evaluate"));
+
+    var expectedUpdated = or(expectedMatcher, not(labelPrefixMatcher(EVALUATE)));
+    verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
+        expression, expectedUpdated, taskLabels);
+  }
+
+  private static void verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
+      String expression, ReportMatcher expectedMatcher, List<Label> taskLabels) {
+    StringBuilder builder = new StringBuilder();
+    ReportMatcher matcher = MatcherCreator.createMatcher(expression);
     for (Label label : taskLabels) {
       for (Space space : SmoothSpace.values()) {
         for (Level level : Level.values()) {

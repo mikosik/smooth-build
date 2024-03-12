@@ -64,11 +64,15 @@ public class ReportMatchers {
     return (label, logs) -> left.matches(label, logs) || right.matches(label, logs);
   }
 
+  public static ReportMatcher not(ReportMatcher matcher) {
+    return (label, logs) -> !matcher.matches(label, logs);
+  }
+
   private static ReportMatcher logLevelMatcher(Level level) {
     return (label, logs) -> logs.stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
   }
 
-  private static ReportMatcher labelPrefixMatcher(Label prefix) {
+  public static ReportMatcher labelPrefixMatcher(Label prefix) {
     return (label, logs) -> label.startsWith(prefix);
   }
 }
