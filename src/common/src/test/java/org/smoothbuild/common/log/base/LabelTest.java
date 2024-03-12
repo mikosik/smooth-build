@@ -1,9 +1,9 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.Label.label;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;

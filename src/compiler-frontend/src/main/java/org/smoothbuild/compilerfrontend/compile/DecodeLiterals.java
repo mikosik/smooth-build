@@ -4,8 +4,8 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.UnescapeFailedException;
-import org.smoothbuild.common.log.Logger;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;

@@ -1,12 +1,12 @@
 package org.smoothbuild.common.step;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import com.google.inject.Key;
-import org.smoothbuild.common.log.Label;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.step.Step.ComposedStep;
 import org.smoothbuild.common.step.Step.FactoryStep;
 import org.smoothbuild.common.step.Step.LabelledStep;

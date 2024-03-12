@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.log.Log.error;
+import static org.smoothbuild.common.log.base.Log.error;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;

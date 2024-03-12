@@ -2,12 +2,12 @@ package org.smoothbuild.app.report;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.log.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 
 import java.util.List;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.ResultSource;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.base.ResultSource;
 
 public class FormatLog {
   public static String formatLogs(

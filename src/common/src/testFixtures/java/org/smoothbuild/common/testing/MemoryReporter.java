@@ -1,11 +1,11 @@
 package org.smoothbuild.common.testing;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.Logger;
-import org.smoothbuild.common.log.Reporter;
-import org.smoothbuild.common.log.ResultSource;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.report.Reporter;
 
 public class MemoryReporter implements Reporter {
   private final Logger buffer = new Logger();

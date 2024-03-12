@@ -52,7 +52,7 @@ import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.Reporter;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;

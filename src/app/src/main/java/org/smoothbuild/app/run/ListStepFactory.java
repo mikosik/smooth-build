@@ -2,12 +2,12 @@ package org.smoothbuild.app.run;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
 
 import org.smoothbuild.app.layout.Layout;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;

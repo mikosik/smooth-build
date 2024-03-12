@@ -10,14 +10,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.Log.info;
-import static org.smoothbuild.common.log.Log.warning;
-import static org.smoothbuild.common.log.ResultSource.EXECUTION;
-import static org.smoothbuild.common.log.Try.failure;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Log.info;
+import static org.smoothbuild.common.log.base.Log.warning;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.stepFactory;
@@ -35,10 +35,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.Reporter;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.tuple.Tuple0;
 
 class StepExecutorTest {
@@ -172,7 +172,7 @@ class StepExecutorTest {
   @Nested
   class _named {
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.common.log.Level#values")
+    @MethodSource("org.smoothbuild.common.log.base.Level#values")
     void unnamed_step_that_logged_something_uses_empty_string_for_header(Level level) {
       var log = new Log(level, "message");
       var step = tryStep(t -> Try.of("value", log));
@@ -181,7 +181,7 @@ class StepExecutorTest {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.common.log.Level#values")
+    @MethodSource("org.smoothbuild.common.log.base.Level#values")
     void named_step_that_logged_something_uses_name_for_header(Level level) {
       var log = new Log(level, "message");
       var step = tryStep(t -> Try.of("value", log)).labelled("name");
@@ -196,7 +196,7 @@ class StepExecutorTest {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.common.log.Level#values")
+    @MethodSource("org.smoothbuild.common.log.base.Level#values")
     void named_inner_step_that_logged_something_uses_full_name_for_header(Level level) {
       var log = new Log(level, "message");
       var step = tryStep(t -> Try.of("value", log)).labelled("name").labelled("outer");

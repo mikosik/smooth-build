@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend;
 
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.common.step.Step.tryStep;

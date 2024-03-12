@@ -6,19 +6,19 @@ import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.Log.info;
-import static org.smoothbuild.common.log.Log.warning;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Log.info;
+import static org.smoothbuild.common.log.base.Log.warning;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.ReportMatcher;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ReportMatchersTest extends TestingVirtualMachine {

@@ -2,16 +2,16 @@ package org.smoothbuild.app.run.eval.report;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.ResultSource.NOOP;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Log;
-import org.smoothbuild.common.log.Reporter;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;

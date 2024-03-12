@@ -2,10 +2,10 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.ResultSource.DISK;
-import static org.smoothbuild.common.log.ResultSource.EXECUTION;
-import static org.smoothbuild.common.log.ResultSource.MEMORY;
-import static org.smoothbuild.common.log.ResultSource.NOOP;
+import static org.smoothbuild.common.log.base.ResultSource.DISK;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
+import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 
 import java.io.IOException;
 import java.util.ArrayList;

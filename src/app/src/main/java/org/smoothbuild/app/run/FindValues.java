@@ -1,13 +1,13 @@
 package org.smoothbuild.app.run;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.log.Try.failure;
+import static org.smoothbuild.common.log.base.Try.failure;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Logger;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;

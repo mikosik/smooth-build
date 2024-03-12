@@ -4,13 +4,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.PrintWriter;
-import org.smoothbuild.common.log.CountingReporter;
-import org.smoothbuild.common.log.FilteringReporter;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.LogCounters;
-import org.smoothbuild.common.log.LogFilteringReporter;
-import org.smoothbuild.common.log.ReportMatcher;
-import org.smoothbuild.common.log.Reporter;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.report.CountingReporter;
+import org.smoothbuild.common.log.report.FilteringReporter;
+import org.smoothbuild.common.log.report.LogCounters;
+import org.smoothbuild.common.log.report.LogFilteringReporter;
+import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Reporter;
 
 public class ReportModule extends AbstractModule {
   private final PrintWriter out;

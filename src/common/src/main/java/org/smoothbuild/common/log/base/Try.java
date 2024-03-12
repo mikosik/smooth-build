@@ -1,11 +1,11 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.common.log.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 
 import java.util.Collection;
 import java.util.Objects;

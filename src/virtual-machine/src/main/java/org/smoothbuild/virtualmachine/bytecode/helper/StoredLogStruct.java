@@ -1,12 +1,12 @@
 package org.smoothbuild.virtualmachine.bytecode.helper;
 
-import static org.smoothbuild.common.log.Level.ERROR;
-import static org.smoothbuild.common.log.Level.FATAL;
-import static org.smoothbuild.common.log.Level.INFO;
-import static org.smoothbuild.common.log.Level.WARNING;
+import static org.smoothbuild.common.log.base.Level.ERROR;
+import static org.smoothbuild.common.log.base.Level.FATAL;
+import static org.smoothbuild.common.log.base.Level.INFO;
+import static org.smoothbuild.common.log.base.Level.WARNING;
 
 import java.util.Set;
-import org.smoothbuild.common.log.Level;
+import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;

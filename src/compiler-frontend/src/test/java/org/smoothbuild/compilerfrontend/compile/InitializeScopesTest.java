@@ -14,7 +14,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.namedV
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.log.Logger;
+import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.LambdaP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
 

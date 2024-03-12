@@ -1,6 +1,9 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.report;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.base.ResultSource;
 
 public class FilteringReporter implements Reporter {
   private final Reporter reporter;

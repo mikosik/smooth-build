@@ -8,8 +8,8 @@ import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.log.Logger;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;

@@ -2,11 +2,11 @@ package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Try.success;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.AnnotationP;

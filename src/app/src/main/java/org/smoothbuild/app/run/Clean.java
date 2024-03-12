@@ -4,15 +4,15 @@ import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.smoothbuild.app.layout.ForSpace;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.log.Logger;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 

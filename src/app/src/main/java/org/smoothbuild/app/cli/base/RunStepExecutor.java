@@ -7,7 +7,7 @@ import static org.smoothbuild.common.step.Step.tryStep;
 import com.google.inject.Injector;
 import org.smoothbuild.app.report.LogSummaryPrinter;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.Reporter;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.tuple.Tuple0;

@@ -2,13 +2,13 @@ package org.smoothbuild.app.run.eval.report;
 
 import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.common.log.Label.label;
+import static org.smoothbuild.common.log.base.Label.label;
 
 import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.Label;
-import org.smoothbuild.common.log.Level;
-import org.smoothbuild.common.log.ReportMatcher;
+import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.Level;
+import org.smoothbuild.common.log.report.ReportMatcher;
 
 public class ReportMatchers {
   public static final ReportMatcher ALL = (label, logs) -> true;

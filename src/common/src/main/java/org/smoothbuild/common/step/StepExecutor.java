@@ -1,14 +1,14 @@
 package org.smoothbuild.common.step;
 
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.PrefixingReporter;
-import org.smoothbuild.common.log.Reporter;
+import org.smoothbuild.common.log.report.PrefixingReporter;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.step.Step.ComposedStep;
 import org.smoothbuild.common.step.Step.LabelledStep;
 

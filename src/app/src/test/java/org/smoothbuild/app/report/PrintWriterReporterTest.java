@@ -3,8 +3,8 @@ package org.smoothbuild.app.report;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.app.report.FormatLog.formatLogs;
-import static org.smoothbuild.common.log.Label.label;
-import static org.smoothbuild.common.log.ResultSource.DISK;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 
 import java.io.PrintWriter;

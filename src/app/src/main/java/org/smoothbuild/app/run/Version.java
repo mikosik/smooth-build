@@ -1,8 +1,8 @@
 package org.smoothbuild.app.run;
 
-import static org.smoothbuild.common.log.Log.error;
-import static org.smoothbuild.common.log.Try.failure;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.smoothbuild.app.layout.BuildVersion;
 import org.smoothbuild.app.layout.HashNode;
 import org.smoothbuild.app.layout.InstallationHashes;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 

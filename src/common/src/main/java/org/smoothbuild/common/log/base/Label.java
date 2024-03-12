@@ -1,4 +1,4 @@
-package org.smoothbuild.common.log;
+package org.smoothbuild.common.log.base;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.List.listOfAll;

@@ -1,14 +1,14 @@
 package org.smoothbuild.compilerbackend;
 
-import static org.smoothbuild.common.log.Log.fatal;
-import static org.smoothbuild.common.log.Try.failure;
-import static org.smoothbuild.common.log.Try.success;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.Try;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
