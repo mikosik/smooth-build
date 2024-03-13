@@ -1,5 +1,6 @@
 package org.smoothbuild.app.run.eval.report;
 
+import static org.smoothbuild.app.run.eval.report.CreateMatcherContext.createMatcherContext;
 import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.findMatcher;
@@ -7,18 +8,18 @@ import static org.smoothbuild.app.run.eval.report.ReportMatchers.labelPrefixMatc
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.not;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherBaseVisitor;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.AndContext;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.BracketsContext;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherContext;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherNameContext;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.OrContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherBaseVisitor;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.AndContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.BracketsContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.MatcherContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.MatcherNameContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.OrContext;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreator {
   public static ReportMatcher createMatcher(String expression) {
-    var matcher = buildMatcher(ReportMatcherParser.parseMatcher(expression));
+    var matcher = buildMatcher(createMatcherContext(expression));
     // For the time being (until `smooth build --show-tasks` is updated to handle more detailed
     // label matching) we always match reports with label prefixed with something different than
     // evaluate.
@@ -26,7 +27,7 @@ public class MatcherCreator {
   }
 
   private static ReportMatcher buildMatcher(MatcherContext matcherContext) {
-    return new TaskMatcherBaseVisitor<ReportMatcher>() {
+    return new ReportMatcherBaseVisitor<ReportMatcher>() {
       @Override
       public ReportMatcher visitMatcher(MatcherContext mContext) {
         return mContext.expression().accept(this);
