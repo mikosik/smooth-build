@@ -1,8 +1,8 @@
-grammar TaskMatcher;
+grammar ReportMatcher;
 
 @ header
 {
-package org.smoothbuild.antlr.taskmatcher;
+package org.smoothbuild.antlr.reportmatcher;
 }
 matcher
    : expression EOF

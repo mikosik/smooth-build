@@ -16,20 +16,20 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherLexer;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser;
-import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherLexer;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.MatcherContext;
 import picocli.CommandLine.TypeConversionException;
 
-public class ReportMatcherParser {
-  public static MatcherContext parseMatcher(String expression) {
-    ErrorListener errorListener = new ErrorListener();
+public class CreateMatcherContext {
+  public static MatcherContext createMatcherContext(String expression) {
+    var errorListener = new ErrorListener();
 
-    TaskMatcherLexer lexer = new TaskMatcherLexer(fromString(expression));
-    lexer.removeErrorListeners();
-    lexer.addErrorListener(errorListener);
+    var reportMatcherLexer = new ReportMatcherLexer(fromString(expression));
+    reportMatcherLexer.removeErrorListeners();
+    reportMatcherLexer.addErrorListener(errorListener);
 
-    TaskMatcherParser parser = new TaskMatcherParser(new CommonTokenStream(lexer));
+    var parser = new ReportMatcherParser(new CommonTokenStream(reportMatcherLexer));
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
 
