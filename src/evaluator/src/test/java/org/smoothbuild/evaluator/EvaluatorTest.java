@@ -1,4 +1,4 @@
-package org.smoothbuild.app.run.eval;
+package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Guice.createInjector;
@@ -42,18 +42,15 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.app.report.PrintWriterReporter;
-import org.smoothbuild.app.run.eval.report.BsTranslator;
-import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.step.StepExecutor;
+import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
@@ -72,7 +69,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 
-public class EvaluatorSTest extends TestingVirtualMachine {
+public class EvaluatorTest extends TestingVirtualMachine {
   private final FilePersister filePersister = mock(FilePersister.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);
@@ -148,8 +145,8 @@ public class EvaluatorSTest extends TestingVirtualMachine {
           when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
-              .thenReturn(right(
-                  EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
+              .thenReturn(
+                  right(EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
           assertEvaluation(bindings(funcS), callS, intB(173));
         }
 
@@ -166,7 +163,7 @@ public class EvaluatorSTest extends TestingVirtualMachine {
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
-                  EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+                  EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertEvaluation(bindings(funcS), callS, intB(77));
         }
       }
@@ -318,8 +315,7 @@ public class EvaluatorSTest extends TestingVirtualMachine {
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var backendCompile = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
-    var printWriter = new PrintWriter(inMemorySystemOut(), true);
-    var reporter = new PrintWriterReporter(printWriter);
+    var reporter = new MemoryReporter();
     var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping()));
 
     var injector = createInjector(new AbstractModule() {

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.accept;
+package org.smoothbuild.evaluator.testing;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.truth.Truth.assertThat;
@@ -7,7 +7,6 @@ import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.app.run.EvaluateStep.evaluateStep;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
@@ -19,6 +18,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
 import static org.smoothbuild.common.testing.TestingSpace.space;
+import static org.smoothbuild.evaluator.EvaluateStep.evaluateStep;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -54,7 +54,7 @@ import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
-public class AcceptanceTestCase extends TestingBytecode {
+public class EvaluatorTestCase extends TestingBytecode {
   private static final Space MODULES_SPACE = space("module-space");
   private static final Path LIB_MODULE_PATH = path("libraryModule.smooth");
   private static final FullPath LIB_MODULE_FULL_PATH =

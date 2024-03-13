@@ -1,4 +1,4 @@
-package org.smoothbuild.app.run.eval.report;
+package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.log.base.Label.label;
 

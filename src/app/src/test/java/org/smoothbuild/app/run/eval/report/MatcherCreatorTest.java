@@ -2,7 +2,6 @@ package org.smoothbuild.app.run.eval.report;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.ALL;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.CALL;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.COMBINE;
@@ -23,6 +22,7 @@ import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;

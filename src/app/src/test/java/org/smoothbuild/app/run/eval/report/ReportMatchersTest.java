@@ -2,7 +2,6 @@ package org.smoothbuild.app.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.and;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
 import static org.smoothbuild.common.collect.List.list;
@@ -11,6 +10,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
+import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

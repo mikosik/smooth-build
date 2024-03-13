@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.testing.accept.AcceptanceTestCase;
+import org.smoothbuild.evaluator.testing.EvaluatorTestCase;
 
-public class StandardLibraryTestCase extends AcceptanceTestCase {
+public class StandardLibraryTestCase extends EvaluatorTestCase {
   @BeforeEach
   @Override
   public void beforeEach() throws IOException {

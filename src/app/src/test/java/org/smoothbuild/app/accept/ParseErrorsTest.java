@@ -3,9 +3,9 @@ package org.smoothbuild.app.accept;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.accept.AcceptanceTestCase;
+import org.smoothbuild.evaluator.testing.EvaluatorTestCase;
 
-public class ParseErrorsTest extends AcceptanceTestCase {
+public class ParseErrorsTest extends EvaluatorTestCase {
   @Test
   public void syntax_error_is_reported() throws Exception {
     createUserModule("result =");

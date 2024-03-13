@@ -29,6 +29,7 @@ subprojects { subproject ->
             'compiler-frontend',
             'virtual-machine',
             'compiler-backend',
+            'evaluator',
             'app',
             'standard-library',
             'system-test']) {

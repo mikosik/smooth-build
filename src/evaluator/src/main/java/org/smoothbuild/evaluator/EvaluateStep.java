@@ -1,14 +1,13 @@
-package org.smoothbuild.app.run;
+package org.smoothbuild.evaluator;
 
-import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
+import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
-import org.smoothbuild.app.run.eval.EvaluatorBFacade;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.step.Step;
