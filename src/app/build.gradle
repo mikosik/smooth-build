@@ -1,6 +1,5 @@
 plugins {
     id 'application'
-    id 'java-test-fixtures'
 }
 
 application {
@@ -12,31 +11,24 @@ dependencies {
     implementation project(':src:antlr-report-matcher')
     implementation project(':src:compiler-frontend')
     implementation project(':src:virtual-machine')
-    implementation project(':src:compiler-backend')
+    implementation project(':src:evaluator')
 
     implementation libs.guava
     implementation libs.guice
     implementation libs.okio
     implementation libs.picocli
 
-    testFixturesApi project(':src:common')
-    testFixturesApi testFixtures(project(':src:compiler-frontend'))
-    testFixturesApi testFixtures(project(':src:compiler-backend'))
-    testFixturesApi testFixtures(project(':src:virtual-machine'))
-    testFixturesApi libs.guava
-    testFixturesApi libs.guice
-    testFixturesApi libs.junit.jupiter.api
-    testFixturesApi libs.mockito
-    testFixturesApi libs.okio
-    testFixturesApi libs.truth
-
+    testImplementation project(':src:common-testing')
+    testImplementation project(':src:virtual-machine')
+    testImplementation testFixtures(project(':src:common'))
+    testImplementation testFixtures(project(':src:virtual-machine'))
+    testImplementation testFixtures(project(':src:evaluator'))
     testImplementation libs.guava.testlib
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params
     testImplementation libs.mockito
     testImplementation libs.truth
-    testImplementation project(':src:common-testing')
 }
 
 def fatJar = tasks.register('fatJar', Jar) {

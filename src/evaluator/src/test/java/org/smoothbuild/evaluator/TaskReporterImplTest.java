@@ -1,4 +1,4 @@
-package org.smoothbuild.app.run.eval.report;
+package org.smoothbuild.evaluator;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

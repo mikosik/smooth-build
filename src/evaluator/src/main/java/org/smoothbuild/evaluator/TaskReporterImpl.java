@@ -1,4 +1,4 @@
-package org.smoothbuild.app.run.eval.report;
+package org.smoothbuild.evaluator;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.common.collect.List.list;

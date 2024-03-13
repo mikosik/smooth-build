@@ -21,7 +21,6 @@ dependencies {
     testImplementation project(':src:common-testing')
     testImplementation testFixtures(project(':src:common'))
     testImplementation testFixtures(project(':src:virtual-machine'))
-    testImplementation testFixtures(project(':src:app'))
     testRuntimeOnly libs.junit.jupiter.engine
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params

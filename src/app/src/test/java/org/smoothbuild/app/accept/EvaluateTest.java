@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.testing.accept.AcceptanceTestCase;
+import org.smoothbuild.evaluator.testing.EvaluatorTestCase;
 import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 
-public class EvaluateTest extends AcceptanceTestCase {
+public class EvaluateTest extends EvaluatorTestCase {
   @Nested
   class _literal {
     @ParameterizedTest

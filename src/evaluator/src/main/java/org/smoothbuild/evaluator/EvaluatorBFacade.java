@@ -1,13 +1,11 @@
-package org.smoothbuild.app.run.eval;
+package org.smoothbuild.evaluator;
 
-import static org.smoothbuild.app.run.eval.report.EvaluateConstants.EVALUATE;
+import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import jakarta.inject.Inject;
-import org.smoothbuild.app.run.eval.report.BsTranslator;
-import org.smoothbuild.app.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.report.PrefixingReporter;

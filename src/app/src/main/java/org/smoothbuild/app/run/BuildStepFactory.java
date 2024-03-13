@@ -1,7 +1,7 @@
 package org.smoothbuild.app.run;
 
-import static org.smoothbuild.app.run.EvaluateStep.evaluateStep;
 import static org.smoothbuild.common.step.Step.tryStep;
+import static org.smoothbuild.evaluator.EvaluateStep.evaluateStep;
 
 import org.smoothbuild.app.layout.Layout;
 import org.smoothbuild.app.run.eval.SaveArtifacts;
