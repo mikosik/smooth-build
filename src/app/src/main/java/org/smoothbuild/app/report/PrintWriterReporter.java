@@ -1,6 +1,6 @@
 package org.smoothbuild.app.report;
 
-import static org.smoothbuild.app.report.FormatLog.formatLogs;
+import static org.smoothbuild.app.report.FormatReport.formatReport;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -29,6 +29,6 @@ public class PrintWriterReporter implements Reporter {
 
   @Override
   public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    printWriter.println(formatLogs(label, details, source, logs));
+    printWriter.println(formatReport(label, details, source, logs));
   }
 }

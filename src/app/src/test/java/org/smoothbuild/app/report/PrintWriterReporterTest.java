@@ -2,7 +2,7 @@ package org.smoothbuild.app.report;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.app.report.FormatLog.formatLogs;
+import static org.smoothbuild.app.report.FormatReport.formatReport;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
@@ -23,6 +23,6 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
 
     reporter.report(label, details, resultSource, logs);
 
-    verify(systemOut).println(formatLogs(label, details, resultSource, logs));
+    verify(systemOut).println(formatReport(label, details, resultSource, logs));
   }
 }
