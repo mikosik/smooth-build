@@ -12,6 +12,6 @@ public class DecodeCatRootException extends DecodeCatException {
 
   public DecodeCatRootException(Hash hash, CategoryKindB kind, int size, int expectedSize) {
     super("Cannot decode %s category at %s. Its merkle root has %d children when %d is expected."
-        .formatted(kind.name(), hash, size, expectedSize));
+        .formatted(kind.getClass().getSimpleName(), hash, size, expectedSize));
   }
 }

@@ -44,7 +44,7 @@ public final class ArrayB extends ValueB {
 
   private <T extends ValueB> void assertIsIterableAs(Class<T> clazz) {
     var elemT = type().elem();
-    if (!clazz.isAssignableFrom(elemT.typeJ())) {
+    if (!clazz.isAssignableFrom(elemT.javaType())) {
       throw new IllegalArgumentException(
           category().name() + " cannot be viewed as Iterable of " + clazz.getCanonicalName() + ".");
     }

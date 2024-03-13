@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.BLOB;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -13,7 +12,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
  */
 public class BlobTB extends TypeB {
   public BlobTB(Hash hash) {
-    super(hash, TypeNamesB.BLOB, BLOB);
+    super(hash, TypeNamesB.BLOB, BlobB.class);
   }
 
   @Override

@@ -2,7 +2,6 @@ package org.smoothbuild.virtualmachine.bytecode.type.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.ARRAY;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -16,7 +15,7 @@ public final class ArrayTB extends TypeB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
-    super(hash, TypeNamesB.arrayTypeName(elem), ARRAY);
+    super(hash, TypeNamesB.arrayTypeName(elem), ArrayB.class);
     this.elem = requireNonNull(elem);
   }
 

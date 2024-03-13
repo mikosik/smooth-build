@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.virtualmachine.bytecode.type.value.TypeNamesB.tupleTypeName;
 
 import org.smoothbuild.common.base.Hash;
@@ -17,7 +16,7 @@ public final class TupleTB extends TypeB {
   private final List<TypeB> elements;
 
   public TupleTB(Hash hash, List<TypeB> elements) {
-    super(hash, calculateName(elements), TUPLE);
+    super(hash, calculateName(elements), TupleB.class);
     this.elements = elements;
   }
 

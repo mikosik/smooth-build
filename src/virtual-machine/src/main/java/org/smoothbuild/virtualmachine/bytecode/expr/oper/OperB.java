@@ -33,6 +33,6 @@ public abstract class OperB extends ExprB {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return category().name() + "(???)";
+    return category().name() + ":" + evaluationType() + "(???)";
   }
 }

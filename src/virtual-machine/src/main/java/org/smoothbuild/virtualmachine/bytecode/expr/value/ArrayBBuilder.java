@@ -29,7 +29,7 @@ public class ArrayBBuilder {
       throw new IllegalArgumentException(
           "Element type must be " + type.elem().q() + " but was " + elem.type().q() + ".");
     }
-    Class<?> required = type.elem().typeJ();
+    Class<?> required = type.elem().javaType();
     if (!required.isInstance(elem)) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "

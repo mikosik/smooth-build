@@ -12,18 +12,26 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeIllegalCategoryExc
  * Category of ExprB.
  */
 public abstract class CategoryB {
-  private final String name;
   private final Hash hash;
-  private final CategoryKindB kind;
+  private final String name;
+  private final Class<? extends ExprB> javaType;
 
-  protected CategoryB(Hash hash, String name, CategoryKindB kind) {
-    this.name = name;
+  protected CategoryB(Hash hash, String name, Class<? extends ExprB> javaType) {
     this.hash = hash;
-    this.kind = kind;
+    this.name = name;
+    this.javaType = javaType;
+  }
+
+  public Hash hash() {
+    return hash;
   }
 
   public String name() {
     return name;
+  }
+
+  public Class<? extends ExprB> javaType() {
+    return javaType;
   }
 
   public String q() {
@@ -33,10 +41,6 @@ public abstract class CategoryB {
   public abstract ExprB newExpr(MerkleRoot merkleRoot, ExprDb exprDb)
       throws DecodeIllegalCategoryException;
 
-  public Hash hash() {
-    return hash;
-  }
-
   @Override
   public boolean equals(Object object) {
     return (object instanceof CategoryB that) && Objects.equals(hash(), that.hash());
@@ -45,14 +49,6 @@ public abstract class CategoryB {
   @Override
   public int hashCode() {
     return hash().hashCode();
-  }
-
-  public CategoryKindB kind() {
-    return kind;
-  }
-
-  public Class<? extends ExprB> typeJ() {
-    return kind.typeJ();
   }
 
   @Override

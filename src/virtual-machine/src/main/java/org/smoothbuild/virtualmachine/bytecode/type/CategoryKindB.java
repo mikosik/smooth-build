@@ -2,24 +2,6 @@ package org.smoothbuild.virtualmachine.bytecode.type;
 
 import java.util.function.BiFunction;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IfFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.BaseKindB;
@@ -47,8 +29,8 @@ public abstract sealed class CategoryKindB
     permits AbstFuncKindB, ArrayKindB, BaseKindB, FuncKindB, OperKindB, TupleKindB {
   public abstract static sealed class BaseKindB extends CategoryKindB
       permits BlobKindB, BoolKindB, IntKindB, StringKindB {
-    private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
-      super(name, marker, typeJ);
+    private BaseKindB(byte marker) {
+      super(marker);
     }
   }
 
@@ -58,12 +40,8 @@ public abstract sealed class CategoryKindB
     private final Class<? extends TypeB> dataClass;
 
     private OperKindB(
-        String name,
-        byte marker,
-        BiFunction<Hash, TypeB, T> constructor,
-        Class<? extends TypeB> dataClass,
-        Class<? extends ExprB> typeJ) {
-      super(name, marker, typeJ);
+        byte marker, BiFunction<Hash, TypeB, T> constructor, Class<? extends TypeB> dataClass) {
+      super(marker);
       this.constructor = constructor;
       this.dataClass = dataClass;
     }
@@ -79,55 +57,51 @@ public abstract sealed class CategoryKindB
 
   public static final class BlobKindB extends BaseKindB {
     BlobKindB() {
-      super("BLOB", (byte) 0, BlobB.class);
+      super((byte) 0);
     }
   }
 
   public static final class BoolKindB extends BaseKindB {
     BoolKindB() {
-      super("BOOL", (byte) 1, BoolB.class);
+      super((byte) 1);
     }
   }
 
   public static final class IntKindB extends BaseKindB {
     IntKindB() {
-      super("INT", (byte) 2, IntB.class);
+      super((byte) 2);
     }
   }
 
   public static final class StringKindB extends BaseKindB {
     StringKindB() {
-      super("STRING", (byte) 3, StringB.class);
+      super((byte) 3);
     }
   }
 
   public static final class ArrayKindB extends CategoryKindB {
     ArrayKindB() {
-      super("ARRAY", (byte) 4, ArrayB.class);
+      super((byte) 4);
     }
   }
 
   public static final class TupleKindB extends CategoryKindB {
     TupleKindB() {
-      super("TUPLE", (byte) 5, TupleB.class);
+      super((byte) 5);
     }
   }
 
   public static final class FuncKindB extends CategoryKindB {
     FuncKindB() {
-      super("FUNC", (byte) 16, FuncB.class);
+      super((byte) 16);
     }
   }
 
   public abstract static sealed class AbstFuncKindB<T extends FuncCB> extends CategoryKindB {
     private final BiFunction<Hash, FuncTB, T> instantiator;
 
-    private AbstFuncKindB(
-        String name,
-        byte marker,
-        Class<? extends ExprB> typeJ,
-        BiFunction<Hash, FuncTB, T> instantiator) {
-      super(name, marker, typeJ);
+    private AbstFuncKindB(byte marker, BiFunction<Hash, FuncTB, T> instantiator) {
+      super(marker);
       this.instantiator = instantiator;
     }
 
@@ -138,84 +112,72 @@ public abstract sealed class CategoryKindB
 
   public static final class LambdaKindB extends AbstFuncKindB<LambdaCB> {
     LambdaKindB() {
-      super("LAMBDA", (byte) 6, LambdaB.class, LambdaCB::new);
+      super((byte) 6, LambdaCB::new);
     }
   }
 
   public static final class NativeFuncKindB extends AbstFuncKindB<NativeFuncCB> {
     NativeFuncKindB() {
-      super("NATIVE_FUNC", (byte) 7, NativeFuncB.class, NativeFuncCB::new);
+      super((byte) 7, NativeFuncCB::new);
     }
   }
 
   public static final class OrderKindB extends OperKindB<OrderCB> {
     OrderKindB() {
-      super("ORDER", (byte) 8, OrderCB::new, ArrayTB.class, OrderB.class);
+      super((byte) 8, OrderCB::new, ArrayTB.class);
     }
   }
 
   public static final class CombineKindB extends OperKindB<CombineCB> {
     CombineKindB() {
-      super("COMBINE", (byte) 9, CombineCB::new, TupleTB.class, CombineB.class);
+      super((byte) 9, CombineCB::new, TupleTB.class);
     }
   }
 
   public static final class SelectKindB extends OperKindB<SelectCB> {
     SelectKindB() {
-      super("SELECT", (byte) 10, SelectCB::new, TypeB.class, SelectB.class);
+      super((byte) 10, SelectCB::new, TypeB.class);
     }
   }
 
   public static final class CallKindB extends OperKindB<CallCB> {
     CallKindB() {
-      super("CALL", (byte) 11, CallCB::new, TypeB.class, CallB.class);
+      super((byte) 11, CallCB::new, TypeB.class);
     }
   }
 
   public static final class PickKindB extends OperKindB<PickCB> {
     PickKindB() {
-      super("PICK", (byte) 12, PickCB::new, TypeB.class, PickB.class);
+      super((byte) 12, PickCB::new, TypeB.class);
     }
   }
 
   public static final class IfFuncKindB extends AbstFuncKindB<IfFuncCB> {
     IfFuncKindB() {
-      super("IF_FUNC", (byte) 13, IfFuncB.class, IfFuncCB::new);
+      super((byte) 13, IfFuncCB::new);
     }
   }
 
   public static final class ReferenceKindB extends OperKindB<ReferenceCB> {
     ReferenceKindB() {
-      super("VAR", (byte) 14, ReferenceCB::new, TypeB.class, ReferenceB.class);
+      super((byte) 14, ReferenceCB::new, TypeB.class);
     }
   }
 
   public static final class MapFuncKindB extends AbstFuncKindB<MapFuncCB> {
     MapFuncKindB() {
-      super("MAP_FUNC", (byte) 15, MapFuncB.class, MapFuncCB::new);
+      super((byte) 15, MapFuncCB::new);
     }
   }
 
-  private final String name;
   private final byte marker;
-  private final Class<? extends ExprB> typeJ;
 
-  private CategoryKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
-    this.name = name;
+  private CategoryKindB(byte marker) {
     this.marker = marker;
-    this.typeJ = typeJ;
-  }
-
-  public String name() {
-    return name;
   }
 
   public byte marker() {
     return marker;
-  }
-
-  public Class<? extends ExprB> typeJ() {
-    return typeJ;
   }
 
   public static CategoryKindB fromMarker(byte marker) {
@@ -243,9 +205,7 @@ public abstract sealed class CategoryKindB
 
   @Override
   public String toString() {
-    return "CategoryKindB{" + "name='"
-        + name + '\'' + ", marker="
-        + marker + ", typeJ="
-        + typeJ.getSimpleName() + '}';
+    return "CategoryKindB{" + "name='" + getClass().getSimpleName() + '\'' + ", marker=" + marker
+        + '}';
   }
 }
