@@ -2,8 +2,8 @@ package org.smoothbuild.app.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.app.report.FormatLog.formatLog;
-import static org.smoothbuild.app.report.FormatLog.formatLogs;
+import static org.smoothbuild.app.report.FormatReport.formatLog;
+import static org.smoothbuild.app.report.FormatReport.formatReport;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -19,10 +19,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.log.base.Log;
 
-public class FormatLogTest {
+public class FormatReportTest {
   @Test
   void test_format_logs() {
-    assertThat(formatLogs(label("label-name"), "details", EXECUTION, logsWithAllLevels()) + "\n")
+    assertThat(formatReport(label("label-name"), "details", EXECUTION, logsWithAllLevels()) + "\n")
         .isEqualTo(
             """
             :label-name                                                                exec

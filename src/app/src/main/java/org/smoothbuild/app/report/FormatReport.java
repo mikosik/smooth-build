@@ -9,8 +9,8 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.ResultSource;
 
-public class FormatLog {
-  public static String formatLogs(
+public class FormatReport {
+  public static String formatReport(
       Label label, String details, ResultSource source, List<Log> logs) {
     var labelString = label.toString();
     var builder = new StringBuilder(labelString);
