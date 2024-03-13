@@ -205,7 +205,7 @@ public class AcceptanceTestCase extends TestingBytecode {
     @Provides
     @ComputationDb
     public FileSystem provideComputationCacheFileSystem() {
-      return projectFileSystem;
+      return computationCacheFileSystem;
     }
 
     @Provides
