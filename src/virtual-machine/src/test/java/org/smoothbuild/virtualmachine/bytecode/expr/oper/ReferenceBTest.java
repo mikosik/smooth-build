@@ -49,6 +49,6 @@ public class ReferenceBTest extends TestingVirtualMachine {
   @Test
   public void to_string() throws Exception {
     var referenceB = referenceB(intTB(), 123);
-    assertThat(referenceB.toString()).isEqualTo("VAR:Int(123)@" + referenceB.hash());
+    assertThat(referenceB.toString()).isEqualTo("REFERENCE:Int(123)@" + referenceB.hash());
   }
 }

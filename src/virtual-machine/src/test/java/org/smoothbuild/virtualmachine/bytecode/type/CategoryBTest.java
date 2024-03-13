@@ -61,8 +61,8 @@ public class CategoryBTest extends TestingVirtualMachine {
   public void to_string(
       Function1<CategoryDb, CategoryB, BytecodeException> factoryCall, String name)
       throws Exception {
-    var catH = execute(factoryCall);
-    assertThat(catH.toString()).isEqualTo(name);
+    var categoryB = execute(factoryCall);
+    assertThat(categoryB.toString()).isEqualTo(name);
   }
 
   public static java.util.List<Arguments> names() {
@@ -79,23 +79,23 @@ public class CategoryBTest extends TestingVirtualMachine {
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
-        args(f -> f.lambda(list(), f.string()), "LAMBDA:()->String"),
-        args(f -> f.lambda(list(f.string()), f.string()), "LAMBDA:(String)->String"),
+        args(f -> f.lambda(list(), f.string()), "LAMBDA"),
+        args(f -> f.lambda(list(f.string()), f.string()), "LAMBDA"),
         args(f -> f.funcT(list(), f.string()), "()->String"),
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
-        args(f -> f.ifFunc(f.int_()), "IF_FUNC:(Bool,Int,Int)->Int"),
-        args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
-        args(f -> f.nativeFunc(list(), f.string()), "NATIVE_FUNC:()->String"),
-        args(f -> f.nativeFunc(list(f.string()), f.string()), "NATIVE_FUNC:(String)->String"),
+        args(f -> f.ifFunc(f.int_()), "IF"),
+        args(f -> f.mapFunc(f.int_(), f.string()), "MAP"),
+        args(f -> f.nativeFunc(list(), f.string()), "NATIVE_FUNC"),
+        args(f -> f.nativeFunc(list(f.string()), f.string()), "NATIVE_FUNC"),
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
-        args(f -> f.call(f.int_()), "CALL:Int"),
-        args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE:{String,Int}"),
-        args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
-        args(f -> f.pick(f.int_()), "PICK:Int"),
-        args(f -> f.select(f.int_()), "SELECT:Int"),
-        args(f -> f.reference(f.int_()), "VAR:Int"));
+        args(f -> f.call(f.int_()), "CALL"),
+        args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE"),
+        args(f -> f.order(f.array(f.string())), "ORDER"),
+        args(f -> f.pick(f.int_()), "PICK"),
+        args(f -> f.select(f.int_()), "SELECT"),
+        args(f -> f.reference(f.int_()), "REFERENCE"));
   }
 
   @Nested
@@ -261,7 +261,7 @@ public class CategoryBTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("typeJ_test_data")
   public void typeJ(CategoryB type, Class<?> expected) throws Exception {
-    assertThat(type.typeJ()).isEqualTo(expected);
+    assertThat(type.javaType()).isEqualTo(expected);
   }
 
   public static java.util.List<Arguments> typeJ_test_data() throws BytecodeException {

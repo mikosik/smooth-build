@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.IF_FUNC;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -10,7 +9,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.IfFuncB;
 
 public final class IfFuncCB extends FuncCB {
   public IfFuncCB(Hash hash, FuncTB funcTB) {
-    super(hash, IF_FUNC, funcTB);
+    super(hash, "IF", funcTB, IfFuncB.class);
   }
 
   @Override

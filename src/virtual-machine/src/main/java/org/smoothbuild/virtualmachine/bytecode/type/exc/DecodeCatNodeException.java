@@ -22,7 +22,8 @@ public class DecodeCatNodeException extends DecodeCatException {
   }
 
   private static String buildMessage(Hash hash, CategoryKindB kind, String path, String message) {
-    return "Cannot decode " + kind.name() + " category at " + hash + ". Cannot decode its node at `"
-        + path + "` path in Merkle tree. " + (message != null ? message : "");
+    return "Cannot decode category at " + hash + " as " + kind.getClass().getSimpleName()
+        + ". Cannot decode its node at `" + path + "` path in Merkle tree. "
+        + (message != null ? message : "");
   }
 }

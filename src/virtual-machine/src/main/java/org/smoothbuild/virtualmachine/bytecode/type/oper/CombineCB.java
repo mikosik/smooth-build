@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.COMBINE;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -15,7 +14,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  */
 public class CombineCB extends OperCB {
   public CombineCB(Hash hash, TypeB evaluationType) {
-    super(hash, COMBINE, evaluationType);
+    super(hash, "COMBINE", CombineB.class, evaluationType);
     checkArgument(evaluationType instanceof TupleTB);
   }
 

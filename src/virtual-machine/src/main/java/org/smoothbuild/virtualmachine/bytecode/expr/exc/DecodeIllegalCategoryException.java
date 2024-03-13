@@ -5,7 +5,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 
 public class DecodeIllegalCategoryException extends DecodeExprException {
   public DecodeIllegalCategoryException(Hash hash, FuncTB funcTB) {
-    super("Cannot decode object at " + hash + ". Its category is " + funcTB.kind()
+    super("Cannot decode object at " + hash + ". Its category is " + funcTB.name()
         + " which cannot have instances because it is abstract category.");
   }
 }

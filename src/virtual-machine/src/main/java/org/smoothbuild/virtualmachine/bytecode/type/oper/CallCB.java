@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.CALL;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -14,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
  */
 public class CallCB extends OperCB {
   public CallCB(Hash hash, TypeB evaluationType) {
-    super(hash, CALL, evaluationType);
+    super(hash, "CALL", CallB.class, evaluationType);
   }
 
   @Override
