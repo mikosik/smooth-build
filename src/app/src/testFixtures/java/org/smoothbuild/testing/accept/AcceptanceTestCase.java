@@ -8,7 +8,6 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.app.run.EvaluateStep.evaluateStep;
-import static org.smoothbuild.app.run.eval.report.ReportMatchers.ALL;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
@@ -188,7 +187,7 @@ public class AcceptanceTestCase extends TestingBytecode {
     protected void configure() {
       bind(MemoryReporter.class).toInstance(new MemoryReporter());
       bind(Reporter.class).to(MemoryReporter.class);
-      bind(ReportMatcher.class).toInstance(ALL);
+      bind(ReportMatcher.class).toInstance((label, logs) -> true);
     }
 
     @Provides
