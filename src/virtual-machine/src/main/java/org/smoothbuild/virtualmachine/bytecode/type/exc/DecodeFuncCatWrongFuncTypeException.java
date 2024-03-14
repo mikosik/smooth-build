@@ -1,11 +1,11 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
 import static org.smoothbuild.virtualmachine.bytecode.type.CategoryDb.DATA_PATH;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.IF_FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.MAP_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.IF_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.MAP_FUNC;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB;
+import org.smoothbuild.virtualmachine.bytecode.type.CategoryId;
 import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
 
 public class DecodeFuncCatWrongFuncTypeException extends DecodeCatNodeException {
@@ -20,7 +20,7 @@ public class DecodeFuncCatWrongFuncTypeException extends DecodeCatNodeException 
         hash, MAP_FUNC, "Function type " + funcTB.q() + " doesn't match type of `map` function.");
   }
 
-  public DecodeFuncCatWrongFuncTypeException(Hash hash, CategoryKindB kind, String message) {
-    super(hash, kind, DATA_PATH, message);
+  public DecodeFuncCatWrongFuncTypeException(Hash hash, CategoryId categoryId, String message) {
+    super(hash, categoryId, DATA_PATH, message);
   }
 }

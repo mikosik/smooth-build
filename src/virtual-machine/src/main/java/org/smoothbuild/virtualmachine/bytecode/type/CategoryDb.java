@@ -7,24 +7,24 @@ import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainCategoryDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.fromMarker;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.ARRAY;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.BLOB;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.BOOL;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.CALL;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.IF_FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.INT;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.LAMBDA;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.MAP_FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.NATIVE_FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.ORDER;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.PICK;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.REFERENCE;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.SELECT;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.STRING;
-import static org.smoothbuild.virtualmachine.bytecode.type.CategoryKinds.TUPLE;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.ARRAY;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.BLOB;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.BOOL;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.CALL;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.COMBINE;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.IF_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.INT;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.LAMBDA;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.MAP_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.NATIVE_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.ORDER;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.PICK;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.REFERENCE;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.SELECT;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.STRING;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.TUPLE;
+import static org.smoothbuild.virtualmachine.bytecode.type.CategoryId.fromOrdinal;
 import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
@@ -37,23 +37,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.AbstFuncKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.ArrayKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.BaseKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.BlobKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.BoolKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.FuncKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.IfFuncKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.IntKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.LambdaKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.MapFuncKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.NativeFuncKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.OperKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.StringKindB;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.CategoryDbException;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatException;
-import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatIllegalKindException;
+import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatIllegalIdException;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatNodeException;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatRootException;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatWrongChainSizeException;
@@ -107,8 +93,8 @@ public class CategoryDb {
   }
 
   private <A extends TypeB> Function0<A, CategoryDbException> createAndCacheTypeMemoizer(
-      Function<Hash, A> factory, CategoryKindB kind) {
-    return memoizer(() -> cache(factory.apply(writeRoot(kind))));
+      Function<Hash, A> factory, CategoryId id) {
+    return memoizer(() -> cache(factory.apply(writeRoot(id))));
   }
 
   // methods for getting ValueB types
@@ -126,21 +112,23 @@ public class CategoryDb {
   }
 
   public LambdaCB lambda(List<TypeB> params, TypeB result) throws CategoryDbException {
-    return funcC(LAMBDA, params, result);
+    return funcC(LAMBDA, params, result, LambdaCB::new);
   }
 
   public LambdaCB lambda(FuncTB funcTB) throws CategoryDbException {
-    return funcC(LAMBDA, funcTB);
+    return funcC(LAMBDA, funcTB, LambdaCB::new);
   }
 
-  private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, List<TypeB> params, TypeB result)
+  private <T extends FuncCB> T funcC(
+      CategoryId id, List<TypeB> params, TypeB result, BiFunction<Hash, FuncTB, T> factory)
       throws CategoryDbException {
-    return funcC(funcKind, funcT(params, result));
+    return funcC(id, funcT(params, result), factory);
   }
 
-  private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
+  private <T extends FuncCB> T funcC(
+      CategoryId id, FuncTB funcTB, BiFunction<Hash, FuncTB, T> factory)
       throws CategoryDbException {
-    return newFuncC(funcKind, funcTB);
+    return newFuncC(id, funcTB, factory);
   }
 
   public FuncTB funcT(List<TypeB> params, TypeB result) throws CategoryDbException {
@@ -151,9 +139,9 @@ public class CategoryDb {
     return newFuncT(params, result);
   }
 
-  public IfFuncCB ifFunc(TypeB t) throws CategoryDbException {
-    var funcT = funcT(list(bool(), t, t), t);
-    return funcC(IF_FUNC, funcT);
+  public IfFuncCB ifFunc(TypeB type) throws CategoryDbException {
+    var funcT = funcT(list(bool(), type, type), type);
+    return funcC(IF_FUNC, funcT, IfFuncCB::new);
   }
 
   public IntTB int_() throws CategoryDbException {
@@ -162,15 +150,15 @@ public class CategoryDb {
 
   public MapFuncCB mapFunc(TypeB r, TypeB s) throws CategoryDbException {
     var funcT = funcT(list(array(s), funcT(list(s), r)), array(r));
-    return funcC(MAP_FUNC, funcT);
+    return funcC(MAP_FUNC, funcT, MapFuncCB::new);
   }
 
   public NativeFuncCB nativeFunc(List<TypeB> params, TypeB result) throws CategoryDbException {
-    return funcC(NATIVE_FUNC, params, result);
+    return funcC(NATIVE_FUNC, params, result, NativeFuncCB::new);
   }
 
   public NativeFuncCB nativeFunc(FuncTB funcTB) throws CategoryDbException {
-    return funcC(NATIVE_FUNC, funcTB);
+    return funcC(NATIVE_FUNC, funcTB, NativeFuncCB::new);
   }
 
   public TupleTB tuple(TypeB... items) throws CategoryDbException {
@@ -188,27 +176,27 @@ public class CategoryDb {
   // methods for getting ExprB types
 
   public CallCB call(TypeB evaluationType) throws CategoryDbException {
-    return newOper(CALL, evaluationType);
+    return newOper(CALL, evaluationType, CallCB::new);
   }
 
   public CombineCB combine(TupleTB evaluationType) throws CategoryDbException {
-    return newOper(COMBINE, evaluationType);
+    return newOper(COMBINE, evaluationType, CombineCB::new);
   }
 
   public OrderCB order(ArrayTB evaluationType) throws CategoryDbException {
-    return newOper(ORDER, evaluationType);
+    return newOper(ORDER, evaluationType, OrderCB::new);
   }
 
   public PickCB pick(TypeB evaluationType) throws CategoryDbException {
-    return newOper(PICK, evaluationType);
+    return newOper(PICK, evaluationType, PickCB::new);
   }
 
   public ReferenceCB reference(TypeB evaluationType) throws CategoryDbException {
-    return newOper(REFERENCE, evaluationType);
+    return newOper(REFERENCE, evaluationType, ReferenceCB::new);
   }
 
   public SelectCB select(TypeB evaluationType) throws CategoryDbException {
-    return newOper(SELECT, evaluationType);
+    return newOper(SELECT, evaluationType, SelectCB::new);
   }
 
   // methods for reading from db
@@ -219,17 +207,25 @@ public class CategoryDb {
 
   private CategoryB read(Hash hash) throws CategoryDbException {
     List<Hash> rootChain = readCategoryRootChain(hash);
-    CategoryKindB kind = decodeCatMarker(hash, rootChain.get(0));
-    return switch (kind) {
-      case ArrayKindB array -> readArrayT(hash, rootChain, kind);
-      case BaseKindB base -> readBaseT(hash, rootChain, base);
-      case LambdaKindB lambda -> readFuncCat(hash, rootChain, lambda);
-      case FuncKindB func -> readFuncT(hash, rootChain);
-      case IfFuncKindB ifFunc -> readIfFuncCat(hash, rootChain, ifFunc);
-      case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootChain, mapFunc);
-      case NativeFuncKindB nativeFunc -> readFuncCat(hash, rootChain, nativeFunc);
-      case OperKindB<?> oper -> readOperCat(hash, rootChain, oper);
-      case TupleKindB tuple -> readTupleT(hash, rootChain);
+    var id = decodeCategoryId(hash, rootChain.get(0));
+    return switch (id) {
+      case ARRAY -> readArrayType(hash, rootChain, id);
+      case BLOB -> newBaseType(hash, id, rootChain, BlobTB::new);
+      case BOOL -> newBaseType(hash, id, rootChain, BoolTB::new);
+      case INT -> newBaseType(hash, id, rootChain, IntTB::new);
+      case STRING -> newBaseType(hash, id, rootChain, StringTB::new);
+      case LAMBDA -> readFuncCategory(hash, rootChain, id, LambdaCB::new);
+      case FUNC -> readFuncType(hash, rootChain);
+      case IF_FUNC -> readIfCategory(hash, rootChain, id);
+      case MAP_FUNC -> readMapCategory(hash, rootChain, id);
+      case NATIVE_FUNC -> readFuncCategory(hash, rootChain, id, NativeFuncCB::new);
+      case CALL -> readOperCategory(hash, rootChain, id, TypeB.class, CallCB::new);
+      case COMBINE -> readOperCategory(hash, rootChain, id, TupleTB.class, CombineCB::new);
+      case ORDER -> readOperCategory(hash, rootChain, id, ArrayTB.class, OrderCB::new);
+      case PICK -> readOperCategory(hash, rootChain, id, TypeB.class, PickCB::new);
+      case REFERENCE -> readOperCategory(hash, rootChain, id, TypeB.class, ReferenceCB::new);
+      case SELECT -> readOperCategory(hash, rootChain, id, TypeB.class, SelectCB::new);
+      case TUPLE -> readTupleType(hash, rootChain);
     };
   }
 
@@ -243,36 +239,42 @@ public class CategoryDb {
     return hashes;
   }
 
-  private CategoryKindB decodeCatMarker(Hash hash, Hash markerHash) throws DecodeCatException {
-    byte marker = invokeAndChainHashedDbException(
+  private CategoryId decodeCategoryId(Hash hash, Hash markerHash) throws DecodeCatException {
+    byte byteMarker = invokeAndChainHashedDbException(
         () -> hashedDb.readByte(markerHash), e -> new DecodeCatException(hash, e));
-    CategoryKindB kind = fromMarker(marker);
-    if (kind == null) {
-      throw new DecodeCatIllegalKindException(hash, marker);
+    var id = fromOrdinal(byteMarker);
+    if (id == null) {
+      throw new DecodeCatIllegalIdException(hash, byteMarker);
     }
-    return kind;
+    return id;
   }
 
-  private ArrayTB readArrayT(Hash hash, List<Hash> rootChain, CategoryKindB kind)
+  private ArrayTB readArrayType(Hash hash, List<Hash> rootChain, CategoryId id)
       throws DecodeCatException {
-    return newArray(hash, readDataAsType(hash, rootChain, kind, TypeB.class));
+    return newArray(hash, readDataAsType(hash, rootChain, id, TypeB.class));
   }
 
-  private TypeB readBaseT(Hash rootHash, List<Hash> rootChain, BaseKindB kind)
+  private <T extends TypeB> T newBaseType(
+      Hash hash, CategoryId id, List<Hash> rootChain, Function<Hash, T> factory)
       throws DecodeCatRootException {
-    assertCatRootChainSize(rootHash, kind, rootChain, 1);
-    return newBaseT(rootHash, kind);
+    assertCatRootChainSize(hash, id, rootChain, 1);
+    return cache(factory.apply(hash));
   }
 
-  private OperCB readOperCat(Hash hash, List<Hash> rootChain, OperKindB<?> operKind)
+  private <T extends OperCB> T readOperCategory(
+      Hash hash,
+      List<Hash> rootChain,
+      CategoryId id,
+      Class<? extends TypeB> dataTypeClass,
+      BiFunction<Hash, TypeB, T> factory)
       throws DecodeCatException {
-    var evaluationType = readDataAsType(hash, rootChain, operKind, operKind.dataClass());
-    return newOper(operKind.constructor(), hash, evaluationType);
+    var evaluationType = readDataAsType(hash, rootChain, id, dataTypeClass);
+    return newOper(factory, hash, evaluationType);
   }
 
-  private FuncTB readFuncT(Hash rootHash, List<Hash> rootChain) throws DecodeCatException {
+  private FuncTB readFuncType(Hash rootHash, List<Hash> rootChain) throws DecodeCatException {
     assertCatRootChainSize(rootHash, FUNC, rootChain, 2);
-    var nodes = readDataChainAsTypes(rootHash, FUNC, rootChain);
+    var nodes = readDataChainAsTypes(FUNC, rootHash, rootChain);
     if (nodes.size() != 2) {
       throw new DecodeCatWrongChainSizeException(rootHash, FUNC, DATA_PATH, 2, nodes.size());
     }
@@ -286,9 +288,9 @@ public class CategoryDb {
     }
   }
 
-  private CategoryB readIfFuncCat(Hash hash, List<Hash> rootChain, IfFuncKindB ifFuncKind)
+  private CategoryB readIfCategory(Hash hash, List<Hash> rootChain, CategoryId id)
       throws CategoryDbException {
-    return readFuncCat(hash, rootChain, ifFuncKind, (FuncTB funcTB) -> {
+    return readFuncCategory(hash, rootChain, id, IfFuncCB::new, (FuncTB funcTB) -> {
       var params = funcTB.params();
       if (params.size() != 3) {
         throw illegalIfFuncTypeExc(hash, funcTB);
@@ -303,9 +305,9 @@ public class CategoryDb {
     });
   }
 
-  private CategoryB readMapFuncCat(Hash hash, List<Hash> rootChain, MapFuncKindB mapFuncKind)
+  private CategoryB readMapCategory(Hash hash, List<Hash> rootChain, CategoryId id)
       throws CategoryDbException {
-    return readFuncCat(hash, rootChain, mapFuncKind, (FuncTB funcTB) -> {
+    return readFuncCategory(hash, rootChain, id, MapFuncCB::new, (FuncTB funcTB) -> {
       var params = funcTB.params();
       if (!(funcTB.result() instanceof ArrayTB outputArrayT)) {
         throw illegalMapFuncTypeExc(hash, funcTB);
@@ -331,106 +333,98 @@ public class CategoryDb {
     });
   }
 
-  private <T extends FuncCB> CategoryB readFuncCat(
-      Hash rootHash, List<Hash> rootChain, AbstFuncKindB<T> kind) throws CategoryDbException {
-    return readFuncCat(rootHash, rootChain, kind, t -> {});
+  private <T extends FuncCB> CategoryB readFuncCategory(
+      Hash rootHash, List<Hash> rootChain, CategoryId id, BiFunction<Hash, FuncTB, T> instantiator)
+      throws CategoryDbException {
+    return readFuncCategory(rootHash, rootChain, id, instantiator, t -> {});
   }
 
-  private <T extends FuncCB> CategoryB readFuncCat(
+  private <T extends FuncCB> CategoryB readFuncCategory(
       Hash rootHash,
       List<Hash> rootChain,
-      AbstFuncKindB<T> kind,
+      CategoryId categoryId,
+      BiFunction<Hash, FuncTB, T> factory,
       Consumer1<FuncTB, CategoryDbException> typeVerifier)
       throws CategoryDbException {
-    assertCatRootChainSize(rootHash, kind, rootChain, 2);
+    assertCatRootChainSize(rootHash, categoryId, rootChain, 2);
     var dataHash = rootChain.get(DATA_IDX);
     var typeComponent = invokeAndChainCategoryDbException(
-        () -> read(dataHash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
+        () -> read(dataHash), e -> new DecodeCatNodeException(rootHash, categoryId, DATA_PATH, e));
     if (typeComponent instanceof FuncTB funcTB) {
       typeVerifier.accept(funcTB);
-      return cache(kind.instantiator().apply(rootHash, funcTB));
+      return cache(factory.apply(rootHash, funcTB));
     } else {
       throw new DecodeCatWrongNodeCatException(
-          rootHash, kind, DATA_PATH, FuncTB.class, typeComponent.getClass());
+          rootHash, categoryId, DATA_PATH, FuncTB.class, typeComponent.getClass());
     }
   }
 
-  private TupleTB readTupleT(Hash rootHash, List<Hash> rootChain) throws DecodeCatException {
+  private TupleTB readTupleType(Hash rootHash, List<Hash> rootChain) throws DecodeCatException {
     assertCatRootChainSize(rootHash, TUPLE, rootChain, 2);
-    var items = readDataChainAsTypes(rootHash, TUPLE, rootChain);
+    var items = readDataChainAsTypes(TUPLE, rootHash, rootChain);
     return newTuple(rootHash, items);
   }
 
   // helper methods for reading
 
   private <T extends TypeB> T readDataAsType(
-      Hash rootHash, List<Hash> rootChain, CategoryKindB kind, Class<T> typeClass)
+      Hash rootHash, List<Hash> rootChain, CategoryId id, Class<T> typeClass)
       throws DecodeCatException {
-    assertCatRootChainSize(rootHash, kind, rootChain, 2);
+    assertCatRootChainSize(rootHash, id, rootChain, 2);
     var hash = rootChain.get(DATA_IDX);
     var categoryB = invokeAndChainCategoryDbException(
-        () -> get(hash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
+        () -> get(hash), e -> new DecodeCatNodeException(rootHash, id, DATA_PATH, e));
     if (typeClass.isAssignableFrom(categoryB.getClass())) {
       @SuppressWarnings("unchecked")
       T result = (T) categoryB;
       return result;
     } else {
       throw new DecodeCatWrongNodeCatException(
-          rootHash, kind, DATA_PATH, typeClass, categoryB.getClass());
+          rootHash, id, DATA_PATH, typeClass, categoryB.getClass());
     }
   }
 
-  private List<TypeB> readDataChainAsTypes(Hash rootHash, CategoryKindB kind, List<Hash> rootChain)
+  private List<TypeB> readDataChainAsTypes(CategoryId id, Hash rootHash, List<Hash> rootChain)
       throws DecodeCatNodeException {
     var elemHashes = invokeAndChainHashedDbException(
         () -> hashedDb.readHashChain(rootChain.get(DATA_IDX)),
-        e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, e));
+        e -> new DecodeCatNodeException(rootHash, id, DATA_PATH, e));
     var builder = new ArrayList<TypeB>();
     for (int i = 0; i < elemHashes.size(); i++) {
-      builder.add(readDataChainElementAsType(kind, rootHash, elemHashes.get(i), i));
+      builder.add(readDataChainElementAsType(id, rootHash, elemHashes.get(i), i));
     }
     return listOfAll(builder);
   }
 
-  private TypeB readDataChainElementAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index)
+  private TypeB readDataChainElementAsType(CategoryId id, Hash rootHash, Hash hash, int index)
       throws DecodeCatNodeException {
     var categoryB = invokeAndChainCategoryDbException(
-        () -> get(hash), e -> new DecodeCatNodeException(rootHash, kind, DATA_PATH, index, e));
+        () -> get(hash), e -> new DecodeCatNodeException(rootHash, id, DATA_PATH, index, e));
     if (categoryB instanceof TypeB typeB) {
       return typeB;
     } else {
       throw new DecodeCatWrongNodeCatException(
-          rootHash, kind, DATA_PATH, index, TypeB.class, categoryB.getClass());
+          rootHash, id, DATA_PATH, index, TypeB.class, categoryB.getClass());
     }
   }
 
   private static void assertCatRootChainSize(
-      Hash rootHash, CategoryKindB kind, List<Hash> hashes, int expectedSize)
+      Hash rootHash, CategoryId id, List<Hash> hashes, int expectedSize)
       throws DecodeCatRootException {
     if (hashes.size() != expectedSize) {
-      throw new DecodeCatRootException(rootHash, kind, hashes.size(), expectedSize);
+      throw new DecodeCatRootException(rootHash, id, hashes.size(), expectedSize);
     }
   }
 
   // methods for creating java instances of CategoryB
 
-  private ArrayTB newArray(TypeB elem) throws CategoryDbException {
-    var rootHash = writeArrayRoot(elem);
-    return newArray(rootHash, elem);
+  private ArrayTB newArray(TypeB element) throws CategoryDbException {
+    var rootHash = writeArrayRoot(element);
+    return newArray(rootHash, element);
   }
 
-  private ArrayTB newArray(Hash rootHash, TypeB elem) {
-    return cache(new ArrayTB(rootHash, elem));
-  }
-
-  private TypeB newBaseT(Hash rootHash, BaseKindB kind) {
-    return cache(
-        switch (kind) {
-          case BlobKindB blobKind -> new BlobTB(rootHash);
-          case BoolKindB boolKind -> new BoolTB(rootHash);
-          case IntKindB intKind -> new IntTB(rootHash);
-          case StringKindB stringKind -> new StringTB(rootHash);
-        });
+  private ArrayTB newArray(Hash rootHash, TypeB element) {
+    return cache(new ArrayTB(rootHash, element));
   }
 
   private FuncTB newFuncT(TupleTB params, TypeB result) throws CategoryDbException {
@@ -438,11 +432,11 @@ public class CategoryDb {
     return cache(new FuncTB(rootHash, params, result));
   }
 
-  private <T extends FuncCB> T newFuncC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
+  private <T extends FuncCB> T newFuncC(
+      CategoryId id, FuncTB funcTB, BiFunction<Hash, FuncTB, T> factory)
       throws CategoryDbException {
-    var rootHash = writeFuncCategoryRoot(funcKind, funcTB);
-    var instantiator = funcKind.instantiator();
-    return cache(instantiator.apply(rootHash, funcTB));
+    var rootHash = writeFuncCategoryRoot(id, funcTB);
+    return cache(factory.apply(rootHash, funcTB));
   }
 
   private TupleTB newTuple(List<TypeB> items) throws CategoryDbException {
@@ -454,15 +448,16 @@ public class CategoryDb {
     return cache(new TupleTB(rootHash, items));
   }
 
-  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationType)
+  private <T extends OperCB> T newOper(
+      CategoryId id, TypeB evaluationType, BiFunction<Hash, TypeB, T> factory)
       throws CategoryDbException {
-    var rootHash = writeRoot(kind, evaluationType);
-    return newOper(kind.constructor(), rootHash, evaluationType);
+    var rootHash = writeRoot(id, evaluationType);
+    return newOper(factory, rootHash, evaluationType);
   }
 
   private <T extends OperCB> T newOper(
-      BiFunction<Hash, TypeB, T> constructor, Hash rootHash, TypeB evaluationType) {
-    return cache(constructor.apply(rootHash, evaluationType));
+      BiFunction<Hash, TypeB, T> factory, Hash rootHash, TypeB evaluationType) {
+    return cache(factory.apply(rootHash, evaluationType));
   }
 
   private <T extends CategoryB> T cache(T type) {
@@ -473,8 +468,8 @@ public class CategoryDb {
 
   // Methods for writing category root
 
-  private Hash writeArrayRoot(CategoryB elem) throws CategoryDbException {
-    return writeRoot(ARRAY, elem);
+  private Hash writeArrayRoot(CategoryB elementCategory) throws CategoryDbException {
+    return writeRoot(ARRAY, elementCategory);
   }
 
   private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws CategoryDbException {
@@ -482,8 +477,8 @@ public class CategoryDb {
     return writeRoot(FUNC, dataHash);
   }
 
-  private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws CategoryDbException {
-    return writeRoot(kind, funcTB);
+  private Hash writeFuncCategoryRoot(CategoryId id, FuncTB funcTB) throws CategoryDbException {
+    return writeRoot(id, funcTB);
   }
 
   private Hash writeTupleRoot(List<TypeB> items) throws CategoryDbException {
@@ -493,16 +488,16 @@ public class CategoryDb {
 
   // Helper methods for writing roots
 
-  private Hash writeRoot(CategoryKindB kind, CategoryB categoryB) throws CategoryDbException {
-    return writeRoot(kind, categoryB.hash());
+  private Hash writeRoot(CategoryId id, CategoryB categoryB) throws CategoryDbException {
+    return writeRoot(id, categoryB.hash());
   }
 
-  private Hash writeRoot(CategoryKindB kind, Hash dataHash) throws CategoryDbException {
-    return writeChain(writeByte(kind.marker()), dataHash);
+  private Hash writeRoot(CategoryId id, Hash dataHash) throws CategoryDbException {
+    return writeChain(writeByte(id.byteMarker()), dataHash);
   }
 
-  private Hash writeRoot(CategoryKindB kind) throws CategoryDbException {
-    return writeChain(writeByte(kind.marker()));
+  private Hash writeRoot(CategoryId id) throws CategoryDbException {
+    return writeChain(writeByte(id.byteMarker()));
   }
 
   // hashedDb calls with exception translation
