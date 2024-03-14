@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryKindB;
+import org.smoothbuild.virtualmachine.bytecode.type.CategoryId;
 
 public class DecodeCatRootException extends DecodeCatException {
   public DecodeCatRootException(Hash hash, int actualSize) {
@@ -10,8 +10,8 @@ public class DecodeCatRootException extends DecodeCatException {
         .formatted(hash, actualSize));
   }
 
-  public DecodeCatRootException(Hash hash, CategoryKindB kind, int size, int expectedSize) {
+  public DecodeCatRootException(Hash hash, CategoryId categoryId, int size, int expectedSize) {
     super("Cannot decode %s category at %s. Its merkle root has %d children when %d is expected."
-        .formatted(kind.getClass().getSimpleName(), hash, size, expectedSize));
+        .formatted(categoryId, hash, size, expectedSize));
   }
 }
