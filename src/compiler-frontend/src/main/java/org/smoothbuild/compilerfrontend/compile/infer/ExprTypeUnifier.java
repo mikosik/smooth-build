@@ -249,7 +249,7 @@ public class ExprTypeUnifier {
   }
 
   private boolean unifyReference(ReferenceP referenceP) {
-    Maybe<SchemaS> schemaS = typeTeller.schemaFor(referenceP.name());
+    Maybe<SchemaS> schemaS = typeTeller.schemaFor(referenceP.referencedName());
     if (schemaS.isSome()) {
       referenceP.setSchemaS(schemaS.get());
       return true;

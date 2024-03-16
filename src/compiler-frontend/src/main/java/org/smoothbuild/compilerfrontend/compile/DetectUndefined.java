@@ -52,7 +52,7 @@ public class DetectUndefined implements TryFunction<Tuple2<ModuleP, ScopeS>, Mod
 
     @Override
     public void visitReference(ReferenceP referenceP) {
-      var name = referenceP.name();
+      var name = referenceP.referencedName();
       if (!(imported.evaluables().contains(name) || scope.referencables().contains(name))) {
         log.log(compileError(referenceP, Strings.q(name) + " is undefined."));
       }

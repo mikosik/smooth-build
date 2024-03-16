@@ -8,16 +8,16 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public final class ReferenceP extends PolymorphicP {
-  private final String name;
+  private final String referencedName;
   private SchemaS schemaS;
 
-  public ReferenceP(String name, Location location) {
+  public ReferenceP(String referencedName, Location location) {
     super(location);
-    this.name = name;
+    this.referencedName = referencedName;
   }
 
-  public String name() {
-    return name;
+  public String referencedName() {
+    return referencedName;
   }
 
   @Override
@@ -35,18 +35,18 @@ public final class ReferenceP extends PolymorphicP {
       return true;
     }
     return object instanceof ReferenceP that
-        && Objects.equals(this.name, that.name)
+        && Objects.equals(this.referencedName, that.referencedName)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, location());
+    return Objects.hash(referencedName, location());
   }
 
   @Override
   public String toString() {
-    var fields = list("name = " + name, "location = " + location()).toString("\n");
+    var fields = list("name = " + referencedName, "location = " + location()).toString("\n");
     return "ReferenceP(\n" + indent(fields) + "\n)";
   }
 }
