@@ -17,7 +17,7 @@ public class TestingFileSystem {
     PathIterator pathIterator = RecursivePathsIterator.recursivePathsIterator(fileSystem, dir);
     while (pathIterator.hasNext()) {
       var path = pathIterator.next();
-      result.put(path, readFile(fileSystem, path));
+      result.put(path, readFile(fileSystem, dir.append(path)));
     }
     return result;
   }
