@@ -192,23 +192,23 @@ public class SbTranslator {
   }
 
   private ExprB translateReference(ReferenceS referenceS) throws SbTranslatorException {
-    var itemS = lexicalEnvironment.get(referenceS.name());
+    var itemS = lexicalEnvironment.get(referenceS.referencedName());
     if (itemS == null) {
-      Maybe<NamedEvaluableS> namedEvaluableS = evaluables.getMaybe(referenceS.name());
+      Maybe<NamedEvaluableS> namedEvaluableS = evaluables.getMaybe(referenceS.referencedName());
       if (namedEvaluableS.isSome()) {
         return switch (namedEvaluableS.get()) {
           case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
           case NamedValueS namedValueS -> translateNamedValueWithCache(referenceS, namedValueS);
         };
       } else {
-        throw new SbTranslatorException(
-            "Cannot resolve `" + referenceS.name() + "` at " + referenceS.location() + ".");
+        throw new SbTranslatorException("Cannot resolve `" + referenceS.referencedName() + "` at "
+            + referenceS.location() + ".");
       }
     } else {
       var evaluationType = typeF.translate(itemS.type());
-      var index = BigInteger.valueOf(lexicalEnvironment.indexOf(referenceS.name()));
+      var index = BigInteger.valueOf(lexicalEnvironment.indexOf(referenceS.referencedName()));
       return saveNalAndReturn(
-          referenceS.name(), referenceS, bytecodeF.reference(evaluationType, index));
+          referenceS.referencedName(), referenceS, bytecodeF.reference(evaluationType, index));
     }
   }
 

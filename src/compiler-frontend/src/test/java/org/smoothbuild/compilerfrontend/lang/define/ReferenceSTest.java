@@ -16,7 +16,7 @@ public class ReferenceSTest {
             """
             ReferenceS(
               schema = <>Int
-              name = referenced
+              referencedName = referenced
               location = {prj}/build.smooth:7
             )""");
   }

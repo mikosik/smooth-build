@@ -28,7 +28,7 @@ public class SelectSTest {
                 typeArgs = <>
                 polymorphicS = ReferenceS(
                   schema = <>MyStruct
-                  name = structValue
+                  referencedName = structValue
                   location = {prj}/build.smooth:12
                 )
                 evaluationType = MyStruct(Int field)

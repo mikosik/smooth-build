@@ -10,12 +10,13 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 /**
  * Reference to {@link NamedEvaluableS} or {@link ItemS}.
  */
-public record ReferenceS(SchemaS schema, String name, Location location)
+public record ReferenceS(SchemaS schema, String referencedName, Location location)
     implements PolymorphicS, Located {
   @Override
   public String toString() {
-    var fields =
-        list("schema = " + schema, "name = " + name, "location = " + location).toString("\n");
+    var fields = list(
+            "schema = " + schema, "referencedName = " + referencedName, "location = " + location)
+        .toString("\n");
     return "ReferenceS(\n" + indent(fields) + "\n)";
   }
 }

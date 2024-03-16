@@ -23,7 +23,7 @@ public class CallSTest {
                 typeArgs = <Int>
                 polymorphicS = ReferenceS(
                   schema = <A>(A)->A
-                  name = myId
+                  referencedName = myId
                   location = {prj}/build.smooth:4
                 )
                 evaluationType = (Int)->Int
