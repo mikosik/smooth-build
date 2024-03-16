@@ -15,6 +15,10 @@ public class RecursivePathsIterator implements PathIterator {
   private final Deque<Path> pathStack;
   private Path nextFile;
 
+  /**
+   * @return PathIterator iterating over all files in given `dir` recursively. Paths returns by
+   * iterator are relative to `dir`.
+   */
   public static PathIterator recursivePathsIterator(FileSystem fileSystem, Path dir)
       throws IOException {
     PathState state = fileSystem.pathState(dir);
