@@ -68,8 +68,8 @@ public class SortModuleMembersByDependency implements TryFunction<ModuleP, Modul
       @Override
       public void visitReference(ReferenceP referenceP) {
         super.visitReference(referenceP);
-        if (names.contains(referenceP.name())) {
-          deps.add(new GraphEdge<>(referenceP.location(), referenceP.name()));
+        if (names.contains(referenceP.referencedName())) {
+          deps.add(new GraphEdge<>(referenceP.location(), referenceP.referencedName()));
         }
       }
     }.visitNamedEvaluable(evaluable);

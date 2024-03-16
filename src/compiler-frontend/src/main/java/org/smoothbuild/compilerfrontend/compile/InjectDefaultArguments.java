@@ -70,7 +70,7 @@ public class InjectDefaultArguments implements TryFunction<Tuple2<ModuleP, Scope
     private List<ExprP> inferPositionedArgs(CallP callP) {
       if (callP.callee() instanceof InstantiateP instantiateP
           && instantiateP.polymorphic() instanceof ReferenceP referenceP) {
-        var name = referenceP.name();
+        var name = referenceP.referencedName();
         var optional = referenceables.getMaybe(name);
         if (optional.isSome()) {
           return inferPositionedArgs(callP, optional.get());
@@ -166,7 +166,7 @@ public class InjectDefaultArguments implements TryFunction<Tuple2<ModuleP, Scope
     }
 
     private static String nameOfReferencedCallee(CallP callP) {
-      return ((ReferenceP) ((InstantiateP) callP.callee()).polymorphic()).name();
+      return ((ReferenceP) ((InstantiateP) callP.callee()).polymorphic()).referencedName();
     }
 
     private static List<Log> findPositionalArgAfterNamedArgError(CallP callP) {

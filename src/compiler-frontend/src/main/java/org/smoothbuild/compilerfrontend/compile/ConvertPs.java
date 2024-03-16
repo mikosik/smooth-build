@@ -230,11 +230,11 @@ public class ConvertPs implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleS> 
 
     private ReferenceS convertReference(ReferenceP referenceP) {
       return convertReference(
-          referenceP, typeTeller.schemaFor(referenceP.name()).get());
+          referenceP, typeTeller.schemaFor(referenceP.referencedName()).get());
     }
 
     private ReferenceS convertReference(ReferenceP referenceP, SchemaS schemaS) {
-      return new ReferenceS(schemaS, referenceP.name(), referenceP.location());
+      return new ReferenceS(schemaS, referenceP.referencedName(), referenceP.location());
     }
 
     private ExprS convertSelect(SelectP selectP) {
