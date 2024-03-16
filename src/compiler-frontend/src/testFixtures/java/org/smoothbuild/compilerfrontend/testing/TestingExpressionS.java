@@ -156,6 +156,10 @@ public class TestingExpressionS {
     return new FuncTS(tupleTS(paramTs), resultT);
   }
 
+  public static StructTS fileTS() {
+    return structTS("File", blobTS(), stringTS());
+  }
+
   public static TupleTS tupleTS(TypeS... itemTs) {
     return tupleTS(list(itemTs));
   }
@@ -415,7 +419,11 @@ public class TestingExpressionS {
   }
 
   public static ReferenceS referenceS(int line, SchemaS schema, String name) {
-    return new ReferenceS(schema, name, location(line));
+    return referenceS(schema, name, location(line));
+  }
+
+  public static ReferenceS referenceS(SchemaS schema, String name, Location location) {
+    return new ReferenceS(schema, name, location);
   }
 
   public static SelectS selectS(ExprS selectable, String field) {
@@ -541,7 +549,15 @@ public class TestingExpressionS {
   }
 
   public static NamedExprValueS valueS(int line, TypeS type, String name, ExprS body) {
-    return new NamedExprValueS(schemaS(type), name, body, location(line));
+    return valueS(line, schemaS(type), name, body);
+  }
+
+  public static NamedExprValueS valueS(SchemaS schema, String name, ExprS body) {
+    return valueS(1, schema, name, body);
+  }
+
+  public static NamedExprValueS valueS(int line, SchemaS schema, String name, ExprS body) {
+    return new NamedExprValueS(schema, name, body, location(line));
   }
 
   public static NamedValueS emptyArrayValueS() {
