@@ -207,7 +207,8 @@ public class SbTranslator {
     } else {
       var evaluationType = typeF.translate(itemS.type());
       var index = BigInteger.valueOf(lexicalEnvironment.indexOf(referenceS.name()));
-      return saveNalAndReturn(referenceS, bytecodeF.reference(evaluationType, index));
+      return saveNalAndReturn(
+          referenceS.name(), referenceS, bytecodeF.reference(evaluationType, index));
     }
   }
 
