@@ -57,11 +57,12 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
       return failure(error(e.getMessage()));
     }
     var logger = new Logger();
-    var sortedArtifacts = artifacts.sortUsing(comparing(a -> a.element1().name()));
+    var sortedArtifacts = artifacts.sortUsing(comparing(a -> a.element1().referencedName()));
     var savedArtifacts =
         sortedArtifacts.map(t -> t.map2(valueB -> save(t.element1(), valueB, logger)));
     var messages = savedArtifacts
-        .map(t -> t.element1().name() + " -> " + t.element2().map(Path::q).getOr("?"))
+        .map(t ->
+            t.element1().referencedName() + " -> " + t.element2().map(Path::q).getOr("?"))
         .toString("\n");
     return Try.of(messages, logger);
   }
@@ -71,7 +72,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
   }
 
   private Maybe<Path> save(ReferenceS valueS, ValueB valueB, Logger logger) {
-    String name = valueS.name();
+    String name = valueS.referencedName();
     try {
       var path = write(valueS, valueB);
       return some(path);
@@ -87,7 +88,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
 
   private Path write(ReferenceS referenceS, ValueB valueB)
       throws IOException, DuplicatedPathsException, BytecodeException {
-    Path artifactPath = artifactPath(referenceS.name());
+    Path artifactPath = artifactPath(referenceS.referencedName());
     if (referenceS.schema().type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
     } else if (referenceS.schema().type().name().equals(FileStruct.NAME)) {
