@@ -18,6 +18,7 @@ import static org.smoothbuild.common.log.base.Log.warning;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.Try.failure;
 import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.stepFactory;
@@ -191,7 +192,7 @@ class StepExecutorTest {
       stepExecutor().execute(step, tuple(), reporter);
 
       var inOrder = inOrder(reporter);
-      inOrder.verify(reporter).report(label("name"), "", EXECUTION, list(log));
+      inOrder.verify(reporter).report(report(label("name"), "", EXECUTION, list(log)));
       inOrder.verifyNoMoreInteractions();
     }
 
@@ -206,7 +207,7 @@ class StepExecutorTest {
       stepExecutor().execute(step, tuple(), reporter);
 
       var inOrder = inOrder(reporter);
-      inOrder.verify(reporter).report(label("outer", "name"), "", EXECUTION, list(log));
+      inOrder.verify(reporter).report(report(label("outer", "name"), "", EXECUTION, list(log)));
       inOrder.verifyNoMoreInteractions();
     }
   }
@@ -232,8 +233,8 @@ class StepExecutorTest {
       var result = stepExecutor().execute(step, tuple(), reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
-      verify(reporter).report(label(), "", EXECUTION, list(info("info")));
-      verify(reporter).report(label(), "", EXECUTION, list(warning("warning")));
+      verify(reporter).report(report(label(), "", EXECUTION, list(info("info"))));
+      verify(reporter).report(report(label(), "", EXECUTION, list(warning("warning"))));
       verifyNoMoreInteractions(reporter);
     }
 
@@ -334,7 +335,7 @@ class StepExecutorTest {
   }
 
   private static void verifyReported(Reporter reporter, List<Log> logs) {
-    verify(reporter).report(label(), "", EXECUTION, logs);
+    verify(reporter).report(report(label(), "", EXECUTION, logs));
     verifyNoMoreInteractions(reporter);
   }
 

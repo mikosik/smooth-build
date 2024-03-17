@@ -1,9 +1,6 @@
 package org.smoothbuild.common.log.report;
 
-import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.ResultSource;
 
 public class CountingReporter implements Reporter {
   private final Reporter reporter;
@@ -15,10 +12,10 @@ public class CountingReporter implements Reporter {
   }
 
   @Override
-  public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    for (Log log : logs) {
+  public void report(Report report) {
+    for (Log log : report.logs()) {
       logCounters.increment(log.level());
     }
-    reporter.report(label, details, source, logs);
+    reporter.report(report);
   }
 }

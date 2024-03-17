@@ -11,6 +11,7 @@ import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Level.INFO;
 import static org.smoothbuild.common.log.base.Level.WARNING;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 import static org.smoothbuild.common.testing.TestingLog.FATAL_LOG;
 import static org.smoothbuild.common.testing.TestingLog.INFO_LOG;
@@ -33,9 +34,9 @@ public class CountingReporterTest {
 
     var label = label("name");
     var details = "details";
-    countingReporter.report(label, details, DISK, list(ERROR_LOG));
+    countingReporter.report(report(label, details, DISK, list(ERROR_LOG)));
 
-    verify(stepReporter).report(label, details, DISK, list(ERROR_LOG));
+    verify(stepReporter).report(report(label, details, DISK, list(ERROR_LOG)));
   }
 
   @ParameterizedTest
@@ -47,7 +48,7 @@ public class CountingReporterTest {
 
     var label = label("name");
     var details = "details";
-    countingReporter.report(label, details, DISK, list(log));
+    countingReporter.report(report(label, details, DISK, list(log)));
 
     verify(logCounters).increment(reportedLevel);
     verifyNoMoreInteractions(logCounters);

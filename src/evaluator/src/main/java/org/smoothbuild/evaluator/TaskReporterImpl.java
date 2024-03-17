@@ -11,6 +11,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.mes
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
@@ -41,16 +42,16 @@ public class TaskReporterImpl implements TaskReporter {
     var details = traceS == null ? "" : traceS.toString();
     var logs = logsFrom(result);
     var label = taskLabel(task);
-    reporter.report(label, details, source, logs);
+    reporter.report(Report.report(label, details, source, logs));
   }
 
   @Override
   public void reportEvaluationException(Throwable throwable) {
-    reporter.report(
+    reporter.report(Report.report(
         label(),
         "",
         NOOP,
-        list(fatal("Evaluation failed with: " + getStackTraceAsString(throwable))));
+        list(fatal("Evaluation failed with: " + getStackTraceAsString(throwable)))));
   }
 
   private static List<Log> logsFrom(ComputationResult result) throws BytecodeException {

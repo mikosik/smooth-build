@@ -2,6 +2,7 @@ package org.smoothbuild.common.step;
 
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -55,7 +56,7 @@ public class StepExecutor {
 
   private <T, R> Maybe<R> tryFunction(TryFunction<T, R> function, T argument, Reporter reporter) {
     var result = function.apply(argument);
-    reporter.report(label(), "", EXECUTION, result.logs());
+    reporter.report(report(label(), "", EXECUTION, result.logs()));
     return result.toMaybe();
   }
 

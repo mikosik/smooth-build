@@ -5,10 +5,7 @@ import static org.smoothbuild.app.report.FormatReport.formatReport;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.PrintWriter;
-import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 
 /**
@@ -28,7 +25,7 @@ public class PrintWriterReporter implements Reporter {
   }
 
   @Override
-  public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    printWriter.println(formatReport(label, details, source, logs));
+  public void report(Report report) {
+    printWriter.println(formatReport(report));
   }
 }
