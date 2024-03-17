@@ -1,10 +1,5 @@
 package org.smoothbuild.common.log.report;
 
-import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.ResultSource;
-
 public class FilteringReporter implements Reporter {
   private final Reporter reporter;
   private final ReportMatcher reportMatcher;
@@ -15,9 +10,9 @@ public class FilteringReporter implements Reporter {
   }
 
   @Override
-  public void report(Label label, String details, ResultSource source, List<Log> logs) {
-    if (reportMatcher.matches(label, logs)) {
-      reporter.report(label, details, source, logs);
+  public void report(Report report) {
+    if (reportMatcher.matches(report.label(), report.logs())) {
+      reporter.report(report);
     }
   }
 }

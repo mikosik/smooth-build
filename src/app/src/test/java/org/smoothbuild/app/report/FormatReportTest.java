@@ -10,6 +10,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 
 import java.util.List;
@@ -22,7 +23,8 @@ import org.smoothbuild.common.log.base.Log;
 public class FormatReportTest {
   @Test
   void test_format_logs() {
-    assertThat(formatReport(label("label-name"), "details", EXECUTION, logsWithAllLevels()) + "\n")
+    var report = report(label("label-name"), "details", EXECUTION, logsWithAllLevels());
+    assertThat(formatReport(report) + "\n")
         .isEqualTo(
             """
             :label-name                                                                exec

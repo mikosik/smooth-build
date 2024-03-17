@@ -26,15 +26,13 @@ public class LogFilteringReporterTest {
   @ParameterizedTest
   @MethodSource
   void logs_are_filtered(Level level, List<Log> logs, List<Log> expected) {
-    var label = label("name");
-    var details = "details";
-    var resultSource = DISK;
     var wrappedReporter = mock(Reporter.class);
+    var report = new Report(label("name"), "details", DISK, logs);
     var reporter = new LogFilteringReporter(wrappedReporter, level);
 
-    reporter.report(label, details, resultSource, logs);
+    reporter.report(report);
 
-    verify(wrappedReporter).report(label, details, resultSource, expected);
+    verify(wrappedReporter).report(report.withLogs(expected));
   }
 
   public static List<Arguments> logs_are_filtered() {

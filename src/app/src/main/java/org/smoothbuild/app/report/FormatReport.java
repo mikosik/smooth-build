@@ -4,23 +4,20 @@ import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 
-import java.util.List;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.report.Report;
 
 public class FormatReport {
-  public static String formatReport(
-      Label label, String details, ResultSource source, List<Log> logs) {
-    var labelString = label.toString();
+  public static String formatReport(Report report) {
+    var labelString = report.label().toString();
     var builder = new StringBuilder(labelString);
-    builder.append(padStart(source.toString(), 79 - labelString.length(), ' '));
-    if (containsAnyFailure(logs) && !details.isEmpty()) {
+    builder.append(padStart(report.source().toString(), 79 - labelString.length(), ' '));
+    if (containsAnyFailure(report.logs()) && !report.details().isEmpty()) {
       builder.append("\n");
-      builder.append(indent(details));
+      builder.append(indent(report.details()));
     }
 
-    for (Log log : logs) {
+    for (Log log : report.logs()) {
       builder.append("\n");
       builder.append(formatLog(log));
     }

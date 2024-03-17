@@ -9,6 +9,7 @@ import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
+import static org.smoothbuild.common.log.report.Report.report;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Label;
@@ -99,6 +100,6 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping));
     taskReporter.report(task, computationResult(intB(), source));
-    verify(reporter).report(label, "", source, list());
+    verify(reporter).report(report(label, "", source, list()));
   }
 }
