@@ -1,5 +1,6 @@
 package org.smoothbuild.evaluator;
 
+import static org.smoothbuild.common.log.report.MappingReporter.labelPrefixingReporter;
 import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
 import com.google.inject.AbstractModule;
@@ -8,7 +9,6 @@ import com.google.inject.Provides;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.report.PrefixingReporter;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.step.MaybeFunction;
 import org.smoothbuild.common.tuple.Tuple2;
@@ -34,7 +34,7 @@ public class EvaluatorBFacade
       public TaskReporter provideTaskReporter(Reporter reporter) {
         var bsMapping = argument.element2();
         var bsTranslator = new BsTranslator(bsMapping);
-        return new TaskReporterImpl(new PrefixingReporter(reporter, EVALUATE), bsTranslator);
+        return new TaskReporterImpl(labelPrefixingReporter(reporter, EVALUATE), bsTranslator);
       }
     });
     var exprs = argument.element1();
