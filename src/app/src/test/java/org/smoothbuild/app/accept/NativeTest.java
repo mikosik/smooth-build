@@ -87,7 +87,8 @@ public class NativeTest extends EvaluatorTestCase {
             """);
         evaluate("result");
         assertThat(logs())
-            .contains(userFatal(1, "Error persisting native jar '{module-space}/userModule.jar'."));
+            .contains(
+                userFatal(1, "Error persisting native jar '{module-bucket}/userModule.jar'."));
       }
 
       @Test
@@ -124,7 +125,7 @@ public class NativeTest extends EvaluatorTestCase {
         assertLogsContainFailure();
         String timestamp1 = fetchTimestamp(logs().get(0).message());
 
-        restartSmoothWithSameFileSystems();
+        restartSmoothWithSameBuckets();
         evaluate("result");
         assertLogsContainFailure();
         String timestamp2 = fetchTimestamp(logs().get(0).message());

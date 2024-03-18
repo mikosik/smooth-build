@@ -3,14 +3,14 @@ package org.smoothbuild.app.run.eval;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
+import static org.smoothbuild.common.testing.TestingBucket.readFile;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
-import static org.smoothbuild.common.testing.TestingFileSystem.directoryToFileMap;
-import static org.smoothbuild.common.testing.TestingFileSystem.readFile;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedValueS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.SubFileSystem;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
@@ -42,8 +42,8 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class SaveArtifactsTest extends TestingVirtualMachine {
   @Override
-  public FileSystem hashedDbFileSystem() {
-    return new SubFileSystem(projectFileSystem(), HASHED_DB_PATH);
+  public Bucket hashedDbBucket() {
+    return new SubBucket(projectBucket(), HASHED_DB_PATH);
   }
 
   @Test
@@ -97,7 +97,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
     var typeS = structTS("NotAFile", blobTS(), stringTS());
     var valueB = tupleB(stringB("my/path"), blobB(byteStringFrom("abc")));
-    var byteString = readFile(hashedDbFileSystem(), HashedDb.dbPathTo(valueB.dataHash()));
+    var byteString = readFile(hashedDbBucket(), HashedDb.dbPathTo(valueB.dataHash()));
 
     testValueStoring(typeS, valueB, byteString);
   }
@@ -208,7 +208,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
-    var saveArtifacts = new SaveArtifacts(projectFileSystem());
+    var saveArtifacts = new SaveArtifacts(projectBucket());
     Tuple2<ExprS, ValueB> instantiate1 = tuple(instantiateS(stringTS(), "myValue1"), stringB());
     Tuple2<ExprS, ValueB> instantiate2 = tuple(instantiateS(stringTS(), "myValue2"), stringB());
     Tuple2<ExprS, ValueB> instantiate3 = tuple(instantiateS(stringTS(), "myValue3"), stringB());
@@ -243,12 +243,11 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
     assertThat(result)
         .isEqualTo(success("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
-    assertThat(directoryToFileMap(projectFileSystem(), ARTIFACTS_PATH))
-        .isEqualTo(expectedDirectoryMap);
+    assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
   private Try<String> saveArtifacts(TypeS typeS, ValueB valueB) {
-    var saveArtifacts = new SaveArtifacts(projectFileSystem());
+    var saveArtifacts = new SaveArtifacts(projectBucket());
     var valueS = annotatedValueS(nativeAnnotationS(), typeS, "myValue", location());
     var instantiateS = TestingExpressionS.instantiateS(list(), valueS);
     return saveArtifacts.apply(list(tuple(instantiateS, valueB)));

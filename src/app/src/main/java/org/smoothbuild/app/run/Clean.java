@@ -3,25 +3,25 @@ package org.smoothbuild.app.run;
 import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
-import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import org.smoothbuild.app.layout.ForSpace;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.app.layout.ForBucket;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple0;
 
 public class Clean implements TryFunction<Tuple0, String> {
-  private final FileSystem fileSystem;
+  private final Bucket bucket;
 
   @Inject
-  public Clean(@ForSpace(PROJECT) FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
+  public Clean(@ForBucket(PROJECT) Bucket bucket) {
+    this.bucket = bucket;
   }
 
   @Override
@@ -35,7 +35,7 @@ public class Clean implements TryFunction<Tuple0, String> {
 
   private void deleteDir(Logger logger, Path path) {
     try {
-      fileSystem.delete(path);
+      bucket.delete(path);
     } catch (IOException e) {
       logger.error("Unable to delete " + path + ".");
     }

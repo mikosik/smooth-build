@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class ContainerTest extends TestingVirtualMachine {
   @Test
   public void file_system() {
-    assertThat(container().fileSystem()).isSameInstanceAs(projectFileSystem());
+    assertThat(container().bucket()).isSameInstanceAs(projectBucket());
   }
 
   @Test

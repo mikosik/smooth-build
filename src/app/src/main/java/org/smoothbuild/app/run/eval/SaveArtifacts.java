@@ -5,11 +5,11 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
-import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Try.failure;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
@@ -19,12 +19,12 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
-import org.smoothbuild.app.layout.ForSpace;
+import org.smoothbuild.app.layout.ForBucket;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;
@@ -41,18 +41,18 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 
 public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, String> {
-  private final FileSystem fileSystem;
+  private final Bucket bucket;
 
   @Inject
-  public SaveArtifacts(@ForSpace(PROJECT) FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
+  public SaveArtifacts(@ForBucket(PROJECT) Bucket bucket) {
+    this.bucket = bucket;
   }
 
   @Override
   public Try<String> apply(List<Tuple2<ExprS, ValueB>> argument) {
     List<Tuple2<ReferenceS, ValueB>> artifacts = argument.map(t -> t.map1(this::toReferenceS));
     try {
-      fileSystem.createDir(ARTIFACTS_PATH);
+      bucket.createDir(ARTIFACTS_PATH);
     } catch (IOException e) {
       return failure(error(e.getMessage()));
     }
@@ -106,7 +106,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
 
   private Path saveArray(ArrayTS arrayTS, Path artifactPath, ArrayB arrayB)
       throws IOException, DuplicatedPathsException, BytecodeException {
-    fileSystem.createDir(artifactPath);
+    bucket.createDir(artifactPath);
     TypeS elemTS = arrayTS.elem();
     if (elemTS instanceof ArrayTS elemArrayTS) {
       int i = 0;
@@ -128,7 +128,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
     for (var valueB : arrayB.elements(ValueB.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(valueB);
-      fileSystem.createLink(sourcePath, targetPath);
+      bucket.createLink(sourcePath, targetPath);
       i++;
     }
   }
@@ -141,12 +141,12 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
         Path targetPath = targetPath(fileContent(file));
-        fileSystem.createLink(sourcePath, targetPath);
+        bucket.createLink(sourcePath, targetPath);
       }
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      fileSystem.delete(artifactPath);
+      bucket.delete(artifactPath);
       throw duplicatedPathsMessage(duplicatesDetector.getDuplicateValues());
     }
   }
@@ -161,8 +161,8 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
 
   private Path saveBaseValue(Path artifactPath, ValueB valueB) throws IOException {
     Path targetPath = targetPath(valueB);
-    fileSystem.delete(artifactPath);
-    fileSystem.createLink(artifactPath, targetPath);
+    bucket.delete(artifactPath);
+    bucket.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 

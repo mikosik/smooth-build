@@ -1,10 +1,10 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import java.util.function.Predicate;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;

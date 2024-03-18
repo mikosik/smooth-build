@@ -115,7 +115,7 @@ public class HashedDbTest extends TestingVirtualMachine {
       throws Exception {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
-    hashedDbFileSystem().createDir(path);
+    hashedDbBucket().createDir(path);
 
     assertCall(() -> hashedDb().contains(hash))
         .throwsException(new CorruptedHashedDbException(
@@ -127,7 +127,7 @@ public class HashedDbTest extends TestingVirtualMachine {
       throws IOException {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
-    hashedDbFileSystem().createDir(path);
+    hashedDbBucket().createDir(path);
 
     assertCall(() -> hashedDb().source(hash))
         .throwsException(new CorruptedHashedDbException(format(
@@ -139,7 +139,7 @@ public class HashedDbTest extends TestingVirtualMachine {
       throws Exception {
     var hash = Hash.of(BYTE_STRING_1);
     var path = dbPathTo(hash);
-    hashedDbFileSystem().createDir(path);
+    hashedDbBucket().createDir(path);
 
     assertCall(() -> hashedDb().writeData(bufferedSink -> bufferedSink.write(BYTE_STRING_1)))
         .throwsException(
@@ -149,24 +149,24 @@ public class HashedDbTest extends TestingVirtualMachine {
 
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
-    var fileSystem = hashedDbFileSystem();
-    var hashedDb = new HashedDb(fileSystem);
+    var bucket = hashedDbBucket();
+    var hashedDb = new HashedDb(bucket);
 
     hashedDb.writeString("abc");
 
-    assertThat(fileSystem.files(TEMP_DIR_PATH)).isEmpty();
+    assertThat(bucket.files(TEMP_DIR_PATH)).isEmpty();
   }
 
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
-    var fileSystem = hashedDbFileSystem();
-    var hashedDb = new HashedDb(fileSystem);
+    var bucket = hashedDbBucket();
+    var hashedDb = new HashedDb(bucket);
 
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
 
-    assertThat(fileSystem.files(TEMP_DIR_PATH)).isEmpty();
+    assertThat(bucket.files(TEMP_DIR_PATH)).isEmpty();
   }
 
   @Nested
@@ -234,7 +234,7 @@ public class HashedDbTest extends TestingVirtualMachine {
       var hash = Hash.of("abc");
       var path = dbPathTo(hash);
 
-      try (var sink = buffer(hashedDbFileSystem().sink(path))) {
+      try (var sink = buffer(hashedDbBucket().sink(path))) {
         sink.write(illegalString());
       }
       assertCall(() -> hashedDb().readString(hash))

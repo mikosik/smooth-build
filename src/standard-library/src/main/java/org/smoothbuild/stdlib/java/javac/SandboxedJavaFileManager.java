@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,8 +13,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;

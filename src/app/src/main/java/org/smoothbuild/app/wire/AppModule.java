@@ -2,17 +2,17 @@ package org.smoothbuild.app.wire;
 
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
-import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import org.smoothbuild.app.layout.ForSpace;
+import org.smoothbuild.app.layout.ForBucket;
 import org.smoothbuild.app.layout.InstallationHashes;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.SubFileSystem;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
@@ -28,19 +28,19 @@ public class AppModule extends AbstractModule {
 
   @Provides
   @ComputationDb
-  public FileSystem provideComputationCacheFileSystem(@ForSpace(PROJECT) FileSystem fileSystem) {
-    return new SubFileSystem(fileSystem, COMPUTATION_CACHE_PATH);
+  public Bucket provideComputationCacheBucket(@ForBucket(PROJECT) Bucket bucket) {
+    return new SubBucket(bucket, COMPUTATION_CACHE_PATH);
   }
 
   @Provides
   @BytecodeDb
-  public FileSystem provideBytecodeDbFileSystem(@ForSpace(PROJECT) FileSystem fileSystem) {
-    return new SubFileSystem(fileSystem, HASHED_DB_PATH);
+  public Bucket provideBytecodeDbBucket(@ForBucket(PROJECT) Bucket bucket) {
+    return new SubBucket(bucket, HASHED_DB_PATH);
   }
 
   @Provides
   @Project
-  public FileSystem provideProjectFileSystem(@ForSpace(PROJECT) FileSystem fileSystem) {
-    return fileSystem;
+  public Bucket provideProjectBucket(@ForBucket(PROJECT) Bucket bucket) {
+    return bucket;
   }
 }

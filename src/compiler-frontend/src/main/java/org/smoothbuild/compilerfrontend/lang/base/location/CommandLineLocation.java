@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.base.location;
 
-import org.smoothbuild.common.filesystem.base.Space;
+import org.smoothbuild.common.bucket.base.BucketId;
 
 public final class CommandLineLocation implements SourceLocation {
   public static final CommandLineLocation INSTANCE = new CommandLineLocation();
@@ -13,7 +13,7 @@ public final class CommandLineLocation implements SourceLocation {
   }
 
   @Override
-  public Space space() {
+  public BucketId bucketId() {
     return null;
   }
 

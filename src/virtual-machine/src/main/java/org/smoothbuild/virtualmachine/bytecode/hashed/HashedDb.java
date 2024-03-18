@@ -6,8 +6,8 @@ import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBigIntegerException;
@@ -36,11 +36,11 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
  */
 public class HashedDb {
   static final Path TEMP_DIR_PATH = path("tmp");
-  private final FileSystem fileSystem;
+  private final Bucket bucket;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
-  public HashedDb(FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
+  public HashedDb(Bucket bucket) {
+    this.bucket = bucket;
   }
 
   public Hash writeBigInteger(BigInteger value) throws HashedDbException {
@@ -137,7 +137,7 @@ public class HashedDb {
 
   public long readHashChainSize(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
-    var pathState = fileSystem.pathState(path);
+    var pathState = bucket.pathState(path);
     return switch (pathState) {
       case FILE -> readHashChainSize(hash, path);
       case DIR -> throw new CorruptedHashedDbException(
@@ -148,7 +148,7 @@ public class HashedDb {
 
   private long readHashChainSize(Hash hash, Path path) throws HashedDbException {
     try {
-      var sizeInBytes = fileSystem.size(path);
+      var sizeInBytes = bucket.size(path);
       long remainder = sizeInBytes % Hash.lengthInBytes();
       if (remainder == 0) {
         return sizeInBytes / Hash.lengthInBytes();
@@ -178,7 +178,7 @@ public class HashedDb {
 
   public boolean contains(Hash hash) throws CorruptedHashedDbException {
     var path = dbPathTo(hash);
-    var pathState = fileSystem.pathState(path);
+    var pathState = bucket.pathState(path);
     return switch (pathState) {
       case FILE -> true;
       case DIR -> throw new CorruptedHashedDbException(
@@ -189,7 +189,7 @@ public class HashedDb {
 
   public BufferedSource source(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
-    var pathState = fileSystem.pathState(path);
+    var pathState = bucket.pathState(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
       case DIR -> throw new CorruptedHashedDbException(
@@ -200,7 +200,7 @@ public class HashedDb {
 
   private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbException {
     try {
-      return fileSystem.source(path);
+      return bucket.source(path);
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
@@ -208,7 +208,7 @@ public class HashedDb {
 
   public HashingSink sink() throws HashedDbException {
     try {
-      return new HashingSink(fileSystem, newTempFileProjectPath());
+      return new HashingSink(bucket, newTempFileProjectPath());
     } catch (IOException e) {
       throw new HashedDbException(e);
     }

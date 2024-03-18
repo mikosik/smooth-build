@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;

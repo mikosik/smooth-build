@@ -1,7 +1,7 @@
 package org.smoothbuild.app.run;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.app.layout.SmoothSpace.PROJECT;
+import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
@@ -41,6 +41,6 @@ public class ListStepFactory implements StepFactory<Tuple0, String> {
   }
 
   private static boolean isInProjectSpace(Location location) {
-    return (location instanceof SourceLocation source) && PROJECT.equals(source.space());
+    return (location instanceof SourceLocation source) && PROJECT.equals(source.bucketId());
   }
 }

@@ -7,17 +7,17 @@ import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
-import static org.smoothbuild.common.testing.TestingSpace.space;
+import static org.smoothbuild.common.testing.TestingBucket.writeFile;
+import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 import static org.smoothbuild.evaluator.EvaluateStep.evaluateStep;
 
 import com.google.inject.AbstractModule;
@@ -29,14 +29,14 @@ import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.bucket.base.SynchronizedBucket;
+import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.Space;
-import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
-import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
@@ -55,59 +55,60 @@ import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
 
 public class EvaluatorTestCase extends TestingBytecode {
-  private static final Space MODULES_SPACE = space("module-space");
+  private static final BucketId MODULES_BUCKET_ID = bucketId("module-bucket");
   private static final Path LIB_MODULE_PATH = path("libraryModule.smooth");
   private static final FullPath LIB_MODULE_FULL_PATH =
-      FullPath.fullPath(MODULES_SPACE, LIB_MODULE_PATH);
+      FullPath.fullPath(MODULES_BUCKET_ID, LIB_MODULE_PATH);
   private static final Path USER_MODULE_PATH = path("userModule.smooth");
-  private static final FullPath USER_MODULE_FULL_PATH = fullPath(MODULES_SPACE, USER_MODULE_PATH);
-  private FileSystem projectFileSystem;
-  private FileSystem bytecodeDbFileSystem;
-  private FileSystem modulesFileSystem;
-  private FileSystem computationCacheFileSystem;
+  private static final FullPath USER_MODULE_FULL_PATH =
+      fullPath(MODULES_BUCKET_ID, USER_MODULE_PATH);
+  private Bucket projectBucket;
+  private Bucket bytecodeDbBucket;
+  private Bucket modulesBucket;
+  private Bucket computationCacheBucket;
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
-    this.projectFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
-    this.modulesFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
-    this.bytecodeDbFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
-    this.computationCacheFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
+    this.projectBucket = new SynchronizedBucket(new MemoryBucket());
+    this.modulesBucket = new SynchronizedBucket(new MemoryBucket());
+    this.bytecodeDbBucket = new SynchronizedBucket(new MemoryBucket());
+    this.computationCacheBucket = new SynchronizedBucket(new MemoryBucket());
     this.modules = list();
     this.injector = createInjector();
   }
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
-    try (var sink = modulesFileSystem.sink(LIB_MODULE_PATH.changeExtension("jar"))) {
+    try (var sink = modulesBucket.sink(LIB_MODULE_PATH.changeExtension("jar"))) {
       try (var source = buffer(source(jar))) {
         sink.writeAll(source);
       }
     }
     try (var source = buffer(source(code))) {
-      writeFile(modulesFileSystem, LIB_MODULE_PATH, source.readUtf8());
+      writeFile(modulesBucket, LIB_MODULE_PATH, source.readUtf8());
     }
     modules = modules.append(LIB_MODULE_FULL_PATH);
   }
 
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
     if (classes.length != 0) {
-      try (var sink = modulesFileSystem.sink(USER_MODULE_PATH.changeExtension("jar"))) {
+      try (var sink = modulesBucket.sink(USER_MODULE_PATH.changeExtension("jar"))) {
         saveBytecodeInJar(sink, list(classes));
       }
     }
-    writeFile(modulesFileSystem, USER_MODULE_PATH, code);
+    writeFile(modulesBucket, USER_MODULE_PATH, code);
     modules = modules.append(USER_MODULE_FULL_PATH);
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
-    writeFile(projectFileSystem, path(path), content);
+    writeFile(projectBucket, path(path), content);
   }
 
-  protected FileSystem projectFileSystem() {
-    return projectFileSystem;
+  protected Bucket projectBucket() {
+    return projectBucket;
   }
 
   protected void evaluate(String... names) {
@@ -116,7 +117,7 @@ public class EvaluatorTestCase extends TestingBytecode {
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
 
-  protected void restartSmoothWithSameFileSystems() {
+  protected void restartSmoothWithSameBuckets() {
     injector = createInjector();
     artifacts = null;
   }
@@ -198,26 +199,26 @@ public class EvaluatorTestCase extends TestingBytecode {
     }
 
     @Provides
-    public Map<Space, FileSystem> provideFileSystemsMap() {
-      return map(MODULES_SPACE, modulesFileSystem);
+    public Map<BucketId, Bucket> provideBucketsMap() {
+      return map(MODULES_BUCKET_ID, modulesBucket);
     }
 
     @Provides
     @ComputationDb
-    public FileSystem provideComputationCacheFileSystem() {
-      return computationCacheFileSystem;
+    public Bucket provideComputationCacheBucket() {
+      return computationCacheBucket;
     }
 
     @Provides
     @BytecodeDb
-    public FileSystem provideBytecodeDbFileSystem() {
-      return bytecodeDbFileSystem;
+    public Bucket provideBytecodeDbBucket() {
+      return bytecodeDbBucket;
     }
 
     @Provides
     @Project
-    public FileSystem provideProjectFileSystem() {
-      return projectFileSystem;
+    public Bucket provideProjectBucket() {
+      return projectBucket;
     }
   }
 

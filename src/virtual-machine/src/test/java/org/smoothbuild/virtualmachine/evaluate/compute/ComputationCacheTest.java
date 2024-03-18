@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.corruptedValueException;
 
@@ -37,7 +37,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   @Test
   public void cache_is_corrupted_when_task_hash_points_to_directory() throws Exception {
     var path = computationCache().toPath(hash);
-    computationCacheFileSystem().sink(path.appendPart("file"));
+    computationCacheBucket().sink(path.appendPart("file"));
     var computationCache = computationCache();
     assertCall(() -> computationCache.contains(hash))
         .throwsException(corruptedValueException(hash, path + " is directory not a file."));

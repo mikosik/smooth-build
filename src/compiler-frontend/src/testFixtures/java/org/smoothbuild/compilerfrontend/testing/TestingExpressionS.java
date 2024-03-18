@@ -3,16 +3,16 @@ package org.smoothbuild.compilerfrontend.testing;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
-import static org.smoothbuild.common.testing.TestingSpace.space;
+import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -24,15 +24,15 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.bucket.base.SynchronizedBucket;
+import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
-import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.Space;
-import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
-import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ExplicitTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ExprP;
@@ -91,13 +91,14 @@ import org.smoothbuild.compilerfrontend.lang.type.VarS;
 import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
 
 public class TestingExpressionS {
-  public static final Space STANDARD_LIBRARY_SPACE = space("ssl");
-  public static final Space PROJECT_SPACE = space("prj");
+  public static final BucketId STANDARD_LIBRARY_BUCKET_ID = bucketId("ssl");
+  public static final BucketId PROJECT_BUCKET_ID = bucketId("prj");
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
   static final FullPath STANDARD_LIBRARY_MODULE_FILE_PATH =
-      fullPath(STANDARD_LIBRARY_SPACE, path("std_lib.smooth"));
-  static final FullPath DEFAULT_MODULE_FILE_PATH = fullPath(PROJECT_SPACE, path("build.smooth"));
+      fullPath(STANDARD_LIBRARY_BUCKET_ID, path("std_lib.smooth"));
+  static final FullPath DEFAULT_MODULE_FILE_PATH =
+      fullPath(PROJECT_BUCKET_ID, path("build.smooth"));
 
   public static java.util.List<TypeS> typesToTest() {
     return nonCompositeTypes().stream()
@@ -820,8 +821,8 @@ public class TestingExpressionS {
     return location(userModuleFullPath(), line);
   }
 
-  public static Location location(Space space) {
-    return location(fullPath(space, path("path")), 17);
+  public static Location location(BucketId bucketId) {
+    return location(fullPath(bucketId, path("path")), 17);
   }
 
   public static Location location(FullPath fullPath, int line) {
@@ -837,15 +838,15 @@ public class TestingExpressionS {
   }
 
   public static FullPath importedBuildFullPath() {
-    return new FullPath(STANDARD_LIBRARY_SPACE, path(IMPORTED_FILE_PATH));
+    return new FullPath(STANDARD_LIBRARY_BUCKET_ID, path(IMPORTED_FILE_PATH));
   }
 
   public static FullPath projectPath(String path) {
-    return new FullPath(PROJECT_SPACE, path(path));
+    return new FullPath(PROJECT_BUCKET_ID, path(path));
   }
 
-  public static SynchronizedFileSystem synchronizedMemoryFileSystem() {
-    return new SynchronizedFileSystem(new MemoryFileSystem());
+  public static SynchronizedBucket synchronizedMemoryBucket() {
+    return new SynchronizedBucket(new MemoryBucket());
   }
 
   private static String shortName(String fullName) {
