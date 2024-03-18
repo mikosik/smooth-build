@@ -157,10 +157,6 @@ public class TestingExpressionS {
     return new FuncTS(tupleTS(paramTs), resultT);
   }
 
-  public static StructTS fileTS() {
-    return structTS("File", blobTS(), stringTS());
-  }
-
   public static TupleTS tupleTS(TypeS... itemTs) {
     return tupleTS(list(itemTs));
   }

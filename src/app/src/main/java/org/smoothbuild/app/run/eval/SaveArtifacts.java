@@ -38,9 +38,9 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 
 public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, String> {
+  static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 
   @Inject
@@ -91,7 +91,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
     Path artifactPath = artifactPath(referenceS.referencedName());
     if (referenceS.schema().type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
-    } else if (referenceS.schema().type().name().equals(FileStruct.NAME)) {
+    } else if (referenceS.schema().type().name().equals(FILE_STRUCT_NAME)) {
       return saveFile(artifactPath, (TupleB) valueB);
     } else {
       return saveBaseValue(artifactPath, valueB);
@@ -114,7 +114,7 @@ public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, S
         saveArray(elemArrayTS, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
-    } else if (elemTS.name().equals(FileStruct.NAME)) {
+    } else if (elemTS.name().equals(FILE_STRUCT_NAME)) {
       saveFileArray(artifactPath, arrayB.elements(TupleB.class));
     } else {
       saveNonFileArray(artifactPath, arrayB);
