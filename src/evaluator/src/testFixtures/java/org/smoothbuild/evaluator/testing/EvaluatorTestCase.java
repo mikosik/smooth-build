@@ -52,7 +52,7 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
-import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
+import org.smoothbuild.virtualmachine.wire.VirtualMachineWiring;
 
 public class EvaluatorTestCase extends TestingBytecode {
   private static final BucketId MODULES_BUCKET_ID = bucketId("module-bucket");
@@ -170,7 +170,7 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   private Injector createInjector() {
-    return Guice.createInjector(PRODUCTION, new TestModule(), new VirtualMachineModule());
+    return Guice.createInjector(PRODUCTION, new TestWiring(), new VirtualMachineWiring());
   }
 
   @Override
@@ -183,7 +183,7 @@ public class EvaluatorTestCase extends TestingBytecode {
     return injector.getInstance(BytecodeFactory.class);
   }
 
-  public class TestModule extends AbstractModule {
+  public class TestWiring extends AbstractModule {
     @Override
     protected void configure() {
       bind(MemoryReporter.class).toInstance(new MemoryReporter());

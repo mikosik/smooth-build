@@ -6,16 +6,16 @@ import com.google.inject.Singleton;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.wiring.BucketFactory;
 
-public class ProjectBucketModule extends AbstractModule {
+public class StandardLibraryBucketWiring extends AbstractModule {
   @Override
   protected void configure() {
-    BucketIdUtils.addMapBindingForBucket(binder(), SmoothBucketId.PROJECT);
+    BucketIdUtils.addMapBindingForBucket(binder(), SmoothBucketId.STANDARD_LIBRARY);
   }
 
   @Provides
   @Singleton
-  @ForBucket(SmoothBucketId.PROJECT)
+  @ForBucket(SmoothBucketId.STANDARD_LIBRARY)
   public Bucket provideBucket(BucketFactory bucketFactory) {
-    return bucketFactory.create(SmoothBucketId.PROJECT);
+    return bucketFactory.create(SmoothBucketId.STANDARD_LIBRARY);
   }
 }

@@ -6,10 +6,10 @@ import java.nio.file.Path;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.collect.Map;
 
-public class DiskBucketModule extends AbstractModule {
+public class DiskBucketWiring extends AbstractModule {
   private final Map<BucketId, Path> bucketIdToPath;
 
-  public DiskBucketModule(Map<BucketId, Path> bucketIdToPath) {
+  public DiskBucketWiring(Map<BucketId, Path> bucketIdToPath) {
     this.bucketIdToPath = bucketIdToPath;
   }
 

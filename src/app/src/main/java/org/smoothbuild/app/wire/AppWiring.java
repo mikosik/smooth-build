@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 
-public class AppModule extends AbstractModule {
+public class AppWiring extends AbstractModule {
   @Provides
   @Singleton
   @Sandbox

@@ -12,12 +12,12 @@ import org.smoothbuild.common.log.report.LogFilteringReporter;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 
-public class ReportModule extends AbstractModule {
+public class ReportWiring extends AbstractModule {
   private final PrintWriter out;
   private final ReportMatcher reportMatcher;
   private final Level logLevel;
 
-  public ReportModule(PrintWriter out, ReportMatcher reportMatcher, Level logLevel) {
+  public ReportWiring(PrintWriter out, ReportMatcher reportMatcher, Level logLevel) {
     this.out = out;
     this.reportMatcher = reportMatcher;
     this.logLevel = logLevel;
