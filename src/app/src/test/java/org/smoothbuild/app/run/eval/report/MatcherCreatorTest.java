@@ -30,9 +30,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.app.layout.SmoothSpace;
+import org.smoothbuild.app.layout.SmoothBucketId;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.Space;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Log;
@@ -57,19 +56,19 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
 
   private static void verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
       String expression, ReportMatcher expectedMatcher, List<Label> taskLabels) {
-    StringBuilder builder = new StringBuilder();
-    ReportMatcher matcher = MatcherCreator.createMatcher(expression);
-    for (Label label : taskLabels) {
-      for (Space space : SmoothSpace.values()) {
-        for (Level level : Level.values()) {
+    var stringBuilder = new StringBuilder();
+    var reportMatcher = MatcherCreator.createMatcher(expression);
+    for (var label : taskLabels) {
+      for (var bucketId : SmoothBucketId.values()) {
+        for (var level : Level.values()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
-          boolean actual = matcher.matches(label, logs);
+          boolean actual = reportMatcher.matches(label, logs);
           boolean expected = expectedMatcher.matches(label, logs);
           if (actual != expected) {
-            builder
+            stringBuilder
                 .append(label)
                 .append(" ")
-                .append(space)
+                .append(bucketId)
                 .append(" ")
                 .append(level)
                 .append(" expected=")
@@ -81,7 +80,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
         }
       }
     }
-    String failures = builder.toString();
+    String failures = stringBuilder.toString();
     if (!failures.isEmpty()) {
       fail("Matcher built from parsed expression '" + expression + "' doesn't work as expected:\n"
           + failures);

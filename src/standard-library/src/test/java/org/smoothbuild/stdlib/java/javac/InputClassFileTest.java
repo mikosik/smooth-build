@@ -3,13 +3,13 @@ package org.smoothbuild.stdlib.java.javac;
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.net.URI;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;

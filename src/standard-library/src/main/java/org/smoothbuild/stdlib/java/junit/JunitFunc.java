@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromJar;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;

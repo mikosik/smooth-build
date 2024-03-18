@@ -5,11 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
-import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.testing.TestingSpace.space;
+import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
@@ -48,7 +48,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
-import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
@@ -117,7 +117,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void mono_native_value() throws Exception {
-          var fullPath = fullPath(space("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeValueS =
@@ -134,7 +134,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var fullPath = fullPath(space("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("prj"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
           var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(fullPath, 2));
@@ -200,7 +200,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void mono_native_function() throws Exception {
-          var fullPath = fullPath(space("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
@@ -216,7 +216,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void poly_native_function() throws Exception {
           var a = varA();
-          var fullPath = fullPath(space("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, a, "myIdentity", nlist(itemS(a, "param")));
@@ -232,7 +232,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var fullPath = fullPath(space("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("prj"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var annotationS = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
@@ -559,7 +559,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Test
     public void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
-      var fullPath = fullPath(space("prj"), path("my/path"));
+      var fullPath = fullPath(bucketId("prj"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
       var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", location(fullPath, 2));
@@ -585,7 +585,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Test
     public void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
-      var fullPath = fullPath(space("prj"), path("my/path"));
+      var fullPath = fullPath(bucketId("prj"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(fullPath, 1));
       var bytecodeFuncS = annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(fullPath, 2));

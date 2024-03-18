@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
-import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.TryFunction;

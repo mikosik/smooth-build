@@ -11,7 +11,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.userMo
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.bucket.base.FullPath;
 
 public class VisibilityTest {
   @Nested

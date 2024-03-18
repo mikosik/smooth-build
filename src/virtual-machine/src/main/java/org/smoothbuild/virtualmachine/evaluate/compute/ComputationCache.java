@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
@@ -13,8 +13,8 @@ import java.io.IOException;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
@@ -29,20 +29,20 @@ import org.smoothbuild.virtualmachine.wire.ComputationDb;
  * This class is thread-safe.
  */
 public class ComputationCache {
-  private final FileSystem fileSystem;
+  private final Bucket bucket;
   private final ExprDb exprDb;
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
   public ComputationCache(
-      @ComputationDb FileSystem fileSystem, ExprDb exprDb, BytecodeFactory bytecodeFactory) {
-    this.fileSystem = fileSystem;
+      @ComputationDb Bucket bucket, ExprDb exprDb, BytecodeFactory bytecodeFactory) {
+    this.bucket = bucket;
     this.exprDb = exprDb;
     this.bytecodeFactory = bytecodeFactory;
   }
 
   public synchronized void write(Hash hash, Output output) throws ComputeException {
-    try (BufferedSink sink = fileSystem.sink(toPath(hash))) {
+    try (BufferedSink sink = bucket.sink(toPath(hash))) {
       var storedLogs = output.storedLogs();
       sink.write(storedLogs.hash().toByteString());
       var valueB = output.valueB();
@@ -56,7 +56,7 @@ public class ComputationCache {
 
   public synchronized boolean contains(Hash hash) throws ComputeException {
     var path = toPath(hash);
-    return switch (fileSystem.pathState(path)) {
+    return switch (bucket.pathState(path)) {
       case FILE -> true;
       case NOTHING -> false;
       case DIR -> throw corruptedValueException(hash, path + " is directory not a file.");
@@ -64,7 +64,7 @@ public class ComputationCache {
   }
 
   public synchronized Output read(Hash hash, TypeB type) throws ComputeException {
-    try (BufferedSource source = fileSystem.source(toPath(hash))) {
+    try (BufferedSource source = bucket.source(toPath(hash))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
       var storedLogsArrayT = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());

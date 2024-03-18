@@ -5,8 +5,8 @@ import static org.smoothbuild.common.step.Step.constStep;
 import static org.smoothbuild.common.step.Step.stepFactory;
 import static org.smoothbuild.common.step.Step.tryStep;
 
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;

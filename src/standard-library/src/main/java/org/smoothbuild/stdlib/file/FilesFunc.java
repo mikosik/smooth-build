@@ -1,15 +1,15 @@
 package org.smoothbuild.stdlib.file;
 
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
+import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.bucket.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.PathIterator;
-import org.smoothbuild.common.filesystem.base.PathState;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.bucket.base.PathIterator;
+import org.smoothbuild.common.bucket.base.PathState;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
@@ -27,15 +27,15 @@ public class FilesFunc {
     if (path == null) {
       return null;
     }
-    FileSystem fileSystem = container.fileSystem();
+    Bucket bucket = container.bucket();
 
     if (path.startsWith(SMOOTH_DIR)) {
       container.log().error("Listing files from " + SMOOTH_DIR.q() + " dir is not allowed.");
       return null;
     }
 
-    return switch (fileSystem.pathState(path)) {
-      case DIR -> readFiles(container, fileSystem, path);
+    return switch (bucket.pathState(path)) {
+      case DIR -> readFiles(container, bucket, path);
       case FILE -> {
         container.log().error("Dir " + path.q() + " doesn't exist. It is a file.");
         yield null;
@@ -47,18 +47,18 @@ public class FilesFunc {
     };
   }
 
-  private static ArrayB readFiles(Container container, FileSystem fileSystem, Path dir)
+  private static ArrayB readFiles(Container container, Bucket bucket, Path dir)
       throws IOException, BytecodeException {
     var fileArrayBuilder =
         container.factory().arrayBuilderWithElements(container.factory().fileType());
     var reader = new FileReader(container);
     if (dir.isRoot()) {
-      for (Path path : fileSystem.files(Path.root())) {
+      for (Path path : bucket.files(Path.root())) {
         if (!path.equals(SMOOTH_DIR)) {
-          PathState pathState = fileSystem.pathState(path);
+          PathState pathState = bucket.pathState(path);
           switch (pathState) {
             case DIR:
-              for (PathIterator it = recursivePathsIterator(fileSystem, path); it.hasNext(); ) {
+              for (PathIterator it = recursivePathsIterator(bucket, path); it.hasNext(); ) {
                 Path currentPath = it.next();
                 Path projectPath = path.append(currentPath);
                 fileArrayBuilder.add(reader.createFile(projectPath, projectPath));
@@ -73,7 +73,7 @@ public class FilesFunc {
         }
       }
     } else {
-      for (PathIterator it = recursivePathsIterator(fileSystem, dir); it.hasNext(); ) {
+      for (PathIterator it = recursivePathsIterator(bucket, dir); it.hasNext(); ) {
         Path path = it.next();
         fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
       }

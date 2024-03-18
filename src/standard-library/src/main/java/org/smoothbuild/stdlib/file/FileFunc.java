@@ -1,11 +1,11 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
@@ -27,8 +27,8 @@ public class FileFunc {
       return null;
     }
 
-    FileSystem fileSystem = container.fileSystem();
-    return switch (fileSystem.pathState(validatedPath)) {
+    Bucket bucket = container.bucket();
+    return switch (bucket.pathState(validatedPath)) {
       case FILE -> {
         FileReader reader = new FileReader(container);
         yield reader.createFile(validatedPath, validatedPath);

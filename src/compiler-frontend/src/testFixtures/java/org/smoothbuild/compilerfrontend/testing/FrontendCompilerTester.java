@@ -7,24 +7,24 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
+import static org.smoothbuild.common.testing.TestingBucket.writeFile;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_SPACE;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_BUCKET_ID;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_MODULE_FILE_PATH;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_SPACE;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 import java.io.IOException;
 import java.util.Map;
-import org.smoothbuild.common.filesystem.base.FileResolver;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.Space;
-import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
-import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FileResolver;
+import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.bucket.base.SynchronizedBucket;
+import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.step.StepExecutor;
@@ -119,11 +119,11 @@ public class FrontendCompilerTester {
   }
 
   private Try<ScopeS> load() {
-    var projectFs = new SynchronizedFileSystem(new MemoryFileSystem());
-    var standardLibraryFs = new SynchronizedFileSystem(new MemoryFileSystem());
-    Map<Space, FileSystem> spaces =
-        Map.of(PROJECT_SPACE, projectFs, STANDARD_LIBRARY_SPACE, standardLibraryFs);
-    var fileResolver = new FileResolver(spaces);
+    var projectBucket = new SynchronizedBucket(new MemoryBucket());
+    var slBucket = new SynchronizedBucket(new MemoryBucket());
+    Map<BucketId, Bucket> buckets =
+        Map.of(PROJECT_BUCKET_ID, projectBucket, STANDARD_LIBRARY_BUCKET_ID, slBucket);
+    var fileResolver = new FileResolver(buckets);
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
       @Override
       protected void configure() {}
@@ -133,7 +133,7 @@ public class FrontendCompilerTester {
         return fileResolver;
       }
     });
-    writeModuleFilesToFileSystems(spaces);
+    writeModuleFilesToBuckets(buckets);
     var steps = createFrontendCompilerStep(
         list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
     var memoryReporter = new MemoryReporter();
@@ -141,20 +141,20 @@ public class FrontendCompilerTester {
     return success(module.getOr(null), memoryReporter.logs());
   }
 
-  private void writeModuleFilesToFileSystems(Map<Space, FileSystem> spaces) {
+  private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {
     writeModuleFile(
-        spaces,
+        buckets,
         STANDARD_LIBRARY_MODULE_FILE_PATH,
         importedSourceCode == null ? "" : importedSourceCode);
-    writeModuleFile(spaces, DEFAULT_MODULE_FILE_PATH, sourceCode);
+    writeModuleFile(buckets, DEFAULT_MODULE_FILE_PATH, sourceCode);
   }
 
   private static void writeModuleFile(
-      Map<Space, FileSystem> spaces, FullPath fullPath, String content) {
+      Map<BucketId, Bucket> buckets, FullPath fullPath, String content) {
     try {
-      writeFile(spaces.get(fullPath.space()), fullPath.path(), content);
+      writeFile(buckets.get(fullPath.bucketId()), fullPath.path(), content);
     } catch (IOException e) {
-      throw new RuntimeException("Can't happen for in memory filesystem.", e);
+      throw new RuntimeException("Can't happen for MemoryBucket.", e);
     }
   }
 

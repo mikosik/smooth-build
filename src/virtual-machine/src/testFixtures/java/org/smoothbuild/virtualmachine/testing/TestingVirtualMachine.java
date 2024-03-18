@@ -1,11 +1,11 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.synchronizedMemoryFileSystem;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.synchronizedMemoryBucket;
 
 import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;
@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.SubFileSystem;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -63,8 +63,8 @@ public class TestingVirtualMachine extends TestingBytecode {
   private ExprDb exprDb;
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
-  private FileSystem projectFileSystem;
-  private FileSystem hashedDbFileSystem;
+  private Bucket projectBucket;
+  private Bucket hashedDbBucket;
   private ByteArrayOutputStream systemOut;
 
   public EvaluatorB evaluatorB(TaskReporter taskReporter) {
@@ -192,7 +192,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Container container(NativeMethodLoader nativeMethodLoader) {
-    return new Container(hashedDbFileSystem(), bytecodeF(), nativeMethodLoader);
+    return new Container(hashedDbBucket(), bytecodeF(), nativeMethodLoader);
   }
 
   @Override
@@ -219,41 +219,41 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public ComputationCache computationCache() {
-    return new ComputationCache(computationCacheFileSystem(), exprDb(), bytecodeF());
+    return new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
   }
 
-  public FileSystem computationCacheFileSystem() {
-    return new SubFileSystem(projectFileSystem(), Path.path("cache"));
+  public Bucket computationCacheBucket() {
+    return new SubBucket(projectBucket(), Path.path("cache"));
   }
 
-  public FileSystem projectFileSystem() {
-    if (projectFileSystem == null) {
-      projectFileSystem = synchronizedMemoryFileSystem();
+  public Bucket projectBucket() {
+    if (projectBucket == null) {
+      projectBucket = synchronizedMemoryBucket();
       try {
-        initializeDirs(projectFileSystem);
+        initializeDirs(projectBucket);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
     }
-    return projectFileSystem;
+    return projectBucket;
   }
 
   // TODO This will not be needed once HashedDb, ComputationCache, ArtifactSaver have initialize()
   // method that creates those directories
-  public static void initializeDirs(FileSystem projectFileSystem) throws IOException {
+  public static void initializeDirs(Bucket projectBucket) throws IOException {
     var dirs =
         list(path(".smooth/hashed"), path(".smooth/computations"), path(".smooth/artifacts"));
     for (Path path : dirs) {
-      initializeDir(projectFileSystem, path);
+      initializeDir(projectBucket, path);
     }
   }
 
-  public static void initializeDir(FileSystem fileSystem, Path dir) throws IOException {
-    switch (fileSystem.pathState(dir)) {
+  public static void initializeDir(Bucket bucket, Path dir) throws IOException {
+    switch (bucket.pathState(dir)) {
       case DIR -> {}
       case FILE -> throw new IOException(
           "Cannot create directory at " + dir.q() + " because it is a file.");
-      case NOTHING -> fileSystem.createDir(dir);
+      case NOTHING -> bucket.createDir(dir);
     }
   }
 
@@ -267,16 +267,16 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   public HashedDb hashedDb() {
     if (hashedDb == null) {
-      hashedDb = new HashedDb(hashedDbFileSystem());
+      hashedDb = new HashedDb(hashedDbBucket());
     }
     return hashedDb;
   }
 
-  public FileSystem hashedDbFileSystem() {
-    if (hashedDbFileSystem == null) {
-      hashedDbFileSystem = projectFileSystem();
+  public Bucket hashedDbBucket() {
+    if (hashedDbBucket == null) {
+      hashedDbBucket = projectBucket();
     }
-    return hashedDbFileSystem;
+    return hashedDbBucket;
   }
 
   // Job related

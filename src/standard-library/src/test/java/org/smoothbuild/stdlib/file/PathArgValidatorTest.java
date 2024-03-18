@@ -9,7 +9,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.sto
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 

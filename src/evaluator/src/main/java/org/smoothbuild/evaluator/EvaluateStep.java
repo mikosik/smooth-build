@@ -8,8 +8,8 @@ import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
 import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.step.Step;
 import org.smoothbuild.common.step.StepFactory;
 import org.smoothbuild.common.tuple.Tuple0;

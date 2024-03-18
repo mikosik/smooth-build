@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.lang.base.location;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.Space;
+import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
 
 public record FileLocation(FullPath file, int line) implements SourceLocation {
 
@@ -13,8 +13,8 @@ public record FileLocation(FullPath file, int line) implements SourceLocation {
   }
 
   @Override
-  public Space space() {
-    return file().space();
+  public BucketId bucketId() {
+    return file().bucketId();
   }
 
   @Override

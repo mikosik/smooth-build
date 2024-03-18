@@ -1,9 +1,9 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.filesystem.base.Path.path;
+import static org.smoothbuild.common.bucket.base.Path.path;
 
-import org.smoothbuild.common.filesystem.base.IllegalPathException;
-import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.bucket.base.IllegalPathException;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;

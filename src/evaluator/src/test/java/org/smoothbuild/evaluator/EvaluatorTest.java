@@ -6,15 +6,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.step.Step.maybeStep;
 import static org.smoothbuild.common.step.Step.tryStep;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_SPACE;
+import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bindings;
@@ -142,7 +142,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
+          when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(
@@ -159,7 +159,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               nlist(itemS(intTS(), "p")));
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
+          when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
@@ -243,7 +243,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(filePersister.persist(fullPath(PROJECT_SPACE, path("build.jar"))))
+          when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
