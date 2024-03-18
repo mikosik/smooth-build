@@ -3,6 +3,7 @@ package org.smoothbuild.app.run.eval;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
+import static org.smoothbuild.app.run.eval.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -16,7 +17,6 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annota
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.fileTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
@@ -34,6 +34,7 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
+import org.smoothbuild.compilerfrontend.lang.type.StructTS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
@@ -260,5 +261,9 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   private static InstantiateS instantiateS(TypeS typeS, String name) {
     return TestingExpressionS.instantiateS(
         list(), annotatedValueS(nativeAnnotationS(), typeS, name, location()));
+  }
+
+  public static StructTS fileTS() {
+    return structTS(FILE_STRUCT_NAME, blobTS(), stringTS());
   }
 }
