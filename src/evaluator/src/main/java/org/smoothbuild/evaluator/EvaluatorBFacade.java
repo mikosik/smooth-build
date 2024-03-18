@@ -29,20 +29,15 @@ public class EvaluatorBFacade
 
   @Override
   public Maybe<List<ValueB>> apply(Tuple2<List<ExprB>, BsMapping> argument) {
-    var bsMapping = argument.element2();
-    var exprs = argument.element1();
     var childInjector = injector.createChildInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(BsMapping.class).toInstance(bsMapping);
-      }
-
       @Provides
-      public TaskReporter provideTaskReporter(Reporter reporter, BsTranslator bsTranslator) {
+      public TaskReporter provideTaskReporter(Reporter reporter) {
+        var bsMapping = argument.element2();
+        var bsTranslator = new BsTranslator(bsMapping);
         return new TaskReporterImpl(new PrefixingReporter(reporter, EVALUATE), bsTranslator);
       }
     });
-    var evaluatorB = childInjector.getInstance(EvaluatorB.class);
-    return evaluatorB.evaluate(exprs);
+    var exprs = argument.element1();
+    return childInjector.getInstance(EvaluatorB.class).evaluate(exprs);
   }
 }
