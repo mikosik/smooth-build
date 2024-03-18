@@ -14,18 +14,18 @@ import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import org.smoothbuild.app.layout.BinaryBucketModule;
-import org.smoothbuild.app.layout.ProjectBucketModule;
-import org.smoothbuild.app.layout.StandardLibraryBucketModule;
-import org.smoothbuild.app.report.ReportModule;
+import org.smoothbuild.app.layout.BinaryBucketWiring;
+import org.smoothbuild.app.layout.ProjectBucketWiring;
+import org.smoothbuild.app.layout.StandardLibraryBucketWiring;
+import org.smoothbuild.app.report.ReportWiring;
 import org.smoothbuild.app.run.eval.report.ReportMatchers;
-import org.smoothbuild.app.wire.AppModule;
+import org.smoothbuild.app.wire.AppWiring;
 import org.smoothbuild.common.bucket.base.BucketId;
-import org.smoothbuild.common.bucket.wiring.DiskBucketModule;
+import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.virtualmachine.wire.VirtualMachineModule;
+import org.smoothbuild.virtualmachine.wire.VirtualMachineWiring;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {
@@ -40,13 +40,13 @@ public class CreateInjector {
         BINARY, installationDir().resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new AppModule(),
-        new VirtualMachineModule(),
-        new ProjectBucketModule(),
-        new StandardLibraryBucketModule(),
-        new BinaryBucketModule(),
-        new DiskBucketModule(bucketIdToPath),
-        new ReportModule(out, reportMatcher, logLevel));
+        new AppWiring(),
+        new VirtualMachineWiring(),
+        new ProjectBucketWiring(),
+        new StandardLibraryBucketWiring(),
+        new BinaryBucketWiring(),
+        new DiskBucketWiring(bucketIdToPath),
+        new ReportWiring(out, reportMatcher, logLevel));
   }
 
   public static Injector createInjector(PrintWriter out) {
@@ -55,10 +55,10 @@ public class CreateInjector {
         BINARY, installationDir().resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new StandardLibraryBucketModule(),
-        new BinaryBucketModule(),
-        new DiskBucketModule(bucketIdToPath),
-        new ReportModule(out, ReportMatchers.ALL, INFO));
+        new StandardLibraryBucketWiring(),
+        new BinaryBucketWiring(),
+        new DiskBucketWiring(bucketIdToPath),
+        new ReportWiring(out, ReportMatchers.ALL, INFO));
   }
 
   private static Path installationDir() {

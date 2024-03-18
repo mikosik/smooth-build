@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
 
-public class VirtualMachineModule extends AbstractModule {
+public class VirtualMachineWiring extends AbstractModule {
   @Override
   protected void configure() {}
 
