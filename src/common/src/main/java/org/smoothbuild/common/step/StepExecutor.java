@@ -2,13 +2,13 @@ package org.smoothbuild.common.step;
 
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.MappingReporter.labelPrefixingReporter;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.report.PrefixingReporter;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.step.Step.ComposedStep;
 import org.smoothbuild.common.step.Step.LabelledStep;
@@ -40,7 +40,7 @@ public class StepExecutor {
 
   private <R, T> Maybe<R> namedStep(
       LabelledStep<T, R> labelledStep, T argument, Reporter reporter) {
-    var newReporter = new PrefixingReporter(reporter, labelledStep.label());
+    var newReporter = labelPrefixingReporter(reporter, labelledStep.label());
     return execute(labelledStep.step(), argument, newReporter);
   }
 
