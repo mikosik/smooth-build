@@ -10,11 +10,10 @@ import org.smoothbuild.app.layout.BuildVersion;
 import org.smoothbuild.app.layout.HashNode;
 import org.smoothbuild.app.layout.InstallationHashes;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple0;
 
-public class Version implements TryFunction<Tuple0, String> {
+public class Version implements TryFunction0<String> {
   private final InstallationHashes installationHashes;
 
   @Inject
@@ -23,7 +22,7 @@ public class Version implements TryFunction<Tuple0, String> {
   }
 
   @Override
-  public Try<String> apply(Tuple0 tuple0) {
+  public Try<String> apply() {
     try {
       return success(createVersionText(installationHashes.installationNode()));
     } catch (IOException e) {

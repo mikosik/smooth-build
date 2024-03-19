@@ -11,9 +11,9 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.step.Step.maybeStep;
-import static org.smoothbuild.common.step.Step.tryStep;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
+import static org.smoothbuild.common.dag.Dag.apply2;
+import static org.smoothbuild.common.dag.Dag.applyMaybeFunction;
+import static org.smoothbuild.common.dag.Dag.value;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
@@ -48,8 +48,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
@@ -326,10 +326,9 @@ public class EvaluatorTest extends TestingVirtualMachine {
         bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
-    var step = tryStep(backendCompile).then(maybeStep(EvaluatorBFacade.class));
-    var argument = tuple(exprs, evaluables);
-
-    return new StepExecutor(injector).execute(step, argument, reporter);
+    var compilationResult = apply2(backendCompile, value(exprs), value(evaluables));
+    var evaluationDag = applyMaybeFunction(EvaluatorBFacade.class, compilationResult);
+    return new DagEvaluator(injector).evaluate(evaluationDag, reporter);
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) throws BytecodeException {

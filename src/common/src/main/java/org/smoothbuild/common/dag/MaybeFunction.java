@@ -1,4 +1,4 @@
-package org.smoothbuild.common.step;
+package org.smoothbuild.common.dag;
 
 import org.smoothbuild.common.collect.Maybe;
 

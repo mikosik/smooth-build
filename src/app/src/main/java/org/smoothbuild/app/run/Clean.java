@@ -11,12 +11,11 @@ import java.io.IOException;
 import org.smoothbuild.app.layout.ForBucket;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple0;
 
-public class Clean implements TryFunction<Tuple0, String> {
+public class Clean implements TryFunction0<String> {
   private final Bucket bucket;
 
   @Inject
@@ -25,7 +24,7 @@ public class Clean implements TryFunction<Tuple0, String> {
   }
 
   @Override
-  public Try<String> apply(Tuple0 argument) {
+  public Try<String> apply() {
     var logger = new Logger();
     deleteDir(logger, HASHED_DB_PATH);
     deleteDir(logger, COMPUTATION_CACHE_PATH);

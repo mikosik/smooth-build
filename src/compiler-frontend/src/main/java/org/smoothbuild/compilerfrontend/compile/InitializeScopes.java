@@ -6,10 +6,10 @@ import static org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP.emptySc
 
 import com.google.common.annotations.VisibleForTesting;
 import org.smoothbuild.common.bindings.MutableBindings;
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.FuncP;
@@ -28,7 +28,7 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends ModuleVisitorP implements TryFunction<ModuleP, ModuleP> {
+public class InitializeScopes extends ModuleVisitorP implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

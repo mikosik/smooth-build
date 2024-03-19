@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.FuncTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
@@ -29,7 +29,7 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 /**
  * Sort module Evaluables and Structs based on dependencies between them.
  */
-public class SortModuleMembersByDependency implements TryFunction<ModuleP, ModuleP> {
+public class SortModuleMembersByDependency implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

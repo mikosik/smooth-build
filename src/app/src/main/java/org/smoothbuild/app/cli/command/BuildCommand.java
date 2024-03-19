@@ -1,14 +1,19 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.RunStepExecutor.runStepExecutor;
+import static org.smoothbuild.app.cli.base.ExecuteDag.executeDag;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
 import static org.smoothbuild.app.run.eval.report.MatcherCreator.createMatcher;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.step.Step.stepFactory;
+import static org.smoothbuild.common.dag.Dag.apply0;
+import static org.smoothbuild.common.dag.Dag.apply1;
+import static org.smoothbuild.common.dag.Dag.chain;
+import static org.smoothbuild.evaluator.SmoothEvaluationDag.smoothEvaluationDag;
 
 import java.nio.file.Path;
 import org.smoothbuild.app.cli.base.ProjectCommand;
-import org.smoothbuild.app.run.BuildStepFactory;
+import org.smoothbuild.app.layout.Layout;
+import org.smoothbuild.app.run.RemoveArtifacts;
+import org.smoothbuild.app.run.eval.SaveArtifacts;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
@@ -74,9 +79,12 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
+    var removedArtifacts = apply0(RemoveArtifacts.class);
+    var evaluation = smoothEvaluationDag(Layout.MODULES, listOfAll(values));
+    var artifacts = chain(removedArtifacts, evaluation);
+    var dag = apply1(SaveArtifacts.class, artifacts);
+
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
-    var step = stepFactory(new BuildStepFactory());
-    var argument = listOfAll(values);
-    return runStepExecutor(injector, step, argument);
+    return executeDag(injector, dag);
   }
 }

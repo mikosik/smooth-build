@@ -2,15 +2,13 @@ package org.smoothbuild.app.run;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
+import static org.smoothbuild.common.dag.Dag.apply1;
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.step.Step.tryStep;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
+import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
 
 import org.smoothbuild.app.layout.Layout;
+import org.smoothbuild.common.dag.Dag;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.Step;
-import org.smoothbuild.common.step.StepFactory;
-import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.SourceLocation;
@@ -18,16 +16,15 @@ import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
-public class ListStepFactory implements StepFactory<Tuple0, String> {
-  @Override
-  public Step<Tuple0, String> create(Tuple0 v) {
-    return createFrontendCompilerStep(Layout.MODULES)
-        .then(tryStep(ListStepFactory::printEvaluables));
+public class ListEvaluablesDag {
+  public static Dag<String> listEvaluablesDag() {
+    var scopeS = frontendCompilationDag(Layout.MODULES);
+    return apply1(ListEvaluablesDag::evaluablesToString, scopeS);
   }
 
-  private static Try<String> printEvaluables(ScopeS scopeS) {
+  private static Try<String> evaluablesToString(ScopeS scopeS) {
     var oneValuePerLineString = scopeS.evaluables().toMap().values().stream()
-        .filter(ListStepFactory::isNoArgNotGenericValue)
+        .filter(ListEvaluablesDag::isNoArgNotGenericValue)
         .map(Nal::name)
         .sorted()
         .collect(joining("\n"));

@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import java.util.Set;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
@@ -35,12 +34,10 @@ import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedFuncS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
-public class InjectDefaultArguments implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleP> {
+public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, ModuleP> {
   @Override
-  public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleP> apply(ModuleP moduleP, ScopeS environment) {
     var logger = new Logger();
-    var environment = context.element2();
-    var moduleP = context.element1();
     new Visitor(environment, immutableBindings(), logger).visitModule(moduleP);
     return Try.of(moduleP, logger);
   }

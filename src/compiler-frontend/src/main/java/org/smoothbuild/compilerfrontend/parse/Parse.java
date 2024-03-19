@@ -20,19 +20,16 @@ import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class Parse implements TryFunction<Tuple2<String, FullPath>, ModuleContext> {
+public class Parse implements TryFunction2<String, FullPath, ModuleContext> {
   @Override
-  public Try<ModuleContext> apply(Tuple2<String, FullPath> argument) {
+  public Try<ModuleContext> apply(String sourceCode, FullPath fullPath) {
     var logger = new Logger();
-    String sourceCode = argument.element1();
-    FullPath fullPath = argument.element2();
     var errorListener = new ErrorListener(fullPath, logger);
     var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
     smoothAntlrLexer.removeErrorListeners();

@@ -4,16 +4,16 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.UnescapeFailedException;
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.IntP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
 
-public class DecodeLiterals implements TryFunction<ModuleP, ModuleP> {
+public class DecodeLiterals implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();
