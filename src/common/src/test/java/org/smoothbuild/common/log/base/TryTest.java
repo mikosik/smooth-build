@@ -19,50 +19,95 @@ import org.junit.jupiter.api.Test;
 public class TryTest {
   @Nested
   class _try_of {
-    @Test
-    void creation_with_value_and_non_problem() {
-      var tryOf = Try.of("abc", warning("warning message"));
-      assertThat(tryOf.value()).isEqualTo("abc");
-      assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
+    @Nested
+    class _with_null_value {
+      @Test
+      void and_no_failure() {
+        var tryOf = Try.of(null, warning("warning message"));
+        assertThat(tryOf.value()).isNull();
+        assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
+      }
+
+      @Test
+      void and_failure() {
+        var tryOf = Try.of(null, error("error message"));
+        assertThat(tryOf.toMaybe()).isEqualTo(none());
+        assertThat(tryOf.logs()).isEqualTo(list(error("error message")));
+      }
     }
 
-    @Test
-    void creation_with_value_and_problem() {
-      var tryOf = Try.of("abc", error("error message"));
-      assertThat(tryOf.toMaybe()).isEqualTo(none());
-      assertThat(tryOf.logs()).isEqualTo(list(error("error message")));
+    @Nested
+    class _with_non_null_value {
+      @Test
+      void and_no_failure() {
+        var tryOf = Try.of("abc", warning("warning message"));
+        assertThat(tryOf.value()).isEqualTo("abc");
+        assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
+      }
+
+      @Test
+      void and_failure() {
+        var tryOf = Try.of("abc", error("error message"));
+        assertThat(tryOf.toMaybe()).isEqualTo(none());
+        assertThat(tryOf.logs()).isEqualTo(list(error("error message")));
+      }
     }
   }
 
   @Nested
   class _success {
-    @Test
-    public void has_value() {
-      var success = success("abc");
-      assertThat(success.value()).isEqualTo("abc");
+    @Nested
+    class _with_null_value {
+      @Test
+      public void has_value() {
+        var success = success(null);
+        assertThat(success.value()).isNull();
+      }
+
+      @Test
+      public void toMaybe_returns_some_with_null() {
+        var success = success(null);
+        assertThat(success.toMaybe()).isEqualTo(some(null));
+      }
+
+      @Test
+      public void creation_with_non_problem_log_is_allowed() {
+        var success = success(null, warning("warning message"));
+        assertThat(success.value()).isNull();
+      }
+
+      @Test
+      public void creation_with_problem_fails() {
+        assertCall(() -> success(null, error("error message")))
+            .throwsException(IllegalArgumentException.class);
+      }
     }
 
-    @Test
-    public void toMaybe_returns_some_with_value() {
-      var success = success("abc");
-      assertThat(success.toMaybe()).isEqualTo(some("abc"));
-    }
+    @Nested
+    class _with_non_null_value {
+      @Test
+      public void has_value() {
+        var success = success("abc");
+        assertThat(success.value()).isEqualTo("abc");
+      }
 
-    @Test
-    public void creation_with_non_problem_log_is_allowed() {
-      var success = success("abc", warning("warning message"));
-      assertThat(success.value()).isEqualTo("abc");
-    }
+      @Test
+      public void toMaybe_returns_some_with_value() {
+        var success = success("abc");
+        assertThat(success.toMaybe()).isEqualTo(some("abc"));
+      }
 
-    @Test
-    public void creation_with_problem_fails() {
-      assertCall(() -> success("abc", error("error message")))
-          .throwsException(IllegalArgumentException.class);
-    }
+      @Test
+      public void creation_with_non_problem_log_is_allowed() {
+        var success = success("abc", warning("warning message"));
+        assertThat(success.value()).isEqualTo("abc");
+      }
 
-    @Test
-    public void creation_with_null_value_fails() {
-      assertCall(() -> success(null)).throwsException(IllegalArgumentException.class);
+      @Test
+      public void creation_with_problem_fails() {
+        assertCall(() -> success("abc", error("error message")))
+            .throwsException(IllegalArgumentException.class);
+      }
     }
   }
 
@@ -108,6 +153,6 @@ public class TryTest {
   @Test
   public void to_string() {
     var success = success("abc", info("message"));
-    assertThat(success.toString()).isEqualTo("Try{abc, [Log{INFO, 'message'}]}");
+    assertThat(success.toString()).isEqualTo("Try{Some(abc), [Log{INFO, 'message'}]}");
   }
 }

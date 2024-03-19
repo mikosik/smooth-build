@@ -4,7 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 
 public class Try<V> {
-  private final V value;
+  private final Maybe<V> value;
   private final List<Log> logs;
 
   public static <T> Try<T> of(T value, Log... logs) {
@@ -21,8 +22,8 @@ public class Try<V> {
   }
 
   public static <T> Try<T> of(T value, Collection<Log> logs) {
-    var valueOrNull = containsAnyFailure(logs) ? null : value;
-    return new Try<>(valueOrNull, logs);
+    Maybe<T> maybe = containsAnyFailure(logs) ? Maybe.none() : some(value);
+    return new Try<>(maybe, logs);
   }
 
   public static <T> Try<T> success(T value, Log... logs) {
@@ -30,7 +31,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> success(T value, Collection<Log> logs) {
-    return new Try<>(value, logs);
+    return new Try<>(some(value), logs);
   }
 
   public static <T> Try<T> failure(Log... logs) {
@@ -38,22 +39,22 @@ public class Try<V> {
   }
 
   public static <T> Try<T> failure(Collection<Log> logs) {
-    return new Try<>(null, logs);
+    return new Try<>(none(), logs);
   }
 
-  private Try(V value, Collection<Log> logs) {
-    checkArgument((value == null) == containsAnyFailure(logs));
+  private Try(Maybe<V> value, Collection<Log> logs) {
+    checkArgument((value.isNone()) == containsAnyFailure(logs));
     this.value = value;
     this.logs = listOfAll(logs);
   }
 
   public V value() {
-    checkState(value != null, "No value is stored in this Try.");
-    return value;
+    checkState(value.isSome(), "No value is stored in this Try.");
+    return value.get();
   }
 
   public Maybe<V> toMaybe() {
-    return maybe(value);
+    return value;
   }
 
   public List<Log> logs() {
