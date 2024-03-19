@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
@@ -28,7 +27,7 @@ public class FindValuesTest extends TestingVirtualMachine {
     var valueS = valueS(schemaS, "myValue", orderS(intTS()));
     var scopeS = new ScopeS(immutableBindings(), immutableBindings(map(valueS.name(), valueS)));
 
-    var exprs = new FindValues().apply(tuple(scopeS, list(valueS.name())));
+    var exprs = new FindValues().apply(scopeS, list(valueS.name()));
 
     var referenceS = referenceS(schemaS, "myValue", commandLineLocation());
     assertThat(exprs).isEqualTo(success(list(instantiateS(referenceS))));
@@ -39,7 +38,7 @@ public class FindValuesTest extends TestingVirtualMachine {
     var value = valueS(schemaS(arrayTS(varA())), "myValue", orderS(varA()));
     var scopeS = new ScopeS(immutableBindings(), immutableBindings(map(value.name(), value)));
 
-    var exprs = new FindValues().apply(tuple(scopeS, list(value.name())));
+    var exprs = new FindValues().apply(scopeS, list(value.name()));
 
     assertThat(exprs.logs())
         .containsExactly(error("`myValue` cannot be calculated as it is a polymorphic value."));

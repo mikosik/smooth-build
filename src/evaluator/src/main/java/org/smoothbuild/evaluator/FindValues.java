@@ -6,23 +6,19 @@ import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.comm
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
 import org.smoothbuild.compilerfrontend.lang.define.ReferenceS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
-public class FindValues implements TryFunction<Tuple2<ScopeS, List<String>>, List<ExprS>> {
-
+public class FindValues implements TryFunction2<ScopeS, List<String>, List<ExprS>> {
   @Override
-  public Try<List<ExprS>> apply(Tuple2<ScopeS, List<String>> argument) {
+  public Try<List<ExprS>> apply(ScopeS environment, List<String> valueNames) {
     var logger = new Logger();
-    var valueNames = argument.element2();
-    var environment = argument.element1();
     var namedEvaluables = new ArrayList<NamedValueS>();
     var evaluables = environment.evaluables();
     for (var name : valueNames) {

@@ -39,10 +39,9 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
@@ -70,16 +69,14 @@ import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class TranslateAp implements TryFunction<Tuple2<ModuleContext, FullPath>, ModuleP> {
+public class TranslateAp implements TryFunction2<ModuleContext, FullPath, ModuleP> {
   @Override
-  public Try<ModuleP> apply(Tuple2<ModuleContext, FullPath> context) {
+  public Try<ModuleP> apply(ModuleContext moduleContext, FullPath fullPath) {
     var logger = new Logger();
-    var module = context.element1();
-    var fullPath = context.element2();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
     var apTranslatingVisitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
-    apTranslatingVisitor.visit(module);
+    apTranslatingVisitor.visit(moduleContext);
     var name = fullPath.withExtension("").path().lastPart().toString();
     var moduleP = new ModuleP(name, listOfAll(structs), listOfAll(evaluables));
     return Try.of(moduleP, logger);

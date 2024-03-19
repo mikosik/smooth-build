@@ -1,15 +1,13 @@
 package org.smoothbuild.app.cli.base;
 
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import java.io.PrintWriter;
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple0;
 
-public class ReportResult implements TryFunction<String, Tuple0> {
+public class ReportResult implements TryFunction1<String, Void> {
   private final PrintWriter printWriter;
 
   @Inject
@@ -18,8 +16,8 @@ public class ReportResult implements TryFunction<String, Tuple0> {
   }
 
   @Override
-  public Try<Tuple0> apply(String string) {
+  public Try<Void> apply(String string) {
     printWriter.println(string);
-    return success(tuple());
+    return success(null);
   }
 }

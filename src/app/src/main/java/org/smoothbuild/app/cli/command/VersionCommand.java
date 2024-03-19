@@ -1,9 +1,8 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.RunStepExecutor.runStepExecutor;
+import static org.smoothbuild.app.cli.base.ExecuteDag.executeDag;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
-import static org.smoothbuild.common.step.Step.tryStep;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
+import static org.smoothbuild.common.dag.Dag.apply0;
 
 import java.util.concurrent.Callable;
 import org.smoothbuild.app.cli.base.LoggingCommand;
@@ -17,8 +16,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
   @Override
   public Integer call() {
     var injector = createInjector(out());
-    var step = tryStep(Version.class);
-    var argument = tuple();
-    return runStepExecutor(injector, step, argument);
+    var version = apply0(Version.class);
+    return executeDag(injector, version);
   }
 }

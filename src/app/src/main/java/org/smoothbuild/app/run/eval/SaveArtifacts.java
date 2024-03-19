@@ -25,9 +25,9 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
@@ -39,7 +39,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
-public class SaveArtifacts implements TryFunction<List<Tuple2<ExprS, ValueB>>, String> {
+public class SaveArtifacts implements TryFunction1<List<Tuple2<ExprS, ValueB>>, String> {
   static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 

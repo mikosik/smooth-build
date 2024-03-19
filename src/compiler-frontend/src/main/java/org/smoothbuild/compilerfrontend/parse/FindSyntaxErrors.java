@@ -2,9 +2,9 @@ package org.smoothbuild.compilerfrontend.parse;
 
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ImplicitTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
@@ -24,7 +24,7 @@ import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
  * Catching those errors here makes it easier
  * to provide more detailed error message.
  */
-public class FindSyntaxErrors implements TryFunction<ModuleP, ModuleP> {
+public class FindSyntaxErrors implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

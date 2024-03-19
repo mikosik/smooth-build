@@ -1,9 +1,8 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.RunStepExecutor.runStepExecutor;
+import static org.smoothbuild.app.cli.base.ExecuteDag.executeDag;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
-import static org.smoothbuild.common.step.Step.tryStep;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
+import static org.smoothbuild.common.dag.Dag.apply0;
 
 import java.nio.file.Path;
 import org.smoothbuild.app.cli.base.ProjectCommand;
@@ -19,8 +18,7 @@ public class CleanCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel);
-    var step = tryStep(Clean.class);
-    var argument = tuple();
-    return runStepExecutor(injector, step, argument);
+    var dag = apply0(Clean.class);
+    return executeDag(injector, dag);
   }
 }

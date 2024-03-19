@@ -18,7 +18,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingBucket.writeFile;
 import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
-import static org.smoothbuild.evaluator.EvaluateStep.evaluateStep;
+import static org.smoothbuild.evaluator.SmoothEvaluationDag.smoothEvaluationDag;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -37,10 +37,10 @@ import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
@@ -112,9 +112,9 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   protected void evaluate(String... names) {
-    var steps = evaluateStep(modules, listOfAll(asList(names)));
+    var steps = smoothEvaluationDag(modules, listOfAll(asList(names)));
     var reporter = injector.getInstance(Reporter.class);
-    this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
+    this.artifacts = injector.getInstance(DagEvaluator.class).evaluate(steps, reporter);
   }
 
   protected void restartSmoothWithSameBuckets() {

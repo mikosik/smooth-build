@@ -8,10 +8,9 @@ import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
@@ -38,12 +37,10 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleP> {
+public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
   @Override
-  public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleP> apply(ModuleP moduleP, ScopeS environment) {
     var logger = new Logger();
-    var moduleP = context.element1();
-    var environment = context.element2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     new Worker(typeTeller, logger).visitModule(moduleP);
     return Try.of(moduleP, logger);

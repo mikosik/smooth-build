@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
 
-public class ReadFileContent implements TryFunction<FullPath, String> {
+public class ReadFileContent implements TryFunction1<FullPath, String> {
   private final FileResolver fileResolver;
 
   @Inject

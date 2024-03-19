@@ -4,10 +4,9 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 import static org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP.emptyScope;
 
 import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
@@ -25,12 +24,11 @@ import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 /**
  * Detect undefined referencables and types.
  */
-public class DetectUndefined implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleP> {
+public class DetectUndefined implements TryFunction2<ModuleP, ScopeS, ModuleP> {
   @Override
-  public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleP> apply(ModuleP moduleP, ScopeS imported) {
     var logger = new Logger();
-    var moduleP = context.element1();
-    new Detector(context.element2(), emptyScope(), logger).visitModule(moduleP);
+    new Detector(imported, emptyScope(), logger).visitModule(moduleP);
     return Try.of(moduleP, logger);
   }
 

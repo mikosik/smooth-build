@@ -16,7 +16,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void nonexistent_value_arg_causes_error() throws Exception {
+  public void nonexistent_value_arg_prints_error() throws Exception {
     createUserModule("""
             result = "abc";
             """);

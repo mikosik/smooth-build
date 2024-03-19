@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callP;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
@@ -55,6 +54,6 @@ public class InjectDefaultArgumentsTest {
 
   private static void callInjectDefaultArguments(ScopeS importedS, ModuleP moduleP) {
     new InitializeScopes().apply(moduleP);
-    new InjectDefaultArguments().apply(tuple(moduleP, importedS));
+    new InjectDefaultArguments().apply(moduleP, importedS);
   }
 }

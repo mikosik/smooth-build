@@ -7,7 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.writeFile;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
+import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_BUCKET_ID;
@@ -24,9 +24,9 @@ import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
+import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.StepExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
@@ -133,10 +133,10 @@ public class FrontendCompilerTester {
       }
     });
     writeModuleFilesToBuckets(buckets);
-    var steps = createFrontendCompilerStep(
-        list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
+    var scopeS =
+        frontendCompilationDag(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
     var memoryReporter = new MemoryReporter();
-    var module = injector.getInstance(StepExecutor.class).execute(steps, null, memoryReporter);
+    var module = injector.getInstance(DagEvaluator.class).evaluate(scopeS, memoryReporter);
     return Try.of(module.getOr(null), memoryReporter.logs());
   }
 

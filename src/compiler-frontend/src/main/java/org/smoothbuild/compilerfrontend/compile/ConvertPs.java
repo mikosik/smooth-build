@@ -6,9 +6,8 @@ import static org.smoothbuild.common.log.base.Try.success;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.step.TryFunction;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
@@ -61,11 +60,9 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.compilerfrontend.lang.type.TupleTS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
 
-public class ConvertPs implements TryFunction<Tuple2<ModuleP, ScopeS>, ModuleS> {
+public class ConvertPs implements TryFunction2<ModuleP, ScopeS, ModuleS> {
   @Override
-  public Try<ModuleS> apply(Tuple2<ModuleP, ScopeS> context) {
-    var moduleP = context.element1();
-    var environment = context.element2();
+  public Try<ModuleS> apply(ModuleP moduleP, ScopeS environment) {
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     return success(new Worker(typeTeller, environment).convertModule(moduleP));
   }
