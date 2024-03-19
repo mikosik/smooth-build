@@ -6,7 +6,6 @@ import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.testing.TestingBucket.writeFile;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerStep.createFrontendCompilerStep;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.DEFAULT_MODULE_FILE_PATH;
@@ -138,7 +137,7 @@ public class FrontendCompilerTester {
         list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
     var memoryReporter = new MemoryReporter();
     var module = injector.getInstance(StepExecutor.class).execute(steps, null, memoryReporter);
-    return success(module.getOr(null), memoryReporter.logs());
+    return Try.of(module.getOr(null), memoryReporter.logs());
   }
 
   private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {
