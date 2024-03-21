@@ -1,8 +1,5 @@
 package org.smoothbuild.evaluator;
 
-import static org.smoothbuild.common.log.report.MappingReporter.labelPrefixingReporter;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
@@ -30,7 +27,7 @@ public class EvaluatorBFacade implements MaybeFunction<CompiledExprs, List<Value
       @Provides
       public TaskReporter provideTaskReporter(Reporter reporter) {
         var bsTranslator = new BsTranslator(compiledExprs.bsMapping());
-        return new TaskReporterImpl(labelPrefixingReporter(reporter, EVALUATE), bsTranslator);
+        return new TaskReporterImpl(reporter, bsTranslator);
       }
     });
     return childInjector.getInstance(EvaluatorB.class).evaluate(compiledExprs.expressions());

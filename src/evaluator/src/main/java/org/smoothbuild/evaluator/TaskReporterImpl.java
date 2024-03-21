@@ -5,6 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
+import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE_PREFIX;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
@@ -48,7 +49,7 @@ public class TaskReporterImpl implements TaskReporter {
   @Override
   public void reportEvaluationException(Throwable throwable) {
     reporter.report(Report.report(
-        label(),
+        label(EVALUATE_PREFIX),
         "",
         NOOP,
         list(fatal("Evaluation failed with: " + getStackTraceAsString(throwable)))));
@@ -64,12 +65,13 @@ public class TaskReporterImpl implements TaskReporter {
 
   private Label taskLabel(Task task) {
     return switch (task) {
-      case CombineTask combineTask -> label("combine");
-      case ConstTask constTask -> label("const", constTask.valueB().type().name());
-      case InvokeTask invokeTask -> label("call", nameOf(invokeTask.nativeFunc()));
-      case OrderTask orderTask -> label("order");
-      case PickTask pickTask -> label("pick");
-      case SelectTask selectTask -> label("select");
+      case CombineTask combineTask -> label(EVALUATE_PREFIX, "combine");
+      case ConstTask constTask -> label(
+          EVALUATE_PREFIX, "const", constTask.valueB().type().name());
+      case InvokeTask invokeTask -> label(EVALUATE_PREFIX, "call", nameOf(invokeTask.nativeFunc()));
+      case OrderTask orderTask -> label(EVALUATE_PREFIX, "order");
+      case PickTask pickTask -> label(EVALUATE_PREFIX, "pick");
+      case SelectTask selectTask -> label(EVALUATE_PREFIX, "select");
     };
   }
 

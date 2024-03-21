@@ -1,8 +1,10 @@
 package org.smoothbuild.compilerfrontend.parse;
 
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import org.smoothbuild.common.dag.TryFunction1;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
@@ -25,6 +27,11 @@ import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
  * to provide more detailed error message.
  */
 public class FindSyntaxErrors implements TryFunction1<ModuleP, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "find_syntax_errors");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

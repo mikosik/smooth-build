@@ -100,6 +100,7 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping));
     taskReporter.report(task, computationResult(intB(), source));
-    verify(reporter).report(report(label, "", source, list()));
+    var prefixedLabel = label("evaluate").append(label);
+    verify(reporter).report(report(prefixedLabel, "", source, list()));
   }
 }

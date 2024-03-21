@@ -1,10 +1,12 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP.emptyScope;
 
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.dag.TryFunction2;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
@@ -25,6 +27,11 @@ import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
  * Detect undefined referencables and types.
  */
 public class DetectUndefined implements TryFunction2<ModuleP, ScopeS, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "detect_undefined");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP, ScopeS imported) {
     var logger = new Logger();

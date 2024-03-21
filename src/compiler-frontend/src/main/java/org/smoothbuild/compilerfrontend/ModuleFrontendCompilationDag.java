@@ -4,9 +4,7 @@ import static org.smoothbuild.common.dag.Dag.apply0;
 import static org.smoothbuild.common.dag.Dag.apply1;
 import static org.smoothbuild.common.dag.Dag.apply2;
 import static org.smoothbuild.common.dag.Dag.evaluate;
-import static org.smoothbuild.common.dag.Dag.prefix;
 import static org.smoothbuild.common.dag.Dag.value;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.compilerfrontend.lang.define.ScopeS.scopeS;
 
@@ -30,11 +28,11 @@ import org.smoothbuild.compilerfrontend.parse.TranslateAp;
 
 public class ModuleFrontendCompilationDag {
   public static Dag<ScopeS> frontendCompilationDag(List<FullPath> modules) {
-    var graph = apply0(LoadInternalModuleMembers.class);
+    var dag = apply0(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
-      graph = evaluate(apply2(ModuleFrontendCompilationDag::create, graph, value(fullPath)));
+      dag = evaluate(apply2(ModuleFrontendCompilationDag::create, dag, value(fullPath)));
     }
-    return prefix(label("parse"), graph);
+    return dag;
   }
 
   public static Try<Dag<ScopeS>> create(ScopeS scopeS, FullPath fullPath) {
