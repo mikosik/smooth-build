@@ -18,7 +18,6 @@ import static org.smoothbuild.common.dag.Dag.applyMaybeFunction;
 import static org.smoothbuild.common.dag.Dag.chain;
 import static org.smoothbuild.common.dag.Dag.evaluate;
 import static org.smoothbuild.common.dag.Dag.inject;
-import static org.smoothbuild.common.dag.Dag.prefix;
 import static org.smoothbuild.common.dag.Dag.value;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -351,29 +350,6 @@ class DagEvaluatorTest {
       var result = stepExecutor().evaluate(evaluate, reporter);
 
       assertThat(result).isEqualTo(some("abc"));
-    }
-  }
-
-  @Nested
-  class _prefix_node {
-    @Test
-    void prefixes_labels() {
-      var reporter = mock(Reporter.class);
-      var evaluate = prefix(label("name"), stringNodeThatFails());
-
-      stepExecutor().evaluate(evaluate, reporter);
-
-      verifyReported(label("name"), reporter, list(error("error")));
-    }
-
-    @Test
-    void prefixes_labels_twice() {
-      var reporter = mock(Reporter.class);
-      var evaluate = prefix(label("outer"), prefix(label("inner"), stringNodeThatFails()));
-
-      stepExecutor().evaluate(evaluate, reporter);
-
-      verifyReported(label("outer", "inner"), reporter, list(error("error")));
     }
   }
 
