@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
@@ -183,12 +184,24 @@ class DagEvaluatorTest {
     @Test
     void with_function_that_returns_success() {
       var reporter = mock(Reporter.class);
-      Dag<TryFunction0<String>> tryFunction = value(() -> success("success", info("message")));
+      Dag<TryFunction0<String>> tryFunction = value(new ReturnSuccessString());
 
       var result = stepExecutor().evaluate(apply0(tryFunction), reporter);
 
       assertThat(result).isEqualTo(some("success"));
-      verifyReported(reporter, list(info("message")));
+      verifyReported(label("return_success_string"), reporter, list(info("message")));
+    }
+
+    public static class ReturnSuccessString implements TryFunction0<String> {
+      @Override
+      public Try<String> apply() {
+        return success("success", info("message"));
+      }
+
+      @Override
+      public Label label() {
+        return Label.label("return_success_string");
+      }
     }
 
     @Test
@@ -219,12 +232,24 @@ class DagEvaluatorTest {
     @Test
     void with_function_that_returns_success() {
       var reporter = mock(Reporter.class);
-      var apply1 = apply1(s -> success(s.toUpperCase(Locale.ROOT), info("message")), value("abc"));
+      var apply1 = apply1(new ToUpperCase(), value("abc"));
 
       var result = stepExecutor().evaluate(apply1, reporter);
 
       assertThat(result).isEqualTo(some("ABC"));
-      verifyReported(reporter, list(info("message")));
+      verifyReported(label("to_upper_case"), reporter, list(info("message")));
+    }
+
+    public static class ToUpperCase implements TryFunction1<String, String> {
+      @Override
+      public Try<String> apply(String string) {
+        return success(string.toUpperCase(Locale.ROOT), info("message"));
+      }
+
+      @Override
+      public Label label() {
+        return Label.label("to_upper_case");
+      }
     }
 
     @Test
@@ -272,13 +297,24 @@ class DagEvaluatorTest {
     @Test
     void with_function_that_returns_success() {
       var reporter = mock(Reporter.class);
-      var apply2 =
-          apply2((a, b) -> success(a + ":" + b, info("message")), value("abc"), value("def"));
+      var apply2 = apply2(new Concatenate(), value("abc"), value("def"));
 
       var result = stepExecutor().evaluate(apply2, reporter);
 
       assertThat(result).isEqualTo(some("abc:def"));
-      verifyReported(reporter, list(info("message")));
+      verifyReported(label("concatenate"), reporter, list(info("message")));
+    }
+
+    public static class Concatenate implements TryFunction2<String, String, String> {
+      @Override
+      public Try<String> apply(String string1, String string2) {
+        return success(string1 + ":" + string2, info("message"));
+      }
+
+      @Override
+      public Label label() {
+        return Label.label("concatenate");
+      }
     }
 
     @Test
@@ -327,8 +363,7 @@ class DagEvaluatorTest {
 
       stepExecutor().evaluate(evaluate, reporter);
 
-      verify(reporter).report(report(label("name"), "", EXECUTION, list(error("error"))));
-      verifyNoMoreInteractions(reporter);
+      verifyReported(label("name"), reporter, list(error("error")));
     }
 
     @Test
@@ -338,13 +373,16 @@ class DagEvaluatorTest {
 
       stepExecutor().evaluate(evaluate, reporter);
 
-      verify(reporter).report(report(label("outer", "inner"), "", EXECUTION, list(error("error"))));
-      verifyNoMoreInteractions(reporter);
+      verifyReported(label("outer", "inner"), reporter, list(error("error")));
     }
   }
 
   private static void verifyReported(Reporter reporter, List<Log> logs) {
-    verify(reporter).report(report(label(), "", EXECUTION, logs));
+    verifyReported(label(), reporter, logs);
+  }
+
+  private static void verifyReported(Label label, Reporter reporter, List<Log> logs) {
+    verify(reporter).report(report(label, "", EXECUTION, logs));
     verifyNoMoreInteractions(reporter);
   }
 

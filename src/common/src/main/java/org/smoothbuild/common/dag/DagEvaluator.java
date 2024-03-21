@@ -2,7 +2,6 @@ package org.smoothbuild.common.dag;
 
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.MappingReporter.labelPrefixingReporter;
 import static org.smoothbuild.common.log.report.Report.report;
@@ -39,8 +38,9 @@ public class DagEvaluator {
   private <V> Maybe<V> evaluateApplication0(Application0<V> application, Reporter reporter) {
     var maybeFunction = evaluate(application.function(), reporter);
     if (maybeFunction.isSome()) {
-      Try<V> result = maybeFunction.get().apply();
-      reporter.report(report(label(), "", EXECUTION, result.logs()));
+      TryFunction0<V> function = maybeFunction.get();
+      Try<V> result = function.apply();
+      reporter.report(report(function.label(), "", EXECUTION, result.logs()));
       return result.toMaybe();
     } else {
       return none();
@@ -48,11 +48,12 @@ public class DagEvaluator {
   }
 
   private <A, V> Maybe<V> evaluateApplication1(Application1<A, V> application, Reporter reporter) {
-    var argument = evaluate(application.argument(), reporter);
-    var function = evaluate(application.function(), reporter);
-    if (argument.isSome() && function.isSome()) {
-      Try<V> result = function.get().apply(argument.get());
-      reporter.report(report(label(), "", EXECUTION, result.logs()));
+    var mabyeFunction = evaluate(application.function(), reporter);
+    var maybeArgument = evaluate(application.argument(), reporter);
+    if (maybeArgument.isSome() && mabyeFunction.isSome()) {
+      var function = mabyeFunction.get();
+      Try<V> result = function.apply(maybeArgument.get());
+      reporter.report(report(function.label(), "", EXECUTION, result.logs()));
       return result.toMaybe();
     }
     return none();
@@ -60,12 +61,13 @@ public class DagEvaluator {
 
   private <A, B, V> Maybe<V> evaluateApplication2(
       Application2<A, B, V> application, Reporter reporter) {
+    var maybeFunction = evaluate(application.function(), reporter);
     var maybeArgument1 = evaluate(application.argument1(), reporter);
     var maybeArgument2 = evaluate(application.argument2(), reporter);
-    var maybeFunction = evaluate(application.function(), reporter);
     if (maybeFunction.isSome() && maybeArgument1.isSome() && maybeArgument2.isSome()) {
-      Try<V> result = maybeFunction.get().apply(maybeArgument1.get(), maybeArgument2.get());
-      reporter.report(report(label(), "", EXECUTION, result.logs()));
+      var function = maybeFunction.get();
+      Try<V> result = function.apply(maybeArgument1.get(), maybeArgument2.get());
+      reporter.report(report(function.label(), "", EXECUTION, result.logs()));
       return result.toMaybe();
     } else {
       return none();
