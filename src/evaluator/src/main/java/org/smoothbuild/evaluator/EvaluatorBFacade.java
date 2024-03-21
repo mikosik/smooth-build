@@ -11,15 +11,12 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.dag.MaybeFunction;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.compilerbackend.BsMapping;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 
-public class EvaluatorBFacade
-    implements MaybeFunction<Tuple2<List<ExprB>, BsMapping>, List<ValueB>> {
+public class EvaluatorBFacade implements MaybeFunction<CompiledExprs, List<ValueB>> {
   private final Injector injector;
 
   @Inject
@@ -28,16 +25,14 @@ public class EvaluatorBFacade
   }
 
   @Override
-  public Maybe<List<ValueB>> apply(Tuple2<List<ExprB>, BsMapping> argument) {
+  public Maybe<List<ValueB>> apply(CompiledExprs compiledExprs) {
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Provides
       public TaskReporter provideTaskReporter(Reporter reporter) {
-        var bsMapping = argument.element2();
-        var bsTranslator = new BsTranslator(bsMapping);
+        var bsTranslator = new BsTranslator(compiledExprs.bsMapping());
         return new TaskReporterImpl(labelPrefixingReporter(reporter, EVALUATE), bsTranslator);
       }
     });
-    var exprs = argument.element1();
-    return childInjector.getInstance(EvaluatorB.class).evaluate(exprs);
+    return childInjector.getInstance(EvaluatorB.class).evaluate(compiledExprs.expressions());
   }
 }
