@@ -1,7 +1,6 @@
 package org.smoothbuild.common.dag;
 
 import com.google.inject.Key;
-import org.smoothbuild.common.log.base.Label;
 
 /**
  * Directed Acyclic Graph containing operations to execute.
@@ -15,7 +14,6 @@ public sealed interface Dag<R>
         Evaluation,
         Injection,
         MaybeApplication,
-        Prefix,
         Value {
 
   public static <R> Dag<R> apply0(Class<? extends TryFunction0<R>> clazz) {
@@ -97,10 +95,6 @@ public sealed interface Dag<R>
     return new Injection<>(key);
   }
 
-  public static <R> Dag<R> prefix(Label label, Dag<R> dag) {
-    return new Prefix<>(label, dag);
-  }
-
   public static <R> Dag<R> value(R value) {
     return new Value<>(value);
   }
@@ -123,7 +117,5 @@ record Injection<R>(Key<? extends R> key) implements Dag<R> {}
 
 record MaybeApplication<A, R>(Dag<? extends MaybeFunction<A, R>> function, Dag<A> argument)
     implements Dag<R> {}
-
-record Prefix<R>(Label label, Dag<R> dag) implements Dag<R> {}
 
 record Value<R>(R value) implements Dag<R> {}

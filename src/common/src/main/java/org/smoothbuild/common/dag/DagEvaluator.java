@@ -3,7 +3,6 @@ package org.smoothbuild.common.dag;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
-import static org.smoothbuild.common.log.report.MappingReporter.labelPrefixingReporter;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import com.google.inject.Injector;
@@ -30,7 +29,6 @@ public class DagEvaluator {
       case Evaluation<V> evaluation -> evaluateEvaluation(evaluation, reporter);
       case Injection<V> injection -> evaluateInjection(injection, reporter);
       case MaybeApplication<?, V> application -> evaluateMaybeApplication(application, reporter);
-      case Prefix<V> prefix -> evaluatePrefix(prefix, reporter);
       case Value<V> value -> evaluateValue(value);
     };
   }
@@ -96,11 +94,6 @@ public class DagEvaluator {
       return function.get().apply(argument.get());
     }
     return none();
-  }
-
-  private <V> Maybe<V> evaluatePrefix(Prefix<V> prefix, Reporter reporter) {
-    var prefixingReporter = labelPrefixingReporter(reporter, prefix.label());
-    return evaluate(prefix.dag(), prefixingReporter);
   }
 
   private static <V> Some<V> evaluateValue(Value<V> value) {
