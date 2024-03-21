@@ -1,10 +1,12 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.UnescapeFailedException;
 import org.smoothbuild.common.dag.TryFunction1;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
@@ -14,6 +16,11 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
 
 public class DecodeLiterals implements TryFunction1<ModuleP, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "decode_literals");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

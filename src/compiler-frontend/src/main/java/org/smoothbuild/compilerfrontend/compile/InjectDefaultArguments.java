@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Set;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.dag.TryFunction2;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
@@ -35,6 +37,11 @@ import org.smoothbuild.compilerfrontend.lang.define.NamedFuncS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
 public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "inject_default_arguments");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP, ScopeS environment) {
     var logger = new Logger();

@@ -7,6 +7,7 @@ import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.dag.TryFunction2;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.compile.ast.define.AnnotationP;
@@ -70,6 +72,11 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
 public class TranslateAp implements TryFunction2<ModuleContext, FullPath, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "simplify_parse_tree");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleContext moduleContext, FullPath fullPath) {
     var logger = new Logger();

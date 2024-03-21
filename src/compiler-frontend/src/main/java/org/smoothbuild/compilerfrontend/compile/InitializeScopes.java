@@ -1,12 +1,14 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP.emptyScope;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.smoothbuild.common.bindings.MutableBindings;
 import org.smoothbuild.common.dag.TryFunction1;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
@@ -29,6 +31,11 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
 public class InitializeScopes extends ModuleVisitorP implements TryFunction1<ModuleP, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "initialize_scopes");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();

@@ -4,6 +4,7 @@ import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.base.Strings.unlines;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.BitSet;
@@ -21,12 +22,18 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.dag.TryFunction2;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
 public class Parse implements TryFunction2<String, FullPath, ModuleContext> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "parse");
+  }
+
   @Override
   public Try<ModuleContext> apply(String sourceCode, FullPath fullPath) {
     var logger = new Logger();

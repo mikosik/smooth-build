@@ -3,11 +3,9 @@ package org.smoothbuild.evaluator;
 import static org.smoothbuild.common.dag.Dag.apply2;
 import static org.smoothbuild.common.dag.Dag.applyMaybeFunction;
 import static org.smoothbuild.common.dag.Dag.evaluate;
-import static org.smoothbuild.common.dag.Dag.prefix;
 import static org.smoothbuild.common.dag.Dag.value;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
 
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
@@ -30,8 +28,8 @@ public class SmoothEvaluationDag {
       ScopeS scopeS, List<String> valueNames) {
     var scopeNode = value(scopeS);
     var valuesS = apply2(FindValues.class, scopeNode, value(valueNames));
-    var evaluationGraph = evaluate(apply2(SmoothEvaluationDag::subDag2, scopeNode, valuesS));
-    return success(prefix(EVALUATE, evaluationGraph));
+    var evaluationDag = evaluate(apply2(SmoothEvaluationDag::subDag2, scopeNode, valuesS));
+    return success(evaluationDag);
   }
 
   public static Try<Dag<List<Tuple2<ExprS, ValueB>>>> subDag2(ScopeS scopeS, List<ExprS> values) {

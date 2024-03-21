@@ -3,12 +3,14 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.dag.TryFunction2;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
@@ -38,6 +40,11 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
 public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "infer_types");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP, ScopeS environment) {
     var logger = new Logger();

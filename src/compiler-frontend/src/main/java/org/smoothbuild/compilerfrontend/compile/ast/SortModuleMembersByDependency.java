@@ -4,6 +4,7 @@ import static java.lang.String.join;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
@@ -30,6 +32,11 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
  * Sort module Evaluables and Structs based on dependencies between them.
  */
 public class SortModuleMembersByDependency implements TryFunction1<ModuleP, ModuleP> {
+  @Override
+  public Label label() {
+    return Label.label(COMPILE_PREFIX, "sort_members");
+  }
+
   @Override
   public Try<ModuleP> apply(ModuleP moduleP) {
     var logger = new Logger();
