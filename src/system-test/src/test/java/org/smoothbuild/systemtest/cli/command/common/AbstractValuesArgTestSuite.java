@@ -72,8 +72,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
         """
         :compile:findValues                                                        exec
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
-        :Summary
-          1 error
+        FAILED: 1 error
         """);
   }
 
@@ -89,8 +88,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
         """
         :compile:findValues                                                        exec
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
-        :Summary
-          1 error
+        FAILED: 1 error
         """);
   }
 

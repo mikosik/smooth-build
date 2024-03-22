@@ -1,37 +1,42 @@
 package org.smoothbuild.app.report;
 
-import static org.smoothbuild.common.base.Strings.indent;
+import static org.smoothbuild.common.log.base.Level.ERROR;
+import static org.smoothbuild.common.log.base.Level.FATAL;
 
 import jakarta.inject.Inject;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.LogCounters;
 
-public class LogSummaryPrinter {
+public class StatusPrinter {
   private final PrintWriter printWriter;
   private final LogCounters logCounters;
 
   @Inject
-  public LogSummaryPrinter(PrintWriter printWriter, LogCounters logCounters) {
+  public StatusPrinter(PrintWriter printWriter, LogCounters logCounters) {
     this.printWriter = printWriter;
     this.logCounters = logCounters;
   }
 
   public void printSummary() {
-    printWriter.println(":Summary");
-    int total = 0;
+    var stats = counterDescriptions();
+    var hasFailures = 0 < logCounters.get(ERROR) || 0 < logCounters.get(FATAL);
+    var status = hasFailures ? "FAILED: " : "SUCCESS: ";
+    printWriter.println(status + String.join(", ", stats));
+  }
+
+  private List<String> counterDescriptions() {
+    var stats = new ArrayList<String>();
     for (Level level : Level.values()) {
       int count = logCounters.get(level);
       if (count != 0) {
-        int value = logCounters.get(level);
-        printWriter.println(indent(statText(level, value)));
+        stats.add(statText(level, logCounters.get(level)));
       }
-      total += count;
     }
-    if (total == 0) {
-      printWriter.println("No logs reported");
-    }
+    return stats;
   }
 
   private String statText(Level level, int value) {
