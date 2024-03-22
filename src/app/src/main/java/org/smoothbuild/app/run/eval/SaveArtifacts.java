@@ -9,7 +9,6 @@ import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Try.failure;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
@@ -63,25 +62,22 @@ public class SaveArtifacts implements TryFunction1<List<Tuple2<ExprS, ValueB>>, 
       return failure(error(e.getMessage()));
     }
     var logger = new Logger();
-    var sortedArtifacts = artifacts.sortUsing(comparing(a -> a.element1().referencedName()));
-    var savedArtifacts =
-        sortedArtifacts.map(t -> t.map2(valueB -> save(t.element1(), valueB, logger)));
-    var messages = savedArtifacts
-        .map(t ->
-            t.element1().referencedName() + " -> " + t.element2().map(Path::q).getOr("?"))
-        .toString("\n");
-    return Try.of(messages, logger);
+    artifacts
+        .sortUsing(comparing(a -> a.element1().referencedName()))
+        .forEach(t -> save(t.element1(), t.element2(), logger));
+    return Try.of(null, logger);
   }
 
-  private ReferenceS toReferenceS(ExprS e) {
-    return (ReferenceS) ((InstantiateS) e).polymorphicS();
+  private ReferenceS toReferenceS(ExprS expr) {
+    return (ReferenceS) ((InstantiateS) expr).polymorphicS();
   }
 
-  private Maybe<Path> save(ReferenceS valueS, ValueB valueB, Logger logger) {
+  private Maybe<Void> save(ReferenceS valueS, ValueB valueB, Logger logger) {
     String name = valueS.referencedName();
     try {
       var path = write(valueS, valueB);
-      return some(path);
+      logger.info(name + " -> " + path.q());
+      return null;
     } catch (IOException | BytecodeException e) {
       logger.fatal("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));

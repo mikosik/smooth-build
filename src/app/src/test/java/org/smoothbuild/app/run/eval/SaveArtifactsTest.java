@@ -7,6 +7,7 @@ import static org.smoothbuild.app.run.eval.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingBucket.readFile;
@@ -214,12 +215,12 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     Tuple2<ExprS, ValueB> instantiate2 = tuple(instantiateS(stringTS(), "myValue2"), stringB());
     Tuple2<ExprS, ValueB> instantiate3 = tuple(instantiateS(stringTS(), "myValue3"), stringB());
     var stringTry = saveArtifacts.apply(list(instantiate3, instantiate1, instantiate2));
-    assertThat(stringTry.value())
-        .isEqualTo(
-            """
-                myValue1 -> '.smooth/artifacts/myValue1'
-                myValue2 -> '.smooth/artifacts/myValue2'
-                myValue3 -> '.smooth/artifacts/myValue3'""");
+    assertThat(stringTry)
+        .isEqualTo(success(
+            null,
+            info("myValue1 -> '.smooth/artifacts/myValue1'"),
+            info("myValue2 -> '.smooth/artifacts/myValue2'"),
+            info("myValue3 -> '.smooth/artifacts/myValue3'")));
   }
 
   private void testValueStoring(TypeS typeS, ValueB valueB, ByteString valueAsByteString)
@@ -243,7 +244,8 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     var result = saveArtifacts(typeS, valueB);
 
     assertThat(result)
-        .isEqualTo(success("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
+        .isEqualTo(
+            success(null, info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'")));
     assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
