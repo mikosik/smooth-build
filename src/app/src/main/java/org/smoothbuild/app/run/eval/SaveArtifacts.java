@@ -22,24 +22,24 @@ import org.smoothbuild.app.layout.ForBucket;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.tuple.Tuple2;
+import org.smoothbuild.common.tuple.Tuples;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
 import org.smoothbuild.compilerfrontend.lang.define.ReferenceS;
 import org.smoothbuild.compilerfrontend.lang.type.ArrayTS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
-public class SaveArtifacts implements TryFunction1<List<Tuple2<ExprS, ValueB>>, String> {
+public class SaveArtifacts implements TryFunction1<EvaluatedExprs, String> {
   static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 
@@ -54,13 +54,14 @@ public class SaveArtifacts implements TryFunction1<List<Tuple2<ExprS, ValueB>>, 
   }
 
   @Override
-  public Try<String> apply(List<Tuple2<ExprS, ValueB>> argument) {
-    List<Tuple2<ReferenceS, ValueB>> artifacts = argument.map(t -> t.map1(this::toReferenceS));
+  public Try<String> apply(EvaluatedExprs evaluatedExprs) {
     try {
       bucket.createDir(ARTIFACTS_PATH);
     } catch (IOException e) {
       return failure(error(e.getMessage()));
     }
+    var referenceSs = evaluatedExprs.exprSs().map(this::toReferenceS);
+    var artifacts = referenceSs.zip(evaluatedExprs.valuesB(), Tuples::tuple);
     var logger = new Logger();
     artifacts
         .sortUsing(comparing(a -> a.element1().referencedName()))

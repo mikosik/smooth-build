@@ -1,19 +1,19 @@
 package org.smoothbuild.evaluator;
 
+import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import jakarta.inject.Inject;
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.dag.MaybeFunction;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.compilerbackend.CompiledExprs;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 
-public class EvaluatorBFacade implements MaybeFunction<CompiledExprs, List<ValueB>> {
+public class EvaluatorBFacade implements MaybeFunction<CompiledExprs, EvaluatedExprs> {
   private final Injector injector;
 
   @Inject
@@ -22,7 +22,7 @@ public class EvaluatorBFacade implements MaybeFunction<CompiledExprs, List<Value
   }
 
   @Override
-  public Maybe<List<ValueB>> apply(CompiledExprs compiledExprs) {
+  public Maybe<EvaluatedExprs> apply(CompiledExprs compiledExprs) {
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Provides
       public TaskReporter provideTaskReporter(Reporter reporter) {
@@ -30,6 +30,7 @@ public class EvaluatorBFacade implements MaybeFunction<CompiledExprs, List<Value
         return new TaskReporterImpl(reporter, bsTranslator);
       }
     });
-    return childInjector.getInstance(EvaluatorB.class).evaluate(compiledExprs.expressions());
+    var valuesB = childInjector.getInstance(EvaluatorB.class).evaluate(compiledExprs.exprBs());
+    return valuesB.map(v -> evaluatedExprs(compiledExprs.exprSs(), v));
   }
 }

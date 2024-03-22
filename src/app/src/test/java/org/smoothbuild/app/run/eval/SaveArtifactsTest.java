@@ -13,7 +13,6 @@ import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingBucket.readFile;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedValueS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
@@ -23,6 +22,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.locati
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;
 import java.util.Map;
@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
 import org.smoothbuild.compilerfrontend.lang.type.StructTS;
@@ -211,10 +211,12 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
     var saveArtifacts = new SaveArtifacts(projectBucket());
-    Tuple2<ExprS, ValueB> instantiate1 = tuple(instantiateS(stringTS(), "myValue1"), stringB());
-    Tuple2<ExprS, ValueB> instantiate2 = tuple(instantiateS(stringTS(), "myValue2"), stringB());
-    Tuple2<ExprS, ValueB> instantiate3 = tuple(instantiateS(stringTS(), "myValue3"), stringB());
-    var stringTry = saveArtifacts.apply(list(instantiate3, instantiate1, instantiate2));
+    List<ExprS> exprSs = list(
+        instantiateS(stringTS(), "myValue1"),
+        instantiateS(stringTS(), "myValue2"),
+        instantiateS(stringTS(), "myValue3"));
+    List<ValueB> valueBs = list(stringB(), stringB(), stringB());
+    var stringTry = saveArtifacts.apply(evaluatedExprs(exprSs, valueBs));
     assertThat(stringTry)
         .isEqualTo(success(
             null,
@@ -251,9 +253,8 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   private Try<String> saveArtifacts(TypeS typeS, ValueB valueB) {
     var saveArtifacts = new SaveArtifacts(projectBucket());
-    var valueS = annotatedValueS(nativeAnnotationS(), typeS, "myValue", location());
-    var instantiateS = TestingExpressionS.instantiateS(list(), valueS);
-    return saveArtifacts.apply(list(tuple(instantiateS, valueB)));
+    ExprS instantiateS = instantiateS(typeS, "myValue");
+    return saveArtifacts.apply(evaluatedExprs(list(instantiateS), list(valueB)));
   }
 
   private static ByteString byteStringFrom(String string) {

@@ -39,12 +39,12 @@ public class BackendCompile
 
   @Override
   public Try<CompiledExprs> apply(
-      List<ExprS> exprs, ImmutableBindings<NamedEvaluableS> evaluables) {
+      List<ExprS> exprSs, ImmutableBindings<NamedEvaluableS> evaluables) {
     var sbTranslator = new SbTranslator(bytecodeFactory, filePersister, bytecodeLoader, evaluables);
     try {
-      var exprBs = exprs.map(sbTranslator::translateExpr);
+      var exprBs = exprSs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
-      return success(compilationResult(exprBs, bsMapping));
+      return success(compilationResult(exprSs, exprBs, bsMapping));
     } catch (SbTranslatorException e) {
       return failure(fatal(e.getMessage()));
     }

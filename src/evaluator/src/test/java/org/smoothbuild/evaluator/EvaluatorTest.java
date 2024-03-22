@@ -59,7 +59,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
@@ -306,12 +305,12 @@ public class EvaluatorTest extends TestingVirtualMachine {
   }
 
   private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
-    var resultMap = evaluate(evaluables, list(exprS)).get();
-    assertThat(resultMap.size()).isEqualTo(1);
-    return resultMap.get(0);
+    var bValues = evaluate(evaluables, list(exprS)).get().valuesB();
+    assertThat(bValues.size()).isEqualTo(1);
+    return bValues.get(0);
   }
 
-  private Maybe<List<ValueB>> evaluate(
+  private Maybe<EvaluatedExprs> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var backendCompile = backendCompile(filePersister, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
