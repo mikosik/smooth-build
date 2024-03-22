@@ -1,6 +1,7 @@
 package org.smoothbuild.app.run;
 
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Try.failure;
 import static org.smoothbuild.common.log.base.Try.success;
 
@@ -11,9 +12,10 @@ import org.smoothbuild.app.layout.HashNode;
 import org.smoothbuild.app.layout.InstallationHashes;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.dag.TryFunction0;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 
-public class Version implements TryFunction0<String> {
+public class Version implements TryFunction0<Void> {
   private final InstallationHashes installationHashes;
 
   @Inject
@@ -22,9 +24,14 @@ public class Version implements TryFunction0<String> {
   }
 
   @Override
-  public Try<String> apply() {
+  public Label label() {
+    return Label.label("cli", "version");
+  }
+
+  @Override
+  public Try<Void> apply() {
     try {
-      return success(createVersionText(installationHashes.installationNode()));
+      return success(null, info(createVersionText(installationHashes.installationNode())));
     } catch (IOException e) {
       return failure(
           error("ERROR: IO error when calculating installation hash: " + e.getMessage()));

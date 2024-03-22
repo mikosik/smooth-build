@@ -39,7 +39,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
-public class SaveArtifacts implements TryFunction1<EvaluatedExprs, String> {
+public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
   static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 
@@ -54,7 +54,7 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, String> {
   }
 
   @Override
-  public Try<String> apply(EvaluatedExprs evaluatedExprs) {
+  public Try<Void> apply(EvaluatedExprs evaluatedExprs) {
     try {
       bucket.createDir(ARTIFACTS_PATH);
     } catch (IOException e) {
