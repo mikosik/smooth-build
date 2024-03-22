@@ -1,4 +1,4 @@
-package org.smoothbuild.evaluator;
+package org.smoothbuild.compilerfrontend;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.base.Try.failure;

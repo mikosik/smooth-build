@@ -16,6 +16,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerbackend.BackendCompile;
+import org.smoothbuild.compilerfrontend.FindValues;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
