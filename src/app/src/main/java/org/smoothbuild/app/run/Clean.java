@@ -4,7 +4,6 @@ import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
-import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
@@ -33,17 +32,18 @@ public class Clean implements TryFunction0<Void> {
   @Override
   public Try<Void> apply() {
     var logger = new Logger();
-    deleteDir(logger, HASHED_DB_PATH);
-    deleteDir(logger, COMPUTATION_CACHE_PATH);
-    deleteDir(logger, ARTIFACTS_PATH);
-    return success(null, info("Cache and artifacts removed."));
+    deleteDir("object cache", HASHED_DB_PATH, logger);
+    deleteDir("computation cache", COMPUTATION_CACHE_PATH, logger);
+    deleteDir("artifacts", ARTIFACTS_PATH, logger);
+    return success(null, logger);
   }
 
-  private void deleteDir(Logger logger, Path path) {
+  private void deleteDir(String name, Path path, Logger logger) {
     try {
       bucket.delete(path);
+      logger.info(name + " removed");
     } catch (IOException e) {
-      logger.error("Unable to delete " + path + ".");
+      logger.error("Unable to delete " + name + " path=" + path.q() + ".");
     }
   }
 }
