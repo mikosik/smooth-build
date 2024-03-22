@@ -188,7 +188,7 @@ class DagEvaluatorTest {
       var result = stepExecutor().evaluate(apply0(tryFunction), reporter);
 
       assertThat(result).isEqualTo(some("success"));
-      verifyReported(label("return_success_string"), reporter, list(info("message")));
+      verifyReported(label("returnSuccessString"), reporter, list(info("message")));
     }
 
     public static class ReturnSuccessString implements TryFunction0<String> {
@@ -199,7 +199,7 @@ class DagEvaluatorTest {
 
       @Override
       public Label label() {
-        return Label.label("return_success_string");
+        return Label.label("returnSuccessString");
       }
     }
 
@@ -236,7 +236,7 @@ class DagEvaluatorTest {
       var result = stepExecutor().evaluate(apply1, reporter);
 
       assertThat(result).isEqualTo(some("ABC"));
-      verifyReported(label("to_upper_case"), reporter, list(info("message")));
+      verifyReported(label("toUpperCase"), reporter, list(info("message")));
     }
 
     public static class ToUpperCase implements TryFunction1<String, String> {
@@ -247,7 +247,7 @@ class DagEvaluatorTest {
 
       @Override
       public Label label() {
-        return Label.label("to_upper_case");
+        return Label.label("toUpperCase");
       }
     }
 

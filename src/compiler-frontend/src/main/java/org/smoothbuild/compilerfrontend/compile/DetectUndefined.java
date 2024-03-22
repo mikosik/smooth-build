@@ -29,7 +29,7 @@ import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 public class DetectUndefined implements TryFunction2<ModuleP, ScopeS, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "detect_undefined");
+    return Label.label(COMPILE_PREFIX, "detectUndefined");
   }
 
   @Override

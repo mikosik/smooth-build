@@ -25,7 +25,7 @@ public class ReadFileContent implements TryFunction1<FullPath, String> {
 
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "read_file_content");
+    return Label.label(COMPILE_PREFIX, "readFileContent");
   }
 
   @Override

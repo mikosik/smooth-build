@@ -11,6 +11,7 @@ import java.io.IOException;
 import org.smoothbuild.app.layout.ForBucket;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.dag.TryFunction0;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 
 public class RemoveArtifacts implements TryFunction0<Void> {
@@ -19,6 +20,11 @@ public class RemoveArtifacts implements TryFunction0<Void> {
   @Inject
   public RemoveArtifacts(@ForBucket(PROJECT) Bucket bucket) {
     this.bucket = bucket;
+  }
+
+  @Override
+  public Label label() {
+    return Label.label("artifacts", "removeAll");
   }
 
   @Override

@@ -74,7 +74,7 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 public class TranslateAp implements TryFunction2<ModuleContext, FullPath, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "simplify_parse_tree");
+    return Label.label(COMPILE_PREFIX, "simplifyParseTree");
   }
 
   @Override

@@ -42,7 +42,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "infer_types");
+    return Label.label(COMPILE_PREFIX, "inferTypes");
   }
 
   @Override

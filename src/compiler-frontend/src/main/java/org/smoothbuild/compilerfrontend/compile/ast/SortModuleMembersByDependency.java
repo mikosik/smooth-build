@@ -34,7 +34,7 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 public class SortModuleMembersByDependency implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "sort_members");
+    return Label.label(COMPILE_PREFIX, "sortMembers");
   }
 
   @Override

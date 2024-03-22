@@ -34,7 +34,7 @@ public class BackendCompile
 
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "find_values");
+    return Label.label(COMPILE_PREFIX, "generateBytecode");
   }
 
   @Override
