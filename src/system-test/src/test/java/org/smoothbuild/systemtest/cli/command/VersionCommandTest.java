@@ -23,11 +23,17 @@ public class VersionCommandTest {
     public void version_command_prints_file_hashes() {
       runSmoothVersion();
       assertFinishedWithSuccess();
-      String hexNumberPattern = "[a-f0-9]+";
-      assertThat(systemOut()).containsMatch("installation +" + hexNumberPattern);
-      assertThat(systemOut()).containsMatch("  smooth.jar +" + hexNumberPattern);
-      assertThat(systemOut()).containsMatch("  standard libraries +" + hexNumberPattern);
-      assertThat(systemOut()).containsMatch("    \\{ssl}/std_lib.smooth +" + hexNumberPattern);
+      var systemOutWithReplacedHashes = systemOut().replaceAll("[0-9a-f]{64}", "HASH");
+      assertThat(systemOutWithReplacedHashes)
+          .contains(
+              """
+          installation HASH
+            smooth.jar HASH
+            standard libraries HASH
+              {ssl}/std_lib module HASH
+                {ssl}/std_lib.smooth HASH
+                {ssl}/std_lib.jar HASH
+        """);
       assertSystemOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }
   }

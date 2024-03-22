@@ -40,15 +40,16 @@ public class Version implements TryFunction0<Void> {
 
   private static String createVersionText(HashNode hashNode) {
     return "smooth build version " + BuildVersion.VERSION + "\n\n"
-        + hashNodeTreeToString("", hashNode);
+        + hashNodeTreeLines("", hashNode).toString("\n");
   }
 
-  private static String hashNodeTreeToString(String indent, HashNode hashNode) {
-    return indent + hashNode.toPrettyString() + "\n"
-        + hashNodeTreeToString(indent + "  ", hashNode.children());
+  private static List<String> hashNodeTreeLines(String indent, HashNode hashNode) {
+    var header = indent + hashNode.toPrettyString();
+    var children = hashNodeChildrenToLines(indent + "  ", hashNode.children());
+    return List.list(header).appendAll(children);
   }
 
-  private static String hashNodeTreeToString(String indent, List<HashNode> hashNodes) {
-    return hashNodes.map(n -> hashNodeTreeToString(indent, n)).toString("\n");
+  private static List<String> hashNodeChildrenToLines(String indent, List<HashNode> hashNodes) {
+    return hashNodes.map(n -> hashNodeTreeLines(indent, n)).flatMap(strings -> strings);
   }
 }
