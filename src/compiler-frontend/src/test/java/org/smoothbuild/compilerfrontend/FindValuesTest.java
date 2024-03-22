@@ -1,4 +1,4 @@
-package org.smoothbuild.evaluator;
+package org.smoothbuild.compilerfrontend;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
@@ -18,9 +18,8 @@ import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class FindValuesTest extends TestingVirtualMachine {
+public class FindValuesTest {
   @Test
   void find_evaluable() {
     var schemaS = schemaS(arrayTS(intTS()));
