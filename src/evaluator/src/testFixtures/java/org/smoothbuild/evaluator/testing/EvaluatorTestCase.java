@@ -42,8 +42,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
-import org.smoothbuild.common.tuple.Tuple2;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
+import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
@@ -68,7 +67,7 @@ public class EvaluatorTestCase extends TestingBytecode {
   private Bucket computationCacheBucket;
   private List<FullPath> modules;
   private Injector injector;
-  private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
+  private Maybe<EvaluatedExprs> evaluatedExprs;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -114,47 +113,47 @@ public class EvaluatorTestCase extends TestingBytecode {
   protected void evaluate(String... names) {
     var steps = smoothEvaluationDag(modules, listOfAll(asList(names)));
     var reporter = injector.getInstance(Reporter.class);
-    this.artifacts = injector.getInstance(DagEvaluator.class).evaluate(steps, reporter);
+    this.evaluatedExprs = injector.getInstance(DagEvaluator.class).evaluate(steps, reporter);
   }
 
   protected void restartSmoothWithSameBuckets() {
     injector = createInjector();
-    artifacts = null;
+    evaluatedExprs = null;
   }
 
   protected ValueB artifact() {
-    var artifactsArray = artifactsArray();
-    int size = artifactsArray.size();
+    var bValues = evaluatedExprs().valuesB();
+    int size = bValues.size();
     return switch (size) {
       case 0 -> fail("Expected artifact but evaluate returned empty list of artifacts.");
-      case 1 -> artifactsArray.get(0).element2();
+      case 1 -> bValues.get(0);
       default -> fail("Expected single artifact but evaluate returned " + size + " artifacts.");
     };
   }
 
   protected ValueB artifact(int index) {
     checkArgument(0 <= index);
-    var artifactsArray = artifactsArray();
-    int size = artifactsArray.size();
+    var valueBs = evaluatedExprs().valuesB();
+    int size = valueBs.size();
     if (size <= index) {
       fail("Expected at least " + (index + 1) + " artifacts but evaluation returned only " + size
           + ".");
     }
-    return artifactsArray.get(index).element2();
+    return valueBs.get(index);
   }
 
-  private List<Tuple2<ExprS, ValueB>> artifactsArray() {
-    if (artifacts == null) {
+  private EvaluatedExprs evaluatedExprs() {
+    if (evaluatedExprs == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }
     if (memoryReporter().containsFailure()) {
       fail("Expected artifact but problems have been reported:\n"
           + memoryReporter().logs());
     }
-    if (artifacts.isNone()) {
+    if (evaluatedExprs.isNone()) {
       fail("Expected artifact but evaluate() returned null.");
     }
-    return artifacts.get();
+    return evaluatedExprs.get();
   }
 
   protected List<Log> logs() {
