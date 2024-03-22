@@ -7,7 +7,6 @@ import static org.smoothbuild.common.dag.Dag.evaluate;
 import static org.smoothbuild.common.dag.Dag.value;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
-import static org.smoothbuild.compilerfrontend.lang.define.ScopeS.scopeS;
 
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
@@ -24,13 +23,12 @@ import org.smoothbuild.compilerfrontend.compile.LoadInternalModuleMembers;
 import org.smoothbuild.compilerfrontend.compile.ast.SortModuleMembersByDependency;
 import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
 import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.parse.FindSyntaxErrors;
 import org.smoothbuild.compilerfrontend.parse.Parse;
 import org.smoothbuild.compilerfrontend.parse.TranslateAp;
 
 public class ModuleFrontendCompilationDag {
-  public static Dag<ScopeS> frontendCompilationDag(List<FullPath> modules) {
+  public static Dag<ModuleS> frontendCompilationDag(List<FullPath> modules) {
     var dag = apply0(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
       dag = evaluate(apply2(InflateDag.class, dag, value(fullPath)));
@@ -38,15 +36,15 @@ public class ModuleFrontendCompilationDag {
     return dag;
   }
 
-  public static class InflateDag implements TryFunction2<ScopeS, FullPath, Dag<ScopeS>> {
+  public static class InflateDag implements TryFunction2<ModuleS, FullPath, Dag<ModuleS>> {
     @Override
     public Label label() {
       return Label.label(COMPILE_PREFIX, "inflateFrontendCompilationDag");
     }
 
     @Override
-    public Try<Dag<ScopeS>> apply(ScopeS scopeS, FullPath fullPath) {
-      var environment = value(scopeS);
+    public Try<Dag<ModuleS>> apply(ModuleS importedModule, FullPath fullPath) {
+      var environment = value(importedModule.membersAndImported());
       var path = value(fullPath);
       var fileContent = apply1(ReadFileContent.class, path);
       var moduleContext = apply2(Parse.class, fileContent, path);
@@ -59,8 +57,7 @@ public class ModuleFrontendCompilationDag {
       var sorted = apply1(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = apply2(InferTypes.class, sorted, environment);
       var moduleS = apply2(ConvertPs.class, typesInferred, environment);
-      var newScopeS = apply1((ModuleS m) -> success(scopeS(scopeS, m.members())), moduleS);
-      return success(newScopeS);
+      return success(moduleS);
     }
   }
 }

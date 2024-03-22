@@ -12,9 +12,9 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.SourceLocation;
+import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
 public class ListEvaluablesDag {
   public static Dag<String> listEvaluablesDag() {
@@ -22,8 +22,8 @@ public class ListEvaluablesDag {
     return apply1(ListEvaluablesDag::evaluablesToString, scopeS);
   }
 
-  private static Try<String> evaluablesToString(ScopeS scopeS) {
-    var oneValuePerLineString = scopeS.evaluables().toMap().values().stream()
+  private static Try<String> evaluablesToString(ModuleS moduleS) {
+    var oneValuePerLineString = moduleS.membersAndImported().evaluables().toMap().values().stream()
         .filter(ListEvaluablesDag::isNoArgNotGenericValue)
         .map(Nal::name)
         .sorted()

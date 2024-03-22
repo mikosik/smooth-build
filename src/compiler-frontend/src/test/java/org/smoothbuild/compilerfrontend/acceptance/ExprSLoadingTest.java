@@ -187,7 +187,8 @@ public class ExprSLoadingTest {
 
           EvaluableS result = module(code)
               .loadsWithSuccess()
-              .getLoadedDefinitions()
+              .getLoadedModule()
+              .members()
               .evaluables()
               .get("result");
           ExprS actualDefArg =
