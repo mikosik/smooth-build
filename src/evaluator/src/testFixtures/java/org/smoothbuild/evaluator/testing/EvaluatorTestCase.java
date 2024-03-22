@@ -111,9 +111,9 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   protected void evaluate(String... names) {
-    var steps = smoothEvaluationDag(modules, listOfAll(asList(names)));
+    var evaluated = smoothEvaluationDag(modules, listOfAll(asList(names)));
     var reporter = injector.getInstance(Reporter.class);
-    this.evaluatedExprs = injector.getInstance(DagEvaluator.class).evaluate(steps, reporter);
+    this.evaluatedExprs = injector.getInstance(DagEvaluator.class).evaluate(evaluated, reporter);
   }
 
   protected void restartSmoothWithSameBuckets() {

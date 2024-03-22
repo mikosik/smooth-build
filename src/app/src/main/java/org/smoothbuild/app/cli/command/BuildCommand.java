@@ -80,8 +80,8 @@ public class BuildCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var removedArtifacts = apply0(RemoveArtifacts.class);
-    var evaluation = smoothEvaluationDag(Layout.MODULES, listOfAll(values));
-    var artifacts = chain(removedArtifacts, evaluation);
+    var evaluated = smoothEvaluationDag(Layout.MODULES, listOfAll(values));
+    var artifacts = chain(removedArtifacts, evaluated);
     var dag = apply1(SaveArtifacts.class, artifacts);
 
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
