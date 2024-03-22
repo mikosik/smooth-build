@@ -251,7 +251,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
-  private Try<String> saveArtifacts(TypeS typeS, ValueB valueB) {
+  private Try<Void> saveArtifacts(TypeS typeS, ValueB valueB) {
     var saveArtifacts = new SaveArtifacts(projectBucket());
     ExprS instantiateS = instantiateS(typeS, "myValue");
     return saveArtifacts.apply(evaluatedExprs(list(instantiateS), list(valueB)));

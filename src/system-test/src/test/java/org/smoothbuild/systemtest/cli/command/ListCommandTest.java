@@ -17,20 +17,20 @@ public class ListCommandTest {
     public void list_command_lists_all_available_values() throws Exception {
       createUserModule(
           """
-            bValue = "abc";
-            aValue = "abc";
-            dValue = "abc";
-            cValue = "abc";
-            """);
+          bValue = "abc";
+          aValue = "abc";
+          dValue = "abc";
+          cValue = "abc";
+          """);
       runSmoothList();
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-        Values that can be evaluated:
-        aValue
-        bValue
-        cValue
-        dValue""");
+          [INFO] Values that can be evaluated:
+            aValue
+            bValue
+            cValue
+            dValue""");
     }
   }
 

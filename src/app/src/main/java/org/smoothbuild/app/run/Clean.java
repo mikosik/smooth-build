@@ -4,6 +4,7 @@ import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
+import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
@@ -12,10 +13,11 @@ import org.smoothbuild.app.layout.ForBucket;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.dag.TryFunction0;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 
-public class Clean implements TryFunction0<String> {
+public class Clean implements TryFunction0<Void> {
   private final Bucket bucket;
 
   @Inject
@@ -24,12 +26,17 @@ public class Clean implements TryFunction0<String> {
   }
 
   @Override
-  public Try<String> apply() {
+  public Label label() {
+    return Label.label("cli", "clean");
+  }
+
+  @Override
+  public Try<Void> apply() {
     var logger = new Logger();
     deleteDir(logger, HASHED_DB_PATH);
     deleteDir(logger, COMPUTATION_CACHE_PATH);
     deleteDir(logger, ARTIFACTS_PATH);
-    return success("Cache and artifacts removed.");
+    return success(null, info("Cache and artifacts removed."));
   }
 
   private void deleteDir(Logger logger, Path path) {
