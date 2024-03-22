@@ -5,6 +5,7 @@ import static org.smoothbuild.common.log.base.Try.success;
 import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import org.smoothbuild.common.dag.TryFunction1;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 
 public class ReportResult implements TryFunction1<String, Void> {
@@ -13,6 +14,11 @@ public class ReportResult implements TryFunction1<String, Void> {
   @Inject
   public ReportResult(PrintWriter printWriter) {
     this.printWriter = printWriter;
+  }
+
+  @Override
+  public Label label() {
+    return Label.label("cli", "result");
   }
 
   @Override

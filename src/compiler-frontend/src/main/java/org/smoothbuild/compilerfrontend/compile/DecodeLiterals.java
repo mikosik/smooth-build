@@ -18,7 +18,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
 public class DecodeLiterals implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "decode_literals");
+    return Label.label(COMPILE_PREFIX, "decodeLiterals");
   }
 
   @Override

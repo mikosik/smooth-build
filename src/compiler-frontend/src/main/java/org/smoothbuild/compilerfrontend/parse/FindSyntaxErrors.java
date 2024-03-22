@@ -29,7 +29,7 @@ import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
 public class FindSyntaxErrors implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "find_syntax_errors");
+    return Label.label(COMPILE_PREFIX, "findSyntaxErrors");
   }
 
   @Override

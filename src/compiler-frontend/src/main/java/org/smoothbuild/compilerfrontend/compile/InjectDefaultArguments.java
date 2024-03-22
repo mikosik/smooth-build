@@ -39,7 +39,7 @@ import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "inject_default_arguments");
+    return Label.label(COMPILE_PREFIX, "injectDefaultArguments");
   }
 
   @Override

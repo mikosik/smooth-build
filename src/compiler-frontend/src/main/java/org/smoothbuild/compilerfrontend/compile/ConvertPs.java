@@ -65,7 +65,7 @@ import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
 public class ConvertPs implements TryFunction2<ModuleP, ScopeS, ModuleS> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "build_IR");
+    return Label.label(COMPILE_PREFIX, "buildIr");
   }
 
   @Override

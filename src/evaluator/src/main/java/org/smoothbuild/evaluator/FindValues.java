@@ -2,8 +2,8 @@ package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE_PREFIX;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
@@ -20,7 +20,7 @@ import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 public class FindValues implements TryFunction2<ScopeS, List<String>, List<ExprS>> {
   @Override
   public Label label() {
-    return Label.label(EVALUATE_PREFIX, "find_values");
+    return Label.label(COMPILE_PREFIX, "findValues");
   }
 
   @Override

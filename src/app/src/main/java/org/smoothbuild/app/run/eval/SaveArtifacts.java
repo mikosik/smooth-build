@@ -26,6 +26,7 @@ import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.dag.TryFunction1;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.tuple.Tuple2;
@@ -46,6 +47,11 @@ public class SaveArtifacts implements TryFunction1<List<Tuple2<ExprS, ValueB>>, 
   @Inject
   public SaveArtifacts(@ForBucket(PROJECT) Bucket bucket) {
     this.bucket = bucket;
+  }
+
+  @Override
+  public Label label() {
+    return Label.label("artifacts", "save");
   }
 
   @Override

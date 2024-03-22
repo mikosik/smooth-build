@@ -33,7 +33,7 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 public class InitializeScopes extends ModuleVisitorP implements TryFunction1<ModuleP, ModuleP> {
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "initialize_scopes");
+    return Label.label(COMPILE_PREFIX, "initializeScopes");
   }
 
   @Override
