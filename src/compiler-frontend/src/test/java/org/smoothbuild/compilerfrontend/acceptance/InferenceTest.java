@@ -164,8 +164,12 @@ public class InferenceTest {
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
       var code = declarations + "\n" + "myValue = (" + params + ") -> " + body + ";";
-      var myValue =
-          module(code).loadsWithSuccess().getLoadedDefinitions().evaluables().get("myValue");
+      var myValue = module(code)
+          .loadsWithSuccess()
+          .getLoadedModule()
+          .members()
+          .evaluables()
+          .get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();
       var lambda = ((InstantiateS) myValueBody).polymorphicS();
       assertThat(lambda.schema()).isEqualTo(expected);

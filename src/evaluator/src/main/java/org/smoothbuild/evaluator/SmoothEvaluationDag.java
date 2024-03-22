@@ -14,21 +14,22 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
+import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
 public class SmoothEvaluationDag {
   public static Dag<List<Tuple2<ExprS, ValueB>>> smoothEvaluationDag(
       List<FullPath> modules, List<String> names) {
-    Dag<ScopeS> scopeS = frontendCompilationDag(modules);
-    return evaluate(apply2(SmoothEvaluationDag::subDag1, scopeS, value(names)));
+    Dag<ModuleS> moduleS = frontendCompilationDag(modules);
+    return evaluate(apply2(SmoothEvaluationDag::subDag1, moduleS, value(names)));
   }
 
   public static Try<Dag<List<Tuple2<ExprS, ValueB>>>> subDag1(
-      ScopeS scopeS, List<String> valueNames) {
-    var scopeNode = value(scopeS);
-    var valuesS = apply2(FindValues.class, scopeNode, value(valueNames));
-    var evaluationDag = evaluate(apply2(SmoothEvaluationDag::subDag2, scopeNode, valuesS));
+      ModuleS moduleS, List<String> valueNames) {
+    var scopeS = value(moduleS.membersAndImported());
+    var valuesS = apply2(FindValues.class, scopeS, value(valueNames));
+    var evaluationDag = evaluate(apply2(SmoothEvaluationDag::subDag2, scopeS, valuesS));
     return success(evaluationDag);
   }
 

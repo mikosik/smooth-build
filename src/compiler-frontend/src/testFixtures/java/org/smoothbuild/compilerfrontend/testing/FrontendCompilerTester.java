@@ -28,15 +28,15 @@ import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.testing.MemoryReporter;
+import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 
 public class FrontendCompilerTester {
   private final String sourceCode;
   private String importedSourceCode;
-  private Try<ScopeS> definitions;
+  private Try<ModuleS> moduleS;
 
   public static FrontendCompilerTester module(String sourceCode) {
     return new FrontendCompilerTester(sourceCode);
@@ -52,8 +52,8 @@ public class FrontendCompilerTester {
   }
 
   public FrontendCompilerTester loadsWithSuccess() {
-    definitions = load();
-    assertWithMessage(messageWithSourceCode()).that(definitions.logs()).isEmpty();
+    moduleS = loadModule();
+    assertWithMessage(messageWithSourceCode()).that(moduleS.logs()).isEmpty();
     return this;
   }
 
@@ -69,7 +69,7 @@ public class FrontendCompilerTester {
   }
 
   private NamedEvaluableS assertContainsEvaluable(String name) {
-    var evaluables = definitions.value().evaluables();
+    var evaluables = moduleS.value().members().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(evaluables.contains(name))
         .isTrue();
@@ -78,7 +78,7 @@ public class FrontendCompilerTester {
 
   public void containsType(TypeS expected) {
     var name = expected.name();
-    var types = definitions.value().types();
+    var types = moduleS.value().members().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.contains(name))
         .isTrue();
@@ -86,12 +86,12 @@ public class FrontendCompilerTester {
     assertWithMessage("Module contains type '" + name + "', but").that(actual).isEqualTo(expected);
   }
 
-  public ScopeS getLoadedDefinitions() {
-    return definitions.value();
+  public ModuleS getLoadedModule() {
+    return moduleS.value();
   }
 
   public void loadsWithProblems() {
-    var module = load();
+    var module = loadModule();
     assertWithMessage(messageWithSourceCode())
         .that(containsAnyFailure(module.logs()))
         .isTrue();
@@ -106,7 +106,7 @@ public class FrontendCompilerTester {
   }
 
   public void loadsWith(Log... logs) {
-    var module = load();
+    var module = loadModule();
     assertWithMessage(messageWithSourceCode()).that(module.logs()).containsExactlyElementsIn(logs);
   }
 
@@ -117,7 +117,7 @@ public class FrontendCompilerTester {
         + "\n====================\n";
   }
 
-  private Try<ScopeS> load() {
+  private Try<ModuleS> loadModule() {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
     var slBucket = new SynchronizedBucket(new MemoryBucket());
     Map<BucketId, Bucket> buckets =
@@ -133,10 +133,10 @@ public class FrontendCompilerTester {
       }
     });
     writeModuleFilesToBuckets(buckets);
-    var scopeS =
+    var moduleS =
         frontendCompilationDag(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
     var memoryReporter = new MemoryReporter();
-    var module = injector.getInstance(DagEvaluator.class).evaluate(scopeS, memoryReporter);
+    var module = injector.getInstance(DagEvaluator.class).evaluate(moduleS, memoryReporter);
     return Try.of(module.getOr(null), memoryReporter.logs());
   }
 
