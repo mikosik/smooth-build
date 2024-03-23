@@ -8,7 +8,7 @@ import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import org.smoothbuild.app.layout.ForBucket;
+import org.smoothbuild.app.layout.WithId;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.dag.TryFunction0;
@@ -20,7 +20,7 @@ public class Clean implements TryFunction0<Void> {
   private final Bucket bucket;
 
   @Inject
-  public Clean(@ForBucket(PROJECT) Bucket bucket) {
+  public Clean(@WithId(PROJECT) Bucket bucket) {
     this.bucket = bucket;
   }
 

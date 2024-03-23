@@ -9,6 +9,6 @@ import java.lang.annotation.Retention;
 @Qualifier
 @Documented
 @Retention(RUNTIME)
-public @interface ForBucket {
+public @interface WithId {
   SmoothBucketId value();
 }

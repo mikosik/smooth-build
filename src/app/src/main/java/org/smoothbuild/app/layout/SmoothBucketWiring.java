@@ -37,21 +37,21 @@ public class SmoothBucketWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  @ForBucket(PROJECT)
+  @WithId(PROJECT)
   public Bucket provideProjectBucket(Map<BucketId, Bucket> map) {
     return map.get(PROJECT);
   }
 
   @Provides
   @Singleton
-  @ForBucket(STANDARD_LIBRARY)
+  @WithId(STANDARD_LIBRARY)
   public Bucket provideStandardLibraryBucket(Map<BucketId, Bucket> map) {
     return map.get(STANDARD_LIBRARY);
   }
 
   @Provides
   @Singleton
-  @ForBucket(BINARY)
+  @WithId(BINARY)
   public Bucket provideBucket(Map<BucketId, Bucket> map) {
     return map.get(BINARY);
   }
