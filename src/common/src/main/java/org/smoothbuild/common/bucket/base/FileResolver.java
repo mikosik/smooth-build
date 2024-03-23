@@ -4,8 +4,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Map;
 import okio.BufferedSource;
+import org.smoothbuild.common.collect.Map;
 
 /**
  * This class is thread-safe.

@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.writeFile;
@@ -17,13 +18,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 import java.io.IOException;
-import java.util.Map;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
@@ -121,7 +122,7 @@ public class FrontendCompilerTester {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
     var slBucket = new SynchronizedBucket(new MemoryBucket());
     Map<BucketId, Bucket> buckets =
-        Map.of(PROJECT_BUCKET_ID, projectBucket, STANDARD_LIBRARY_BUCKET_ID, slBucket);
+        map(PROJECT_BUCKET_ID, projectBucket, STANDARD_LIBRARY_BUCKET_ID, slBucket);
     var fileResolver = new FileResolver(buckets);
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
       @Override

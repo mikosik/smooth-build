@@ -14,9 +14,7 @@ import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import org.smoothbuild.app.layout.BinaryBucketWiring;
-import org.smoothbuild.app.layout.ProjectBucketWiring;
-import org.smoothbuild.app.layout.StandardLibraryBucketWiring;
+import org.smoothbuild.app.layout.SmoothBucketWiring;
 import org.smoothbuild.app.report.ReportWiring;
 import org.smoothbuild.app.run.eval.report.ReportMatchers;
 import org.smoothbuild.app.wire.AppWiring;
@@ -43,9 +41,7 @@ public class CreateInjector {
         PRODUCTION,
         new AppWiring(),
         new VirtualMachineWiring(),
-        new ProjectBucketWiring(),
-        new StandardLibraryBucketWiring(),
-        new BinaryBucketWiring(),
+        new SmoothBucketWiring(true),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, reportMatcher, logLevel));
   }
@@ -57,8 +53,7 @@ public class CreateInjector {
         BINARY, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new StandardLibraryBucketWiring(),
-        new BinaryBucketWiring(),
+        new SmoothBucketWiring(false),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, ReportMatchers.ALL, INFO));
   }
