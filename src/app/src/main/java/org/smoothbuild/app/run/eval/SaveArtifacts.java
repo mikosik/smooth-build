@@ -5,7 +5,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
-import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -18,7 +17,6 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
-import org.smoothbuild.app.layout.WithId;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
@@ -38,13 +36,14 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.wire.Project;
 
 public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
   static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 
   @Inject
-  public SaveArtifacts(@WithId(PROJECT) Bucket bucket) {
+  public SaveArtifacts(@Project Bucket bucket) {
     this.bucket = bucket;
   }
 

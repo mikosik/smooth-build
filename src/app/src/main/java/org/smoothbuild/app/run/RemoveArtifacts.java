@@ -13,12 +13,13 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.virtualmachine.wire.Project;
 
 public class RemoveArtifacts implements TryFunction0<Void> {
   private final Bucket bucket;
 
   @Inject
-  public RemoveArtifacts(@WithId(PROJECT) Bucket bucket) {
+  public RemoveArtifacts(@Project Bucket bucket) {
     this.bucket = bucket;
   }
 
