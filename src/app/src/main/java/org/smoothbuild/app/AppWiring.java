@@ -1,4 +1,4 @@
-package org.smoothbuild.app.wire;
+package org.smoothbuild.app;
 
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
