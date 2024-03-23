@@ -15,25 +15,25 @@ import org.smoothbuild.compilerfrontend.lang.type.StructTS;
 import org.smoothbuild.compilerfrontend.lang.type.TupleTS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 class TypeSbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
-  private final Map<VarS, TypeB> varMap;
+  private final Map<VarS, BType> varMap;
 
-  public TypeSbTranslator(ChainingBytecodeFactory bytecodeF, Map<VarS, TypeB> varMap) {
+  public TypeSbTranslator(ChainingBytecodeFactory bytecodeF, Map<VarS, BType> varMap) {
     this.bytecodeF = bytecodeF;
     this.varMap = varMap;
   }
 
-  public Map<VarS, TypeB> varMap() {
+  public Map<VarS, BType> varMap() {
     return varMap;
   }
 
-  public TypeB translate(TypeS type) throws SbTranslatorException {
+  public BType translate(TypeS type) throws SbTranslatorException {
     return switch (type) {
       case ArrayTS arrayTS -> translate(arrayTS);
       case BlobTS blobTS -> bytecodeF.blobType();
@@ -48,28 +48,28 @@ class TypeSbTranslator {
     };
   }
 
-  public TypeB translate(VarS var) {
-    TypeB typeB = varMap.get(var);
-    if (typeB == null) {
+  public BType translate(VarS var) {
+    BType bType = varMap.get(var);
+    if (bType == null) {
       throw new IllegalStateException("Unknown variable " + var.q() + ".");
     } else {
-      return typeB;
+      return bType;
     }
   }
 
-  public TupleTB translate(StructTS struct) throws SbTranslatorException {
+  public BTupleType translate(StructTS struct) throws SbTranslatorException {
     return bytecodeF.tupleType(listOfAll(struct.fields()).map(isig -> translate(isig.type())));
   }
 
-  public FuncTB translate(FuncTS func) throws SbTranslatorException {
+  public BFuncType translate(FuncTS func) throws SbTranslatorException {
     return bytecodeF.funcType(translate(func.params()), translate(func.result()));
   }
 
-  public TupleTB translate(TupleTS tuple) throws SbTranslatorException {
+  public BTupleType translate(TupleTS tuple) throws SbTranslatorException {
     return bytecodeF.tupleType(listOfAll(tuple.elements()).map(this::translate));
   }
 
-  public ArrayTB translate(ArrayTS array) throws SbTranslatorException {
+  public BArrayType translate(ArrayTS array) throws SbTranslatorException {
     return bytecodeF.arrayType(translate(array.elem()));
   }
 }

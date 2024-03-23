@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.plugin;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
 
 /**
  * Implementation of NativeApi doesn't provide any thread safety and should be used
@@ -13,5 +13,5 @@ public interface NativeApi {
 
   public MessageLogger log();
 
-  public ArrayB messages() throws BytecodeException;
+  public BArray messages() throws BytecodeException;
 }

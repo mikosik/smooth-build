@@ -8,7 +8,7 @@ import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class OutputClassFileTest extends TestingVirtualMachine {
@@ -24,7 +24,7 @@ public class OutputClassFileTest extends TestingVirtualMachine {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elements(TupleB.class)).containsExactly(fileB(path, bytes));
+    assertThat(fileArrayBuilder.build().elements(BTuple.class)).containsExactly(fileB(path, bytes));
   }
 
   @Test

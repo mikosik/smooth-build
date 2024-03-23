@@ -11,7 +11,7 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class InputClassFileTest extends TestingVirtualMachine {
@@ -83,7 +83,7 @@ public class InputClassFileTest extends TestingVirtualMachine {
 
   @Test
   public void open_input_stream_returns_file_content() throws Exception {
-    TupleB file = fileB(path, bytes);
+    BTuple file = fileB(path, bytes);
     InputClassFile inputClassFile = new InputClassFile(file);
     try (var source = buffer(source(inputClassFile.openInputStream()))) {
       assertThat(source.readByteString()).isEqualTo(bytes);

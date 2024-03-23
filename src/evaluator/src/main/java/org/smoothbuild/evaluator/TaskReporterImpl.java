@@ -15,8 +15,8 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
@@ -59,7 +59,7 @@ public class TaskReporterImpl implements TaskReporter {
     return result
         .output()
         .storedLogs()
-        .elements(TupleB.class)
+        .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));
   }
 
@@ -75,7 +75,7 @@ public class TaskReporterImpl implements TaskReporter {
     };
   }
 
-  private String nameOf(FuncB funcB) {
-    return bsTranslator.nameFor(funcB.hash());
+  private String nameOf(BFunc func) {
+    return bsTranslator.nameFor(func.hash());
   }
 }

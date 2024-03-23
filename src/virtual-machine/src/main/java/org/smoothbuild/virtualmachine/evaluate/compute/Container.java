@@ -6,8 +6,8 @@ import java.util.List;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.wire.Project;
@@ -51,7 +51,7 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public ArrayB messages() throws BytecodeException {
+  public BArray messages() throws BytecodeException {
     return bytecodeFactory
         .arrayBuilderWithElements(bytecodeFactory.storedLogType())
         .addAll(messageLogger.messages)
@@ -63,7 +63,7 @@ public class Container implements NativeApi {
   }
 
   private static class ContainerMessageLoggerImpl implements ContainerMessageLogger {
-    private final List<ValueB> messages = new ArrayList<>();
+    private final List<BValue> messages = new ArrayList<>();
     private final BytecodeFactory bytecodeFactory;
     private boolean containsErrorOrAbove = false;
 

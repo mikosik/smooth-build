@@ -44,7 +44,7 @@ import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
 import org.smoothbuild.virtualmachine.testing.TestingBytecode;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
@@ -121,8 +121,8 @@ public class EvaluatorTestCase extends TestingBytecode {
     evaluatedExprs = null;
   }
 
-  protected ValueB artifact() {
-    var bValues = evaluatedExprs().valuesB();
+  protected BValue artifact() {
+    var bValues = evaluatedExprs().bValues();
     int size = bValues.size();
     return switch (size) {
       case 0 -> fail("Expected artifact but evaluate returned empty list of artifacts.");
@@ -131,9 +131,9 @@ public class EvaluatorTestCase extends TestingBytecode {
     };
   }
 
-  protected ValueB artifact(int index) {
+  protected BValue artifact(int index) {
     checkArgument(0 <= index);
-    var valueBs = evaluatedExprs().valuesB();
+    var valueBs = evaluatedExprs().bValues();
     int size = valueBs.size();
     if (size <= index) {
       fail("Expected at least " + (index + 1) + " artifacts but evaluation returned only " + size

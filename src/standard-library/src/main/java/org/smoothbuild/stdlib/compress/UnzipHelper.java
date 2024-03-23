@@ -9,23 +9,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class UnzipHelper {
   private static final Predicate<String> NOT_MANIFEST_PREDICATE = f -> !f.equals(JAR_MANIFEST_PATH);
 
-  public static Map<String, TupleB> filesFromLibJars(NativeApi nativeApi, ArrayB libJars)
+  public static Map<String, BTuple> filesFromLibJars(NativeApi nativeApi, BArray libJars)
       throws BytecodeException {
     return filesFromLibJars(nativeApi, libJars, NOT_MANIFEST_PREDICATE);
   }
 
-  public static HashMap<String, TupleB> filesFromLibJars(
-      NativeApi nativeApi, ArrayB libJars, Predicate<String> filter) throws BytecodeException {
-    var result = new HashMap<String, TupleB>();
-    var jars = libJars.elements(TupleB.class);
+  public static HashMap<String, BTuple> filesFromLibJars(
+      NativeApi nativeApi, BArray libJars, Predicate<String> filter) throws BytecodeException {
+    var result = new HashMap<String, BTuple>();
+    var jars = libJars.elements(BTuple.class);
     for (int i = 0; i < jars.size(); i++) {
       var jarFile = jars.get(i);
       var classes = filesFromJar(nativeApi, jarFile, filter);
@@ -45,22 +45,22 @@ public class UnzipHelper {
     return result;
   }
 
-  public static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile)
+  public static Map<String, BTuple> filesFromJar(NativeApi nativeApi, BTuple jarFile)
       throws BytecodeException {
     return filesFromJar(nativeApi, jarFile, NOT_MANIFEST_PREDICATE);
   }
 
-  private static Map<String, TupleB> filesFromJar(
-      NativeApi nativeApi, TupleB jarFile, Predicate<String> filter) throws BytecodeException {
+  private static Map<String, BTuple> filesFromJar(
+      NativeApi nativeApi, BTuple jarFile, Predicate<String> filter) throws BytecodeException {
     var files = unzipToArrayB(nativeApi, fileContent(jarFile), filter);
     if (files == null) {
       return null;
     }
-    return files.elements(TupleB.class).toMap(f -> filePath(f).toJavaString(), x -> x);
+    return files.elements(BTuple.class).toMap(f -> filePath(f).toJavaString(), x -> x);
   }
 
-  public static ArrayB unzipToArrayB(
-      NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate)
+  public static BArray unzipToArrayB(
+      NativeApi nativeApi, BBlob blob, Predicate<String> includePredicate)
       throws BytecodeException {
     return unzipBlob(nativeApi.factory(), blob, includePredicate)
         .ifLeft(error -> nativeApi.log().error("Error reading archive: " + error))

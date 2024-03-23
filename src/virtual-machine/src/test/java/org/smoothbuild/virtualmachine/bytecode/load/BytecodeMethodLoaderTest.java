@@ -16,8 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonStaticMethod;
@@ -45,8 +44,8 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
         Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
         throws BytecodeException {
       var methodLoader = mock(MethodLoader.class);
-      BlobB jar = blobB();
-      String classBinaryName = "binary.name";
+      var jar = blobB();
+      var classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
       when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
 
@@ -91,7 +90,7 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   public void loading_method_with_non_val_result_causes_error() throws Exception {
     assertLoadingCausesError(
         WithNonValueResult.class,
-        "Providing method result type is not " + ValueB.class.getCanonicalName() + ".");
+        "Providing method result type is not " + BValue.class.getCanonicalName() + ".");
   }
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws Exception {

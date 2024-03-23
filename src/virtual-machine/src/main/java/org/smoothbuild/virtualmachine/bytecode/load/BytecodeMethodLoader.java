@@ -13,13 +13,13 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 
 /**
  * Loads java methods as instances of {@link Method}.
- * Method to load is specified by providing {@link NativeFuncB}.
+ * Method to load is specified by providing {@link BNativeFunc}.
  * This class is thread-safe.
  */
 @Singleton
@@ -34,7 +34,7 @@ public class BytecodeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BlobB jar, String classBinaryName) throws BytecodeException {
+  public Either<String, Method> load(BBlob jar, String classBinaryName) throws BytecodeException {
     var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
     return memoizer.apply(methodSpec);
   }
@@ -57,8 +57,8 @@ public class BytecodeMethodLoader {
     if (method.getParameterTypes().length != 2) {
       return left("Providing method parameter count is different than 2.");
     }
-    if (!method.getReturnType().equals(ValueB.class)) {
-      return left("Providing method result type is not " + ValueB.class.getName() + ".");
+    if (!method.getReturnType().equals(BValue.class)) {
+      return left("Providing method result type is not " + BValue.class.getName() + ".");
     }
     return right(method);
   }

@@ -8,29 +8,29 @@ import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.Helpers;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BlobTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BoolTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.StringTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BStringType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 /**
  * Wrapper for BytecodeFactory that chains BytecodeExceptions inside SbTranslatorException.
@@ -45,92 +45,93 @@ class ChainingBytecodeFactory {
 
   // Expressions
 
-  public BlobB blob(Consumer1<BufferedSink, IOException> writer) throws SbTranslatorException {
+  public BBlob blob(Consumer1<BufferedSink, IOException> writer) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.blob(writer));
   }
 
-  public BoolB bool(boolean value) throws SbTranslatorException {
+  public BBool bool(boolean value) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.bool(value));
   }
 
-  public CallB call(ExprB callableB, CombineB argsB) throws SbTranslatorException {
+  public BCall call(BExpr callableB, BCombine argsB) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.call(callableB, argsB));
   }
 
-  public CombineB combine(List<ExprB> elemBs) throws SbTranslatorException {
+  public BCombine combine(List<BExpr> elemBs) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.combine(elemBs));
   }
 
-  public IntB int_(BigInteger value) throws SbTranslatorException {
+  public BInt int_(BigInteger value) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.int_(value));
   }
 
-  public LambdaB lambda(FuncTB type, ExprB body) throws SbTranslatorException {
+  public BLambda lambda(BFuncType type, BExpr body) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.lambda(type, body));
   }
 
-  public NativeFuncB nativeFunc(FuncTB funcTB, BlobB jarB, StringB classBinaryNameB, BoolB isPureB)
+  public BNativeFunc nativeFunc(
+      BFuncType funcType, BBlob jarB, BString classBinaryNameB, BBool isPureB)
       throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB));
+        () -> bytecodeFactory.nativeFunc(funcType, jarB, classBinaryNameB, isPureB));
   }
 
-  public OrderB order(ArrayTB arrayTB, List<ExprB> elemsB) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.order(arrayTB, elemsB));
+  public BOrder order(BArrayType arrayType, List<BExpr> elemsB) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.order(arrayType, elemsB));
   }
 
-  public SelectB select(ExprB selectableB, IntB indexB) throws SbTranslatorException {
+  public BSelect select(BExpr selectableB, BInt indexB) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.select(selectableB, indexB));
   }
 
-  public StringB string(String string) throws SbTranslatorException {
+  public BString string(String string) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.string(string));
   }
 
-  public TupleB tuple(List<ValueB> items) throws SbTranslatorException {
+  public BTuple tuple(List<BValue> items) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.tuple(items));
   }
 
-  public ReferenceB reference(TypeB evaluationType, BigInteger index) throws SbTranslatorException {
+  public BReference reference(BType evaluationType, BigInteger index) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
         () -> bytecodeFactory.reference(evaluationType, bytecodeFactory.int_(index)));
   }
 
   // types
 
-  public ArrayTB arrayType(TypeB elemT) throws SbTranslatorException {
+  public BArrayType arrayType(BType elemT) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.arrayType(elemT));
   }
 
-  public BlobTB blobType() throws SbTranslatorException {
+  public BBlobType blobType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeFactory::blobType);
   }
 
-  public BoolTB boolType() throws SbTranslatorException {
+  public BBoolType boolType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeFactory::boolType);
   }
 
-  public FuncTB funcType(List<TypeB> paramTs, TypeB resultT) throws SbTranslatorException {
+  public BFuncType funcType(List<BType> paramTs, BType resultT) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.funcType(paramTs, resultT));
   }
 
-  public FuncTB funcType(TupleTB paramTs, TypeB resultT) throws SbTranslatorException {
+  public BFuncType funcType(BTupleType paramTs, BType resultT) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.funcType(paramTs, resultT));
   }
 
-  public IntTB intType() throws SbTranslatorException {
+  public BIntType intType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeFactory::intType);
   }
 
-  public StringTB stringType() throws SbTranslatorException {
+  public BStringType stringType() throws SbTranslatorException {
     return invokeTranslatingBytecodeException(bytecodeFactory::stringType);
   }
 
-  public TupleTB tupleType(TypeB... itemTs) throws SbTranslatorException {
+  public BTupleType tupleType(BType... itemTs) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.tupleType(itemTs));
   }
 
-  public TupleTB tupleType(List<TypeB> itemTs) throws SbTranslatorException {
+  public BTupleType tupleType(List<BType> itemTs) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.tupleType(itemTs));
   }
 

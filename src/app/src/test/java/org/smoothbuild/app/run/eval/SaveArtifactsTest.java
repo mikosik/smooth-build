@@ -38,7 +38,7 @@ import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
 import org.smoothbuild.compilerfrontend.lang.type.StructTS;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -215,8 +215,8 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
         instantiateS(stringTS(), "myValue1"),
         instantiateS(stringTS(), "myValue2"),
         instantiateS(stringTS(), "myValue3"));
-    List<ValueB> valueBs = list(stringB(), stringB(), stringB());
-    var stringTry = saveArtifacts.apply(evaluatedExprs(exprSs, valueBs));
+    List<BValue> bValues = list(stringB(), stringB(), stringB());
+    var stringTry = saveArtifacts.apply(evaluatedExprs(exprSs, bValues));
     assertThat(stringTry)
         .isEqualTo(success(
             null,
@@ -225,25 +225,25 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
             info("myValue3 -> '.smooth/artifacts/myValue3'")));
   }
 
-  private void testValueStoring(TypeS typeS, ValueB valueB, ByteString valueAsByteString)
+  private void testValueStoring(TypeS typeS, BValue value, ByteString valueAsByteString)
       throws Exception {
-    testValueStoring(typeS, valueB, valueAsByteString, "myValue");
+    testValueStoring(typeS, value, valueAsByteString, "myValue");
   }
 
   private void testValueStoring(
-      TypeS typeS, ValueB valueB, ByteString valueAsByteString, String artifactRelativePath)
+      TypeS typeS, BValue value, ByteString valueAsByteString, String artifactRelativePath)
       throws IOException {
     var expectedDirectoryMap = Map.of(path(artifactRelativePath), valueAsByteString);
-    testValueStoring(typeS, valueB, artifactRelativePath, expectedDirectoryMap);
+    testValueStoring(typeS, value, artifactRelativePath, expectedDirectoryMap);
   }
 
   private void testValueStoring(
       TypeS typeS,
-      ValueB valueB,
+      BValue value,
       String artifactRelativePath,
       Map<Path, ByteString> expectedDirectoryMap)
       throws IOException {
-    var result = saveArtifacts(typeS, valueB);
+    var result = saveArtifacts(typeS, value);
 
     assertThat(result)
         .isEqualTo(
@@ -251,10 +251,10 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
-  private Try<Void> saveArtifacts(TypeS typeS, ValueB valueB) {
+  private Try<Void> saveArtifacts(TypeS typeS, BValue value) {
     var saveArtifacts = new SaveArtifacts(projectBucket());
     ExprS instantiateS = instantiateS(typeS, "myValue");
-    return saveArtifacts.apply(evaluatedExprs(list(instantiateS), list(valueB)));
+    return saveArtifacts.apply(evaluatedExprs(list(instantiateS), list(value)));
   }
 
   private static ByteString byteStringFrom(String string) {

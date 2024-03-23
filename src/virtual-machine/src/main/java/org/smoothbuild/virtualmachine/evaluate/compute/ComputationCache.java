@@ -18,10 +18,10 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
@@ -45,9 +45,9 @@ public class ComputationCache {
     try (BufferedSink sink = bucket.sink(toPath(hash))) {
       var storedLogs = output.storedLogs();
       sink.write(storedLogs.hash().toByteString());
-      var valueB = output.valueB();
-      if (valueB != null) {
-        sink.write(valueB.hash().toByteString());
+      var value = output.value();
+      if (value != null) {
+        sink.write(value.hash().toByteString());
       }
     } catch (IOException e) {
       throw computeException(e);
@@ -63,20 +63,20 @@ public class ComputationCache {
     };
   }
 
-  public synchronized Output read(Hash hash, TypeB type) throws ComputeException {
+  public synchronized Output read(Hash hash, BType type) throws ComputeException {
     try (BufferedSource source = bucket.source(toPath(hash))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
-      var storedLogsArrayT = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());
-      if (!storedLogs.category().equals(storedLogsArrayT)) {
+      var storedLogsArrayType = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());
+      if (!storedLogs.category().equals(storedLogsArrayType)) {
         throw corruptedValueException(
             hash,
-            "Expected " + storedLogsArrayT.q() + " as first child of its Merkle root, but got "
+            "Expected " + storedLogsArrayType.q() + " as first child of its Merkle root, but got "
                 + storedLogs.category().q());
       }
 
-      var storedLogArray = (ArrayB) storedLogs;
-      for (var storedLog : storedLogArray.elements(TupleB.class)) {
+      var storedLogArray = (BArray) storedLogs;
+      for (var storedLog : storedLogArray.elements(BTuple.class)) {
         var level = levelAsString(storedLog);
         if (!isValidLevel(level)) {
           throw corruptedValueException(
@@ -94,7 +94,7 @@ public class ComputationCache {
               "Expected value of type " + type.q() + " as second child of its Merkle root, but got "
                   + value.evaluationType().q());
         } else {
-          return new Output((ValueB) value, storedLogArray);
+          return new Output((BValue) value, storedLogArray);
         }
       }
     } catch (IOException e) {

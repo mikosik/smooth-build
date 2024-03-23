@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
@@ -342,13 +342,13 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   private void assertComputationResult(
-      Task task, TupleB input, ValueB memoryValue, ValueB diskValue, ComputationResult expected)
+      Task task, BTuple input, BValue memoryValue, BValue diskValue, ComputationResult expected)
       throws Exception {
     var computer = computerWithCaches(task, input, memoryValue, diskValue);
     assertComputationResult(computer, task, input, expected);
   }
 
-  private Computer computerWithCaches(Task task, TupleB input, ValueB memoryValue, ValueB diskValue)
+  private Computer computerWithCaches(Task task, BTuple input, BValue memoryValue, BValue diskValue)
       throws Exception {
     var computationCache = computationCache();
     var sandboxHash = Hash.of(123);
@@ -365,7 +365,7 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   private void assertComputationResult(
-      Computer computer, Task task, TupleB input, ComputationResult expected) throws Exception {
+      Computer computer, Task task, BTuple input, ComputationResult expected) throws Exception {
     var consumer = new MemoizingConsumer<ComputationResult>();
 
     computer.compute(task, input, consumer);
@@ -374,7 +374,7 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   private void assertCachesState(
-      Task task, TupleB input, ComputationResult memoryValue, ValueB diskValue) throws Exception {
+      Task task, BTuple input, ComputationResult memoryValue, BValue diskValue) throws Exception {
     var sandboxHash = Hash.of(123);
     var computationCache = computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();

@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
@@ -66,13 +66,13 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
   }
 
   private String wrongReturnTypeErrorMessage() {
-    return "Providing method should declare return type as " + ValueB.class.getCanonicalName()
-        + " but is " + OrderB.class.getCanonicalName() + ".";
+    return "Providing method should declare return type as " + BValue.class.getCanonicalName()
+        + " but is " + BOrder.class.getCanonicalName() + ".";
   }
 
   private String wrongParametersErrorMessage() {
     return "Providing method should have two parameters " + NativeApi.class.getCanonicalName()
-        + " and " + TupleB.class.getCanonicalName() + ".";
+        + " and " + BTuple.class.getCanonicalName() + ".";
   }
 
   private NativeMethodLoader nativeMethodLoaderWithPlatformClassLoader() {
@@ -90,14 +90,14 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
     @Test
     public void method_is_cached() throws Exception {
       var method = ReturnAbc.class.getDeclaredMethod(
-          NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
+          NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, BTuple.class);
       testCaching(method, right(method), right(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = NonPublicMethod.class.getDeclaredMethod(
-          NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
+          NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, BTuple.class);
       testCaching(
           method,
           left("xx"),
@@ -115,9 +115,9 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var nativeFuncB = nativeFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
-      var resultMethod1 = nativeMethodLoader.load(nativeFuncB);
-      var resultMethod2 = nativeMethodLoader.load(nativeFuncB);
+      var nativeFunc = nativeFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
+      var resultMethod1 = nativeMethodLoader.load(nativeFunc);
+      var resultMethod2 = nativeMethodLoader.load(nativeFunc);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
       verify(methodLoader, times(1)).load(methodSpec);

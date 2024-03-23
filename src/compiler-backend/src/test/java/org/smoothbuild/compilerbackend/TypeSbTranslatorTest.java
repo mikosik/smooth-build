@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class TypeSbTranslatorTest extends TestingVirtualMachine {
@@ -106,11 +106,11 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     }
   }
 
-  private void assertTranslation(TypeS typeS, TypeB expected) throws SbTranslatorException {
+  private void assertTranslation(TypeS typeS, BType expected) throws SbTranslatorException {
     assertTranslation(map(), typeS, expected);
   }
 
-  private void assertTranslation(Map<VarS, TypeB> varMap, TypeS typeS, TypeB expected)
+  private void assertTranslation(Map<VarS, BType> varMap, TypeS typeS, BType expected)
       throws SbTranslatorException {
     var typeSbTranslator = new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF()), varMap);
     assertThat(typeSbTranslator.translate(typeS)).isEqualTo(expected);

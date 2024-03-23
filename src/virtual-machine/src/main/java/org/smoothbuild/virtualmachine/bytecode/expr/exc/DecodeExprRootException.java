@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryB;
+import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
 
 public class DecodeExprRootException extends DecodeExprException {
   public static DecodeExprRootException cannotReadRootException(Hash hash, Throwable cause) {
@@ -16,7 +16,7 @@ public class DecodeExprRootException extends DecodeExprException {
   }
 
   public static DecodeExprRootException wrongSizeOfRootChainException(
-      Hash hash, CategoryB category, int actualSize) {
+      Hash hash, BCategory category, int actualSize) {
     return new DecodeExprRootException(
         hash,
         "Its root points to hash sequence with " + actualSize
@@ -24,7 +24,7 @@ public class DecodeExprRootException extends DecodeExprException {
             + rootShouldPointToSequence(category));
   }
 
-  private static String rootShouldPointToSequence(CategoryB category) {
+  private static String rootShouldPointToSequence(BCategory category) {
     if (category.containsData()) {
       return "its root should point to sequence of 2 elements.";
     } else {

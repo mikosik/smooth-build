@@ -11,9 +11,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.stdlib.StandardLibraryTestCase;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 
 public class JavacTest extends StandardLibraryTestCase {
@@ -102,18 +102,18 @@ public class JavacTest extends StandardLibraryTestCase {
     assertThat(logs()).contains(error("duplicate class: MyClass"));
   }
 
-  private static Map<String, ByteString> arrayToFileMap(ValueB array) throws Exception {
-    List<TupleB> elements = ((ArrayB) array).elements(TupleB.class);
+  private static Map<String, ByteString> arrayToFileMap(BValue array) throws Exception {
+    List<BTuple> elements = ((BArray) array).elements(BTuple.class);
     return elements.toMap(JavacTest::fileBToStringPath, JavacTest::fileBToByteStringContent);
   }
 
-  private static ByteString fileBToByteStringContent(TupleB file) throws Exception {
+  private static ByteString fileBToByteStringContent(BTuple file) throws Exception {
     try (var source = FileStruct.fileContent(file).source()) {
       return source.readByteString();
     }
   }
 
-  private static String fileBToStringPath(TupleB file) throws BytecodeException {
+  private static String fileBToStringPath(BTuple file) throws BytecodeException {
     return FileStruct.filePath(file).toJavaString();
   }
 

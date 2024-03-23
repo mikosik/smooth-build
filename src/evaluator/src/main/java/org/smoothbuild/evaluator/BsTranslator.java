@@ -7,7 +7,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.TraceS;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public class BsTranslator {
   private final BsMapping bsMapping;
@@ -17,11 +17,11 @@ public class BsTranslator {
     this.bsMapping = bsMapping;
   }
 
-  public TraceS translate(TraceB traceB) {
-    return new TraceS(translate(traceB.elements()));
+  public TraceS translate(BTrace bTrace) {
+    return new TraceS(translate(bTrace.elements()));
   }
 
-  private TraceS.Element translate(TraceB.Element headElement) {
+  private TraceS.Element translate(BTrace.Element headElement) {
     if (headElement == null) {
       return null;
     } else {

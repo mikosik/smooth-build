@@ -13,17 +13,17 @@ import java.util.zip.ZipException;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JavacFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
-    ArrayB srcs = (ArrayB) args.get(0);
-    ArrayB libs = (ArrayB) args.get(1);
-    ArrayB options = (ArrayB) args.get(2);
+  public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    BArray srcs = (BArray) args.get(0);
+    BArray libs = (BArray) args.get(1);
+    BArray options = (BArray) args.get(2);
 
     return new Worker(nativeApi, srcs, libs, options).execute();
   }
@@ -31,11 +31,11 @@ public class JavacFunc {
   private static class Worker {
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
-    private final ArrayB srcs;
-    private final ArrayB libs;
-    private final ArrayB options;
+    private final BArray srcs;
+    private final BArray libs;
+    private final BArray options;
 
-    public Worker(NativeApi nativeApi, ArrayB srcs, ArrayB libs, ArrayB options) {
+    public Worker(NativeApi nativeApi, BArray srcs, BArray libs, BArray options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.srcs = srcs;
@@ -43,7 +43,7 @@ public class JavacFunc {
       this.options = options;
     }
 
-    public ArrayB execute() throws BytecodeException {
+    public BArray execute() throws BytecodeException {
       if (compiler == null) {
         nativeApi
             .log()
@@ -55,7 +55,7 @@ public class JavacFunc {
       return compile(srcs);
     }
 
-    public ArrayB compile(ArrayB files) throws BytecodeException {
+    public BArray compile(BArray files) throws BytecodeException {
       // prepare args for compilation
 
       var additionalCompilerOutput = new StringWriter();
@@ -67,7 +67,7 @@ public class JavacFunc {
         return null;
       }
       try (var sandboxedJFM = new SandboxedJavaFileManager(standardJFM, nativeApi, libsClasses)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(TupleB.class));
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(BTuple.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -112,13 +112,13 @@ public class JavacFunc {
     }
 
     private List<String> options() throws BytecodeException {
-      return options.elements(StringB.class).map(StringB::toJavaString);
+      return options.elements(BString.class).map(BString::toJavaString);
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles)
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<BTuple> sourceFiles)
         throws BytecodeException {
       ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (TupleB file : sourceFiles) {
+      for (BTuple file : sourceFiles) {
         result.add(new InputSourceFile(file));
       }
       return result;
@@ -126,7 +126,7 @@ public class JavacFunc {
   }
 
   public static Iterable<InputClassFile> classesFromJarFiles(
-      NativeApi nativeApi, ArrayB libraryJars) throws BytecodeException {
+      NativeApi nativeApi, BArray libraryJars) throws BytecodeException {
     var filesMap = filesFromLibJars(nativeApi, libraryJars, isClassFilePredicate());
     return filesMap == null
         ? null

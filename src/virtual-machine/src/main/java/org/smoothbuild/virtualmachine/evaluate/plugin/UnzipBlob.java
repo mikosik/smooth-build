@@ -12,14 +12,14 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
 public class UnzipBlob {
-  public static Either<String, ArrayB> unzipBlob(
-      BytecodeFactory bytecodeFactory, BlobB blob, Predicate<String> includePredicate)
+  public static Either<String, BArray> unzipBlob(
+      BytecodeFactory bytecodeFactory, BBlob blob, Predicate<String> includePredicate)
       throws BytecodeException {
     var arrayBuilder = bytecodeFactory.arrayBuilderWithElements(bytecodeFactory.fileType());
     try (var source = blob.source()) {
@@ -34,11 +34,11 @@ public class UnzipBlob {
     return right(arrayBuilder.build());
   }
 
-  private static TupleB fileB(
+  private static BTuple fileB(
       BytecodeFactory bytecodeFactory, String fileName, InputStream inputStream)
       throws BytecodeException {
-    StringB path = bytecodeFactory.string(fileName);
-    BlobB content = bytecodeFactory.blob(sink -> sink.writeAll(source(inputStream)));
+    BString path = bytecodeFactory.string(fileName);
+    BBlob content = bytecodeFactory.blob(sink -> sink.writeAll(source(inputStream)));
     return bytecodeFactory.file(content, path);
   }
 }

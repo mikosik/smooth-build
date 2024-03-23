@@ -13,23 +13,23 @@ import java.util.jar.JarOutputStream;
 import okio.BufferedSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JarFunc {
   private static final String MANIFEST_FILE_PATH = "META-INF/MANIFEST.MF";
 
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
-    ArrayB files = (ArrayB) args.get(0);
-    BlobB manifest = (BlobB) args.get(1);
+  public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    BArray files = (BArray) args.get(0);
+    BBlob manifest = (BBlob) args.get(1);
 
     var duplicatesDetector = new HashSet<String>();
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
       try (var jarOutputStream = new JarOutputStream(buffer(blobBuilder).outputStream())) {
-        for (TupleB file : files.elements(TupleB.class)) {
+        for (BTuple file : files.elements(BTuple.class)) {
           var filePath = filePath(file).toJavaString();
           if (!duplicatesDetector.add(filePath)) {
             nativeApi.log().error("Cannot jar two files with the same path = " + filePath);
@@ -46,7 +46,7 @@ public class JarFunc {
   }
 
   private static void addJarEntry(
-      JarOutputStream jarOutputStream, String filePath, BlobB fileContent)
+      JarOutputStream jarOutputStream, String filePath, BBlob fileContent)
       throws IOException, BytecodeException {
     var jarEntry = new JarEntry(filePath);
     jarEntry.setLastModifiedTime(FileTime.fromMillis(0));

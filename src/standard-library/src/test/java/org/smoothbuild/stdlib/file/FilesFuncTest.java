@@ -5,8 +5,8 @@ import static org.smoothbuild.common.log.base.Log.error;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.stdlib.StandardLibraryTestCase;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 
 public class FilesFuncTest extends StandardLibraryTestCase {
   @Test
@@ -84,7 +84,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     createProjectFile(".smooth/hidden.txt", "abc");
     evaluate("result");
 
-    var files = ((ArrayB) artifact()).elements(ValueB.class);
+    var files = ((BArray) artifact()).elements(BValue.class);
     assertThat(files).containsExactly(fileB("dir/file.txt", "abc"));
   }
 

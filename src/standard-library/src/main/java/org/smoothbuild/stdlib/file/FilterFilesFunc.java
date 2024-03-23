@@ -8,17 +8,17 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class FilterFilesFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
-    ArrayB files = (ArrayB) args.get(0);
-    StringB pattern = (StringB) args.get(1);
+  public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    BArray files = (BArray) args.get(0);
+    BString pattern = (BString) args.get(1);
 
     Predicate<Path> filter;
     try {
@@ -27,10 +27,10 @@ public class FilterFilesFunc {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
     }
-    ArrayBBuilder builder =
+    BArrayBuilder builder =
         nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileType());
 
-    for (TupleB file : files.elements(TupleB.class)) {
+    for (BTuple file : files.elements(BTuple.class)) {
       if (filter.test(path(filePath(file).toJavaString()))) {
         builder.add(file);
       }
