@@ -34,25 +34,4 @@ public class SmoothBucketWiring extends AbstractModule {
     map.put(BINARY, bucketFactory.create(BINARY));
     return Map.mapOfAll(map);
   }
-
-  @Provides
-  @Singleton
-  @WithId(PROJECT)
-  public Bucket provideProjectBucket(Map<BucketId, Bucket> map) {
-    return map.get(PROJECT);
-  }
-
-  @Provides
-  @Singleton
-  @WithId(STANDARD_LIBRARY)
-  public Bucket provideStandardLibraryBucket(Map<BucketId, Bucket> map) {
-    return map.get(STANDARD_LIBRARY);
-  }
-
-  @Provides
-  @Singleton
-  @WithId(BINARY)
-  public Bucket provideBucket(Map<BucketId, Bucket> map) {
-    return map.get(BINARY);
-  }
 }
