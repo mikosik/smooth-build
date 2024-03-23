@@ -9,21 +9,21 @@ import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 /**
  * Loads java methods as instances of {@link Method}.
- * Method to load is specified by providing {@link NativeFuncB}.
+ * Method to load is specified by providing {@link BNativeFunc}.
  * This class is thread-safe.
  */
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final Function1<NativeFuncB, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BNativeFunc, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -31,13 +31,13 @@ public class NativeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(NativeFuncB nativeFuncB) throws BytecodeException {
-    return memoizer.apply(nativeFuncB);
+  public Either<String, Method> load(BNativeFunc nativeFunc) throws BytecodeException {
+    return memoizer.apply(nativeFunc);
   }
 
-  private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) throws BytecodeException {
-    var classBinaryName = nativeFuncB.classBinaryName().toJavaString();
-    var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
+  private Either<String, Method> loadImpl(BNativeFunc nativeFunc) throws BytecodeException {
+    var classBinaryName = nativeFunc.classBinaryName().toJavaString();
+    var methodSpec = new MethodSpec(nativeFunc.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader
         .load(methodSpec)
         .flatMapRight(this::validateMethodSignature)
@@ -56,19 +56,19 @@ public class NativeMethodLoader {
 
   private Either<String, Method> validateMethodParams(Method method) {
     Class<?> returnType = method.getReturnType();
-    if (!returnType.equals(ValueB.class)) {
+    if (!returnType.equals(BValue.class)) {
       return Either.left("Providing method should declare return type as "
-          + ValueB.class.getCanonicalName() + " but is " + returnType.getCanonicalName() + ".");
+          + BValue.class.getCanonicalName() + " but is " + returnType.getCanonicalName() + ".");
     }
     Class<?>[] types = method.getParameterTypes();
     boolean valid = types.length == 2
         && (types[0].equals(NativeApi.class) || types[0].equals(Container.class))
-        && (types[1].equals(TupleB.class));
+        && (types[1].equals(BTuple.class));
     if (valid) {
       return Either.right(method);
     } else {
       return Either.left("Providing method should have two parameters "
-          + NativeApi.class.getCanonicalName() + " and " + TupleB.class.getCanonicalName() + ".");
+          + NativeApi.class.getCanonicalName() + " and " + BTuple.class.getCanonicalName() + ".");
     }
   }
 

@@ -11,7 +11,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BsTranslatorTest extends TestingVirtualMachine {
@@ -26,7 +26,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
   public void empty_trace() {
     var bsMapping = new BsMapping();
     var bsTraceTranslator = new BsTranslator(bsMapping);
-    assertThat(bsTraceTranslator.translate(new TraceB())).isEqualTo(traceS());
+    assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(traceS());
   }
 
   @Test

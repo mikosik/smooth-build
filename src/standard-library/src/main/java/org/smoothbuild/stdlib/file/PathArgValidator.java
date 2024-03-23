@@ -5,11 +5,11 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import org.smoothbuild.common.bucket.base.IllegalPathException;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class PathArgValidator {
-  public static Path validatedProjectPath(NativeApi nativeApi, String name, StringB path)
+  public static Path validatedProjectPath(NativeApi nativeApi, String name, BString path)
       throws BytecodeException {
     String value = path.toJavaString();
     switch (value) {

@@ -10,14 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ResultHandlerTest extends TestingVirtualMachine {
   private TaskReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<ValueB> consumer;
-  private ValueB value;
+  private Consumer<BValue> consumer;
+  private BValue value;
 
   @BeforeEach
   @SuppressWarnings("unchecked")

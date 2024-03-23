@@ -10,8 +10,8 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
 
 /**
  * Stores disk file as BlobB in expression-db.
@@ -30,7 +30,7 @@ public class FilePersister {
     this.fileBlobCache = new ConcurrentHashMap<>();
   }
 
-  public BlobB persist(FullPath fullPath) throws BytecodeException {
+  public BBlob persist(FullPath fullPath) throws BytecodeException {
     var cachingLoader = fileBlobCache.computeIfAbsent(fullPath, CachingLoader::new);
     try {
       return cachingLoader.persist();
@@ -41,21 +41,21 @@ public class FilePersister {
 
   private class CachingLoader {
     private final FullPath fullPath;
-    private BlobB blob;
+    private BBlob blob;
 
     private CachingLoader(FullPath fullPath) {
       this.fullPath = fullPath;
     }
 
-    public synchronized BlobB persist() throws IOException, BytecodeException {
+    public synchronized BBlob persist() throws IOException, BytecodeException {
       if (blob == null) {
         blob = persistImpl();
       }
       return blob;
     }
 
-    private BlobB persistImpl() throws BytecodeException, IOException {
-      try (BlobBBuilder blobBuilder = exprDb.newBlobBuilder()) {
+    private BBlob persistImpl() throws BytecodeException, IOException {
+      try (BBlobBuilder blobBuilder = exprDb.newBlobBuilder()) {
         try (BufferedSource source = fileResolver.source(fullPath)) {
           source.readAll(blobBuilder);
         }

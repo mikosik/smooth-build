@@ -23,7 +23,7 @@ public class SmoothEvaluationDag {
   public static Dag<EvaluatedExprs> smoothEvaluationDag(
       List<FullPath> modules, List<String> names) {
     Dag<CompiledExprs> compiledExprs = frontBackCompilationDag(modules, names);
-    return applyMaybeFunction(EvaluatorBFacade.class, compiledExprs);
+    return applyMaybeFunction(BEvaluatorFacade.class, compiledExprs);
   }
 
   private static Dag<CompiledExprs> frontBackCompilationDag(

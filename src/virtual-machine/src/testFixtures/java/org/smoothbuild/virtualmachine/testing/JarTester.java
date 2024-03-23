@@ -9,18 +9,18 @@ import java.util.jar.JarOutputStream;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ByteString;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
 public class JarTester {
-  public static BlobB jar(TupleB... files) throws Exception {
+  public static BBlob jar(BTuple... files) throws Exception {
     return new TestingVirtualMachine().blobB(jarByteString(files));
   }
 
-  public static ByteString jarByteString(TupleB... files) throws Exception {
+  public static ByteString jarByteString(BTuple... files) throws Exception {
     Buffer buffer = new Buffer();
     try (JarOutputStream jarOutputStream = new JarOutputStream(buffer.outputStream())) {
-      for (TupleB file : files) {
+      for (BTuple file : files) {
         addEntry(jarOutputStream, file);
       }
     }
@@ -28,7 +28,7 @@ public class JarTester {
     return buffer.readByteString();
   }
 
-  private static void addEntry(JarOutputStream jarOutputStream, TupleB file) throws Exception {
+  private static void addEntry(JarOutputStream jarOutputStream, BTuple file) throws Exception {
     JarEntry entry = new JarEntry(filePath(file).toJavaString());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {

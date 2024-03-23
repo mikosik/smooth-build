@@ -18,36 +18,36 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.log.base.Level;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IfFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
-import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BlobTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BoolTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.StringTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BStringType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 /**
  * This class is thread-safe.
@@ -57,8 +57,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 public class BytecodeFactory {
   private final ExprDb exprDb;
   private final CategoryDb categoryDb;
-  private final Function0<TupleTB, BytecodeException> storedLogTypeMemoizer;
-  private final Function0<TupleTB, BytecodeException> fileTypeMemoizer;
+  private final Function0<BTupleType, BytecodeException> storedLogTypeMemoizer;
+  private final Function0<BTupleType, BytecodeException> fileTypeMemoizer;
 
   @Inject
   public BytecodeFactory(ExprDb exprDb, CategoryDb categoryDb) {
@@ -70,16 +70,16 @@ public class BytecodeFactory {
 
   // Objects
 
-  public ArrayBBuilder arrayBuilderWithElements(TypeB elemT) throws BytecodeException {
-    return exprDb.newArrayBuilder(categoryDb.array(elemT));
+  public BArrayBuilder arrayBuilderWithElements(BType elementType) throws BytecodeException {
+    return exprDb.newArrayBuilder(categoryDb.array(elementType));
   }
 
-  public ArrayBBuilder arrayBuilder(ArrayTB type) {
+  public BArrayBuilder arrayBuilder(BArrayType type) {
     return exprDb.newArrayBuilder(type);
   }
 
-  public BlobB blob(Consumer1<BufferedSink, IOException> writer) throws BytecodeException {
-    try (BlobBBuilder builder = blobBuilder()) {
+  public BBlob blob(Consumer1<BufferedSink, IOException> writer) throws BytecodeException {
+    try (BBlobBuilder builder = blobBuilder()) {
       try (var bufferedSink = buffer(builder)) {
         writer.accept(bufferedSink);
       }
@@ -89,147 +89,148 @@ public class BytecodeFactory {
     }
   }
 
-  public BlobBBuilder blobBuilder() throws BytecodeException {
+  public BBlobBuilder blobBuilder() throws BytecodeException {
     return exprDb.newBlobBuilder();
   }
 
-  public BoolB bool(boolean value) throws BytecodeException {
+  public BBool bool(boolean value) throws BytecodeException {
     return exprDb.newBool(value);
   }
 
-  public CallB call(ExprB func, CombineB args) throws BytecodeException {
+  public BCall call(BExpr func, BCombine args) throws BytecodeException {
     return exprDb.newCall(func, args);
   }
 
-  public CombineB combine(List<ExprB> items) throws BytecodeException {
+  public BCombine combine(List<BExpr> items) throws BytecodeException {
     return exprDb.newCombine(items);
   }
 
-  public TupleB file(BlobB content, StringB path) throws BytecodeException {
+  public BTuple file(BBlob content, BString path) throws BytecodeException {
     return exprDb.newTuple(list(content, path));
   }
 
-  public LambdaB lambda(FuncTB type, ExprB body) throws BytecodeException {
+  public BLambda lambda(BFuncType type, BExpr body) throws BytecodeException {
     return exprDb.newLambda(type, body);
   }
 
-  public IfFuncB ifFunc(TypeB t) throws BytecodeException {
+  public BIf ifFunc(BType t) throws BytecodeException {
     return exprDb.newIfFunc(t);
   }
 
-  public IntB int_(BigInteger value) throws BytecodeException {
+  public BInt int_(BigInteger value) throws BytecodeException {
     return exprDb.newInt(value);
   }
 
-  public MapFuncB mapFunc(TypeB r, TypeB s) throws BytecodeException {
+  public BMap mapFunc(BType r, BType s) throws BytecodeException {
     return exprDb.newMapFunc(r, s);
   }
 
-  public NativeFuncB nativeFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure)
+  public BNativeFunc nativeFunc(
+      BFuncType funcType, BBlob jar, BString classBinaryName, BBool isPure)
       throws BytecodeException {
-    return exprDb.newNativeFunc(funcTB, jar, classBinaryName, isPure);
+    return exprDb.newNativeFunc(funcType, jar, classBinaryName, isPure);
   }
 
-  public PickB pick(ExprB pickable, ExprB index) throws BytecodeException {
+  public BPick pick(BExpr pickable, BExpr index) throws BytecodeException {
     return exprDb.newPick(pickable, index);
   }
 
-  public ReferenceB reference(TypeB evaluationType, IntB index) throws BytecodeException {
+  public BReference reference(BType evaluationType, BInt index) throws BytecodeException {
     return exprDb.newReference(evaluationType, index);
   }
 
-  public SelectB select(ExprB selectable, IntB index) throws BytecodeException {
+  public BSelect select(BExpr selectable, BInt index) throws BytecodeException {
     return exprDb.newSelect(selectable, index);
   }
 
-  public StringB string(String string) throws BytecodeException {
+  public BString string(String string) throws BytecodeException {
     return exprDb.newString(string);
   }
 
-  public TupleB tuple(List<ValueB> items) throws BytecodeException {
+  public BTuple tuple(List<BValue> items) throws BytecodeException {
     return exprDb.newTuple(items);
   }
 
-  public OrderB order(ArrayTB evaluationType, List<ExprB> elems) throws BytecodeException {
-    return exprDb.newOrder(evaluationType, elems);
+  public BOrder order(BArrayType evaluationType, List<BExpr> elements) throws BytecodeException {
+    return exprDb.newOrder(evaluationType, elements);
   }
 
   // Types
 
-  public ArrayTB arrayType(TypeB elementType) throws BytecodeException {
+  public BArrayType arrayType(BType elementType) throws BytecodeException {
     return categoryDb.array(elementType);
   }
 
-  public BlobTB blobType() throws BytecodeException {
+  public BBlobType blobType() throws BytecodeException {
     return categoryDb.blob();
   }
 
-  public BoolTB boolType() throws BytecodeException {
+  public BBoolType boolType() throws BytecodeException {
     return categoryDb.bool();
   }
 
-  public FuncTB funcType(List<TypeB> paramTypes, TypeB resultType) throws BytecodeException {
+  public BFuncType funcType(List<BType> paramTypes, BType resultType) throws BytecodeException {
     return categoryDb.funcT(listOfAll(paramTypes), resultType);
   }
 
-  public FuncTB funcType(TupleTB paramTypes, TypeB resultType) throws BytecodeException {
+  public BFuncType funcType(BTupleType paramTypes, BType resultType) throws BytecodeException {
     return categoryDb.funcT(paramTypes, resultType);
   }
 
-  public IntTB intType() throws BytecodeException {
+  public BIntType intType() throws BytecodeException {
     return categoryDb.int_();
   }
 
-  public TupleTB storedLogType() throws BytecodeException {
+  public BTupleType storedLogType() throws BytecodeException {
     return storedLogTypeMemoizer.apply();
   }
 
-  public StringTB stringType() throws BytecodeException {
+  public BStringType stringType() throws BytecodeException {
     return categoryDb.string();
   }
 
-  public TupleTB tupleType(TypeB... itemTs) throws BytecodeException {
+  public BTupleType tupleType(BType... itemTs) throws BytecodeException {
     return categoryDb.tuple(itemTs);
   }
 
-  public TupleTB tupleType(List<TypeB> itemTs) throws BytecodeException {
+  public BTupleType tupleType(List<BType> itemTs) throws BytecodeException {
     return categoryDb.tuple(itemTs);
   }
 
   // other values and its types
 
-  public TupleTB fileType() throws BytecodeException {
+  public BTupleType fileType() throws BytecodeException {
     return fileTypeMemoizer.apply();
   }
 
-  public TupleB fatalLog(String text) throws BytecodeException {
+  public BTuple fatalLog(String text) throws BytecodeException {
     return storedLog(FATAL, text);
   }
 
-  public TupleB errorLog(String text) throws BytecodeException {
+  public BTuple errorLog(String text) throws BytecodeException {
     return storedLog(ERROR, text);
   }
 
-  public TupleB warningLog(String text) throws BytecodeException {
+  public BTuple warningLog(String text) throws BytecodeException {
     return storedLog(WARNING, text);
   }
 
-  public TupleB infoLog(String text) throws BytecodeException {
+  public BTuple infoLog(String text) throws BytecodeException {
     return storedLog(INFO, text);
   }
 
-  private TupleB storedLog(Level level, String message) throws BytecodeException {
+  private BTuple storedLog(Level level, String message) throws BytecodeException {
     var messageValue = exprDb.newString(message);
     var levelValue = exprDb.newString(level.name());
     return exprDb.newTuple(list(messageValue, levelValue));
   }
 
-  private static TupleTB createStoredLogType(CategoryDb categoryDb) throws BytecodeException {
+  private static BTupleType createStoredLogType(CategoryDb categoryDb) throws BytecodeException {
     var stringType = categoryDb.string();
     return categoryDb.tuple(stringType, stringType);
   }
 
-  private static TupleTB createFileType(CategoryDb categoryDb) throws BytecodeException {
+  private static BTupleType createFileType(CategoryDb categoryDb) throws BytecodeException {
     return categoryDb.tuple(categoryDb.blob(), categoryDb.string());
   }
 }

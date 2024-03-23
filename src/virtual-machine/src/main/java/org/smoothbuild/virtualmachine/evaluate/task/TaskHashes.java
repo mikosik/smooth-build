@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.evaluate.task;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 public class TaskHashes {
   public static Hash taskHash(Task task) {
@@ -27,20 +27,20 @@ public class TaskHashes {
     return hash(1);
   }
 
-  private static Hash invokeHash(NativeFuncB nativeFuncB) {
-    return hash(2, nativeFuncB.hash());
+  private static Hash invokeHash(BNativeFunc nativeFunc) {
+    return hash(2, nativeFunc.hash());
   }
 
-  private static Hash orderHash(TypeB typeB) {
-    return hash(3, typeB.hash());
+  private static Hash orderHash(BType type) {
+    return hash(3, type.hash());
   }
 
   private static Hash selectHash() {
     return hash(4);
   }
 
-  private static Hash constHash(ValueB valueB) {
-    return hash(5, valueB.hash());
+  private static Hash constHash(BValue value) {
+    return hash(5, value.hash());
   }
 
   private static Hash hash(int id, Hash hash) {

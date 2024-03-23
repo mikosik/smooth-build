@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class PathArgValidatorTest extends TestingVirtualMachine {
@@ -42,7 +42,7 @@ public class PathArgValidatorTest extends TestingVirtualMachine {
   public void illegal_project_paths_are_reported(String path) throws Exception {
     Path name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name).isNull();
-    var elements = container().messages().elements(TupleB.class);
+    var elements = container().messages().elements(BTuple.class);
     elements.map(e -> storedLogMessage(e).toJavaString()).forEach(t -> assertThat(t)
         .startsWith("Param `name` has illegal value."));
     elements.map(e -> storedLogLevel(e).toJavaString()).forEach(s -> assertThat(s)

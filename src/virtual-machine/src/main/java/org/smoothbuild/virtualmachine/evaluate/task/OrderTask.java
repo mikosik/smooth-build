@@ -1,23 +1,23 @@
 package org.smoothbuild.virtualmachine.evaluate.task;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class OrderTask extends Task {
-  public OrderTask(OrderB orderB, TraceB trace) {
-    super(orderB, trace);
+  public OrderTask(BOrder order, BTrace trace) {
+    super(order, trace);
   }
 
   @Override
-  public Output run(TupleB input, Container container) throws BytecodeException {
-    ArrayB array = container
+  public Output run(BTuple input, Container container) throws BytecodeException {
+    BArray array = container
         .factory()
-        .arrayBuilder((ArrayTB) outputType())
+        .arrayBuilder((BArrayType) outputType())
         .addAll(input.elements())
         .build();
     return new Output(array, container.messages());

@@ -16,14 +16,14 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
-  private final ArrayBBuilder resClassFiles;
+  private final BArrayBuilder resClassFiles;
 
   SandboxedJavaFileManager(
       StandardJavaFileManager fileManager, NativeApi nativeApi, Iterable<InputClassFile> objects)
@@ -46,7 +46,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     return result;
   }
 
-  public ArrayB resultClassfiles() throws BytecodeException {
+  public BArray resultClassfiles() throws BytecodeException {
     return resClassFiles.build();
   }
 

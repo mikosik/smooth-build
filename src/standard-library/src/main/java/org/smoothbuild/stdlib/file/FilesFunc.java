@@ -11,18 +11,18 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.PathIterator;
 import org.smoothbuild.common.bucket.base.PathState;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FilesFunc {
   private static final Path SMOOTH_DIR = path(".smooth");
 
-  public static ValueB func(Container container, TupleB args)
+  public static BValue func(Container container, BTuple args)
       throws IOException, BytecodeException {
-    StringB dir = (StringB) args.get(0);
+    BString dir = (BString) args.get(0);
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;
@@ -47,7 +47,7 @@ public class FilesFunc {
     };
   }
 
-  private static ArrayB readFiles(Container container, Bucket bucket, Path dir)
+  private static BArray readFiles(Container container, Bucket bucket, Path dir)
       throws IOException, BytecodeException {
     var fileArrayBuilder =
         container.factory().arrayBuilderWithElements(container.factory().fileType());

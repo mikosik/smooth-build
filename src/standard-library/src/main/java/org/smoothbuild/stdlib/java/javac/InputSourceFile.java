@@ -9,12 +9,12 @@ import java.net.URI;
 import java.util.Scanner;
 import javax.tools.SimpleJavaFileObject;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
 public class InputSourceFile extends SimpleJavaFileObject {
-  private final TupleB file;
+  private final BTuple file;
 
-  public InputSourceFile(TupleB file) throws BytecodeException {
+  public InputSourceFile(BTuple file) throws BytecodeException {
     super(URI.create("string:///" + filePath(file).toJavaString()), Kind.SOURCE);
     this.file = file;
   }

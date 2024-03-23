@@ -1,18 +1,18 @@
 package org.smoothbuild.virtualmachine.evaluate.task;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class CombineTask extends Task {
-  public CombineTask(CombineB combineB, TraceB trace) {
-    super(combineB, trace);
+  public CombineTask(BCombine combine, BTrace trace) {
+    super(combine, trace);
   }
 
   @Override
-  public Output run(TupleB input, Container container) throws BytecodeException {
+  public Output run(BTuple input, Container container) throws BytecodeException {
     return new Output(input, container.messages());
   }
 }

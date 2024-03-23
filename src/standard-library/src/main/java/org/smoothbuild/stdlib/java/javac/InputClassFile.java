@@ -11,19 +11,19 @@ import java.net.URI;
 import java.util.Objects;
 import javax.tools.SimpleJavaFileObject;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
 public class InputClassFile extends SimpleJavaFileObject {
-  private final TupleB file;
+  private final BTuple file;
   private final String filePath;
   private final String binaryName;
   private final String aPackage;
 
-  public InputClassFile(TupleB file) throws BytecodeException {
+  public InputClassFile(BTuple file) throws BytecodeException {
     this(file, filePath(file).toJavaString());
   }
 
-  public InputClassFile(TupleB file, String filePath) {
+  public InputClassFile(BTuple file, String filePath) {
     super(URI.create("jar:///" + ":" + filePath), Kind.CLASS);
 
     if (!filePath.endsWith(Kind.CLASS.extension)) {

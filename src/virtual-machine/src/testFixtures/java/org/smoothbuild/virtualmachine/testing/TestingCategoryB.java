@@ -5,16 +5,16 @@ import static org.smoothbuild.common.collect.List.list;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 public class TestingCategoryB {
   public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();
 
-  public static final List<TypeB> BASE_CATS_TO_TEST = wrapException(() -> list(
+  public static final List<BType> BASE_CATS_TO_TEST = wrapException(() -> list(
       CONTEXT.blobTB(),
       CONTEXT.boolTB(),
       func(CONTEXT.blobTB(), CONTEXT.boolTB()),
@@ -22,7 +22,7 @@ public class TestingCategoryB {
       CONTEXT.stringTB(),
       CONTEXT.personTB()));
 
-  public static final List<CategoryB> ARRAY_CATS_TO_TEST = wrapException(() -> list(
+  public static final List<BCategory> ARRAY_CATS_TO_TEST = wrapException(() -> list(
       array(CONTEXT.blobTB()),
       array(func(CONTEXT.blobTB(), CONTEXT.boolTB())),
       array(CONTEXT.boolTB()),
@@ -36,10 +36,10 @@ public class TestingCategoryB {
       array(array(CONTEXT.stringTB())),
       array(array(CONTEXT.personTB()))));
 
-  public static final List<CategoryB> CATS_TO_TEST =
+  public static final List<BCategory> CATS_TO_TEST =
       ARRAY_CATS_TO_TEST.appendAll(BASE_CATS_TO_TEST);
 
-  public static final List<CategoryB> ALL_CATS_TO_TEST =
+  public static final List<BCategory> ALL_CATS_TO_TEST =
       wrapException(TestingCategoryB::createAllCats);
 
   private static <R, T extends Throwable> R wrapException(Function0<R, T> function0) {
@@ -50,8 +50,8 @@ public class TestingCategoryB {
     }
   }
 
-  private static List<CategoryB> createAllCats() throws BytecodeException {
-    var baseCs = list(
+  private static List<BCategory> createAllCats() throws BytecodeException {
+    var baseCategories = list(
         CONTEXT.blobTB(),
         CONTEXT.boolTB(),
         CONTEXT.intTB(),
@@ -64,9 +64,9 @@ public class TestingCategoryB {
         tuple(CONTEXT.blobTB()),
         tuple(CONTEXT.blobTB(), CONTEXT.blobTB()),
         tuple(CONTEXT.stringTB()));
-    var arrayCs = baseCs.map(CONTEXT::arrayTB);
-    var valueCs = baseCs.appendAll(arrayCs);
-    var exprCs = list(
+    var arrayCategories = baseCategories.map(CONTEXT::arrayTB);
+    var valueCategories = baseCategories.appendAll(arrayCategories);
+    var exprCategories = list(
         CONTEXT.callCB(CONTEXT.blobTB()),
         CONTEXT.callCB(CONTEXT.stringTB()),
         CONTEXT.combineCB(CONTEXT.tupleTB(CONTEXT.blobTB())),
@@ -92,18 +92,18 @@ public class TestingCategoryB {
         CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.lambdaCB(CONTEXT.stringTB()));
 
-    return exprCs.appendAll(valueCs);
+    return exprCategories.appendAll(valueCategories);
   }
 
-  private static ArrayTB array(TypeB elemT) throws BytecodeException {
-    return CONTEXT.arrayTB(elemT);
+  private static BArrayType array(BType elementType) throws BytecodeException {
+    return CONTEXT.arrayTB(elementType);
   }
 
-  private static FuncTB func(TypeB res, TypeB... params) throws BytecodeException {
-    return CONTEXT.funcTB(list(params), res);
+  private static BFuncType func(BType resultType, BType... paramTypes) throws BytecodeException {
+    return CONTEXT.funcTB(list(paramTypes), resultType);
   }
 
-  private static TupleTB tuple(TypeB... params) throws BytecodeException {
-    return CONTEXT.tupleTB(params);
+  private static BTupleType tuple(BType... paramTypes) throws BytecodeException {
+    return CONTEXT.tupleTB(paramTypes);
   }
 }

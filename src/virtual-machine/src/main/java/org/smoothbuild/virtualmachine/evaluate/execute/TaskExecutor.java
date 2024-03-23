@@ -4,8 +4,8 @@ import jakarta.inject.Inject;
 import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.Consumer0;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
@@ -25,7 +25,7 @@ public class TaskExecutor {
     this.taskReporter = taskReporter;
   }
 
-  public void enqueue(Task task, TupleB input, Consumer<ValueB> consumer) {
+  public void enqueue(Task task, BTuple input, Consumer<BValue> consumer) {
     enqueue(() -> {
       var resultHandler = new ResultHandler(task, executor, taskReporter, consumer);
       // TODO bytecodeException thrown by compute() should be reported differently with more

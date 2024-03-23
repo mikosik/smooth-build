@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.lev
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ContainerTest extends TestingVirtualMachine {
@@ -18,9 +18,9 @@ public class ContainerTest extends TestingVirtualMachine {
   public void messages_are_logged() throws Exception {
     var container = container();
     container.log().error("message");
-    Iterable<TupleB> iterable = container.messages().elements(TupleB.class);
+    Iterable<BTuple> iterable = container.messages().elements(BTuple.class);
     assertThat(iterable).hasSize(1);
-    TupleB tuple = iterable.iterator().next();
+    BTuple tuple = iterable.iterator().next();
     assertThat(message(tuple)).isEqualTo("message");
     assertThat(levelAsString(tuple)).isEqualTo("ERROR");
   }

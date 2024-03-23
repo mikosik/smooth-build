@@ -13,18 +13,18 @@ import java.util.zip.ZipOutputStream;
 import okio.BufferedSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class ZipFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {
-    ArrayB files = (ArrayB) args.get(0);
+  public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    BArray files = (BArray) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
       try (var zipOutputStream = new ZipOutputStream(buffer(blobBuilder).outputStream())) {
-        for (TupleB file : files.elements(TupleB.class)) {
+        for (BTuple file : files.elements(BTuple.class)) {
           String path = filePath(file).toJavaString();
           if (!duplicatesDetector.add(path)) {
             nativeApi.log().error("Cannot zip two files with the same path = " + path);
@@ -41,7 +41,7 @@ public class ZipFunc {
     }
   }
 
-  private static void addZipEntry(ZipOutputStream zipOutputStream, TupleB file)
+  private static void addZipEntry(ZipOutputStream zipOutputStream, BTuple file)
       throws IOException, BytecodeException {
     var zipEntry = new ZipEntry(filePath(file).toJavaString());
     zipEntry.setLastModifiedTime(FileTime.fromMillis(0));

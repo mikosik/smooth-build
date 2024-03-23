@@ -11,9 +11,9 @@ import java.util.Map;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 /**
  * Loads smooth bytecode (ExprB) by executing java method that returns instance of ExprB.
@@ -29,8 +29,8 @@ public class BytecodeLoader {
     this.bytecodeFactory = bytecodeFactory;
   }
 
-  public Either<String, ExprB> load(
-      String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap)
+  public Either<String, BExpr> load(
+      String name, BBlob jar, String classBinaryName, Map<String, BType> varMap)
       throws BytecodeException {
     return methodLoader
         .load(jar, classBinaryName)
@@ -38,9 +38,9 @@ public class BytecodeLoader {
         .mapLeft(e -> loadingError(name, classBinaryName, e));
   }
 
-  private Either<String, ExprB> invoke(Method method, Map<String, TypeB> varMap) {
+  private Either<String, BExpr> invoke(Method method, Map<String, BType> varMap) {
     try {
-      return right((ExprB) method.invoke(null, bytecodeFactory, varMap));
+      return right((BExpr) method.invoke(null, bytecodeFactory, varMap));
     } catch (IllegalAccessException e) {
       return left("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {

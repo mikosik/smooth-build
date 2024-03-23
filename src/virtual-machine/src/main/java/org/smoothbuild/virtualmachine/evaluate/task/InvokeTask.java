@@ -7,36 +7,36 @@ import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class InvokeTask extends Task {
-  private final NativeFuncB nativeFuncB;
+  private final BNativeFunc nativeFunc;
 
-  public InvokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) throws BytecodeException {
-    super(callB, trace, nativeFuncB.isPure().toJavaBoolean() ? PURE : IMPURE);
-    this.nativeFuncB = nativeFuncB;
+  public InvokeTask(BCall call, BNativeFunc nativeFunc, BTrace trace) throws BytecodeException {
+    super(call, trace, nativeFunc.isPure().toJavaBoolean() ? PURE : IMPURE);
+    this.nativeFunc = nativeFunc;
   }
 
   @Override
-  public Output run(TupleB input, Container container) throws BytecodeException {
+  public Output run(BTuple input, Container container) throws BytecodeException {
     return container
         .nativeMethodLoader()
-        .load(nativeFuncB)
+        .load(nativeFunc)
         .mapRight(m -> invokeMethod(m, input, container))
         .ifLeft(left -> container.log().fatal(left))
         .rightOrGet(() -> new Output(null, container.messages()));
   }
 
-  private Output invokeMethod(Method method, TupleB args, Container container)
+  private Output invokeMethod(Method method, BTuple args, Container container)
       throws BytecodeException {
-    ValueB result = null;
+    BValue result = null;
     try {
-      result = (ValueB) method.invoke(null, new Object[] {container, args});
+      result = (BValue) method.invoke(null, new Object[] {container, args});
     } catch (IllegalAccessException e) {
       reportExceptionAsFatal(container, "Cannot invoke native method", e);
     } catch (InvocationTargetException e) {
@@ -52,7 +52,7 @@ public final class InvokeTask extends Task {
     container.log().fatal(message + ":\n" + getStackTraceAsString(throwable));
   }
 
-  private Output buildOutput(Container container, ValueB result) throws BytecodeException {
+  private Output buildOutput(Container container, BValue result) throws BytecodeException {
     var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {
@@ -79,7 +79,7 @@ public final class InvokeTask extends Task {
     container.log().fatal("Faulty native implementation: " + message);
   }
 
-  public NativeFuncB nativeFunc() {
-    return nativeFuncB;
+  public BNativeFunc nativeFunc() {
+    return nativeFunc;
   }
 }

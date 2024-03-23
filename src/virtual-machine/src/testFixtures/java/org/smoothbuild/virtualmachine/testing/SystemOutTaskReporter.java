@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.sto
 
 import java.io.PrintWriter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
@@ -19,7 +19,7 @@ class SystemOutTaskReporter implements TaskReporter {
 
   @Override
   public void report(Task task, ComputationResult result) throws BytecodeException {
-    for (TupleB message : result.output().storedLogs().elements(TupleB.class)) {
+    for (BTuple message : result.output().storedLogs().elements(BTuple.class)) {
       printWriter.println(storedLogLevel(message) + " " + storedLogMessage(message));
     }
   }

@@ -8,19 +8,19 @@ import okio.ForwardingSink;
 import okio.Okio;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class OutputClassFile extends SimpleJavaFileObject {
-  private final ArrayBBuilder fileArrayBuilder;
+  private final BArrayBuilder fileArrayBuilder;
   private final Path path;
-  private final BlobBBuilder contentBuilder;
+  private final BBlobBuilder contentBuilder;
   private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBBuilder fileArrayBuilder, Path path, NativeApi nativeApi)
+  public OutputClassFile(BArrayBuilder fileArrayBuilder, Path path, NativeApi nativeApi)
       throws BytecodeException {
     super(URI.create("class:///" + path.toString()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
@@ -36,8 +36,8 @@ public class OutputClassFile extends SimpleJavaFileObject {
           public void close() throws IOException {
             super.close();
             try {
-              StringB pathString = nativeApi.factory().string(path.toString());
-              TupleB file = nativeApi.factory().file(contentBuilder.build(), pathString);
+              BString pathString = nativeApi.factory().string(path.toString());
+              BTuple file = nativeApi.factory().file(contentBuilder.build(), pathString);
               fileArrayBuilder.add(file);
             } catch (BytecodeException e) {
               throw e.toIOException();

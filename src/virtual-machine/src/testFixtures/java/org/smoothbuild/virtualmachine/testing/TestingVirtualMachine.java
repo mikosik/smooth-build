@@ -19,16 +19,16 @@ import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
@@ -37,17 +37,17 @@ import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
-import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
+import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
-import org.smoothbuild.virtualmachine.evaluate.execute.ReferenceInlinerB;
-import org.smoothbuild.virtualmachine.evaluate.execute.SchedulerB;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
@@ -67,56 +67,56 @@ public class TestingVirtualMachine extends TestingBytecode {
   private Bucket hashedDbBucket;
   private ByteArrayOutputStream systemOut;
 
-  public EvaluatorB evaluatorB(TaskReporter taskReporter) {
-    return evaluatorB(taskExecutor(taskReporter));
+  public BEvaluator bEvaluator(TaskReporter taskReporter) {
+    return bEvaluator(taskExecutor(taskReporter));
   }
 
-  public EvaluatorB evaluatorB() {
-    return evaluatorB(() -> schedulerB());
+  public BEvaluator bEvaluator() {
+    return bEvaluator(() -> bScheduler());
   }
 
-  public EvaluatorB evaluatorB(Provider<SchedulerB> schedulerB) {
-    return new EvaluatorB(schedulerB, taskReporter());
+  public BEvaluator bEvaluator(Provider<BScheduler> schedulerB) {
+    return new BEvaluator(schedulerB, taskReporter());
   }
 
-  public EvaluatorB evaluatorB(Provider<SchedulerB> schedulerB, TaskReporter taskReporter) {
-    return new EvaluatorB(schedulerB, taskReporter);
+  public BEvaluator bEvaluator(Provider<BScheduler> schedulerB, TaskReporter taskReporter) {
+    return new BEvaluator(schedulerB, taskReporter);
   }
 
-  public EvaluatorB evaluatorB(NativeMethodLoader nativeMethodLoader) {
-    return evaluatorB(() -> schedulerB(nativeMethodLoader));
+  public BEvaluator bEvaluator(NativeMethodLoader nativeMethodLoader) {
+    return bEvaluator(() -> bScheduler(nativeMethodLoader));
   }
 
-  public EvaluatorB evaluatorB(TaskExecutor taskExecutor) {
-    return evaluatorB(() -> schedulerB(taskExecutor));
+  public BEvaluator bEvaluator(TaskExecutor taskExecutor) {
+    return bEvaluator(() -> bScheduler(taskExecutor));
   }
 
-  public SchedulerB schedulerB() {
-    return schedulerB(taskExecutor());
+  public BScheduler bScheduler() {
+    return bScheduler(taskExecutor());
   }
 
-  public SchedulerB schedulerB(NativeMethodLoader nativeMethodLoader) {
-    return new SchedulerB(taskExecutor(nativeMethodLoader), bytecodeF(), varReducerB());
+  public BScheduler bScheduler(NativeMethodLoader nativeMethodLoader) {
+    return new BScheduler(taskExecutor(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public SchedulerB schedulerB(TaskExecutor taskExecutor) {
-    return new SchedulerB(taskExecutor, bytecodeF(), varReducerB());
+  public BScheduler bScheduler(TaskExecutor taskExecutor) {
+    return new BScheduler(taskExecutor, bytecodeF(), bReferenceInliner());
   }
 
-  public ReferenceInlinerB varReducerB() {
-    return new ReferenceInlinerB(bytecodeF());
+  public BReferenceInliner bReferenceInliner() {
+    return new BReferenceInliner(bytecodeF());
   }
 
-  public SchedulerB schedulerB(int threadCount) {
-    return schedulerB(computer(), taskReporter(), threadCount);
+  public BScheduler bScheduler(int threadCount) {
+    return bScheduler(computer(), taskReporter(), threadCount);
   }
 
-  public SchedulerB schedulerB(TaskReporter reporter, int threadCount) {
-    return schedulerB(computer(), reporter, threadCount);
+  public BScheduler bScheduler(TaskReporter reporter, int threadCount) {
+    return bScheduler(computer(), reporter, threadCount);
   }
 
-  public SchedulerB schedulerB(Computer computer, TaskReporter reporter, int threadCount) {
-    return schedulerB(taskExecutor(computer, reporter, threadCount));
+  public BScheduler bScheduler(Computer computer, TaskReporter reporter, int threadCount) {
+    return bScheduler(taskExecutor(computer, reporter, threadCount));
   }
 
   public NativeMethodLoader nativeMethodLoader() {
@@ -281,16 +281,16 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   // Job related
 
-  public static Job job(ExprB exprB, ExprB... environment) {
-    return new Job(exprB, list(environment).map(TestingVirtualMachine::job), new TraceB());
+  public static Job job(BExpr expr, BExpr... environment) {
+    return new Job(expr, list(environment).map(TestingVirtualMachine::job), new BTrace());
   }
 
-  public static Job job(ExprB exprB, Job... environment) {
-    return new Job(exprB, list(environment), new TraceB());
+  public static Job job(BExpr expr, Job... environment) {
+    return new Job(expr, list(environment), new BTrace());
   }
 
-  public static Job job(ExprB exprB) {
-    return new Job(exprB, list(), new TraceB());
+  public static Job job(BExpr expr) {
+    return new Job(expr, list(), new BTrace());
   }
 
   // Task, Computation, Output
@@ -303,81 +303,81 @@ public class TestingVirtualMachine extends TestingBytecode {
     return invokeTask(callB(), nativeFuncB(), traceB());
   }
 
-  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB) throws BytecodeException {
-    return invokeTask(callB, nativeFuncB, null);
+  public InvokeTask invokeTask(BCall call, BNativeFunc nativeFunc) throws BytecodeException {
+    return invokeTask(call, nativeFunc, null);
   }
 
-  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace)
+  public InvokeTask invokeTask(BCall call, BNativeFunc nativeFunc, BTrace trace)
       throws BytecodeException {
-    return new InvokeTask(callB, nativeFuncB, trace);
+    return new InvokeTask(call, nativeFunc, trace);
   }
 
   public CombineTask combineTask() throws BytecodeException {
     return combineTask(combineB(), traceB());
   }
 
-  public CombineTask combineTask(CombineB combineB, TraceB trace) {
-    return new CombineTask(combineB, trace);
+  public CombineTask combineTask(BCombine combine, BTrace trace) {
+    return new CombineTask(combine, trace);
   }
 
   public SelectTask selectTask() throws BytecodeException {
     return selectTask(selectB(), traceB());
   }
 
-  public SelectTask selectTask(SelectB selectB, TraceB trace) {
-    return new SelectTask(selectB, trace);
+  public SelectTask selectTask(BSelect select, BTrace trace) {
+    return new SelectTask(select, trace);
   }
 
   public PickTask pickTask() throws BytecodeException {
     return pickTask(pickB(), traceB());
   }
 
-  public PickTask pickTask(PickB pickB, TraceB trace) {
-    return new PickTask(pickB, trace);
+  public PickTask pickTask(BPick pick, BTrace trace) {
+    return new PickTask(pick, trace);
   }
 
   public OrderTask orderTask() throws BytecodeException {
     return orderTask(orderB(), traceB());
   }
 
-  public OrderTask orderTask(OrderB orderB, TraceB trace) {
-    return new OrderTask(orderB, trace);
+  public OrderTask orderTask(BOrder order, BTrace trace) {
+    return new OrderTask(order, trace);
   }
 
   public ConstTask constTask() throws BytecodeException {
     return constTask(intB(7));
   }
 
-  public static ConstTask constTask(ValueB valueB) {
-    return constTask(valueB, traceB());
+  public static ConstTask constTask(BValue value) {
+    return constTask(value, traceB());
   }
 
-  public static ConstTask constTask(ValueB valueB, TraceB trace) {
-    return new ConstTask(valueB, trace);
+  public static ConstTask constTask(BValue value, BTrace trace) {
+    return new ConstTask(value, trace);
   }
 
-  public ComputationResult computationResult(ValueB valueB) throws BytecodeException {
-    return computationResult(output(valueB), DISK);
+  public ComputationResult computationResult(BValue value) throws BytecodeException {
+    return computationResult(output(value), DISK);
   }
 
-  public ComputationResult computationResult(ValueB valueB, ResultSource source)
+  public ComputationResult computationResult(BValue value, ResultSource source)
       throws BytecodeException {
-    return computationResult(output(valueB), source);
+    return computationResult(output(value), source);
   }
 
   public static ComputationResult computationResult(Output output, ResultSource source) {
     return new ComputationResult(output, source);
   }
 
-  public ComputationResult computationResultWithMessages(ArrayB messages) throws BytecodeException {
+  public ComputationResult computationResultWithMessages(BArray messages) throws BytecodeException {
     return computationResult(output(intB(), messages), EXECUTION);
   }
 
-  public Output output(ValueB valueB) throws BytecodeException {
-    return output(valueB, logArrayEmpty());
+  public Output output(BValue value) throws BytecodeException {
+    return output(value, logArrayEmpty());
   }
 
-  public Output output(ValueB valueB, ArrayB messages) {
-    return new Output(valueB, messages);
+  public Output output(BValue value, BArray messages) {
+    return new Output(value, messages);
   }
 }

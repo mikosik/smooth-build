@@ -20,18 +20,18 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JunitFunc {
-  public static ValueB func(NativeApi nativeApi, TupleB args)
+  public static BValue func(NativeApi nativeApi, BTuple args)
       throws IOException, BytecodeException {
-    TupleB tests = (TupleB) args.get(0);
-    ArrayB deps = (ArrayB) args.get(1);
-    StringB include = (StringB) args.get(2);
+    BTuple tests = (BTuple) args.get(0);
+    BArray deps = (BArray) args.get(1);
+    BString include = (BString) args.get(2);
 
     try {
       var filesFromTests = filesFromJar(nativeApi, tests);
@@ -74,10 +74,10 @@ public class JunitFunc {
     }
   }
 
-  private static ClassLoader classLoader(ImmutableMap<String, TupleB> filesMap) {
+  private static ClassLoader classLoader(ImmutableMap<String, BTuple> filesMap) {
     return mapClassLoader(getPlatformClassLoader(), path -> {
       try {
-        TupleB file = filesMap.get(path);
+        BTuple file = filesMap.get(path);
         return file == null ? null : fileContent(file).source().inputStream();
       } catch (BytecodeException e) {
         throw e.toIOException();
@@ -85,8 +85,8 @@ public class JunitFunc {
     });
   }
 
-  private static ImmutableMap<String, TupleB> concatMaps(
-      Map<String, TupleB> testClasses, Map<String, TupleB> libClasses) throws JunitException {
+  private static ImmutableMap<String, BTuple> concatMaps(
+      Map<String, BTuple> testClasses, Map<String, BTuple> libClasses) throws JunitException {
     var allFiles = new HashMap<>(libClasses);
     for (var entry : testClasses.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
@@ -103,7 +103,7 @@ public class JunitFunc {
     return newInstance(nativeApi, loadClass(classLoader, "org.junit.runner.JUnitCore"));
   }
 
-  private static void assertJunitCoreIsPresent(Map<String, TupleB> files) throws JunitException {
+  private static void assertJunitCoreIsPresent(Map<String, BTuple> files) throws JunitException {
     if (!files.containsKey("org/junit/runner/JUnitCore.class")) {
       throw new JunitException(
           "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
@@ -119,7 +119,7 @@ public class JunitFunc {
     }
   }
 
-  private static Predicate<Path> createFilter(StringB includeParam)
+  private static Predicate<Path> createFilter(BString includeParam)
       throws JunitException, BytecodeException {
     try {
       return new PathMatcher(includeParam.toJavaString());

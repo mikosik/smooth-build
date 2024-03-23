@@ -53,10 +53,10 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -431,7 +431,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         public void expression_inside_expression_function_body() throws Exception {
           var funcS = funcS(7, "myFunc", nlist(), intS(8, 37));
           var sbTranslator = newTranslator(bindings(funcS));
-          var funcB = (LambdaB) sbTranslator.translateExpr(instantiateS(funcS));
+          var funcB = (BLambda) sbTranslator.translateExpr(instantiateS(funcS));
           var body = funcB.body();
           assertNalMapping(sbTranslator, body, null, location(8));
         }
@@ -491,11 +491,11 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var monoLambdaS = instantiateS(lambdaS(7, nlist(), stringS("abc")));
 
         var sbTranslator = newTranslator();
-        var lambdaB = (LambdaB) sbTranslator.translateExpr(monoLambdaS);
+        var bLambda = (BLambda) sbTranslator.translateExpr(monoLambdaS);
         var nameMapping = sbTranslator.bsMapping().nameMapping();
         var locationMapping = sbTranslator.bsMapping().locMapping();
-        assertThat(nameMapping.get(lambdaB.hash())).isEqualTo("<lambda>");
-        assertThat(locationMapping.get(lambdaB.hash())).isEqualTo(location(7));
+        assertThat(nameMapping.get(bLambda.hash())).isEqualTo("<lambda>");
+        assertThat(locationMapping.get(bLambda.hash())).isEqualTo(location(7));
       }
 
       @Test
@@ -515,9 +515,8 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       public void param_ref() throws Exception {
         var funcS = funcS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator(bindings(funcS));
-        var funcB = (LambdaB) sbTranslator.translateExpr(instantiateS(funcS));
-        var refB = funcB.body();
-        assertNalMapping(sbTranslator, refB, "p", location(5));
+        var bLambda = (BLambda) sbTranslator.translateExpr(instantiateS(funcS));
+        assertNalMapping(sbTranslator, bLambda.body(), "p", location(5));
       }
 
       @Test
@@ -633,16 +632,16 @@ public class SbTranslatorTest extends TestingVirtualMachine {
   }
 
   private void assertTranslation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected) throws Exception {
+      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, BExpr expected) throws Exception {
     assertTranslation(newTranslator(evaluables), exprS, expected);
   }
 
-  private void assertTranslation(NamedEvaluableS namedEvaluableS, ExprB expectedB)
+  private void assertTranslation(NamedEvaluableS namedEvaluableS, BExpr expectedB)
       throws Exception {
     assertTranslation(bindings(namedEvaluableS), instantiateS(namedEvaluableS), expectedB);
   }
 
-  private void assertTranslation(ExprS exprS, ExprB expected) throws Exception {
+  private void assertTranslation(ExprS exprS, BExpr expected) throws Exception {
     assertTranslation(newTranslator(), exprS, expected);
   }
 
@@ -650,13 +649,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       FilePersister filePersister,
       ImmutableBindings<NamedEvaluableS> evaluables,
       ExprS exprS,
-      ExprB expected)
+      BExpr expected)
       throws SbTranslatorException {
     var sbTranslator = newTranslator(filePersister, evaluables);
     assertTranslation(sbTranslator, exprS, expected);
   }
 
-  private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, ExprB expected)
+  private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, BExpr expected)
       throws SbTranslatorException {
     assertThat(sbTranslator.translateExpr(exprS)).isEqualTo(expected);
   }
@@ -686,7 +685,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       String expectedName,
       Location expectedLocation)
       throws Exception {
-    var call = ((CallB) sbTranslator.translateExpr(exprS));
+    var call = ((BCall) sbTranslator.translateExpr(exprS));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
     var called = call.subExprs().func();
     assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
@@ -714,10 +713,10 @@ public class SbTranslatorTest extends TestingVirtualMachine {
   }
 
   private static void assertNalMapping(
-      SbTranslator sbTranslator, ExprB exprB, String expectedName, Location expectedLocation) {
+      SbTranslator sbTranslator, BExpr expr, String expectedName, Location expectedLocation) {
     var bsMapping = sbTranslator.bsMapping();
-    assertThat(bsMapping.nameMapping().get(exprB.hash())).isEqualTo(expectedName);
-    assertThat(bsMapping.locMapping().get(exprB.hash())).isEqualTo(expectedLocation);
+    assertThat(bsMapping.nameMapping().get(expr.hash())).isEqualTo(expectedName);
+    assertThat(bsMapping.locMapping().get(expr.hash())).isEqualTo(expectedLocation);
   }
 
   private SbTranslator newTranslator() throws Exception {
@@ -736,10 +735,10 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     return sbTranslator(filePersister, evaluables);
   }
 
-  private FilePersister createFilePersisterMock(FullPath fullPath, BlobB value)
+  private FilePersister createFilePersisterMock(FullPath fullPath, BBlob bBlob)
       throws BytecodeException {
     FilePersister mock = mock(FilePersister.class);
-    when(mock.persist(fullPath)).thenReturn(value);
+    when(mock.persist(fullPath)).thenReturn(bBlob);
     return mock;
   }
 

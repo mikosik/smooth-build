@@ -14,9 +14,9 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
 /**
  * Factory for creating classLoaders that load classes from jar file provided as BlobB.
@@ -26,7 +26,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 public class JarClassLoaderFactory {
   private final BytecodeFactory bytecodeFactory;
   private final ClassLoader parentClassLoader;
-  private final Function1<BlobB, Either<String, ClassLoader>, BytecodeException> memoizer;
+  private final Function1<BBlob, Either<String, ClassLoader>, BytecodeException> memoizer;
 
   @Inject
   public JarClassLoaderFactory(BytecodeFactory bytecodeFactory) {
@@ -39,24 +39,24 @@ public class JarClassLoaderFactory {
     this.memoizer = memoizer(this::newClassLoader);
   }
 
-  public Either<String, ClassLoader> classLoaderFor(BlobB jar) throws BytecodeException {
+  public Either<String, ClassLoader> classLoaderFor(BBlob jar) throws BytecodeException {
     return memoizer.apply(jar);
   }
 
-  private Either<String, ClassLoader> newClassLoader(BlobB jar) throws BytecodeException {
+  private Either<String, ClassLoader> newClassLoader(BBlob jar) throws BytecodeException {
     return unzipBlob(bytecodeFactory, jar, s -> true)
         .mapRight(this::newClassLoader)
         .mapLeft(error -> "Error unpacking jar with native code: " + error);
   }
 
-  private ClassLoader newClassLoader(ArrayB files) throws BytecodeException {
-    var filesMap = files.elements(TupleB.class).toMap(f -> filePath(f).toJavaString(), x -> x);
+  private ClassLoader newClassLoader(BArray files) throws BytecodeException {
+    var filesMap = files.elements(BTuple.class).toMap(f -> filePath(f).toJavaString(), x -> x);
     return newClassLoader(filesMap);
   }
 
-  private ClassLoader newClassLoader(Map<String, TupleB> filesMap) {
+  private ClassLoader newClassLoader(Map<String, BTuple> filesMap) {
     return mapClassLoader(parentClassLoader, path -> {
-      TupleB file = filesMap.get(path);
+      BTuple file = filesMap.get(path);
       try {
         return file == null ? null : fileContent(file).source().inputStream();
       } catch (BytecodeException e) {

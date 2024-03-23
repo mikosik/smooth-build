@@ -13,38 +13,38 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.ExprDbException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.CombineB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.OrderB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.PickB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.ReferenceB;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.SelectB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BoolB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IfFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.NativeFuncB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashingSink;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryB;
+import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
 import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.CategoryDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.ReferenceCB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.IntTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BReferenceCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 /**
  * This class is thread-safe.
@@ -60,22 +60,22 @@ public class ExprDb {
 
   // methods for creating InstB subclasses
 
-  public ArrayBBuilder newArrayBuilder(ArrayTB type) {
-    return new ArrayBBuilder(type, this);
+  public BArrayBuilder newArrayBuilder(BArrayType type) {
+    return new BArrayBuilder(type, this);
   }
 
-  public BlobBBuilder newBlobBuilder() throws BytecodeException {
-    return new BlobBBuilder(this, sink());
+  public BBlobBuilder newBlobBuilder() throws BytecodeException {
+    return new BBlobBuilder(this, sink());
   }
 
-  public BoolB newBool(boolean value) throws BytecodeException {
+  public BBool newBool(boolean value) throws BytecodeException {
     var data = writeBoolData(value);
-    var boolTB = categoryDb.bool();
-    var root = newRoot(boolTB, data);
-    return boolTB.newExpr(root, this);
+    var boolType = categoryDb.bool();
+    var root = newRoot(boolType, data);
+    return boolType.newExpr(root, this);
   }
 
-  public LambdaB newLambda(FuncTB type, ExprB body) throws BytecodeException {
+  public BLambda newLambda(BFuncType type, BExpr body) throws BytecodeException {
     validateBodyEvaluationType(type, body);
     var cat = categoryDb.lambda(type);
     var dataHash = body.hash();
@@ -83,7 +83,7 @@ public class ExprDb {
     return cat.newExpr(root, this);
   }
 
-  public NativeFuncB newNativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
+  public BNativeFunc newNativeFunc(BFuncType type, BBlob jar, BString classBinaryName, BBool isPure)
       throws BytecodeException {
     var cat = categoryDb.nativeFunc(type);
     var data = writeNativeFuncData(jar, classBinaryName, isPure);
@@ -91,22 +91,22 @@ public class ExprDb {
     return cat.newExpr(root, this);
   }
 
-  public IntB newInt(BigInteger value) throws BytecodeException {
+  public BInt newInt(BigInteger value) throws BytecodeException {
     var data = writeIntData(value);
-    var intTB = categoryDb.int_();
-    var root = newRoot(intTB, data);
-    return intTB.newExpr(root, this);
+    var intType = categoryDb.int_();
+    var root = newRoot(intType, data);
+    return intType.newExpr(root, this);
   }
 
-  public StringB newString(String value) throws BytecodeException {
+  public BString newString(String value) throws BytecodeException {
     var data = writeStringData(value);
-    var stringTB = categoryDb.string();
-    var root = newRoot(stringTB, data);
-    return stringTB.newExpr(root, this);
+    var stringType = categoryDb.string();
+    var root = newRoot(stringType, data);
+    return stringType.newExpr(root, this);
   }
 
-  public TupleB newTuple(List<? extends ValueB> items) throws BytecodeException {
-    var type = categoryDb.tuple(items.map(ValueB::type));
+  public BTuple newTuple(List<? extends BValue> items) throws BytecodeException {
+    var type = categoryDb.tuple(items.map(BValue::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -114,47 +114,47 @@ public class ExprDb {
 
   // methods for creating OperB subclasses
 
-  public CallB newCall(ExprB func, CombineB args) throws BytecodeException {
-    var funcTB = castEvaluationTypeToFuncTB(func);
-    validateArgsInCall(funcTB, args);
-    var callCB = categoryDb.call(funcTB.result());
+  public BCall newCall(BExpr func, BCombine args) throws BytecodeException {
+    var funcType = castEvaluationTypeToFuncTB(func);
+    validateArgsInCall(funcType, args);
+    var callCategory = categoryDb.call(funcType.result());
     var data = writeCallData(func, args);
-    var root = newRoot(callCB, data);
-    return callCB.newExpr(root, this);
+    var root = newRoot(callCategory, data);
+    return callCategory.newExpr(root, this);
   }
 
-  public CombineB newCombine(List<? extends ExprB> items) throws BytecodeException {
-    var evaluationType = categoryDb.tuple(items.map(ExprB::evaluationType));
-    var combineCB = categoryDb.combine(evaluationType);
+  public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {
+    var evaluationType = categoryDb.tuple(items.map(BExpr::evaluationType));
+    var combineCategory = categoryDb.combine(evaluationType);
     var data = writeCombineData(items);
-    var root = newRoot(combineCB, data);
-    return combineCB.newExpr(root, this);
+    var root = newRoot(combineCategory, data);
+    return combineCategory.newExpr(root, this);
   }
 
-  public IfFuncB newIfFunc(TypeB t) throws BytecodeException {
-    var ifFuncCB = categoryDb.ifFunc(t);
-    var root = newRoot(ifFuncCB);
-    return ifFuncCB.newExpr(root, this);
+  public BIf newIfFunc(BType t) throws BytecodeException {
+    var ifCategory = categoryDb.ifFunc(t);
+    var root = newRoot(ifCategory);
+    return ifCategory.newExpr(root, this);
   }
 
-  public MapFuncB newMapFunc(TypeB r, TypeB s) throws BytecodeException {
-    var mapFuncCB = categoryDb.mapFunc(r, s);
-    var root = newRoot(mapFuncCB);
-    return mapFuncCB.newExpr(root, this);
+  public BMap newMapFunc(BType r, BType s) throws BytecodeException {
+    var mapCategory = categoryDb.mapFunc(r, s);
+    var root = newRoot(mapCategory);
+    return mapCategory.newExpr(root, this);
   }
 
-  public OrderB newOrder(ArrayTB evaluationType, List<? extends ExprB> elems)
+  public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elems)
       throws BytecodeException {
     validateOrderElements(evaluationType.elem(), elems);
-    var orderCB = categoryDb.order(evaluationType);
+    var orderCategory = categoryDb.order(evaluationType);
     var data = writeOrderData(elems);
-    var root = newRoot(orderCB, data);
-    return orderCB.newExpr(root, this);
+    var root = newRoot(orderCategory, data);
+    return orderCategory.newExpr(root, this);
   }
 
-  public PickB newPick(ExprB pickable, ExprB index) throws BytecodeException {
+  public BPick newPick(BExpr pickable, BExpr index) throws BytecodeException {
     var evaluationType = pickEvaluationType(pickable);
-    if (!(index.evaluationType() instanceof IntTB)) {
+    if (!(index.evaluationType() instanceof BIntType)) {
       throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
           + index.evaluationType().q() + ".");
     }
@@ -164,66 +164,68 @@ public class ExprDb {
     return category.newExpr(root, this);
   }
 
-  public ReferenceB newReference(TypeB evaluationType, IntB index) throws BytecodeException {
-    ReferenceCB type = categoryDb.reference(evaluationType);
+  public BReference newReference(BType evaluationType, BInt index) throws BytecodeException {
+    BReferenceCategory type = categoryDb.reference(evaluationType);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }
 
-  public SelectB newSelect(ExprB selectable, IntB index) throws BytecodeException {
+  public BSelect newSelect(BExpr selectable, BInt index) throws BytecodeException {
     var evaluationType = selectEvaluationType(selectable, index);
     var data = writeSelectData(selectable, index);
-    var category = categoryDb.select(evaluationType);
-    var root = newRoot(category, data);
-    return category.newExpr(root, this);
+    var selectCategory = categoryDb.select(evaluationType);
+    var root = newRoot(selectCategory, data);
+    return selectCategory.newExpr(root, this);
   }
 
   // validators
 
-  private static void validateBodyEvaluationType(FuncTB funcTB, ExprB body) {
-    if (!body.evaluationType().equals(funcTB.result())) {
+  private static void validateBodyEvaluationType(BFuncType funcType, BExpr body) {
+    if (!body.evaluationType().equals(funcType.result())) {
       var message = "body.evaluationType() = %s should be equal to funcTB.res() = %s."
-          .formatted(body.evaluationType().q(), funcTB.result().q());
+          .formatted(body.evaluationType().q(), funcType.result().q());
       throw new IllegalArgumentException(message);
     }
   }
 
-  private void validateOrderElements(TypeB elemT, List<? extends ExprB> elems) {
+  private void validateOrderElements(BType elementType, List<? extends BExpr> elems) {
     for (int i = 0; i < elems.size(); i++) {
-      var iElemT = elems.get(i).evaluationType();
-      if (!elemT.equals(iElemT)) {
-        throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
-            + " but element at index " + i + " has type " + iElemT.q() + ".");
+      var iElementType = elems.get(i).evaluationType();
+      if (!elementType.equals(iElementType)) {
+        throw new IllegalArgumentException("Illegal elem type. Expected " + elementType.q()
+            + " but element at index " + i + " has type " + iElementType.q() + ".");
       }
     }
   }
 
-  private FuncTB castEvaluationTypeToFuncTB(ExprB func) {
-    if (func.evaluationType() instanceof FuncTB funcT) {
+  private BFuncType castEvaluationTypeToFuncTB(BExpr func) {
+    if (func.evaluationType() instanceof BFuncType funcT) {
       return funcT;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
     }
   }
 
-  private void validateArgsInCall(FuncTB funcTB, CombineB args) {
+  private void validateArgsInCall(BFuncType funcType, BCombine args) {
     validateArgs(
-        funcTB, args.evaluationType().elements(), () -> illegalArgs(funcTB, args.evaluationType()));
+        funcType,
+        args.evaluationType().elements(),
+        () -> illegalArgs(funcType, args.evaluationType()));
   }
 
-  private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {
+  private IllegalArgumentException illegalArgs(BFuncType funcType, BTupleType argsT) {
     return new IllegalArgumentException(
         "Argument evaluation types %s should be equal to function parameter types %s."
-            .formatted(itemTsToString(argsT), itemTsToString(funcTB.params())));
+            .formatted(itemTsToString(argsT), itemTsToString(funcType.params())));
   }
 
-  private static String itemTsToString(TupleTB argsT) {
+  private static String itemTsToString(BTupleType argsT) {
     return argsT.elements().toString("(", ",", ")");
   }
 
   // generic getter
 
-  public ExprB get(Hash rootHash) throws BytecodeException {
+  public BExpr get(Hash rootHash) throws BytecodeException {
     var hashes = decodeRootChain(rootHash);
     int rootChainSize = hashes.size();
     if (rootChainSize != 2 && rootChainSize != 1)
@@ -243,7 +245,7 @@ public class ExprDb {
     }
   }
 
-  private CategoryB getCatOrChainException(Hash rootHash, Hash typeHash)
+  private BCategory getCatOrChainException(Hash rootHash, Hash typeHash)
       throws DecodeExprCatException {
     try {
       return categoryDb.get(typeHash);
@@ -258,23 +260,23 @@ public class ExprDb {
 
   // methods accessed by builders
 
-  public ArrayB newArray(ArrayTB type, List<? extends ValueB> elems) throws BytecodeException {
+  public BArray newArray(BArrayType type, List<? extends BValue> elems) throws BytecodeException {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  public BlobB newBlob(Hash dataHash) throws BytecodeException {
-    var blobTB = categoryDb.blob();
-    var root = newRoot(blobTB, dataHash);
-    return blobTB.newExpr(root, this);
+  public BBlob newBlob(Hash dataHash) throws BytecodeException {
+    var blobType = categoryDb.blob();
+    var root = newRoot(blobType, dataHash);
+    return blobType.newExpr(root, this);
   }
 
   // methods for creating types
 
-  private TypeB pickEvaluationType(ExprB pickable) {
+  private BType pickEvaluationType(BExpr pickable) {
     var evaluationType = pickable.evaluationType();
-    if (evaluationType instanceof ArrayTB arrayT) {
+    if (evaluationType instanceof BArrayType arrayT) {
       return arrayT.elem();
     } else {
       throw new IllegalArgumentException(
@@ -282,9 +284,9 @@ public class ExprDb {
     }
   }
 
-  private TypeB selectEvaluationType(ExprB selectable, IntB index) throws BytecodeException {
+  private BType selectEvaluationType(BExpr selectable, BInt index) throws BytecodeException {
     var evaluationType = selectable.evaluationType();
-    if (evaluationType instanceof TupleTB tuple) {
+    if (evaluationType instanceof BTupleType tuple) {
       int intIndex = index.toJavaBigInteger().intValue();
       var elements = tuple.elements();
       checkElementIndex(intIndex, elements.size());
@@ -295,41 +297,41 @@ public class ExprDb {
     }
   }
 
-  private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws BytecodeException {
+  private MerkleRoot newRoot(BCategory cat, Hash dataHash) throws BytecodeException {
     Hash rootHash = writeChain(cat.hash(), dataHash);
     return new MerkleRoot(rootHash, cat, dataHash);
   }
 
-  private MerkleRoot newRoot(CategoryB cat) throws BytecodeException {
+  private MerkleRoot newRoot(BCategory cat) throws BytecodeException {
     Hash rootHash = writeChain(cat.hash());
     return new MerkleRoot(rootHash, cat, null);
   }
 
   // methods for writing data of Operations
 
-  private Hash writeCallData(ExprB func, CombineB args) throws BytecodeException {
+  private Hash writeCallData(BExpr func, BCombine args) throws BytecodeException {
     return writeChain(func.hash(), args.hash());
   }
 
-  private Hash writeCombineData(List<? extends ExprB> items) throws BytecodeException {
+  private Hash writeCombineData(List<? extends BExpr> items) throws BytecodeException {
     return writeChain(items);
   }
 
-  private Hash writeOrderData(List<? extends ExprB> elems) throws BytecodeException {
+  private Hash writeOrderData(List<? extends BExpr> elems) throws BytecodeException {
     return writeChain(elems);
   }
 
-  private Hash writePickData(ExprB pickable, ExprB index) throws BytecodeException {
+  private Hash writePickData(BExpr pickable, BExpr index) throws BytecodeException {
     return writeChain(pickable.hash(), index.hash());
   }
 
-  private Hash writeSelectData(ExprB selectable, IntB index) throws BytecodeException {
+  private Hash writeSelectData(BExpr selectable, BInt index) throws BytecodeException {
     return writeChain(selectable.hash(), index.hash());
   }
 
   // methods for writing data of Values
 
-  private Hash writeArrayData(List<? extends ValueB> elems) throws BytecodeException {
+  private Hash writeArrayData(List<? extends BValue> elems) throws BytecodeException {
     return writeChain(elems);
   }
 
@@ -341,7 +343,7 @@ public class ExprDb {
     return writeBigInteger(value);
   }
 
-  private Hash writeNativeFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
+  private Hash writeNativeFuncData(BBlob jar, BString classBinaryName, BBool isPure)
       throws BytecodeException {
     return writeChain(jar.hash(), classBinaryName.hash(), isPure.hash());
   }
@@ -350,7 +352,7 @@ public class ExprDb {
     return writeString(string);
   }
 
-  private Hash writeTupleData(List<? extends ValueB> items) throws BytecodeException {
+  private Hash writeTupleData(List<? extends BValue> items) throws BytecodeException {
     return writeChain(items);
   }
 
@@ -390,8 +392,8 @@ public class ExprDb {
         () -> hashedDb.writeHashChain(hashes), ExprDbException::new);
   }
 
-  private Hash writeChain(List<? extends ExprB> exprs) throws ExprDbException {
-    var hashes = exprs.map(ExprB::hash);
+  private Hash writeChain(List<? extends BExpr> exprs) throws ExprDbException {
+    var hashes = exprs.map(BExpr::hash);
     return invokeAndChainHashedDbException(
         () -> hashedDb.writeHashChain(hashes), ExprDbException::new);
   }

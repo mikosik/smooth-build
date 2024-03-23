@@ -1,14 +1,14 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryB;
+import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
 
 public class MerkleRoot {
   private final Hash hash;
-  private final CategoryB category;
+  private final BCategory category;
   private final Hash dataHash;
 
-  public MerkleRoot(Hash hash, CategoryB category, Hash dataHash) {
+  public MerkleRoot(Hash hash, BCategory category, Hash dataHash) {
     this.hash = hash;
     this.dataHash = dataHash;
     this.category = category;
@@ -18,7 +18,7 @@ public class MerkleRoot {
     return hash;
   }
 
-  public CategoryB category() {
+  public BCategory category() {
     return category;
   }
 

@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
@@ -51,7 +51,7 @@ public class Computer {
     this.memoryCache = memoryCache;
   }
 
-  public void compute(Task task, TupleB input, Consumer<ComputationResult> consumer)
+  public void compute(Task task, BTuple input, Consumer<ComputationResult> consumer)
       throws ComputeException {
     if (task.purity() == FAST) {
       computeFast(task, input, consumer);
@@ -60,13 +60,13 @@ public class Computer {
     }
   }
 
-  private void computeFast(Task task, TupleB input, Consumer<ComputationResult> consumer)
+  private void computeFast(Task task, BTuple input, Consumer<ComputationResult> consumer)
       throws ComputeException {
     var output = runComputation(task, input);
     consumer.accept(new ComputationResult(output, NOOP));
   }
 
-  private void computeWithCache(Task task, TupleB input, Consumer<ComputationResult> consumer)
+  private void computeWithCache(Task task, BTuple input, Consumer<ComputationResult> consumer)
       throws ComputeException {
     var hash = computationHash(task, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
@@ -112,7 +112,7 @@ public class Computer {
     return new ComputationResult(computationResult.output(), resultSource);
   }
 
-  private Output runComputation(Task task, TupleB input) throws ComputeException {
+  private Output runComputation(Task task, BTuple input) throws ComputeException {
     var container = containerProvider.get();
     try {
       return task.run(input, container);
@@ -121,11 +121,11 @@ public class Computer {
     }
   }
 
-  private Hash computationHash(Task task, TupleB args) {
+  private Hash computationHash(Task task, BTuple args) {
     return computationHash(sandboxHash, task, args);
   }
 
-  public static Hash computationHash(Hash sandboxHash, Task task, TupleB input) {
+  public static Hash computationHash(Hash sandboxHash, Task task, BTuple input) {
     return Hash.of(asList(sandboxHash, taskHash(task), input.hash()));
   }
 }

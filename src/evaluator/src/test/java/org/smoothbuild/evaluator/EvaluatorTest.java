@@ -55,15 +55,15 @@ import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.ExprS;
 import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.IntB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
-import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
@@ -145,7 +145,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(
-                  right(EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
+                  right(EvaluatorTest.class.getMethod("returnInt", NativeApi.class, BTuple.class)));
           assertEvaluation(bindings(funcS), callS, intB(173));
         }
 
@@ -162,7 +162,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
-                  EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+                  EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
           assertEvaluation(bindings(funcS), callS, intB(77));
         }
       }
@@ -244,14 +244,14 @@ public class EvaluatorTest extends TestingVirtualMachine {
           var className = ReturnIdFunc.class.getCanonicalName();
           when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jar);
-          var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
-          var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
-          when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(funcB));
+          var varMap = ImmutableMap.<String, BType>of("A", intTB());
+          var bFunc = ReturnIdFunc.bytecode(bytecodeF(), varMap);
+          when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(bFunc));
 
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
           assertEvaluation(
-              bindings(bytecodeFuncS), instantiateS(list(intTS()), bytecodeFuncS), funcB);
+              bindings(bytecodeFuncS), instantiateS(list(intTS()), bytecodeFuncS), bFunc);
         }
 
         @Test
@@ -290,22 +290,22 @@ public class EvaluatorTest extends TestingVirtualMachine {
     }
   }
 
-  private void assertEvaluation(NamedEvaluableS namedEvaluableS, ExprB exprB) {
+  private void assertEvaluation(NamedEvaluableS namedEvaluableS, BExpr bExpr) {
     assertThat(evaluate(bindings(namedEvaluableS), instantiateS(namedEvaluableS)))
-        .isEqualTo(exprB);
+        .isEqualTo(bExpr);
   }
 
-  private void assertEvaluation(ExprS exprS, ExprB exprB) {
-    assertEvaluation(bindings(), exprS, exprB);
+  private void assertEvaluation(ExprS exprS, BExpr bExpr) {
+    assertEvaluation(bindings(), exprS, bExpr);
   }
 
   private void assertEvaluation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB exprB) {
-    assertThat(evaluate(evaluables, exprS)).isEqualTo(exprB);
+      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, BExpr bExpr) {
+    assertThat(evaluate(evaluables, exprS)).isEqualTo(bExpr);
   }
 
-  private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
-    var bValues = evaluate(evaluables, list(exprS)).get().valuesB();
+  private BExpr evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+    var bValues = evaluate(evaluables, list(exprS)).get().bValues();
     assertThat(bValues.size()).isEqualTo(1);
     return bValues.get(0);
   }
@@ -313,33 +313,33 @@ public class EvaluatorTest extends TestingVirtualMachine {
   private Maybe<EvaluatedExprs> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var backendCompile = backendCompile(filePersister, bytecodeLoader);
-    var evaluatorB = evaluatorB(nativeMethodLoader);
+    var bEvaluator = bEvaluator(nativeMethodLoader);
     var reporter = new MemoryReporter();
     var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping()));
 
     var injector = createInjector(new AbstractModule() {
       @Override
       protected void configure() {
-        bind(EvaluatorB.class).toInstance(evaluatorB);
+        bind(BEvaluator.class).toInstance(bEvaluator);
         bind(Reporter.class).toInstance(reporter);
         bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
     var compilationResult = apply2(backendCompile, value(exprs), value(evaluables));
-    var evaluationDag = applyMaybeFunction(EvaluatorBFacade.class, compilationResult);
+    var evaluationDag = applyMaybeFunction(BEvaluatorFacade.class, compilationResult);
     return new DagEvaluator(injector).evaluate(evaluationDag, reporter);
   }
 
-  public static IntB returnInt(NativeApi nativeApi, TupleB args) throws BytecodeException {
+  public static BInt returnInt(NativeApi nativeApi, BTuple args) throws BytecodeException {
     return nativeApi.factory().int_(BigInteger.valueOf(173));
   }
 
-  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) throws BytecodeException {
-    return (IntB) args.get(0);
+  public static BInt returnIntParam(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    return (BInt) args.get(0);
   }
 
-  public static ArrayB returnArrayParam(NativeApi nativeApi, TupleB args) throws BytecodeException {
-    return (ArrayB) args.get(0);
+  public static BArray returnArrayParam(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    return (BArray) args.get(0);
   }
 
   private BackendCompile backendCompile(

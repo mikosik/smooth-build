@@ -2,56 +2,56 @@ package org.smoothbuild.virtualmachine.evaluate.task;
 
 import java.util.Objects;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public abstract sealed class Task
     permits CombineTask, ConstTask, InvokeTask, OrderTask, PickTask, SelectTask {
-  private final ExprB exprB;
+  private final BExpr expr;
   private final Purity purity;
-  private final TraceB trace;
+  private final BTrace trace;
 
-  public Task(ExprB exprB, TraceB trace) {
-    this(exprB, trace, Purity.PURE);
+  public Task(BExpr expr, BTrace trace) {
+    this(expr, trace, Purity.PURE);
   }
 
-  public Task(ExprB exprB, TraceB trace, Purity purity) {
-    this.exprB = exprB;
+  public Task(BExpr expr, BTrace trace, Purity purity) {
+    this.expr = expr;
     this.trace = trace;
     this.purity = purity;
   }
 
-  public ExprB exprB() {
-    return exprB;
+  public BExpr exprB() {
+    return expr;
   }
 
-  public TraceB trace() {
+  public BTrace trace() {
     return trace;
   }
 
-  public TypeB outputType() {
-    return exprB.evaluationType();
+  public BType outputType() {
+    return expr.evaluationType();
   }
 
   public Purity purity() {
     return purity;
   }
 
-  public abstract Output run(TupleB input, Container container) throws BytecodeException;
+  public abstract Output run(BTuple input, Container container) throws BytecodeException;
 
   @Override
   public int hashCode() {
-    return exprB.hashCode();
+    return expr.hashCode();
   }
 
   @Override
   public boolean equals(Object object) {
     return object instanceof Task that
         && Objects.equals(this.getClass(), that.getClass())
-        && Objects.equals(this.exprB, that.exprB())
+        && Objects.equals(this.expr, that.exprB())
         && Objects.equals(this.trace, that.trace);
   }
 }

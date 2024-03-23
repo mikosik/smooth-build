@@ -5,8 +5,8 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class OutputTest extends TestingVirtualMachine {
@@ -17,7 +17,7 @@ public class OutputTest extends TestingVirtualMachine {
 
   @Test
   public void value_returns_value() throws Exception {
-    assertThat(new Output(aString(), messages()).valueB()).isEqualTo(aString());
+    assertThat(new Output(aString(), messages()).value()).isEqualTo(aString());
   }
 
   @Test
@@ -74,11 +74,11 @@ public class OutputTest extends TestingVirtualMachine {
     assertThat(output).isEqualTo(new Output(aString(), messages()));
   }
 
-  private ArrayB messages() throws BytecodeException {
+  private BArray messages() throws BytecodeException {
     return logArrayWithOneError();
   }
 
-  private StringB aString() throws BytecodeException {
+  private BString aString() throws BytecodeException {
     return stringB("abc");
   }
 }

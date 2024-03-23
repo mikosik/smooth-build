@@ -7,17 +7,17 @@ import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FileFunc {
   private static final Path SMOOTH_DIR = path(".smooth");
 
-  public static ValueB func(Container container, TupleB args)
+  public static BValue func(Container container, BTuple args)
       throws IOException, BytecodeException {
-    StringB path = (StringB) args.get(0);
+    BString path = (BString) args.get(0);
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
       return null;

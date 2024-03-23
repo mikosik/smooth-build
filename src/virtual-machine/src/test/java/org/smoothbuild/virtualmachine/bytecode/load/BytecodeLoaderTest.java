@@ -13,8 +13,8 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
-import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
@@ -38,7 +38,7 @@ public class BytecodeLoaderTest extends TestingVirtualMachine {
             + ".UnsupportedOperationException: detailed message"));
   }
 
-  private Either<String, ExprB> loadBytecode(Class<?> clazz, Map<String, TypeB> varMap)
+  private Either<String, BExpr> loadBytecode(Class<?> clazz, Map<String, BType> varMap)
       throws NoSuchMethodException, BytecodeException {
     var jar = blobB();
     var classBinaryName = "binary.name";
