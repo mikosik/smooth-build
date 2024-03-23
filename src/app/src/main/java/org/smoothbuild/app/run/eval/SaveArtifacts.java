@@ -18,7 +18,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
-import org.smoothbuild.app.layout.ForBucket;
+import org.smoothbuild.app.layout.WithId;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
@@ -44,7 +44,7 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
   private final Bucket bucket;
 
   @Inject
-  public SaveArtifacts(@ForBucket(PROJECT) Bucket bucket) {
+  public SaveArtifacts(@WithId(PROJECT) Bucket bucket) {
     this.bucket = bucket;
   }
 

@@ -8,7 +8,7 @@ import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import org.smoothbuild.app.layout.ForBucket;
+import org.smoothbuild.app.layout.WithId;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Label;
@@ -18,7 +18,7 @@ public class RemoveArtifacts implements TryFunction0<Void> {
   private final Bucket bucket;
 
   @Inject
-  public RemoveArtifacts(@ForBucket(PROJECT) Bucket bucket) {
+  public RemoveArtifacts(@WithId(PROJECT) Bucket bucket) {
     this.bucket = bucket;
   }
 
