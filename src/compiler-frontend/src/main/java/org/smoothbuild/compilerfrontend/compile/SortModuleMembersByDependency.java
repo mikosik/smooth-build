@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile.ast;
+package org.smoothbuild.compilerfrontend.compile;
 
 import static java.lang.String.join;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -18,6 +18,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.FuncTP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;

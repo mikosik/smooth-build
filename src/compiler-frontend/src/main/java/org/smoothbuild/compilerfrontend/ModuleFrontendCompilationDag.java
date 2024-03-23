@@ -17,15 +17,16 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.compile.ConvertPs;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
 import org.smoothbuild.compilerfrontend.compile.DetectUndefined;
+import org.smoothbuild.compilerfrontend.compile.FindSyntaxErrors;
 import org.smoothbuild.compilerfrontend.compile.InitializeScopes;
 import org.smoothbuild.compilerfrontend.compile.InjectDefaultArguments;
 import org.smoothbuild.compilerfrontend.compile.LoadInternalModuleMembers;
-import org.smoothbuild.compilerfrontend.compile.ast.SortModuleMembersByDependency;
+import org.smoothbuild.compilerfrontend.compile.Parse;
+import org.smoothbuild.compilerfrontend.compile.ReadFileContent;
+import org.smoothbuild.compilerfrontend.compile.SortModuleMembersByDependency;
+import org.smoothbuild.compilerfrontend.compile.TranslateAp;
 import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
 import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
-import org.smoothbuild.compilerfrontend.parse.FindSyntaxErrors;
-import org.smoothbuild.compilerfrontend.parse.Parse;
-import org.smoothbuild.compilerfrontend.parse.TranslateAp;
 
 public class ModuleFrontendCompilationDag {
   public static Dag<ModuleS> frontendCompilationDag(List<FullPath> modules) {

@@ -16,7 +16,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
-import org.smoothbuild.compilerfrontend.FindValues;
+import org.smoothbuild.compilerfrontend.compile.FindValues;
 import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
 
 public class SmoothEvaluationDag {
