@@ -34,10 +34,11 @@ public class CreateInjector {
 
   public static Injector createInjector(
       Path projectDir, PrintWriter out, Level logLevel, ReportMatcher reportMatcher) {
+    var installationDir = installationDir();
     Map<BucketId, Path> bucketIdToPath = map(
         PROJECT, projectDir,
-        STANDARD_LIBRARY, installationDir().resolve(STANDARD_LIBRARY_DIR_NAME),
-        BINARY, installationDir().resolve(BIN_DIR_NAME));
+        STANDARD_LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
+        BINARY, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
         new AppWiring(),
@@ -50,9 +51,10 @@ public class CreateInjector {
   }
 
   public static Injector createInjector(PrintWriter out) {
+    var installationDir = installationDir();
     Map<BucketId, Path> bucketIdToPath = map(
-        STANDARD_LIBRARY, installationDir().resolve(STANDARD_LIBRARY_DIR_NAME),
-        BINARY, installationDir().resolve(BIN_DIR_NAME));
+        STANDARD_LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
+        BINARY, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
         new StandardLibraryBucketWiring(),
