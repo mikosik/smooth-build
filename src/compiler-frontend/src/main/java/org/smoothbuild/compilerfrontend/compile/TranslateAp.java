@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.parse;
+package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.common.collect.List.list;

@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend;
+package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.log.base.Log.error;

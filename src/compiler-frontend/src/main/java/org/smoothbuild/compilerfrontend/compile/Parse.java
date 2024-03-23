@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.parse;
+package org.smoothbuild.compilerfrontend.compile;
 
 import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;

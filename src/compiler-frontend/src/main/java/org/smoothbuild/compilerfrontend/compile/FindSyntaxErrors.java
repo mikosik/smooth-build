@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.parse;
+package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
