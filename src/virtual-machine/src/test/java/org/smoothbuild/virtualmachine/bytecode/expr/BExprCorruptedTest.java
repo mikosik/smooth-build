@@ -30,6 +30,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodePickWrongEvaluationTypeException;
@@ -37,6 +38,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectIndexOutOfBo
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
@@ -535,20 +537,113 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _if_func {
+  class _if {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save IF
+       * This test makes sure that other tests in this class use proper scheme to save IF operation
        * in HashedDb.
        */
-      var hash = hash(hash(bIfKind(bIntType())));
-      assertThat(hash).isEqualTo(bIf(bIntType()).hash());
+      var condition = bBool(true);
+      var then_ = bInt(1);
+      var else_ = bInt(2);
+      var dataHash = hash(hash(condition), hash(then_), hash(else_));
+      var hash = hash(hash(bIfKind(bIntType())), dataHash);
+      assertThat(((BIf) exprDb().get(hash)).subExprs())
+          .isEqualTo(new BIf.SubExprsB(condition, then_, else_));
     }
 
     @Test
-    public void root_with_data_hash() throws Exception {
-      obj_root_with_data_hash(bIfKind(bIntType()));
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(bIfKind(bIntType()));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var condition = bBool(true);
+      var then_ = bInt(1);
+      var else_ = bInt(2);
+      var dataHash = hash(hash(condition), hash(then_), hash(else_));
+      obj_root_with_two_data_hashes(
+          bIfKind(), dataHash, (Hash hash) -> ((BIf) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          bIfKind(), (Hash hash) -> ((BIf) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    public void data_is_chain_with_one_element() throws Exception {
+      var condition = bBool(true);
+      var dataHash = hash(hash(condition));
+      var hash = hash(hash(bIfKind()), dataHash);
+      assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, bIfKind(), DATA_PATH, 3, 1));
+    }
+
+    @Test
+    public void data_is_chain_with_two_elements() throws Exception {
+      var condition = bBool(true);
+      var then_ = bInt(1);
+      var dataHash = hash(hash(condition), hash(then_));
+      var hash = hash(hash(bIfKind()), dataHash);
+      assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, bIfKind(), DATA_PATH, 3, 2));
+    }
+
+    @Test
+    public void data_is_chain_with_four_element() throws Exception {
+      var condition = bBool(true);
+      var then_ = bInt(1);
+      var else_ = bInt(2);
+      var dataHash = hash(hash(condition), hash(then_), hash(else_), hash(else_));
+      var hash = hash(hash(bIfKind()), dataHash);
+      assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, bIfKind(), DATA_PATH, 3, 4));
+    }
+
+    @Test
+    public void condition_evaluation_type_is_not_bool() throws Exception {
+      var condition = bString();
+      var then_ = bInt(1);
+      var else_ = bInt(2);
+      var dataHash = hash(hash(condition), hash(then_), hash(else_));
+      var kind = bIfKind(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "condition", "Bool", bStringType()));
+    }
+
+    @Test
+    public void then_evaluation_type_is_not_equal_to_if_evaluation_type() throws Exception {
+      var condition = bBool();
+      var then_ = bString();
+      var else_ = bInt(2);
+      var dataHash = hash(hash(condition), hash(then_), hash(else_));
+      var kind = bIfKind(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "then", bIntType(), bStringType()));
+    }
+
+    @Test
+    public void else_evaluation_type_is_not_equal_to_if_evaluation_type() throws Exception {
+      var condition = bBool();
+      var then_ = bInt(1);
+      var else_ = bString();
+      var dataHash = hash(hash(condition), hash(then_), hash(else_));
+      var kind = bIfKind(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "else", bIntType(), bStringType()));
     }
   }
 

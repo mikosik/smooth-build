@@ -14,6 +14,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf.SubExprsB;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOper;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
@@ -22,7 +24,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BFunc;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
@@ -88,6 +89,7 @@ public class BScheduler {
     switch (job.expr()) {
       case BCall call -> new CallScheduler(job, call).scheduleCall();
       case BCombine combine -> scheduleOperTask(job, combine, CombineTask::new);
+      case BIf if_ -> scheduleIfFunc(job, if_);
       case BLambda lambda -> scheduleConstTask(job, (BValue) bReferenceInliner.inline(job));
       case BValue value -> scheduleConstTask(job, value);
       case BOrder order -> scheduleOperTask(job, order, OrderTask::new);
@@ -122,7 +124,6 @@ public class BScheduler {
     private void onFuncEvaluated(BValue funcB) throws BytecodeException {
       switch ((BFunc) funcB) {
         case BLambda lambda -> handleLambda(lambda);
-        case BIf if_ -> handleIfFunc();
         case BMap map -> handleMapFunc();
         case BNativeFunc nativeFunc -> handleNativeFunc(nativeFunc);
       }
@@ -135,19 +136,6 @@ public class BScheduler {
       var bodyTrace = callTrace(lambda);
       var bodyJob = newJob(lambda.body(), bodyEnvironmentJobs, bodyTrace);
       scheduleJobEvaluation(bodyJob, callJob.promisedValue());
-    }
-
-    // handling IfFunc
-
-    private void handleIfFunc() throws BytecodeException {
-      var args = args();
-      var job = newJob(args.get(0), callJob);
-      scheduleJobEvaluation(job, v -> onConditionEvaluated(v, args));
-    }
-
-    private void onConditionEvaluated(BValue condition, List<BExpr> args) throws BytecodeException {
-      var expr = args.get(((BBool) condition).toJavaBoolean() ? 1 : 2);
-      scheduleJobEvaluation(newJob(expr, callJob), callJob.promisedValue());
     }
 
     // handling MapFunc
@@ -202,6 +190,18 @@ public class BScheduler {
   private void scheduleConstTask(Job job, BValue value) {
     var constTask = new ConstTask(value, job.trace());
     scheduleJobTask(job, constTask, list());
+  }
+
+  private void scheduleIfFunc(Job ifJob, BIf if_) throws BytecodeException {
+    var args = if_.subExprs();
+    var job = newJob(args.condition(), ifJob);
+    scheduleJobEvaluation(job, v -> onConditionEvaluated(v, ifJob, args));
+  }
+
+  private void onConditionEvaluated(BValue condition, Job ifJob, SubExprsB args)
+      throws BytecodeException {
+    var expr = ((BBool) condition).toJavaBoolean() ? args.then_() : args.else_();
+    scheduleJobEvaluation(newJob(expr, ifJob), ifJob.promisedValue());
   }
 
   private <T extends BOper> void scheduleOperTask(

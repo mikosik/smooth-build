@@ -15,6 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
@@ -24,7 +25,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
@@ -131,9 +131,21 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BIf newIfFunc(BType t) throws BytecodeException {
-    var kind = kindDb.ifFunc(t);
-    var root = newRoot(kind);
+  public BIf newIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
+    var conditionType = condition.evaluationType();
+    if (!conditionType.equals(kindDb.bool())) {
+      throw new IllegalArgumentException(
+          "`condition.evaluationType()` should be `Bool` but is " + conditionType + ".");
+    }
+    var thenType = then_.evaluationType();
+    var elseType = else_.evaluationType();
+    if (!thenType.equals(elseType)) {
+      throw new IllegalArgumentException("`then.evaluationType()` (which is " + thenType.q()
+          + ") should be equal to `else.evaluationType()` (which is " + elseType.q() + ").");
+    }
+    var kind = kindDb.if_(thenType);
+    var data = writeChain(condition.hash(), then_.hash(), else_.hash());
+    var root = newRoot(kind, data);
     return kind.newExpr(root, this);
   }
 
@@ -155,7 +167,7 @@ public class BExprDb {
   public BPick newPick(BExpr pickable, BExpr index) throws BytecodeException {
     var evaluationType = pickEvaluationType(pickable);
     if (!(index.evaluationType() instanceof BIntType)) {
-      throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
+      throw new IllegalArgumentException("index.evaluationType() should be `Int` but is "
           + index.evaluationType().q() + ".");
     }
     var kind = kindDb.pick(evaluationType);
@@ -228,8 +240,9 @@ public class BExprDb {
   public BExpr get(Hash rootHash) throws BytecodeException {
     var hashes = decodeRootChain(rootHash);
     int rootChainSize = hashes.size();
-    if (rootChainSize != 2 && rootChainSize != 1)
+    if (rootChainSize != 2 && rootChainSize != 1) {
       throw wrongSizeOfRootChainException(rootHash, rootChainSize);
+    }
     var kind = getKindOrChainException(rootHash, hashes.get(0));
     if (kind.containsData()) {
       if (rootChainSize != 2) {
@@ -280,7 +293,7 @@ public class BExprDb {
       return arrayT.elem();
     } else {
       throw new IllegalArgumentException(
-          "pickable.evaluationType() should be ArrayTB but is " + evaluationType.q() + ".");
+          "pickable.evaluationType() should be `Array` but is " + evaluationType.q() + ".");
     }
   }
 
@@ -293,7 +306,7 @@ public class BExprDb {
       return elements.get(intIndex);
     } else {
       throw new IllegalArgumentException(
-          "selectable.evaluationType() should be TupleTB but is " + evaluationType.q() + ".");
+          "selectable.evaluationType() should be `Tuple` but is " + evaluationType.q() + ".");
     }
   }
 

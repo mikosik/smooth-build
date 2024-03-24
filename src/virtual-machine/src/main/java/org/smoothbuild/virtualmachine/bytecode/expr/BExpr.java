@@ -104,7 +104,7 @@ public abstract class BExpr {
         .map(tuple -> readNode(dataNodePath(tuple.element2()), chain.get(tuple.element2())));
   }
 
-  private List<Hash> readDataAsHashChain(int expectedSize) throws BExprDbException {
+  protected List<Hash> readDataAsHashChain(int expectedSize) throws BExprDbException {
     List<Hash> data = readDataAsHashChain();
     if (data.size() != expectedSize) {
       throw new DecodeExprWrongChainSizeException(
@@ -130,7 +130,7 @@ public abstract class BExpr {
     return readNode(dataNodePath(i), elemHash);
   }
 
-  private BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
+  protected BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
     return invokeAndChainBytecodeException(
         () -> exprDb.get(nodeHash), e -> new DecodeExprNodeException(hash(), kind(), nodePath, e));
   }
@@ -154,7 +154,8 @@ public abstract class BExpr {
     return result;
   }
 
-  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz) throws BExprDbException {
+  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz)
+      throws BExprDbException {
     if (clazz.isInstance(nodeExpr)) {
       @SuppressWarnings("unchecked")
       T result = (T) nodeExpr;
@@ -165,7 +166,7 @@ public abstract class BExpr {
     }
   }
 
-  private static String dataNodePath(int i) {
+  protected static String dataNodePath(int i) {
     return DATA_PATH + "[" + i + "]";
   }
 

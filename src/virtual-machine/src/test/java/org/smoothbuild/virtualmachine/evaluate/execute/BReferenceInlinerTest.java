@@ -6,6 +6,7 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
@@ -85,8 +86,8 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void if_func() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bIf(bIntType()));
+    public void if_() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bIf(bBool(), bInt(), bInt()));
     }
 
     @Test
@@ -110,21 +111,21 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
 
     @Test
     public void lambda_body_with_var_referencing_param_of_this_lambda() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(0, r -> myLambda(r));
+      assertReferenceInliningDoesNotChangeExpression(0, r -> bLambda(list(bIntType()), r));
     }
 
     @Test
     public void lambda_body_with_var_referencing_param_of_enclosing_lambda() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(1, r -> myLambda(r));
+      assertReferenceInliningDoesNotChangeExpression(1, r -> lambdaInsideLambda(r));
     }
 
     @Test
     public void lambda_body_with_var_referencing_unbound_param() throws Exception {
-      assertReferenceInliningReplacesReference(2, r -> myLambda(r), bInt(1));
+      assertReferenceInliningReplacesReference(2, bInt(1), r -> lambdaInsideLambda(r));
     }
 
-    private BLambda myLambda(BExpr expr) throws BytecodeException {
-      var inner = bLambda(bFuncType(bBlobType(), bIntType()), expr);
+    private BLambda lambdaInsideLambda(BExpr r) throws BytecodeException {
+      var inner = bLambda(list(bIntType()), r);
       return bLambda(list(bIntType()), inner);
     }
 
@@ -141,6 +142,22 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     @Test
     public void combine() throws Exception {
       assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bCombine);
+    }
+
+    @Test
+    public void if_condition() throws Exception {
+      assertReferenceInliningReplacesReference(
+          2, bBool(false), list(bInt(1), bInt(2), bBool(false)), r -> bIf(r, bInt(7), bInt(8)));
+    }
+
+    @Test
+    public void if_then() throws Exception {
+      assertReferenceInliningReplacesReference(r -> bIf(bBool(), r, bInt(33)));
+    }
+
+    @Test
+    public void if_else() throws Exception {
+      assertReferenceInliningReplacesReference(r -> bIf(bBool(), bInt(33), r));
     }
 
     @Test
@@ -180,20 +197,30 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
 
   private void assertReferenceInliningReplacesReference(
       Function1<BExpr, BExpr, BytecodeException> factory) throws BytecodeException {
-    assertReferenceInliningReplacesReference(2, factory);
+    assertReferenceInliningReplacesReference(2, bInt(3), factory);
   }
 
   private void assertReferenceInliningReplacesReference(
-      int referencedIndex, Function1<BExpr, BExpr, BytecodeException> factory)
+      int referencedIndex,
+      BInt expectedReplacement,
+      Function1<BExpr, BExpr, BytecodeException> factory)
       throws BytecodeException {
-    assertReferenceInliningReplacesReference(referencedIndex, factory, bInt(3));
+    List<BExpr> environment = list(bInt(1), bInt(2), bInt(3));
+    assertReferenceInliningReplacesReference(
+        referencedIndex, expectedReplacement, environment, factory);
   }
 
   private void assertReferenceInliningReplacesReference(
-      int referencedIndex, Function1<BExpr, BExpr, BytecodeException> factory, BInt replacement)
+      int referencedIndex,
+      BExpr expectedReplacement,
+      List<BExpr> environment,
+      Function1<BExpr, BExpr, BytecodeException> factory)
       throws BytecodeException {
-    assertReferenceInlining(
-        factory.apply(bReference(bIntType(), referencedIndex)), factory.apply(replacement));
+    var referenceEvaluationType = environment.get(referencedIndex).evaluationType();
+    BExpr expr = factory.apply(bReference(referenceEvaluationType, referencedIndex));
+    BExpr expected = factory.apply(expectedReplacement);
+    var job = job(expr, environment);
+    assertThat(bReferenceInliner().inline(job)).isEqualTo(expected);
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(
@@ -207,10 +234,5 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     var expr = factory.apply(bReference(bIntType(), referencedIndex));
     var job = job(expr, bInt(1), bInt(2), bInt(3));
     assertThat(bReferenceInliner().inline(job)).isSameInstanceAs(expr);
-  }
-
-  private void assertReferenceInlining(BExpr expr, BExpr expected) throws BytecodeException {
-    var job = job(expr, bInt(1), bInt(2), bInt(3));
-    assertThat(bReferenceInliner().inline(job)).isEqualTo(expected);
   }
 }

@@ -23,6 +23,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
@@ -31,7 +32,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
@@ -113,8 +113,8 @@ public class BytecodeFactory {
     return exprDb.newLambda(type, body);
   }
 
-  public BIf ifFunc(BType t) throws BytecodeException {
-    return exprDb.newIfFunc(t);
+  public BIf if_(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
+    return exprDb.newIf(condition, then_, else_);
   }
 
   public BInt int_(BigInteger value) throws BytecodeException {

@@ -17,6 +17,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
@@ -25,7 +26,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
@@ -36,6 +36,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BPickKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BReferenceKind;
@@ -44,7 +45,6 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BLambdaKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BMapKind;
@@ -176,8 +176,8 @@ public abstract class TestingBytecode {
     return bIfKind(bIntType());
   }
 
-  public BIfKind bIfKind(BType t) throws BytecodeException {
-    return kindDb().ifFunc(t);
+  public BIfKind bIfKind(BType evaluationType) throws BytecodeException {
+    return kindDb().if_(evaluationType);
   }
 
   public BMapKind bMapKind() throws BytecodeException {
@@ -479,8 +479,8 @@ public abstract class TestingBytecode {
     return bytecodeF().combine(list(items));
   }
 
-  public BIf bIf(BType resultType) throws BytecodeException {
-    return bytecodeF().ifFunc(resultType);
+  public BIf bIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
+    return bytecodeF().if_(condition, then_, else_);
   }
 
   public BMap bMap(BType r, BType s) throws BytecodeException {

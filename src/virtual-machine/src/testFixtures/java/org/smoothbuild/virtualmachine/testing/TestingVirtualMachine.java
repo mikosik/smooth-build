@@ -16,6 +16,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -76,7 +77,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BEvaluator bEvaluator(Provider<BScheduler> schedulerB) {
-    return new BEvaluator(schedulerB, taskReporter());
+    return bEvaluator(schedulerB, taskReporter());
   }
 
   public BEvaluator bEvaluator(Provider<BScheduler> schedulerB, TaskReporter taskReporter) {
@@ -282,7 +283,11 @@ public class TestingVirtualMachine extends TestingBytecode {
   // Job related
 
   public static Job job(BExpr expr, BExpr... environment) {
-    return new Job(expr, list(environment).map(TestingVirtualMachine::job), new BTrace());
+    return job(expr, list(environment));
+  }
+
+  public static Job job(BExpr expr, List<BExpr> list) {
+    return new Job(expr, list.map(TestingVirtualMachine::job), new BTrace());
   }
 
   public static Job job(BExpr expr, Job... environment) {
