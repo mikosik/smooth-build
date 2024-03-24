@@ -12,31 +12,31 @@ public class StoredLogStructTest extends TestingVirtualMachine {
 
   @Test
   public void empty_list_contains_no_errors() throws Exception {
-    messages = logArrayEmpty();
+    messages = bLogArrayEmpty();
     assertThat(containsErrorOrAbove(messages)).isFalse();
   }
 
   @Test
   public void list_with_info_message_contains_no_errors() throws Exception {
-    messages = arrayB(infoLog("info message"));
+    messages = bArray(bInfoLog("info message"));
     assertThat(containsErrorOrAbove(messages)).isFalse();
   }
 
   @Test
   public void list_with_warning_message_contains_no_errors() throws Exception {
-    messages = arrayB(warningLog("warning message"));
+    messages = bArray(bWarningLog("warning message"));
     assertThat(containsErrorOrAbove(messages)).isFalse();
   }
 
   @Test
   public void list_with_error_message_contains_error_or_above() throws Exception {
-    messages = arrayB(errorLog("error message"));
+    messages = bArray(bErrorLog("error message"));
     assertThat(containsErrorOrAbove(messages)).isTrue();
   }
 
   @Test
   public void list_with_fatal_message_contains_error_or_above() throws Exception {
-    messages = arrayB(fatalLog("error message"));
+    messages = bArray(bFatalLog("error message"));
     assertThat(containsErrorOrAbove(messages)).isTrue();
   }
 }

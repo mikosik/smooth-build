@@ -15,24 +15,24 @@ public class BIfTest extends TestingVirtualMachine {
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BIf> {
     @Override
     protected List<BIf> equalExprs() throws BytecodeException {
-      return list(ifFuncB(intTB()), ifFuncB(intTB()));
+      return list(bIf(bIntType()), bIf(bIntType()));
     }
 
     @Override
     protected List<BIf> nonEqualExprs() throws BytecodeException {
-      return list(ifFuncB(intTB()), ifFuncB(stringTB()), ifFuncB(blobTB()));
+      return list(bIf(bIntType()), bIf(bStringType()), bIf(bBlobType()));
     }
   }
 
   @Test
   public void if_can_be_read_back_by_hash() throws Exception {
-    var ifB = ifFuncB(intTB());
+    var ifB = bIf(bIntType());
     assertThat(exprDbOther().get(ifB.hash())).isEqualTo(ifB);
   }
 
   @Test
   public void to_string() throws Exception {
-    var ifB = ifFuncB(intTB());
+    var ifB = bIf(bIntType());
     assertThat(ifB.toString()).isEqualTo("IfFunc((Bool,Int,Int)->Int)@" + ifB.hash());
   }
 }

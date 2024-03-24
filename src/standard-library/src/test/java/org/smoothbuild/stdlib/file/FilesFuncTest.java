@@ -71,7 +71,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     createProjectFile("dir/subdir/file.txt", "def");
     evaluate("result");
     assertThat(artifact())
-        .isEqualTo(arrayB(fileB("file.txt", "abc"), fileB("subdir/file.txt", "def")));
+        .isEqualTo(bArray(bFile("file.txt", "abc"), bFile("subdir/file.txt", "def")));
   }
 
   @Test
@@ -85,7 +85,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     evaluate("result");
 
     var files = ((BArray) artifact()).elements(BValue.class);
-    assertThat(files).containsExactly(fileB("dir/file.txt", "abc"));
+    assertThat(files).containsExactly(bFile("dir/file.txt", "abc"));
   }
 
   @Test
@@ -96,10 +96,10 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     createProjectFile("dir/file.txt", "abc");
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("file.txt", "abc")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "abc")));
 
     createProjectFile("dir/file.txt", "def");
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("file.txt", "def")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "def")));
   }
 }

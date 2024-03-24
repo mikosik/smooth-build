@@ -14,26 +14,26 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class BCallTest extends TestingVirtualMachine {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
-    assertCall(() -> callB(intB()))
+    assertCall(() -> bCall(bInt()))
         .throwsException(
             new IllegalArgumentException("`func` component doesn't evaluate to FuncB."));
   }
 
   @Test
   public void creating_call_with_too_few_args_causes_exception() {
-    assertCall(() -> callB(lambdaB(list(stringTB()), intB())))
+    assertCall(() -> bCall(bLambda(list(bStringType()), bInt())))
         .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
-    assertCall(() -> callB(lambdaB(list(stringTB()), intB()), intB(), intB()))
+    assertCall(() -> bCall(bLambda(list(bStringType()), bInt()), bInt(), bInt()))
         .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
-    assertCall(() -> callB(lambdaB(list(stringTB()), intB()), intB(3)))
+    assertCall(() -> bCall(bLambda(list(bStringType()), bInt()), bInt(3)))
         .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
 
@@ -45,9 +45,9 @@ public class BCallTest extends TestingVirtualMachine {
 
   @Test
   public void sub_exprs_returns_sub_exprs() throws Exception {
-    var func = lambdaB(list(stringTB()), intB());
-    var args = combineB(stringB());
-    assertThat(callB(func, args).subExprs()).isEqualTo(new SubExprsB(func, args));
+    var func = bLambda(list(bStringType()), bInt());
+    var args = bCombine(bString());
+    assertThat(bCall(func, args).subExprs()).isEqualTo(new SubExprsB(func, args));
   }
 
   @Nested
@@ -55,38 +55,38 @@ public class BCallTest extends TestingVirtualMachine {
     @Override
     protected java.util.List<BCall> equalExprs() throws BytecodeException {
       return list(
-          callB(lambdaB(list(blobTB()), intB()), blobB()),
-          callB(lambdaB(list(blobTB()), intB()), blobB()));
+          bCall(bLambda(list(bBlobType()), bInt()), bBlob()),
+          bCall(bLambda(list(bBlobType()), bInt()), bBlob()));
     }
 
     @Override
     protected java.util.List<BCall> nonEqualExprs() throws BytecodeException {
       return list(
-          callB(lambdaB(list(blobTB()), intB()), blobB()),
-          callB(lambdaB(list(stringTB()), intB()), stringB()),
-          callB(lambdaB(list(blobTB()), stringB()), blobB()));
+          bCall(bLambda(list(bBlobType()), bInt()), bBlob()),
+          bCall(bLambda(list(bStringType()), bInt()), bString()),
+          bCall(bLambda(list(bBlobType()), bString()), bBlob()));
     }
   }
 
   @Test
   public void call_can_be_read_back_by_hash() throws Exception {
-    var call = callB(lambdaB(list(stringTB()), intB()), stringB());
+    var call = bCall(bLambda(list(bStringType()), bInt()), bString());
     assertThat(exprDbOther().get(call.hash())).isEqualTo(call);
   }
 
   @Test
   public void call_read_back_by_hash_has_same_data() throws Exception {
-    var func = lambdaB(list(stringTB()), intB());
-    var args = combineB(stringB());
-    var call = callB(func, args);
+    var func = bLambda(list(bStringType()), bInt());
+    var args = bCombine(bString());
+    var call = bCall(func, args);
     assertThat(((BCall) exprDbOther().get(call.hash())).subExprs())
         .isEqualTo(new BCall.SubExprsB(func, args));
   }
 
   @Test
   public void to_string() throws Exception {
-    var func = lambdaB(list(stringTB()), intB());
-    var call = callB(func, stringB());
+    var func = bLambda(list(bStringType()), bInt());
+    var call = bCall(func, bString());
     assertThat(call.toString()).isEqualTo("CALL:Int(???)@" + call.hash());
   }
 }

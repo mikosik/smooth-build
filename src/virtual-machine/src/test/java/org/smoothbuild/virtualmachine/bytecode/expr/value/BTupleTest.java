@@ -13,21 +13,21 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class BTupleTest extends TestingVirtualMachine {
   @Test
   public void setting_element_to_null_throws_exception() {
-    assertCall(() -> exprDb().newTuple(list(stringB("John"), null)))
+    assertCall(() -> exprDb().newTuple(list(bString("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_of_person_tuple_is_person_type() throws Exception {
     var person = johnDoePerson();
-    assertThat(person.kind()).isEqualTo(personTB());
+    assertThat(person.kind()).isEqualTo(bPersonType());
   }
 
   @Test
   public void element_contains_object_passed_to_builder() throws Exception {
     var person = johnDoePerson();
-    assertThat(person.kind()).isEqualTo(personTB());
-    assertThat(person.get(0)).isEqualTo(stringB("John"));
+    assertThat(person.kind()).isEqualTo(bPersonType());
+    assertThat(person.get(0)).isEqualTo(bString("John"));
   }
 
   @Test
@@ -53,18 +53,18 @@ public class BTupleTest extends TestingVirtualMachine {
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BTuple> {
     @Override
     protected java.util.List<BTuple> equalExprs() throws BytecodeException {
-      return list(tupleB(intB(7), stringB("abc")), tupleB(intB(7), stringB("abc")));
+      return list(bTuple(bInt(7), bString("abc")), bTuple(bInt(7), bString("abc")));
     }
 
     @Override
     protected java.util.List<BTuple> nonEqualExprs() throws BytecodeException {
       return list(
-          tupleB(),
-          tupleB(intB(0)),
-          tupleB(intB(7)),
-          tupleB(intB(0), intB(0)),
-          tupleB(intB(0), intB(7)),
-          tupleB(intB(7), intB(0)));
+          bTuple(),
+          bTuple(bInt(0)),
+          bTuple(bInt(7)),
+          bTuple(bInt(0), bInt(0)),
+          bTuple(bInt(0), bInt(7)),
+          bTuple(bInt(7), bInt(0)));
     }
   }
 
@@ -90,6 +90,6 @@ public class BTupleTest extends TestingVirtualMachine {
   }
 
   private BTuple johnDoePerson() throws Exception {
-    return tupleB(stringB("John"), stringB("Doe"));
+    return bTuple(bString("John"), bString("Doe"));
   }
 }

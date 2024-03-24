@@ -62,7 +62,7 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
   private void assertLoadingCausesError(Class<?> clazz, String message)
       throws IOException, BytecodeException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
-    assertThat(nativeMethodLoader.load(nativeFuncB(clazz))).isEqualTo(loadingError(clazz, message));
+    assertThat(nativeMethodLoader.load(bNativeFunc(clazz))).isEqualTo(loadingError(clazz, message));
   }
 
   private String wrongReturnTypeErrorMessage() {
@@ -108,14 +108,14 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
         Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
         throws Exception {
       var methodLoader = mock(MethodLoader.class);
-      var jar = blobB();
+      var jar = bBlob();
       var classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
       when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var nativeFunc = nativeFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
+      var nativeFunc = bNativeFunc(bFuncType(bStringType()), jar, bString(classBinaryName));
       var resultMethod1 = nativeMethodLoader.load(nativeFunc);
       var resultMethod2 = nativeMethodLoader.load(nativeFunc);
       assertThat(resultMethod1).isEqualTo(expected);

@@ -24,12 +24,12 @@ public class OutputClassFileTest extends TestingVirtualMachine {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elements(BTuple.class)).containsExactly(fileB(path, bytes));
+    assertThat(fileArrayBuilder.build().elements(BTuple.class)).containsExactly(bFile(path, bytes));
   }
 
   @Test
   public void get_name_returns_file_path() throws Exception {
-    var arrayTH = arrayTB(fileTB());
+    var arrayTH = bArrayType(bFileType());
     var outputClassFile = new OutputClassFile(exprDb().newArrayBuilder(arrayTH), path, nativeApi());
     assertThat(outputClassFile.getName()).isEqualTo("/" + path);
   }

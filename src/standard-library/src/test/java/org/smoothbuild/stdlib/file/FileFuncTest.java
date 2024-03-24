@@ -69,7 +69,7 @@ public class FileFuncTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     createProjectFile("dir/file.txt", "abc");
     evaluate("result");
-    assertThat(artifact()).isEqualTo(fileB("dir/file.txt", "abc"));
+    assertThat(artifact()).isEqualTo(bFile("dir/file.txt", "abc"));
   }
 
   @Test
@@ -80,10 +80,10 @@ public class FileFuncTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     createProjectFile("dir/file.txt", "abc");
     evaluate("result");
-    assertThat(artifact()).isEqualTo(fileB("dir/file.txt", "abc"));
+    assertThat(artifact()).isEqualTo(bFile("dir/file.txt", "abc"));
 
     createProjectFile("dir/file.txt", "def");
     evaluate("result");
-    assertThat(artifact()).isEqualTo(fileB("dir/file.txt", "def"));
+    assertThat(artifact()).isEqualTo(bFile("dir/file.txt", "def"));
   }
 }

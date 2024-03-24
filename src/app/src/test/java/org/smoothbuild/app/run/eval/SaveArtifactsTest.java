@@ -51,7 +51,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_bool_artifact() throws Exception {
     var typeS = boolTS();
-    var valueB = boolB(true);
+    var valueB = bBool(true);
     var valueAsByteString = byteStringWithSingleByteEqualOne();
 
     testValueStoring(typeS, valueB, valueAsByteString);
@@ -60,7 +60,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_int_artifact() throws Exception {
     var typeS = intTS();
-    var valueB = intB(7);
+    var valueB = bInt(7);
     var valueAsByteString = ByteString.of((byte) 7);
 
     testValueStoring(typeS, valueB, valueAsByteString);
@@ -69,7 +69,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_string_artifact() throws Exception {
     var typeS = stringTS();
-    var valueB = stringB("abc");
+    var valueB = bString("abc");
     var valueAsByteString = byteStringFrom("abc");
 
     testValueStoring(typeS, valueB, valueAsByteString);
@@ -79,7 +79,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   void store_blob_artifact() throws Exception {
     var typeS = blobTS();
     var valueAsByteString = byteStringFrom("abc");
-    var valueB = blobB(valueAsByteString);
+    var valueB = bBlob(valueAsByteString);
 
     testValueStoring(typeS, valueB, valueAsByteString);
   }
@@ -89,7 +89,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     var typeS = fileTS();
     var string = "abc";
     var contentAsByteString = byteStringFrom(string);
-    var valueB = fileB(path("my/path"), contentAsByteString);
+    var valueB = bFile(path("my/path"), contentAsByteString);
     var artifactRelativePath = "myValue/my/path";
 
     testValueStoring(typeS, valueB, contentAsByteString, artifactRelativePath);
@@ -98,7 +98,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
     var typeS = structTS("NotAFile", blobTS(), stringTS());
-    var valueB = tupleB(stringB("my/path"), blobB(byteStringFrom("abc")));
+    var valueB = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
     var byteString = readFile(hashedDbBucket(), HashedDb.dbPathTo(valueB.dataHash()));
 
     testValueStoring(typeS, valueB, byteString);
@@ -107,7 +107,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_empty_bool_array_artifact() throws Exception {
     var typeS = arrayTS(boolTS());
-    var valueB = arrayB(boolTB());
+    var valueB = bArray(bBoolType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
   }
@@ -115,7 +115,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_not_empty_bool_array_artifact() throws Exception {
     var typeS = arrayTS(boolTS());
-    var valueB = arrayB(boolTB(), boolB(true), boolB(false));
+    var valueB = bArray(bBoolType(), bBool(true), bBool(false));
 
     testValueStoring(
         typeS,
@@ -131,7 +131,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_empty_string_array_artifact() throws Exception {
     var typeS = arrayTS(stringTS());
-    var valueB = arrayB(stringTB());
+    var valueB = bArray(bStringType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
   }
@@ -139,7 +139,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_not_empty_string_array_artifact() throws Exception {
     var typeS = arrayTS(stringTS());
-    var valueB = arrayB(stringTB(), stringB("abc"), stringB("def"));
+    var valueB = bArray(bStringType(), bString("abc"), bString("def"));
 
     testValueStoring(
         typeS,
@@ -151,7 +151,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_empty_blob_array_artifact() throws Exception {
     var typeS = arrayTS(blobTS());
-    var valueB = arrayB(blobTB());
+    var valueB = bArray(bBlobType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
   }
@@ -159,7 +159,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_not_empty_blob_array_artifact() throws Exception {
     var typeS = arrayTS(blobTS());
-    var valueB = arrayB(blobTB(), blobB(7), blobB(8));
+    var valueB = bArray(bBlobType(), bBlob(7), bBlob(8));
 
     testValueStoring(
         typeS,
@@ -172,7 +172,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void store_empty_file_array_artifact() throws Exception {
     var typeS = arrayTS(fileTS());
-    var valueB = arrayB(fileTB());
+    var valueB = bArray(bFileType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
   }
@@ -182,7 +182,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     var typeS = arrayTS(fileTS());
     var content1 = byteStringFrom("abc");
     var content2 = byteStringFrom("def");
-    var valueB = arrayB(fileTB(), fileB("dir1/file1", content1), fileB("dir2/file2", content2));
+    var valueB = bArray(bFileType(), bFile("dir1/file1", content1), bFile("dir2/file2", content2));
 
     testValueStoring(
         typeS,
@@ -197,7 +197,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     var content1 = byteStringFrom("abc");
     var content2 = byteStringFrom("def");
     var path = path("dir1/file1");
-    var valueB = arrayB(fileTB(), fileB(path, content1), fileB(path, content2));
+    var valueB = bArray(bFileType(), bFile(path, content1), bFile(path, content2));
 
     assertThat(saveArtifacts(typeS, valueB).logs())
         .isEqualTo(
@@ -215,7 +215,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
         instantiateS(stringTS(), "myValue1"),
         instantiateS(stringTS(), "myValue2"),
         instantiateS(stringTS(), "myValue3"));
-    List<BValue> bValues = list(stringB(), stringB(), stringB());
+    List<BValue> bValues = list(bString(), bString(), bString());
     var stringTry = saveArtifacts.apply(evaluatedExprs(exprSs, bValues));
     assertThat(stringTry)
         .isEqualTo(success(

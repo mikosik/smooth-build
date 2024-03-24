@@ -25,7 +25,7 @@ public class ResultHandlerTest extends TestingVirtualMachine {
     reporter = mock(TaskReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    value = stringB();
+    value = bString();
   }
 
   @Nested

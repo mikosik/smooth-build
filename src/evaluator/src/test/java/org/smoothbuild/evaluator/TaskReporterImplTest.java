@@ -28,12 +28,12 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
 
   @Test
   public void constIntTaskHeader() throws Exception {
-    testHeader(constTask(intB()), label("const", "Int"));
+    testHeader(constTask(bInt()), label("const", "Int"));
   }
 
   @Test
   public void constStringTaskHeader() throws Exception {
-    testHeader(constTask(stringB()), label("const", "String"));
+    testHeader(constTask(bString()), label("const", "String"));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
       throws BytecodeException {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping));
-    taskReporter.report(task, computationResult(intB(), source));
+    taskReporter.report(task, computationResult(bInt(), source));
     var prefixedLabel = label("evaluate").append(label);
     verify(reporter).report(report(prefixedLabel, "", source, list()));
   }

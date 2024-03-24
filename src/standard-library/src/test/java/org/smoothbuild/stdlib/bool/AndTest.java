@@ -15,7 +15,7 @@ public class AndTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(false));
+    assertThat(artifact()).isEqualTo(bBool(false));
   }
 
   @Test
@@ -25,7 +25,7 @@ public class AndTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(false));
+    assertThat(artifact()).isEqualTo(bBool(false));
   }
 
   @Test
@@ -35,7 +35,7 @@ public class AndTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(false));
+    assertThat(artifact()).isEqualTo(bBool(false));
   }
 
   @Test
@@ -45,7 +45,7 @@ public class AndTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(true));
+    assertThat(artifact()).isEqualTo(bBool(true));
   }
 
   @Test
@@ -59,6 +59,6 @@ public class AndTest extends StandardLibraryTestCase {
         ThrowException.class.getCanonicalName());
     createUserModule(userModule, ThrowException.class);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(false));
+    assertThat(artifact()).isEqualTo(bBool(false));
   }
 }

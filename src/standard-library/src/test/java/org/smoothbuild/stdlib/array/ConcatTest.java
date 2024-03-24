@@ -13,7 +13,7 @@ public class ConcatTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(intTB()));
+    assertThat(artifact()).isEqualTo(bArray(bIntType()));
   }
 
   @Test
@@ -23,7 +23,7 @@ public class ConcatTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(stringB("a"), stringB("b"), stringB("c")));
+    assertThat(artifact()).isEqualTo(bArray(bString("a"), bString("b"), bString("c")));
   }
 
   @Test
@@ -34,7 +34,7 @@ public class ConcatTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     evaluate("result");
     assertThat(artifact())
-        .isEqualTo(arrayB(
-            stringB("a"), stringB("b"), stringB("c"), stringB("d"), stringB("e"), stringB("f")));
+        .isEqualTo(bArray(
+            bString("a"), bString("b"), bString("c"), bString("d"), bString("e"), bString("f")));
   }
 }

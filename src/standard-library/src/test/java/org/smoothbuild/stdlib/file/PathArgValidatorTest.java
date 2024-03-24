@@ -17,7 +17,7 @@ public class PathArgValidatorTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) throws Exception {
-    validatedProjectPath(container(), "name", stringB(path));
+    validatedProjectPath(container(), "name", bString(path));
   }
 
   public static Stream<String> listOfCorrectProjectPaths() {
@@ -40,7 +40,7 @@ public class PathArgValidatorTest extends TestingVirtualMachine {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) throws Exception {
-    Path name = validatedProjectPath(container(), "name", stringB(path));
+    Path name = validatedProjectPath(container(), "name", bString(path));
     assertThat(name).isNull();
     var elements = container().messages().elements(BTuple.class);
     elements.map(e -> storedLogMessage(e).toJavaString()).forEach(t -> assertThat(t)

@@ -28,7 +28,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("file", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("file", "A")));
   }
 
   @Test
@@ -38,7 +38,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "A")));
   }
 
   @Test
@@ -49,7 +49,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -59,7 +59,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
             result = [File(0x41, "dir/subdir/file.txt")] > filterFiles("**");
             """);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/subdir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/subdir/file.txt", "A")));
   }
 
   @Test
@@ -70,7 +70,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -81,7 +81,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -92,7 +92,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/def/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/def/file.txt", "A")));
   }
 
   @Test
@@ -103,7 +103,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -114,7 +114,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -125,7 +125,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "A")));
   }
 
   @Test
@@ -136,7 +136,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -147,7 +147,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/subdir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/subdir/file.txt", "A")));
   }
 
   @Test
@@ -158,7 +158,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -170,7 +170,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -183,7 +183,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/subdir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/subdir/file.txt", "A")));
   }
 
   @Test
@@ -193,7 +193,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "A")));
   }
 
   @Test
@@ -204,7 +204,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -215,7 +215,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -226,7 +226,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -238,7 +238,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/subdir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/subdir/file.txt", "A")));
   }
 
   @Test
@@ -249,7 +249,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -260,7 +260,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -271,7 +271,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file.txt", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file.txt", "A")));
   }
 
   @Test
@@ -282,7 +282,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -293,7 +293,7 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileTB()));
+    assertThat(artifact()).isEqualTo(bArray(bFileType()));
   }
 
   @Test
@@ -305,6 +305,6 @@ public class FilterFilesTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("src/com/comp/Main.java", "A")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("src/com/comp/Main.java", "A")));
   }
 }

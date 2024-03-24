@@ -13,14 +13,14 @@ public class InputSourceFileTest extends TestingVirtualMachine {
   @Test
   public void get_char_content_returns_file_content() throws Exception {
     Path path = path("my/path");
-    BTuple file = fileB(path, ByteString.encodeUtf8("abc"));
+    BTuple file = bFile(path, ByteString.encodeUtf8("abc"));
     assertThat(new InputSourceFile(file).getCharContent(true).toString()).isEqualTo("abc");
   }
 
   @Test
   public void uri() throws Exception {
     Path path = path("my/path");
-    BTuple file = fileB(path);
+    BTuple file = bFile(path);
     assertThat(new InputSourceFile(file).getName()).isEqualTo("/" + path.toString());
   }
 }

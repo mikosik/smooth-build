@@ -28,8 +28,8 @@ public class OutputTest extends TestingVirtualMachine {
 
   @Test
   public void output_created_without_messages_has_no_messages() throws Exception {
-    Output output = new Output(aString(), logArrayEmpty());
-    assertThat(output.storedLogs()).isEqualTo(logArrayEmpty());
+    Output output = new Output(aString(), bLogArrayEmpty());
+    assertThat(output.storedLogs()).isEqualTo(bLogArrayEmpty());
   }
 
   @Test
@@ -40,8 +40,8 @@ public class OutputTest extends TestingVirtualMachine {
 
   @Test
   public void outputs_with_same_value_and_no_messages_are_equal() throws Exception {
-    Output output = new Output(aString(), logArrayEmpty());
-    assertThat(output).isEqualTo(new Output(aString(), logArrayEmpty()));
+    Output output = new Output(aString(), bLogArrayEmpty());
+    assertThat(output).isEqualTo(new Output(aString(), bLogArrayEmpty()));
   }
 
   @Test
@@ -53,13 +53,13 @@ public class OutputTest extends TestingVirtualMachine {
   @Test
   public void outputs_with_same_value_but_different_messages_are_not_equal() throws Exception {
     Output output = new Output(aString(), messages());
-    assertThat(output).isNotEqualTo(new Output(aString(), logArrayEmpty()));
+    assertThat(output).isNotEqualTo(new Output(aString(), bLogArrayEmpty()));
   }
 
   @Test
   public void outputs_with_different_value_and_same_messages_are_not_equal() throws Exception {
     Output output = new Output(aString(), messages());
-    assertThat(output).isNotEqualTo(new Output(stringB("def"), messages()));
+    assertThat(output).isNotEqualTo(new Output(bString("def"), messages()));
   }
 
   @Test
@@ -75,10 +75,10 @@ public class OutputTest extends TestingVirtualMachine {
   }
 
   private BArray messages() throws BytecodeException {
-    return logArrayWithOneError();
+    return bLogArrayWithOneError();
   }
 
   private BString aString() throws BytecodeException {
-    return stringB("abc");
+    return bString("abc");
   }
 }

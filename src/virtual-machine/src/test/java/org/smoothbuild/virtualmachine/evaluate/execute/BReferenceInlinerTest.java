@@ -22,81 +22,82 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     @Test
     public void call() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> callB(lambdaB(list(intTB()), intB()), intB()));
+          r -> bCall(bLambda(list(bIntType()), bInt()), bInt()));
     }
 
     @Test
     public void combine() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> combineB(intB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bCombine(bInt()));
     }
 
     @Test
     public void order() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> orderB(intB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bOrder(bInt()));
     }
 
     @Test
     public void pick() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> pickB(orderB(intB(1), intB(2)), intB(0)));
+      assertReferenceInliningDoesNotChangeExpression(r -> bPick(bOrder(bInt(1), bInt(2)), bInt(0)));
     }
 
     @Test
     public void select() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> selectB(combineB(intB()), intB(0)));
+      assertReferenceInliningDoesNotChangeExpression(r -> bSelect(bCombine(bInt()), bInt(0)));
     }
 
     // values
 
     @Test
     public void array() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> arrayB(intB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bArray(bInt()));
     }
 
     @Test
     public void blob() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> blobB());
+      assertReferenceInliningDoesNotChangeExpression(r -> bBlob());
     }
 
     @Test
     public void bool() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> boolB());
+      assertReferenceInliningDoesNotChangeExpression(r -> bBool());
     }
 
     @Test
     public void int_() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> intB());
+      assertReferenceInliningDoesNotChangeExpression(r -> bInt());
     }
 
     @Test
     public void string() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> stringB());
+      assertReferenceInliningDoesNotChangeExpression(r -> bString());
     }
 
     @Test
     public void tuple() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> tupleB(intB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bTuple(bInt()));
     }
 
     // callables
 
     @Test
     public void lambda_without_references() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> lambdaB(intB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bLambda(bInt()));
     }
 
     @Test
     public void if_func() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> ifFuncB(intTB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bIf(bIntType()));
     }
 
     @Test
     public void map_func() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> mapFuncB(intTB(), blobTB()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bMap(bIntType(), bBlobType()));
     }
 
     @Test
     public void native_func() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> nativeFuncB(funcTB(intTB(), blobTB())));
+      assertReferenceInliningDoesNotChangeExpression(
+          r -> bNativeFunc(bFuncType(bIntType(), bBlobType())));
     }
   }
 
@@ -119,60 +120,60 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
 
     @Test
     public void lambda_body_with_var_referencing_unbound_param() throws Exception {
-      assertReferenceInliningReplacesReference(2, r -> myLambda(r), intB(1));
+      assertReferenceInliningReplacesReference(2, r -> myLambda(r), bInt(1));
     }
 
     private BLambda myLambda(BExpr expr) throws BytecodeException {
-      var inner = lambdaB(funcTB(blobTB(), intTB()), expr);
-      return lambdaB(list(intTB()), inner);
+      var inner = bLambda(bFuncType(bBlobType(), bIntType()), expr);
+      return bLambda(list(bIntType()), inner);
     }
 
     @Test
     public void call_argument() throws Exception {
-      assertReferenceInliningReplacesReference(r -> callB(idFuncB(), r));
+      assertReferenceInliningReplacesReference(r -> bCall(bIdFunc(), r));
     }
 
     @Test
     public void call_func() throws Exception {
-      assertReferenceInliningReplacesReference(r -> callB(lambdaB(r)));
+      assertReferenceInliningReplacesReference(r -> bCall(bLambda(r)));
     }
 
     @Test
     public void combine() throws Exception {
-      assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::combineB);
+      assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bCombine);
     }
 
     @Test
     public void order() throws Exception {
-      assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::orderB);
+      assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bOrder);
     }
 
     @Test
     public void pick_pickable() throws Exception {
-      assertReferenceInliningReplacesReference(r -> pickB(orderB(r), intB()));
+      assertReferenceInliningReplacesReference(r -> bPick(bOrder(r), bInt()));
     }
 
     @Test
     public void pick_index() throws Exception {
-      assertReferenceInliningReplacesReference(r -> pickB(orderB(), r));
+      assertReferenceInliningReplacesReference(r -> bPick(bOrder(), r));
     }
 
     @Test
     public void select_selectable() throws Exception {
-      assertReferenceInliningReplacesReference(r -> selectB(combineB(r), intB(0)));
+      assertReferenceInliningReplacesReference(r -> bSelect(bCombine(r), bInt(0)));
     }
   }
 
   @Test
   public void reference_with_index_equal_to_environment_size_causes_exception() throws Exception {
-    var job = job(referenceB(stringTB(), 3), intB(), intB(), intB(17));
+    var job = job(bReference(bStringType(), 3), bInt(), bInt(), bInt(17));
     assertCall(() -> bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(3, 3));
   }
 
   @Test
   public void reference_with_negative_index_causes_exception() throws Exception {
-    var job = job(referenceB(stringTB(), -1), intB(), intB(), intB(17));
+    var job = job(bReference(bStringType(), -1), bInt(), bInt(), bInt(17));
     assertCall(() -> bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(-1, 3));
   }
@@ -185,14 +186,14 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
   private void assertReferenceInliningReplacesReference(
       int referencedIndex, Function1<BExpr, BExpr, BytecodeException> factory)
       throws BytecodeException {
-    assertReferenceInliningReplacesReference(referencedIndex, factory, intB(3));
+    assertReferenceInliningReplacesReference(referencedIndex, factory, bInt(3));
   }
 
   private void assertReferenceInliningReplacesReference(
       int referencedIndex, Function1<BExpr, BExpr, BytecodeException> factory, BInt replacement)
       throws BytecodeException {
     assertReferenceInlining(
-        factory.apply(referenceB(intTB(), referencedIndex)), factory.apply(replacement));
+        factory.apply(bReference(bIntType(), referencedIndex)), factory.apply(replacement));
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(
@@ -203,13 +204,13 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
   private void assertReferenceInliningDoesNotChangeExpression(
       int referencedIndex, Function1<BExpr, BExpr, BytecodeException> factory)
       throws BytecodeException {
-    var expr = factory.apply(referenceB(intTB(), referencedIndex));
-    var job = job(expr, intB(1), intB(2), intB(3));
+    var expr = factory.apply(bReference(bIntType(), referencedIndex));
+    var job = job(expr, bInt(1), bInt(2), bInt(3));
     assertThat(bReferenceInliner().inline(job)).isSameInstanceAs(expr);
   }
 
   private void assertReferenceInlining(BExpr expr, BExpr expected) throws BytecodeException {
-    var job = job(expr, intB(1), intB(2), intB(3));
+    var job = job(expr, bInt(1), bInt(2), bInt(3));
     assertThat(bReferenceInliner().inline(job)).isEqualTo(expected);
   }
 }

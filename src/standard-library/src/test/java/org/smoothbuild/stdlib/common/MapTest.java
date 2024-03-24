@@ -13,7 +13,7 @@ public class MapTest extends StandardLibraryTestCase {
         """;
     createUserModule(code);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(boolB(true), boolB(false)));
+    assertThat(artifact()).isEqualTo(bArray(bBool(true), bBool(false)));
   }
 
   @Test
@@ -26,6 +26,6 @@ public class MapTest extends StandardLibraryTestCase {
         """;
     createUserModule(code);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(stringB("test01.txt"), stringB("test02.txt")));
+    assertThat(artifact()).isEqualTo(bArray(bString("test01.txt"), bString("test02.txt")));
   }
 }

@@ -74,15 +74,15 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_expression_value() throws Exception {
           var valueS = valueS("myValue", intS(7));
-          assertTranslation(valueS, callB(lambdaB(intB(7))));
+          assertTranslation(valueS, bCall(bLambda(bInt(7))));
         }
 
         @Test
         public void poly_expression_value() throws Exception {
           var emptyArrayVal = emptyArrayValueS();
           var instantiateS = instantiateS(list(intTS()), emptyArrayVal);
-          var orderB = orderB(intTB());
-          assertTranslation(bindings(emptyArrayVal), instantiateS, callB(lambdaB(orderB)));
+          var orderB = bOrder(bIntType());
+          assertTranslation(bindings(emptyArrayVal), instantiateS, bCall(bLambda(orderB)));
         }
 
         @Test
@@ -92,7 +92,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           assertTranslation(
               bindings(otherValue, myValue),
               instantiateS(myValue),
-              callB(lambdaB(callB(lambdaB(intB(7))))));
+              bCall(bLambda(bCall(bLambda(bInt(7))))));
         }
 
         @Test
@@ -108,11 +108,11 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var referencingValueS = valueS("referencing", instantiatedEmptyArrayValueS);
           var instantiatedReferencingValueS = instantiateS(list(intTS()), referencingValueS);
 
-          var orderB = orderB(intTB());
+          var orderB = bOrder(bIntType());
           assertTranslation(
               bindings(emptyArrayValueS, referencingValueS),
               instantiatedReferencingValueS,
-              callB(lambdaB(callB(lambdaB(orderB)))));
+              bCall(bLambda(bCall(bLambda(orderB)))));
         }
 
         @Test
@@ -123,7 +123,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var nativeValueS =
               annotatedValueS(nativeAnnotation, stringTS(), "myValue", location(fullPath, 2));
 
-          var jar = blobB(37);
+          var jar = bBlob(37);
           var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), jar);
           var translator = sbTranslator(filePersister, bindings(nativeValueS));
 
@@ -145,7 +145,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
               filePersister,
               bindings(bytecodeValueS),
               instantiateS(bytecodeValueS),
-              stringB("abc"));
+              bString("abc"));
         }
 
         @Test
@@ -161,7 +161,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var filePersister = createFilePersisterMock(
               fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = instantiateS(list(intTS()), bytecodeValueS);
-          assertTranslation(filePersister, bindings(bytecodeValueS), instantiateS, idFuncB());
+          assertTranslation(filePersister, bindings(bytecodeValueS), instantiateS, bIdFunc());
         }
       }
 
@@ -170,14 +170,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_expression_function() throws Exception {
           var funcS = funcS("myFunc", nlist(), intS(7));
-          assertTranslation(funcS, lambdaB(intB(7)));
+          assertTranslation(funcS, bLambda(bInt(7)));
         }
 
         @Test
         public void poly_expression_function() throws Exception {
           var funcS = idFuncS();
           var instantiateS = instantiateS(list(intTS()), funcS);
-          var lambdaB = lambdaB(funcTB(intTB(), intTB()), referenceB(intTB(), 0));
+          var lambdaB = bLambda(bFuncType(bIntType(), bIntType()), bReference(bIntType(), 0));
           assertTranslation(bindings(funcS), instantiateS, lambdaB);
         }
 
@@ -193,8 +193,9 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var wrapFuncS = funcS(b, "wrap", nlist(itemS(b, "p")), bodyS);
           var wrapMonoFuncS = instantiateS(list(intTS()), wrapFuncS);
 
-          var idFuncB = lambdaB(funcTB(intTB(), intTB()), referenceB(intTB(), 0));
-          var wrapFuncB = lambdaB(funcTB(intTB(), intTB()), callB(idFuncB, referenceB(intTB(), 0)));
+          var idFuncB = bLambda(bFuncType(bIntType(), bIntType()), bReference(bIntType(), 0));
+          var wrapFuncB =
+              bLambda(bFuncType(bIntType(), bIntType()), bCall(idFuncB, bReference(bIntType(), 0)));
           assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, wrapFuncB);
         }
 
@@ -205,10 +206,10 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
-          var funcTB = funcTB(blobTB(), intTB());
-          var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
+          var funcTB = bFuncType(bBlobType(), bIntType());
+          var nativeFuncB = bNativeFunc(funcTB, bBlob(37), bString(classBinaryName), bBool(true));
 
-          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), bBlob(37));
           assertTranslation(
               filePersister, bindings(nativeFuncS), instantiateS(nativeFuncS), nativeFuncB);
         }
@@ -221,10 +222,10 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var annotationS = nativeAnnotationS(location(fullPath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, a, "myIdentity", nlist(itemS(a, "param")));
 
-          var funcTB = funcTB(intTB(), intTB());
-          var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
+          var funcTB = bFuncType(bIntType(), bIntType());
+          var nativeFuncB = bNativeFunc(funcTB, bBlob(37), bString(classBinaryName), bBool(true));
 
-          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), bBlob(37));
           var instantiateS = instantiateS(list(intTS()), nativeFuncS);
           assertTranslation(filePersister, bindings(nativeFuncS), instantiateS, nativeFuncB);
         }
@@ -244,7 +245,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
               filePersister,
               bindings(bytecodeFuncS),
               instantiateS(bytecodeFuncS),
-              returnAbcFuncB());
+              bReturnAbcFunc());
         }
 
         @Test
@@ -261,7 +262,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var filePersister = createFilePersisterMock(
               fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = instantiateS(list(intTS()), bytecodeFuncS);
-          assertTranslation(filePersister, bindings(bytecodeFuncS), instantiateS, idFuncB());
+          assertTranslation(filePersister, bindings(bytecodeFuncS), instantiateS, bIdFunc());
         }
       }
     }
@@ -271,26 +272,26 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Test
       public void blob() throws Exception {
         var blobS = blobS(37);
-        assertTranslation(blobS, blobB(37));
+        assertTranslation(blobS, bBlob(37));
       }
 
       @Test
       public void int_() throws Exception {
         var intS = intS(1);
-        assertTranslation(intS, intB(1));
+        assertTranslation(intS, bInt(1));
       }
 
       @Test
       public void string() throws Exception {
         var stringS = stringS("abc");
-        assertTranslation(stringS, stringB("abc"));
+        assertTranslation(stringS, bString("abc"));
       }
 
       @Test
       public void lambda() throws Exception {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, lambdaB(list(intTB()), referenceB(intTB(), 0)));
+        assertTranslation(monoLambdaS, bLambda(list(bIntType()), bReference(bIntType(), 0)));
       }
 
       @Test
@@ -298,8 +299,8 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var monoLambdaS = instantiateS(lambdaS(paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
-        var bodyB = lambdaB(referenceB(intTB(), 0));
-        var lambdaB = lambdaB(funcTB(intTB(), funcTB(intTB())), bodyB);
+        var bodyB = bLambda(bReference(bIntType(), 0));
+        var lambdaB = bLambda(bFuncType(bIntType(), bFuncType(bIntType())), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
       }
@@ -311,8 +312,8 @@ public class SbTranslatorTest extends TestingVirtualMachine {
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "i")), monoLambdaS);
 
-        var bodyB = lambdaB(list(blobTB()), referenceB(intTB(), 1));
-        var lambdaB = lambdaB(list(intTB()), bodyB);
+        var bodyB = bLambda(list(bBlobType()), bReference(bIntType(), 1));
+        var lambdaB = bLambda(list(bIntType()), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
       }
@@ -321,25 +322,25 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       public void call() throws Exception {
         var funcS = funcS("myFunc", nlist(), stringS("abc"));
         var callS = callS(instantiateS(funcS));
-        assertTranslation(bindings(funcS), callS, callB(lambdaB(stringB("abc"))));
+        assertTranslation(bindings(funcS), callS, bCall(bLambda(bString("abc"))));
       }
 
       @Test
       public void combine() throws Exception {
         var combineS = combineS(intS(3), stringS("abc"));
-        assertTranslation(combineS, combineB(intB(3), stringB("abc")));
+        assertTranslation(combineS, bCombine(bInt(3), bString("abc")));
       }
 
       @Test
       public void order() throws Exception {
         var orderS = orderS(intTS(), intS(3), intS(7));
-        assertTranslation(orderS, orderB(intB(3), intB(7)));
+        assertTranslation(orderS, bOrder(bInt(3), bInt(7)));
       }
 
       @Test
       public void param_ref() throws Exception {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-        assertTranslation(funcS, idFuncB());
+        assertTranslation(funcS, bIdFunc());
       }
 
       @Test
@@ -357,9 +358,9 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var callS = callS(instantiateS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
-        var ctorB = lambdaB(list(stringTB()), combineB(referenceB(stringTB(), 0)));
-        var callB = callB(ctorB, stringB("abc"));
-        assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
+        var ctorB = bLambda(list(bStringType()), bCombine(bReference(bStringType(), 0)));
+        var callB = bCall(ctorB, bString("abc"));
+        assertTranslation(bindings(constructorS), selectS, bSelect(callB, bInt(0)));
       }
 
       @Test
@@ -370,8 +371,8 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoLambdaS);
         var instantiateS = instantiateS(list(intTS()), funcS);
 
-        var bodyB = lambdaB(referenceB(intTB(), 0));
-        var lambdaB = lambdaB(funcTB(intTB(), funcTB(intTB())), bodyB);
+        var bodyB = bLambda(bReference(bIntType(), 0));
+        var lambdaB = bLambda(bFuncType(bIntType(), bFuncType(bIntType())), bodyB);
 
         assertTranslation(bindings(funcS), instantiateS, lambdaB);
       }
@@ -444,7 +445,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var nativeFuncS =
               annotatedFuncS(2, annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
-          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), blobB(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), bBlob(37));
           var sbTranslator = sbTranslator(filePersister, bindings(nativeFuncS));
           assertNalMapping(sbTranslator, instantiateS(3, nativeFuncS), "myFunc", location(2));
         }
@@ -726,7 +727,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
   private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables)
       throws Exception {
     var filePersister = mock(FilePersister.class);
-    when(filePersister.persist(any())).thenReturn(blobB(1));
+    when(filePersister.persist(any())).thenReturn(bBlob(1));
     return sbTranslator(filePersister, evaluables);
   }
 

@@ -23,12 +23,12 @@ import org.smoothbuild.virtualmachine.testing.func.bytecode.ThrowException;
 public class BytecodeLoaderTest extends TestingVirtualMachine {
   @Test
   public void loading_bytecode() throws Exception {
-    assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(right(stringB("abc")));
+    assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(right(bString("abc")));
   }
 
   @Test
   public void loading_monomorphised_bytecode() throws Exception {
-    assertThat(loadBytecode(ReturnIdFunc.class, map("A", intTB()))).isEqualTo(right(idFuncB()));
+    assertThat(loadBytecode(ReturnIdFunc.class, map("A", bIntType()))).isEqualTo(right(bIdFunc()));
   }
 
   @Test
@@ -40,7 +40,7 @@ public class BytecodeLoaderTest extends TestingVirtualMachine {
 
   private Either<String, BExpr> loadBytecode(Class<?> clazz, Map<String, BType> varMap)
       throws NoSuchMethodException, BytecodeException {
-    var jar = blobB();
+    var jar = bBlob();
     var classBinaryName = "binary.name";
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);
     when(bytecodeMethodLoader.load(jar, classBinaryName)).thenReturn(fetchMethod(clazz));

@@ -77,7 +77,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
        * to save base type in HashedDb.
        */
       var hash = hash(hash(STRING.byteMarker()));
-      assertThat(hash).isEqualTo(stringTB().hash());
+      assertThat(hash).isEqualTo(bStringType().hash());
     }
 
     @Test
@@ -116,8 +116,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save array type in HashedDb.
          */
-        var hash = hash(hash(ARRAY.byteMarker()), hash(stringTB()));
-        assertThat(hash).isEqualTo(arrayTB(stringTB()).hash());
+        var hash = hash(hash(ARRAY.byteMarker()), hash(bStringType()));
+        assertThat(hash).isEqualTo(bArrayType(bStringType()).hash());
       }
 
       @Test
@@ -142,7 +142,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_type_being_oper_type() throws Exception {
-        var hash = hash(hash(ARRAY.byteMarker()), hash(varCB()));
+        var hash = hash(hash(ARRAY.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 hash, ARRAY, DATA_PATH, BType.class, BReferenceKind.class));
@@ -157,8 +157,10 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save expression function type in HashedDb.
          */
-        var specHash = hash(hash(LAMBDA.byteMarker()), hash(funcTB(stringTB(), boolTB(), intTB())));
-        assertThat(specHash).isEqualTo(lambdaCB(stringTB(), boolTB(), intTB()).hash());
+        var specHash = hash(
+            hash(LAMBDA.byteMarker()), hash(bFuncType(bStringType(), bBoolType(), bIntType())));
+        assertThat(specHash)
+            .isEqualTo(bLambdaKind(bStringType(), bBoolType(), bIntType()).hash());
       }
 
       @Override
@@ -176,13 +178,14 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * to save if func kind in HashedDb.
          */
         var specHash = hash(
-            hash(IF_FUNC.byteMarker()), hash(funcTB(list(boolTB(), intTB(), intTB()), intTB())));
-        assertThat(specHash).isEqualTo(ifFuncCB(intTB()).hash());
+            hash(IF_FUNC.byteMarker()),
+            hash(bFuncType(list(bBoolType(), bIntType(), bIntType()), bIntType())));
+        assertThat(specHash).isEqualTo(bIfKind(bIntType()).hash());
       }
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalIfType = funcTB(list(boolTB(), intTB(), intTB()), blobTB());
+        var illegalIfType = bFuncType(list(bBoolType(), bIntType(), bIntType()), bBlobType());
         var kindHash = hash(hash(IF_FUNC.byteMarker()), hash(illegalIfType));
         assertCall(() -> kindDb().get(kindHash))
             .throwsException(illegalIfFuncTypeExc(kindHash, illegalIfType));
@@ -204,13 +207,17 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          */
         var specHash = hash(
             hash(MAP_FUNC.byteMarker()),
-            hash(funcTB(arrayTB(blobTB()), funcTB(blobTB(), intTB()), arrayTB(intTB()))));
-        assertThat(specHash).isEqualTo(mapFuncCB(intTB(), blobTB()).hash());
+            hash(bFuncType(
+                bArrayType(bBlobType()),
+                bFuncType(bBlobType(), bIntType()),
+                bArrayType(bIntType()))));
+        assertThat(specHash).isEqualTo(bMapKind(bIntType(), bBlobType()).hash());
       }
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalType = funcTB(arrayTB(blobTB()), funcTB(stringTB(), intTB()), arrayTB(intTB()));
+        var illegalType = bFuncType(
+            bArrayType(bBlobType()), bFuncType(bStringType(), bIntType()), bArrayType(bIntType()));
         var kindHash = hash(hash(MAP_FUNC.byteMarker()), hash(illegalType));
         assertCall(() -> kindDb().get(kindHash))
             .throwsException(illegalMapFuncTypeExc(kindHash, illegalType));
@@ -230,10 +237,11 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var specHash =
-            hash(hash(NATIVE_FUNC.byteMarker()), hash(funcTB(stringTB(), boolTB(), intTB())));
+        var specHash = hash(
+            hash(NATIVE_FUNC.byteMarker()),
+            hash(bFuncType(bStringType(), bBoolType(), bIntType())));
         assertThat(specHash)
-            .isEqualTo(nativeFuncCB(stringTB(), boolTB(), intTB()).hash());
+            .isEqualTo(bNativeFuncKind(bStringType(), bBoolType(), bIntType()).hash());
       }
 
       @Override
@@ -266,7 +274,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_func_type_being_oper_type() throws Exception {
-        var notFuncType = varCB(intTB());
+        var notFuncType = bReferenceKind(bIntType());
         var typeHash = hash(hash(kindId().byteMarker()), hash(notFuncType));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -282,9 +290,11 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var specHash =
-            hash(hash(FUNC.byteMarker()), hash(hash(tupleTB(stringTB(), boolTB())), hash(intTB())));
-        assertThat(specHash).isEqualTo(funcTB(stringTB(), boolTB(), intTB()).hash());
+        var specHash = hash(
+            hash(FUNC.byteMarker()),
+            hash(hash(bTupleType(bStringType(), bBoolType())), hash(bIntType())));
+        assertThat(specHash)
+            .isEqualTo(bFuncType(bStringType(), bBoolType(), bIntType()).hash());
       }
 
       @Test
@@ -311,8 +321,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_data_having_three_elements() throws Exception {
-        var paramTs = tupleTB(stringTB(), boolTB());
-        var resultT = intTB();
+        var paramTs = bTupleType(bStringType(), bBoolType());
+        var resultT = bIntType();
         var hash = hash(hash(FUNC.byteMarker()), hash(hash(paramTs), hash(resultT), hash(resultT)));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongChainSizeException(hash, FUNC, DATA_PATH, 2, 3));
@@ -320,7 +330,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_data_having_one_elements() throws Exception {
-        var paramTs = tupleTB(stringTB(), boolTB());
+        var paramTs = bTupleType(bStringType(), bBoolType());
         var hash = hash(hash(FUNC.byteMarker()), hash(hash(paramTs)));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongChainSizeException(hash, FUNC, DATA_PATH, 2, 1));
@@ -340,7 +350,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_result_pointing_nowhere() throws Exception {
-        var paramTypes = tupleTB(stringTB(), boolTB());
+        var paramTypes = bTupleType(bStringType(), bBoolType());
         var nowhere = Hash.of(33);
         var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramTypes), nowhere));
         assertCall(() -> kindDb().get(typeHash))
@@ -350,8 +360,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_result_being_oper_type() throws Exception {
-        var paramType = tupleTB(stringTB(), boolTB());
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramType), hash(varCB())));
+        var paramType = bTupleType(bStringType(), bBoolType());
+        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
                 typeHash, FUNC, BKindDb.FUNC_RES_PATH, BType.class, BReferenceKind.class));
@@ -359,7 +369,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_result_type_corrupted() throws Exception {
-        var paramTypes = tupleTB(stringTB(), boolTB());
+        var paramTypes = bTupleType(bStringType(), bBoolType());
         var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramTypes), corruptedArrayTHash()));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, FUNC, BKindDb.FUNC_RES_PATH))
@@ -369,7 +379,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       @Test
       public void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(nowhere, hash(intTB())));
+        var typeHash = hash(hash(FUNC.byteMarker()), hash(nowhere, hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(new DecodeKindException(nowhere));
@@ -377,7 +387,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(stringTB()), hash(intTB())));
+        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(bStringType()), hash(bIntType())));
         assertThatGet(typeHash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 typeHash, FUNC, FUNC_PARAMS_PATH, BTupleType.class, BStringType.class));
@@ -385,7 +395,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_params_being_oper_type() throws Exception {
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(varCB()), hash(intTB())));
+        var typeHash =
+            hash(hash(FUNC.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
                 typeHash, FUNC, FUNC_PARAMS_PATH, BType.class, BReferenceKind.class));
@@ -393,7 +404,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_params_type_corrupted() throws Exception {
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(corruptedArrayTHash(), hash(intTB())));
+        var typeHash = hash(hash(FUNC.byteMarker()), hash(corruptedArrayTHash(), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
@@ -408,8 +419,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save Tuple type in HashedDb.
          */
-        var hash = hash(hash(TUPLE.byteMarker()), hash(hash(stringTB()), hash(stringTB())));
-        assertThat(hash).isEqualTo(personTB().hash());
+        var hash = hash(hash(TUPLE.byteMarker()), hash(hash(bStringType()), hash(bStringType())));
+        assertThat(hash).isEqualTo(bPersonType().hash());
       }
 
       @Test
@@ -436,7 +447,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_elements_being_array_of_non_type() throws Exception {
-        var stringHash = hash(stringB("abc"));
+        var stringHash = hash(bString("abc"));
         var hash = hash(hash(TUPLE.byteMarker()), hash(stringHash));
         assertThatGet(hash)
             .throwsException(new DecodeKindNodeException(hash, TUPLE, "data[0]"))
@@ -445,7 +456,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_elements_being_chain_of_oper_types() throws Exception {
-        var hash = hash(hash(TUPLE.byteMarker()), hash(hash(varCB())));
+        var hash = hash(hash(TUPLE.byteMarker()), hash(hash(bReferenceKind())));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 hash, TUPLE, "data", 0, BType.class, BReferenceKind.class));
@@ -453,7 +464,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_corrupted_element_type() throws Exception {
-        var hash = hash(hash(TUPLE.byteMarker()), hash(corruptedArrayTHash(), hash(stringTB())));
+        var hash = hash(hash(TUPLE.byteMarker()), hash(corruptedArrayTHash(), hash(bStringType())));
         assertThatGet(hash)
             .throwsException(new DecodeKindNodeException(hash, TUPLE, "data[0]"))
             .withCause(corruptedArrayTypeExc());
@@ -467,7 +478,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
   }
 
   private void assert_reading_kind_with_additional_data_causes_exc(KindId id) throws Exception {
-    var hash = hash(hash(id.byteMarker()), hash(stringTB()), hash("corrupted"));
+    var hash = hash(hash(id.byteMarker()), hash(bStringType()), hash("corrupted"));
     assertThatGet(hash).throwsException(new DecodeKindRootException(hash, 3));
   }
 
@@ -551,8 +562,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save call type in HashedDb.
          */
-        var hash = hash(hash(CALL.byteMarker()), hash(intTB()));
-        assertThat(hash).isEqualTo(callCB(intTB()).hash());
+        var hash = hash(hash(CALL.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bCallKind(bIntType()).hash());
       }
 
       @Nested
@@ -571,8 +582,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save Combine type in HashedDb.
          */
-        var hash = hash(hash(COMBINE.byteMarker()), hash(tupleTB(intTB(), stringTB())));
-        assertThat(hash).isEqualTo(combineCB(intTB(), stringTB()).hash());
+        var hash = hash(hash(COMBINE.byteMarker()), hash(bTupleType(bIntType(), bStringType())));
+        assertThat(hash).isEqualTo(bCombineKind(bIntType(), bStringType()).hash());
       }
 
       @Nested
@@ -584,7 +595,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_evaluation_type_not_being_tuple_type() throws Exception {
-        var hash = hash(hash(COMBINE.byteMarker()), hash(intTB()));
+        var hash = hash(hash(COMBINE.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 hash, COMBINE, DATA_PATH, BTupleType.class, BIntType.class));
@@ -599,8 +610,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save Order type in HashedDb.
          */
-        var hash = hash(hash(ORDER.byteMarker()), hash(arrayTB(intTB())));
-        assertThat(hash).isEqualTo(orderCB(intTB()).hash());
+        var hash = hash(hash(ORDER.byteMarker()), hash(bArrayType(bIntType())));
+        assertThat(hash).isEqualTo(bOrderKind(bIntType()).hash());
       }
 
       @Nested
@@ -612,7 +623,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_evaluation_type_not_being_array_type() throws Exception {
-        var hash = hash(hash(ORDER.byteMarker()), hash(intTB()));
+        var hash = hash(hash(ORDER.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 hash, ORDER, DATA_PATH, BArrayType.class, BIntType.class));
@@ -627,8 +638,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save Pick type in HashedDb.
          */
-        var hash = hash(hash(PICK.byteMarker()), hash(intTB()));
-        assertThat(hash).isEqualTo(pickCB(intTB()).hash());
+        var hash = hash(hash(PICK.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bPickKind(bIntType()).hash());
       }
 
       @Nested
@@ -647,8 +658,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save variable in HashedDb.
          */
-        var hash = hash(hash(REFERENCE.byteMarker()), hash(intTB()));
-        assertThat(hash).isEqualTo(varCB(intTB()).hash());
+        var hash = hash(hash(REFERENCE.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bReferenceKind(bIntType()).hash());
       }
 
       @Nested
@@ -667,8 +678,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
          * This test makes sure that other tests in this class use proper scheme
          * to save Select type in HashedDb.
          */
-        var hash = hash(hash(SELECT.byteMarker()), hash(intTB()));
-        assertThat(hash).isEqualTo(selectCB(intTB()).hash());
+        var hash = hash(hash(SELECT.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bSelectKind(bIntType()).hash());
       }
 
       @Nested
@@ -714,7 +725,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
 
       @Test
       public void with_evaluation_type_being_oper_type() throws Exception {
-        var hash = hash(hash(kindId.byteMarker()), hash(varCB()));
+        var hash = hash(hash(kindId.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 hash, kindId, DATA_PATH, type, BReferenceKind.class));

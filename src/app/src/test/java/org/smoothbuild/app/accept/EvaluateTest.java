@@ -21,7 +21,7 @@ public class EvaluateTest extends EvaluatorTestCase {
     public void blob_literal_value_is_decoded(String hexDigits) throws Exception {
       createUserModule("result = 0x" + hexDigits + ";");
       evaluate("result");
-      assertThat(artifact()).isEqualTo(blobB(ByteString.decodeHex(hexDigits)));
+      assertThat(artifact()).isEqualTo(bBlob(ByteString.decodeHex(hexDigits)));
     }
 
     @ParameterizedTest
@@ -29,7 +29,7 @@ public class EvaluateTest extends EvaluatorTestCase {
     public void int_literal_value_is_decoded(String intLiteral) throws Exception {
       createUserModule("result = " + intLiteral + ";");
       evaluate("result");
-      assertThat(artifact()).isEqualTo(intB(new BigInteger(intLiteral, 10)));
+      assertThat(artifact()).isEqualTo(bInt(new BigInteger(intLiteral, 10)));
     }
 
     @ParameterizedTest
@@ -55,7 +55,7 @@ public class EvaluateTest extends EvaluatorTestCase {
     public void string_literal_value_is_decoded(String string) throws Exception {
       createUserModule("result = \"" + string + "\";");
       evaluate("result");
-      assertThat(artifact()).isEqualTo(stringB(string.translateEscapes()));
+      assertThat(artifact()).isEqualTo(bString(string.translateEscapes()));
     }
   }
 
@@ -73,7 +73,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             String result = MyStruct("abc").field;
             """);
         evaluate("result");
-        assertThat(artifact()).isEqualTo(stringB("abc"));
+        assertThat(artifact()).isEqualTo(bString("abc"));
       }
 
       @Test
@@ -88,7 +88,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             Int result = "abc" > aStruct.field();
             """);
         evaluate("result");
-        assertThat(artifact()).isEqualTo(intB(7));
+        assertThat(artifact()).isEqualTo(bInt(7));
       }
     }
 
@@ -100,7 +100,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             [Int] result = [1, 2, 3];
             """);
         evaluate("result");
-        assertThat(artifact()).isEqualTo(arrayB(intB(1), intB(2), intB(3)));
+        assertThat(artifact()).isEqualTo(bArray(bInt(1), bInt(2), bInt(3)));
       }
 
       @Test
@@ -109,7 +109,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             [Int] result = 1 > [2, 3];
             """);
         evaluate("result");
-        assertThat(artifact()).isEqualTo(arrayB(intB(1), intB(2), intB(3)));
+        assertThat(artifact()).isEqualTo(bArray(bInt(1), bInt(2), bInt(3)));
       }
     }
 
@@ -125,7 +125,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             result = (() -> 7)();
             """);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(intB(7));
+          assertThat(artifact()).isEqualTo(bInt(7));
         }
 
         @Test
@@ -134,7 +134,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             result = ((Int int) -> int)(7);
             """);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(intB(7));
+          assertThat(artifact()).isEqualTo(bInt(7));
         }
 
         @Test
@@ -148,7 +148,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               """;
           createUserModule(userModule, ThrowException.class);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(stringB("abc"));
+          assertThat(artifact()).isEqualTo(bString("abc"));
         }
 
         @Test
@@ -160,7 +160,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               """;
           createUserModule(userModule, ThrowException.class);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(stringB("abc"));
+          assertThat(artifact()).isEqualTo(bString("abc"));
         }
 
         @Test
@@ -172,7 +172,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               """;
           createUserModule(userModule, ThrowException.class);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(stringB("abc"));
+          assertThat(artifact()).isEqualTo(bString("abc"));
         }
 
         @Test
@@ -183,7 +183,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             result = 7 > ((Int int) -> int)();
             """);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(intB(7));
+          assertThat(artifact()).isEqualTo(bInt(7));
         }
       }
 
@@ -197,7 +197,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             result = myFunc();
             """);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(intB(7));
+          assertThat(artifact()).isEqualTo(bInt(7));
         }
 
         @Test
@@ -208,7 +208,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             result = myFunc(7);
             """);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(intB(7));
+          assertThat(artifact()).isEqualTo(bInt(7));
         }
 
         @Test
@@ -223,7 +223,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               """;
           createUserModule(userModule, ThrowException.class);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(stringB("abc"));
+          assertThat(artifact()).isEqualTo(bString("abc"));
         }
 
         @Test
@@ -236,7 +236,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               """;
           createUserModule(userModule, ThrowException.class);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(stringB("abc"));
+          assertThat(artifact()).isEqualTo(bString("abc"));
         }
 
         @Test
@@ -249,7 +249,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               """;
           createUserModule(userModule, ThrowException.class);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(stringB("abc"));
+          assertThat(artifact()).isEqualTo(bString("abc"));
         }
 
         @Test
@@ -260,7 +260,7 @@ public class EvaluateTest extends EvaluatorTestCase {
             result = 7 > myFunc();
             """);
           evaluate("result");
-          assertThat(artifact()).isEqualTo(intB(7));
+          assertThat(artifact()).isEqualTo(bInt(7));
         }
       }
     }
@@ -279,7 +279,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           result = func();
           """);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("abc"));
+            assertThat(artifact()).isEqualTo(bString("abc"));
           }
 
           @Test
@@ -290,7 +290,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               result = func("def");
               """);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("def"));
+            assertThat(artifact()).isEqualTo(bString("def"));
           }
 
           @Test
@@ -305,7 +305,7 @@ public class EvaluateTest extends EvaluatorTestCase {
                 ThrowException.class.getCanonicalName());
             createUserModule(userModule, ThrowException.class);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("def"));
+            assertThat(artifact()).isEqualTo(bString("def"));
           }
         }
 
@@ -322,7 +322,7 @@ public class EvaluateTest extends EvaluatorTestCase {
                 StringIdentity.class.getCanonicalName());
             createUserModule(userModule, StringIdentity.class);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("abc"));
+            assertThat(artifact()).isEqualTo(bString("abc"));
           }
 
           @Test
@@ -336,7 +336,7 @@ public class EvaluateTest extends EvaluatorTestCase {
                 StringIdentity.class.getCanonicalName());
             createUserModule(userModule, StringIdentity.class);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("def"));
+            assertThat(artifact()).isEqualTo(bString("def"));
           }
 
           @Test
@@ -352,7 +352,7 @@ public class EvaluateTest extends EvaluatorTestCase {
                 StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName());
             createUserModule(userModule, StringIdentity.class, ThrowException.class);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("def"));
+            assertThat(artifact()).isEqualTo(bString("def"));
           }
         }
       }
@@ -369,7 +369,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               result = myFunc("abc");
               """);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("abc"));
+            assertThat(artifact()).isEqualTo(bString("abc"));
           }
 
           @Test
@@ -380,7 +380,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               result = myFunc("abc");
               """);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("abc"));
+            assertThat(artifact()).isEqualTo(bString("abc"));
           }
         }
 
@@ -395,7 +395,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               result = myFunc("abc");
               """);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("abc"));
+            assertThat(artifact()).isEqualTo(bString("abc"));
           }
 
           @Test
@@ -407,7 +407,7 @@ public class EvaluateTest extends EvaluatorTestCase {
               result = myFunc("abc");
               """);
             evaluate("result");
-            assertThat(artifact()).isEqualTo(stringB("abc"));
+            assertThat(artifact()).isEqualTo(bString("abc"));
           }
         }
       }

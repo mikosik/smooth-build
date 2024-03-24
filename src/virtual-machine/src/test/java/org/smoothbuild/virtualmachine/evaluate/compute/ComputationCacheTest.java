@@ -30,7 +30,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   @Test
   public void cache_contains_written_result() throws Exception {
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(stringB("result"), logArrayEmpty()));
+    computationCache.write(hash, new Output(bString("result"), bLogArrayEmpty()));
     assertThat(computationCache.contains(hash)).isTrue();
   }
 
@@ -45,27 +45,27 @@ public class ComputationCacheTest extends TestingVirtualMachine {
 
   @Test
   public void reading_not_written_value_fails() {
-    assertCall(() -> computationCache().read(hash, stringTB()))
+    assertCall(() -> computationCache().read(hash, bStringType()))
         .throwsException(ComputeException.class);
   }
 
   @Test
   public void written_messages_can_be_read_back() throws Exception {
-    var strV = stringB("abc");
-    var message = errorLog("error message");
-    var messages = arrayB(message);
+    var strV = bString("abc");
+    var message = bErrorLog("error message");
+    var messages = bArray(message);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(strV, messages));
 
-    assertThat(computationCache.read(hash, stringTB()).storedLogs()).isEqualTo(messages);
+    assertThat(computationCache.read(hash, bStringType()).storedLogs()).isEqualTo(messages);
   }
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    var file = fileB(path("file/path"), bytes);
+    var file = bFile(path("file/path"), bytes);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(arrayB(file), logArrayEmpty()));
-    var arrayType = arrayTB(bytecodeF().fileType());
+    computationCache.write(hash, new Output(bArray(file), bLogArrayEmpty()));
+    var arrayType = bArrayType(bytecodeF().fileType());
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BTuple.class))
         .containsExactly(file);
@@ -73,10 +73,10 @@ public class ComputationCacheTest extends TestingVirtualMachine {
 
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
-    var blob = blobB(bytes);
+    var blob = bBlob(bytes);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(arrayB(blob), logArrayEmpty()));
-    var arrayType = arrayTB(blobTB());
+    computationCache.write(hash, new Output(bArray(blob), bLogArrayEmpty()));
+    var arrayType = bArrayType(bBlobType());
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BBlob.class))
         .containsExactly(blob);
@@ -84,10 +84,10 @@ public class ComputationCacheTest extends TestingVirtualMachine {
 
   @Test
   public void written_bool_array_can_be_read_back() throws Exception {
-    var bool = boolB(true);
+    var bool = bBool(true);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(arrayB(bool), logArrayEmpty()));
-    var arrayType = arrayTB(boolTB());
+    computationCache.write(hash, new Output(bArray(bool), bLogArrayEmpty()));
+    var arrayType = bArrayType(bBoolType());
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BBool.class))
         .containsExactly(bool);
@@ -95,10 +95,10 @@ public class ComputationCacheTest extends TestingVirtualMachine {
 
   @Test
   public void written_int_array_can_be_read_back() throws Exception {
-    var int_ = intB(123);
+    var int_ = bInt(123);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(arrayB(int_), logArrayEmpty()));
-    var arrayType = arrayTB(intTB());
+    computationCache.write(hash, new Output(bArray(int_), bLogArrayEmpty()));
+    var arrayType = bArrayType(bIntType());
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BInt.class))
         .containsExactly(int_);
@@ -106,11 +106,11 @@ public class ComputationCacheTest extends TestingVirtualMachine {
 
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
-    var string = stringB("some string");
-    var array = arrayB(string);
+    var string = bString("some string");
+    var array = bArray(string);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(array, logArrayEmpty()));
-    var arrayType = arrayTB(stringTB());
+    computationCache.write(hash, new Output(array, bLogArrayEmpty()));
+    var arrayType = bArrayType(bStringType());
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BString.class))
         .containsExactly(string);
@@ -118,49 +118,49 @@ public class ComputationCacheTest extends TestingVirtualMachine {
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    var file = fileB(path("file/path"), bytes);
+    var file = bFile(path("file/path"), bytes);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(file, logArrayEmpty()));
+    computationCache.write(hash, new Output(file, bLogArrayEmpty()));
 
     assertThat(computationCache.read(hash, bytecodeF().fileType()).value()).isEqualTo(file);
   }
 
   @Test
   public void written_blob_can_be_read_back() throws Exception {
-    var blob = blobB(bytes);
+    var blob = bBlob(bytes);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(blob, logArrayEmpty()));
+    computationCache.write(hash, new Output(blob, bLogArrayEmpty()));
 
-    assertThat(computationCache.read(hash, blobTB()).value()).isEqualTo(blob);
+    assertThat(computationCache.read(hash, bBlobType()).value()).isEqualTo(blob);
   }
 
   @Test
   public void written_bool_can_be_read_back() throws Exception {
-    var bool = boolB(true);
+    var bool = bBool(true);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(bool, logArrayEmpty()));
+    computationCache.write(hash, new Output(bool, bLogArrayEmpty()));
 
-    assertThat(((BBool) computationCache.read(hash, boolTB()).value()).toJavaBoolean())
+    assertThat(((BBool) computationCache.read(hash, bBoolType()).value()).toJavaBoolean())
         .isTrue();
   }
 
   @Test
   public void written_int_can_be_read_back() throws Exception {
-    var int_ = intB(123);
+    var int_ = bInt(123);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(int_, logArrayEmpty()));
+    computationCache.write(hash, new Output(int_, bLogArrayEmpty()));
 
-    assertThat(((BInt) computationCache.read(hash, intTB()).value()).toJavaBigInteger())
+    assertThat(((BInt) computationCache.read(hash, bIntType()).value()).toJavaBigInteger())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test
   public void written_string_can_be_read_back() throws Exception {
     var string = "some string";
-    var bString = stringB(string);
+    var bString = bString(string);
     var computationCache = computationCache();
-    computationCache.write(hash, new Output(bString, logArrayEmpty()));
-    assertThat(((BString) computationCache.read(hash, stringTB()).value()).toJavaString())
+    computationCache.write(hash, new Output(bString, bLogArrayEmpty()));
+    assertThat(((BString) computationCache.read(hash, bStringType()).value()).toJavaString())
         .isEqualTo(string);
   }
 }

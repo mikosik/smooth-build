@@ -300,7 +300,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public InvokeTask invokeTask() throws BytecodeException {
-    return invokeTask(callB(), nativeFuncB(), traceB());
+    return invokeTask(bCall(), bNativeFunc(), bTrace());
   }
 
   public InvokeTask invokeTask(BCall call, BNativeFunc nativeFunc) throws BytecodeException {
@@ -313,7 +313,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public CombineTask combineTask() throws BytecodeException {
-    return combineTask(combineB(), traceB());
+    return combineTask(bCombine(), bTrace());
   }
 
   public CombineTask combineTask(BCombine combine, BTrace trace) {
@@ -321,7 +321,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public SelectTask selectTask() throws BytecodeException {
-    return selectTask(selectB(), traceB());
+    return selectTask(bSelect(), bTrace());
   }
 
   public SelectTask selectTask(BSelect select, BTrace trace) {
@@ -329,7 +329,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public PickTask pickTask() throws BytecodeException {
-    return pickTask(pickB(), traceB());
+    return pickTask(bPick(), bTrace());
   }
 
   public PickTask pickTask(BPick pick, BTrace trace) {
@@ -337,7 +337,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public OrderTask orderTask() throws BytecodeException {
-    return orderTask(orderB(), traceB());
+    return orderTask(bOrder(), bTrace());
   }
 
   public OrderTask orderTask(BOrder order, BTrace trace) {
@@ -345,11 +345,11 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public ConstTask constTask() throws BytecodeException {
-    return constTask(intB(7));
+    return constTask(bInt(7));
   }
 
   public static ConstTask constTask(BValue value) {
-    return constTask(value, traceB());
+    return constTask(value, bTrace());
   }
 
   public static ConstTask constTask(BValue value, BTrace trace) {
@@ -370,11 +370,11 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public ComputationResult computationResultWithMessages(BArray messages) throws BytecodeException {
-    return computationResult(output(intB(), messages), EXECUTION);
+    return computationResult(output(bInt(), messages), EXECUTION);
   }
 
   public Output output(BValue value) throws BytecodeException {
-    return output(value, logArrayEmpty());
+    return output(value, bLogArrayEmpty());
   }
 
   public Output output(BValue value, BArray messages) {

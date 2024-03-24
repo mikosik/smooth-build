@@ -10,8 +10,8 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class DecodeSelectWrongEvaluationTypeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() throws Exception {
-    var exception =
-        new DecodeSelectWrongEvaluationTypeException(Hash.of(13), selectCB(intTB()), stringTB());
+    var exception = new DecodeSelectWrongEvaluationTypeException(
+        Hash.of(13), bSelectKind(bIntType()), bStringType());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT` object"
             + " at 43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574."

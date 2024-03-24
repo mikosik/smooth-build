@@ -15,26 +15,26 @@ public class TestingBKind {
   public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();
 
   public static final List<BType> BASE_CATS_TO_TEST = wrapException(() -> list(
-      CONTEXT.blobTB(),
-      CONTEXT.boolTB(),
-      func(CONTEXT.blobTB(), CONTEXT.boolTB()),
-      CONTEXT.intTB(),
-      CONTEXT.stringTB(),
-      CONTEXT.personTB()));
+      CONTEXT.bBlobType(),
+      CONTEXT.bBoolType(),
+      func(CONTEXT.bBlobType(), CONTEXT.bBoolType()),
+      CONTEXT.bIntType(),
+      CONTEXT.bStringType(),
+      CONTEXT.bPersonType()));
 
   public static final List<BKind> ARRAY_CATS_TO_TEST = wrapException(() -> list(
-      array(CONTEXT.blobTB()),
-      array(func(CONTEXT.blobTB(), CONTEXT.boolTB())),
-      array(CONTEXT.boolTB()),
-      array(CONTEXT.intTB()),
-      array(CONTEXT.stringTB()),
-      array(CONTEXT.personTB()),
-      array(array(CONTEXT.blobTB())),
-      array(array(CONTEXT.boolTB())),
-      array(array(func(CONTEXT.blobTB(), CONTEXT.boolTB()))),
-      array(array(CONTEXT.intTB())),
-      array(array(CONTEXT.stringTB())),
-      array(array(CONTEXT.personTB()))));
+      array(CONTEXT.bBlobType()),
+      array(func(CONTEXT.bBlobType(), CONTEXT.bBoolType())),
+      array(CONTEXT.bBoolType()),
+      array(CONTEXT.bIntType()),
+      array(CONTEXT.bStringType()),
+      array(CONTEXT.bPersonType()),
+      array(array(CONTEXT.bBlobType())),
+      array(array(CONTEXT.bBoolType())),
+      array(array(func(CONTEXT.bBlobType(), CONTEXT.bBoolType()))),
+      array(array(CONTEXT.bIntType())),
+      array(array(CONTEXT.bStringType())),
+      array(array(CONTEXT.bPersonType()))));
 
   public static final List<BKind> CATS_TO_TEST = ARRAY_CATS_TO_TEST.appendAll(BASE_CATS_TO_TEST);
 
@@ -50,58 +50,58 @@ public class TestingBKind {
 
   private static List<BKind> createAllKinds() throws BytecodeException {
     var baseKinds = list(
-        CONTEXT.blobTB(),
-        CONTEXT.boolTB(),
-        CONTEXT.intTB(),
-        func(CONTEXT.blobTB()),
-        func(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        func(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        func(CONTEXT.stringTB()),
-        CONTEXT.stringTB(),
+        CONTEXT.bBlobType(),
+        CONTEXT.bBoolType(),
+        CONTEXT.bIntType(),
+        func(CONTEXT.bBlobType()),
+        func(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        func(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        func(CONTEXT.bStringType()),
+        CONTEXT.bStringType(),
         tuple(),
-        tuple(CONTEXT.blobTB()),
-        tuple(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        tuple(CONTEXT.stringTB()));
-    var arrayKinds = baseKinds.map(CONTEXT::arrayTB);
+        tuple(CONTEXT.bBlobType()),
+        tuple(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        tuple(CONTEXT.bStringType()));
+    var arrayKinds = baseKinds.map(CONTEXT::bArrayType);
     var valueKinds = baseKinds.appendAll(arrayKinds);
     var exprKinds = list(
-        CONTEXT.callCB(CONTEXT.blobTB()),
-        CONTEXT.callCB(CONTEXT.stringTB()),
-        CONTEXT.combineCB(CONTEXT.tupleTB(CONTEXT.blobTB())),
-        CONTEXT.combineCB(CONTEXT.tupleTB(CONTEXT.stringTB())),
-        CONTEXT.orderCB(array(CONTEXT.blobTB())),
-        CONTEXT.orderCB(array(CONTEXT.stringTB())),
-        CONTEXT.pickCB(CONTEXT.blobTB()),
-        CONTEXT.pickCB(CONTEXT.stringTB()),
-        CONTEXT.varCB(CONTEXT.blobTB()),
-        CONTEXT.varCB(CONTEXT.stringTB()),
-        CONTEXT.selectCB(CONTEXT.blobTB()),
-        CONTEXT.selectCB(CONTEXT.stringTB()),
-        CONTEXT.ifFuncCB(CONTEXT.blobTB()),
-        CONTEXT.ifFuncCB(CONTEXT.stringTB()),
-        CONTEXT.mapFuncCB(CONTEXT.stringTB(), CONTEXT.intTB()),
-        CONTEXT.mapFuncCB(CONTEXT.stringTB(), CONTEXT.boolTB()),
-        CONTEXT.nativeFuncCB(CONTEXT.blobTB()),
-        CONTEXT.nativeFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.nativeFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.nativeFuncCB(CONTEXT.stringTB()),
-        CONTEXT.lambdaCB(CONTEXT.blobTB()),
-        CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.lambdaCB(CONTEXT.stringTB()));
+        CONTEXT.bCallKind(CONTEXT.bBlobType()),
+        CONTEXT.bCallKind(CONTEXT.bStringType()),
+        CONTEXT.bCombineKind(CONTEXT.bTupleType(CONTEXT.bBlobType())),
+        CONTEXT.bCombineKind(CONTEXT.bTupleType(CONTEXT.bStringType())),
+        CONTEXT.bOrderKind(array(CONTEXT.bBlobType())),
+        CONTEXT.bOrderKind(array(CONTEXT.bStringType())),
+        CONTEXT.bPickKind(CONTEXT.bBlobType()),
+        CONTEXT.bPickKind(CONTEXT.bStringType()),
+        CONTEXT.bReferenceKind(CONTEXT.bBlobType()),
+        CONTEXT.bReferenceKind(CONTEXT.bStringType()),
+        CONTEXT.bSelectKind(CONTEXT.bBlobType()),
+        CONTEXT.bSelectKind(CONTEXT.bStringType()),
+        CONTEXT.bIfKind(CONTEXT.bBlobType()),
+        CONTEXT.bIfKind(CONTEXT.bStringType()),
+        CONTEXT.bMapKind(CONTEXT.bStringType(), CONTEXT.bIntType()),
+        CONTEXT.bMapKind(CONTEXT.bStringType(), CONTEXT.bBoolType()),
+        CONTEXT.bNativeFuncKind(CONTEXT.bBlobType()),
+        CONTEXT.bNativeFuncKind(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        CONTEXT.bNativeFuncKind(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        CONTEXT.bNativeFuncKind(CONTEXT.bStringType()),
+        CONTEXT.bLambdaKind(CONTEXT.bBlobType()),
+        CONTEXT.bLambdaKind(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        CONTEXT.bLambdaKind(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        CONTEXT.bLambdaKind(CONTEXT.bStringType()));
 
     return exprKinds.appendAll(valueKinds);
   }
 
   private static BArrayType array(BType elementType) throws BytecodeException {
-    return CONTEXT.arrayTB(elementType);
+    return CONTEXT.bArrayType(elementType);
   }
 
   private static BFuncType func(BType resultType, BType... paramTypes) throws BytecodeException {
-    return CONTEXT.funcTB(list(paramTypes), resultType);
+    return CONTEXT.bFuncType(list(paramTypes), resultType);
   }
 
   private static BTupleType tuple(BType... paramTypes) throws BytecodeException {
-    return CONTEXT.tupleTB(paramTypes);
+    return CONTEXT.bTupleType(paramTypes);
   }
 }

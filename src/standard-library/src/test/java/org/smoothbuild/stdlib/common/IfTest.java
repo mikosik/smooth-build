@@ -16,7 +16,7 @@ public class IfTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("then clause"));
+    assertThat(artifact()).isEqualTo(bString("then clause"));
   }
 
   @Test
@@ -26,7 +26,7 @@ public class IfTest extends StandardLibraryTestCase {
             result = if(false, "then clause", "else clause");
             """);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("else clause"));
+    assertThat(artifact()).isEqualTo(bString("else clause"));
   }
 
   @Test
@@ -40,7 +40,7 @@ public class IfTest extends StandardLibraryTestCase {
         ThrowException.class.getCanonicalName());
     createUserModule(userModule, ThrowException.class);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("else clause"));
+    assertThat(artifact()).isEqualTo(bString("else clause"));
   }
 
   @Test
@@ -54,7 +54,7 @@ public class IfTest extends StandardLibraryTestCase {
         ThrowException.class.getCanonicalName());
     createUserModule(userModule, ThrowException.class);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("then clause"));
+    assertThat(artifact()).isEqualTo(bString("then clause"));
   }
 
   @Nested
@@ -70,7 +70,7 @@ public class IfTest extends StandardLibraryTestCase {
           ThrowException.class.getCanonicalName());
       createUserModule(userModule, ThrowException.class);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(stringB("else clause"));
+      assertThat(artifact()).isEqualTo(bString("else clause"));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class IfTest extends StandardLibraryTestCase {
           ThrowException.class.getCanonicalName());
       createUserModule(userModule, ThrowException.class);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(stringB("then clause"));
+      assertThat(artifact()).isEqualTo(bString("then clause"));
     }
   }
 }

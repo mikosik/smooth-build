@@ -10,8 +10,8 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class DecodeCombineWrongElementsSizeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() throws Exception {
-    var exception =
-        new DecodeCombineWrongElementsSizeException(Hash.of(13), combineCB(intTB(), stringTB()), 3);
+    var exception = new DecodeCombineWrongElementsSizeException(
+        Hash.of(13), bCombineKind(bIntType(), bStringType()), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `COMBINE` object at "
             + "43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "

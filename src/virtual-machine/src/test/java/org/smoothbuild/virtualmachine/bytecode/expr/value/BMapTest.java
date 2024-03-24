@@ -15,27 +15,27 @@ public class BMapTest extends TestingVirtualMachine {
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BMap> {
     @Override
     protected List<BMap> equalExprs() throws BytecodeException {
-      return list(mapFuncB(intTB(), stringTB()), mapFuncB(intTB(), stringTB()));
+      return list(bMap(bIntType(), bStringType()), bMap(bIntType(), bStringType()));
     }
 
     @Override
     protected List<BMap> nonEqualExprs() throws BytecodeException {
       return list(
-          mapFuncB(intTB(), boolTB()),
-          mapFuncB(intTB(), stringTB()),
-          mapFuncB(stringTB(), stringTB()));
+          bMap(bIntType(), bBoolType()),
+          bMap(bIntType(), bStringType()),
+          bMap(bStringType(), bStringType()));
     }
   }
 
   @Test
   public void map_can_be_read_back_by_hash() throws Exception {
-    var map = mapFuncB(intTB(), stringTB());
+    var map = bMap(bIntType(), bStringType());
     assertThat(exprDbOther().get(map.hash())).isEqualTo(map);
   }
 
   @Test
   public void to_string() throws Exception {
-    var map = mapFuncB(intTB(), stringTB());
+    var map = bMap(bIntType(), bStringType());
     assertThat(map.toString()).isEqualTo("MapFunc(([String],(String)->Int)->[Int])@" + map.hash());
   }
 }
