@@ -1,18 +1,18 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 public class UnusedVarsGenerator {
   private final AlphabeticalVarsGenerator iterator = new AlphabeticalVarsGenerator();
-  private final VarSetS reservedVars;
+  private final SVarSet reservedVars;
 
-  public UnusedVarsGenerator(VarSetS reservedVars) {
+  public UnusedVarsGenerator(SVarSet reservedVars) {
     this.reservedVars = reservedVars;
   }
 
-  public VarS next() {
-    VarS var;
+  public SVar next() {
+    SVar var;
     do {
       var = iterator.next();
     } while (reservedVars.contains(var));

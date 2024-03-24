@@ -14,31 +14,31 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.dag.Dag.apply2;
 import static org.smoothbuild.common.dag.Dag.applyMaybeFunction;
 import static org.smoothbuild.common.dag.Dag.value;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_BUCKET_ID;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bindings;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bytecodeFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.combineS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.constructorS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intIdFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.lambdaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.orderS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.paramRefS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.selectS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.valueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.annotatedFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bytecodeFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.callS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.combineS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.constructorS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.lambdaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.nativeAnnotationS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.paramRefS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.selectS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.valueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
@@ -52,8 +52,8 @@ import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
@@ -293,28 +293,28 @@ public class EvaluatorTest extends TestingVirtualMachine {
     }
   }
 
-  private void assertEvaluation(NamedEvaluableS namedEvaluableS, BExpr bExpr) {
-    assertThat(evaluate(bindings(namedEvaluableS), instantiateS(namedEvaluableS)))
+  private void assertEvaluation(SNamedEvaluable sNamedEvaluable, BExpr bExpr) {
+    assertThat(evaluate(bindings(sNamedEvaluable), instantiateS(sNamedEvaluable)))
         .isEqualTo(bExpr);
   }
 
-  private void assertEvaluation(ExprS exprS, BExpr bExpr) {
-    assertEvaluation(bindings(), exprS, bExpr);
+  private void assertEvaluation(SExpr sExpr, BExpr bExpr) {
+    assertEvaluation(bindings(), sExpr, bExpr);
   }
 
   private void assertEvaluation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, BExpr bExpr) {
-    assertThat(evaluate(evaluables, exprS)).isEqualTo(bExpr);
+      ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr bExpr) {
+    assertThat(evaluate(evaluables, sExpr)).isEqualTo(bExpr);
   }
 
-  private BExpr evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
-    var bValues = evaluate(evaluables, list(exprS)).get().bValues();
+  private BExpr evaluate(ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr) {
+    var bValues = evaluate(evaluables, list(sExpr)).get().bValues();
     assertThat(bValues.size()).isEqualTo(1);
     return bValues.get(0);
   }
 
   private Maybe<EvaluatedExprs> evaluate(
-      ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
+      ImmutableBindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
     var backendCompile = backendCompile(filePersister, bytecodeLoader);
     var bEvaluator = bEvaluator(nativeMethodLoader);
     var reporter = new MemoryReporter();

@@ -1,10 +1,10 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.tupleTS;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -32,44 +32,44 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
 import org.smoothbuild.compilerfrontend.compile.infer.TypeTeller;
-import org.smoothbuild.compilerfrontend.lang.define.AnnotatedFuncS;
-import org.smoothbuild.compilerfrontend.lang.define.AnnotatedValueS;
-import org.smoothbuild.compilerfrontend.lang.define.AnnotationS;
-import org.smoothbuild.compilerfrontend.lang.define.BlobS;
-import org.smoothbuild.compilerfrontend.lang.define.CallS;
-import org.smoothbuild.compilerfrontend.lang.define.CombineS;
-import org.smoothbuild.compilerfrontend.lang.define.ConstructorS;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
-import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
-import org.smoothbuild.compilerfrontend.lang.define.IntS;
-import org.smoothbuild.compilerfrontend.lang.define.ItemS;
-import org.smoothbuild.compilerfrontend.lang.define.LambdaS;
-import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedExprFuncS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedExprValueS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedFuncS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
-import org.smoothbuild.compilerfrontend.lang.define.OrderS;
-import org.smoothbuild.compilerfrontend.lang.define.PolymorphicS;
-import org.smoothbuild.compilerfrontend.lang.define.ReferenceS;
+import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
+import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
+import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
+import org.smoothbuild.compilerfrontend.lang.define.SBlob;
+import org.smoothbuild.compilerfrontend.lang.define.SCall;
+import org.smoothbuild.compilerfrontend.lang.define.SCombine;
+import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
+import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
+import org.smoothbuild.compilerfrontend.lang.define.SInt;
+import org.smoothbuild.compilerfrontend.lang.define.SItem;
+import org.smoothbuild.compilerfrontend.lang.define.SLambda;
+import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
+import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
+import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.define.SString;
+import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.lang.define.SelectS;
-import org.smoothbuild.compilerfrontend.lang.define.StringS;
-import org.smoothbuild.compilerfrontend.lang.define.TypeDefinitionS;
-import org.smoothbuild.compilerfrontend.lang.type.ArrayTS;
+import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
+import org.smoothbuild.compilerfrontend.lang.type.STupleType;
+import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.TupleTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
 
-public class ConvertPs implements TryFunction2<ModuleP, ScopeS, ModuleS> {
+public class ConvertPs implements TryFunction2<ModuleP, ScopeS, SModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "buildIr");
   }
 
   @Override
-  public Try<ModuleS> apply(ModuleP moduleP, ScopeS environment) {
+  public Try<SModule> apply(ModuleP moduleP, ScopeS environment) {
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     return success(new Worker(typeTeller, environment).convertModule(moduleP));
   }
@@ -83,28 +83,28 @@ public class ConvertPs implements TryFunction2<ModuleP, ScopeS, ModuleS> {
       this.imported = imported;
     }
 
-    private ModuleS convertModule(ModuleP moduleP) {
+    private SModule convertModule(ModuleP moduleP) {
       var scopeP = moduleP.scope();
       var structs = scopeP.types().toMap().mapValues(this::convertStruct);
       var evaluables = scopeP.referencables().toMap().mapValues(this::convertReferenceableP);
       var members = new ScopeS(immutableBindings(structs), immutableBindings(evaluables));
       var scopeS = ScopeS.scopeS(imported, members);
-      return new ModuleS(members, scopeS);
+      return new SModule(members, scopeS);
     }
 
-    private TypeDefinitionS convertStruct(StructP structP) {
-      return new TypeDefinitionS(structP.typeS(), structP.location());
+    private STypeDefinition convertStruct(StructP structP) {
+      return new STypeDefinition(structP.typeS(), structP.location());
     }
 
-    private ConstructorS convertConstructor(ConstructorP constructorP) {
+    private SConstructor convertConstructor(ConstructorP constructorP) {
       var fields = constructorP.params();
       var params =
-          fields.map(f -> new ItemS(fields.get(f.name()).typeS(), f.name(), none(), f.location()));
-      return new ConstructorS(
+          fields.map(f -> new SItem(fields.get(f.name()).typeS(), f.name(), none(), f.location()));
+      return new SConstructor(
           constructorP.schemaS(), constructorP.name(), params, constructorP.location());
     }
 
-    private NamedEvaluableS convertReferenceableP(ReferenceableP referenceableP) {
+    private SNamedEvaluable convertReferenceableP(ReferenceableP referenceableP) {
       return switch (referenceableP) {
         case ConstructorP constructorP -> convertConstructor(constructorP);
         case NamedFuncP namedFuncP -> convertNamedFunc(namedFuncP);
@@ -113,65 +113,65 @@ public class ConvertPs implements TryFunction2<ModuleP, ScopeS, ModuleS> {
       };
     }
 
-    public NamedValueS convertNamedValue(NamedValueP namedValueP) {
+    public SNamedValue convertNamedValue(NamedValueP namedValueP) {
       var schema = namedValueP.schemaS();
       var name = namedValueP.name();
       var location = namedValueP.location();
       if (namedValueP.annotation().isSome()) {
         var ann = convertAnnotation(namedValueP.annotation().get());
-        return new AnnotatedValueS(ann, schema, name, location);
+        return new SAnnotatedValue(ann, schema, name, location);
       } else if (namedValueP.body().isSome()) {
         var body = convertExpr(namedValueP.body().get());
-        return new NamedExprValueS(schema, name, body, location);
+        return new SNamedExprValue(schema, name, body, location);
       } else {
         throw new RuntimeException("Internal error: NamedValueP without annotation and body.");
       }
     }
 
-    public NamedFuncS convertNamedFunc(NamedFuncP namedFuncP) {
+    public SNamedFunc convertNamedFunc(NamedFuncP namedFuncP) {
       return convertNamedFunc(namedFuncP, convertParams(namedFuncP));
     }
 
-    private NList<ItemS> convertParams(NamedFuncP namedFuncP) {
+    private NList<SItem> convertParams(NamedFuncP namedFuncP) {
       return namedFuncP.params().map(this::convertParam);
     }
 
-    private NList<ItemS> convertParams(NList<ItemP> params) {
+    private NList<SItem> convertParams(NList<ItemP> params) {
       return params.map(this::convertParam);
     }
 
-    public ItemS convertParam(ItemP paramP) {
+    public SItem convertParam(ItemP paramP) {
       var type = paramP.typeS();
       var name = paramP.name();
       var body = paramP.defaultValue().map(this::convertNamedValue);
-      return new ItemS(type, name, body, paramP.location());
+      return new SItem(type, name, body, paramP.location());
     }
 
-    private NamedFuncS convertNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
+    private SNamedFunc convertNamedFunc(NamedFuncP namedFuncP, NList<SItem> params) {
       var schema = namedFuncP.schemaS();
       var name = namedFuncP.name();
       var loc = namedFuncP.location();
       if (namedFuncP.annotation().isSome()) {
         var annotationS = convertAnnotation(namedFuncP.annotation().get());
-        return new AnnotatedFuncS(annotationS, schema, name, params, loc);
+        return new SAnnotatedFunc(annotationS, schema, name, params, loc);
       } else if (namedFuncP.body().isSome()) {
         var body = convertFuncBody(namedFuncP, namedFuncP.body().get());
-        return new NamedExprFuncS(schema, name, params, body, loc);
+        return new SNamedExprFunc(schema, name, params, body, loc);
       } else {
         throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
       }
     }
 
-    private AnnotationS convertAnnotation(AnnotationP annotationP) {
+    private SAnnotation convertAnnotation(AnnotationP annotationP) {
       var path = convertString(annotationP.value());
-      return new AnnotationS(annotationP.name(), path, annotationP.location());
+      return new SAnnotation(annotationP.name(), path, annotationP.location());
     }
 
-    private List<ExprS> convertExprs(List<ExprP> positionedArgs) {
+    private List<SExpr> convertExprs(List<ExprP> positionedArgs) {
       return positionedArgs.map(this::convertExpr);
     }
 
-    private ExprS convertExpr(ExprP expr) {
+    private SExpr convertExpr(ExprP expr) {
       return switch (expr) {
         case BlobP blobP -> convertBlob(blobP);
         case CallP callP -> convertCall(callP);
@@ -184,70 +184,70 @@ public class ConvertPs implements TryFunction2<ModuleP, ScopeS, ModuleS> {
       };
     }
 
-    private LambdaS convertLambda(LambdaP lambdaP) {
+    private SLambda convertLambda(LambdaP lambdaP) {
       var params = convertParams(lambdaP.params());
       var body = convertFuncBody(lambdaP, lambdaP.bodyGet());
-      return new LambdaS(lambdaP.schemaS(), params, body, lambdaP.location());
+      return new SLambda(lambdaP.schemaS(), params, body, lambdaP.location());
     }
 
-    private BlobS convertBlob(BlobP blob) {
-      return new BlobS(TypeFS.BLOB, blob.byteString(), blob.location());
+    private SBlob convertBlob(BlobP blob) {
+      return new SBlob(STypes.BLOB, blob.byteString(), blob.location());
     }
 
-    private ExprS convertCall(CallP call) {
+    private SExpr convertCall(CallP call) {
       var callee = convertExpr(call.callee());
       var args = convertArgs(call);
-      return new CallS(callee, args, call.location());
+      return new SCall(callee, args, call.location());
     }
 
-    private CombineS convertArgs(CallP call) {
+    private SCombine convertArgs(CallP call) {
       var args = convertExprs(call.positionedArgs());
-      var evaluationType = new TupleTS(args.map(ExprS::evaluationType));
-      return new CombineS(evaluationType, args, call.location());
+      var evaluationType = new STupleType(args.map(SExpr::evaluationType));
+      return new SCombine(evaluationType, args, call.location());
     }
 
-    private ExprS convertFuncBody(FuncP funcP, ExprP body) {
+    private SExpr convertFuncBody(FuncP funcP, ExprP body) {
       var typeTellerForBody = typeTeller.withScope(funcP.scope());
       return new Worker(typeTellerForBody, imported).convertExpr(body);
     }
 
-    private IntS convertInt(IntP int_) {
-      return new IntS(TypeFS.INT, int_.bigInteger(), int_.location());
+    private SInt convertInt(IntP int_) {
+      return new SInt(STypes.INT, int_.bigInteger(), int_.location());
     }
 
-    private PolymorphicS convertPolymorphic(PolymorphicP polymorphicP) {
+    private SPolymorphic convertPolymorphic(PolymorphicP polymorphicP) {
       return switch (polymorphicP) {
         case LambdaP lambdaP -> convertLambda(lambdaP);
         case ReferenceP referenceP -> convertReference(referenceP);
       };
     }
 
-    private ExprS convertInstantiate(InstantiateP instantiateP) {
+    private SExpr convertInstantiate(InstantiateP instantiateP) {
       var polymorphicS = convertPolymorphic(instantiateP.polymorphic());
-      return new InstantiateS(instantiateP.typeArgs(), polymorphicS, instantiateP.location());
+      return new SInstantiate(instantiateP.typeArgs(), polymorphicS, instantiateP.location());
     }
 
-    private ExprS convertOrder(OrderP order) {
+    private SExpr convertOrder(OrderP order) {
       var elems = convertExprs(order.elements());
-      return new OrderS((ArrayTS) order.typeS(), elems, order.location());
+      return new SOrder((SArrayType) order.typeS(), elems, order.location());
     }
 
-    private ReferenceS convertReference(ReferenceP referenceP) {
+    private SReference convertReference(ReferenceP referenceP) {
       return convertReference(
           referenceP, typeTeller.schemaFor(referenceP.referencedName()).get());
     }
 
-    private ReferenceS convertReference(ReferenceP referenceP, SchemaS schemaS) {
-      return new ReferenceS(schemaS, referenceP.referencedName(), referenceP.location());
+    private SReference convertReference(ReferenceP referenceP, SchemaS schemaS) {
+      return new SReference(schemaS, referenceP.referencedName(), referenceP.location());
     }
 
-    private ExprS convertSelect(SelectP selectP) {
+    private SExpr convertSelect(SelectP selectP) {
       var selectable = convertExpr(selectP.selectable());
       return new SelectS(selectable, selectP.field(), selectP.location());
     }
 
-    private StringS convertString(StringP string) {
-      return new StringS(TypeFS.STRING, string.unescapedValue(), string.location());
+    private SString convertString(StringP string) {
+      return new SString(STypes.STRING, string.unescapedValue(), string.location());
     }
   }
 }

@@ -31,6 +31,6 @@ public class BEvaluatorFacade implements MaybeFunction<CompiledExprs, EvaluatedE
       }
     });
     var bValues = childInjector.getInstance(BEvaluator.class).evaluate(compiledExprs.bExprs());
-    return bValues.map(v -> evaluatedExprs(compiledExprs.exprSs(), v));
+    return bValues.map(v -> evaluatedExprs(compiledExprs.sExprs(), v));
   }
 }

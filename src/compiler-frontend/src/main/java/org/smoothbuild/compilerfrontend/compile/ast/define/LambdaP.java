@@ -8,16 +8,16 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.FuncSchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
 public final class LambdaP extends PolymorphicP implements FuncP {
   private final ImplicitTP resultT;
   private final NList<ItemP> params;
   private final ExprP body;
   private final String name;
-  private FuncTS typeS;
-  private FuncSchemaS schemaS;
+  private SFuncType typeS;
+  private SFuncSchema schemaS;
   private ScopeP scope;
 
   public LambdaP(String name, NList<ItemP> params, ExprP body, Location location) {
@@ -53,22 +53,22 @@ public final class LambdaP extends PolymorphicP implements FuncP {
   }
 
   @Override
-  public FuncTS typeS() {
+  public SFuncType typeS() {
     return typeS;
   }
 
   @Override
-  public void setTypeS(FuncTS type) {
+  public void setTypeS(SFuncType type) {
     this.typeS = type;
   }
 
   @Override
-  public FuncSchemaS schemaS() {
+  public SFuncSchema schemaS() {
     return schemaS;
   }
 
   @Override
-  public void setSchemaS(FuncSchemaS schemaS) {
+  public void setSchemaS(SFuncSchema schemaS) {
     this.schemaS = schemaS;
   }
 

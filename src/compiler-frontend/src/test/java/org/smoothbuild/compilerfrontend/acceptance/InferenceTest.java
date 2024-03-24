@@ -4,31 +4,31 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcSchemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.idFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.lambdaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.orderS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.schemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.valueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.callS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcSchemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.lambdaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.schemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.valueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedExprValueS;
+import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class InferenceTest {
@@ -170,8 +170,8 @@ public class InferenceTest {
           .members()
           .evaluables()
           .get("myValue");
-      var myValueBody = ((NamedExprValueS) myValue).body();
-      var lambda = ((InstantiateS) myValueBody).polymorphicS();
+      var myValueBody = ((SNamedExprValue) myValue).body();
+      var lambda = ((SInstantiate) myValueBody).sPolymorphic();
       assertThat(lambda.schema()).isEqualTo(expected);
     }
   }

@@ -1,12 +1,12 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

@@ -13,15 +13,15 @@ import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingBucket.readFile;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedValueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.annotatedValueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.nativeAnnotationS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;
@@ -33,11 +33,11 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
-import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
-import org.smoothbuild.compilerfrontend.lang.type.StructTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.testing.TestingExpressionS;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
+import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -211,12 +211,12 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
     var saveArtifacts = new SaveArtifacts(projectBucket());
-    List<ExprS> exprSs = list(
+    List<SExpr> sExprs = list(
         instantiateS(stringTS(), "myValue1"),
         instantiateS(stringTS(), "myValue2"),
         instantiateS(stringTS(), "myValue3"));
     List<BValue> bValues = list(bString(), bString(), bString());
-    var stringTry = saveArtifacts.apply(evaluatedExprs(exprSs, bValues));
+    var stringTry = saveArtifacts.apply(evaluatedExprs(sExprs, bValues));
     assertThat(stringTry)
         .isEqualTo(success(
             null,
@@ -225,25 +225,25 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
             info("myValue3 -> '.smooth/artifacts/myValue3'")));
   }
 
-  private void testValueStoring(TypeS typeS, BValue value, ByteString valueAsByteString)
+  private void testValueStoring(SType sType, BValue value, ByteString valueAsByteString)
       throws Exception {
-    testValueStoring(typeS, value, valueAsByteString, "myValue");
+    testValueStoring(sType, value, valueAsByteString, "myValue");
   }
 
   private void testValueStoring(
-      TypeS typeS, BValue value, ByteString valueAsByteString, String artifactRelativePath)
+      SType sType, BValue value, ByteString valueAsByteString, String artifactRelativePath)
       throws IOException {
     var expectedDirectoryMap = Map.of(path(artifactRelativePath), valueAsByteString);
-    testValueStoring(typeS, value, artifactRelativePath, expectedDirectoryMap);
+    testValueStoring(sType, value, artifactRelativePath, expectedDirectoryMap);
   }
 
   private void testValueStoring(
-      TypeS typeS,
+      SType sType,
       BValue value,
       String artifactRelativePath,
       Map<Path, ByteString> expectedDirectoryMap)
       throws IOException {
-    var result = saveArtifacts(typeS, value);
+    var result = saveArtifacts(sType, value);
 
     assertThat(result)
         .isEqualTo(
@@ -251,9 +251,9 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
-  private Try<Void> saveArtifacts(TypeS typeS, BValue value) {
+  private Try<Void> saveArtifacts(SType sType, BValue value) {
     var saveArtifacts = new SaveArtifacts(projectBucket());
-    ExprS instantiateS = instantiateS(typeS, "myValue");
+    SExpr instantiateS = instantiateS(sType, "myValue");
     return saveArtifacts.apply(evaluatedExprs(list(instantiateS), list(value)));
   }
 
@@ -261,12 +261,12 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
     return ByteString.encodeUtf8(string);
   }
 
-  private static InstantiateS instantiateS(TypeS typeS, String name) {
-    return TestingExpressionS.instantiateS(
-        list(), annotatedValueS(nativeAnnotationS(), typeS, name, location()));
+  private static SInstantiate instantiateS(SType sType, String name) {
+    return TestingSExpression.instantiateS(
+        list(), annotatedValueS(nativeAnnotationS(), sType, name, location()));
   }
 
-  public static StructTS fileTS() {
+  public static SStructType fileTS() {
     return structTS(FILE_STRUCT_NAME, blobTS(), stringTS());
   }
 }

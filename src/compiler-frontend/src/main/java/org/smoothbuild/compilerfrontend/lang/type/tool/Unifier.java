@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.type.TempVarS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
+import org.smoothbuild.compilerfrontend.lang.type.STempVar;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 /**
  * Unifier allows unifying types (`TypeS`s)
@@ -37,7 +37,7 @@ import org.smoothbuild.compilerfrontend.lang.type.VarS;
  * both interfaces inferring type of TempVar as Interface(Int field1, Int field2).
  */
 public class Unifier {
-  private final Map<VarS, Unified> varToUnified;
+  private final Map<SVar, Unified> varToUnified;
   private final Set<InstantiationConstraint> instantiationConstraints;
   private final TempVarGenerator tempVarGenerator;
 
@@ -65,8 +65,8 @@ public class Unifier {
     return new EqualityConstraint(constraint.instantiation(), structureOf(constraint.schema()));
   }
 
-  public TypeS structureOf(TypeS type) {
-    var tempMap = new HashMap<TypeS, TypeS>();
+  public SType structureOf(SType type) {
+    var tempMap = new HashMap<SType, SType>();
     return resolve(type).mapTemps((temp) -> tempMap.computeIfAbsent(temp, t -> newTempVar()));
   }
 
@@ -109,7 +109,7 @@ public class Unifier {
     return listOfAll(builder);
   }
 
-  private static record ResolvedInstantiation(TypeS instantiation, TypeS schema) {}
+  private static record ResolvedInstantiation(SType instantiation, SType schema) {}
 
   private List<ResolvedInstantiation> resolvedInstantiationConstraints(
       List<InstantiationConstraint> orderedInstantiationConstraints) {
@@ -131,14 +131,14 @@ public class Unifier {
       throws UnifierException {
     var type1 = constraint.type1();
     var type2 = constraint.type2();
-    if (type1 instanceof TempVarS tempVar1) {
-      if (type2 instanceof TempVarS tempVar2) {
+    if (type1 instanceof STempVar tempVar1) {
+      if (type2 instanceof STempVar tempVar2) {
         unifyTempVarAndTempVar(tempVar1, tempVar2, queue);
       } else {
         unifyTempVarAndNonTempVar(tempVar1, type2, queue);
       }
     } else {
-      if (type2 instanceof TempVarS tempVar2) {
+      if (type2 instanceof STempVar tempVar2) {
         unifyTempVarAndNonTempVar(tempVar2, type1, queue);
       } else {
         ConstraintInferrer.unifyAndInferConstraints(type1, type2, queue);
@@ -147,7 +147,7 @@ public class Unifier {
   }
 
   private void unifyTempVarAndTempVar(
-      TempVarS tempVar1, TempVarS tempVar2, Queue<EqualityConstraint> constraints)
+      STempVar tempVar1, STempVar tempVar2, Queue<EqualityConstraint> constraints)
       throws UnifierException {
     var unified1 = unifiedFor(tempVar1);
     var unified2 = unifiedFor(tempVar2);
@@ -176,7 +176,7 @@ public class Unifier {
   }
 
   private void unifyTempVarAndNonTempVar(
-      TempVarS temp, TypeS type, Queue<EqualityConstraint> constraints) throws UnifierException {
+      STempVar temp, SType type, Queue<EqualityConstraint> constraints) throws UnifierException {
     var unified = unifiedFor(temp);
     if (unified.type == null) {
       unified.type = type;
@@ -187,7 +187,7 @@ public class Unifier {
     failIfCycleExists(unified);
   }
 
-  public TempVarS newTempVar() {
+  public STempVar newTempVar() {
     var tempVar = tempVarGenerator.next();
     varToUnified.put(tempVar, new Unified(tempVar));
     return tempVar;
@@ -195,14 +195,14 @@ public class Unifier {
 
   // resolving
 
-  public TypeS resolve(TypeS typeS) {
-    return switch (typeS) {
-      case TempVarS tempVar -> resolveTempVar(tempVar);
-      default -> resolveNonTemp(typeS);
+  public SType resolve(SType sType) {
+    return switch (sType) {
+      case STempVar tempVar -> resolveTempVar(tempVar);
+      default -> resolveNonTemp(sType);
     };
   }
 
-  private TypeS resolveTempVar(TempVarS tempVar) {
+  private SType resolveTempVar(STempVar tempVar) {
     var unified = unifiedFor(tempVar);
     if (unified.type == null) {
       return unified.mainVar;
@@ -211,7 +211,7 @@ public class Unifier {
     }
   }
 
-  private TypeS resolveNonTemp(TypeS type) {
+  private SType resolveNonTemp(SType type) {
     return type.mapTemps(this::resolve);
   }
 
@@ -233,7 +233,7 @@ public class Unifier {
     }
   }
 
-  private Unified unifiedFor(TempVarS tempVar) {
+  private Unified unifiedFor(STempVar tempVar) {
     var unified = varToUnified.get(tempVar);
     if (unified == null) {
       throw new IllegalStateException("Unknown temp var " + q(tempVar.name()) + ".");
@@ -251,12 +251,12 @@ public class Unifier {
   }
 
   private static class Unified {
-    private final TempVarS mainVar;
-    private final Set<TempVarS> vars;
+    private final STempVar mainVar;
+    private final Set<STempVar> vars;
     private final Set<Unified> usedIn;
-    private TypeS type;
+    private SType type;
 
-    public Unified(TempVarS var) {
+    public Unified(STempVar var) {
       this.mainVar = var;
       this.vars = new HashSet<>();
       this.usedIn = new HashSet<>();

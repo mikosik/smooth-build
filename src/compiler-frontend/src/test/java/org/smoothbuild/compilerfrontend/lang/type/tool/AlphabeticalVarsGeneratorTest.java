@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class AlphabeticalVarsGeneratorTest {
   private static final String DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -32,10 +32,10 @@ public class AlphabeticalVarsGeneratorTest {
   }
 
   private static void checkNameAtIndex(int index, String name) {
-    assertThat(find(index)).isEqualTo(new VarS(name));
+    assertThat(find(index)).isEqualTo(new SVar(name));
   }
 
-  private static VarS find(int index) {
+  private static SVar find(int index) {
     var iterator = new AlphabeticalVarsGenerator();
     for (int j = 0; j < index; j++) {
       iterator.next();

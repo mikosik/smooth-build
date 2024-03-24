@@ -31,9 +31,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceableP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ScopedP;
 import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
-import org.smoothbuild.compilerfrontend.lang.define.ItemS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedFuncS;
+import org.smoothbuild.compilerfrontend.lang.define.SItem;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
 public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, ModuleP> {
@@ -95,9 +95,9 @@ public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, Mod
       }
     }
 
-    private List<ExprP> inferPositionedArgs(CallP callP, NamedEvaluableS namedEvaluableS) {
-      if (namedEvaluableS instanceof NamedFuncS namedFuncS) {
-        var mappedParams = namedFuncS.params().list().map(Param::new);
+    private List<ExprP> inferPositionedArgs(CallP callP, SNamedEvaluable sNamedEvaluable) {
+      if (sNamedEvaluable instanceof SNamedFunc sNamedFunc) {
+        var mappedParams = sNamedFunc.params().list().map(Param::new);
         return inferPositionedArgs(callP, mappedParams, logger);
       } else {
         return inferPositionedArgs(callP, logger);
@@ -224,7 +224,7 @@ public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, Mod
   }
 
   private static record Param(String name, boolean hasDefaultValue) {
-    public Param(ItemS param) {
+    public Param(SItem param) {
       this(param.name(), param.defaultValue().isSome());
     }
 

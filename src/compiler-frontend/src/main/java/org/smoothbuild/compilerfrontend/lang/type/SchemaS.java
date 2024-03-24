@@ -10,25 +10,25 @@ import java.util.Objects;
 /**
  * Polymorphic type (aka type schema).
  */
-public sealed class SchemaS permits FuncSchemaS {
+public sealed class SchemaS permits SFuncSchema {
   private final String name;
-  private final VarSetS quantifiedVars;
-  private final TypeS type;
+  private final SVarSet quantifiedVars;
+  private final SType type;
 
-  public SchemaS(VarSetS quantifiedVars, TypeS type) {
+  public SchemaS(SVarSet quantifiedVars, SType type) {
     assertQuantifiedVarsArePresentInType(quantifiedVars, type);
     this.name = calculateName(quantifiedVars, type);
     this.quantifiedVars = requireNonNull(quantifiedVars);
     this.type = requireNonNull(type);
   }
 
-  private static void assertQuantifiedVarsArePresentInType(VarSetS quantifiedVars, TypeS type) {
+  private static void assertQuantifiedVarsArePresentInType(SVarSet quantifiedVars, SType type) {
     checkArgument(
         type.vars().containsAll(quantifiedVars),
         "Quantified variable(s) " + quantifiedVars + " are not present in type " + type.q() + ".");
   }
 
-  private static String calculateName(VarSetS quantifiedVars, TypeS type) {
+  private static String calculateName(SVarSet quantifiedVars, SType type) {
     return quantifiedVars.toString() + type.name();
   }
 
@@ -41,15 +41,15 @@ public sealed class SchemaS permits FuncSchemaS {
    * Other variables present in this schema are type variables which are quantified variables
    * of enclosing environment (enclosing function or value).
    */
-  public VarSetS quantifiedVars() {
+  public SVarSet quantifiedVars() {
     return quantifiedVars;
   }
 
-  public TypeS type() {
+  public SType type() {
     return type;
   }
 
-  public TypeS instantiate(List<TypeS> typeArgs) {
+  public SType instantiate(List<SType> typeArgs) {
     var map = zipToMap(quantifiedVars.toList(), typeArgs);
     return type.mapVars(v -> map.getOrDefault(v, v));
   }

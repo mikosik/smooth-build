@@ -4,7 +4,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
@@ -16,11 +16,11 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.TypeP;
 import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
-import org.smoothbuild.compilerfrontend.lang.type.ArrayTS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
+import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
 
 public class TypeTeller {
   private final ScopeS imported;
@@ -46,22 +46,22 @@ public class TypeTeller {
         .getOrGet(() -> some(imported.evaluables().get(name).schema()));
   }
 
-  public Maybe<TypeS> translate(TypeP type) {
+  public Maybe<SType> translate(TypeP type) {
     if (TypeNamesS.isVarName(type.name())) {
-      return some(new VarS(type.name()));
+      return some(new SVar(type.name()));
     }
     return switch (type) {
-      case ArrayTP array -> translate(array.elemT()).map(ArrayTS::new);
+      case ArrayTP array -> translate(array.elemT()).map(SArrayType::new);
       case FuncTP func -> {
         var resultOpt = translate(func.result());
         var paramsOpt = pullUpMaybe(func.params().map(this::translate));
-        yield resultOpt.mapWith(paramsOpt, (r, p) -> new FuncTS(listOfAll(p), r));
+        yield resultOpt.mapWith(paramsOpt, (r, p) -> new SFuncType(listOfAll(p), r));
       }
       default -> typeWithName(type);
     };
   }
 
-  private Maybe<TypeS> typeWithName(TypeP type) {
+  private Maybe<SType> typeWithName(TypeP type) {
     Maybe<StructP> structP = scopeP.types().getMaybe(type.name());
     if (structP.isSome()) {
       return maybe(structP.get().typeS());

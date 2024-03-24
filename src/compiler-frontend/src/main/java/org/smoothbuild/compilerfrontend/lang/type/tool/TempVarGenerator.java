@@ -1,11 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
-import org.smoothbuild.compilerfrontend.lang.type.TempVarS;
+import org.smoothbuild.compilerfrontend.lang.type.STempVar;
 
 public class TempVarGenerator {
   private int tempVarCounter = 0;
 
-  public TempVarS next() {
-    return new TempVarS(Integer.toString(tempVarCounter++));
+  public STempVar next() {
+    return new STempVar(Integer.toString(tempVarCounter++));
   }
 }

@@ -4,9 +4,9 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.compilerfrontend.lang.define.ItemSigS;
-import org.smoothbuild.compilerfrontend.lang.type.TupleTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
+import org.smoothbuild.compilerfrontend.lang.type.STupleType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class TypeNamesS {
   public static final String BLOB = "Blob";
@@ -34,24 +34,24 @@ public class TypeNamesS {
     return 'A' <= character && character <= 'Z';
   }
 
-  public static String arrayTypeName(TypeS elemT) {
+  public static String arrayTypeName(SType elemT) {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(TupleTS paramTs, TypeS resultT) {
+  public static String funcTypeName(STupleType paramTs, SType resultT) {
     return "(" + commaSeparatedTypeNames(paramTs.elements()) + ")->" + resultT.name();
   }
 
-  public static String tupleTypeName(List<? extends TypeS> elemTs) {
+  public static String tupleTypeName(List<? extends SType> elemTs) {
     return "(" + commaSeparatedTypeNames(elemTs) + ")";
   }
 
-  public static String interfaceTypeName(Map<String, ItemSigS> fields) {
+  public static String interfaceTypeName(Map<String, SItemSig> fields) {
     return listOfAll(fields.values()).toString("(", ",", ")");
   }
 
-  private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
-    return elemTs.map(TypeS::name).toString(",");
+  private static String commaSeparatedTypeNames(List<? extends SType> elemTs) {
+    return elemTs.map(SType::name).toString(",");
   }
 
   public static String fullName(String scopeName, String shortName) {

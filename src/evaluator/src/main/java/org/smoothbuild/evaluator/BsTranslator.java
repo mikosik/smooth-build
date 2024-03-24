@@ -6,7 +6,7 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.define.TraceS;
+import org.smoothbuild.compilerfrontend.lang.define.STrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public class BsTranslator {
@@ -17,18 +17,18 @@ public class BsTranslator {
     this.bsMapping = bsMapping;
   }
 
-  public TraceS translate(BTrace bTrace) {
-    return new TraceS(translate(bTrace.elements()));
+  public STrace translate(BTrace bTrace) {
+    return new STrace(translate(bTrace.elements()));
   }
 
-  private TraceS.Element translate(BTrace.Element headElement) {
+  private STrace.Element translate(BTrace.Element headElement) {
     if (headElement == null) {
       return null;
     } else {
       var name = nameFor(headElement.called());
       var location = locationFor(headElement.call());
       var tailS = translate(headElement.tail());
-      return new TraceS.Element(name, location, tailS);
+      return new STrace.Element(name, location, tailS);
     }
   }
 

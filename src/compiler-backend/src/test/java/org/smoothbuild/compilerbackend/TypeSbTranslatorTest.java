@@ -3,23 +3,23 @@ package org.smoothbuild.compilerbackend;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.tupleTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varC;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varC;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -106,13 +106,13 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     }
   }
 
-  private void assertTranslation(TypeS typeS, BType expected) throws SbTranslatorException {
-    assertTranslation(map(), typeS, expected);
+  private void assertTranslation(SType sType, BType expected) throws SbTranslatorException {
+    assertTranslation(map(), sType, expected);
   }
 
-  private void assertTranslation(Map<VarS, BType> varMap, TypeS typeS, BType expected)
+  private void assertTranslation(Map<SVar, BType> varMap, SType sType, BType expected)
       throws SbTranslatorException {
     var typeSbTranslator = new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF()), varMap);
-    assertThat(typeSbTranslator.translate(typeS)).isEqualTo(expected);
+    assertThat(typeSbTranslator.translate(sType)).isEqualTo(expected);
   }
 }

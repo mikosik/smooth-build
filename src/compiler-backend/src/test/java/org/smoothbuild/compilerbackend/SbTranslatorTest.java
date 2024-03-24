@@ -11,47 +11,47 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.annotatedValueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bindings;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.bytecodeS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.callS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.combineS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.constructorS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.emptyArrayValueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.idFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.instantiateS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.lambdaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeAnnotationS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.nativeFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.orderS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.paramRefS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.selectS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.sigS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.userModuleFullPath;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.valueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.varB;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.annotatedFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.annotatedValueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bytecodeS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.callS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.combineS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.constructorS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.emptyArrayValueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.instantiateS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.lambdaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.nativeAnnotationS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.nativeFuncS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.paramRefS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.selectS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sigS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userModuleFullPath;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.valueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
@@ -609,107 +609,107 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       assertTranslationIsCached(bindings(funcS), instantiateS);
     }
 
-    private void assertTranslationIsCached(NamedEvaluableS namedEvaluableS) throws Exception {
-      assertTranslationIsCached(bindings(namedEvaluableS), instantiateS(namedEvaluableS));
+    private void assertTranslationIsCached(SNamedEvaluable sNamedEvaluable) throws Exception {
+      assertTranslationIsCached(bindings(sNamedEvaluable), instantiateS(sNamedEvaluable));
     }
 
     private void assertTranslationIsCached(
-        ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) throws Exception {
-      assertTranslationIsCached(exprS, newTranslator(evaluables));
+        ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr) throws Exception {
+      assertTranslationIsCached(sExpr, newTranslator(evaluables));
     }
 
     private void assertTranslationIsCached(
-        FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
+        FilePersister filePersister, ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr)
         throws SbTranslatorException {
       var sbTranslator = newTranslator(filePersister, evaluables);
-      assertTranslationIsCached(exprS, sbTranslator);
+      assertTranslationIsCached(sExpr, sbTranslator);
     }
 
-    private void assertTranslationIsCached(ExprS exprS, SbTranslator sbTranslator)
+    private void assertTranslationIsCached(SExpr sExpr, SbTranslator sbTranslator)
         throws SbTranslatorException {
-      assertThat(sbTranslator.translateExpr(exprS))
-          .isSameInstanceAs(sbTranslator.translateExpr(exprS));
+      assertThat(sbTranslator.translateExpr(sExpr))
+          .isSameInstanceAs(sbTranslator.translateExpr(sExpr));
     }
   }
 
   private void assertTranslation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, BExpr expected) throws Exception {
-    assertTranslation(newTranslator(evaluables), exprS, expected);
+      ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr expected) throws Exception {
+    assertTranslation(newTranslator(evaluables), sExpr, expected);
   }
 
-  private void assertTranslation(NamedEvaluableS namedEvaluableS, BExpr expectedB)
+  private void assertTranslation(SNamedEvaluable sNamedEvaluable, BExpr expectedB)
       throws Exception {
-    assertTranslation(bindings(namedEvaluableS), instantiateS(namedEvaluableS), expectedB);
+    assertTranslation(bindings(sNamedEvaluable), instantiateS(sNamedEvaluable), expectedB);
   }
 
-  private void assertTranslation(ExprS exprS, BExpr expected) throws Exception {
-    assertTranslation(newTranslator(), exprS, expected);
+  private void assertTranslation(SExpr sExpr, BExpr expected) throws Exception {
+    assertTranslation(newTranslator(), sExpr, expected);
   }
 
   private void assertTranslation(
       FilePersister filePersister,
-      ImmutableBindings<NamedEvaluableS> evaluables,
-      ExprS exprS,
+      ImmutableBindings<SNamedEvaluable> evaluables,
+      SExpr sExpr,
       BExpr expected)
       throws SbTranslatorException {
     var sbTranslator = newTranslator(filePersister, evaluables);
-    assertTranslation(sbTranslator, exprS, expected);
+    assertTranslation(sbTranslator, sExpr, expected);
   }
 
-  private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, BExpr expected)
+  private void assertTranslation(SbTranslator sbTranslator, SExpr sExpr, BExpr expected)
       throws SbTranslatorException {
-    assertThat(sbTranslator.translateExpr(exprS)).isEqualTo(expected);
+    assertThat(sbTranslator.translateExpr(sExpr)).isEqualTo(expected);
   }
 
   private void assertValueNalMapping(
-      ExprS exprS, Location expectedCallLocation, String expectedName, Location expectedLocation)
+      SExpr sExpr, Location expectedCallLocation, String expectedName, Location expectedLocation)
       throws Exception {
     assertValueNalMapping(
-        newTranslator(), exprS, expectedCallLocation, expectedName, expectedLocation);
+        newTranslator(), sExpr, expectedCallLocation, expectedName, expectedLocation);
   }
 
   private void assertValueNalMapping(
-      ImmutableBindings<NamedEvaluableS> evaluables,
-      ExprS exprS,
+      ImmutableBindings<SNamedEvaluable> evaluables,
+      SExpr sExpr,
       Location expectedCallLocation,
       String expectedName,
       Location expectedLocation)
       throws Exception {
     assertValueNalMapping(
-        newTranslator(evaluables), exprS, expectedCallLocation, expectedName, expectedLocation);
+        newTranslator(evaluables), sExpr, expectedCallLocation, expectedName, expectedLocation);
   }
 
   private static void assertValueNalMapping(
       SbTranslator sbTranslator,
-      ExprS exprS,
+      SExpr sExpr,
       Location expectedCallLocation,
       String expectedName,
       Location expectedLocation)
       throws Exception {
-    var call = ((BCall) sbTranslator.translateExpr(exprS));
+    var call = ((BCall) sbTranslator.translateExpr(sExpr));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
     var called = call.subExprs().func();
     assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(
-      ImmutableBindings<NamedEvaluableS> evaluables,
-      ExprS exprS,
+      ImmutableBindings<SNamedEvaluable> evaluables,
+      SExpr sExpr,
       String expectedName,
       Location expectedLocation)
       throws Exception {
-    assertNalMapping(newTranslator(evaluables), exprS, expectedName, expectedLocation);
+    assertNalMapping(newTranslator(evaluables), sExpr, expectedName, expectedLocation);
   }
 
-  private void assertNalMapping(ExprS exprS, String expectedName, Location expectedLocation)
+  private void assertNalMapping(SExpr sExpr, String expectedName, Location expectedLocation)
       throws Exception {
-    assertNalMapping(newTranslator(), exprS, expectedName, expectedLocation);
+    assertNalMapping(newTranslator(), sExpr, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(
-      SbTranslator sbTranslator, ExprS exprS, String expectedName, Location expectedLocation)
+      SbTranslator sbTranslator, SExpr sExpr, String expectedName, Location expectedLocation)
       throws SbTranslatorException {
-    var exprB = sbTranslator.translateExpr(exprS);
+    var exprB = sbTranslator.translateExpr(sExpr);
     assertNalMapping(sbTranslator, exprB, expectedName, expectedLocation);
   }
 
@@ -724,7 +724,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     return newTranslator(immutableBindings());
   }
 
-  private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables)
+  private SbTranslator newTranslator(ImmutableBindings<SNamedEvaluable> evaluables)
       throws Exception {
     var filePersister = mock(FilePersister.class);
     when(filePersister.persist(any())).thenReturn(bBlob(1));
@@ -732,7 +732,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
   }
 
   private SbTranslator newTranslator(
-      FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables) {
+      FilePersister filePersister, ImmutableBindings<SNamedEvaluable> evaluables) {
     return sbTranslator(filePersister, evaluables);
   }
 
@@ -743,19 +743,19 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     return mock;
   }
 
-  public SbTranslator sbTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
+  public SbTranslator sbTranslator(ImmutableBindings<SNamedEvaluable> evaluables) {
     return sbTranslator(filePersister(), evaluables);
   }
 
   public SbTranslator sbTranslator(
-      FilePersister filePersister, ImmutableBindings<NamedEvaluableS> evaluables) {
+      FilePersister filePersister, ImmutableBindings<SNamedEvaluable> evaluables) {
     return sbTranslator(filePersister, bytecodeLoader(), evaluables);
   }
 
   private SbTranslator sbTranslator(
       FilePersister filePersister,
       BytecodeLoader bytecodeLoader,
-      ImmutableBindings<NamedEvaluableS> evaluables) {
+      ImmutableBindings<SNamedEvaluable> evaluables) {
     return new SbTranslator(bytecodeF(), filePersister, bytecodeLoader, evaluables);
   }
 }

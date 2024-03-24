@@ -1,15 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import java.util.Arrays;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class AlphabeticalVarsGenerator {
   private char[] name = new char[] {'A'};
 
-  public VarS next() {
-    VarS varS = new VarS(new String(name));
+  public SVar next() {
+    SVar sVar = new SVar(new String(name));
     generateNextName();
-    return varS;
+    return sVar;
   }
 
   private void generateNextName() {
