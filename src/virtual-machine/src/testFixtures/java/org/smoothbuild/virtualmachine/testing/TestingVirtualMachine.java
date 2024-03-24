@@ -20,7 +20,7 @@ import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
@@ -36,7 +36,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
+import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
@@ -60,8 +60,8 @@ import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TestingVirtualMachine extends TestingBytecode {
   private BytecodeFactory bytecodeFactory;
-  private ExprDb exprDb;
-  private CategoryDb categoryDb;
+  private BExprDb exprDb;
+  private BKindDb kindDb;
   private HashedDb hashedDb;
   private Bucket projectBucket;
   private Bucket hashedDbBucket;
@@ -198,22 +198,22 @@ public class TestingVirtualMachine extends TestingBytecode {
   @Override
   public BytecodeFactory bytecodeF() {
     if (bytecodeFactory == null) {
-      bytecodeFactory = new BytecodeFactory(exprDb(), categoryDb());
+      bytecodeFactory = new BytecodeFactory(exprDb(), kindDb());
     }
     return bytecodeFactory;
   }
 
   @Override
-  public CategoryDb categoryDb() {
-    if (categoryDb == null) {
-      categoryDb = new CategoryDb(hashedDb());
+  public BKindDb kindDb() {
+    if (kindDb == null) {
+      kindDb = new BKindDb(hashedDb());
     }
-    return categoryDb;
+    return kindDb;
   }
 
-  public ExprDb exprDb() {
+  public BExprDb exprDb() {
     if (exprDb == null) {
-      exprDb = new ExprDb(hashedDb(), categoryDb());
+      exprDb = new BExprDb(hashedDb(), kindDb());
     }
     return exprDb;
   }
@@ -257,12 +257,12 @@ public class TestingVirtualMachine extends TestingBytecode {
     }
   }
 
-  public ExprDb exprDbOther() {
-    return new ExprDb(hashedDb(), categoryDbOther());
+  public BExprDb exprDbOther() {
+    return new BExprDb(hashedDb(), kindDbOther());
   }
 
-  public CategoryDb categoryDbOther() {
-    return new CategoryDb(hashedDb());
+  public BKindDb kindDbOther() {
+    return new BKindDb(hashedDb());
   }
 
   public HashedDb hashedDb() {

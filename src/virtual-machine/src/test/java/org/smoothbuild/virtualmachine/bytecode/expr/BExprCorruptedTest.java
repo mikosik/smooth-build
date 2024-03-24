@@ -26,7 +26,7 @@ import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprCatException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
@@ -56,8 +56,8 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeCatException;
+import org.smoothbuild.virtualmachine.bytecode.type.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeKindException;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
@@ -92,8 +92,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var typeHash = Hash.of("not a type");
       var hash = hash(typeHash, hash("aaa"));
       assertCall(() -> exprDb().get(hash))
-          .throwsException(new DecodeExprCatException(hash))
-          .withCause(new DecodeCatException(typeHash));
+          .throwsException(new DecodeExprKindException(hash))
+          .withCause(new DecodeKindException(typeHash));
     }
 
     @Test
@@ -324,10 +324,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var funcType = funcTB(stringTB(), intTB(), intTB());
       var func = lambdaB(funcType, intB());
       var dataHash = hash(hash(func));
-      var category = callCB(intTB());
-      var hash = hash(hash(category), dataHash);
+      var kind = callCB(intTB());
+      var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, category, DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -336,10 +336,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var func = lambdaB(funcType, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(hash(func), hash(args), hash(args));
-      var category = callCB(intTB());
-      var hash = hash(hash(category), dataHash);
+      var kind = callCB(intTB());
+      var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, category, DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -491,8 +491,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
        * expression function in HashedDb.
        */
       var body = boolB(true);
-      var category = lambdaCB(intTB(), stringTB(), boolTB());
-      var hash = hash(hash(category), hash(body));
+      var kind = lambdaCB(intTB(), stringTB(), boolTB());
+      var hash = hash(hash(kind), hash(body));
       assertThat(((BLambda) exprDb().get(hash)).body()).isEqualTo(body);
     }
 
@@ -504,10 +504,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolB(true);
-      var category = lambdaCB(intTB(), stringTB(), boolTB());
+      var kind = lambdaCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
-          category, dataHash, (Hash hash) -> ((BLambda) exprDb().get(hash)).body());
+          kind, dataHash, (Hash hash) -> ((BLambda) exprDb().get(hash)).body());
     }
 
     @Test
@@ -519,11 +519,11 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var body = intB(17);
-      var category = lambdaCB(intTB(), stringTB(), boolTB());
-      var hash = hash(hash(category), hash(body));
+      var kind = lambdaCB(intTB(), stringTB(), boolTB());
+      var hash = hash(hash(kind), hash(body));
       assertCall(() -> ((BLambda) exprDb().get(hash)).body())
           .throwsException(
-              new DecodeExprWrongNodeTypeException(hash, category, DATA_PATH, boolTB(), intTB()));
+              new DecodeExprWrongNodeTypeException(hash, kind, DATA_PATH, boolTB(), intTB()));
     }
   }
 
@@ -604,11 +604,11 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
        * This test makes sure that other tests in this class use proper scheme to save
        * Method in HashedDb.
        */
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
-      var hash = hash(hash(category), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
 
       assertThat(((BNativeFunc) exprDb().get(hash)).jar()).isEqualTo(jar);
       assertThat(((BNativeFunc) exprDb().get(hash)).classBinaryName()).isEqualTo(classBinaryName);
@@ -622,32 +622,32 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
       var dataHash = hash(hash(jar), hash(classBinaryName), hash(isPure));
       obj_root_with_two_data_hashes(
-          category, dataHash, (Hash hash) -> ((BNativeFunc) exprDb().get(hash)).classBinaryName());
+          kind, dataHash, (Hash hash) -> ((BNativeFunc) exprDb().get(hash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          category, (Hash hash) -> ((BNativeFunc) exprDb().get(hash)).classBinaryName());
+          kind, (Hash hash) -> ((BNativeFunc) exprDb().get(hash)).classBinaryName());
     }
 
     @Test
     public void data_is_chain_with_two_elements() throws Exception {
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var dataHash = hash(hash(jar), hash(classBinaryName));
-      var hash = hash(hash(category), dataHash);
+      var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BNativeFunc) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, category, DATA_PATH, 3, 2));
+          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 3, 2));
     }
 
     @Test
@@ -665,40 +665,40 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       var jar = stringB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
-      var hash = hash(hash(category), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
       assertCall(() -> ((BNativeFunc) exprDb().get(hash)).jar())
           .throwsException(new DecodeExprWrongNodeClassException(
-              hash, category, DATA_PATH + "[0]", BBlob.class, BString.class));
+              hash, kind, DATA_PATH + "[0]", BBlob.class, BString.class));
     }
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = intB();
       var isPure = boolB(true);
-      var hash = hash(hash(category), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
 
       assertCall(() -> ((BNativeFunc) exprDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongNodeClassException(
-              hash, category, DATA_PATH + "[1]", BString.class, BInt.class));
+              hash, kind, DATA_PATH + "[1]", BString.class, BInt.class));
     }
 
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
-      var category = nativeFuncCB(intTB(), stringTB());
+      var kind = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = stringB();
-      var hash = hash(hash(category), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
 
       assertCall(() -> ((BNativeFunc) exprDb().get(hash)).isPure())
           .throwsException(new DecodeExprWrongNodeClassException(
-              hash, category, DATA_PATH + "[2]", BBool.class, BString.class));
+              hash, kind, DATA_PATH + "[2]", BBool.class, BString.class));
     }
   }
 
@@ -1129,40 +1129,40 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
   }
 
-  private void obj_root_without_data_hash(BCategory cat) throws HashedDbException {
+  private void obj_root_without_data_hash(BKind cat) throws HashedDbException {
     var hash = hash(hash(cat));
     assertCall(() -> exprDb().get(hash))
         .throwsException(wrongSizeOfRootChainException(hash, cat, 1));
   }
 
-  private void obj_root_with_data_hash(BCategory category) throws HashedDbException {
-    var hash = hash(hash(category), hash(category));
+  private void obj_root_with_data_hash(BKind kind) throws HashedDbException {
+    var hash = hash(hash(kind), hash(kind));
     assertCall(() -> exprDb().get(hash))
-        .throwsException(wrongSizeOfRootChainException(hash, category, 2));
+        .throwsException(wrongSizeOfRootChainException(hash, kind, 2));
   }
 
   private void obj_root_with_two_data_hashes(
-      BCategory type, Hash dataHash, Function1<Hash, ?, BytecodeException> factory)
+      BKind type, Hash dataHash, Function1<Hash, ?, BytecodeException> factory)
       throws HashedDbException {
     var hash = hash(hash(type), dataHash, dataHash);
     assertCall(() -> factory.apply(hash)).throwsException(wrongSizeOfRootChainException(hash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      BCategory category, Consumer1<Hash, BytecodeException> factory) throws HashedDbException {
+      BKind kind, Consumer1<Hash, BytecodeException> factory) throws HashedDbException {
     var dataHash = Hash.of(33);
-    var hash = hash(hash(category), dataHash);
+    var hash = hash(hash(kind), dataHash);
     assertCall(() -> factory.accept(hash))
-        .throwsException(new DecodeExprNodeException(hash, category, DATA_PATH))
+        .throwsException(new DecodeExprNodeException(hash, kind, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-      BCategory category, Consumer1<Hash, BytecodeException> factory) throws HashedDbException {
+      BKind kind, Consumer1<Hash, BytecodeException> factory) throws HashedDbException {
     var dataHash = Hash.of(33);
-    var hash = hash(hash(category), dataHash);
+    var hash = hash(hash(kind), dataHash);
     assertCall(() -> factory.accept(hash))
-        .throwsException(new DecodeExprNodeException(hash, category, DATA_PATH))
+        .throwsException(new DecodeExprNodeException(hash, kind, DATA_PATH))
         .withCause(new DecodeExprNoSuchExprException(dataHash));
   }
 
@@ -1199,7 +1199,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     return expr.hash();
   }
 
-  protected Hash hash(BCategory type) {
+  protected Hash hash(BKind type) {
     return type.hash();
   }
 

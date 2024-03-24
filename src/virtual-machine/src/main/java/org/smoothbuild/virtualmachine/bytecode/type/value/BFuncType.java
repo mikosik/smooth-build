@@ -4,9 +4,9 @@ import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.func
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeIllegalCategoryException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeIllegalKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BFunc;
 
 public final class BFuncType extends BType {
@@ -28,7 +28,7 @@ public final class BFuncType extends BType {
   }
 
   @Override
-  public BExpr newExpr(MerkleRoot merkleRoot, ExprDb exprDb) throws DecodeIllegalCategoryException {
-    throw new DecodeIllegalCategoryException(merkleRoot.hash(), this);
+  public BExpr newExpr(MerkleRoot merkleRoot, BExprDb exprDb) throws DecodeIllegalKindException {
+    throw new DecodeIllegalKindException(merkleRoot.hash(), this);
   }
 }

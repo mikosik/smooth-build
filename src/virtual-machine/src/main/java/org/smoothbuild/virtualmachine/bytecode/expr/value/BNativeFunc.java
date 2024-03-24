@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.bytecode.expr.value;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BNativeFuncCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BNativeFuncKind;
 
 /**
  * Native function. Encapsulates java jar and thus java method to invoke.
@@ -17,9 +17,9 @@ public final class BNativeFunc extends BFunc {
   private static final int CLASS_BINARY_NAME_IDX = 1;
   private static final int IS_PURE_IDX = 2;
 
-  public BNativeFunc(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BNativeFunc(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.category() instanceof BNativeFuncCategory);
+    checkArgument(merkleRoot.kind() instanceof BNativeFuncKind);
   }
 
   public BBlob jar() throws BytecodeException {

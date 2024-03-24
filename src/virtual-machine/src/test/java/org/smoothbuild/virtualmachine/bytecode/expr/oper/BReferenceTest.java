@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class BReferenceTest extends TestingVirtualMachine {
   @Test
   public void type_of_var_expr_is_var_type() throws Exception {
-    assertThat(referenceB(intTB(), 123).category()).isEqualTo(varCB(intTB()));
+    assertThat(referenceB(intTB(), 123).kind()).isEqualTo(varCB(intTB()));
   }
 
   @Test

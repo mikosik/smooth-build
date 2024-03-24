@@ -4,7 +4,7 @@ import java.util.function.Function;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.exc.CategoryDbException;
+import org.smoothbuild.virtualmachine.bytecode.type.exc.BKindDbException;
 
 public class Helpers {
   public static <R, T extends Throwable> R invokeAndChainBytecodeException(
@@ -17,13 +17,12 @@ public class Helpers {
     }
   }
 
-  public static <R, T extends Throwable> R invokeAndChainCategoryDbException(
-      Function0<R, CategoryDbException> function0,
-      Function<CategoryDbException, T> exceptionWrapper)
+  public static <R, T extends Throwable> R invokeAndChainKindDbException(
+      Function0<R, BKindDbException> function0, Function<BKindDbException, T> exceptionWrapper)
       throws T {
     try {
       return function0.apply();
-    } catch (CategoryDbException e) {
+    } catch (BKindDbException e) {
       throw exceptionWrapper.apply(e);
     }
   }

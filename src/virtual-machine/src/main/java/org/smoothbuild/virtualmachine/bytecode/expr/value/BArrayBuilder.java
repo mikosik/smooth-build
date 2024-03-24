@@ -5,15 +5,15 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.ArrayList;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 
 public class BArrayBuilder {
   private final BArrayType type;
-  private final ExprDb exprDb;
+  private final BExprDb exprDb;
   private final java.util.List<BValue> elements;
 
-  public BArrayBuilder(BArrayType type, ExprDb exprDb) {
+  public BArrayBuilder(BArrayType type, BExprDb exprDb) {
     this.type = type;
     this.exprDb = exprDb;
     this.elements = new ArrayList<>();

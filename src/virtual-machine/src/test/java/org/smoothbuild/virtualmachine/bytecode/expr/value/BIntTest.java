@@ -14,7 +14,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class BIntTest extends TestingVirtualMachine {
   @Test
   public void type_of_int_is_int_type() throws Exception {
-    assertThat(intB(123).category()).isEqualTo(intTB());
+    assertThat(intB(123).kind()).isEqualTo(intTB());
   }
 
   @Test

@@ -1,22 +1,17 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 
 public class DecodeExprWrongNodeClassException extends DecodeExprNodeException {
   public DecodeExprWrongNodeClassException(
-      Hash hash,
-      BCategory cat,
-      String memberPath,
-      int pathIndex,
-      Class<?> expected,
-      Class<?> actual) {
-    this(hash, cat, indexedPath(memberPath, pathIndex), expected, actual);
+      Hash hash, BKind kind, String memberPath, int pathIndex, Class<?> expected, Class<?> actual) {
+    this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }
 
   public DecodeExprWrongNodeClassException(
-      Hash hash, BCategory cat, String path, Class<?> expected, Class<?> actual) {
-    super(hash, cat, path, buildMessage(expected, actual));
+      Hash hash, BKind kind, String path, Class<?> expected, Class<?> actual) {
+    super(hash, kind, path, buildMessage(expected, actual));
   }
 
   private static String buildMessage(Class<?> expected, Class<?> actual) {

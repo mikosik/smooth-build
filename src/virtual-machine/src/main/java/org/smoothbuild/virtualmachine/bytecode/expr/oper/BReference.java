@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
 
@@ -16,7 +16,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
  * This class is thread-safe.
  */
 public class BReference extends BOper {
-  public BReference(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BReference(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
   }
 
@@ -31,7 +31,7 @@ public class BReference extends BOper {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return category().name() + ":" + evaluationType() + "(" + index().toJavaBigInteger() + ")";
+    return kind().name() + ":" + evaluationType() + "(" + index().toJavaBigInteger() + ")";
   }
 
   public static record SubExprsB() implements BExprs {

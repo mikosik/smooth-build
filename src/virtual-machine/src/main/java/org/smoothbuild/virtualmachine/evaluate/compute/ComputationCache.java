@@ -17,7 +17,7 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
@@ -30,12 +30,12 @@ import org.smoothbuild.virtualmachine.wire.ComputationDb;
  */
 public class ComputationCache {
   private final Bucket bucket;
-  private final ExprDb exprDb;
+  private final BExprDb exprDb;
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
   public ComputationCache(
-      @ComputationDb Bucket bucket, ExprDb exprDb, BytecodeFactory bytecodeFactory) {
+      @ComputationDb Bucket bucket, BExprDb exprDb, BytecodeFactory bytecodeFactory) {
     this.bucket = bucket;
     this.exprDb = exprDb;
     this.bytecodeFactory = bytecodeFactory;
@@ -68,11 +68,11 @@ public class ComputationCache {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
       var storedLogsArrayType = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());
-      if (!storedLogs.category().equals(storedLogsArrayType)) {
+      if (!storedLogs.kind().equals(storedLogsArrayType)) {
         throw corruptedValueException(
             hash,
             "Expected " + storedLogsArrayType.q() + " as first child of its Merkle root, but got "
-                + storedLogs.category().q());
+                + storedLogs.kind().q());
       }
 
       var storedLogArray = (BArray) storedLogs;

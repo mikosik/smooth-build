@@ -4,9 +4,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
+import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
 
 public class VirtualMachineWiring extends AbstractModule {
   @Override
@@ -14,14 +14,14 @@ public class VirtualMachineWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  public ExprDb provideExprDb(@BytecodeDb HashedDb hashedDb, CategoryDb categoryDb) {
-    return new ExprDb(hashedDb, categoryDb);
+  public BExprDb provideExprDb(@BytecodeDb HashedDb hashedDb, BKindDb kindDb) {
+    return new BExprDb(hashedDb, kindDb);
   }
 
   @Provides
   @Singleton
-  public CategoryDb provideCategoryDb(@BytecodeDb HashedDb hashedDb) {
-    return new CategoryDb(hashedDb);
+  public BKindDb provideKindDb(@BytecodeDb HashedDb hashedDb) {
+    return new BKindDb(hashedDb);
   }
 
   @Provides

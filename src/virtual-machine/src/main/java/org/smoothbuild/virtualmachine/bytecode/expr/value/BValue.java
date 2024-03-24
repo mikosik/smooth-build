@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.value;
 
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
  */
 public abstract sealed class BValue extends BExpr
     permits BFunc, BArray, BBlob, BBool, BInt, BString, BTuple {
-  public BValue(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BValue(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
   }
 
@@ -21,6 +21,6 @@ public abstract sealed class BValue extends BExpr
   }
 
   public BType type() {
-    return (BType) category();
+    return (BType) kind();
   }
 }

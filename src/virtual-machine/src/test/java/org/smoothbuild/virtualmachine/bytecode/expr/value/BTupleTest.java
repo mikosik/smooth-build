@@ -20,13 +20,13 @@ public class BTupleTest extends TestingVirtualMachine {
   @Test
   public void type_of_person_tuple_is_person_type() throws Exception {
     var person = johnDoePerson();
-    assertThat(person.category()).isEqualTo(personTB());
+    assertThat(person.kind()).isEqualTo(personTB());
   }
 
   @Test
   public void element_contains_object_passed_to_builder() throws Exception {
     var person = johnDoePerson();
-    assertThat(person.category()).isEqualTo(personTB());
+    assertThat(person.kind()).isEqualTo(personTB());
     assertThat(person.get(0)).isEqualTo(stringB("John"));
   }
 

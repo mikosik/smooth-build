@@ -26,7 +26,7 @@ public class BBlobTest extends TestingVirtualMachine {
 
   @Test
   public void type_of_blob_is_blob_type() throws Exception {
-    assertThat(blobB(bytes).category()).isEqualTo(blobTB());
+    assertThat(blobB(bytes).kind()).isEqualTo(blobTB());
   }
 
   @Test

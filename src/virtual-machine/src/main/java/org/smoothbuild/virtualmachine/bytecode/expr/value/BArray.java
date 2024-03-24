@@ -5,7 +5,7 @@ import static org.smoothbuild.common.function.Function0.memoizer;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
@@ -16,7 +16,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 public final class BArray extends BValue {
   private final Function0<List<BValue>, BytecodeException> elementsMemoizer;
 
-  public BArray(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BArray(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     this.elementsMemoizer = memoizer(this::instantiateElements);
   }
@@ -28,7 +28,7 @@ public final class BArray extends BValue {
 
   @Override
   public BArrayType type() {
-    return (BArrayType) super.category();
+    return (BArrayType) super.kind();
   }
 
   public long size() throws BytecodeException {
@@ -46,7 +46,7 @@ public final class BArray extends BValue {
     var elemT = type().elem();
     if (!clazz.isAssignableFrom(elemT.javaType())) {
       throw new IllegalArgumentException(
-          category().name() + " cannot be viewed as Iterable of " + clazz.getCanonicalName() + ".");
+          kind().name() + " cannot be viewed as Iterable of " + clazz.getCanonicalName() + ".");
     }
   }
 
@@ -57,7 +57,7 @@ public final class BArray extends BValue {
       var elemT = elements.get(i).type();
       if (!expectedElemT.equals(elemT)) {
         throw new DecodeExprWrongNodeTypeException(
-            hash(), category(), DATA_PATH, i, expectedElemT, elemT);
+            hash(), kind(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
     return elements;

@@ -2,15 +2,15 @@ package org.smoothbuild.virtualmachine.bytecode.expr.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
 
 public abstract sealed class BFunc extends BValue permits BLambda, BIf, BMap, BNativeFunc {
-  public BFunc(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BFunc(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.category() instanceof BFuncCategory);
+    checkArgument(merkleRoot.kind() instanceof BFuncKind);
   }
 
   @Override
@@ -20,6 +20,6 @@ public abstract sealed class BFunc extends BValue permits BLambda, BIf, BMap, BN
 
   @Override
   public BFuncType type() {
-    return ((BFuncCategory) category()).type();
+    return ((BFuncKind) kind()).type();
   }
 }

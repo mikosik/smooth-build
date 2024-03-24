@@ -22,14 +22,14 @@ public class BSelectTest extends TestingVirtualMachine {
   @Test
   public void creating_select_with_too_great_index_causes_exception() throws Exception {
     var tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(tuple, intB(2)).category())
+    assertCall(() -> selectB(tuple, intB(2)).kind())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() throws Exception {
     var tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(tuple, intB(-1)).category())
+    assertCall(() -> selectB(tuple, intB(-1)).kind())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 

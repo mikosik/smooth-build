@@ -6,15 +6,15 @@ import java.io.IOException;
 import okio.ForwardingSink;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashingSink;
 
 public class BBlobBuilder extends ForwardingSink {
-  private final ExprDb exprDb;
+  private final BExprDb exprDb;
   private final Function0<BBlob, BytecodeException> hashMemoizer;
 
-  public BBlobBuilder(ExprDb exprDb, HashingSink hashingSink) {
+  public BBlobBuilder(BExprDb exprDb, HashingSink hashingSink) {
     super(hashingSink);
     this.exprDb = exprDb;
     this.hashMemoizer = memoizer(this::createBlobB);

@@ -7,7 +7,7 @@ import static org.smoothbuild.virtualmachine.bytecode.type.Validator.validateTup
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
@@ -19,7 +19,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 public final class BTuple extends BValue {
   private final Function0<List<BValue>, BytecodeException> elementsMemoizer;
 
-  public BTuple(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BTuple(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     this.elementsMemoizer = memoizer(this::instantiateItems);
   }
@@ -31,7 +31,7 @@ public final class BTuple extends BValue {
 
   @Override
   public BTupleType type() {
-    return (BTupleType) super.category();
+    return (BTupleType) super.kind();
   }
 
   public BValue get(int index) throws BytecodeException {
@@ -53,7 +53,7 @@ public final class BTuple extends BValue {
         type,
         elementTypes,
         () -> new DecodeExprWrongNodeTypeException(
-            hash(), category(), DATA_PATH, type, asTupleToString(elementTypes)));
+            hash(), kind(), DATA_PATH, type, asTupleToString(elementTypes)));
     return elements;
   }
 

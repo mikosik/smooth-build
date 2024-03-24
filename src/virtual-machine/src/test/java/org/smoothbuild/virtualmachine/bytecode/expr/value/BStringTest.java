@@ -16,7 +16,7 @@ public class BStringTest extends TestingVirtualMachine {
 
   @Test
   public void type_of_string_is_string_type() throws Exception {
-    assertThat(stringB(string).category()).isEqualTo(stringTB());
+    assertThat(stringB(string).kind()).isEqualTo(stringTB());
   }
 
   @Test

@@ -19,7 +19,7 @@ import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
@@ -39,7 +39,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
+import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
@@ -55,23 +55,23 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
  */
 @Singleton
 public class BytecodeFactory {
-  private final ExprDb exprDb;
-  private final CategoryDb categoryDb;
+  private final BExprDb exprDb;
+  private final BKindDb kindDb;
   private final Function0<BTupleType, BytecodeException> storedLogTypeMemoizer;
   private final Function0<BTupleType, BytecodeException> fileTypeMemoizer;
 
   @Inject
-  public BytecodeFactory(ExprDb exprDb, CategoryDb categoryDb) {
+  public BytecodeFactory(BExprDb exprDb, BKindDb kindDb) {
     this.exprDb = exprDb;
-    this.categoryDb = categoryDb;
-    this.storedLogTypeMemoizer = memoizer(() -> createStoredLogType(categoryDb));
-    this.fileTypeMemoizer = memoizer(() -> createFileType(categoryDb));
+    this.kindDb = kindDb;
+    this.storedLogTypeMemoizer = memoizer(() -> createStoredLogType(kindDb));
+    this.fileTypeMemoizer = memoizer(() -> createFileType(kindDb));
   }
 
   // Objects
 
   public BArrayBuilder arrayBuilderWithElements(BType elementType) throws BytecodeException {
-    return exprDb.newArrayBuilder(categoryDb.array(elementType));
+    return exprDb.newArrayBuilder(kindDb.array(elementType));
   }
 
   public BArrayBuilder arrayBuilder(BArrayType type) {
@@ -158,27 +158,27 @@ public class BytecodeFactory {
   // Types
 
   public BArrayType arrayType(BType elementType) throws BytecodeException {
-    return categoryDb.array(elementType);
+    return kindDb.array(elementType);
   }
 
   public BBlobType blobType() throws BytecodeException {
-    return categoryDb.blob();
+    return kindDb.blob();
   }
 
   public BBoolType boolType() throws BytecodeException {
-    return categoryDb.bool();
+    return kindDb.bool();
   }
 
   public BFuncType funcType(List<BType> paramTypes, BType resultType) throws BytecodeException {
-    return categoryDb.funcT(listOfAll(paramTypes), resultType);
+    return kindDb.funcT(listOfAll(paramTypes), resultType);
   }
 
   public BFuncType funcType(BTupleType paramTypes, BType resultType) throws BytecodeException {
-    return categoryDb.funcT(paramTypes, resultType);
+    return kindDb.funcT(paramTypes, resultType);
   }
 
   public BIntType intType() throws BytecodeException {
-    return categoryDb.int_();
+    return kindDb.int_();
   }
 
   public BTupleType storedLogType() throws BytecodeException {
@@ -186,15 +186,15 @@ public class BytecodeFactory {
   }
 
   public BStringType stringType() throws BytecodeException {
-    return categoryDb.string();
+    return kindDb.string();
   }
 
   public BTupleType tupleType(BType... itemTs) throws BytecodeException {
-    return categoryDb.tuple(itemTs);
+    return kindDb.tuple(itemTs);
   }
 
   public BTupleType tupleType(List<BType> itemTs) throws BytecodeException {
-    return categoryDb.tuple(itemTs);
+    return kindDb.tuple(itemTs);
   }
 
   // other values and its types
@@ -225,12 +225,12 @@ public class BytecodeFactory {
     return exprDb.newTuple(list(messageValue, levelValue));
   }
 
-  private static BTupleType createStoredLogType(CategoryDb categoryDb) throws BytecodeException {
-    var stringType = categoryDb.string();
-    return categoryDb.tuple(stringType, stringType);
+  private static BTupleType createStoredLogType(BKindDb kindDb) throws BytecodeException {
+    var stringType = kindDb.string();
+    return kindDb.tuple(stringType, stringType);
   }
 
-  private static BTupleType createFileType(CategoryDb categoryDb) throws BytecodeException {
-    return categoryDb.tuple(categoryDb.blob(), categoryDb.string());
+  private static BTupleType createFileType(BKindDb kindDb) throws BytecodeException {
+    return kindDb.tuple(kindDb.blob(), kindDb.string());
   }
 }
