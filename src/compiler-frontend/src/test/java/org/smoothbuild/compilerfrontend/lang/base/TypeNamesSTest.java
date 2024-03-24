@@ -1,13 +1,13 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class TypeNamesSTest {
   @Test
@@ -161,7 +161,7 @@ public class TypeNamesSTest {
   class _array_type_name {
     @Test
     public void array_type_name() {
-      assertThat(TypeNamesS.arrayTypeName(stringTS())).isEqualTo("[String]");
+      assertThat(TypeNamesS.arrayTypeName(sStringType())).isEqualTo("[String]");
     }
   }
 
@@ -169,7 +169,8 @@ public class TypeNamesSTest {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(TypeNamesS.funcTypeName(tupleTS(blobTS(), boolTS()), stringTS()))
+      assertThat(TypeNamesS.funcTypeName(
+              TestingSExpression.sTupleType(sBlobType(), sBoolType()), sStringType()))
           .isEqualTo("(Blob,Bool)->String");
     }
   }

@@ -7,13 +7,13 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.FuncTP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.TypeP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
@@ -24,35 +24,35 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class TypeTeller {
   private final ScopeS imported;
-  private final ScopeP scopeP;
+  private final PScope pScope;
 
-  public TypeTeller(ScopeS imported, ScopeP scopeP) {
+  public TypeTeller(ScopeS imported, PScope pScope) {
     this.imported = imported;
-    this.scopeP = scopeP;
+    this.pScope = pScope;
   }
 
-  public TypeTeller withScope(ScopeP scopeP) {
-    return new TypeTeller(imported, scopeP);
+  public TypeTeller withScope(PScope pScope) {
+    return new TypeTeller(imported, pScope);
   }
 
   public Maybe<SchemaS> schemaFor(String name) {
-    return scopeP
+    return pScope
         .referencables()
         .getMaybe(name)
         .map(r -> switch (r) {
-          case NamedEvaluableP namedEvaluableP -> maybe(namedEvaluableP.schemaS());
-          case ItemP itemP -> maybe(itemP.typeS()).map(t -> new SchemaS(varSetS(), t));
+          case PNamedEvaluable pNamedEvaluable -> maybe(pNamedEvaluable.schemaS());
+          case PItem pItem -> maybe(pItem.typeS()).map(t -> new SchemaS(varSetS(), t));
         })
         .getOrGet(() -> some(imported.evaluables().get(name).schema()));
   }
 
-  public Maybe<SType> translate(TypeP type) {
+  public Maybe<SType> translate(PType type) {
     if (TypeNamesS.isVarName(type.name())) {
       return some(new SVar(type.name()));
     }
     return switch (type) {
-      case ArrayTP array -> translate(array.elemT()).map(SArrayType::new);
-      case FuncTP func -> {
+      case PArrayType array -> translate(array.elemT()).map(SArrayType::new);
+      case PFuncType func -> {
         var resultOpt = translate(func.result());
         var paramsOpt = pullUpMaybe(func.params().map(this::translate));
         yield resultOpt.mapWith(paramsOpt, (r, p) -> new SFuncType(listOfAll(p), r));
@@ -61,8 +61,8 @@ public class TypeTeller {
     };
   }
 
-  private Maybe<SType> typeWithName(TypeP type) {
-    Maybe<StructP> structP = scopeP.types().getMaybe(type.name());
+  private Maybe<SType> typeWithName(PType type) {
+    Maybe<PStruct> structP = pScope.types().getMaybe(type.name());
     if (structP.isSome()) {
       return maybe(structP.get().typeS());
     } else {

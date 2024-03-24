@@ -17,15 +17,16 @@ import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedFuncTS;
 public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(TestingSExpression.varS("A"));
-  public static final TestedTS B = new TestedTS(TestingSExpression.varS("B"));
-  public static final TestedTS BLOB = new TestedTS(TestingSExpression.blobTS());
-  public static final TestedTS BOOL = new TestedTS(TestingSExpression.boolTS());
+  public static final TestedTS A = new TestedTS(TestingSExpression.sVar("A"));
+  public static final TestedTS B = new TestedTS(TestingSExpression.sVar("B"));
+  public static final TestedTS BLOB = new TestedTS(TestingSExpression.sBlobType());
+  public static final TestedTS BOOL = new TestedTS(TestingSExpression.sBoolType());
 
-  public static final TestedTS INT = new TestedTS(TestingSExpression.intTS());
-  public static final TestedTS STRING = new TestedTS(TestingSExpression.stringTS());
+  public static final TestedTS INT = new TestedTS(TestingSExpression.sIntType());
+  public static final TestedTS STRING = new TestedTS(TestingSExpression.sStringType());
   public static final TestedTS STRUCT = new TestedTS(
-      TestingSExpression.structTS("Person", nlist(itemSigS(TestingSExpression.stringTS(), "name"))),
+      TestingSExpression.sStructType(
+          "Person", nlist(itemSigS(TestingSExpression.sStringType(), "name"))),
       Set.of("Person(String name)"),
       Set.of("Person(String name)"));
   public static final List<TestedTS> TESTED_TYPES = list(
@@ -77,7 +78,7 @@ public class TestedTSF {
   private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
         type,
-        TestingSExpression.arrayTS(type.type()),
+        TestingSExpression.sArrayType(type.type()),
         type.typeDeclarations(),
         type.allDeclarations());
   }
@@ -109,7 +110,7 @@ public class TestedTSF {
     return new TestedFuncTS(
         resultT,
         paramTestedTs,
-        TestingSExpression.funcTS(paramSigs.map(SItemSig::type), resultT.type()),
+        TestingSExpression.sFuncType(paramSigs.map(SItemSig::type), resultT.type()),
         typeDeclarations,
         declarations);
   }

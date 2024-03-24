@@ -2,19 +2,19 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.callS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.instantiateS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SCallTest {
   @Test
   public void to_string() {
-    var funcS = instantiateS(4, list(intTS()), idFuncS());
-    var callS = callS(3, funcS, intS(3, 7));
+    var funcS = TestingSExpression.sInstantiate(4, list(sIntType()), idSFunc());
+    var callS = sCall(3, funcS, sInt(3, 7));
     assertThat(callS.toString())
         .isEqualTo(
             """

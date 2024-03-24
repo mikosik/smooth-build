@@ -13,12 +13,12 @@ import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedValueP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
@@ -39,18 +39,18 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
+public class InferTypes implements TryFunction2<PModule, ScopeS, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "inferTypes");
   }
 
   @Override
-  public Try<ModuleP> apply(ModuleP moduleP, ScopeS environment) {
+  public Try<PModule> apply(PModule pModule, ScopeS environment) {
     var logger = new Logger();
-    var typeTeller = new TypeTeller(environment, moduleP.scope());
-    new Worker(typeTeller, logger).visitModule(moduleP);
-    return Try.of(moduleP, logger);
+    var typeTeller = new TypeTeller(environment, pModule.scope());
+    new Worker(typeTeller, logger).visitModule(pModule);
+    return Try.of(pModule, logger);
   }
 
   public static class Worker {
@@ -64,20 +64,20 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       this.logger = logger;
     }
 
-    private void visitModule(ModuleP moduleP) {
-      moduleP.structs().forEach(this::visitStruct);
-      moduleP.evaluables().forEach(this::visitReferenceable);
+    private void visitModule(PModule pModule) {
+      pModule.structs().forEach(this::visitStruct);
+      pModule.evaluables().forEach(this::visitReferenceable);
     }
 
-    private void visitStruct(StructP structP) {
-      var structTS = inferStructT(structP);
-      structTS.ifPresent(st -> visitConstructor(structP, st));
+    private void visitStruct(PStruct pStruct) {
+      var structTS = inferStructT(pStruct);
+      structTS.ifPresent(st -> visitConstructor(pStruct, st));
     }
 
-    private void visitConstructor(StructP structP, SStructType structT) {
-      var constructorP = structP.constructor();
+    private void visitConstructor(PStruct pStruct, SStructType structT) {
+      var constructorP = pStruct.constructor();
       var fieldSigs = structT.fields();
-      var params = structP
+      var params = pStruct
           .fields()
           .list()
           .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
@@ -87,30 +87,30 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       constructorP.setTypeS(funcTS);
     }
 
-    private void visitReferenceable(ReferenceableP referenceableP) {
-      switch (referenceableP) {
-        case NamedFuncP namedFuncP -> visitFunc(namedFuncP);
-        case NamedValueP namedValueP -> visitValue(namedValueP);
-        case ItemP itemP -> throw new RuntimeException("shouldn't happen");
+    private void visitReferenceable(PReferenceable pReferenceable) {
+      switch (pReferenceable) {
+        case PNamedFunc pNamedFunc -> visitFunc(pNamedFunc);
+        case PNamedValue pNamedValue -> visitValue(pNamedValue);
+        case PItem pItem -> throw new RuntimeException("shouldn't happen");
       }
     }
 
-    private void visitValue(NamedValueP namedValueP) {
-      inferNamedValueSchema(namedValueP);
+    private void visitValue(PNamedValue pNamedValue) {
+      inferNamedValueSchema(pNamedValue);
     }
 
-    private void visitFunc(NamedFuncP namedFuncP) {
-      inferNamedFuncSchema(namedFuncP);
+    private void visitFunc(PNamedFunc pNamedFunc) {
+      inferNamedFuncSchema(pNamedFunc);
     }
 
-    private Maybe<SStructType> inferStructT(StructP struct) {
+    private Maybe<SStructType> inferStructT(PStruct struct) {
       return pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
           .map(NList::nlist)
           .map(is -> new SStructType(struct.name(), is))
           .ifPresent(struct::setTypeS);
     }
 
-    private Maybe<SItemSig> inferFieldSig(ItemP field) {
+    private Maybe<SItemSig> inferFieldSig(PItem field) {
       return typeTeller.translate(field.type()).flatMap(t -> {
         if (t.vars().isEmpty()) {
           field.setTypeS(t);
@@ -126,7 +126,7 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
 
     // value
 
-    private boolean inferNamedValueSchema(NamedValueP namedValue) {
+    private boolean inferNamedValueSchema(PNamedValue namedValue) {
       if (unifyNamedValue(namedValue)) {
         nameImplicitVars(namedValue);
         return resolveValueSchema(namedValue);
@@ -135,21 +135,21 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       }
     }
 
-    private boolean unifyNamedValue(NamedValueP namedValue) {
+    private boolean unifyNamedValue(PNamedValue namedValue) {
       return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedValue(namedValue);
     }
 
-    private void nameImplicitVars(NamedValueP namedValue) {
+    private void nameImplicitVars(PNamedValue namedValue) {
       new TempVarsNamer(unifier).nameVarsInNamedValue(namedValue);
     }
 
-    private boolean resolveValueSchema(NamedValueP namedValueP) {
-      return new TypeInferrerResolve(unifier, logger).resolveNamedValue(namedValueP);
+    private boolean resolveValueSchema(PNamedValue pNamedValue) {
+      return new TypeInferrerResolve(unifier, logger).resolveNamedValue(pNamedValue);
     }
 
     // func
 
-    private void inferNamedFuncSchema(NamedFuncP namedFunc) {
+    private void inferNamedFuncSchema(PNamedFunc namedFunc) {
       var params = namedFunc.params();
       if (inferParamDefaultValues(params) && unifyNamedFunc(namedFunc)) {
         nameImplicitVars(namedFunc);
@@ -159,19 +159,19 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       }
     }
 
-    private boolean unifyNamedFunc(NamedFuncP namedFunc) {
+    private boolean unifyNamedFunc(PNamedFunc namedFunc) {
       return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedFunc(namedFunc);
     }
 
-    private void nameImplicitVars(NamedFuncP namedFunc) {
+    private void nameImplicitVars(PNamedFunc namedFunc) {
       new TempVarsNamer(unifier).nameVarsInNamedFunc(namedFunc);
     }
 
-    private boolean resolveNamedFunc(NamedFuncP namedFunc) {
+    private boolean resolveNamedFunc(PNamedFunc namedFunc) {
       return new TypeInferrerResolve(unifier, logger).resolveNamedFunc(namedFunc);
     }
 
-    private void detectTypeErrorsBetweenParamAndItsDefaultValue(NamedFuncP namedFunc) {
+    private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc) {
       var params = namedFunc.params();
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
@@ -207,13 +207,13 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
 
     // param default value
 
-    private boolean inferParamDefaultValues(NList<ItemP> params) {
+    private boolean inferParamDefaultValues(NList<PItem> params) {
       return params.stream()
           .flatMap(p -> p.defaultValue().toList().stream())
           .allMatch(this::inferParamDefaultValue);
     }
 
-    private boolean inferParamDefaultValue(NamedValueP defaultValue) {
+    private boolean inferParamDefaultValue(PNamedValue defaultValue) {
       return inferNamedValueSchema(defaultValue);
     }
   }

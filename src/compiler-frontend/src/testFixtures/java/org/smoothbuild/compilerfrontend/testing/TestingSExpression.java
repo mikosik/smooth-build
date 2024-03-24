@@ -33,21 +33,21 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
-import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ExplicitTP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ExprP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ImplicitTP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.InstantiateP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.IntP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.LambdaP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedValueP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PolymorphicP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
@@ -112,12 +112,12 @@ public class TestingSExpression {
 
   public static java.util.List<Function<SType, SType>> compositeTypeSFactories() {
     java.util.List<Function<SType, SType>> simpleFactories = java.util.List.of(
-        TestingSExpression::arrayTS,
-        TestingSExpression::funcTS,
-        t -> funcTS(t, intTS()),
-        TestingSExpression::tupleTS,
-        TestingSExpression::structTS,
-        TestingSExpression::interfaceTS);
+        TestingSExpression::sArrayType,
+        TestingSExpression::sFuncType,
+        t -> sFuncType(t, sIntType()),
+        TestingSExpression::sTupleType,
+        TestingSExpression::sStructType,
+        TestingSExpression::sInterfaceType);
     java.util.List<Function<SType, SType>> factories = new ArrayList<>();
     factories.addAll(simpleFactories);
     for (var simpleFactory : simpleFactories) {
@@ -129,128 +129,129 @@ public class TestingSExpression {
     return factories;
   }
 
-  public static SArrayType arrayTS(SType elemT) {
+  public static SArrayType sArrayType(SType elemT) {
     return new SArrayType(elemT);
   }
 
-  public static SBlobType blobTS() {
+  public static SBlobType sBlobType() {
     return STypes.BLOB;
   }
 
-  public static SBoolType boolTS() {
+  public static SBoolType sBoolType() {
     return STypes.BOOL;
   }
 
-  public static SFuncType funcTS(SType resultT) {
-    return funcTS(list(), resultT);
+  public static SFuncType sFuncType(SType resultType) {
+    return sFuncType(list(), resultType);
   }
 
-  public static SFuncType funcTS(SType param1, SType resultT) {
-    return funcTS(list(param1), resultT);
+  public static SFuncType sFuncType(SType param1, SType resultType) {
+    return sFuncType(list(param1), resultType);
   }
 
-  public static SFuncType funcTS(SType param1, SType param2, SType resultT) {
-    return funcTS(list(param1, param2), resultT);
+  public static SFuncType sFuncType(SType param1, SType param2, SType resultType) {
+    return sFuncType(list(param1, param2), resultType);
   }
 
-  public static SFuncType funcTS(List<SType> paramTs, SType resultT) {
-    return new SFuncType(tupleTS(paramTs), resultT);
+  public static SFuncType sFuncType(List<SType> paramTs, SType resultType) {
+    return new SFuncType(sTupleType(paramTs), resultType);
   }
 
-  public static STupleType tupleTS(SType... itemTs) {
-    return tupleTS(list(itemTs));
+  public static STupleType sTupleType(SType... itemTypes) {
+    return sTupleType(list(itemTypes));
   }
 
-  public static STupleType tupleTS(List<SType> paramTs) {
-    return new STupleType(paramTs);
+  public static STupleType sTupleType(List<SType> paramTypes) {
+    return new STupleType(paramTypes);
   }
 
-  public static SIntType intTS() {
+  public static SIntType sIntType() {
     return STypes.INT;
   }
 
-  public static SFuncSchema funcSchemaS(NList<SItem> params, SType resultT) {
-    return funcSchemaS(toTypes(params.list()), resultT);
+  public static SFuncSchema sFuncSchema(NList<SItem> params, SType resultType) {
+    return sFuncSchema(toTypes(params.list()), resultType);
   }
 
-  public static SFuncSchema funcSchemaS(SType resultT) {
-    return funcSchemaS(funcTS(list(), resultT));
+  public static SFuncSchema sFuncSchema(SType resultType) {
+    return sFuncSchema(sFuncType(list(), resultType));
   }
 
-  public static SFuncSchema funcSchemaS(SType param1, SType resultT) {
-    return funcSchemaS(funcTS(list(param1), resultT));
+  public static SFuncSchema sFuncSchema(SType paramType, SType resultType) {
+    return sFuncSchema(sFuncType(list(paramType), resultType));
   }
 
-  public static SFuncSchema funcSchemaS(List<SType> paramTs, SType resultT) {
-    return funcSchemaS(funcTS(paramTs, resultT));
+  public static SFuncSchema sFuncSchema(List<SType> paramTypes, SType resultType) {
+    return sFuncSchema(sFuncType(paramTypes, resultType));
   }
 
-  private static SFuncSchema funcSchemaS(SFuncType sFuncType) {
-    return funcSchemaS(sFuncType.vars(), sFuncType);
+  private static SFuncSchema sFuncSchema(SFuncType funcType) {
+    return sFuncSchema(funcType.vars(), funcType);
   }
 
-  private static SFuncSchema funcSchemaS(SVarSet quantifiedVars, SFuncType sFuncType) {
-    return new SFuncSchema(quantifiedVars, sFuncType);
+  private static SFuncSchema sFuncSchema(SVarSet quantifiedVars, SFuncType funcType) {
+    return new SFuncSchema(quantifiedVars, funcType);
   }
 
-  public static SInterfaceType interfaceTS() {
-    return interfaceTS(map());
+  public static SInterfaceType sInterfaceType() {
+    return sInterfaceType(map());
   }
 
-  public static SInterfaceType interfaceTS(SType... fieldTs) {
-    return interfaceTS(typesToItemSigsMap(fieldTs));
+  public static SInterfaceType sInterfaceType(SType... fieldTypes) {
+    return sInterfaceType(typesToItemSigsMap(fieldTypes));
   }
 
-  public static SInterfaceType interfaceTS(SItemSig... fieldTs) {
-    return interfaceTS(itemSigsToMap(fieldTs));
+  public static SInterfaceType sInterfaceType(SItemSig... fieldTypes) {
+    return sInterfaceType(itemSigsToMap(fieldTypes));
   }
 
-  public static SInterfaceType interfaceTS(Map<String, SItemSig> fieldSignatures) {
+  public static SInterfaceType sInterfaceType(Map<String, SItemSig> fieldSignatures) {
     return new SInterfaceType(fieldSignatures);
   }
 
-  public static SchemaS schemaS(SType sType) {
-    return new SchemaS(sType.vars(), sType);
+  public static SchemaS sSchema(SType type) {
+    return new SchemaS(type.vars(), type);
   }
 
-  public static SStructType personTS() {
-    return structTS("Person", nlist(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
+  public static SStructType sPersonType() {
+    return sStructType(
+        "Person", nlist(sSig(sStringType(), "firstName"), sSig(sStringType(), "lastName")));
   }
 
-  public static SStructType animalTS() {
-    return structTS("Animal", nlist(sigS(stringTS(), "name"), sigS(intTS(), "size")));
+  public static SStructType sAnimalType() {
+    return sStructType("Animal", nlist(sSig(sStringType(), "name"), sSig(sIntType(), "size")));
   }
 
-  public static SStringType stringTS() {
+  public static SStringType sStringType() {
     return STypes.STRING;
   }
 
-  public static SStructType structTS(SType... fieldTs) {
-    return structTS("MyStruct", fieldTs);
+  public static SStructType sStructType(SType... fieldTypes) {
+    return sStructType("MyStruct", fieldTypes);
   }
 
-  public static SStructType structTS(String myStruct) {
-    return structTS(myStruct, nlist());
+  public static SStructType sStructType(String name) {
+    return sStructType(name, nlist());
   }
 
-  public static SStructType structTS(String myStruct, SType... fieldTs) {
-    return structTS(myStruct, nlist(typesToItemSigs(fieldTs)));
+  public static SStructType sStructType(String name, SType... fieldTypes) {
+    return sStructType(name, nlist(typesToItemSigs(fieldTypes)));
   }
 
-  public static SStructType structTS(String myStruct, SItemSig... fieldSigs) {
-    return structTS(myStruct, nlist(fieldSigs));
+  public static SStructType sStructType(String name, SItemSig... fieldSigs) {
+    return sStructType(name, nlist(fieldSigs));
   }
 
-  private static List<SItemSig> typesToItemSigs(SType... fieldTs) {
+  private static List<SItemSig> typesToItemSigs(SType... fieldTypes) {
     var builder = new ArrayList<SItemSig>();
-    for (int i = 0; i < fieldTs.length; i++) {
-      builder.add(sigS(fieldTs[i], "param" + i));
+    for (int i = 0; i < fieldTypes.length; i++) {
+      builder.add(sSig(fieldTypes[i], "param" + i));
     }
     return listOfAll(builder);
   }
 
   public static Map<String, SItemSig> typesToItemSigsMap(SType... types) {
-    return itemSigsToMap(typeTsToSigS(types));
+    return itemSigsToMap(sTypesToSSigs(types));
   }
 
   public static Map<String, SItemSig> itemSigsToMap(SItemSig... itemSigs) {
@@ -261,80 +262,80 @@ public class TestingSExpression {
     return sigs.toMap(SItemSig::name, f -> f);
   }
 
-  private static List<SItemSig> typeTsToSigS(SType... types) {
+  private static List<SItemSig> sTypesToSSigs(SType... types) {
     var builder = new ArrayList<SItemSig>();
     for (int i = 0; i < types.length; i++) {
-      builder.add(sigS(types[i], "param" + i));
+      builder.add(sSig(types[i], "param" + i));
     }
     return listOfAll(builder);
   }
 
-  public static SStructType structTS(String name, NList<SItemSig> fields) {
+  public static SStructType sStructType(String name, NList<SItemSig> fields) {
     return new SStructType(name, fields);
   }
 
-  public static SVar tempVarA() {
-    return tempVar("1");
+  public static SVar sTempVarA() {
+    return sTempVar("1");
   }
 
-  public static STempVar tempVar(String name) {
+  public static STempVar sTempVar(String name) {
     return new STempVar(name);
   }
 
   public static SVar varA() {
-    return varS("A");
+    return sVar("A");
   }
 
   public static SVar varB() {
-    return varS("B");
+    return sVar("B");
   }
 
   public static SVar varC() {
-    return varS("C");
+    return sVar("C");
   }
 
   public static SVar varX() {
-    return varS("X");
+    return sVar("X");
   }
 
-  public static SVar varS(String name) {
+  public static SVar sVar(String name) {
     return new SVar(name);
   }
 
   // ExprS-s
 
-  public static SBlob blobS(int data) {
-    return blobS(1, data);
+  public static SBlob sBlob(int data) {
+    return sBlob(1, data);
   }
 
-  public static SBlob blobS(int line, int data) {
-    return new SBlob(blobTS(), intToByteString(data), location(line));
+  public static SBlob sBlob(int line, int data) {
+    return new SBlob(sBlobType(), intToByteString(data), location(line));
   }
 
-  public static SCall callS(SExpr callable, SExpr... args) {
-    return callS(1, callable, args);
+  public static SCall sCall(SExpr callable, SExpr... args) {
+    return sCall(1, callable, args);
   }
 
-  public static SCall callS(int line, SExpr callable, SExpr... args) {
-    return new SCall(callable, combineS(line, args), location(line));
+  public static SCall sCall(int line, SExpr callable, SExpr... args) {
+    return new SCall(callable, sCombine(line, args), location(line));
   }
 
-  public static SCombine combineS(SExpr... args) {
-    return combineS(13, args);
+  public static SCombine sCombine(SExpr... args) {
+    return sCombine(13, args);
   }
 
-  private static SCombine combineS(int line, SExpr... args) {
+  private static SCombine sCombine(int line, SExpr... args) {
     var argsList = list(args);
     var evaluationType = new STupleType(argsList.map(SExpr::evaluationType));
     return new SCombine(evaluationType, argsList, location(line));
   }
 
-  public static SInt intS(int value) {
-    return intS(1, value);
+  public static SInt sInt(int value) {
+    return sInt(1, value);
   }
 
-  public static SInt intS(int line, int value) {
-    return new SInt(intTS(), BigInteger.valueOf(value), location(line));
+  public static SInt sInt(int line, int value) {
+    return new SInt(sIntType(), BigInteger.valueOf(value), location(line));
   }
 
   public static Map<SVar, SType> varMap() {
@@ -345,466 +346,469 @@ public class TestingSExpression {
     return map(var, type);
   }
 
-  public static SInstantiate instantiateS(SNamedEvaluable sNamedEvaluable) {
-    return instantiateS(17, sNamedEvaluable);
+  public static SInstantiate sInstantiate(SNamedEvaluable namedEvaluable) {
+    return sInstantiate(17, namedEvaluable);
   }
 
-  public static SInstantiate instantiateS(int line, SNamedEvaluable sNamedEvaluable) {
-    return instantiateS(line, referenceS(line, sNamedEvaluable));
+  public static SInstantiate sInstantiate(int line, SNamedEvaluable namedEvaluable) {
+    return sInstantiate(line, sReference(line, namedEvaluable));
   }
 
-  public static SInstantiate instantiateS(List<SType> typeArgs, SNamedEvaluable sNamedEvaluable) {
-    return instantiateS(1, typeArgs, sNamedEvaluable);
+  public static SInstantiate sInstantiate(List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
+    return sInstantiate(1, typeArgs, namedEvaluable);
   }
 
-  public static SInstantiate instantiateS(
-      int line, List<SType> typeArgs, SNamedEvaluable sNamedEvaluable) {
+  public static SInstantiate sInstantiate(
+      int line, List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
     var location = location(line);
-    var referenceS = new SReference(sNamedEvaluable.schema(), sNamedEvaluable.name(), location);
-    return instantiateS(typeArgs, referenceS, location);
+    var referenceS = new SReference(namedEvaluable.schema(), namedEvaluable.name(), location);
+    return sInstantiate(typeArgs, referenceS, location);
   }
 
-  public static SInstantiate instantiateS(SPolymorphic sPolymorphic) {
-    return instantiateS(sPolymorphic, sPolymorphic.location());
+  public static SInstantiate sInstantiate(SPolymorphic polymorphic) {
+    return sInstantiate(polymorphic, polymorphic.location());
   }
 
-  public static SInstantiate instantiateS(int line, SPolymorphic sPolymorphic) {
-    return instantiateS(sPolymorphic, location(line));
+  public static SInstantiate sInstantiate(int line, SPolymorphic polymorphic) {
+    return sInstantiate(polymorphic, location(line));
   }
 
-  public static SInstantiate instantiateS(SPolymorphic sPolymorphic, Location location) {
-    return instantiateS(list(), sPolymorphic, location);
+  public static SInstantiate sInstantiate(SPolymorphic polymorphic, Location location) {
+    return sInstantiate(list(), polymorphic, location);
   }
 
-  public static SInstantiate instantiateS(List<SType> typeArgs, SPolymorphic sPolymorphic) {
-    return instantiateS(1, typeArgs, sPolymorphic);
+  public static SInstantiate sInstantiate(List<SType> typeArgs, SPolymorphic polymorphic) {
+    return sInstantiate(1, typeArgs, polymorphic);
   }
 
-  public static SInstantiate instantiateS(
-      int line, List<SType> typeArgs, SPolymorphic sPolymorphic) {
-    return instantiateS(typeArgs, sPolymorphic, location(line));
+  public static SInstantiate sInstantiate(
+      int line, List<SType> typeArgs, SPolymorphic polymorphic) {
+    return sInstantiate(typeArgs, polymorphic, location(line));
   }
 
-  public static SInstantiate instantiateS(
-      List<SType> typeArgs, SPolymorphic sPolymorphic, Location location) {
-    return new SInstantiate(typeArgs, sPolymorphic, location);
+  public static SInstantiate sInstantiate(
+      List<SType> typeArgs, SPolymorphic polymorphic, Location location) {
+    return new SInstantiate(typeArgs, polymorphic, location);
   }
 
-  public static SOrder orderS(int line, SExpr headElem, SExpr... tailElems) {
+  public static SOrder sOrder(int line, SExpr headElement, SExpr... tailElements) {
     return new SOrder(
-        arrayTS(headElem.evaluationType()), list(headElem).append(tailElems), location(line));
+        sArrayType(headElement.evaluationType()),
+        list(headElement).append(tailElements),
+        location(line));
   }
 
-  public static SOrder orderS(SType elemT, SExpr... exprs) {
-    return orderS(1, elemT, exprs);
+  public static SOrder sOrder(SType elementType, SExpr... exprs) {
+    return sOrder(1, elementType, exprs);
   }
 
-  public static SOrder orderS(int line, SType elemT, SExpr... exprs) {
-    return new SOrder(arrayTS(elemT), list(exprs), location(line));
+  public static SOrder sOrder(int line, SType elementType, SExpr... exprs) {
+    return new SOrder(sArrayType(elementType), list(exprs), location(line));
   }
 
-  public static SInstantiate paramRefS(SType type, String name) {
-    return paramRefS(1, type, name);
+  public static SInstantiate sParamRef(SType type, String name) {
+    return sParamRef(1, type, name);
   }
 
-  public static SInstantiate paramRefS(int line, SType type, String name) {
-    return instantiateS(line, referenceS(line, new SchemaS(varSetS(), type), name));
+  public static SInstantiate sParamRef(int line, SType type, String name) {
+    return sInstantiate(line, sReference(line, new SchemaS(varSetS(), type), name));
   }
 
-  public static SReference referenceS(int line, SNamedEvaluable sNamedEvaluable) {
-    return referenceS(line, sNamedEvaluable.schema(), sNamedEvaluable.name());
+  public static SReference sReference(int line, SNamedEvaluable namedEvaluable) {
+    return sReference(line, namedEvaluable.schema(), namedEvaluable.name());
   }
 
-  public static SReference referenceS(int line, SchemaS schema, String name) {
-    return referenceS(schema, name, location(line));
+  public static SReference sReference(int line, SchemaS schema, String name) {
+    return sReference(schema, name, location(line));
   }
 
-  public static SReference referenceS(SchemaS schema, String name, Location location) {
+  public static SReference sReference(SchemaS schema, String name, Location location) {
     return new SReference(schema, name, location);
   }
 
-  public static SelectS selectS(SExpr selectable, String field) {
-    return selectS(1, selectable, field);
+  public static SelectS sSelect(SExpr selectable, String field) {
+    return sSelect(1, selectable, field);
   }
 
-  public static SelectS selectS(int line, SExpr selectable, String field) {
+  public static SelectS sSelect(int line, SExpr selectable, String field) {
     return new SelectS(selectable, field, location(line));
   }
 
-  public static SString stringS() {
-    return stringS("abc");
+  public static SString sString() {
+    return sString("abc");
   }
 
-  public static SString stringS(String string) {
-    return stringS(1, string);
+  public static SString sString(String string) {
+    return sString(1, string);
   }
 
-  public static SString stringS(int line, String data) {
-    return new SString(stringTS(), data, location(line));
+  public static SString sString(int line, String data) {
+    return new SString(sStringType(), data, location(line));
   }
 
   // other smooth language thingies
 
-  private static SAnnotation bytecodeS(String path) {
-    return bytecodeS(1, path);
+  private static SAnnotation sBytecode(String path) {
+    return sBytecode(1, path);
   }
 
-  public static SAnnotation bytecodeS(int line, String path) {
-    return bytecodeS(line, stringS(line, path));
+  public static SAnnotation sBytecode(int line, String path) {
+    return sBytecode(line, sString(line, path));
   }
 
-  public static SAnnotation bytecodeS(int line, SString path) {
-    return bytecodeS(path, location(line));
+  public static SAnnotation sBytecode(int line, SString path) {
+    return sBytecode(path, location(line));
   }
 
-  public static SAnnotation bytecodeS(String path, Location location) {
-    return bytecodeS(stringS(path), location);
+  public static SAnnotation sBytecode(String path, Location location) {
+    return sBytecode(sString(path), location);
   }
 
-  public static SAnnotation bytecodeS(SString path, Location location) {
+  public static SAnnotation sBytecode(SString path, Location location) {
     return new SAnnotation(BYTECODE, path, location);
   }
 
-  public static SAnnotation nativeAnnotationS() {
-    return nativeAnnotationS(1, stringS("impl"));
+  public static SAnnotation sNativeAnnotation() {
+    return sNativeAnnotation(1, sString("impl"));
   }
 
-  public static SAnnotation nativeAnnotationS(int line, SString classBinaryName) {
-    return nativeAnnotationS(line, classBinaryName, true);
+  public static SAnnotation sNativeAnnotation(int line, SString classBinaryName) {
+    return sNativeAnnotation(line, classBinaryName, true);
   }
 
-  public static SAnnotation nativeAnnotationS(int line, SString classBinaryName, boolean pure) {
-    return nativeAnnotationS(location(line), classBinaryName, pure);
+  public static SAnnotation sNativeAnnotation(int line, SString classBinaryName, boolean pure) {
+    return sNativeAnnotation(location(line), classBinaryName, pure);
   }
 
-  public static SAnnotation nativeAnnotationS(Location location, SString classBinaryName) {
-    return nativeAnnotationS(location, classBinaryName, true);
+  public static SAnnotation sNativeAnnotation(Location location, SString classBinaryName) {
+    return sNativeAnnotation(location, classBinaryName, true);
   }
 
-  public static SAnnotation nativeAnnotationS(
+  public static SAnnotation sNativeAnnotation(
       Location location, SString classBinaryName, boolean pure) {
     var name = pure ? NATIVE_PURE : NATIVE_IMPURE;
     return new SAnnotation(name, classBinaryName, location);
   }
 
-  public static SItem itemS(SType type) {
-    return itemS(1, type, "paramName");
+  public static SItem sItem(SType type) {
+    return sItem(1, type, "paramName");
   }
 
-  public static SItem itemS(SType type, String name) {
-    return itemS(1, type, name);
+  public static SItem sItem(SType type, String name) {
+    return sItem(1, type, name);
   }
 
-  public static SItem itemS(int line, SType type, String name) {
-    return itemS(line, type, name, none());
+  public static SItem sItem(int line, SType type, String name) {
+    return sItem(line, type, name, none());
   }
 
-  public static SItem itemS(int line, SType type, String name, SExpr body) {
-    return itemS(line, type, name, some(body));
+  public static SItem sItem(int line, SType type, String name, SExpr body) {
+    return sItem(line, type, name, some(body));
   }
 
-  public static SItem itemS(String name, SExpr body) {
-    return itemS(body.evaluationType(), name, some(body));
+  public static SItem sItem(String name, SExpr body) {
+    return sItem(body.evaluationType(), name, some(body));
   }
 
-  public static SItem itemS(SType type, String name, Maybe<SExpr> body) {
-    return itemS(1, type, name, body);
+  public static SItem sItem(SType type, String name, Maybe<SExpr> body) {
+    return sItem(1, type, name, body);
   }
 
-  public static SItem itemS(int line, SType type, String name, Maybe<SExpr> body) {
-    return itemSPoly(line, type, name, body.map(b -> valueS(line, name, b)));
+  public static SItem sItem(int line, SType type, String name, Maybe<SExpr> body) {
+    return sItemPoly(line, type, name, body.map(b -> sValue(line, name, b)));
   }
 
-  public static SItem itemS(int line, SType type, String name, SNamedValue body) {
-    return itemSPoly(line, type, name, some(body));
+  public static SItem sItem(int line, SType type, String name, SNamedValue body) {
+    return sItemPoly(line, type, name, some(body));
   }
 
-  public static SItem itemSPoly(int line, SType type, String name, Maybe<SNamedValue> body) {
+  public static SItem sItemPoly(int line, SType type, String name, Maybe<SNamedValue> body) {
     return new SItem(type, name, body, location(line));
   }
 
-  public static SAnnotatedValue bytecodeValueS(int line, SType type, String name) {
-    return annotatedValueS(line, bytecodeS(line - 1, "impl"), type, name);
+  public static SAnnotatedValue sBytecodeValue(int line, SType type, String name) {
+    return sAnnotatedValue(line, sBytecode(line - 1, "impl"), type, name);
   }
 
-  public static SAnnotatedValue annotatedValueS(
+  public static SAnnotatedValue sAnnotatedValue(
       int line, SAnnotation annotation, SType type, String name) {
-    return annotatedValueS(annotation, type, name, location(line));
+    return sAnnotatedValue(annotation, type, name, location(line));
   }
 
-  public static SAnnotatedValue annotatedValueS(
+  public static SAnnotatedValue sAnnotatedValue(
       SAnnotation annotation, SType type, String name, Location location) {
-    return new SAnnotatedValue(annotation, schemaS(type), name, location);
+    return new SAnnotatedValue(annotation, sSchema(type), name, location);
   }
 
-  public static SNamedExprValue valueS(String name, SExpr body) {
-    return valueS(1, name, body);
+  public static SNamedExprValue sValue(String name, SExpr body) {
+    return sValue(1, name, body);
   }
 
-  public static SNamedExprValue valueS(int line, String name, SExpr body) {
-    return valueS(line, body.evaluationType(), name, body);
+  public static SNamedExprValue sValue(int line, String name, SExpr body) {
+    return sValue(line, body.evaluationType(), name, body);
   }
 
-  public static SNamedExprValue valueS(int line, SType type, String name, SExpr body) {
-    return valueS(line, schemaS(type), name, body);
+  public static SNamedExprValue sValue(int line, SType type, String name, SExpr body) {
+    return sValue(line, sSchema(type), name, body);
   }
 
-  public static SNamedExprValue valueS(SchemaS schema, String name, SExpr body) {
-    return valueS(1, schema, name, body);
+  public static SNamedExprValue sValue(SchemaS schema, String name, SExpr body) {
+    return sValue(1, schema, name, body);
   }
 
-  public static SNamedExprValue valueS(int line, SchemaS schema, String name, SExpr body) {
+  public static SNamedExprValue sValue(int line, SchemaS schema, String name, SExpr body) {
     return new SNamedExprValue(schema, name, body, location(line));
   }
 
-  public static SNamedValue emptyArrayValueS() {
-    return emptyArrayValueS(varA());
+  public static SNamedValue emptySArrayValue() {
+    return emptySArrayValue(varA());
   }
 
-  public static SNamedValue emptyArrayValueS(SVar elemT) {
-    return valueS("emptyArray", orderS(elemT));
+  public static SNamedValue emptySArrayValue(SVar elementType) {
+    return sValue("emptyArray", sOrder(elementType));
   }
 
-  public static SConstructor constructorS(SStructType structT) {
-    return constructorS(1, structT, UPPER_CAMEL.to(LOWER_CAMEL, structT.name()));
+  public static SConstructor sConstructor(SStructType structType) {
+    return sConstructor(1, structType, UPPER_CAMEL.to(LOWER_CAMEL, structType.name()));
   }
 
-  public static SConstructor constructorS(int line, SStructType structT) {
-    return constructorS(line, structT, structT.name());
+  public static SConstructor sConstructor(int line, SStructType structType) {
+    return sConstructor(line, structType, structType.name());
   }
 
-  public static SConstructor constructorS(int line, SStructType structT, String name) {
-    var fields = structT.fields();
+  public static SConstructor sConstructor(int line, SStructType structType, String name) {
+    var fields = structType.fields();
     var params = fields.map(f -> new SItem(f.type(), f.name(), none(), location(2)));
-    return new SConstructor(funcSchemaS(params, structT), name, params, location(line));
+    return new SConstructor(sFuncSchema(params, structType), name, params, location(line));
   }
 
-  public static SAnnotatedFunc bytecodeFuncS(
-      String path, SType resultT, String name, NList<SItem> params) {
-    return bytecodeFuncS(1, path, resultT, name, params);
+  public static SAnnotatedFunc sBytecodeFunc(
+      String path, SType resultType, String name, NList<SItem> params) {
+    return sBytecodeFunc(1, path, resultType, name, params);
   }
 
-  public static SAnnotatedFunc bytecodeFuncS(
-      int line, SType resultT, String name, NList<SItem> params) {
-    return annotatedFuncS(line, bytecodeS(line - 1, "impl"), resultT, name, params);
+  public static SAnnotatedFunc sBytecodeFunc(
+      int line, SType resultType, String name, NList<SItem> params) {
+    return sAnnotatedFunc(line, sBytecode(line - 1, "impl"), resultType, name, params);
   }
 
-  public static SAnnotatedFunc bytecodeFuncS(
-      int line, String path, SType resultT, String name, NList<SItem> params) {
-    return annotatedFuncS(line, bytecodeS(path), resultT, name, params);
+  public static SAnnotatedFunc sBytecodeFunc(
+      int line, String path, SType resultType, String name, NList<SItem> params) {
+    return sAnnotatedFunc(line, sBytecode(path), resultType, name, params);
   }
 
-  public static SAnnotatedFunc nativeFuncS(SType resultT, String name, NList<SItem> params) {
-    return annotatedFuncS(nativeAnnotationS(), resultT, name, params);
+  public static SAnnotatedFunc sNativeFunc(SType resultType, String name, NList<SItem> params) {
+    return sAnnotatedFunc(sNativeAnnotation(), resultType, name, params);
   }
 
-  public static SAnnotatedFunc annotatedFuncS(
-      SAnnotation ann, SType resultT, String name, NList<SItem> params) {
-    return annotatedFuncS(1, ann, resultT, name, params);
+  public static SAnnotatedFunc sAnnotatedFunc(
+      SAnnotation ann, SType resultType, String name, NList<SItem> params) {
+    return sAnnotatedFunc(1, ann, resultType, name, params);
   }
 
-  public static SAnnotatedFunc annotatedFuncS(
-      int line, SAnnotation ann, SType resultT, String name, NList<SItem> params) {
-    return annotatedFuncS(ann, resultT, name, params, location(line));
+  public static SAnnotatedFunc sAnnotatedFunc(
+      int line, SAnnotation ann, SType resultType, String name, NList<SItem> params) {
+    return sAnnotatedFunc(ann, resultType, name, params, location(line));
   }
 
-  public static SAnnotatedFunc annotatedFuncS(
-      SAnnotation ann, SType resultT, String name, NList<SItem> params, Location location) {
-    return new SAnnotatedFunc(ann, funcSchemaS(params, resultT), name, params, location);
+  public static SAnnotatedFunc sAnnotatedFunc(
+      SAnnotation ann, SType resultType, String name, NList<SItem> params, Location location) {
+    return new SAnnotatedFunc(ann, sFuncSchema(params, resultType), name, params, location);
   }
 
-  public static SNamedExprFunc funcS(int line, String name, NList<SItem> params, SExpr body) {
-    return funcS(line, body.evaluationType(), name, params, body);
+  public static SNamedExprFunc sFunc(int line, String name, NList<SItem> params, SExpr body) {
+    return sFunc(line, body.evaluationType(), name, params, body);
   }
 
-  public static SNamedExprFunc funcS(String name, NList<SItem> params, SExpr body) {
-    return funcS(body.evaluationType(), name, params, body);
+  public static SNamedExprFunc sFunc(String name, NList<SItem> params, SExpr body) {
+    return sFunc(body.evaluationType(), name, params, body);
   }
 
-  public static SNamedExprFunc funcS(SType resultT, String name, NList<SItem> params, SExpr body) {
-    return funcS(1, resultT, name, params, body);
+  public static SNamedExprFunc sFunc(
+      SType resultType, String name, NList<SItem> params, SExpr body) {
+    return sFunc(1, resultType, name, params, body);
   }
 
-  public static SNamedExprFunc funcS(
-      int line, SType resultT, String name, NList<SItem> params, SExpr body) {
-    var schema = funcSchemaS(params, resultT);
+  public static SNamedExprFunc sFunc(
+      int line, SType resultType, String name, NList<SItem> params, SExpr body) {
+    var schema = sFuncSchema(params, resultType);
     return new SNamedExprFunc(schema, name, params, body, location(line));
   }
 
-  public static SLambda lambdaS(SVarSet quantifiedVars, SExpr body) {
-    return lambdaS(quantifiedVars, nlist(), body);
+  public static SLambda sLambda(SVarSet quantifiedVars, SExpr body) {
+    return sLambda(quantifiedVars, nlist(), body);
   }
 
-  public static SLambda lambdaS(SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
-    return lambdaS(1, quantifiedVars, params, body);
+  public static SLambda sLambda(SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
+    return sLambda(1, quantifiedVars, params, body);
   }
 
-  public static SLambda lambdaS(int line, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
-    var funcTS = funcTS(toTypes(params.list()), body.evaluationType());
-    var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
+  public static SLambda sLambda(int line, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
+    var funcTS = sFuncType(toTypes(params.list()), body.evaluationType());
+    var funcSchemaS = sFuncSchema(quantifiedVars, funcTS);
     return new SLambda(funcSchemaS, params, body, location(line));
   }
 
-  public static SLambda lambdaS(SExpr body) {
-    return lambdaS(1, nlist(), body);
+  public static SLambda sLambda(SExpr body) {
+    return sLambda(1, nlist(), body);
   }
 
-  public static SLambda lambdaS(NList<SItem> params, SExpr body) {
-    return lambdaS(1, params, body);
+  public static SLambda sLambda(NList<SItem> params, SExpr body) {
+    return sLambda(1, params, body);
   }
 
-  public static SLambda lambdaS(int line, NList<SItem> params, SExpr body) {
-    var funcSchemaS = funcSchemaS(toTypes(params.list()), body.evaluationType());
+  public static SLambda sLambda(int line, NList<SItem> params, SExpr body) {
+    var funcSchemaS = sFuncSchema(toTypes(params.list()), body.evaluationType());
     return new SLambda(funcSchemaS, params, body, location(line));
   }
 
-  public static SNamedExprFunc idFuncS() {
+  public static SNamedExprFunc idSFunc() {
     var a = varA();
-    return funcS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a"));
+    return sFunc(a, "myId", nlist(sItem(a, "a")), sParamRef(a, "a"));
   }
 
-  public static SNamedExprFunc intIdFuncS() {
-    return funcS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), paramRefS(intTS(), "i"));
+  public static SNamedExprFunc intIdSFunc() {
+    return sFunc(sIntType(), "myIntId", nlist(sItem(sIntType(), "i")), sParamRef(sIntType(), "i"));
   }
 
-  public static SNamedExprFunc returnIntFuncS() {
-    return funcS(intTS(), "myReturnInt", nlist(), intS(1, 3));
+  public static SNamedExprFunc returnIntSFunc() {
+    return sFunc(sIntType(), "myReturnInt", nlist(), sInt(1, 3));
   }
 
-  public static SItemSig sigS(SType type, String name) {
+  public static SItemSig sSig(SType type, String name) {
     return new SItemSig(type, name);
   }
 
-  public static STrace traceS() {
+  public static STrace sTrace() {
     return new STrace();
   }
 
-  public static STrace traceS(String name2, int line2, String name1, int line1) {
-    return traceS(name2, location(line2), name1, location(line1));
+  public static STrace sTrace(String name2, int line2, String name1, int line1) {
+    return sTrace(name2, location(line2), name1, location(line1));
   }
 
-  public static STrace traceS(String name2, Location location2, String name1, Location location1) {
+  public static STrace sTrace(String name2, Location location2, String name1, Location location1) {
     var element1 = new Element(name1, location1, null);
     var element2 = new Element(name2, location2, element1);
     return new STrace(element2);
   }
 
-  public static STrace traceS(String name, int line) {
-    return traceS(name, location(line));
+  public static STrace sTrace(String name, int line) {
+    return sTrace(name, location(line));
   }
 
-  public static STrace traceS(String name, Location location) {
+  public static STrace sTrace(String name, Location location) {
     return new STrace(new STrace.Element(name, location, null));
   }
 
   // P - parsed objects
 
-  public static ModuleP moduleP(List<StructP> structs, List<NamedEvaluableP> evaluables) {
-    return new ModuleP("", structs, evaluables);
+  public static PModule pModule(List<PStruct> structs, List<PNamedEvaluable> evaluables) {
+    return new PModule("", structs, evaluables);
   }
 
-  public static InstantiateP lambdaP(NList<ItemP> params, ExprP body) {
-    return instantiateP(new LambdaP("^1", params, body, location()));
+  public static PInstantiate pLambda(NList<PItem> params, PExpr body) {
+    return pInstantiate(new PLambda("^1", params, body, location()));
   }
 
-  public static CallP callP(ExprP callee) {
-    return callP(callee, location());
+  public static PCall pCall(PExpr callee) {
+    return pCall(callee, location());
   }
 
-  public static CallP callP(ExprP callee, Location location) {
-    return new CallP(callee, list(), location);
+  public static PCall pCall(PExpr callee, Location location) {
+    return new PCall(callee, list(), location);
   }
 
-  public static InstantiateP instantiateP(PolymorphicP polymorphicP) {
-    return new InstantiateP(polymorphicP, polymorphicP.location());
+  public static PInstantiate pInstantiate(PPolymorphic polymorphic) {
+    return new PInstantiate(polymorphic, polymorphic.location());
   }
 
-  public static NamedFuncP namedFuncP() {
-    return namedFuncP(nlist(itemP()));
+  public static PNamedFunc pNamedFunc() {
+    return pNamedFunc(nlist(pItem()));
   }
 
-  public static NamedFuncP namedFuncP(String name) {
-    return namedFuncP(name, nlist(itemP()));
+  public static PNamedFunc pNamedFunc(String name) {
+    return pNamedFunc(name, nlist(pItem()));
   }
 
-  public static NamedFuncP namedFuncP(String name, int line) {
-    return namedFuncP(name, nlist(itemP()), none(), location(line));
+  public static PNamedFunc pNamedFunc(String name, int line) {
+    return pNamedFunc(name, nlist(pItem()), none(), location(line));
   }
 
-  public static NamedFuncP namedFuncP(NList<ItemP> params) {
-    return namedFuncP("myFunc", params);
+  public static PNamedFunc pNamedFunc(NList<PItem> params) {
+    return pNamedFunc("myFunc", params);
   }
 
-  public static NamedFuncP namedFuncP(String name, ExprP body) {
-    return namedFuncP(name, nlist(), some(body));
+  public static PNamedFunc pNamedFunc(String name, PExpr body) {
+    return pNamedFunc(name, nlist(), some(body));
   }
 
-  public static NamedFuncP namedFuncP(String name, NList<ItemP> params) {
-    return namedFuncP(name, params, none());
+  public static PNamedFunc pNamedFunc(String name, NList<PItem> params) {
+    return pNamedFunc(name, params, none());
   }
 
-  public static NamedFuncP namedFuncP(String name, NList<ItemP> params, Maybe<ExprP> body) {
-    return namedFuncP(name, params, body, location());
+  public static PNamedFunc pNamedFunc(String name, NList<PItem> params, Maybe<PExpr> body) {
+    return pNamedFunc(name, params, body, location());
   }
 
-  public static NamedFuncP namedFuncP(
-      String name, NList<ItemP> params, Maybe<ExprP> body, Location location) {
-    var resultT = new ImplicitTP(location);
-    return new NamedFuncP(resultT, name, shortName(name), params, body, none(), location);
+  public static PNamedFunc pNamedFunc(
+      String name, NList<PItem> params, Maybe<PExpr> body, Location location) {
+    var resultT = new PImplicitType(location);
+    return new PNamedFunc(resultT, name, shortName(name), params, body, none(), location);
   }
 
-  public static NamedValueP namedValueP() {
-    return namedValueP(intP());
+  public static PNamedValue pNamedValue() {
+    return pNamedValue(pInt());
   }
 
-  public static NamedValueP namedValueP(ExprP body) {
-    return namedValueP("myValue", body);
+  public static PNamedValue pNamedValue(PExpr body) {
+    return pNamedValue("myValue", body);
   }
 
-  public static NamedValueP namedValueP(String name) {
-    return namedValueP(name, intP());
+  public static PNamedValue pNamedValue(String name) {
+    return pNamedValue(name, pInt());
   }
 
-  public static NamedValueP namedValueP(String name, ExprP body) {
+  public static PNamedValue pNamedValue(String name, PExpr body) {
     var location = location();
-    var type = new ImplicitTP(location);
-    return new NamedValueP(type, name, shortName(name), some(body), none(), location);
+    var type = new PImplicitType(location);
+    return new PNamedValue(type, name, shortName(name), some(body), none(), location);
   }
 
-  public static ItemP itemP() {
-    return itemP(some(namedValueP()));
+  public static PItem pItem() {
+    return pItem(some(pNamedValue()));
   }
 
-  public static ItemP itemP(Maybe<NamedValueP> defaultValue) {
-    return itemP("param1", defaultValue);
+  public static PItem pItem(Maybe<PNamedValue> defaultValue) {
+    return pItem("param1", defaultValue);
   }
 
-  public static ItemP itemP(String name) {
-    return itemP(name, none());
+  public static PItem pItem(String name) {
+    return pItem(name, none());
   }
 
-  public static ItemP itemP(String name, ExprP defaultValue) {
-    return itemP(name, namedValueP(defaultValue));
+  public static PItem pItem(String name, PExpr defaultValue) {
+    return pItem(name, pNamedValue(defaultValue));
   }
 
-  public static ItemP itemP(String name, NamedValueP defaultValue) {
-    return itemP(name, some(defaultValue));
+  public static PItem pItem(String name, PNamedValue defaultValue) {
+    return pItem(name, some(defaultValue));
   }
 
-  public static ItemP itemP(String name, Maybe<NamedValueP> defaultValue) {
-    return new ItemP(new ExplicitTP("Int", location()), name, defaultValue, location());
+  public static PItem pItem(String name, Maybe<PNamedValue> defaultValue) {
+    return new PItem(new PExplicitType("Int", location()), name, defaultValue, location());
   }
 
-  public static IntP intP() {
-    return new IntP("7", location());
+  public static PInt pInt() {
+    return new PInt("7", location());
   }
 
-  public static InstantiateP referenceP(String name) {
-    return referenceP(name, location(7));
+  public static PInstantiate pReference(String name) {
+    return pReference(name, location(7));
   }
 
-  public static InstantiateP referenceP(String name, Location location) {
-    return instantiateP(new ReferenceP(name, location));
+  public static PInstantiate pReference(String name, Location location) {
+    return pInstantiate(new PReference(name, location));
   }
 
   // location

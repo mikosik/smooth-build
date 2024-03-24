@@ -9,26 +9,26 @@ import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.IntP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 
-public class DecodeLiterals implements TryFunction1<ModuleP, ModuleP> {
+public class DecodeLiterals implements TryFunction1<PModule, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "decodeLiterals");
   }
 
   @Override
-  public Try<ModuleP> apply(ModuleP moduleP) {
+  public Try<PModule> apply(PModule pModule) {
     var logger = new Logger();
-    new DecodeLiteralModuleVisitor(logger).visitModule(moduleP);
-    return Try.of(moduleP, logger);
+    new DecodeLiteralModuleVisitor(logger).visitModule(pModule);
+    return Try.of(pModule, logger);
   }
 
-  private static class DecodeLiteralModuleVisitor extends ModuleVisitorP {
+  private static class DecodeLiteralModuleVisitor extends PModuleVisitor {
     private final Logger logger;
 
     public DecodeLiteralModuleVisitor(Logger logger) {
@@ -36,32 +36,32 @@ public class DecodeLiterals implements TryFunction1<ModuleP, ModuleP> {
     }
 
     @Override
-    public void visitBlob(BlobP blobP) {
-      super.visitBlob(blobP);
+    public void visitBlob(PBlob pBlob) {
+      super.visitBlob(pBlob);
       try {
-        blobP.decodeByteString();
+        pBlob.decodeByteString();
       } catch (DecodeHexException e) {
-        logger.log(compileError(blobP, "Illegal Blob literal: " + e.getMessage()));
+        logger.log(compileError(pBlob, "Illegal Blob literal: " + e.getMessage()));
       }
     }
 
     @Override
-    public void visitInt(IntP intP) {
-      super.visitInt(intP);
+    public void visitInt(PInt pInt) {
+      super.visitInt(pInt);
       try {
-        intP.decodeBigInteger();
+        pInt.decodeBigInteger();
       } catch (NumberFormatException e) {
-        logger.log(compileError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
+        logger.log(compileError(pInt, "Illegal Int literal: `" + pInt.literal() + "`."));
       }
     }
 
     @Override
-    public void visitString(StringP stringP) {
-      super.visitString(stringP);
+    public void visitString(PString pString) {
+      super.visitString(pString);
       try {
-        stringP.calculateUnescaped();
+        pString.calculateUnescaped();
       } catch (UnescapeFailedException e) {
-        logger.log(compileError(stringP, "Illegal String literal: " + e.getMessage()));
+        logger.log(compileError(pString, "Illegal String literal: " + e.getMessage()));
       }
     }
   }

@@ -5,55 +5,57 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.callP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.moduleP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedFuncP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedValueP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.paramRefS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.referenceP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pCall;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pModule;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedValue;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pReference;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class InjectDefaultArgumentsTest {
   @Test
   public void missing_call_argument_is_filled_with_reference_to_default_argument() {
-    var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
+    var myFuncS = TestingSExpression.sFunc(
+        "myFunc",
+        nlist(TestingSExpression.sItem("param", TestingSExpression.sInt(7))),
+        TestingSExpression.sParamRef(sIntType(), "param"));
     var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
-    var callP = callP(referenceP("myFunc"), callLocation);
-    var namedValueP = namedValueP("value", callP);
-    var moduleP = moduleP(list(), list(namedValueP));
+    var callP = pCall(TestingSExpression.pReference("myFunc"), callLocation);
+    var namedValueP = pNamedValue("value", callP);
+    var moduleP = pModule(list(), list(namedValueP));
 
     callInjectDefaultArguments(importedS, moduleP);
 
-    assertThat(callP.positionedArgs()).isEqualTo(list(referenceP("myFunc:param", callLocation)));
+    assertThat(callP.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
 
   @Test
   public void
       missing_call_argument_in_call_within_default_body_is_filled_with_reference_to_default_argument() {
-    var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
+    var myFuncS = TestingSExpression.sFunc(
+        "myFunc",
+        nlist(TestingSExpression.sItem("param", TestingSExpression.sInt(7))),
+        TestingSExpression.sParamRef(sIntType(), "param"));
     var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
-    var callP = callP(referenceP("myFunc"), callLocation);
-    var namedValueP = namedFuncP("value", nlist(itemP("p", callP)));
-    var moduleP = moduleP(list(), list(namedValueP));
+    var callP = pCall(TestingSExpression.pReference("myFunc"), callLocation);
+    var namedValueP =
+        TestingSExpression.pNamedFunc("value", nlist(TestingSExpression.pItem("p", callP)));
+    var moduleP = pModule(list(), list(namedValueP));
 
     callInjectDefaultArguments(importedS, moduleP);
 
-    assertThat(callP.positionedArgs()).isEqualTo(list(referenceP("myFunc:param", callLocation)));
+    assertThat(callP.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
 
-  private static void callInjectDefaultArguments(ScopeS importedS, ModuleP moduleP) {
-    new InitializeScopes().apply(moduleP);
-    new InjectDefaultArguments().apply(moduleP, importedS);
+  private static void callInjectDefaultArguments(ScopeS importedS, PModule pModule) {
+    new InitializeScopes().apply(pModule);
+    new InjectDefaultArguments().apply(pModule, importedS);
   }
 }
