@@ -69,10 +69,10 @@ public class BExprDb {
   }
 
   public BBool newBool(boolean value) throws BytecodeException {
-    var data = writeBoolData(value);
-    var boolType = kindDb.bool();
-    var root = newRoot(boolType, data);
-    return boolType.newExpr(root, this);
+    var type = kindDb.bool();
+    var dataHash = writeBoolean(value);
+    var root = newRoot(type, dataHash);
+    return type.newExpr(root, this);
   }
 
   public BLambda newLambda(BFuncType type, BExpr body) throws BytecodeException {
@@ -86,29 +86,29 @@ public class BExprDb {
   public BNativeFunc newNativeFunc(BFuncType type, BBlob jar, BString classBinaryName, BBool isPure)
       throws BytecodeException {
     var kind = kindDb.nativeFunc(type);
-    var data = writeNativeFuncData(jar, classBinaryName, isPure);
-    var root = newRoot(kind, data);
+    var dataHash = writeChain(jar.hash(), classBinaryName.hash(), isPure.hash());
+    var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
 
   public BInt newInt(BigInteger value) throws BytecodeException {
-    var data = writeIntData(value);
-    var intType = kindDb.int_();
-    var root = newRoot(intType, data);
-    return intType.newExpr(root, this);
+    var type = kindDb.int_();
+    var dataHash = writeBigInteger(value);
+    var root = newRoot(type, dataHash);
+    return type.newExpr(root, this);
   }
 
   public BString newString(String value) throws BytecodeException {
-    var data = writeStringData(value);
-    var stringType = kindDb.string();
-    var root = newRoot(stringType, data);
-    return stringType.newExpr(root, this);
+    var type = kindDb.string();
+    var dataHash = writeString(value);
+    var root = newRoot(type, dataHash);
+    return type.newExpr(root, this);
   }
 
   public BTuple newTuple(List<? extends BValue> items) throws BytecodeException {
     var type = kindDb.tuple(items.map(BValue::type));
-    var data = writeTupleData(items);
-    var root = newRoot(type, data);
+    var dataHash = writeChain(items);
+    var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
 
@@ -117,39 +117,39 @@ public class BExprDb {
   public BCall newCall(BExpr func, BCombine args) throws BytecodeException {
     var funcType = castEvaluationTypeToFuncTB(func);
     validateArgsInCall(funcType, args);
-    var callKind = kindDb.call(funcType.result());
-    var data = writeCallData(func, args);
-    var root = newRoot(callKind, data);
-    return callKind.newExpr(root, this);
+    var kind = kindDb.call(funcType.result());
+    var dataHash = writeChain(func.hash(), args.hash());
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
   }
 
   public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {
     var evaluationType = kindDb.tuple(items.map(BExpr::evaluationType));
-    var combineKind = kindDb.combine(evaluationType);
-    var data = writeCombineData(items);
-    var root = newRoot(combineKind, data);
-    return combineKind.newExpr(root, this);
+    var kind = kindDb.combine(evaluationType);
+    var dataHash = writeChain(items);
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
   }
 
   public BIf newIfFunc(BType t) throws BytecodeException {
-    var ifKind = kindDb.ifFunc(t);
-    var root = newRoot(ifKind);
-    return ifKind.newExpr(root, this);
+    var kind = kindDb.ifFunc(t);
+    var root = newRoot(kind);
+    return kind.newExpr(root, this);
   }
 
   public BMap newMapFunc(BType r, BType s) throws BytecodeException {
-    var mapKind = kindDb.mapFunc(r, s);
-    var root = newRoot(mapKind);
-    return mapKind.newExpr(root, this);
+    var kind = kindDb.mapFunc(r, s);
+    var root = newRoot(kind);
+    return kind.newExpr(root, this);
   }
 
   public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elems)
       throws BytecodeException {
     validateOrderElements(evaluationType.elem(), elems);
-    var orderKind = kindDb.order(evaluationType);
-    var data = writeOrderData(elems);
-    var root = newRoot(orderKind, data);
-    return orderKind.newExpr(root, this);
+    var kind = kindDb.order(evaluationType);
+    var dataHash = writeChain(elems);
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
   }
 
   public BPick newPick(BExpr pickable, BExpr index) throws BytecodeException {
@@ -158,10 +158,10 @@ public class BExprDb {
       throw new IllegalArgumentException("index.evaluationType() should be IntTB but is "
           + index.evaluationType().q() + ".");
     }
-    var data = writePickData(pickable, index);
-    var pickKind = kindDb.pick(evaluationType);
-    var root = newRoot(pickKind, data);
-    return pickKind.newExpr(root, this);
+    var kind = kindDb.pick(evaluationType);
+    var dataHash = writeChain(pickable.hash(), index.hash());
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
   }
 
   public BReference newReference(BType evaluationType, BInt index) throws BytecodeException {
@@ -172,10 +172,10 @@ public class BExprDb {
 
   public BSelect newSelect(BExpr selectable, BInt index) throws BytecodeException {
     var evaluationType = selectEvaluationType(selectable, index);
-    var data = writeSelectData(selectable, index);
-    var selectKind = kindDb.select(evaluationType);
-    var root = newRoot(selectKind, data);
-    return selectKind.newExpr(root, this);
+    var kind = kindDb.select(evaluationType);
+    var dataHash = writeChain(selectable.hash(), index.hash());
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
   }
 
   // validators
@@ -261,15 +261,15 @@ public class BExprDb {
   // methods accessed by builders
 
   public BArray newArray(BArrayType type, List<? extends BValue> elems) throws BytecodeException {
-    var data = writeArrayData(elems);
-    var root = newRoot(type, data);
+    var dataHash = writeChain(elems);
+    var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
 
   public BBlob newBlob(Hash dataHash) throws BytecodeException {
-    var blobType = kindDb.blob();
-    var root = newRoot(blobType, dataHash);
-    return blobType.newExpr(root, this);
+    var type = kindDb.blob();
+    var root = newRoot(type, dataHash);
+    return type.newExpr(root, this);
   }
 
   // methods for creating types
@@ -305,55 +305,6 @@ public class BExprDb {
   private MerkleRoot newRoot(BKind kind) throws BytecodeException {
     Hash rootHash = writeChain(kind.hash());
     return new MerkleRoot(rootHash, kind, null);
-  }
-
-  // methods for writing data of Operations
-
-  private Hash writeCallData(BExpr func, BCombine args) throws BytecodeException {
-    return writeChain(func.hash(), args.hash());
-  }
-
-  private Hash writeCombineData(List<? extends BExpr> items) throws BytecodeException {
-    return writeChain(items);
-  }
-
-  private Hash writeOrderData(List<? extends BExpr> elems) throws BytecodeException {
-    return writeChain(elems);
-  }
-
-  private Hash writePickData(BExpr pickable, BExpr index) throws BytecodeException {
-    return writeChain(pickable.hash(), index.hash());
-  }
-
-  private Hash writeSelectData(BExpr selectable, BInt index) throws BytecodeException {
-    return writeChain(selectable.hash(), index.hash());
-  }
-
-  // methods for writing data of Values
-
-  private Hash writeArrayData(List<? extends BValue> elems) throws BytecodeException {
-    return writeChain(elems);
-  }
-
-  private Hash writeBoolData(boolean value) throws BytecodeException {
-    return writeBoolean(value);
-  }
-
-  private Hash writeIntData(BigInteger value) throws BytecodeException {
-    return writeBigInteger(value);
-  }
-
-  private Hash writeNativeFuncData(BBlob jar, BString classBinaryName, BBool isPure)
-      throws BytecodeException {
-    return writeChain(jar.hash(), classBinaryName.hash(), isPure.hash());
-  }
-
-  private Hash writeStringData(String string) throws BytecodeException {
-    return writeString(string);
-  }
-
-  private Hash writeTupleData(List<? extends BValue> items) throws BytecodeException {
-    return writeChain(items);
   }
 
   // hashedDb calls with exception chaining
