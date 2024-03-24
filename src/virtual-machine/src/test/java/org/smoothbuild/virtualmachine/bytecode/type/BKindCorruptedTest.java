@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.type.BKindDb.DATA_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.type.BKindDb.FUNC_PARAMS_PATH;
@@ -11,7 +10,7 @@ import static org.smoothbuild.virtualmachine.bytecode.type.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.KindId.IF_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.LAMBDA;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.MAP_FUNC;
@@ -22,7 +21,6 @@ import static org.smoothbuild.virtualmachine.bytecode.type.KindId.REFERENCE;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.STRING;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.TUPLE;
-import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncKindWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc;
 
 import okio.ByteString;
@@ -166,34 +164,6 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       @Override
       protected KindId kindId() {
         return LAMBDA;
-      }
-    }
-
-    @Nested
-    class _if_func extends _abstract_func_kind_test_suite {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save if func kind in HashedDb.
-         */
-        var specHash = hash(
-            hash(IF_FUNC.byteMarker()),
-            hash(bFuncType(list(bBoolType(), bIntType(), bIntType()), bIntType())));
-        assertThat(specHash).isEqualTo(bIfKind(bIntType()).hash());
-      }
-
-      @Test
-      public void illegal_func_type_causes_error() throws Exception {
-        var illegalIfType = bFuncType(list(bBoolType(), bIntType(), bIntType()), bBlobType());
-        var kindHash = hash(hash(IF_FUNC.byteMarker()), hash(illegalIfType));
-        assertCall(() -> kindDb().get(kindHash))
-            .throwsException(illegalIfFuncTypeExc(kindHash, illegalIfType));
-      }
-
-      @Override
-      protected KindId kindId() {
-        return IF_FUNC;
       }
     }
 
@@ -553,14 +523,14 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _expr {
+  class _oper {
     @Nested
     class _call {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save call type in HashedDb.
+         * to save CALL kind in HashedDb.
          */
         var hash = hash(hash(CALL.byteMarker()), hash(bIntType()));
         assertThat(hash).isEqualTo(bCallKind(bIntType()).hash());
@@ -580,7 +550,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save Combine type in HashedDb.
+         * to save COMBINE kind in HashedDb.
          */
         var hash = hash(hash(COMBINE.byteMarker()), hash(bTupleType(bIntType(), bStringType())));
         assertThat(hash).isEqualTo(bCombineKind(bIntType(), bStringType()).hash());
@@ -603,12 +573,32 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     }
 
     @Nested
+    class _if_func {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save IF kind in HashedDb.
+         */
+        var hash = hash(hash(IF.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bIfKind(bIntType()).hash());
+      }
+
+      @Nested
+      class _oper_kind_tests extends AbstractOperKindTestSuite {
+        protected _oper_kind_tests() {
+          super(IF);
+        }
+      }
+    }
+
+    @Nested
     class _order {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save Order type in HashedDb.
+         * to save ORDER kind in HashedDb.
          */
         var hash = hash(hash(ORDER.byteMarker()), hash(bArrayType(bIntType())));
         assertThat(hash).isEqualTo(bOrderKind(bIntType()).hash());
@@ -636,7 +626,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save Pick type in HashedDb.
+         * to save PICK kind in HashedDb.
          */
         var hash = hash(hash(PICK.byteMarker()), hash(bIntType()));
         assertThat(hash).isEqualTo(bPickKind(bIntType()).hash());
@@ -651,12 +641,12 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     }
 
     @Nested
-    class _var {
+    class _reference {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save variable in HashedDb.
+         * to save REFERENCE kind in HashedDb.
          */
         var hash = hash(hash(REFERENCE.byteMarker()), hash(bIntType()));
         assertThat(hash).isEqualTo(bReferenceKind(bIntType()).hash());
@@ -676,7 +666,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save Select type in HashedDb.
+         * to save SELECT kind in HashedDb.
          */
         var hash = hash(hash(SELECT.byteMarker()), hash(bIntType()));
         assertThat(hash).isEqualTo(bSelectKind(bIntType()).hash());
@@ -724,7 +714,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_evaluation_type_being_oper_type() throws Exception {
+      public void with_evaluation_type_being_oper_kind() throws Exception {
         var hash = hash(hash(kindId.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(

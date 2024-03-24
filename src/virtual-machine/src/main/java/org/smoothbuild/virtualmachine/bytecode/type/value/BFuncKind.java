@@ -5,7 +5,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 
 public abstract sealed class BFuncKind extends BKind
-    permits BLambdaKind, BIfKind, BMapKind, BNativeFuncKind {
+    permits BLambdaKind, BMapKind, BNativeFuncKind {
   private final BFuncType funcType;
 
   public BFuncKind(Hash hash, String name, BFuncType funcType, Class<? extends BExpr> javaType) {

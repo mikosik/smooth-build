@@ -16,6 +16,7 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
@@ -24,7 +25,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BFunc;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
@@ -80,7 +80,7 @@ public class BKindTest extends TestingVirtualMachine {
         args(f -> f.lambda(list(f.string()), f.string()), "LAMBDA"),
         args(f -> f.funcT(list(), f.string()), "()->String"),
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
-        args(f -> f.ifFunc(f.int_()), "IF"),
+        args(f -> f.if_(f.int_()), "IF"),
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP"),
         args(f -> f.nativeFunc(list(), f.string()), "NATIVE_FUNC"),
         args(f -> f.nativeFunc(list(f.string()), f.string()), "NATIVE_FUNC"),

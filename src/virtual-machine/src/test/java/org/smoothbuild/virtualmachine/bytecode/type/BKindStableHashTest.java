@@ -29,7 +29,7 @@ public class BKindStableHashTest extends TestingVirtualMachine {
             t.bLambdaKind(), "6bc8397b7832905afad31d92d07c1d21f1302196b142d0b004549aec72962c07"),
         arguments(
             t.bFuncType(), "2efc8dc079b8693ac751fc181888b64bb53404b0c1aba4c54f9dafbe2e1ec254"),
-        arguments(t.bIfKind(), "f784ebe7e358cf4dee4455464bf48ed13e2b93d1d4d9d1068aae8b6a27ff95c4"),
+        arguments(t.bIfKind(), "40899d393a16038b9b21d71dc422370e69c623d07e98b88b2c37b232506188a1"),
         arguments(t.bIntType(), "1cc3adea40ebfd94433ac004777d68150cce9db4c771bc7de1b297a7b795bbba"),
         arguments(t.bMapKind(), "21f8080bd94cf983b9082f0600b7eee7bbd93079ac0e736a966bfafb06089475"),
         arguments(

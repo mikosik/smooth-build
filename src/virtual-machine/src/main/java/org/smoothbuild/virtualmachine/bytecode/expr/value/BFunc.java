@@ -7,7 +7,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
 
-public abstract sealed class BFunc extends BValue permits BLambda, BIf, BMap, BNativeFunc {
+public abstract sealed class BFunc extends BValue permits BLambda, BMap, BNativeFunc {
   public BFunc(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BFuncKind);

@@ -13,7 +13,7 @@ import static org.smoothbuild.virtualmachine.bytecode.type.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.FUNC;
-import static org.smoothbuild.virtualmachine.bytecode.type.KindId.IF_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.LAMBDA;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.MAP_FUNC;
@@ -25,7 +25,6 @@ import static org.smoothbuild.virtualmachine.bytecode.type.KindId.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.STRING;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.TUPLE;
 import static org.smoothbuild.virtualmachine.bytecode.type.KindId.fromOrdinal;
-import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncKindWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc;
 
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeKindWrongChainSize
 import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeKindWrongNodeKindException;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BOperKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.type.oper.BPickKind;
@@ -56,7 +56,6 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BLambdaKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BMapKind;
@@ -139,9 +138,8 @@ public class BKindDb {
     return newFuncT(params, result);
   }
 
-  public BIfKind ifFunc(BType type) throws BKindDbException {
-    var funcT = funcT(list(bool(), type, type), type);
-    return funcC(IF_FUNC, funcT, BIfKind::new);
+  public BIfKind if_(BType type) throws BKindDbException {
+    return newOper(IF, type, BIfKind::new);
   }
 
   public BIntType int_() throws BKindDbException {
@@ -216,7 +214,7 @@ public class BKindDb {
       case STRING -> newBaseType(hash, id, rootChain, BStringType::new);
       case LAMBDA -> readFuncKind(hash, rootChain, id, BLambdaKind::new);
       case FUNC -> readFuncType(hash, rootChain);
-      case IF_FUNC -> readIfKind(hash, rootChain, id);
+      case IF -> readOperKind(hash, rootChain, id, BType.class, BIfKind::new);
       case MAP_FUNC -> readMapKind(hash, rootChain, id);
       case NATIVE_FUNC -> readFuncKind(hash, rootChain, id, BNativeFuncKind::new);
       case CALL -> readOperKind(hash, rootChain, id, BType.class, BCallKind::new);
@@ -286,22 +284,6 @@ public class BKindDb {
       throw new DecodeKindWrongNodeKindException(
           rootHash, FUNC, FUNC_PARAMS_PATH, BTupleType.class, params.getClass());
     }
-  }
-
-  private BKind readIfKind(Hash hash, List<Hash> rootChain, KindId id) throws BKindDbException {
-    return readFuncKind(hash, rootChain, id, BIfKind::new, (BFuncType funcType) -> {
-      var params = funcType.params();
-      if (params.size() != 3) {
-        throw illegalIfFuncTypeExc(hash, funcType);
-      }
-      var result = funcType.result();
-      boolean first = params.get(0).equals(bool());
-      boolean second = params.get(1).equals(result);
-      boolean third = params.get(2).equals(result);
-      if (!(first && second && third)) {
-        throw illegalIfFuncTypeExc(hash, funcType);
-      }
-    });
   }
 
   private BKind readMapKind(Hash hash, List<Hash> rootChain, KindId id) throws BKindDbException {

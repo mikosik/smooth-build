@@ -237,9 +237,9 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   class _if_func {
     @Test
     public void if_func() throws Exception {
-      assertThat(bIf(bIntType()).hash())
+      assertThat(bIf(bBool(true), bInt(1), bInt(2)).hash())
           .isEqualTo(
-              Hash.decode("6e98e4543dc7381224cfc05eb232f1f6d63d71cc8445d564b1d35e3aaa522618"));
+              Hash.decode("ae2abb3bad2420d56b3777571d60d2b9086d8153d22d332e7da71918e7f830de"));
     }
   }
 

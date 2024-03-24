@@ -7,6 +7,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
@@ -35,6 +36,7 @@ public class BReferenceInliner {
     return switch (expr) {
       case BCall call -> rewriteCall(call, resolver);
       case BCombine combine -> rewriteCombine(combine, resolver);
+      case BIf if_ -> rewriteIf(if_, resolver);
       case BOrder order -> rewriteOrder(order, resolver);
       case BPick pick -> rewritePick(pick, resolver);
       case BReference reference -> rewriteVar(reference, resolver);
@@ -64,6 +66,23 @@ public class BReferenceInliner {
       return combine;
     } else {
       return bytecodeFactory.combine(rewrittenItems);
+    }
+  }
+
+  private BExpr rewriteIf(BIf if_, Resolver resolver) throws BytecodeException {
+    var subExprs = if_.subExprs();
+    var condition = subExprs.condition();
+    var then_ = subExprs.then_();
+    var else_ = subExprs.else_();
+    var rewrittenCondition = rewriteExpr(condition, resolver);
+    var rewrittenThen = rewriteExpr(then_, resolver);
+    var rewrittenElse = rewriteExpr(else_, resolver);
+    if (condition.equals(rewrittenCondition)
+        && then_.equals(rewrittenThen)
+        && else_.equals(rewrittenElse)) {
+      return if_;
+    } else {
+      return bytecodeFactory.if_(rewrittenCondition, rewrittenThen, rewrittenElse);
     }
   }
 

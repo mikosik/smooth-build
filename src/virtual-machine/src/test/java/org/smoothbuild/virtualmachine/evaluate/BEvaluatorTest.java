@@ -254,20 +254,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void if_function_with_true_condition() throws Exception {
-          var ifFunc = bIf(bIntType());
-          var call = bCall(ifFunc, bBool(true), bInt(7), bInt(0));
-          assertThat(evaluate(call)).isEqualTo(bInt(7));
-        }
-
-        @Test
-        public void if_func_with_false_condition() throws Exception {
-          var ifFunc = bIf(bIntType());
-          var call = bCall(ifFunc, bBool(false), bInt(7), bInt(0));
-          assertThat(evaluate(call)).isEqualTo(bInt(0));
-        }
-
-        @Test
         public void map_func() throws Exception {
           var s = bIntType();
           var r = bTupleType(s);
@@ -324,6 +310,18 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void combine() throws Exception {
         var combine = bCombine(bInt(7));
         assertThat(evaluate(combine)).isEqualTo(bTuple(bInt(7)));
+      }
+
+      @Test
+      public void if_with_true_condition() throws Exception {
+        var if_ = bIf(bBool(true), bInt(1), bInt(2));
+        assertThat(evaluate(if_)).isEqualTo(bInt(1));
+      }
+
+      @Test
+      public void if_with_false_condition() throws Exception {
+        var if_ = bIf(bBool(false), bInt(1), bInt(2));
+        assertThat(evaluate(if_)).isEqualTo(bInt(2));
       }
 
       @Test
@@ -516,7 +514,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             t.bBlob(17),
             t.bBool(true),
             t.bIdFunc(),
-            t.bIf(t.bIntType()),
             t.bMap(t.bIntType(), t.bBlobType()),
             t.bNativeFunc(),
             t.bInt(17),
@@ -532,6 +529,18 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             call,
             invokeTask(call, func, bTrace(call, func)),
             computationResult(bString("abc"), EXECUTION));
+      }
+
+      @Test
+      public void report_if_as_if_task() throws Exception {
+        var condition = bBool(true);
+        var then_ = bInt(1);
+        var else_ = bInt(2);
+        var if_ = bIf(condition, then_, else_);
+        var taskReporter = mock(TaskReporter.class);
+        evaluate(bEvaluator(taskReporter), if_);
+        verify(taskReporter).report(constTask(condition), computationResult(condition, NOOP));
+        verify(taskReporter).report(constTask(then_), computationResult(then_, NOOP));
       }
 
       @Test

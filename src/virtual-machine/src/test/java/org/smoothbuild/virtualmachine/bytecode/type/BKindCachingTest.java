@@ -40,7 +40,7 @@ public class BKindCachingTest extends TestingVirtualMachine {
         kindDb -> kindDb.combine(kindDb.tuple()),
         kindDb -> kindDb.combine(kindDb.tuple(kindDb.int_())),
         kindDb -> kindDb.lambda(kindDb.funcT(list(), kindDb.int_())),
-        kindDb -> kindDb.ifFunc(kindDb.int_()),
+        kindDb -> kindDb.if_(kindDb.int_()),
         kindDb -> kindDb.mapFunc(kindDb.int_(), kindDb.string()),
         kindDb -> kindDb.order(kindDb.array(kindDb.int_())),
         kindDb -> kindDb.pick(kindDb.int_()),
