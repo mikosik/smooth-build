@@ -74,7 +74,7 @@ public class NativeTest extends EvaluatorTestCase {
             StringIdentity.class.getCanonicalName());
         createUserModule(userModule, StringIdentity.class);
         evaluate("result");
-        assertThat(artifact()).isEqualTo(stringB("abc"));
+        assertThat(artifact()).isEqualTo(bString("abc"));
       }
 
       @Test
@@ -291,7 +291,7 @@ public class NativeTest extends EvaluatorTestCase {
           ReturnIdFunc.class.getCanonicalName());
       createUserModule(userModule, ReturnIdFunc.class);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(intB(77));
+      assertThat(artifact()).isEqualTo(bInt(77));
     }
 
     @Test
@@ -323,7 +323,7 @@ public class NativeTest extends EvaluatorTestCase {
           ReturnAbc.class.getCanonicalName());
       createUserModule(userModule, ReturnAbc.class);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(stringB("abc"));
+      assertThat(artifact()).isEqualTo(bString("abc"));
     }
 
     @Test

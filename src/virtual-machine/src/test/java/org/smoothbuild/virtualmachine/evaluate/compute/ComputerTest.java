@@ -32,21 +32,21 @@ public class ComputerTest extends TestingVirtualMachine {
   class _combine_task {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
-      var value = intB(17);
-      var task = new CombineTask(combineB(intB()), traceB());
-      var input = tupleB(value);
-      var memory = tupleB(intB(1));
-      var disk = tupleB(intB(2));
+      var value = bInt(17);
+      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var input = bTuple(value);
+      var memory = bTuple(bInt(1));
+      var disk = bTuple(bInt(2));
 
       assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new CombineTask(combineB(intB()), traceB());
-      var input = tupleB(value);
-      var disk = tupleB(intB(2));
+      var value = bInt(17);
+      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var input = bTuple(value);
+      var disk = bTuple(bInt(2));
 
       var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
@@ -54,21 +54,21 @@ public class ComputerTest extends TestingVirtualMachine {
 
     @Test
     public void when_not_cached() throws Exception {
-      var value = intB(17);
-      var task = new CombineTask(combineB(intB()), traceB());
-      var input = tupleB(value);
+      var value = bInt(17);
+      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var input = bTuple(value);
 
-      var expected = computationResult(output(tupleB(value)), EXECUTION);
+      var expected = computationResult(output(bTuple(value)), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new CombineTask(combineB(intB()), traceB());
-      var input = tupleB(value);
+      var value = bInt(17);
+      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var input = bTuple(value);
 
-      assertCachesState(task, input, null, tupleB(value));
+      assertCachesState(task, input, null, bTuple(value));
     }
   }
 
@@ -76,39 +76,39 @@ public class ComputerTest extends TestingVirtualMachine {
   class _const_task {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
-      var value = intB(17);
-      var task = new ConstTask(value, traceB());
-      var input = tupleB();
-      var memory = intB(1);
-      var disk = intB(2);
+      var value = bInt(17);
+      var task = new ConstTask(value, bTrace());
+      var input = bTuple();
+      var memory = bInt(1);
+      var disk = bInt(2);
 
       assertComputationResult(task, input, memory, disk, computationResult(output(value), NOOP));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new ConstTask(value, traceB());
-      var input = tupleB();
-      var disk = intB(2);
+      var value = bInt(17);
+      var task = new ConstTask(value, bTrace());
+      var input = bTuple();
+      var disk = bInt(2);
 
       assertComputationResult(task, input, null, disk, computationResult(output(value), NOOP));
     }
 
     @Test
     public void when_not_cached() throws Exception {
-      var value = intB(17);
-      var task = new ConstTask(value, traceB());
-      var input = tupleB();
+      var value = bInt(17);
+      var task = new ConstTask(value, bTrace());
+      var input = bTuple();
 
       assertComputationResult(task, input, null, null, computationResult(output(value), NOOP));
     }
 
     @Test
     public void executed_computation_is_not_cached() throws Exception {
-      var value = intB(17);
-      var task = new ConstTask(value, traceB());
-      var input = tupleB();
+      var value = bInt(17);
+      var task = new ConstTask(value, bTrace());
+      var input = bTuple();
 
       assertCachesState(task, input, null, null);
     }
@@ -118,46 +118,46 @@ public class ComputerTest extends TestingVirtualMachine {
   class _invoke_task_with_pure_func {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(true);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
-      var memory = stringB("def");
-      var disk = stringB("ghi");
+      var nativeFuncB = bReturnAbcNativeFunc(true);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
+      var memory = bString("def");
+      var disk = bString("ghi");
 
       assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(true);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
-      var disk = stringB("ghi");
+      var nativeFuncB = bReturnAbcNativeFunc(true);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
+      var disk = bString("ghi");
 
       assertComputationResult(task, input, null, disk, computationResult(output(disk), DISK));
     }
 
     @Test
     public void when_not_cached() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(true);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
+      var nativeFuncB = bReturnAbcNativeFunc(true);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
 
-      var expected = computationResult(output(stringB("abc")), EXECUTION);
+      var expected = computationResult(output(bString("abc")), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(true);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
+      var nativeFuncB = bReturnAbcNativeFunc(true);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
 
-      assertCachesState(task, input, null, stringB("abc"));
+      assertCachesState(task, input, null, bString("abc"));
     }
   }
 
@@ -165,47 +165,47 @@ public class ComputerTest extends TestingVirtualMachine {
   class _invoke_task_with_impure_func {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(false);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
-      var memory = stringB("def");
-      var disk = stringB("ghi");
+      var nativeFuncB = bReturnAbcNativeFunc(false);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
+      var memory = bString("def");
+      var disk = bString("ghi");
 
       assertComputationResult(task, input, memory, disk, computationResult(output(memory), MEMORY));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(false);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
-      var disk = stringB("ghi");
+      var nativeFuncB = bReturnAbcNativeFunc(false);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
+      var disk = bString("ghi");
 
-      var computationResult = computationResult(output(stringB("abc")), EXECUTION);
+      var computationResult = computationResult(output(bString("abc")), EXECUTION);
       assertComputationResult(task, input, null, disk, computationResult);
     }
 
     @Test
     public void when_not_cached() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(false);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
+      var nativeFuncB = bReturnAbcNativeFunc(false);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
 
-      var expected = computationResult(output(stringB("abc")), EXECUTION);
+      var expected = computationResult(output(bString("abc")), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = returnAbcNativeFuncB(false);
-      var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, traceB());
-      var input = tupleB();
+      var nativeFuncB = bReturnAbcNativeFunc(false);
+      var callB = bCall(nativeFuncB);
+      var task = new InvokeTask(callB, nativeFuncB, bTrace());
+      var input = bTuple();
 
-      assertCachesState(task, input, computationResult(stringB("abc"), EXECUTION), null);
+      assertCachesState(task, input, computationResult(bString("abc"), EXECUTION), null);
     }
   }
 
@@ -213,21 +213,21 @@ public class ComputerTest extends TestingVirtualMachine {
   class _order_task {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
-      var value = intB(17);
-      var task = new OrderTask(orderB(intTB()), traceB());
-      var input = tupleB(value);
-      var memory = arrayB(intB(1));
-      var disk = arrayB(intB(2));
+      var value = bInt(17);
+      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var input = bTuple(value);
+      var memory = bArray(bInt(1));
+      var disk = bArray(bInt(2));
 
       assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new OrderTask(orderB(intTB()), traceB());
-      var input = tupleB(value);
-      var disk = arrayB(intB(2));
+      var value = bInt(17);
+      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var input = bTuple(value);
+      var disk = bArray(bInt(2));
 
       var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
@@ -235,21 +235,21 @@ public class ComputerTest extends TestingVirtualMachine {
 
     @Test
     public void when_not_cached() throws Exception {
-      var value = intB(17);
-      var task = new OrderTask(orderB(intTB()), traceB());
-      var input = tupleB(value);
+      var value = bInt(17);
+      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var input = bTuple(value);
 
-      var expected = computationResult(output(arrayB(value)), EXECUTION);
+      var expected = computationResult(output(bArray(value)), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new OrderTask(orderB(intTB()), traceB());
-      var input = tupleB(value);
+      var value = bInt(17);
+      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var input = bTuple(value);
 
-      assertCachesState(task, input, null, arrayB(value));
+      assertCachesState(task, input, null, bArray(value));
     }
   }
 
@@ -257,21 +257,21 @@ public class ComputerTest extends TestingVirtualMachine {
   class _pick_task {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
-      var value = intB(17);
-      var task = new PickTask(pickB(), traceB());
-      var input = tupleB(arrayB(value), intB(0));
-      var memory = intB(1);
-      var disk = intB(2);
+      var value = bInt(17);
+      var task = new PickTask(bPick(), bTrace());
+      var input = bTuple(bArray(value), bInt(0));
+      var memory = bInt(1);
+      var disk = bInt(2);
 
       assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new PickTask(pickB(), traceB());
-      var input = tupleB(arrayB(value), intB(0));
-      var disk = intB(2);
+      var value = bInt(17);
+      var task = new PickTask(bPick(), bTrace());
+      var input = bTuple(bArray(value), bInt(0));
+      var disk = bInt(2);
 
       var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
@@ -279,9 +279,9 @@ public class ComputerTest extends TestingVirtualMachine {
 
     @Test
     public void when_not_cached() throws Exception {
-      var value = intB(17);
-      var task = new PickTask(pickB(), traceB());
-      var input = tupleB(arrayB(value), intB(0));
+      var value = bInt(17);
+      var task = new PickTask(bPick(), bTrace());
+      var input = bTuple(bArray(value), bInt(0));
 
       var expected = computationResult(output(value), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
@@ -289,9 +289,9 @@ public class ComputerTest extends TestingVirtualMachine {
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new PickTask(pickB(), traceB());
-      var input = tupleB(arrayB(value), intB(0));
+      var value = bInt(17);
+      var task = new PickTask(bPick(), bTrace());
+      var input = bTuple(bArray(value), bInt(0));
 
       assertCachesState(task, input, null, value);
     }
@@ -301,21 +301,21 @@ public class ComputerTest extends TestingVirtualMachine {
   class _select_task {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
-      var value = intB(17);
-      var task = new SelectTask(selectB(), traceB());
-      var input = tupleB(tupleB(value), intB(0));
-      var memory = intB(1);
-      var disk = intB(2);
+      var value = bInt(17);
+      var task = new SelectTask(bSelect(), bTrace());
+      var input = bTuple(bTuple(value), bInt(0));
+      var memory = bInt(1);
+      var disk = bInt(2);
 
       assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new SelectTask(selectB(), traceB());
-      var input = tupleB(tupleB(value), intB(0));
-      var disk = intB(2);
+      var value = bInt(17);
+      var task = new SelectTask(bSelect(), bTrace());
+      var input = bTuple(bTuple(value), bInt(0));
+      var disk = bInt(2);
 
       var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
@@ -323,9 +323,9 @@ public class ComputerTest extends TestingVirtualMachine {
 
     @Test
     public void when_not_cached() throws Exception {
-      var value = intB(17);
-      var task = new SelectTask(selectB(), traceB());
-      var input = tupleB(tupleB(value), intB(0));
+      var value = bInt(17);
+      var task = new SelectTask(bSelect(), bTrace());
+      var input = bTuple(bTuple(value), bInt(0));
 
       var expected = computationResult(output(value), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
@@ -333,9 +333,9 @@ public class ComputerTest extends TestingVirtualMachine {
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
-      var value = intB(17);
-      var task = new SelectTask(selectB(), traceB());
-      var input = tupleB(tupleB(value), intB(0));
+      var value = bInt(17);
+      var task = new SelectTask(bSelect(), bTrace());
+      var input = bTuple(bTuple(value), bInt(0));
 
       assertCachesState(task, input, null, value);
     }

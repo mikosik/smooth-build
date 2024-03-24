@@ -16,38 +16,48 @@ public class TaskHashesCollisionTest extends TestingVirtualMachine {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 
-    addHash(list, set, new CombineTask(combineB(), traceB()));
-    addHash(list, set, new ConstTask(intB(7), traceB()));
-    addHash(list, set, new ConstTask(intB(9), traceB()));
+    addHash(list, set, new CombineTask(bCombine(), bTrace()));
+    addHash(list, set, new ConstTask(bInt(7), bTrace()));
+    addHash(list, set, new ConstTask(bInt(9), bTrace()));
     addHash(
         list,
         set,
         new InvokeTask(
-            callB(), nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)), traceB()));
+            bCall(),
+            bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("1"), bBool(true)),
+            bTrace()));
     addHash(
         list,
         set,
         new InvokeTask(
-            callB(), nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)), traceB()));
+            bCall(),
+            bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("1"), bBool(false)),
+            bTrace()));
     addHash(
         list,
         set,
         new InvokeTask(
-            callB(), nativeFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)), traceB()));
+            bCall(),
+            bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("2"), bBool(true)),
+            bTrace()));
     addHash(
         list,
         set,
         new InvokeTask(
-            callB(), nativeFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)), traceB()));
+            bCall(),
+            bNativeFunc(bFuncType(bIntType()), bBlob(2), bString("1"), bBool(true)),
+            bTrace()));
     addHash(
         list,
         set,
         new InvokeTask(
-            callB(), nativeFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)), traceB()));
-    addHash(list, set, new OrderTask(orderB(intTB()), traceB()));
-    addHash(list, set, new OrderTask(orderB(blobTB()), traceB()));
-    addHash(list, set, new PickTask(pickB(), traceB()));
-    addHash(list, set, new SelectTask(selectB(), traceB()));
+            bCall(),
+            bNativeFunc(bFuncType(bBoolType()), bBlob(1), bString("1"), bBool(true)),
+            bTrace()));
+    addHash(list, set, new OrderTask(bOrder(bIntType()), bTrace()));
+    addHash(list, set, new OrderTask(bOrder(bBlobType()), bTrace()));
+    addHash(list, set, new PickTask(bPick(), bTrace()));
+    addHash(list, set, new SelectTask(bSelect(), bTrace()));
   }
 
   private void addHash(List<Hash> list, Set<Hash> set, Task task) {

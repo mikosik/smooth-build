@@ -14,7 +14,7 @@ public class IdTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("abc"));
+    assertThat(artifact()).isEqualTo(bString("abc"));
   }
 
   @Test
@@ -24,6 +24,6 @@ public class IdTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(blobB(ByteString.of((byte) 1, (byte) 2, (byte) 3)));
+    assertThat(artifact()).isEqualTo(bBlob(ByteString.of((byte) 1, (byte) 2, (byte) 3)));
   }
 }

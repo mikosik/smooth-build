@@ -11,7 +11,7 @@ public class DecodeExprNodeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() throws Exception {
     var exception =
-        new DecodeExprNodeException(Hash.of(13), intTB(), "node-path", "Detailed message.");
+        new DecodeExprNodeException(Hash.of(13), bIntType(), "node-path", "Detailed message.");
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` object at "
             + "43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "

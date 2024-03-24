@@ -17,6 +17,6 @@ public class JarFileTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(arrayB(fileB("dir/file1.txt", "A"), fileB("file2.txt", "B")));
+    assertThat(artifact()).isEqualTo(bArray(bFile("dir/file1.txt", "A"), bFile("file2.txt", "B")));
   }
 }

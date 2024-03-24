@@ -16,7 +16,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -26,7 +26,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(false));
+      assertThat(artifact()).isEqualTo(bBool(false));
     }
   }
 
@@ -39,7 +39,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(false));
+      assertThat(artifact()).isEqualTo(bBool(false));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(false));
+      assertThat(artifact()).isEqualTo(bBool(false));
     }
   }
 
@@ -82,7 +82,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(false));
+      assertThat(artifact()).isEqualTo(bBool(false));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(false));
+      assertThat(artifact()).isEqualTo(bBool(false));
     }
   }
 
@@ -130,7 +130,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(false));
+      assertThat(artifact()).isEqualTo(bBool(false));
     }
   }
 
@@ -159,7 +159,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class EqualTest extends StandardLibraryTestCase {
           """;
       createUserModule(userModule);
       evaluate("result");
-      assertThat(artifact()).isEqualTo(boolB(true));
+      assertThat(artifact()).isEqualTo(bBool(true));
     }
   }
 }

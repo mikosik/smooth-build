@@ -9,7 +9,7 @@ public class ZipFuncTest extends TestingVirtualMachine {
   @Test
   public void zip_produces_bit_level_equal_file_independent_of_its_creation_time()
       throws Exception {
-    var fileArray = tupleB(arrayB(fileB("filename", "context")));
+    var fileArray = bTuple(bArray(bFile("filename", "context")));
     var zip1 = ZipFunc.func(nativeApi(), fileArray);
     sleepMillis(2000);
     var zip2 = ZipFunc.func(nativeApi(), fileArray);

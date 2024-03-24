@@ -79,21 +79,21 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void learning_test() throws Exception {
         // This test makes sure that it is possible to detect Task creation using a mock.
-        var order = orderB(intB(7));
+        var order = bOrder(bInt(7));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), order)).isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(bEvaluator(spyingExecutor), order)).isEqualTo(bArray(bInt(7)));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
       }
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_not_used() throws Exception {
-        var lambda = lambdaB(list(arrayTB(boolTB())), intB(7));
-        var call = callB(lambda, orderB(boolTB()));
+        var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
+        var call = bCall(lambda, bOrder(bBoolType()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(intB(7));
+        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bInt(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
       }
@@ -101,13 +101,13 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void no_task_is_executed_for_func_expr_in_call_to_map_when_array_expr_is_empty()
           throws Exception {
-        var map = mapFuncB(intTB(), intTB());
-        var mappingFunc = pickB(orderB(idFuncB()), intB(0));
-        var emptyIntArray = arrayB(intTB());
-        var call = callB(map, emptyIntArray, mappingFunc);
+        var map = bMap(bIntType(), bIntType());
+        var mappingFunc = bPick(bOrder(bIdFunc()), bInt(0));
+        var emptyIntArray = bArray(bIntType());
+        var call = bCall(map, emptyIntArray, mappingFunc);
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(arrayB(intTB()));
+        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bArray(bIntType()));
 
         verify(spyingExecutor, never()).enqueue(isA(PickTask.class), any(), any());
       }
@@ -115,27 +115,28 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used()
           throws Exception {
-        var innerLambda = lambdaB(list(arrayTB(boolTB())), intB(7));
-        var outerLambda =
-            lambdaB(list(arrayTB(boolTB())), callB(innerLambda, referenceB(arrayTB(boolTB()), 0)));
-        var call = callB(outerLambda, orderB(boolTB()));
+        var innerLambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
+        var outerLambda = bLambda(
+            list(bArrayType(bBoolType())),
+            bCall(innerLambda, bReference(bArrayType(bBoolType()), 0)));
+        var call = bCall(outerLambda, bOrder(bBoolType()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(intB(7));
+        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bInt(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
       }
 
       @Test
       public void task_for_func_arg_that_is_used_twice_is_executed_only_once() throws Exception {
-        var arrayType = arrayTB(intTB());
+        var arrayType = bArrayType(bIntType());
         var lambda =
-            lambdaB(list(arrayType), combineB(referenceB(arrayType, 0), referenceB(arrayType, 0)));
-        var call = callB(lambda, orderB(intB(7)));
+            bLambda(list(arrayType), bCombine(bReference(arrayType, 0), bReference(arrayType, 0)));
+        var call = bCall(lambda, bOrder(bInt(7)));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
         assertThat(evaluate(bEvaluator(spyingExecutor), call))
-            .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
+            .isEqualTo(bTuple(bArray(bInt(7)), bArray(bInt(7))));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
       }
@@ -146,11 +147,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void learning_test() throws Exception {
         // Learning test verifies that job creation is counted also inside func body.
-        var func = lambdaB(orderB(intB(7)));
-        var call = callB(func);
+        var func = bLambda(bOrder(bInt(7)));
+        var call = bCall(func);
 
         var countingScheduler = countingSchedulerB();
-        assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(bArray(bInt(7)));
 
         assertThat(countingScheduler.counters().get(BInt.class).intValue()).isEqualTo(1);
       }
@@ -158,11 +159,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies()
           throws Exception {
-        var lambda = lambdaB(list(arrayTB(boolTB())), intB(7));
-        var call = callB(lambda, orderB(boolB()));
+        var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
+        var call = bCall(lambda, bOrder(bBool()));
 
         var countingScheduler = countingSchedulerB();
-        assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(intB(7));
+        assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(bInt(7));
 
         assertThat(countingScheduler.counters().get(BBool.class)).isNull();
       }
@@ -175,32 +176,32 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     class _values {
       @Test
       public void array() throws Exception {
-        assertThat(evaluate(arrayB(intB(7)))).isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(bArray(bInt(7)))).isEqualTo(bArray(bInt(7)));
       }
 
       @Test
       public void blob() throws Exception {
-        assertThat(evaluate(blobB(7))).isEqualTo(blobB(7));
+        assertThat(evaluate(bBlob(7))).isEqualTo(bBlob(7));
       }
 
       @Test
       public void bool() throws Exception {
-        assertThat(evaluate(boolB(true))).isEqualTo(boolB(true));
+        assertThat(evaluate(bBool(true))).isEqualTo(bBool(true));
       }
 
       @Test
       public void int_() throws Exception {
-        assertThat(evaluate(intB(8))).isEqualTo(intB(8));
+        assertThat(evaluate(bInt(8))).isEqualTo(bInt(8));
       }
 
       @Test
       public void string() throws Exception {
-        assertThat(evaluate(stringB("abc"))).isEqualTo(stringB("abc"));
+        assertThat(evaluate(bString("abc"))).isEqualTo(bString("abc"));
       }
 
       @Test
       public void tuple() throws Exception {
-        assertThat(evaluate(tupleB(intB(7)))).isEqualTo(tupleB(intB(7)));
+        assertThat(evaluate(bTuple(bInt(7)))).isEqualTo(bTuple(bInt(7)));
       }
     }
 
@@ -210,87 +211,88 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       class _call {
         @Test
         public void lambda() throws Exception {
-          var func = lambdaB(intB(7));
-          var call = callB(func);
-          assertThat(evaluate(call)).isEqualTo(intB(7));
+          var func = bLambda(bInt(7));
+          var call = bCall(func);
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
         public void lambda_passed_as_argument() throws Exception {
-          var paramFunc = lambdaB(intB(7));
+          var paramFunc = bLambda(bInt(7));
           var paramFuncType = paramFunc.evaluationType();
-          var outerLambda = lambdaB(list(paramFuncType), callB(referenceB(paramFuncType, 0)));
-          var call = callB(outerLambda, paramFunc);
-          assertThat(evaluate(call)).isEqualTo(intB(7));
+          var outerLambda = bLambda(list(paramFuncType), bCall(bReference(paramFuncType, 0)));
+          var call = bCall(outerLambda, paramFunc);
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
         public void lambda_returned_from_call() throws Exception {
-          var innerLambda = lambdaB(intB(7));
-          var outerLambda = lambdaB(innerLambda);
-          var call = callB(callB(outerLambda));
-          assertThat(evaluate(call)).isEqualTo(intB(7));
+          var innerLambda = bLambda(bInt(7));
+          var outerLambda = bLambda(innerLambda);
+          var call = bCall(bCall(outerLambda));
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
         public void lambda_returning_param_of_enclosing_lambda() throws Exception {
-          var innerLambda = lambdaB(referenceB(intTB(), 0));
-          var outerLambda = lambdaB(list(intTB()), innerLambda);
-          var callToOuter = callB(outerLambda, intB(17));
-          var callToInnerReturnedByOuter = callB(callToOuter);
-          assertThat(evaluate(callToInnerReturnedByOuter)).isEqualTo(intB(17));
+          var innerLambda = bLambda(bReference(bIntType(), 0));
+          var outerLambda = bLambda(list(bIntType()), innerLambda);
+          var callToOuter = bCall(outerLambda, bInt(17));
+          var callToInnerReturnedByOuter = bCall(callToOuter);
+          assertThat(evaluate(callToInnerReturnedByOuter)).isEqualTo(bInt(17));
         }
 
         @Test
         public void lambda_returning_value_from_environment_that_references_another_environment()
             throws Exception {
-          var innerLambda = lambdaB(referenceB(intTB(), 0));
-          var middleLambda = lambdaB(list(intTB()), innerLambda);
-          var outerLambda = lambdaB(list(intTB()), callB(middleLambda, referenceB(intTB(), 0)));
-          var middleReturnedByOuter = callB(outerLambda, intB(17));
-          assertThat(evaluate(callB(middleReturnedByOuter))).isEqualTo(intB(17));
+          var innerLambda = bLambda(bReference(bIntType(), 0));
+          var middleLambda = bLambda(list(bIntType()), innerLambda);
+          var outerLambda =
+              bLambda(list(bIntType()), bCall(middleLambda, bReference(bIntType(), 0)));
+          var middleReturnedByOuter = bCall(outerLambda, bInt(17));
+          assertThat(evaluate(bCall(middleReturnedByOuter))).isEqualTo(bInt(17));
         }
 
         @Test
         public void if_function_with_true_condition() throws Exception {
-          var ifFunc = ifFuncB(intTB());
-          var call = callB(ifFunc, boolB(true), intB(7), intB(0));
-          assertThat(evaluate(call)).isEqualTo(intB(7));
+          var ifFunc = bIf(bIntType());
+          var call = bCall(ifFunc, bBool(true), bInt(7), bInt(0));
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
         public void if_func_with_false_condition() throws Exception {
-          var ifFunc = ifFuncB(intTB());
-          var call = callB(ifFunc, boolB(false), intB(7), intB(0));
-          assertThat(evaluate(call)).isEqualTo(intB(0));
+          var ifFunc = bIf(bIntType());
+          var call = bCall(ifFunc, bBool(false), bInt(7), bInt(0));
+          assertThat(evaluate(call)).isEqualTo(bInt(0));
         }
 
         @Test
         public void map_func() throws Exception {
-          var s = intTB();
-          var r = tupleTB(s);
-          var lambda = lambdaB(funcTB(s, r), combineB(referenceB(s, 0)));
-          var mapFunc = mapFuncB(r, s);
-          var map = callB(mapFunc, arrayB(intB(1), intB(2)), lambda);
-          assertThat(evaluate(map)).isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
+          var s = bIntType();
+          var r = bTupleType(s);
+          var lambda = bLambda(bFuncType(s, r), bCombine(bReference(s, 0)));
+          var mapFunc = bMap(r, s);
+          var map = bCall(mapFunc, bArray(bInt(1), bInt(2)), lambda);
+          assertThat(evaluate(map)).isEqualTo(bArray(bTuple(bInt(1)), bTuple(bInt(2))));
         }
 
         @Test
         public void native_func() throws Exception {
           var nativeFunc =
-              nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-          var call = callB(nativeFunc, intB(33));
+              bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
+          var call = bCall(nativeFunc, bInt(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFunc)))
               .thenReturn(right(
                   BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(intB(33));
+          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(bInt(33));
         }
 
         @Test
         public void native_func_passed_as_arg() throws Exception {
           var nativeFunc =
-              nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+              bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFunc)))
               .thenReturn(right(
@@ -298,50 +300,50 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
           var nativeFuncType = nativeFunc.evaluationType();
           var outerLambda =
-              lambdaB(list(nativeFuncType), callB(referenceB(nativeFuncType, 0), intB(7)));
-          var call = callB(outerLambda, nativeFunc);
-          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(intB(7));
+              bLambda(list(nativeFuncType), bCall(bReference(nativeFuncType, 0), bInt(7)));
+          var call = bCall(outerLambda, nativeFunc);
+          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(bInt(7));
         }
 
         @Test
         public void native_func_returned_from_call() throws Exception {
           var nativeFunc =
-              nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+              bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFunc)))
               .thenReturn(right(
                   BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
 
-          var outerFunc = lambdaB(nativeFunc);
-          var call = callB(callB(outerFunc), intB(7));
-          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(intB(7));
+          var outerFunc = bLambda(nativeFunc);
+          var call = bCall(bCall(outerFunc), bInt(7));
+          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(bInt(7));
         }
       }
 
       @Test
       public void combine() throws Exception {
-        var combine = combineB(intB(7));
-        assertThat(evaluate(combine)).isEqualTo(tupleB(intB(7)));
+        var combine = bCombine(bInt(7));
+        assertThat(evaluate(combine)).isEqualTo(bTuple(bInt(7)));
       }
 
       @Test
       public void order() throws Exception {
-        var order = orderB(intB(7), intB(8));
-        assertThat(evaluate(order)).isEqualTo(arrayB(intB(7), intB(8)));
+        var order = bOrder(bInt(7), bInt(8));
+        assertThat(evaluate(order)).isEqualTo(bArray(bInt(7), bInt(8)));
       }
 
       @Nested
       class _pick {
         @Test
         public void pick() throws Exception {
-          var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
-          var pick = pickB(tuple, intB(2));
-          assertThat(evaluate(pick)).isEqualTo(intB(12));
+          var tuple = bArray(bInt(10), bInt(11), bInt(12), bInt(13));
+          var pick = bPick(tuple, bInt(2));
+          assertThat(evaluate(pick)).isEqualTo(bInt(12));
         }
 
         @Test
         public void pick_with_index_outside_of_bounds() throws Exception {
-          var pick = pickB(arrayB(intB(10), intB(11), intB(12), intB(13)), intB(4));
+          var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(bEvaluator(taskReporter), pick);
           verify(taskReporter)
@@ -355,7 +357,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
         @Test
         public void pick_with_index_negative() throws Exception {
-          var pick = pickB(arrayB(intB(10), intB(11), intB(12), intB(13)), intB(-1));
+          var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(bEvaluator(taskReporter), pick);
           verify(taskReporter)
@@ -372,34 +374,34 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       class _reference {
         @Test
         public void var_referencing_func_param() throws Exception {
-          var lambda = lambdaB(list(intTB()), referenceB(intTB(), 0));
-          var callB = callB(lambda, intB(7));
-          assertThat(evaluate(callB)).isEqualTo(intB(7));
+          var lambda = bLambda(list(bIntType()), bReference(bIntType(), 0));
+          var callB = bCall(lambda, bInt(7));
+          assertThat(evaluate(callB)).isEqualTo(bInt(7));
         }
 
         @Test
         public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
-          var innerLambda = lambdaB(list(), referenceB(intTB(), 0));
-          var outerLambda = lambdaB(list(intTB()), callB(innerLambda));
-          assertThat(evaluate(callB(outerLambda, intB(7)))).isEqualTo(intB(7));
+          var innerLambda = bLambda(list(), bReference(bIntType(), 0));
+          var outerLambda = bLambda(list(bIntType()), bCall(innerLambda));
+          assertThat(evaluate(bCall(outerLambda, bInt(7)))).isEqualTo(bInt(7));
         }
 
         @Test
         public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
-          var innerLambda = lambdaB(list(intTB()), referenceB(intTB(), 1));
-          var outerLambda = lambdaB(list(intTB()), innerLambda);
-          var callOuter = callB(outerLambda, intB(7));
-          var callInner = callB(callOuter, intB(8));
+          var innerLambda = bLambda(list(bIntType()), bReference(bIntType(), 1));
+          var outerLambda = bLambda(list(bIntType()), innerLambda);
+          var callOuter = bCall(outerLambda, bInt(7));
+          var callInner = bCall(callOuter, bInt(8));
 
-          assertThat(evaluate(callInner)).isEqualTo(intB(7));
+          assertThat(evaluate(callInner)).isEqualTo(bInt(7));
         }
 
         @Test
         public void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
-          var lambda = lambdaB(list(intTB()), referenceB(intTB(), 2));
-          var call = callB(lambda, intB(7));
+          var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
+          var call = bCall(lambda, bInt(7));
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(bEvaluator(taskReporter), call);
           verify(taskReporter)
@@ -410,8 +412,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         public void
             reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
                 throws Exception {
-          var lambda = lambdaB(list(blobTB()), referenceB(intTB(), 0));
-          var call = callB(lambda, blobB());
+          var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
+          var call = bCall(lambda, bBlob());
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(bEvaluator(taskReporter), call);
           verify(taskReporter).reportEvaluationException(argThat(e -> e.getMessage()
@@ -421,9 +423,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
       @Test
       public void select() throws Exception {
-        var tuple = tupleB(intB(7));
-        var select = selectB(tuple, intB(0));
-        assertThat(evaluate(select)).isEqualTo(intB(7));
+        var tuple = bTuple(bInt(7));
+        var select = bSelect(tuple, bInt(0));
+        assertThat(evaluate(select)).isEqualTo(bInt(7));
       }
     }
 
@@ -445,9 +447,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       private BCall throwExceptionCall() throws Exception {
-        var funcType = funcTB(stringTB());
-        var nativeFunc = nativeFuncB(funcType, ThrowException.class);
-        return callB(nativeFunc);
+        var funcType = bFuncType(bStringType());
+        var nativeFunc = bNativeFunc(funcType, ThrowException.class);
+        return bCall(nativeFunc);
       }
 
       public static class ThrowException {
@@ -459,7 +461,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void computer_that_throws_exception_is_detected() throws Exception {
         var taskReporter = mock(TaskReporter.class);
-        var expr = stringB("abc");
+        var expr = bString("abc");
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
           @Override
@@ -504,60 +506,60 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void report_value_as_const_task(BValue value) throws Exception {
         var taskReporter = mock(TaskReporter.class);
         evaluate(bEvaluator(taskReporter), value);
-        verify(taskReporter).report(constTask(value, traceB()), computationResult(value, NOOP));
+        verify(taskReporter).report(constTask(value, bTrace()), computationResult(value, NOOP));
       }
 
       public static List<BValue> report_const_task_cases() throws Exception {
         var t = new TestingVirtualMachine();
         return list(
-            t.arrayB(t.intB(17)),
-            t.blobB(17),
-            t.boolB(true),
-            t.idFuncB(),
-            t.ifFuncB(t.intTB()),
-            t.mapFuncB(t.intTB(), t.blobTB()),
-            t.nativeFuncB(),
-            t.intB(17),
-            t.stringB("abc"),
-            t.tupleB(t.intB(17)));
+            t.bArray(t.bInt(17)),
+            t.bBlob(17),
+            t.bBool(true),
+            t.bIdFunc(),
+            t.bIf(t.bIntType()),
+            t.bMap(t.bIntType(), t.bBlobType()),
+            t.bNativeFunc(),
+            t.bInt(17),
+            t.bString("abc"),
+            t.bTuple(t.bInt(17)));
       }
 
       @Test
       public void report_native_call_as_invoke_task() throws Exception {
-        var func = returnAbcNativeFunc();
-        var call = callB(func);
+        var func = bReturnAbcNativeFunc();
+        var call = bCall(func);
         assertReport(
             call,
-            invokeTask(call, func, traceB(call, func)),
-            computationResult(stringB("abc"), EXECUTION));
+            invokeTask(call, func, bTrace(call, func)),
+            computationResult(bString("abc"), EXECUTION));
       }
 
       @Test
       public void report_combine_as_combine_task() throws Exception {
-        var combine = combineB(intB(17));
+        var combine = bCombine(bInt(17));
         assertReport(
             combine,
-            combineTask(combine, traceB()),
-            computationResult(tupleB(intB(17)), EXECUTION));
+            combineTask(combine, bTrace()),
+            computationResult(bTuple(bInt(17)), EXECUTION));
       }
 
       @Test
       public void report_order_as_order_task() throws Exception {
-        var order = orderB(intB(17));
+        var order = bOrder(bInt(17));
         assertReport(
-            order, orderTask(order, traceB()), computationResult(arrayB(intB(17)), EXECUTION));
+            order, orderTask(order, bTrace()), computationResult(bArray(bInt(17)), EXECUTION));
       }
 
       @Test
       public void report_pick_as_pick_task() throws Exception {
-        var pick = pickB(arrayB(intB(17)), intB(0));
-        assertReport(pick, pickTask(pick, traceB()), computationResult(intB(17), EXECUTION));
+        var pick = bPick(bArray(bInt(17)), bInt(0));
+        assertReport(pick, pickTask(pick, bTrace()), computationResult(bInt(17), EXECUTION));
       }
 
       @Test
       public void report_select_as_select_task() throws Exception {
-        var select = selectB(tupleB(intB(17)), intB(0));
-        assertReport(select, selectTask(select, traceB()), computationResult(intB(17), EXECUTION));
+        var select = bSelect(bTuple(bInt(17)), bInt(0));
+        assertReport(select, selectTask(select, bTrace()), computationResult(bInt(17), EXECUTION));
       }
     }
 
@@ -565,27 +567,27 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     class _with_traces {
       @Test
       public void order_inside_func_body() throws Exception {
-        var order = orderB(intB(17));
-        var func = lambdaB(order);
-        var funcAsExpr = callB(lambdaB(func));
-        var call = callB(funcAsExpr);
+        var order = bOrder(bInt(17));
+        var func = bLambda(order);
+        var funcAsExpr = bCall(bLambda(func));
+        var call = bCall(funcAsExpr);
         assertReport(
             call,
-            orderTask(order, traceB(call, func)),
-            computationResult(arrayB(intB(17)), EXECUTION));
+            orderTask(order, bTrace(call, func)),
+            computationResult(bArray(bInt(17)), EXECUTION));
       }
 
       @Test
       public void order_inside_func_body_that_is_called_from_other_func_body() throws Exception {
-        var order = orderB(intB(17));
-        var func2 = lambdaB(order);
-        var call2 = callB(func2);
-        var func1 = lambdaB(call2);
-        var call1 = callB(func1);
+        var order = bOrder(bInt(17));
+        var func2 = bLambda(order);
+        var call2 = bCall(func2);
+        var func1 = bLambda(call2);
+        var call1 = bCall(func1);
         assertReport(
             call1,
-            orderTask(order, traceB(call2, func2, traceB(call1, func1))),
-            computationResult(arrayB(intB(17)), EXECUTION));
+            orderTask(order, bTrace(call2, func2, bTrace(call1, func1))),
+            computationResult(bArray(bInt(17)), EXECUTION));
       }
     }
 
@@ -608,10 +610,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       COUNTERS.put(counterA, new AtomicInteger(10));
       COUNTERS.put(counterB, new AtomicInteger(20));
       COUNTDOWNS.put(countdown, new CountDownLatch(2));
-      var expr = orderB(
+      var expr = bOrder(
           commandCall(testName, "INC2,COUNT1,WAIT1,GET1"),
           commandCall(testName, "INC1,COUNT1,WAIT1,GET2"));
-      assertThat(evaluate(expr)).isEqualTo(arrayB(stringB("11"), stringB("21")));
+      assertThat(evaluate(expr)).isEqualTo(bArray(bString("11"), bString("21")));
     }
 
     @Test
@@ -620,7 +622,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       var testName = "execution_waits_and_reuses_computation_with_equal_hash";
       var counterName = testName + "1";
       COUNTERS.put(counterName, new AtomicInteger());
-      var bExpr = orderB(
+      var bExpr = bOrder(
           commandCall(testName, "INC1"),
           commandCall(testName, "INC1"),
           commandCall(testName, "INC1"),
@@ -629,7 +631,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       var taskReporter = mock(TaskReporter.class);
       var vm = new BEvaluator(() -> bScheduler(taskReporter, 4), taskReporter);
       assertThat(evaluate(vm, bExpr))
-          .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
+          .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResSource(4, DISK, taskReporter);
     }
@@ -647,13 +649,13 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       COUNTERS.put(counter2, new AtomicInteger());
       COUNTDOWNS.put(countdown1, new CountDownLatch(1));
       COUNTDOWNS.put(countdown2, new CountDownLatch(1));
-      var expr = orderB(
+      var expr = bOrder(
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
       var vm = new BEvaluator(() -> bScheduler(2), taskReporter());
-      assertThat(evaluate(vm, expr)).isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
+      assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
     }
 
     private BCall commandCall(String testName, String commands) throws Exception {
@@ -661,9 +663,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     }
 
     private BCall commandCall(String testName, String commands, boolean isPure) throws Exception {
-      var nativeFunc =
-          nativeFuncB(funcTB(stringTB(), stringTB(), stringTB()), ExecuteCommands.class, isPure);
-      return callB(nativeFunc, stringB(testName), stringB(commands));
+      var nativeFunc = bNativeFunc(
+          bFuncType(bStringType(), bStringType(), bStringType()), ExecuteCommands.class, isPure);
+      return bCall(nativeFunc, bString(testName), bString(commands));
     }
 
     public static class ExecuteCommands {

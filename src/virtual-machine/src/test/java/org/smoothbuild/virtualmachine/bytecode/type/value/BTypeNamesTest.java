@@ -15,7 +15,7 @@ public class BTypeNamesTest extends TestingVirtualMachine {
   class _array_type_name {
     @Test
     public void array_type_name() throws Exception {
-      assertThat(arrayTypeName(stringTB())).isEqualTo("[String]");
+      assertThat(arrayTypeName(bStringType())).isEqualTo("[String]");
     }
   }
 
@@ -23,7 +23,7 @@ public class BTypeNamesTest extends TestingVirtualMachine {
   class _func_type_name {
     @Test
     public void func_type_name() throws Exception {
-      assertThat(funcTypeName(list(blobTB(), boolTB()), stringTB()))
+      assertThat(funcTypeName(list(bBlobType(), bBoolType()), bStringType()))
           .isEqualTo("(Blob,Bool)->String");
     }
   }
@@ -32,7 +32,7 @@ public class BTypeNamesTest extends TestingVirtualMachine {
   class _tuple_type_name {
     @Test
     public void func_type_name() throws Exception {
-      assertThat(tupleTypeName(list(blobTB(), boolTB()))).isEqualTo("{Blob,Bool}");
+      assertThat(tupleTypeName(list(bBlobType(), bBoolType()))).isEqualTo("{Blob,Bool}");
     }
   }
 }

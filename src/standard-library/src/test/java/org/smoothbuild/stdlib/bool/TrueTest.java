@@ -13,6 +13,6 @@ public class TrueTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(true));
+    assertThat(artifact()).isEqualTo(bBool(true));
   }
 }

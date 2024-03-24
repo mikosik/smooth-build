@@ -14,6 +14,6 @@ public class ToBlobTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo((blobB(encodeUtf8("abc"))));
+    assertThat(artifact()).isEqualTo((bBlob(encodeUtf8("abc"))));
   }
 }

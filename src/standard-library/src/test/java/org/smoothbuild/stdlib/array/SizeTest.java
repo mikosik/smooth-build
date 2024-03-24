@@ -12,7 +12,7 @@ public class SizeTest extends StandardLibraryTestCase {
         result = size([]);
         """);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(intB(0));
+    assertThat(artifact()).isEqualTo(bInt(0));
   }
 
   @Test
@@ -21,7 +21,7 @@ public class SizeTest extends StandardLibraryTestCase {
         result = size([1]);
         """);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(intB(1));
+    assertThat(artifact()).isEqualTo(bInt(1));
   }
 
   @Test
@@ -30,7 +30,7 @@ public class SizeTest extends StandardLibraryTestCase {
         result = size([1, 2]);
         """);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(intB(2));
+    assertThat(artifact()).isEqualTo(bInt(2));
   }
 
   @Test
@@ -39,6 +39,6 @@ public class SizeTest extends StandardLibraryTestCase {
         result = size([1, 2, 3]);
         """);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(intB(3));
+    assertThat(artifact()).isEqualTo(bInt(3));
   }
 }

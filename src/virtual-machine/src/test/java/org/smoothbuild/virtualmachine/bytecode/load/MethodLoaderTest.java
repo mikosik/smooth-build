@@ -74,7 +74,7 @@ public class MethodLoaderTest extends TestingVirtualMachine {
 
     private void testCaching(Class<?> clazz) throws Exception {
       var className = "className";
-      var jar = blobB();
+      var jar = bBlob();
 
       var classLoader = mock(ClassLoader.class);
       doReturn(clazz).when(classLoader).loadClass(className);

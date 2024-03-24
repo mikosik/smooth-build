@@ -44,7 +44,7 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
         Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
         throws BytecodeException {
       var methodLoader = mock(MethodLoader.class);
-      var jar = blobB();
+      var jar = bBlob();
       var classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
       when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
@@ -99,7 +99,7 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
 
   private void assertLoadingCausesError(Method method, String message) throws BytecodeException {
     var methodSpec =
-        new MethodSpec(blobB(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
+        new MethodSpec(bBlob(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
     assertThat(load(methodSpec, method)).isEqualTo(left(message));
   }
 

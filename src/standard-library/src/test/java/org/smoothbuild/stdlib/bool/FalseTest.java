@@ -13,6 +13,6 @@ public class FalseTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(boolB(false));
+    assertThat(artifact()).isEqualTo(bBool(false));
   }
 }

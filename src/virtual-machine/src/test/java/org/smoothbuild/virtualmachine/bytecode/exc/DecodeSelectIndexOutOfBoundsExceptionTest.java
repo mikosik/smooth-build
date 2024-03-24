@@ -11,7 +11,7 @@ public class DecodeSelectIndexOutOfBoundsExceptionTest extends TestingVirtualMac
   @Test
   public void message() throws Exception {
     var exception =
-        new DecodeSelectIndexOutOfBoundsException(Hash.of(13), selectCB(intTB()), 13, 10);
+        new DecodeSelectIndexOutOfBoundsException(Hash.of(13), bSelectKind(bIntType()), 13, 10);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT` object "
             + "at 43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "

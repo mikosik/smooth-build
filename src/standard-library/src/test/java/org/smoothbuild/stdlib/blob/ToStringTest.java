@@ -13,6 +13,6 @@ public class ToStringTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("A"));
+    assertThat(artifact()).isEqualTo(bString("A"));
   }
 }

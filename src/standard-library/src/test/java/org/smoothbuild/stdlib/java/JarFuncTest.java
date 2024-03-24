@@ -9,7 +9,7 @@ public class JarFuncTest extends TestingVirtualMachine {
   @Test
   public void jar_produces_bit_level_equal_file_independent_of_its_creation_time()
       throws Exception {
-    var args = tupleB(arrayB(fileB("filename", "context")), blobB(37));
+    var args = bTuple(bArray(bFile("filename", "context")), bBlob(37));
     var zip1 = JarFunc.func(nativeApi(), args);
     sleepMillis(2000);
     var zip2 = JarFunc.func(nativeApi(), args);

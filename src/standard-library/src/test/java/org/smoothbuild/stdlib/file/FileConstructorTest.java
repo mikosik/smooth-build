@@ -13,6 +13,6 @@ public class FileConstructorTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(fileB("name.txt", "A"));
+    assertThat(artifact()).isEqualTo(bFile("name.txt", "A"));
   }
 }

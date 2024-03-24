@@ -14,7 +14,7 @@ public class ElemTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("first"));
+    assertThat(artifact()).isEqualTo(bString("first"));
   }
 
   @Test
@@ -24,7 +24,7 @@ public class ElemTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(artifact()).isEqualTo(stringB("third"));
+    assertThat(artifact()).isEqualTo(bString("third"));
   }
 
   @Test

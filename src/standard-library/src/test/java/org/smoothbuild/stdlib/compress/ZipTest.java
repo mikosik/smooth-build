@@ -21,7 +21,7 @@ public class ZipTest extends StandardLibraryTestCase {
     evaluate("result");
 
     assertThat(artifact())
-        .isEqualTo(arrayB(fileB("dir/file1.txt", "abc"), fileB("file2.txt", "def")));
+        .isEqualTo(bArray(bFile("dir/file1.txt", "abc"), bFile("file2.txt", "def")));
   }
 
   @Test

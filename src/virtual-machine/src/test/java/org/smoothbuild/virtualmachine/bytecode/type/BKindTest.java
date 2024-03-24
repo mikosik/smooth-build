@@ -235,7 +235,7 @@ public class BKindTest extends TestingVirtualMachine {
   class _tuple {
     @Test
     public void _without_items_can_be_created() throws Exception {
-      tupleTB();
+      bTupleType();
     }
 
     @ParameterizedTest
@@ -264,27 +264,28 @@ public class BKindTest extends TestingVirtualMachine {
   public static java.util.List<Arguments> typeJ_test_data() throws BytecodeException {
     TestingVirtualMachine test = new TestingVirtualMachine();
     return list(
-        arguments(test.blobTB(), BBlob.class),
-        arguments(test.boolTB(), BBool.class),
-        arguments(test.funcTB(test.boolTB(), test.blobTB()), BFunc.class),
-        arguments(test.ifFuncCB(), BIf.class),
-        arguments(test.mapFuncCB(), BMap.class),
-        arguments(test.intTB(), BInt.class),
-        arguments(test.nativeFuncCB(test.boolTB(), test.blobTB()), BNativeFunc.class),
-        arguments(test.personTB(), BTuple.class),
-        arguments(test.stringTB(), BString.class),
-        arguments(test.arrayTB(test.blobTB()), BArray.class),
-        arguments(test.arrayTB(test.boolTB()), BArray.class),
-        arguments(test.arrayTB(test.funcTB(test.boolTB(), test.blobTB())), BArray.class),
-        arguments(test.arrayTB(test.intTB()), BArray.class),
-        arguments(test.arrayTB(test.personTB()), BArray.class),
-        arguments(test.arrayTB(test.stringTB()), BArray.class),
-        arguments(test.callCB(), BCall.class),
-        arguments(test.orderCB(), BOrder.class),
-        arguments(test.combineCB(test.intTB(), test.stringTB()), BCombine.class),
-        arguments(test.pickCB(), BPick.class),
-        arguments(test.varCB(test.intTB()), BReference.class),
-        arguments(test.selectCB(test.intTB()), BSelect.class));
+        arguments(test.bBlobType(), BBlob.class),
+        arguments(test.bBoolType(), BBool.class),
+        arguments(test.bFuncType(test.bBoolType(), test.bBlobType()), BFunc.class),
+        arguments(test.bIfKind(), BIf.class),
+        arguments(test.bMapKind(), BMap.class),
+        arguments(test.bIntType(), BInt.class),
+        arguments(test.bNativeFuncKind(test.bBoolType(), test.bBlobType()), BNativeFunc.class),
+        arguments(test.bPersonType(), BTuple.class),
+        arguments(test.bStringType(), BString.class),
+        arguments(test.bArrayType(test.bBlobType()), BArray.class),
+        arguments(test.bArrayType(test.bBoolType()), BArray.class),
+        arguments(
+            test.bArrayType(test.bFuncType(test.bBoolType(), test.bBlobType())), BArray.class),
+        arguments(test.bArrayType(test.bIntType()), BArray.class),
+        arguments(test.bArrayType(test.bPersonType()), BArray.class),
+        arguments(test.bArrayType(test.bStringType()), BArray.class),
+        arguments(test.bCallKind(), BCall.class),
+        arguments(test.bOrderKind(), BOrder.class),
+        arguments(test.bCombineKind(test.bIntType(), test.bStringType()), BCombine.class),
+        arguments(test.bPickKind(), BPick.class),
+        arguments(test.bReferenceKind(test.bIntType()), BReference.class),
+        arguments(test.bSelectKind(test.bIntType()), BSelect.class));
   }
 
   @Nested
@@ -306,32 +307,32 @@ public class BKindTest extends TestingVirtualMachine {
       BKindDb db = test.kindDb();
       return list(
           arguments(db.combine(db.tuple()), db.tuple()),
-          arguments(db.combine(db.tuple(test.stringTB())), db.tuple(test.stringTB())));
+          arguments(db.combine(db.tuple(test.bStringType())), db.tuple(test.bStringType())));
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void order(BType type) throws Exception {
-      var arrayType = arrayTB(type);
-      assertThat(orderCB(type).evaluationType()).isEqualTo(arrayType);
+      var arrayType = bArrayType(type);
+      assertThat(bOrderKind(type).evaluationType()).isEqualTo(arrayType);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void pick(BType type) throws Exception {
-      assertThat(pickCB(type).evaluationType()).isEqualTo(type);
+      assertThat(bPickKind(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void reference(BType type) throws Exception {
-      assertThat(varCB(type).evaluationType()).isEqualTo(type);
+      assertThat(bReferenceKind(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(BType type) throws Exception {
-      assertThat(selectCB(type).evaluationType()).isEqualTo(type);
+      assertThat(bSelectKind(type).evaluationType()).isEqualTo(type);
     }
 
     public static List<BKind> types() {
@@ -342,37 +343,46 @@ public class BKindTest extends TestingVirtualMachine {
   @Test
   public void equals_and_hashcode() throws Exception {
     var tester = new EqualsTester();
-    tester.addEqualityGroup(blobTB(), blobTB());
-    tester.addEqualityGroup(boolTB(), boolTB());
-    tester.addEqualityGroup(funcTB(boolTB(), blobTB()), funcTB(boolTB(), blobTB()));
-    tester.addEqualityGroup(intTB(), intTB());
-    tester.addEqualityGroup(stringTB(), stringTB());
-    tester.addEqualityGroup(personTB(), personTB());
-
-    tester.addEqualityGroup(arrayTB(blobTB()), arrayTB(blobTB()));
-    tester.addEqualityGroup(arrayTB(boolTB()), arrayTB(boolTB()));
+    tester.addEqualityGroup(bBlobType(), bBlobType());
+    tester.addEqualityGroup(bBoolType(), bBoolType());
     tester.addEqualityGroup(
-        arrayTB(funcTB(boolTB(), blobTB())), arrayTB(funcTB(boolTB(), blobTB())));
-    tester.addEqualityGroup(arrayTB(intTB()), arrayTB(intTB()));
-    tester.addEqualityGroup(arrayTB(stringTB()), arrayTB(stringTB()));
-    tester.addEqualityGroup(arrayTB(personTB()), arrayTB(personTB()));
+        bFuncType(bBoolType(), bBlobType()), bFuncType(bBoolType(), bBlobType()));
+    tester.addEqualityGroup(bIntType(), bIntType());
+    tester.addEqualityGroup(bStringType(), bStringType());
+    tester.addEqualityGroup(bPersonType(), bPersonType());
 
-    tester.addEqualityGroup(arrayTB(arrayTB(blobTB())), arrayTB(arrayTB(blobTB())));
-    tester.addEqualityGroup(arrayTB(arrayTB(boolTB())), arrayTB(arrayTB(boolTB())));
-    tester.addEqualityGroup(arrayTB(arrayTB(funcTB(intTB()))), arrayTB(arrayTB(funcTB(intTB()))));
-    tester.addEqualityGroup(arrayTB(arrayTB(intTB())), arrayTB(arrayTB(intTB())));
-    tester.addEqualityGroup(arrayTB(arrayTB(stringTB())), arrayTB(arrayTB(stringTB())));
+    tester.addEqualityGroup(bArrayType(bBlobType()), bArrayType(bBlobType()));
+    tester.addEqualityGroup(bArrayType(bBoolType()), bArrayType(bBoolType()));
     tester.addEqualityGroup(
-        arrayTB(arrayTB(tupleTB(animalTB()))), arrayTB(arrayTB(tupleTB(animalTB()))));
+        bArrayType(bFuncType(bBoolType(), bBlobType())),
+        bArrayType(bFuncType(bBoolType(), bBlobType())));
+    tester.addEqualityGroup(bArrayType(bIntType()), bArrayType(bIntType()));
+    tester.addEqualityGroup(bArrayType(bStringType()), bArrayType(bStringType()));
+    tester.addEqualityGroup(bArrayType(bPersonType()), bArrayType(bPersonType()));
 
-    tester.addEqualityGroup(callCB(), callCB());
-    tester.addEqualityGroup(combineCB(intTB(), stringTB()), combineCB(intTB(), stringTB()));
-    tester.addEqualityGroup(ifFuncCB(), ifFuncCB());
-    tester.addEqualityGroup(mapFuncCB(), mapFuncCB());
-    tester.addEqualityGroup(orderCB(), orderCB());
-    tester.addEqualityGroup(pickCB(), pickCB());
-    tester.addEqualityGroup(varCB(intTB()), varCB(intTB()));
-    tester.addEqualityGroup(selectCB(intTB()), selectCB(intTB()));
+    tester.addEqualityGroup(
+        bArrayType(bArrayType(bBlobType())), bArrayType(bArrayType(bBlobType())));
+    tester.addEqualityGroup(
+        bArrayType(bArrayType(bBoolType())), bArrayType(bArrayType(bBoolType())));
+    tester.addEqualityGroup(
+        bArrayType(bArrayType(bFuncType(bIntType()))),
+        bArrayType(bArrayType(bFuncType(bIntType()))));
+    tester.addEqualityGroup(bArrayType(bArrayType(bIntType())), bArrayType(bArrayType(bIntType())));
+    tester.addEqualityGroup(
+        bArrayType(bArrayType(bStringType())), bArrayType(bArrayType(bStringType())));
+    tester.addEqualityGroup(
+        bArrayType(bArrayType(bTupleType(bAnimalType()))),
+        bArrayType(bArrayType(bTupleType(bAnimalType()))));
+
+    tester.addEqualityGroup(bCallKind(), bCallKind());
+    tester.addEqualityGroup(
+        bCombineKind(bIntType(), bStringType()), bCombineKind(bIntType(), bStringType()));
+    tester.addEqualityGroup(bIfKind(), bIfKind());
+    tester.addEqualityGroup(bMapKind(), bMapKind());
+    tester.addEqualityGroup(bOrderKind(), bOrderKind());
+    tester.addEqualityGroup(bPickKind(), bPickKind());
+    tester.addEqualityGroup(bReferenceKind(bIntType()), bReferenceKind(bIntType()));
+    tester.addEqualityGroup(bSelectKind(bIntType()), bSelectKind(bIntType()));
 
     tester.testEquals();
   }

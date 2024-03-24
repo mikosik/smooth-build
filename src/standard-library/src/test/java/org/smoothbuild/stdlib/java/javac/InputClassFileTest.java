@@ -20,70 +20,70 @@ public class InputClassFileTest extends TestingVirtualMachine {
 
   @Test
   public void file_without_class_extension_is_forbidden() {
-    assertCall(() -> new InputClassFile(fileB(path("abc"))))
+    assertCall(() -> new InputClassFile(bFile(path("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void input_class_files_with_equal_paths_but_different_content_are_equal()
       throws Exception {
-    assertThat(new InputClassFile(fileB(path, ByteString.encodeUtf8("abc"))))
-        .isEqualTo(new InputClassFile(fileB(path, ByteString.encodeUtf8("def"))));
+    assertThat(new InputClassFile(bFile(path, ByteString.encodeUtf8("abc"))))
+        .isEqualTo(new InputClassFile(bFile(path, ByteString.encodeUtf8("def"))));
   }
 
   @Test
   public void input_class_files_with_different_paths_are_not_equal() throws Exception {
-    assertThat(new InputClassFile(fileB(path("a/b/MyClass.class"), bytes)))
-        .isNotEqualTo(new InputClassFile(fileB(path("a/b/OtherClass.class"), bytes)));
+    assertThat(new InputClassFile(bFile(path("a/b/MyClass.class"), bytes)))
+        .isNotEqualTo(new InputClassFile(bFile(path("a/b/OtherClass.class"), bytes)));
   }
 
   @Test
   public void class_in_default_package_has_empty_package() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("Myclass.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("Myclass.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("");
   }
 
   @Test
   public void aPackage_returns_class_package() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/Myclass.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/Myclass.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("a.b");
   }
 
   @Test
   public void aPackage_for_inner_class_returns_package_of_enclosing_class()
       throws BytecodeException {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass$Inner.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/MyClass$Inner.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("a.b");
   }
 
   @Test
   public void binary_name_for_default_class_returns_class_name() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("MyClass.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("MyClass.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("MyClass");
   }
 
   @Test
   public void binary_name_for_class_returns_package_plus_class_name() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/MyClass.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("a.b.MyClass");
   }
 
   @Test
   public void binary_name_for_inner_class_returns_package_plus_outer_class_plus_inner_class_name()
       throws BytecodeException {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass$Inner.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/MyClass$Inner.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("a.b.MyClass$Inner");
   }
 
   @Test
   public void to_uri() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile(fileB(path("a/b/MyClass.class")));
+    InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/MyClass.class")));
     assertThat(inputClassFile.toUri()).isEqualTo(URI.create("jar:///:a/b/MyClass.class"));
   }
 
   @Test
   public void open_input_stream_returns_file_content() throws Exception {
-    BTuple file = fileB(path, bytes);
+    BTuple file = bFile(path, bytes);
     InputClassFile inputClassFile = new InputClassFile(file);
     try (var source = buffer(source(inputClassFile.openInputStream()))) {
       assertThat(source.readByteString()).isEqualTo(bytes);
