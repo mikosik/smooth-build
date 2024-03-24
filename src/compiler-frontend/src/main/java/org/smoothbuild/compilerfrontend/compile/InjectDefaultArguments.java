@@ -18,97 +18,97 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
-import org.smoothbuild.compilerfrontend.compile.ast.ScopingModuleVisitorP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ExprP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.InstantiateP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ItemP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedArgP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ScopedP;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
-public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, ModuleP> {
+public class InjectDefaultArguments implements TryFunction2<PModule, ScopeS, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "injectDefaultArguments");
   }
 
   @Override
-  public Try<ModuleP> apply(ModuleP moduleP, ScopeS environment) {
+  public Try<PModule> apply(PModule pModule, ScopeS environment) {
     var logger = new Logger();
-    new Visitor(environment, immutableBindings(), logger).visitModule(moduleP);
-    return Try.of(moduleP, logger);
+    new Visitor(environment, immutableBindings(), logger).visitModule(pModule);
+    return Try.of(pModule, logger);
   }
 
-  private static class Visitor extends ScopingModuleVisitorP {
+  private static class Visitor extends PScopingModuleVisitor {
     private final ScopeS imported;
-    private final Bindings<ReferenceableP> referenceables;
+    private final Bindings<PReferenceable> referenceables;
     private final Logger logger;
 
-    public Visitor(ScopeS imported, Bindings<ReferenceableP> referenceables, Logger logger) {
+    public Visitor(ScopeS imported, Bindings<PReferenceable> referenceables, Logger logger) {
       this.imported = imported;
       this.referenceables = referenceables;
       this.logger = logger;
     }
 
     @Override
-    protected ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP) {
-      return new Visitor(imported, scopedP.scope().referencables(), logger);
+    protected PModuleVisitor createVisitorForScopeOf(PScoped pScoped) {
+      return new Visitor(imported, pScoped.scope().referencables(), logger);
     }
 
     @Override
-    public void visitCall(CallP callP) {
-      super.visitCall(callP);
-      callP.setPositionedArgs(inferPositionedArgs(callP));
+    public void visitCall(PCall pCall) {
+      super.visitCall(pCall);
+      pCall.setPositionedArgs(inferPositionedArgs(pCall));
     }
 
-    private List<ExprP> inferPositionedArgs(CallP callP) {
-      if (callP.callee() instanceof InstantiateP instantiateP
-          && instantiateP.polymorphic() instanceof ReferenceP referenceP) {
-        var name = referenceP.referencedName();
+    private List<PExpr> inferPositionedArgs(PCall pCall) {
+      if (pCall.callee() instanceof PInstantiate pInstantiate
+          && pInstantiate.polymorphic() instanceof PReference pReference) {
+        var name = pReference.referencedName();
         var optional = referenceables.getMaybe(name);
         if (optional.isSome()) {
-          return inferPositionedArgs(callP, optional.get());
+          return inferPositionedArgs(pCall, optional.get());
         } else {
-          return inferPositionedArgs(callP, imported.evaluables().get(name));
+          return inferPositionedArgs(pCall, imported.evaluables().get(name));
         }
       } else {
-        return inferPositionedArgs(callP, logger);
+        return inferPositionedArgs(pCall, logger);
       }
     }
 
-    private List<ExprP> inferPositionedArgs(CallP callP, ReferenceableP referenceableP) {
-      if (referenceableP instanceof NamedFuncP namedFuncP) {
-        var mappedParams = namedFuncP.params().list().map(Param::new);
-        return inferPositionedArgs(callP, mappedParams, logger);
+    private List<PExpr> inferPositionedArgs(PCall pCall, PReferenceable pReferenceable) {
+      if (pReferenceable instanceof PNamedFunc pNamedFunc) {
+        var mappedParams = pNamedFunc.params().list().map(Param::new);
+        return inferPositionedArgs(pCall, mappedParams, logger);
       } else {
-        return inferPositionedArgs(callP, logger);
+        return inferPositionedArgs(pCall, logger);
       }
     }
 
-    private List<ExprP> inferPositionedArgs(CallP callP, SNamedEvaluable sNamedEvaluable) {
+    private List<PExpr> inferPositionedArgs(PCall pCall, SNamedEvaluable sNamedEvaluable) {
       if (sNamedEvaluable instanceof SNamedFunc sNamedFunc) {
         var mappedParams = sNamedFunc.params().list().map(Param::new);
-        return inferPositionedArgs(callP, mappedParams, logger);
+        return inferPositionedArgs(pCall, mappedParams, logger);
       } else {
-        return inferPositionedArgs(callP, logger);
+        return inferPositionedArgs(pCall, logger);
       }
     }
 
-    private static List<ExprP> inferPositionedArgs(CallP callP, Logger logger) {
-      var args = callP.args();
+    private static List<PExpr> inferPositionedArgs(PCall pCall, Logger logger) {
+      var args = pCall.args();
       for (var arg : args) {
-        if (arg instanceof NamedArgP namedArgP) {
-          logger.log(unknownParameterError(namedArgP));
+        if (arg instanceof PNamedArg pNamedArg) {
+          logger.log(unknownParameterError(pNamedArg));
         }
       }
       // We can return args even when errors above has been logged
@@ -116,37 +116,37 @@ public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, Mod
       return args;
     }
 
-    private static List<ExprP> inferPositionedArgs(
-        CallP callP, List<Param> params, Logger mainLogger) {
+    private static List<PExpr> inferPositionedArgs(
+        PCall pCall, List<Param> params, Logger mainLogger) {
       var logger = new Logger();
-      var positionalArgs = leadingPositionalArgs(callP);
-      logger.logAll(findPositionalArgAfterNamedArgError(callP));
-      logger.logAll(findUnknownParamNameErrors(callP, params));
-      logger.logAll(findDuplicateAssignmentErrors(callP, positionalArgs, params));
+      var positionalArgs = leadingPositionalArgs(pCall);
+      logger.logAll(findPositionalArgAfterNamedArgError(pCall));
+      logger.logAll(findUnknownParamNameErrors(pCall, params));
+      logger.logAll(findDuplicateAssignmentErrors(pCall, positionalArgs, params));
       mainLogger.logAll(logger);
       if (logger.containsFailure()) {
         return null;
       }
-      return positionedArgs(callP, params, positionalArgs.size(), mainLogger);
+      return positionedArgs(pCall, params, positionalArgs.size(), mainLogger);
     }
 
-    private static List<ExprP> leadingPositionalArgs(CallP callP) {
-      return callP.args().takeWhile(a -> !(a instanceof NamedArgP));
+    private static List<PExpr> leadingPositionalArgs(PCall pCall) {
+      return pCall.args().takeWhile(a -> !(a instanceof PNamedArg));
     }
 
-    private static List<ExprP> positionedArgs(
-        CallP callP, List<Param> params, int positionalArgsCount, Logger logBuffer) {
+    private static List<PExpr> positionedArgs(
+        PCall pCall, List<Param> params, int positionalArgsCount, Logger logBuffer) {
       var names = params.map(Param::name);
-      var args = callP.args();
+      var args = pCall.args();
       // Case where positional args count exceeds function params count is reported as error
       // during call unification. Here we silently ignore it by creating list that is big enough
       // to hold all args.
       var size = max(positionalArgsCount, params.size());
-      var result = new ArrayList<ExprP>(nCopies(size, null));
+      var result = new ArrayList<PExpr>(nCopies(size, null));
       for (int i = 0; i < args.size(); i++) {
         var arg = args.get(i);
-        if (arg instanceof NamedArgP namedArgP) {
-          result.set(names.indexOf(namedArgP.name()), namedArgP.expr());
+        if (arg instanceof PNamedArg pNamedArg) {
+          result.set(names.indexOf(pNamedArg.name()), pNamedArg.expr());
         } else {
           result.set(i, arg);
         }
@@ -156,69 +156,69 @@ public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, Mod
         if (result.get(i) == null) {
           var param = params.get(i);
           if (param.hasDefaultValue()) {
-            var name = TypeNamesS.fullName(nameOfReferencedCallee(callP), param.name());
-            var location = callP.location();
-            var element = new InstantiateP(new ReferenceP(name, location), location);
+            var name = TypeNamesS.fullName(nameOfReferencedCallee(pCall), param.name());
+            var location = pCall.location();
+            var element = new PInstantiate(new PReference(name, location), location);
             result.set(i, element);
           } else {
             error = true;
-            logBuffer.log(paramsMustBeSpecifiedError(callP, i, params));
+            logBuffer.log(paramsMustBeSpecifiedError(pCall, i, params));
           }
         }
       }
       return error ? null : listOfAll(result);
     }
 
-    private static String nameOfReferencedCallee(CallP callP) {
-      return ((ReferenceP) ((InstantiateP) callP.callee()).polymorphic()).referencedName();
+    private static String nameOfReferencedCallee(PCall pCall) {
+      return ((PReference) ((PInstantiate) pCall.callee()).polymorphic()).referencedName();
     }
 
-    private static List<Log> findPositionalArgAfterNamedArgError(CallP callP) {
-      return callP
+    private static List<Log> findPositionalArgAfterNamedArgError(PCall pCall) {
+      return pCall
           .args()
-          .dropWhile(a -> !(a instanceof NamedArgP))
-          .dropWhile(a -> a instanceof NamedArgP)
+          .dropWhile(a -> !(a instanceof PNamedArg))
+          .dropWhile(a -> a instanceof PNamedArg)
           .map(Visitor::positionalArgumentsMustBePlacedBeforeNamedArguments);
     }
 
-    private static List<Log> findUnknownParamNameErrors(CallP callP, List<Param> params) {
+    private static List<Log> findUnknownParamNameErrors(PCall pCall, List<Param> params) {
       var names = params.map(Param::name).toSet();
-      return callP
+      return pCall
           .args()
-          .filter(a -> a instanceof NamedArgP)
-          .map(a -> (NamedArgP) a)
+          .filter(a -> a instanceof PNamedArg)
+          .map(a -> (PNamedArg) a)
           .filter(a -> !names.contains(a.name()))
           .map(Visitor::unknownParameterError);
     }
 
     private static List<Log> findDuplicateAssignmentErrors(
-        CallP callP, List<ExprP> positionalArgs, List<Param> params) {
+        PCall pCall, List<PExpr> positionalArgs, List<Param> params) {
       var names = positionalArgNames(positionalArgs, params);
-      return callP
+      return pCall
           .args()
-          .filter(a -> a instanceof NamedArgP)
-          .map(a -> (NamedArgP) a)
+          .filter(a -> a instanceof PNamedArg)
+          .map(a -> (PNamedArg) a)
           .filter(a -> !names.add(a.name()))
           .map(Visitor::paramIsAlreadyAssignedError);
     }
 
-    private static Set<String> positionalArgNames(List<ExprP> positionalArgs, List<Param> params) {
+    private static Set<String> positionalArgNames(List<PExpr> positionalArgs, List<Param> params) {
       return params.stream().limit(positionalArgs.size()).map(Param::name).collect(toSet());
     }
 
-    private static Log paramsMustBeSpecifiedError(CallP callP, int i, List<Param> params) {
-      return compileError(callP, "Parameter " + q(params.get(i).name()) + " must be specified.");
+    private static Log paramsMustBeSpecifiedError(PCall pCall, int i, List<Param> params) {
+      return compileError(pCall, "Parameter " + q(params.get(i).name()) + " must be specified.");
     }
 
-    private static Log unknownParameterError(NamedArgP namedArgP) {
-      return compileError(namedArgP, "Unknown parameter " + namedArgP.q() + ".");
+    private static Log unknownParameterError(PNamedArg pNamedArg) {
+      return compileError(pNamedArg, "Unknown parameter " + pNamedArg.q() + ".");
     }
 
-    private static Log paramIsAlreadyAssignedError(NamedArgP namedArgP) {
-      return compileError(namedArgP, namedArgP.q() + " is already assigned.");
+    private static Log paramIsAlreadyAssignedError(PNamedArg pNamedArg) {
+      return compileError(pNamedArg, pNamedArg.q() + " is already assigned.");
     }
 
-    private static Log positionalArgumentsMustBePlacedBeforeNamedArguments(ExprP argument) {
+    private static Log positionalArgumentsMustBePlacedBeforeNamedArguments(PExpr argument) {
       return compileError(argument, "Positional arguments must be placed before named arguments.");
     }
   }
@@ -228,7 +228,7 @@ public class InjectDefaultArguments implements TryFunction2<ModuleP, ScopeS, Mod
       this(param.name(), param.defaultValue().isSome());
     }
 
-    public Param(ItemP param) {
+    public Param(PItem param) {
       this(param.name(), param.defaultValue().isSome());
     }
   }

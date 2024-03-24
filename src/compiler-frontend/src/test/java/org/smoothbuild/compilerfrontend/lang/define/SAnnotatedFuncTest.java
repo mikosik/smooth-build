@@ -2,21 +2,20 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcSchemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.nativeAnnotationS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SAnnotatedFuncTest {
   @Test
   public void to_string() {
-    var params = nlist(itemS(intTS(), "myParam"));
-    var funcTS = funcSchemaS(params, stringTS());
-    var func = new SAnnotatedFunc(nativeAnnotationS(), funcTS, "myFunc", params, location(1));
+    var params = nlist(TestingSExpression.sItem(sIntType(), "myParam"));
+    var funcTS = TestingSExpression.sFuncSchema(params, sStringType());
+    var func = new SAnnotatedFunc(
+        TestingSExpression.sNativeAnnotation(), funcTS, "myFunc", params, location(1));
     assertThat(func.toString())
         .isEqualTo(
             """

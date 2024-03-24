@@ -4,24 +4,17 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.callS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcSchemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idFuncS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.instantiateS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.lambdaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.orderS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.schemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.tupleTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.valueS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sLambda;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 
@@ -30,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class InferenceTest {
   @Nested
@@ -41,7 +35,9 @@ public class InferenceTest {
         var code = """
           myValue = "abc";
           """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
       }
 
       @Test
@@ -49,7 +45,9 @@ public class InferenceTest {
         var code = """
           myValue = 0x07;
           """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(blobTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", sSchema(sBlobType()));
       }
 
       @Test
@@ -57,7 +55,7 @@ public class InferenceTest {
         var code = """
           myValue = 123;
           """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(intTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", sSchema(sIntType()));
       }
 
       @Test
@@ -67,7 +65,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
       }
 
       @Test
@@ -77,7 +75,9 @@ public class InferenceTest {
           String stringValue = "abc";
           myValue = stringValue;
           """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
       }
 
       @Test
@@ -89,7 +89,8 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", funcSchemaS(blobTS(), stringTS()));
+            .containsEvaluableWithSchema(
+                "myValue", TestingSExpression.sFuncSchema(sBlobType(), sStringType()));
       }
 
       @Test
@@ -99,7 +100,9 @@ public class InferenceTest {
           String myFunc() = "abc";
           myValue = myFunc();
           """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
       }
 
       @Test
@@ -108,7 +111,7 @@ public class InferenceTest {
           A myId(A a) = a;
           myValue = myId(7);
           """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(intTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", sSchema(sIntType()));
       }
     }
 
@@ -121,7 +124,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(varA())));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(varA())));
       }
 
       @Test
@@ -132,7 +135,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(varA())));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(varA())));
       }
 
       @Test
@@ -143,7 +146,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", funcSchemaS(varA(), varA()));
+            .containsEvaluableWithSchema("myValue", TestingSExpression.sFuncSchema(varA(), varA()));
       }
     }
   }
@@ -190,17 +193,17 @@ public class InferenceTest {
       class _literal {
         @Test
         public void string_literal() {
-          assertInferredFunctionType("", "\"abc\"", funcSchemaS(stringTS()));
+          assertInferredFunctionType("", "\"abc\"", TestingSExpression.sFuncSchema(sStringType()));
         }
 
         @Test
         public void blob_literal() {
-          assertInferredFunctionType("", "0x07", funcSchemaS(blobTS()));
+          assertInferredFunctionType("", "0x07", TestingSExpression.sFuncSchema(sBlobType()));
         }
 
         @Test
         public void int_literal() {
-          assertInferredFunctionType("", "123", funcSchemaS(intTS()));
+          assertInferredFunctionType("", "123", TestingSExpression.sFuncSchema(sIntType()));
         }
       }
 
@@ -208,23 +211,29 @@ public class InferenceTest {
       class _array {
         @Test
         public void mono_array() {
-          assertInferredFunctionType("", "[17]", funcSchemaS(arrayTS(intTS())));
+          assertInferredFunctionType(
+              "", "[17]", TestingSExpression.sFuncSchema(sArrayType(sIntType())));
         }
       }
 
       @Test
       public void value_ref() {
-        assertInferredFunctionType("Int intValue = 7;", "", "intValue", funcSchemaS(intTS()));
+        assertInferredFunctionType(
+            "Int intValue = 7;", "", "intValue", TestingSExpression.sFuncSchema(sIntType()));
       }
 
       @Test
       public void ref() {
-        assertInferredFunctionType("Int int", "int", funcSchemaS(intTS(), intTS()));
+        assertInferredFunctionType(
+            "Int int", "int", TestingSExpression.sFuncSchema(sIntType(), sIntType()));
       }
 
       @Test
       public void param_function_call() {
-        assertInferredFunctionType("()->Int f", "f()", funcSchemaS(funcTS(intTS()), intTS()));
+        assertInferredFunctionType(
+            "()->Int f",
+            "f()",
+            TestingSExpression.sFuncSchema(TestingSExpression.sFuncType(sIntType()), sIntType()));
       }
 
       @Test
@@ -233,22 +242,25 @@ public class InferenceTest {
             "Int otherFunc(Blob param) = 7;",
             "",
             "otherFunc",
-            funcSchemaS(funcTS(blobTS(), intTS())));
+            TestingSExpression.sFuncSchema(TestingSExpression.sFuncType(sBlobType(), sIntType())));
       }
 
       @Test
       public void mono_function_call() {
-        assertInferredFunctionType("Int otherFunc() = 7;", "", "otherFunc()", funcSchemaS(intTS()));
+        assertInferredFunctionType(
+            "Int otherFunc() = 7;", "", "otherFunc()", TestingSExpression.sFuncSchema(sIntType()));
       }
 
       @Test
       public void poly_function_call() {
-        assertInferredFunctionType("A myId(A a) = a;", "", "myId(7)", funcSchemaS(intTS()));
+        assertInferredFunctionType(
+            "A myId(A a) = a;", "", "myId(7)", TestingSExpression.sFuncSchema(sIntType()));
       }
 
       @Test
       public void function_mono_param() {
-        assertInferredFunctionType("Int param", "param", funcSchemaS(intTS(), intTS()));
+        assertInferredFunctionType(
+            "Int param", "param", TestingSExpression.sFuncSchema(sIntType(), sIntType()));
       }
     }
 
@@ -258,17 +270,20 @@ public class InferenceTest {
       class _literal {
         @Test
         public void string_literal() {
-          assertInferredFunctionType("A a", "\"abc\"", funcSchemaS(varA(), stringTS()));
+          assertInferredFunctionType(
+              "A a", "\"abc\"", TestingSExpression.sFuncSchema(varA(), sStringType()));
         }
 
         @Test
         public void blob_literal() {
-          assertInferredFunctionType("A a", "0x07", funcSchemaS(varA(), blobTS()));
+          assertInferredFunctionType(
+              "A a", "0x07", TestingSExpression.sFuncSchema(varA(), sBlobType()));
         }
 
         @Test
         public void int_literal() {
-          assertInferredFunctionType("A a", "7", funcSchemaS(varA(), intTS()));
+          assertInferredFunctionType(
+              "A a", "7", TestingSExpression.sFuncSchema(varA(), sIntType()));
         }
       }
 
@@ -276,17 +291,19 @@ public class InferenceTest {
       class _array {
         @Test
         public void mono_array() {
-          assertInferredFunctionType("A a", "[7]", funcSchemaS(varA(), arrayTS(intTS())));
+          assertInferredFunctionType(
+              "A a", "[7]", TestingSExpression.sFuncSchema(varA(), sArrayType(sIntType())));
         }
 
         @Test
         public void poly_array() {
-          assertInferredFunctionType("", "[]", funcSchemaS(arrayTS(varA())));
+          assertInferredFunctionType("", "[]", TestingSExpression.sFuncSchema(sArrayType(varA())));
         }
 
         @Test
         public void poly_array_when_param_list_already_uses_A_as_var_name() {
-          assertInferredFunctionType("A a", "[]", funcSchemaS(varA(), arrayTS(varB())));
+          assertInferredFunctionType(
+              "A a", "[]", TestingSExpression.sFuncSchema(varA(), sArrayType(varB())));
         }
       }
 
@@ -294,19 +311,26 @@ public class InferenceTest {
       class _value {
         @Test
         public void mono_value_ref() {
-          assertInferredFunctionType("Int intValue = 7;", "", "intValue", funcSchemaS(intTS()));
+          assertInferredFunctionType(
+              "Int intValue = 7;", "", "intValue", TestingSExpression.sFuncSchema(sIntType()));
         }
 
         @Test
         public void poly_value_ref() {
           assertInferredFunctionType(
-              "[A] emptyArray = [];", "", "emptyArray", funcSchemaS(arrayTS(varA())));
+              "[A] emptyArray = [];",
+              "",
+              "emptyArray",
+              TestingSExpression.sFuncSchema(sArrayType(varA())));
         }
 
         @Test
         public void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
           assertInferredFunctionType(
-              "[A] emptyArray = [];", "A a", "emptyArray", funcSchemaS(varA(), arrayTS(varB())));
+              "[A] emptyArray = [];",
+              "A a",
+              "emptyArray",
+              TestingSExpression.sFuncSchema(varA(), sArrayType(varB())));
         }
       }
 
@@ -314,24 +338,31 @@ public class InferenceTest {
       class _param_ref {
         @Test
         public void ref_with_base_type() {
-          assertInferredFunctionType("Int int", "int", funcSchemaS(intTS(), intTS()));
+          assertInferredFunctionType(
+              "Int int", "int", TestingSExpression.sFuncSchema(sIntType(), sIntType()));
         }
 
         @Test
         public void ref_with_poly_type() {
-          assertInferredFunctionType("A param", "param", funcSchemaS(varA(), varA()));
+          assertInferredFunctionType(
+              "A param", "param", TestingSExpression.sFuncSchema(varA(), varA()));
         }
 
         @Test
         public void ref_with_mono_function_type() {
-          var funcT = funcTS(boolTS(), intTS());
-          assertInferredFunctionType("(Bool)->Int func", "func", funcSchemaS(funcT, funcT));
+          var funcT = TestingSExpression.sFuncType(sBoolType(), sIntType());
+          assertInferredFunctionType(
+              "(Bool)->Int func", "func", TestingSExpression.sFuncSchema(funcT, funcT));
         }
 
         @Test
         public void ref_with_poly_function_type() {
           assertInferredFunctionType(
-              "(A)->A param", "param", funcSchemaS(funcTS(varA(), varA()), funcTS(varA(), varA())));
+              "(A)->A param",
+              "param",
+              TestingSExpression.sFuncSchema(
+                  TestingSExpression.sFuncType(varA(), varA()),
+                  TestingSExpression.sFuncType(varA(), varA())));
         }
       }
 
@@ -339,30 +370,45 @@ public class InferenceTest {
       class _call {
         @Test
         public void call_to_mono_param() {
-          assertInferredFunctionType("()->Int f", "f()", funcSchemaS(funcTS(intTS()), intTS()));
+          assertInferredFunctionType(
+              "()->Int f",
+              "f()",
+              TestingSExpression.sFuncSchema(TestingSExpression.sFuncType(sIntType()), sIntType()));
         }
 
         @Test
         public void call_to_poly_param() {
-          assertInferredFunctionType("()->A f", "f()", funcSchemaS(funcTS(varA()), varA()));
+          assertInferredFunctionType(
+              "()->A f",
+              "f()",
+              TestingSExpression.sFuncSchema(TestingSExpression.sFuncType(varA()), varA()));
         }
 
         @Test
         public void call_to_mono_function() {
           assertInferredFunctionType(
-              "Int otherFunc() = 7;", "", "otherFunc()", funcSchemaS(intTS()));
+              "Int otherFunc() = 7;",
+              "",
+              "otherFunc()",
+              TestingSExpression.sFuncSchema(sIntType()));
         }
 
         @Test
         public void call_to_poly_function() {
           assertInferredFunctionType(
-              "A myIdentity(A a) = a;", "", "myIdentity(7)", funcSchemaS(intTS()));
+              "A myIdentity(A a) = a;",
+              "",
+              "myIdentity(7)",
+              TestingSExpression.sFuncSchema(sIntType()));
         }
 
         @Test
         public void call_to_poly_function_when_argument_type_is_our_type_param() {
           assertInferredFunctionType(
-              "A myIdentity(A a) = a;", "B b", "myIdentity(b)", funcSchemaS(varB(), varB()));
+              "A myIdentity(A a) = a;",
+              "B b",
+              "myIdentity(b)",
+              TestingSExpression.sFuncSchema(varB(), varB()));
         }
       }
 
@@ -374,20 +420,27 @@ public class InferenceTest {
               "Int otherFunc(Blob param) = 7;",
               "",
               "otherFunc",
-              funcSchemaS(funcTS(blobTS(), intTS())));
+              TestingSExpression.sFuncSchema(
+                  TestingSExpression.sFuncType(sBlobType(), sIntType())));
         }
 
         @Test
         public void poly_function_ref() {
           assertInferredFunctionType(
-              "A myId(A a) = a;", "", "myId", funcSchemaS(funcTS(varA(), varA())));
+              "A myId(A a) = a;",
+              "",
+              "myId",
+              TestingSExpression.sFuncSchema(TestingSExpression.sFuncType(varA(), varA())));
         }
 
         @Test
         public void
             poly_function_ref_when_function_type_param_shadows_referenced_function_res_type() {
           assertInferredFunctionType(
-              "A myId(A a) = a;", "A a", "myId", funcSchemaS(varA(), funcTS(varB(), varB())));
+              "A myId(A a) = a;",
+              "A a",
+              "myId",
+              TestingSExpression.sFuncSchema(varA(), TestingSExpression.sFuncType(varB(), varB())));
         }
       }
     }
@@ -404,7 +457,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(varA())));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(varA())));
       }
     }
 
@@ -417,7 +470,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
       }
 
       @Test
@@ -427,7 +480,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(intTS())));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntType())));
       }
 
       @Test
@@ -437,7 +490,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(blobTS())));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sBlobType())));
       }
 
       @Test
@@ -447,7 +500,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(arrayTS(intTS()))));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sArrayType(sIntType()))));
       }
 
       @Test
@@ -458,7 +511,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(intTS())));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntType())));
       }
 
       @Test
@@ -470,7 +523,9 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(funcTS(intTS(), intTS()))));
+            .containsEvaluableWithSchema(
+                "result",
+                sSchema(sArrayType(TestingSExpression.sFuncType(sIntType(), sIntType()))));
       }
 
       @Test
@@ -481,7 +536,8 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(funcTS(varA(), varA()))));
+            .containsEvaluableWithSchema(
+                "result", sSchema(sArrayType(TestingSExpression.sFuncType(varA(), varA()))));
       }
     }
 
@@ -494,7 +550,7 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
       }
 
       @Test
@@ -524,7 +580,8 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(funcTS(intTS()))));
+            .containsEvaluableWithSchema(
+                "result", sSchema(sArrayType(TestingSExpression.sFuncType(sIntType()))));
       }
 
       @Test
@@ -554,7 +611,7 @@ public class InferenceTest {
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema(
-                "result", schemaS(arrayTS(idFuncS().schema().type())));
+                "result", sSchema(sArrayType(idSFunc().schema().type())));
       }
 
       @Test
@@ -580,7 +637,9 @@ public class InferenceTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(funcTS(intTS(), intTS()))));
+            .containsEvaluableWithSchema(
+                "result",
+                sSchema(sArrayType(TestingSExpression.sFuncType(sIntType(), sIntType()))));
       }
 
       @Test
@@ -660,7 +719,9 @@ public class InferenceTest {
             A myIdentity(A a) = a;
             myValue = myIdentity("abc");
             """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
       }
 
       @Test
@@ -672,7 +733,7 @@ public class InferenceTest {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
       }
 
       @Test
@@ -685,7 +746,8 @@ public class InferenceTest {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", funcSchemaS(blobTS(), stringTS()));
+            .containsEvaluableWithSchema(
+                "myValue", TestingSExpression.sFuncSchema(sBlobType(), sStringType()));
       }
     }
 
@@ -699,7 +761,9 @@ public class InferenceTest {
             A firstElement([A] array);
             myValue = firstElement(["abc"]);
             """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
       }
 
       @Test
@@ -712,7 +776,7 @@ public class InferenceTest {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
       }
     }
 
@@ -727,7 +791,7 @@ public class InferenceTest {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
       }
 
       @Test
@@ -739,7 +803,7 @@ public class InferenceTest {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(arrayTS(stringTS()))));
+            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sArrayType(sStringType()))));
       }
 
       @Test
@@ -752,7 +816,9 @@ public class InferenceTest {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(funcTS(blobTS(), stringTS()))));
+            .containsEvaluableWithSchema(
+                "myValue",
+                sSchema(sArrayType(TestingSExpression.sFuncType(sBlobType(), sStringType()))));
       }
     }
 
@@ -765,7 +831,7 @@ public class InferenceTest {
               A myFunc(A a = 7) = a;
               myValue = myFunc();
               """;
-        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(intTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", sSchema(sIntType()));
       }
 
       @Test
@@ -778,7 +844,8 @@ public class InferenceTest {
               """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", funcSchemaS(intTS(), intTS()));
+            .containsEvaluableWithSchema(
+                "myValue", TestingSExpression.sFuncSchema(sIntType(), sIntType()));
       }
 
       @Test
@@ -825,7 +892,7 @@ public class InferenceTest {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvaluableWithSchema("result", schemaS(arrayTS(stringTS())));
+          .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
     }
   }
 
@@ -838,10 +905,17 @@ public class InferenceTest {
               Int myFunc(A a) = 7;
               result = myFunc([]);
               """;
-      var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
-      var emptyArray = orderS(2, tupleTS());
-      var call = callS(2, instantiateS(2, list(arrayTS(tupleTS())), myFunc), emptyArray);
-      module(code).loadsWithSuccess().containsEvaluable(valueS(2, "result", call));
+      var myFunc = TestingSExpression.sFunc(
+          1, "myFunc", nlist(TestingSExpression.sItem(1, varA(), "a")), sInt(1, 7));
+      var emptyArray = sOrder(2, TestingSExpression.sTupleType());
+      var call = sCall(
+          2,
+          TestingSExpression.sInstantiate(
+              2, list(sArrayType(TestingSExpression.sTupleType())), myFunc),
+          emptyArray);
+      module(code)
+          .loadsWithSuccess()
+          .containsEvaluable(TestingSExpression.sValue(2, "result", call));
     }
 
     @Test
@@ -849,10 +923,16 @@ public class InferenceTest {
       var code = """
               result = ((A a) -> 7)([]);
               """;
-      var lambda = lambdaS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
-      var emptyArray = orderS(1, tupleTS());
-      var call = callS(1, instantiateS(1, list(arrayTS(tupleTS())), lambda), emptyArray);
-      module(code).loadsWithSuccess().containsEvaluable(valueS(1, "result", call));
+      var lambda = sLambda(1, nlist(TestingSExpression.sItem(1, varA(), "a")), sInt(1, 7));
+      var emptyArray = sOrder(1, TestingSExpression.sTupleType());
+      var call = sCall(
+          1,
+          TestingSExpression.sInstantiate(
+              1, list(sArrayType(TestingSExpression.sTupleType())), lambda),
+          emptyArray);
+      module(code)
+          .loadsWithSuccess()
+          .containsEvaluable(TestingSExpression.sValue(1, "result", call));
     }
   }
 

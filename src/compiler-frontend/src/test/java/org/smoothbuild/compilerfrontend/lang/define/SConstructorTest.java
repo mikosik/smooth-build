@@ -2,18 +2,18 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.constructorS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sigS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sConstructor;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 
 import org.junit.jupiter.api.Test;
 
 public class SConstructorTest {
   @Test
   public void to_string() {
-    var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
-    var constructorS = constructorS(17, structTS, "constructorName");
+    var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
+    var constructorS = sConstructor(17, structTS, "constructorName");
     assertThat(constructorS.toString())
         .isEqualTo(
             """

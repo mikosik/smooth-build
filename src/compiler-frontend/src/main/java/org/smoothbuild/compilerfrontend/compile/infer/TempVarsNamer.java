@@ -4,20 +4,20 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.EvaluableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ExprP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.InstantiateP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.IntP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.LambdaP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedArgP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedValueP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.OrderP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
@@ -38,57 +38,57 @@ public class TempVarsNamer {
     this.outerScopeVars = outerScopeVars;
   }
 
-  public void nameVarsInNamedValue(NamedValueP namedValue) {
+  public void nameVarsInNamedValue(PNamedValue namedValue) {
     nameVarsInEvaluable(namedValue);
   }
 
-  public void nameVarsInNamedFunc(NamedFuncP namedFunc) {
+  public void nameVarsInNamedFunc(PNamedFunc namedFunc) {
     nameVarsInEvaluable(namedFunc);
   }
 
-  private void handleExpr(SVarSet varsInScope, ExprP expr) {
+  private void handleExpr(SVarSet varsInScope, PExpr expr) {
     new TempVarsNamer(unifier, varsInScope).handleExpr(expr);
   }
 
-  private void handleExpr(ExprP expr) {
+  private void handleExpr(PExpr expr) {
     switch (expr) {
-      case CallP callP -> handleCall(callP);
-      case InstantiateP instantiateP -> handleInstantiate(instantiateP);
-      case NamedArgP namedArgP -> handleExpr(namedArgP.expr());
-      case OrderP orderP -> handleOrder(orderP);
-      case SelectP selectP -> handleExpr(selectP.selectable());
-      case IntP intP -> {}
-      case BlobP blobP -> {}
-      case StringP stringP -> {}
+      case PCall pCall -> handleCall(pCall);
+      case PInstantiate pInstantiate -> handleInstantiate(pInstantiate);
+      case PNamedArg pNamedArg -> handleExpr(pNamedArg.expr());
+      case POrder pOrder -> handleOrder(pOrder);
+      case PSelect pSelect -> handleExpr(pSelect.selectable());
+      case PInt pInt -> {}
+      case PBlob pBlob -> {}
+      case PString pString -> {}
     }
   }
 
-  private void handleCall(CallP call) {
+  private void handleCall(PCall call) {
     handleChildren(list(call.callee()).appendAll(call.args()));
   }
 
-  private void handleInstantiate(InstantiateP instantiateP) {
-    switch (instantiateP.polymorphic()) {
-      case LambdaP lambdaP -> handleLambda(lambdaP);
-      case ReferenceP referenceP -> {}
+  private void handleInstantiate(PInstantiate pInstantiate) {
+    switch (pInstantiate.polymorphic()) {
+      case PLambda pLambda -> handleLambda(pLambda);
+      case PReference pReference -> {}
     }
   }
 
-  private void handleLambda(LambdaP lambdaP) {
-    nameVarsInEvaluable(lambdaP);
+  private void handleLambda(PLambda pLambda) {
+    nameVarsInEvaluable(pLambda);
   }
 
-  private void handleOrder(OrderP order) {
+  private void handleOrder(POrder order) {
     handleChildren(order.elements());
   }
 
-  private void handleChildren(List<ExprP> children) {
+  private void handleChildren(List<PExpr> children) {
     for (var child : children) {
       handleExpr(child);
     }
   }
 
-  private void nameVarsInEvaluable(EvaluableP evaluable) {
+  private void nameVarsInEvaluable(PEvaluable evaluable) {
     var resolvedT = unifier.resolve(evaluable.typeS());
     var body = evaluable.body();
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());

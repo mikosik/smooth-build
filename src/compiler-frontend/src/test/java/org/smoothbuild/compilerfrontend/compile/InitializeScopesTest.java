@@ -5,26 +5,25 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.compile.InitializeScopes.initializeScopes;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.lambdaP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.moduleP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedFuncP;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedValueP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pInt;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pLambda;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pModule;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedValue;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.compilerfrontend.compile.ast.define.LambdaP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class InitializeScopesTest {
   @Nested
   class _module {
     @Test
     public void module_scope_has_its_member_function_in_referenceables() {
-      var namedFuncP = namedFuncP("myFunc");
-      var moduleP = moduleP(list(), list(namedFuncP));
+      var namedFuncP = TestingSExpression.pNamedFunc("myFunc");
+      var moduleP = pModule(list(), list(namedFuncP));
 
       initializeScopes(moduleP, new Logger());
 
@@ -33,8 +32,8 @@ public class InitializeScopesTest {
 
     @Test
     public void module_scope_has_its_member_value_in_referenceables() {
-      var namedValueP = namedValueP("myValue");
-      var moduleP = moduleP(list(), list(namedValueP));
+      var namedValueP = TestingSExpression.pNamedValue("myValue");
+      var moduleP = pModule(list(), list(namedValueP));
 
       initializeScopes(moduleP, new Logger());
 
@@ -43,10 +42,10 @@ public class InitializeScopesTest {
 
     @Test
     public void module_scope_has_its_member_function_param_default_value_in_referenceables() {
-      var defaultValue = namedValueP("myFunc:param");
-      var param = itemP("param", defaultValue);
-      var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = moduleP(list(), list(namedFuncP));
+      var defaultValue = TestingSExpression.pNamedValue("myFunc:param");
+      var param = TestingSExpression.pItem("param", defaultValue);
+      var namedFuncP = TestingSExpression.pNamedFunc("myFunc", nlist(param));
+      var moduleP = pModule(list(), list(namedFuncP));
 
       initializeScopes(moduleP, new Logger());
 
@@ -60,10 +59,10 @@ public class InitializeScopesTest {
     class _parameter_default_value {
       @Test
       public void parameter_default_value_scope_referenceables_does_not_contain_that_parameter() {
-        var defaultValue = namedValueP("myFunc:param");
-        var param = itemP("param", defaultValue);
-        var namedFuncP = namedFuncP("myFunc", nlist(param));
-        var moduleP = moduleP(list(), list(namedFuncP));
+        var defaultValue = TestingSExpression.pNamedValue("myFunc:param");
+        var param = TestingSExpression.pItem("param", defaultValue);
+        var namedFuncP = TestingSExpression.pNamedFunc("myFunc", nlist(param));
+        var moduleP = pModule(list(), list(namedFuncP));
 
         initializeScopes(moduleP, new Logger());
 
@@ -72,11 +71,11 @@ public class InitializeScopesTest {
 
       @Test
       public void parameter_default_value_scope_referenceables_does_not_contain_other_parameter() {
-        var param1DefaultValue = namedValueP("myFunc:param");
-        var param1 = itemP("param1", param1DefaultValue);
-        var param2 = itemP("param2");
-        var namedFuncP = namedFuncP("myFunc", nlist(param1, param2));
-        var moduleP = moduleP(list(), list(namedFuncP));
+        var param1DefaultValue = TestingSExpression.pNamedValue("myFunc:param");
+        var param1 = TestingSExpression.pItem("param1", param1DefaultValue);
+        var param2 = TestingSExpression.pItem("param2");
+        var namedFuncP = TestingSExpression.pNamedFunc("myFunc", nlist(param1, param2));
+        var moduleP = pModule(list(), list(namedFuncP));
 
         initializeScopes(moduleP, new Logger());
 
@@ -86,20 +85,23 @@ public class InitializeScopesTest {
 
       @Test
       public void parameter_default_value_scope_referenceables_contains_function_from_module() {
-        testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(namedFuncP("myFunc"));
+        testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(
+            TestingSExpression.pNamedFunc("myFunc"));
       }
 
       @Test
       public void parameter_default_value_scope_referenceables_contains_value_from_module() {
-        testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(namedValueP("myValue"));
+        testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(
+            TestingSExpression.pNamedValue("myValue"));
       }
 
       private void testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(
-          NamedEvaluableP member) {
-        var defaultValue = namedValueP("myFuncWithParamWithDefaultValue:param");
-        var param = itemP("param", defaultValue);
-        var namedFuncP = namedFuncP("myFuncWithParamWithDefaultValue", nlist(param));
-        var moduleP = moduleP(list(), list(namedFuncP, member));
+          PNamedEvaluable member) {
+        var defaultValue = TestingSExpression.pNamedValue("myFuncWithParamWithDefaultValue:param");
+        var param = TestingSExpression.pItem("param", defaultValue);
+        var namedFuncP =
+            TestingSExpression.pNamedFunc("myFuncWithParamWithDefaultValue", nlist(param));
+        var moduleP = pModule(list(), list(namedFuncP, member));
 
         initializeScopes(moduleP, new Logger());
 
@@ -109,9 +111,9 @@ public class InitializeScopesTest {
 
     @Test
     public void named_function_scope_has_its_parameter() {
-      var param = itemP("param");
-      var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = moduleP(list(), list(namedFuncP));
+      var param = TestingSExpression.pItem("param");
+      var namedFuncP = TestingSExpression.pNamedFunc("myFunc", nlist(param));
+      var moduleP = pModule(list(), list(namedFuncP));
 
       initializeScopes(moduleP, new Logger());
 
@@ -120,10 +122,10 @@ public class InitializeScopesTest {
 
     @Test
     public void named_function_scope_has_its_sibling_named_value() {
-      var namedValueP = namedValueP("myValue");
-      var param = itemP("param");
-      var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = moduleP(list(), list(namedFuncP, namedValueP));
+      var namedValueP = TestingSExpression.pNamedValue("myValue");
+      var param = TestingSExpression.pItem("param");
+      var namedFuncP = TestingSExpression.pNamedFunc("myFunc", nlist(param));
+      var moduleP = pModule(list(), list(namedFuncP, namedValueP));
 
       initializeScopes(moduleP, new Logger());
 
@@ -132,10 +134,10 @@ public class InitializeScopesTest {
 
     @Test
     public void named_function_scope_has_its_sibling_named_function() {
-      var otherFunc = namedFuncP("otherFunc");
-      var param = itemP("param");
-      var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = moduleP(list(), list(namedFuncP, otherFunc));
+      var otherFunc = TestingSExpression.pNamedFunc("otherFunc");
+      var param = TestingSExpression.pItem("param");
+      var namedFuncP = TestingSExpression.pNamedFunc("myFunc", nlist(param));
+      var moduleP = pModule(list(), list(namedFuncP, otherFunc));
 
       initializeScopes(moduleP, new Logger());
 
@@ -147,39 +149,39 @@ public class InitializeScopesTest {
   class _lambda {
     @Test
     public void lambda_scope_has_value_that_encloses_it() {
-      var param = itemP("param");
-      var lambdaP = lambdaP(nlist(param), intP());
-      var namedValueP = namedValueP("myValue", lambdaP);
-      var moduleP = moduleP(list(), list(namedValueP));
+      var param = TestingSExpression.pItem("param");
+      var lambdaP = pLambda(nlist(param), pInt());
+      var namedValueP = pNamedValue("myValue", lambdaP);
+      var moduleP = pModule(list(), list(namedValueP));
 
       initializeScopes(moduleP, new Logger());
 
-      var cast = ((LambdaP) lambdaP.polymorphic());
+      var cast = ((PLambda) lambdaP.polymorphic());
       assertThat(cast.scope().referencables().get("myValue")).isEqualTo(namedValueP);
     }
 
     @Test
     public void lambda_scope_has_function_that_encloses_it() {
-      var param = itemP("param");
-      var lambdaP = lambdaP(nlist(param), intP());
-      var namedValueP = namedFuncP("myFunc", lambdaP);
-      var moduleP = moduleP(list(), list(namedValueP));
+      var param = TestingSExpression.pItem("param");
+      var lambdaP = pLambda(nlist(param), pInt());
+      var namedValueP = TestingSExpression.pNamedFunc("myFunc", lambdaP);
+      var moduleP = pModule(list(), list(namedValueP));
 
       initializeScopes(moduleP, new Logger());
 
-      var cast = ((LambdaP) lambdaP.polymorphic());
+      var cast = ((PLambda) lambdaP.polymorphic());
       assertThat(cast.scope().referencables().get("myFunc")).isEqualTo(namedValueP);
     }
 
     @Test
     public void lambda_scope_has_its_parameter() {
-      var param = itemP("param");
-      var lambdaP = lambdaP(nlist(param), intP());
-      var moduleP = moduleP(list(), list(namedValueP(lambdaP)));
+      var param = TestingSExpression.pItem("param");
+      var lambdaP = pLambda(nlist(param), pInt());
+      var moduleP = pModule(list(), list(TestingSExpression.pNamedValue(lambdaP)));
 
       initializeScopes(moduleP, new Logger());
 
-      var cast = ((LambdaP) lambdaP.polymorphic());
+      var cast = ((PLambda) lambdaP.polymorphic());
       assertThat(cast.scope().referencables().get("param")).isEqualTo(param);
     }
   }

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,25 +20,25 @@ public class SItemTest {
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new SItem(stringTS(), null, none(), location()))
+    assertCall(() -> new SItem(sStringType(), null, none(), location()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_getter() {
-    param = new SItem(stringTS(), name, none(), location());
-    assertThat(param.type()).isEqualTo(stringTS());
+    param = new SItem(sStringType(), name, none(), location());
+    assertThat(param.type()).isEqualTo(sStringType());
   }
 
   @Test
   public void name_getter() {
-    param = new SItem(stringTS(), name, none(), location());
+    param = new SItem(sStringType(), name, none(), location());
     assertThat(param.name()).isEqualTo(name);
   }
 
   @Test
   public void to_string() {
-    param = new SItem(stringTS(), name, none(), location());
+    param = new SItem(sStringType(), name, none(), location());
     assertThat(param.toString())
         .isEqualTo(
             """

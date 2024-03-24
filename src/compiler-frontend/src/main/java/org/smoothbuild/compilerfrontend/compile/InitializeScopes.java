@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP.emptyScope;
+import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.smoothbuild.common.bindings.MutableBindings;
@@ -12,17 +12,17 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
-import org.smoothbuild.compilerfrontend.compile.ast.ScopingModuleVisitorP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.FuncP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedValueP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ScopeP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ScopedP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
@@ -30,74 +30,74 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends ModuleVisitorP implements TryFunction1<ModuleP, ModuleP> {
+public class InitializeScopes extends PModuleVisitor implements TryFunction1<PModule, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "initializeScopes");
   }
 
   @Override
-  public Try<ModuleP> apply(ModuleP moduleP) {
+  public Try<PModule> apply(PModule pModule) {
     var logger = new Logger();
-    initializeScopes(moduleP, logger);
-    return Try.of(moduleP, logger);
+    initializeScopes(pModule, logger);
+    return Try.of(pModule, logger);
   }
 
   @VisibleForTesting
-  static void initializeScopes(ModuleP moduleP, Logger logger) {
-    new Initializer(emptyScope(), logger).visitModule(moduleP);
+  static void initializeScopes(PModule pModule, Logger logger) {
+    new Initializer(emptyScope(), logger).visitModule(pModule);
   }
 
-  private static class Initializer extends ScopingModuleVisitorP {
-    private final ScopeP scope;
+  private static class Initializer extends PScopingModuleVisitor {
+    private final PScope scope;
     private final Logger logger;
 
-    private Initializer(ScopeP scope, Logger logger) {
+    private Initializer(PScope scope, Logger logger) {
       this.scope = scope;
       this.logger = logger;
     }
 
     @Override
-    protected ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP) {
+    protected PModuleVisitor createVisitorForScopeOf(PScoped pScoped) {
       var scopeFiller = new ScopeCreator(scope, logger);
-      var newScope = scopeFiller.createScopeFor(scopedP);
-      scopedP.setScope(newScope);
+      var newScope = scopeFiller.createScopeFor(pScoped);
+      pScoped.setScope(newScope);
       return new Initializer(newScope, logger);
     }
   }
 
-  private static class ScopeCreator extends ModuleVisitorP {
-    private final ScopeP scope;
+  private static class ScopeCreator extends PModuleVisitor {
+    private final PScope scope;
     private final Logger log;
-    private final MutableBindings<ReferenceableP> referenceables = mutableBindings();
-    private final MutableBindings<StructP> types = mutableBindings();
+    private final MutableBindings<PReferenceable> referenceables = mutableBindings();
+    private final MutableBindings<PStruct> types = mutableBindings();
 
-    public ScopeCreator(ScopeP scope, Logger log) {
+    public ScopeCreator(PScope scope, Logger log) {
       this.scope = scope;
       this.log = log;
     }
 
-    private ScopeP createScopeFor(ScopedP scopedP) {
-      switch (scopedP) {
-        case ModuleP moduleP -> initializeScopeFor(moduleP);
-        case StructP structP -> initializeScopeFor(structP);
-        case NamedValueP namedValueP -> initializeScopeFor(namedValueP);
-        case FuncP funcP -> initializeScopeFor(funcP);
+    private PScope createScopeFor(PScoped pScoped) {
+      switch (pScoped) {
+        case PModule pModule -> initializeScopeFor(pModule);
+        case PStruct pStruct -> initializeScopeFor(pStruct);
+        case PNamedValue pNamedValue -> initializeScopeFor(pNamedValue);
+        case PFunc pFunc -> initializeScopeFor(pFunc);
       }
       return scope.newInnerScope(
-          scopedP.name(), referenceables.toFlatImmutable(), types.toFlatImmutable());
+          pScoped.name(), referenceables.toFlatImmutable(), types.toFlatImmutable());
     }
 
-    private void initializeScopeFor(ModuleP moduleP) {
-      moduleP.structs().forEach(this::addType);
-      moduleP.structs().forEach(this::addConstructor);
-      moduleP.evaluables().forEach(this::addNamedEvaluable);
+    private void initializeScopeFor(PModule pModule) {
+      pModule.structs().forEach(this::addType);
+      pModule.structs().forEach(this::addConstructor);
+      pModule.evaluables().forEach(this::addNamedEvaluable);
     }
 
-    private void addNamedEvaluable(NamedEvaluableP namedEvaluableP) {
-      addReferenceable(namedEvaluableP);
-      if (namedEvaluableP instanceof NamedFuncP namedFuncP) {
-        for (var param : namedFuncP.params()) {
+    private void addNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
+      addReferenceable(pNamedEvaluable);
+      if (pNamedEvaluable instanceof PNamedFunc pNamedFunc) {
+        for (var param : pNamedFunc.params()) {
           if (param.defaultValue().isSome()) {
             var defaultValue = param.defaultValue().get();
             addReferenceable(defaultValue);
@@ -106,8 +106,8 @@ public class InitializeScopes extends ModuleVisitorP implements TryFunction1<Mod
       }
     }
 
-    private void addConstructor(StructP structP) {
-      var constructor = structP.constructor();
+    private void addConstructor(PStruct pStruct) {
+      var constructor = pStruct.constructor();
       // No need to report error when other referenceable with same name is already defined.
       // Constructor name starts with capital letter, so it can collide only
       // with other constructor name. This can only happen when other structure
@@ -115,22 +115,22 @@ public class InitializeScopes extends ModuleVisitorP implements TryFunction1<Mod
       referenceables.add(constructor.name(), constructor);
     }
 
-    private void initializeScopeFor(StructP structP) {
-      structP.fields().forEach(this::addReferenceable);
+    private void initializeScopeFor(PStruct pStruct) {
+      pStruct.fields().forEach(this::addReferenceable);
     }
 
-    private void initializeScopeFor(NamedValueP namedValueP) {}
+    private void initializeScopeFor(PNamedValue pNamedValue) {}
 
-    private void initializeScopeFor(FuncP funcP) {
-      funcP.params().forEach(this::addReferenceable);
+    private void initializeScopeFor(PFunc pFunc) {
+      pFunc.params().forEach(this::addReferenceable);
     }
 
-    private void addType(StructP type) {
+    private void addType(PStruct type) {
       addBinding(types, type);
     }
 
-    private void addReferenceable(ReferenceableP referenceableP) {
-      addBinding(referenceables, referenceableP);
+    private void addReferenceable(PReferenceable pReferenceable) {
+      addBinding(referenceables, pReferenceable);
     }
 
     private <T extends Nal> void addBinding(MutableBindings<T> bindings, T binding) {

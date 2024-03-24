@@ -3,14 +3,11 @@ package org.smoothbuild.compilerbackend;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.tupleTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varC;
@@ -20,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -28,43 +26,48 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
   class _mono {
     @Test
     public void blob_type() throws Exception {
-      assertTranslation(blobTS(), bBlobType());
+      assertTranslation(sBlobType(), bBlobType());
     }
 
     @Test
     public void bool_type() throws Exception {
-      assertTranslation(boolTS(), bBoolType());
+      assertTranslation(sBoolType(), bBoolType());
     }
 
     @Test
     public void int_type() throws Exception {
-      assertTranslation(intTS(), bIntType());
+      assertTranslation(sIntType(), bIntType());
     }
 
     @Test
     public void string_type() throws Exception {
-      assertTranslation(stringTS(), bStringType());
+      assertTranslation(sStringType(), bStringType());
     }
 
     @Test
     public void int_array_type() throws Exception {
-      assertTranslation(arrayTS(intTS()), bArrayType(bIntType()));
+      assertTranslation(sArrayType(sIntType()), bArrayType(bIntType()));
     }
 
     @Test
     public void tuple_type() throws Exception {
-      assertTranslation(tupleTS(intTS(), blobTS()), bTupleType(bIntType(), bBlobType()));
+      assertTranslation(
+          TestingSExpression.sTupleType(sIntType(), sBlobType()),
+          bTupleType(bIntType(), bBlobType()));
     }
 
     @Test
     public void struct_type() throws Exception {
-      assertTranslation(structTS(intTS(), blobTS()), bTupleType(bIntType(), bBlobType()));
+      assertTranslation(
+          TestingSExpression.sStructType(sIntType(), sBlobType()),
+          bTupleType(bIntType(), bBlobType()));
     }
 
     @Test
     public void func_type() throws Exception {
       assertTranslation(
-          funcTS(blobTS(), stringTS(), intTS()), bFuncType(bBlobType(), bStringType(), bIntType()));
+          TestingSExpression.sFuncType(sBlobType(), sStringType(), sIntType()),
+          bFuncType(bBlobType(), bStringType(), bIntType()));
     }
   }
 
@@ -72,14 +75,14 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
   class _poly {
     @Test
     public void array_type() throws Exception {
-      assertTranslation(map(varA(), bIntType()), arrayTS(varA()), bArrayType(bIntType()));
+      assertTranslation(map(varA(), bIntType()), sArrayType(varA()), bArrayType(bIntType()));
     }
 
     @Test
     public void tuple_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType()),
-          tupleTS(varA(), varB()),
+          TestingSExpression.sTupleType(varA(), varB()),
           bTupleType(bIntType(), bBlobType()));
     }
 
@@ -87,7 +90,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     public void struct_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType()),
-          structTS(varA(), varB()),
+          TestingSExpression.sStructType(varA(), varB()),
           bTupleType(bIntType(), bBlobType()));
     }
 
@@ -95,13 +98,13 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     public void func_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType(), varC(), bStringType()),
-          funcTS(varB(), varC(), varA()),
+          TestingSExpression.sFuncType(varB(), varC(), varA()),
           bFuncType(bBlobType(), bStringType(), bIntType()));
     }
 
     @Test
     public void missing_mapping_for_variable_causes_exception() {
-      assertCall(() -> assertTranslation(arrayTS(varA()), bArrayType(bIntType())))
+      assertCall(() -> assertTranslation(sArrayType(varA()), bArrayType(bIntType())))
           .throwsException(new IllegalStateException("Unknown variable `A`."));
     }
   }

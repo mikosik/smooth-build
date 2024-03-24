@@ -18,99 +18,99 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.compile.ast.ModuleVisitorP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ArrayTP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.FuncTP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ModuleP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedEvaluableP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.TypeP;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 /**
  * Sort module Evaluables and Structs based on dependencies between them.
  */
-public class SortModuleMembersByDependency implements TryFunction1<ModuleP, ModuleP> {
+public class SortModuleMembersByDependency implements TryFunction1<PModule, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "sortMembers");
   }
 
   @Override
-  public Try<ModuleP> apply(ModuleP moduleP) {
+  public Try<PModule> apply(PModule pModule) {
     var logger = new Logger();
-    var sortedTs = sortStructsByDeps(moduleP.structs());
+    var sortedTs = sortStructsByDeps(pModule.structs());
     if (sortedTs.sorted() == null) {
       logger.log(createCycleError("Type hierarchy", sortedTs.cycle()));
       return Try.of(null, logger);
     }
-    var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
+    var sortedEvaluables = sortEvaluablesByDeps(pModule.evaluables());
     if (sortedEvaluables.sorted() == null) {
       logger.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
       return Try.of(null, logger);
     }
-    ModuleP result = new ModuleP(
-        moduleP.name(),
+    PModule result = new PModule(
+        pModule.name(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
-        moduleP.scope());
+        pModule.scope());
     return Try.of(result, logger);
   }
 
-  private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(
-      List<NamedEvaluableP> evaluables) {
+  private static TopologicalSortingRes<String, PNamedEvaluable, Location> sortEvaluablesByDeps(
+      List<PNamedEvaluable> evaluables) {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(r -> names.add(r.name()));
 
-    HashSet<GraphNode<String, NamedEvaluableP, Location>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, PNamedEvaluable, Location>> nodes = new HashSet<>();
     nodes.addAll(evaluables.map(r -> evaluable(r, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, NamedEvaluableP, Location> evaluable(
-      NamedEvaluableP evaluable, Set<String> names) {
+  private static GraphNode<String, PNamedEvaluable, Location> evaluable(
+      PNamedEvaluable evaluable, Set<String> names) {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
-    new ModuleVisitorP() {
+    new PModuleVisitor() {
       @Override
-      public void visitReference(ReferenceP referenceP) {
-        super.visitReference(referenceP);
-        if (names.contains(referenceP.referencedName())) {
-          deps.add(new GraphEdge<>(referenceP.location(), referenceP.referencedName()));
+      public void visitReference(PReference pReference) {
+        super.visitReference(pReference);
+        if (names.contains(pReference.referencedName())) {
+          deps.add(new GraphEdge<>(pReference.location(), pReference.referencedName()));
         }
       }
     }.visitNamedEvaluable(evaluable);
     return new GraphNode<>(evaluable.name(), evaluable, listOfAll(deps));
   }
 
-  private static TopologicalSortingRes<String, StructP, Location> sortStructsByDeps(
-      List<StructP> structs) {
+  private static TopologicalSortingRes<String, PStruct, Location> sortStructsByDeps(
+      List<PStruct> structs) {
     var structNames = structs.map(Nal::name).toSet();
     var nodes = structs.map(struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, StructP, Location> structToGraphNode(
-      StructP struct, Set<String> funcNames) {
+  private static GraphNode<String, PStruct, Location> structToGraphNode(
+      PStruct struct, Set<String> funcNames) {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
-    new ModuleVisitorP() {
+    new PModuleVisitor() {
       @Override
-      public void visitStructSignature(StructP structP) {
-        super.visitStructSignature(structP);
-        structP.fields().forEach(f -> addToDeps(f.type()));
+      public void visitStructSignature(PStruct pStruct) {
+        super.visitStructSignature(pStruct);
+        pStruct.fields().forEach(f -> addToDeps(f.type()));
       }
 
-      private void addToDeps(TypeP typeP) {
-        switch (typeP) {
-          case ArrayTP arrayT -> addToDeps(arrayT.elemT());
-          case FuncTP funcT -> {
+      private void addToDeps(PType pType) {
+        switch (pType) {
+          case PArrayType arrayT -> addToDeps(arrayT.elemT());
+          case PFuncType funcT -> {
             addToDeps(funcT.result());
             funcT.params().forEach(this::addToDeps);
           }
           default -> {
-            if (funcNames.contains(typeP.name())) {
-              deps.add(new GraphEdge<>(typeP.location(), typeP.name()));
+            if (funcNames.contains(pType.name())) {
+              deps.add(new GraphEdge<>(pType.location(), pType.name()));
             }
           }
         }

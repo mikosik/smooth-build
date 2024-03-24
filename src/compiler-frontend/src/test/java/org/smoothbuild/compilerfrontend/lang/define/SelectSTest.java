@@ -2,24 +2,23 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.annotatedValueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.instantiateS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.selectS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sigS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SelectSTest {
   @Test
   public void to_string() {
-    var annotationS = new SAnnotation("myAnnotation", stringS(7, "myPath"), location(17));
-    var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
-    var structValue = annotatedValueS(11, annotationS, structTS, "structValue");
-    var selectS = selectS(3, instantiateS(12, structValue), "field");
+    var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
+    var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
+    var structValue = TestingSExpression.sAnnotatedValue(11, annotationS, structTS, "structValue");
+    var selectS =
+        TestingSExpression.sSelect(3, TestingSExpression.sInstantiate(12, structValue), "field");
     assertThat(selectS.toString())
         .isEqualTo(
             """

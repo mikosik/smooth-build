@@ -13,15 +13,13 @@ import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingBucket.readFile;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.annotatedValueS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.arrayTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.blobTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.boolTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.nativeAnnotationS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.stringTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;
@@ -50,7 +48,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_bool_artifact() throws Exception {
-    var typeS = boolTS();
+    var typeS = sBoolType();
     var valueB = bBool(true);
     var valueAsByteString = byteStringWithSingleByteEqualOne();
 
@@ -59,7 +57,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_int_artifact() throws Exception {
-    var typeS = intTS();
+    var typeS = sIntType();
     var valueB = bInt(7);
     var valueAsByteString = ByteString.of((byte) 7);
 
@@ -68,7 +66,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_string_artifact() throws Exception {
-    var typeS = stringTS();
+    var typeS = sStringType();
     var valueB = bString("abc");
     var valueAsByteString = byteStringFrom("abc");
 
@@ -77,7 +75,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_blob_artifact() throws Exception {
-    var typeS = blobTS();
+    var typeS = sBlobType();
     var valueAsByteString = byteStringFrom("abc");
     var valueB = bBlob(valueAsByteString);
 
@@ -97,7 +95,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
-    var typeS = structTS("NotAFile", blobTS(), stringTS());
+    var typeS = TestingSExpression.sStructType("NotAFile", sBlobType(), sStringType());
     var valueB = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
     var byteString = readFile(hashedDbBucket(), HashedDb.dbPathTo(valueB.dataHash()));
 
@@ -106,7 +104,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_empty_bool_array_artifact() throws Exception {
-    var typeS = arrayTS(boolTS());
+    var typeS = sArrayType(sBoolType());
     var valueB = bArray(bBoolType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
@@ -114,7 +112,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_not_empty_bool_array_artifact() throws Exception {
-    var typeS = arrayTS(boolTS());
+    var typeS = sArrayType(sBoolType());
     var valueB = bArray(bBoolType(), bBool(true), bBool(false));
 
     testValueStoring(
@@ -130,7 +128,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_empty_string_array_artifact() throws Exception {
-    var typeS = arrayTS(stringTS());
+    var typeS = sArrayType(sStringType());
     var valueB = bArray(bStringType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
@@ -138,7 +136,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_not_empty_string_array_artifact() throws Exception {
-    var typeS = arrayTS(stringTS());
+    var typeS = sArrayType(sStringType());
     var valueB = bArray(bStringType(), bString("abc"), bString("def"));
 
     testValueStoring(
@@ -150,7 +148,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_empty_blob_array_artifact() throws Exception {
-    var typeS = arrayTS(blobTS());
+    var typeS = sArrayType(sBlobType());
     var valueB = bArray(bBlobType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
@@ -158,7 +156,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_not_empty_blob_array_artifact() throws Exception {
-    var typeS = arrayTS(blobTS());
+    var typeS = sArrayType(sBlobType());
     var valueB = bArray(bBlobType(), bBlob(7), bBlob(8));
 
     testValueStoring(
@@ -171,7 +169,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_empty_file_array_artifact() throws Exception {
-    var typeS = arrayTS(fileTS());
+    var typeS = sArrayType(fileTS());
     var valueB = bArray(bFileType());
 
     testValueStoring(typeS, valueB, "myValue", Map.of());
@@ -179,7 +177,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_not_empty_file_array_artifact() throws Exception {
-    var typeS = arrayTS(fileTS());
+    var typeS = sArrayType(fileTS());
     var content1 = byteStringFrom("abc");
     var content2 = byteStringFrom("def");
     var valueB = bArray(bFileType(), bFile("dir1/file1", content1), bFile("dir2/file2", content2));
@@ -193,7 +191,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_array_of_files_with_duplicated_paths_fails() throws Exception {
-    var typeS = arrayTS(fileTS());
+    var typeS = sArrayType(fileTS());
     var content1 = byteStringFrom("abc");
     var content2 = byteStringFrom("def");
     var path = path("dir1/file1");
@@ -212,9 +210,9 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
     var saveArtifacts = new SaveArtifacts(projectBucket());
     List<SExpr> sExprs = list(
-        instantiateS(stringTS(), "myValue1"),
-        instantiateS(stringTS(), "myValue2"),
-        instantiateS(stringTS(), "myValue3"));
+        instantiateS(sStringType(), "myValue1"),
+        instantiateS(sStringType(), "myValue2"),
+        instantiateS(sStringType(), "myValue3"));
     List<BValue> bValues = list(bString(), bString(), bString());
     var stringTry = saveArtifacts.apply(evaluatedExprs(sExprs, bValues));
     assertThat(stringTry)
@@ -262,11 +260,11 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   }
 
   private static SInstantiate instantiateS(SType sType, String name) {
-    return TestingSExpression.instantiateS(
-        list(), annotatedValueS(nativeAnnotationS(), sType, name, location()));
+    return TestingSExpression.sInstantiate(
+        list(), sAnnotatedValue(TestingSExpression.sNativeAnnotation(), sType, name, location()));
   }
 
   public static SStructType fileTS() {
-    return structTS(FILE_STRUCT_NAME, blobTS(), stringTS());
+    return TestingSExpression.sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
   }
 }

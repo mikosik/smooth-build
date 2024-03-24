@@ -1,15 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.orderS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SOrderTest {
   @Test
   public void to_string() {
-    var orderS = orderS(3, intS(4, 44), intS(5, 55));
+    var orderS = TestingSExpression.sOrder(3, sInt(4, 44), sInt(5, 55));
     assertThat(orderS.toString())
         .isEqualTo(
             """

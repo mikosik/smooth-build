@@ -3,15 +3,15 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.schemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userModuleFullPath;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class VisibilityTest {
   @Nested
@@ -727,7 +727,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleValue", schemaS(intTS()));
+              .containsEvaluableWithSchema("otherModuleValue", sSchema(sIntType()));
         }
 
         @Test
@@ -737,7 +737,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleFunc", schemaS(intTS()));
+              .containsEvaluableWithSchema("otherModuleFunc", sSchema(sIntType()));
         }
 
         @Test
@@ -747,7 +747,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleStruct", schemaS(intTS()));
+              .containsEvaluableWithSchema("otherModuleStruct", sSchema(sIntType()));
         }
       }
 
@@ -786,7 +786,8 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleValue", schemaS(funcTS(intTS())));
+              .containsEvaluableWithSchema(
+                  "otherModuleValue", sSchema(TestingSExpression.sFuncType(sIntType())));
         }
 
         @Test
@@ -796,7 +797,8 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleFunc", schemaS(funcTS(intTS())));
+              .containsEvaluableWithSchema(
+                  "otherModuleFunc", sSchema(TestingSExpression.sFuncType(sIntType())));
         }
 
         @Test
@@ -806,7 +808,8 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleStruct", schemaS(funcTS(intTS())));
+              .containsEvaluableWithSchema(
+                  "otherModuleStruct", sSchema(TestingSExpression.sFuncType(sIntType())));
         }
       }
 
@@ -983,7 +986,7 @@ public class VisibilityTest {
         @Test
         public void base_type_succeeds() {
           var code = "String()";
-          module(code).loadsWithSuccess().containsType(structTS("String", nlist()));
+          module(code).loadsWithSuccess().containsType(sStructType("String", nlist()));
         }
 
         @Test
@@ -993,7 +996,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsType(structTS("OtherModuleStruct", nlist()));
+              .containsType(sStructType("OtherModuleStruct", nlist()));
         }
       }
 

@@ -2,18 +2,18 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.list;
 
-import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.CallP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ExprP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.InstantiateP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.IntP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.LambdaP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.NamedArgP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.OrderP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PolymorphicP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
-import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
+import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
@@ -31,31 +31,31 @@ public class UnitTypeInferrer {
     this.unifier = unifier;
   }
 
-  public void infer(ExprP expr) {
+  public void infer(PExpr expr) {
     switch (expr) {
-      case CallP call -> inferCall(call);
-      case InstantiateP instantiateP -> inferInstantiate(instantiateP);
-      case NamedArgP namedArg -> inferNamedArg(namedArg);
-      case OrderP order -> inferOrder(order);
-      case SelectP select -> inferSelect(select);
-      case StringP string -> {}
-      case IntP int_ -> {}
-      case BlobP blob -> {}
+      case PCall call -> inferCall(call);
+      case PInstantiate pInstantiate -> inferInstantiate(pInstantiate);
+      case PNamedArg namedArg -> inferNamedArg(namedArg);
+      case POrder order -> inferOrder(order);
+      case PSelect select -> inferSelect(select);
+      case PString string -> {}
+      case PInt int_ -> {}
+      case PBlob blob -> {}
     }
   }
 
-  private void inferCall(CallP call) {
+  private void inferCall(PCall call) {
     infer(call.callee());
     call.args().forEach(this::infer);
   }
 
-  private void inferInstantiate(InstantiateP instantiateP) {
-    inferPolymorphic(instantiateP.polymorphic());
-    inferInstantiateTypeArgs(instantiateP);
+  private void inferInstantiate(PInstantiate pInstantiate) {
+    inferPolymorphic(pInstantiate.polymorphic());
+    inferInstantiateTypeArgs(pInstantiate);
   }
 
-  private void inferInstantiateTypeArgs(InstantiateP instantiateP) {
-    for (var typeArg : instantiateP.typeArgs()) {
+  private void inferInstantiateTypeArgs(PInstantiate pInstantiate) {
+    for (var typeArg : pInstantiate.typeArgs()) {
       var resolvedTypeArg = unifier.resolve(typeArg);
       for (var var : resolvedTypeArg.vars()) {
         if (var.isTemporary()) {
@@ -66,26 +66,26 @@ public class UnitTypeInferrer {
     }
   }
 
-  private void inferPolymorphic(PolymorphicP polymorphicP) {
-    switch (polymorphicP) {
-      case LambdaP lambdaP -> inferLambda(lambdaP);
-      case ReferenceP referenceP -> {}
+  private void inferPolymorphic(PPolymorphic pPolymorphic) {
+    switch (pPolymorphic) {
+      case PLambda pLambda -> inferLambda(pLambda);
+      case PReference pReference -> {}
     }
   }
 
-  private void inferLambda(LambdaP lambda) {
+  private void inferLambda(PLambda lambda) {
     infer(lambda.bodyGet());
   }
 
-  private void inferNamedArg(NamedArgP namedArg) {
+  private void inferNamedArg(PNamedArg namedArg) {
     infer(namedArg.expr());
   }
 
-  private void inferOrder(OrderP order) {
+  private void inferOrder(POrder order) {
     order.elements().forEach(this::infer);
   }
 
-  private void inferSelect(SelectP select) {
+  private void inferSelect(PSelect select) {
     infer(select.selectable());
   }
 }

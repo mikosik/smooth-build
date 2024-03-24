@@ -4,13 +4,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.traceS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -26,14 +27,14 @@ public class BsTranslatorTest extends TestingVirtualMachine {
   public void empty_trace() {
     var bsMapping = new BsMapping();
     var bsTraceTranslator = new BsTranslator(bsMapping);
-    assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(traceS());
+    assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(TestingSExpression.sTrace());
   }
 
   @Test
   public void one_elem_trace() {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH1, HASH2);
-    assertThat(bsTraceTranslator.translate(trace)).isEqualTo(traceS("name2", location(1)));
+    assertThat(bsTraceTranslator.translate(trace)).isEqualTo(sTrace("name2", location(1)));
   }
 
   @Test
@@ -41,7 +42,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(traceS("name4", location(3), "name2", location(1)));
+        .isEqualTo(TestingSExpression.sTrace("name4", location(3), "name2", location(1)));
   }
 
   @Test
@@ -49,7 +50,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(traceS("name4", location(3), "???", location(1)));
+        .isEqualTo(TestingSExpression.sTrace("name4", location(3), "???", location(1)));
   }
 
   @Test
@@ -57,7 +58,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(traceS("name4", location(3), "name2", unknownLocation()));
+        .isEqualTo(TestingSExpression.sTrace("name4", location(3), "name2", unknownLocation()));
   }
 
   private static BsMapping createBsMapping() {
