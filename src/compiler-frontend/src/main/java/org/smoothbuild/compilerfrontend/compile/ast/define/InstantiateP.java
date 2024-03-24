@@ -6,14 +6,14 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Instantiation of polymorphic entity.
  */
 public final class InstantiateP extends ExprP {
   private final PolymorphicP polymorphic;
-  private List<TypeS> typeArgs;
+  private List<SType> typeArgs;
 
   public InstantiateP(PolymorphicP polymorphic, Location location) {
     super(location);
@@ -24,11 +24,11 @@ public final class InstantiateP extends ExprP {
     return polymorphic;
   }
 
-  public void setTypeArgs(List<TypeS> typeArgs) {
+  public void setTypeArgs(List<SType> typeArgs) {
     this.typeArgs = typeArgs;
   }
 
-  public List<TypeS> typeArgs() {
+  public List<SType> typeArgs() {
     return typeArgs;
   }
 

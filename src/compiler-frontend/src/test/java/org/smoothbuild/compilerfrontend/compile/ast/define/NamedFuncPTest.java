@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.namedFuncP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedFuncP;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

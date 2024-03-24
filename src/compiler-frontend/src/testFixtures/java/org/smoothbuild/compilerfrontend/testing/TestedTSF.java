@@ -3,29 +3,29 @@ package org.smoothbuild.compilerfrontend.testing;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.define.ItemSigS;
+import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedArrayTS;
 import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedFuncTS;
 
 public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(TestingExpressionS.varS("A"));
-  public static final TestedTS B = new TestedTS(TestingExpressionS.varS("B"));
-  public static final TestedTS BLOB = new TestedTS(TestingExpressionS.blobTS());
-  public static final TestedTS BOOL = new TestedTS(TestingExpressionS.boolTS());
+  public static final TestedTS A = new TestedTS(TestingSExpression.varS("A"));
+  public static final TestedTS B = new TestedTS(TestingSExpression.varS("B"));
+  public static final TestedTS BLOB = new TestedTS(TestingSExpression.blobTS());
+  public static final TestedTS BOOL = new TestedTS(TestingSExpression.boolTS());
 
-  public static final TestedTS INT = new TestedTS(TestingExpressionS.intTS());
-  public static final TestedTS STRING = new TestedTS(TestingExpressionS.stringTS());
+  public static final TestedTS INT = new TestedTS(TestingSExpression.intTS());
+  public static final TestedTS STRING = new TestedTS(TestingSExpression.stringTS());
   public static final TestedTS STRUCT = new TestedTS(
-      TestingExpressionS.structTS("Person", nlist(itemSigS(TestingExpressionS.stringTS(), "name"))),
+      TestingSExpression.structTS("Person", nlist(itemSigS(TestingSExpression.stringTS(), "name"))),
       Set.of("Person(String name)"),
       Set.of("Person(String name)"));
   public static final List<TestedTS> TESTED_TYPES = list(
@@ -77,7 +77,7 @@ public class TestedTSF {
   private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
         type,
-        TestingExpressionS.arrayTS(type.type()),
+        TestingSExpression.arrayTS(type.type()),
         type.typeDeclarations(),
         type.allDeclarations());
   }
@@ -109,7 +109,7 @@ public class TestedTSF {
     return new TestedFuncTS(
         resultT,
         paramTestedTs,
-        TestingExpressionS.funcTS(paramSigs.map(ItemSigS::type), resultT.type()),
+        TestingSExpression.funcTS(paramSigs.map(SItemSig::type), resultT.type()),
         typeDeclarations,
         declarations);
   }
@@ -122,10 +122,10 @@ public class TestedTSF {
     return builder.toString();
   }
 
-  private static List<ItemSigS> toSigs(List<TestedTS> paramTestedTs) {
-    var builder = new ArrayList<ItemSigS>();
+  private static List<SItemSig> toSigs(List<TestedTS> paramTestedTs) {
+    var builder = new ArrayList<SItemSig>();
     for (int i = 0; i < paramTestedTs.size(); i++) {
-      builder.add(new ItemSigS(paramTestedTs.get(i).type(), "p" + i));
+      builder.add(new SItemSig(paramTestedTs.get(i).type(), "p" + i));
     }
     return listOfAll(builder);
   }

@@ -9,10 +9,10 @@ import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.writeFile;
 import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.PROJECT_BUCKET_ID;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_BUCKET_ID;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.STANDARD_LIBRARY_MODULE_FILE_PATH;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_BUCKET_ID;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_MODULE_FILE_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -29,15 +29,15 @@ import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.testing.MemoryReporter;
-import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
+import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 
 public class FrontendCompilerTester {
   private final String sourceCode;
   private String importedSourceCode;
-  private Try<ModuleS> moduleS;
+  private Try<SModule> moduleS;
 
   public static FrontendCompilerTester module(String sourceCode) {
     return new FrontendCompilerTester(sourceCode);
@@ -58,7 +58,7 @@ public class FrontendCompilerTester {
     return this;
   }
 
-  public void containsEvaluable(NamedEvaluableS expected) {
+  public void containsEvaluable(SNamedEvaluable expected) {
     String name = expected.name();
     var actual = assertContainsEvaluable(name);
     assertThat(actual).isEqualTo(expected);
@@ -69,7 +69,7 @@ public class FrontendCompilerTester {
     assertThat(referenceable.schema()).isEqualTo(expectedT);
   }
 
-  private NamedEvaluableS assertContainsEvaluable(String name) {
+  private SNamedEvaluable assertContainsEvaluable(String name) {
     var evaluables = moduleS.value().members().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(evaluables.contains(name))
@@ -77,17 +77,17 @@ public class FrontendCompilerTester {
     return evaluables.get(name);
   }
 
-  public void containsType(TypeS expected) {
+  public void containsType(SType expected) {
     var name = expected.name();
     var types = moduleS.value().members().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.contains(name))
         .isTrue();
-    TypeS actual = types.get(name).type();
+    SType actual = types.get(name).type();
     assertWithMessage("Module contains type '" + name + "', but").that(actual).isEqualTo(expected);
   }
 
-  public ModuleS getLoadedModule() {
+  public SModule getLoadedModule() {
     return moduleS.value();
   }
 
@@ -118,7 +118,7 @@ public class FrontendCompilerTester {
         + "\n====================\n";
   }
 
-  private Try<ModuleS> loadModule() {
+  private Try<SModule> loadModule() {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
     var slBucket = new SynchronizedBucket(new MemoryBucket());
     Map<BucketId, Bucket> buckets =

@@ -3,11 +3,11 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.funcTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.schemaS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.structTS;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.userModuleFullPath;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.funcTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.schemaS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.structTS;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userModuleFullPath;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

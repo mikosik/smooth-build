@@ -9,13 +9,13 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.StructTS;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
 public final class StructP extends NalImpl implements ScopedP {
   private final NList<ItemP> fields;
   private final NamedFuncP constructor;
   private ScopeP scope;
-  private StructTS structTS;
+  private SStructType sStructType;
 
   public StructP(String name, List<ItemP> fields, Location location) {
     this(name, nlistWithShadowing(fields), location);
@@ -45,12 +45,12 @@ public final class StructP extends NalImpl implements ScopedP {
     this.scope = scope;
   }
 
-  public StructTS typeS() {
-    return structTS;
+  public SStructType typeS() {
+    return sStructType;
   }
 
-  public void setTypeS(StructTS structTS) {
-    this.structTS = structTS;
+  public void setTypeS(SStructType sStructType) {
+    this.sStructType = sStructType;
   }
 
   @Override

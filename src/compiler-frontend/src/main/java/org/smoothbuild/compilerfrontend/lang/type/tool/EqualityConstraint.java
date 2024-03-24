@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Constraint stating that two types are equal.
  */
-public record EqualityConstraint(TypeS type1, TypeS type2) implements Constraint {}
+public record EqualityConstraint(SType type1, SType type2) implements Constraint {}

@@ -5,12 +5,12 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.compile.InitializeScopes.initializeScopes;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.intP;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.itemP;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.lambdaP;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.moduleP;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.namedFuncP;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.namedValueP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.itemP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.lambdaP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.moduleP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedFuncP;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.namedValueP;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

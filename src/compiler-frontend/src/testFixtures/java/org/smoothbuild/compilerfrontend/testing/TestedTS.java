@@ -5,25 +5,25 @@ import static java.lang.String.join;
 import java.util.Objects;
 import java.util.Set;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class TestedTS {
-  private final TypeS type;
+  private final SType type;
   private final Set<String> typeDeclarations;
   private final Set<String> allDeclarations;
 
-  public TestedTS(TypeS type) {
+  public TestedTS(SType type) {
     this(type, Set.of(), Set.of());
   }
 
-  public TestedTS(TypeS type, Set<String> typeDeclarations, Set<String> allDeclarations) {
+  public TestedTS(SType type, Set<String> typeDeclarations, Set<String> allDeclarations) {
     this.type = type;
     this.typeDeclarations = typeDeclarations;
     this.allDeclarations = allDeclarations;
   }
 
-  public TypeS type() {
+  public SType type() {
     return type;
   }
 
@@ -84,7 +84,7 @@ public class TestedTS {
     public TestedFuncTS(
         TestedTS resultT,
         List<TestedTS> paramTs,
-        FuncTS type,
+        SFuncType type,
         Set<String> typeDeclarations,
         Set<String> allDeclarations) {
       super(type, typeDeclarations, allDeclarations);
@@ -102,7 +102,7 @@ public class TestedTS {
     public final TestedTS elemT;
 
     public TestedArrayTS(
-        TestedTS elemT, TypeS type, Set<String> typeDeclarations, Set<String> allDeclarations) {
+        TestedTS elemT, SType type, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, typeDeclarations, allDeclarations);
       this.elemT = elemT;
     }

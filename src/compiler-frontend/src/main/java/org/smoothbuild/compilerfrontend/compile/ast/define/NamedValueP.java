@@ -6,12 +6,12 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
 
 public final class NamedValueP extends NamedEvaluableP {
   private final TypeP type;
-  private TypeS typeS;
+  private SType sType;
   private SchemaS schemaS;
 
   public NamedValueP(
@@ -35,12 +35,12 @@ public final class NamedValueP extends NamedEvaluableP {
   }
 
   @Override
-  public TypeS typeS() {
-    return typeS;
+  public SType typeS() {
+    return sType;
   }
 
-  public void setTypeS(TypeS typeS) {
-    this.typeS = typeS;
+  public void setTypeS(SType sType) {
+    this.sType = sType;
   }
 
   @Override

@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
@@ -19,15 +19,15 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.NamedFuncP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.NamedValueP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceableP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StructP;
-import org.smoothbuild.compilerfrontend.lang.define.ItemS;
-import org.smoothbuild.compilerfrontend.lang.define.ItemSigS;
+import org.smoothbuild.compilerfrontend.lang.define.SItem;
+import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncSchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.StructTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -74,15 +74,15 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       structTS.ifPresent(st -> visitConstructor(structP, st));
     }
 
-    private void visitConstructor(StructP structP, StructTS structT) {
+    private void visitConstructor(StructP structP, SStructType structT) {
       var constructorP = structP.constructor();
       var fieldSigs = structT.fields();
       var params = structP
           .fields()
           .list()
-          .map(f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
-      var funcTS = new FuncTS(ItemS.toTypes(params), structT);
-      var schema = new FuncSchemaS(varSetS(), funcTS);
+          .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
+      var funcTS = new SFuncType(SItem.toTypes(params), structT);
+      var schema = new SFuncSchema(varSetS(), funcTS);
       constructorP.setSchemaS(schema);
       constructorP.setTypeS(funcTS);
     }
@@ -103,18 +103,18 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       inferNamedFuncSchema(namedFuncP);
     }
 
-    private Maybe<StructTS> inferStructT(StructP struct) {
+    private Maybe<SStructType> inferStructT(StructP struct) {
       return pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
           .map(NList::nlist)
-          .map(is -> new StructTS(struct.name(), is))
+          .map(is -> new SStructType(struct.name(), is))
           .ifPresent(struct::setTypeS);
     }
 
-    private Maybe<ItemSigS> inferFieldSig(ItemP field) {
+    private Maybe<SItemSig> inferFieldSig(ItemP field) {
       return typeTeller.translate(field.type()).flatMap(t -> {
         if (t.vars().isEmpty()) {
           field.setTypeS(t);
-          return some(new ItemSigS(t, field.name()));
+          return some(new SItemSig(t, field.name()));
         } else {
           var message = "Field type cannot be polymorphic. Found field %s with type %s."
               .formatted(field.q(), t.q());
@@ -196,12 +196,12 @@ public class InferTypes implements TryFunction2<ModuleP, ScopeS, ModuleP> {
       }
     }
 
-    private static TypeS replaceQuantifiedVarsWithTempVars(SchemaS schemaS, Unifier unifier) {
+    private static SType replaceQuantifiedVarsWithTempVars(SchemaS schemaS, Unifier unifier) {
       return replaceVarsWithTempVars(schemaS.quantifiedVars(), schemaS.type(), unifier);
     }
 
-    private static TypeS replaceVarsWithTempVars(VarSetS vars, TypeS type, Unifier unifier) {
-      var mapping = vars.toList().toMap(v -> (TypeS) unifier.newTempVar());
+    private static SType replaceVarsWithTempVars(SVarSet vars, SType type, Unifier unifier) {
+      var mapping = vars.toList().toMap(v -> (SType) unifier.newTempVar());
       return type.mapVars(mapping);
     }
 

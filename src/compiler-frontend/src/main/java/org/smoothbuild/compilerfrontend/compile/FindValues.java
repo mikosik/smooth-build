@@ -11,29 +11,29 @@ import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
-import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
-import org.smoothbuild.compilerfrontend.lang.define.ReferenceS;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
+import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
+import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 
-public class FindValues implements TryFunction2<ScopeS, List<String>, List<ExprS>> {
+public class FindValues implements TryFunction2<ScopeS, List<String>, List<SExpr>> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "findValues");
   }
 
   @Override
-  public Try<List<ExprS>> apply(ScopeS environment, List<String> valueNames) {
+  public Try<List<SExpr>> apply(ScopeS environment, List<String> valueNames) {
     var logger = new Logger();
-    var namedEvaluables = new ArrayList<NamedValueS>();
+    var namedEvaluables = new ArrayList<SNamedValue>();
     var evaluables = environment.evaluables();
     for (var name : valueNames) {
       var topEvaluable = evaluables.getMaybe(name);
       if (topEvaluable.isNone()) {
         logger.error("Unknown value `" + name + "`.\n"
             + "Try 'smooth list' to see all available values that can be calculated.");
-      } else if (!(topEvaluable.get() instanceof NamedValueS namedValue)) {
+      } else if (!(topEvaluable.get() instanceof SNamedValue namedValue)) {
         logger.error("`" + name + "` cannot be calculated as it is not a value but a function.");
       } else if (namedValue.schema().quantifiedVars().isEmpty()) {
         namedEvaluables.add(namedValue);
@@ -44,12 +44,12 @@ public class FindValues implements TryFunction2<ScopeS, List<String>, List<ExprS
     if (logger.containsFailure()) {
       return failure(logger);
     }
-    List<ExprS> exprs = listOfAll(namedEvaluables)
-        .map(v -> new InstantiateS(referenceTo(v), commandLineLocation()));
+    List<SExpr> exprs = listOfAll(namedEvaluables)
+        .map(v -> new SInstantiate(referenceTo(v), commandLineLocation()));
     return Try.of(exprs, logger);
   }
 
-  private static ReferenceS referenceTo(NamedValueS namedValueS) {
-    return new ReferenceS(namedValueS.schema(), namedValueS.name(), commandLineLocation());
+  private static SReference referenceTo(SNamedValue sNamedValue) {
+    return new SReference(sNamedValue.schema(), sNamedValue.name(), commandLineLocation());
   }
 }

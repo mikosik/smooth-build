@@ -9,12 +9,12 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class ItemP extends NalImpl implements ReferenceableP {
   private final TypeP type;
   private final Maybe<NamedValueP> defaultValue;
-  private TypeS typeS;
+  private SType sType;
 
   public ItemP(TypeP type, String name, Maybe<NamedValueP> defaultValue, Location location) {
     super(name, location);
@@ -35,16 +35,16 @@ public final class ItemP extends NalImpl implements ReferenceableP {
     return defaultValue;
   }
 
-  public TypeS typeS() {
-    return typeS;
+  public SType typeS() {
+    return sType;
   }
 
-  public TypeS setTypeS(TypeS type) {
-    this.typeS = type;
+  public SType setTypeS(SType type) {
+    this.sType = type;
     return type;
   }
 
-  public static List<TypeS> toTypeS(NList<ItemP> params) {
+  public static List<SType> toTypeS(NList<ItemP> params) {
     return params.list().map(ItemP::typeS);
   }
 

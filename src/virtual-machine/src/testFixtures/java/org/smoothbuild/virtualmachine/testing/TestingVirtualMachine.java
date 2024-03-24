@@ -5,7 +5,7 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.synchronizedMemoryBucket;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
 
 import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;

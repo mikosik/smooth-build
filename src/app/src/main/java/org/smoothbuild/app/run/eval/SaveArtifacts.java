@@ -26,11 +26,11 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.tuple.Tuples;
-import org.smoothbuild.compilerfrontend.lang.define.ExprS;
-import org.smoothbuild.compilerfrontend.lang.define.InstantiateS;
-import org.smoothbuild.compilerfrontend.lang.define.ReferenceS;
-import org.smoothbuild.compilerfrontend.lang.type.ArrayTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
+import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
+import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
@@ -59,7 +59,7 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
     } catch (IOException e) {
       return failure(error(e.getMessage()));
     }
-    var referenceSs = evaluatedExprs.exprSs().map(this::toReferenceS);
+    var referenceSs = evaluatedExprs.sExprs().map(this::toReferenceS);
     var artifacts = referenceSs.zip(evaluatedExprs.bValues(), Tuples::tuple);
     var logger = new Logger();
     artifacts
@@ -68,11 +68,11 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
     return Try.of(null, logger);
   }
 
-  private ReferenceS toReferenceS(ExprS expr) {
-    return (ReferenceS) ((InstantiateS) expr).polymorphicS();
+  private SReference toReferenceS(SExpr expr) {
+    return (SReference) ((SInstantiate) expr).sPolymorphic();
   }
 
-  private Maybe<Void> save(ReferenceS valueS, BValue value, Logger logger) {
+  private Maybe<Void> save(SReference valueS, BValue value, Logger logger) {
     String name = valueS.referencedName();
     try {
       var path = write(valueS, value);
@@ -88,12 +88,12 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
     }
   }
 
-  private Path write(ReferenceS referenceS, BValue value)
+  private Path write(SReference sReference, BValue value)
       throws IOException, DuplicatedPathsException, BytecodeException {
-    Path artifactPath = artifactPath(referenceS.referencedName());
-    if (referenceS.schema().type() instanceof ArrayTS arrayTS) {
-      return saveArray(arrayTS, artifactPath, (BArray) value);
-    } else if (referenceS.schema().type().name().equals(FILE_STRUCT_NAME)) {
+    Path artifactPath = artifactPath(sReference.referencedName());
+    if (sReference.schema().type() instanceof SArrayType sArrayType) {
+      return saveArray(sArrayType, artifactPath, (BArray) value);
+    } else if (sReference.schema().type().name().equals(FILE_STRUCT_NAME)) {
       return saveFile(artifactPath, (BTuple) value);
     } else {
       return saveBaseValue(artifactPath, value);
@@ -106,14 +106,14 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
     return artifactPath.append(fileValuePath(file));
   }
 
-  private Path saveArray(ArrayTS arrayTS, Path artifactPath, BArray array)
+  private Path saveArray(SArrayType sArrayType, Path artifactPath, BArray array)
       throws IOException, DuplicatedPathsException, BytecodeException {
     bucket.createDir(artifactPath);
-    TypeS elemTS = arrayTS.elem();
-    if (elemTS instanceof ArrayTS elemArrayTS) {
+    SType elemTS = sArrayType.elem();
+    if (elemTS instanceof SArrayType sElemArrayType) {
       int i = 0;
       for (BArray elem : array.elements(BArray.class)) {
-        saveArray(elemArrayTS, artifactPath.appendPart(Integer.toString(i)), elem);
+        saveArray(sElemArrayType, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
     } else if (elemTS.name().equals(FILE_STRUCT_NAME)) {

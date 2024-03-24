@@ -8,27 +8,28 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
-import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
+import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
-import org.smoothbuild.compilerfrontend.lang.define.TypeDefinitionS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypes;
 
-public class LoadInternalModuleMembers implements TryFunction0<ModuleS> {
+public class LoadInternalModuleMembers implements TryFunction0<SModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "loadInternalModule");
   }
 
   @Override
-  public Try<ModuleS> apply() {
+  public Try<SModule> apply() {
     var logger = new Logger();
-    var types = immutableBindings(TypeFS.baseTs().toMap(TypeS::name, t -> baseTypeDefinitions(t)));
+    var types =
+        immutableBindings(STypes.baseTypes().toMap(SType::name, t -> baseTypeDefinitions(t)));
     var members = new ScopeS(types, immutableBindings());
-    return Try.of(new ModuleS(members, members), logger);
+    return Try.of(new SModule(members, members), logger);
   }
 
-  private static TypeDefinitionS baseTypeDefinitions(TypeS baseTypeS) {
-    return new TypeDefinitionS(baseTypeS, Locations.internalLocation());
+  private static STypeDefinition baseTypeDefinitions(SType sBaseType) {
+    return new STypeDefinition(sBaseType, Locations.internalLocation());
   }
 }

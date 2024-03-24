@@ -15,9 +15,9 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.SourceLocation;
-import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.compilerfrontend.lang.define.NamedValueS;
+import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 
 public class ListEvaluablesDag {
   public static Dag<Void> listEvaluablesDag() {
@@ -25,16 +25,16 @@ public class ListEvaluablesDag {
     return apply1(PrintEvaluables.class, scopeS);
   }
 
-  public static class PrintEvaluables implements TryFunction1<ModuleS, Void> {
+  public static class PrintEvaluables implements TryFunction1<SModule, Void> {
     @Override
     public Label label() {
       return Label.label("cli", "list");
     }
 
     @Override
-    public Try<Void> apply(ModuleS moduleS) {
+    public Try<Void> apply(SModule sModule) {
       var oneValuePerLineString =
-          moduleS.membersAndImported().evaluables().toMap().values().stream()
+          sModule.membersAndImported().evaluables().toMap().values().stream()
               .filter(ListEvaluablesDag::isNoArgNotGenericValue)
               .map(Nal::name)
               .sorted()
@@ -43,9 +43,9 @@ public class ListEvaluablesDag {
     }
   }
 
-  private static boolean isNoArgNotGenericValue(NamedEvaluableS evaluable) {
+  private static boolean isNoArgNotGenericValue(SNamedEvaluable evaluable) {
     return isInProjectSpace(evaluable.location())
-        && evaluable instanceof NamedValueS
+        && evaluable instanceof SNamedValue
         && evaluable.schema().quantifiedVars().isEmpty();
   }
 

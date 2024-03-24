@@ -26,10 +26,10 @@ import org.smoothbuild.compilerfrontend.compile.ReadFileContent;
 import org.smoothbuild.compilerfrontend.compile.SortModuleMembersByDependency;
 import org.smoothbuild.compilerfrontend.compile.TranslateAp;
 import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
-import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
+import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
 public class ModuleFrontendCompilationDag {
-  public static Dag<ModuleS> frontendCompilationDag(List<FullPath> modules) {
+  public static Dag<SModule> frontendCompilationDag(List<FullPath> modules) {
     var dag = apply0(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
       dag = evaluate(apply2(InflateDag.class, dag, value(fullPath)));
@@ -37,14 +37,14 @@ public class ModuleFrontendCompilationDag {
     return dag;
   }
 
-  public static class InflateDag implements TryFunction2<ModuleS, FullPath, Dag<ModuleS>> {
+  public static class InflateDag implements TryFunction2<SModule, FullPath, Dag<SModule>> {
     @Override
     public Label label() {
       return Label.label(COMPILE_PREFIX, "inflateFrontendCompilationDag");
     }
 
     @Override
-    public Try<Dag<ModuleS>> apply(ModuleS importedModule, FullPath fullPath) {
+    public Try<Dag<SModule>> apply(SModule importedModule, FullPath fullPath) {
       var environment = value(importedModule.membersAndImported());
       var path = value(fullPath);
       var fileContent = apply1(ReadFileContent.class, path);

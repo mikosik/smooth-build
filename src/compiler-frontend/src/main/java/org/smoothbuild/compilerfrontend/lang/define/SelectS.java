@@ -5,17 +5,17 @@ import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.StructTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public record SelectS(ExprS selectable, String field, Location location) implements ExprS {
+public record SelectS(SExpr selectable, String field, Location location) implements SExpr {
   public SelectS {
-    checkArgument(selectable.evaluationType() instanceof StructTS);
+    checkArgument(selectable.evaluationType() instanceof SStructType);
   }
 
   @Override
-  public TypeS evaluationType() {
-    var structTS = (StructTS) selectable.evaluationType();
+  public SType evaluationType() {
+    var structTS = (SStructType) selectable.evaluationType();
     return structTS.fields().get(field).type();
   }
 

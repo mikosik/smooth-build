@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Logger;
@@ -21,12 +21,12 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PolymorphicP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
-import org.smoothbuild.compilerfrontend.lang.type.FuncSchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 public class TypeInferrerResolve {
@@ -58,20 +58,21 @@ public class TypeInferrerResolve {
     return true;
   }
 
-  private FuncSchemaS resolveSchema(FuncSchemaS funcSchemaS) {
-    return new FuncSchemaS(resolveQuantifiedVars(funcSchemaS), (FuncTS) resolveType(funcSchemaS));
+  private SFuncSchema resolveSchema(SFuncSchema sFuncSchema) {
+    return new SFuncSchema(
+        resolveQuantifiedVars(sFuncSchema), (SFuncType) resolveType(sFuncSchema));
   }
 
   private SchemaS resolveSchema(SchemaS schemaS) {
     return new SchemaS(resolveQuantifiedVars(schemaS), resolveType(schemaS));
   }
 
-  private VarSetS resolveQuantifiedVars(SchemaS schemaS) {
+  private SVarSet resolveQuantifiedVars(SchemaS schemaS) {
     return varSetS(
-        schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
+        schemaS.quantifiedVars().stream().map(v -> (SVar) unifier.resolve(v)).toList());
   }
 
-  private TypeS resolveType(SchemaS schemaS) {
+  private SType resolveType(SchemaS schemaS) {
     return unifier.resolve(schemaS.type());
   }
 
@@ -150,7 +151,7 @@ public class TypeInferrerResolve {
     return true;
   }
 
-  private boolean hasTempVar(TypeS t) {
-    return t.vars().stream().anyMatch(VarS::isTemporary);
+  private boolean hasTempVar(SType t) {
+    return t.vars().stream().anyMatch(SVar::isTemporary);
   }
 }

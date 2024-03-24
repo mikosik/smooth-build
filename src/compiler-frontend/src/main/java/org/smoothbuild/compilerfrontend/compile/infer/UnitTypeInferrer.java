@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PolymorphicP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
-import org.smoothbuild.compilerfrontend.lang.type.TupleTS;
+import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
@@ -59,7 +59,8 @@ public class UnitTypeInferrer {
       var resolvedTypeArg = unifier.resolve(typeArg);
       for (var var : resolvedTypeArg.vars()) {
         if (var.isTemporary()) {
-          unifier.addOrFailWithRuntimeException(new EqualityConstraint(var, new TupleTS(list())));
+          unifier.addOrFailWithRuntimeException(
+              new EqualityConstraint(var, new STupleType(list())));
         }
       }
     }

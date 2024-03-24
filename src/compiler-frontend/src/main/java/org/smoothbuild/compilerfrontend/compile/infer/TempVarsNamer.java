@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.compile.ast.define.BlobP;
@@ -18,22 +18,22 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.OrderP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.ReferenceP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarS;
-import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnusedVarsGenerator;
 
 public class TempVarsNamer {
   private final Unifier unifier;
-  private final VarSetS outerScopeVars;
+  private final SVarSet outerScopeVars;
 
   public TempVarsNamer(Unifier unifier) {
     this(unifier, varSetS());
   }
 
-  private TempVarsNamer(Unifier unifier, VarSetS outerScopeVars) {
+  private TempVarsNamer(Unifier unifier, SVarSet outerScopeVars) {
     this.unifier = unifier;
     this.outerScopeVars = outerScopeVars;
   }
@@ -46,7 +46,7 @@ public class TempVarsNamer {
     nameVarsInEvaluable(namedFunc);
   }
 
-  private void handleExpr(VarSetS varsInScope, ExprP expr) {
+  private void handleExpr(SVarSet varsInScope, ExprP expr) {
     new TempVarsNamer(unifier, varsInScope).handleExpr(expr);
   }
 
@@ -98,11 +98,11 @@ public class TempVarsNamer {
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
   }
 
-  private static TypeS nameVars(TypeS resolvedT, VarSetS reservedVars) {
+  private static SType nameVars(SType resolvedT, SVarSet reservedVars) {
     var vars = resolvedT.vars();
-    var varsToRename = vars.filter(VarS::isTemporary);
+    var varsToRename = vars.filter(SVar::isTemporary);
     var varGenerator = new UnusedVarsGenerator(reservedVars);
-    var mapping = varsToRename.toList().toMap(v -> (TypeS) varGenerator.next());
+    var mapping = varsToRename.toList().toMap(v -> (SType) varGenerator.next());
     return resolvedT.mapVars(mapping);
   }
 }

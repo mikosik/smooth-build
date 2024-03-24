@@ -7,14 +7,14 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.FuncSchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
 public sealed class NamedFuncP extends NamedEvaluableP implements FuncP permits ConstructorP {
   private final TypeP resultT;
   private final NList<ItemP> params;
-  private FuncTS typeS;
-  private FuncSchemaS funcSchemaS;
+  private SFuncType typeS;
+  private SFuncSchema sFuncSchema;
 
   public NamedFuncP(
       TypeP resultT,
@@ -45,23 +45,23 @@ public sealed class NamedFuncP extends NamedEvaluableP implements FuncP permits 
   }
 
   @Override
-  public FuncTS typeS() {
+  public SFuncType typeS() {
     return typeS;
   }
 
   @Override
-  public void setTypeS(FuncTS type) {
+  public void setTypeS(SFuncType type) {
     this.typeS = type;
   }
 
   @Override
-  public FuncSchemaS schemaS() {
-    return funcSchemaS;
+  public SFuncSchema schemaS() {
+    return sFuncSchema;
   }
 
   @Override
-  public void setSchemaS(FuncSchemaS funcSchemaS) {
-    this.funcSchemaS = funcSchemaS;
+  public void setSchemaS(SFuncSchema sFuncSchema) {
+    this.sFuncSchema = sFuncSchema;
   }
 
   @Override

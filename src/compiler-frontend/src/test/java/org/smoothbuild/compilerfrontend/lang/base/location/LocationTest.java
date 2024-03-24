@@ -6,7 +6,7 @@ import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.comm
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.internalLocation;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
-import static org.smoothbuild.compilerfrontend.testing.TestingExpressionS.projectPath;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.projectPath;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;

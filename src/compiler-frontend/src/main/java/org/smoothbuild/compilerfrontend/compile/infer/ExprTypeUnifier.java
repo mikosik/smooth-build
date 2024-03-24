@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
@@ -33,14 +33,14 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.SelectP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.StringP;
 import org.smoothbuild.compilerfrontend.compile.ast.define.TypeP;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.ArrayTS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncSchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.FuncTS;
+import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypes;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.compilerfrontend.lang.type.StructTS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeFS;
-import org.smoothbuild.compilerfrontend.lang.type.TypeS;
-import org.smoothbuild.compilerfrontend.lang.type.VarSetS;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -48,7 +48,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 public class ExprTypeUnifier {
   private final Unifier unifier;
   private final TypeTeller typeTeller;
-  private final VarSetS outerScopeVars;
+  private final SVarSet outerScopeVars;
   private final Logger logger;
 
   public ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller, Logger logger) {
@@ -56,7 +56,7 @@ public class ExprTypeUnifier {
   }
 
   private ExprTypeUnifier(
-      Unifier unifier, TypeTeller typeTeller, VarSetS outerScopeVars, Logger logger) {
+      Unifier unifier, TypeTeller typeTeller, SVarSet outerScopeVars, Logger logger) {
     this.unifier = unifier;
     this.typeTeller = typeTeller;
     this.outerScopeVars = outerScopeVars;
@@ -87,16 +87,16 @@ public class ExprTypeUnifier {
     var vars = resolveQuantifiedVars(resolvedT);
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(new SchemaS(vars, resolvedT));
-      case FuncP funcP -> funcP.setSchemaS(new FuncSchemaS(vars, (FuncTS) resolvedT));
+      case FuncP funcP -> funcP.setSchemaS(new SFuncSchema(vars, (SFuncType) resolvedT));
     }
     return true;
   }
 
-  private VarSetS resolveQuantifiedVars(TypeS typeS) {
-    return typeS.vars().withRemovedAll(outerScopeVars.map(unifier::resolve));
+  private SVarSet resolveQuantifiedVars(SType sType) {
+    return sType.vars().withRemovedAll(outerScopeVars.map(unifier::resolve));
   }
 
-  private TypeS resolveType(EvaluableP evaluableP) {
+  private SType resolveType(EvaluableP evaluableP) {
     return unifier.resolve(evaluableP.typeS());
   }
 
@@ -115,42 +115,42 @@ public class ExprTypeUnifier {
     return paramTs.mapWith(resultT, (p, r) -> unifyFunc(funcP, p, r)).getOr(false);
   }
 
-  private boolean unifyFunc(FuncP funcP, List<TypeS> paramTs, TypeS resultT) {
+  private boolean unifyFunc(FuncP funcP, List<SType> paramTs, SType resultT) {
     var typeTellerForBody = typeTeller.withScope(funcP.scope());
-    var funcTS = new FuncTS(paramTs, resultT);
+    var funcTS = new SFuncType(paramTs, resultT);
     funcP.setTypeS(funcTS);
     return unifyEvaluableBody(funcP, resultT, funcTS, typeTellerForBody);
   }
 
-  private Maybe<List<TypeS>> inferParamTs(NList<ItemP> params) {
+  private Maybe<List<SType>> inferParamTs(NList<ItemP> params) {
     var paramTs = pullUpMaybe(params.list().map(p -> typeTeller.translate(p.type())));
     paramTs.ifPresent(types -> params.list().zip(types, ItemP::setTypeS));
     return paramTs.map(List::listOfAll);
   }
 
   private Boolean unifyEvaluableBody(
-      EvaluableP evaluableP, TypeS evaluationType, TypeS type, TypeTeller typeTeller) {
+      EvaluableP evaluableP, SType evaluationType, SType type, TypeTeller typeTeller) {
     var vars = outerScopeVars.withAddedAll(type.vars());
     return new ExprTypeUnifier(unifier, typeTeller, vars, logger)
         .unifyEvaluableBody(evaluableP, evaluationType);
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evaluationType) {
+  private Boolean unifyEvaluableBody(EvaluableP evaluableP, SType evaluationType) {
     return evaluableP
         .body()
         .map(body -> unifyBodyExprAndEvaluationType(evaluableP, evaluationType, body))
         .getOr(true);
   }
 
-  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluableP, TypeS typeS, ExprP bodyP) {
+  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluableP, SType sType, ExprP bodyP) {
     return unifyExpr(bodyP)
-        .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluableP, typeS, bodyT))
+        .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluableP, sType, bodyT))
         .getOr(false);
   }
 
-  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluableP, TypeS typeS, TypeS bodyT) {
+  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluableP, SType sType, SType bodyT) {
     try {
-      unify(typeS, bodyT);
+      unify(sType, bodyT);
       return true;
     } catch (UnifierException e) {
       logger.log(compileError(
@@ -159,39 +159,39 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Maybe<TypeS> unifyExpr(ExprP exprP) {
+  private Maybe<SType> unifyExpr(ExprP exprP) {
     return switch (exprP) {
       case CallP callP -> unifyAndMemoize(this::unifyCall, callP);
       case InstantiateP instantiateP -> unifyAndMemoize(this::unifyInstantiate, instantiateP);
       case NamedArgP namedArgP -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
       case SelectP selectP -> unifyAndMemoize(this::unifySelect, selectP);
-      case StringP stringP -> setAndMemoize(TypeFS.STRING, stringP);
-      case IntP intP -> setAndMemoize(TypeFS.INT, intP);
-      case BlobP blobP -> setAndMemoize(TypeFS.BLOB, blobP);
+      case StringP stringP -> setAndMemoize(STypes.STRING, stringP);
+      case IntP intP -> setAndMemoize(STypes.INT, intP);
+      case BlobP blobP -> setAndMemoize(STypes.BLOB, blobP);
     };
   }
 
-  private Maybe<TypeS> setAndMemoize(TypeS typeS, ExprP exprP) {
-    exprP.setTypeS(typeS);
-    return some(typeS);
+  private Maybe<SType> setAndMemoize(SType sType, ExprP exprP) {
+    exprP.setTypeS(sType);
+    return some(sType);
   }
 
-  private <T extends ExprP> Maybe<TypeS> unifyAndMemoize(
-      Function<T, Maybe<TypeS>> unifier, T exprP) {
+  private <T extends ExprP> Maybe<SType> unifyAndMemoize(
+      Function<T, Maybe<SType>> unifier, T exprP) {
     return unifier.apply(exprP).ifPresent(exprP::setTypeS);
   }
 
-  private Maybe<TypeS> unifyCall(CallP callP) {
+  private Maybe<SType> unifyCall(CallP callP) {
     var calleeT = unifyExpr(callP.callee());
     var positionedArgs = callP.positionedArgs();
     var argTs = pullUpMaybe(positionedArgs.map(this::unifyExpr));
     return calleeT.flatMapWith(argTs, (c, a) -> unifyCall(c, listOfAll(a), callP.location()));
   }
 
-  private Maybe<TypeS> unifyCall(TypeS calleeT, List<TypeS> argTs, Location location) {
+  private Maybe<SType> unifyCall(SType calleeT, List<SType> argTs, Location location) {
     var resultT = unifier.newTempVar();
-    var funcT = new FuncTS(argTs, resultT);
+    var funcT = new SFuncType(argTs, resultT);
     try {
       unify(funcT, calleeT);
       return some(resultT);
@@ -201,7 +201,7 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Maybe<TypeS> unifyInstantiate(InstantiateP instantiateP) {
+  private Maybe<SType> unifyInstantiate(InstantiateP instantiateP) {
     var polymorphicP = instantiateP.polymorphic();
     if (unifyPolymorphic(polymorphicP)) {
       var schema = polymorphicP.schemaS();
@@ -223,19 +223,19 @@ public class ExprTypeUnifier {
     return unifyEvaluableAndSetSchema(lambdaP);
   }
 
-  private Maybe<TypeS> unifyNamedArg(NamedArgP namedArgP) {
+  private Maybe<SType> unifyNamedArg(NamedArgP namedArgP) {
     return unifyExpr(namedArgP.expr());
   }
 
-  private Maybe<TypeS> unifyOrder(OrderP orderP) {
+  private Maybe<SType> unifyOrder(OrderP orderP) {
     var elems = orderP.elements();
     var elemTs = pullUpMaybe(elems.map(this::unifyExpr));
     return elemTs.flatMap(types -> unifyElementsWithArray(listOfAll(types), orderP.location()));
   }
 
-  private Maybe<TypeS> unifyElementsWithArray(List<TypeS> elemTs, Location location) {
+  private Maybe<SType> unifyElementsWithArray(List<SType> elemTs, Location location) {
     var elemVar = unifier.newTempVar();
-    for (TypeS elemT : elemTs) {
+    for (SType elemT : elemTs) {
       try {
         unify(elemVar, elemT);
       } catch (UnifierException e) {
@@ -245,7 +245,7 @@ public class ExprTypeUnifier {
         return none();
       }
     }
-    return some(new ArrayTS(elemVar));
+    return some(new SArrayType(elemVar));
   }
 
   private boolean unifyReference(ReferenceP referenceP) {
@@ -258,11 +258,11 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Maybe<TypeS> unifySelect(SelectP selectP) {
+  private Maybe<SType> unifySelect(SelectP selectP) {
     var selectableT = unifyExpr(selectP.selectable());
     return selectableT.flatMap(t -> {
-      if (unifier.resolve(t) instanceof StructTS structTS) {
-        var itemSigS = structTS.fields().get(selectP.field());
+      if (unifier.resolve(t) instanceof SStructType sStructType) {
+        var itemSigS = sStructType.fields().get(selectP.field());
         if (itemSigS == null) {
           logger.log(compileError(selectP.location(), "Unknown field `" + selectP.field() + "`."));
           return none();
@@ -276,11 +276,11 @@ public class ExprTypeUnifier {
     });
   }
 
-  private void unify(TypeS typeS, TypeS bodyT) throws UnifierException {
-    unifier.add(new EqualityConstraint(typeS, bodyT));
+  private void unify(SType sType, SType bodyT) throws UnifierException {
+    unifier.add(new EqualityConstraint(sType, bodyT));
   }
 
-  private Maybe<TypeS> translateOrGenerateTempVar(TypeP typeP) {
+  private Maybe<SType> translateOrGenerateTempVar(TypeP typeP) {
     if (typeP instanceof ImplicitTP) {
       return some(unifier.newTempVar());
     } else {

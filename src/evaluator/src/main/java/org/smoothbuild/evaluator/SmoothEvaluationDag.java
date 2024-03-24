@@ -17,7 +17,7 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.compile.FindValues;
-import org.smoothbuild.compilerfrontend.lang.define.ModuleS;
+import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
 public class SmoothEvaluationDag {
   public static Dag<EvaluatedExprs> smoothEvaluationDag(
@@ -28,21 +28,21 @@ public class SmoothEvaluationDag {
 
   private static Dag<CompiledExprs> frontBackCompilationDag(
       List<FullPath> modules, List<String> names) {
-    Dag<ModuleS> moduleS = frontendCompilationDag(modules);
+    Dag<SModule> moduleS = frontendCompilationDag(modules);
     return evaluate(apply2(InflateDag1.class, moduleS, value(names)));
   }
 
   public static class InflateDag1
-      implements TryFunction2<ModuleS, List<String>, Dag<CompiledExprs>> {
+      implements TryFunction2<SModule, List<String>, Dag<CompiledExprs>> {
     @Override
     public Label label() {
       return Label.label(COMPILE_PREFIX, "inflateBackendCompilationDag");
     }
 
     @Override
-    public Try<Dag<CompiledExprs>> apply(ModuleS moduleS, List<String> valueNames) {
-      var scopeS = value(moduleS.membersAndImported());
-      var evaluables = value(moduleS.membersAndImported().evaluables());
+    public Try<Dag<CompiledExprs>> apply(SModule sModule, List<String> valueNames) {
+      var scopeS = value(sModule.membersAndImported());
+      var evaluables = value(sModule.membersAndImported().evaluables());
 
       var valuesS = apply2(FindValues.class, scopeS, value(valueNames));
       var compiledExprs = apply2(BackendCompile.class, valuesS, evaluables);
