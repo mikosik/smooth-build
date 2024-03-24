@@ -7,11 +7,11 @@ import static org.smoothbuild.virtualmachine.bytecode.type.Validator.validateArg
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.ExprDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BCallCategory;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
 
@@ -23,14 +23,14 @@ public class BCall extends BOper {
   private static final int CALLABLE_IDX = 0;
   private static final int ARGS_IDX = 1;
 
-  public BCall(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BCall(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.category() instanceof BCallCategory);
+    checkArgument(merkleRoot.kind() instanceof BCallKind);
   }
 
   @Override
-  public BCallCategory category() {
-    return (BCallCategory) super.category();
+  public BCallKind kind() {
+    return (BCallKind) super.kind();
   }
 
   @Override
@@ -41,27 +41,27 @@ public class BCall extends BOper {
     return new SubExprsB(func, args);
   }
 
-  private void validate(BExpr func, BCombine args) throws ExprDbException {
+  private void validate(BExpr func, BCombine args) throws BExprDbException {
     if (func.evaluationType() instanceof BFuncType funcType) {
       validate(funcType, args);
     } else {
       throw new DecodeExprWrongNodeTypeException(
-          hash(), this.category(), "func", BFuncType.class, func.evaluationType());
+          hash(), this.kind(), "func", BFuncType.class, func.evaluationType());
     }
   }
 
-  private void validate(BFuncType funcType, BCombine args) throws ExprDbException {
+  private void validate(BFuncType funcType, BCombine args) throws BExprDbException {
     var argsT = args.evaluationType();
     validateArgs(funcType, argsT.elements(), () -> illegalArgsExc(funcType.params(), argsT));
     var resultT = funcType.result();
     if (!evaluationType().equals(resultT)) {
       throw new DecodeExprWrongNodeTypeException(
-          hash(), this.category(), "call.result", evaluationType(), resultT);
+          hash(), this.kind(), "call.result", evaluationType(), resultT);
     }
   }
 
-  private ExprDbException illegalArgsExc(BTupleType params, BTupleType argsType) {
-    return new DecodeExprWrongNodeTypeException(hash(), this.category(), "args", params, argsType);
+  private BExprDbException illegalArgsExc(BTupleType params, BTupleType argsType) {
+    return new DecodeExprWrongNodeTypeException(hash(), this.kind(), "args", params, argsType);
   }
 
   private BExpr readFunc() throws BytecodeException {

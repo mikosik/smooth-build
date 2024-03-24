@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.tupl
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
@@ -21,8 +21,8 @@ public final class BTupleType extends BType {
   }
 
   @Override
-  public BTuple newExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
-    checkArgument(merkleRoot.category() instanceof BTupleType);
+  public BTuple newExpr(MerkleRoot merkleRoot, BExprDb exprDb) {
+    checkArgument(merkleRoot.kind() instanceof BTupleType);
     return new BTuple(merkleRoot, exprDb);
   }
 

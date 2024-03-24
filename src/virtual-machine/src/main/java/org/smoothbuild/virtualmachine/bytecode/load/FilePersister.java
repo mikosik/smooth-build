@@ -8,7 +8,7 @@ import okio.BufferedSource;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
@@ -20,11 +20,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
 @Singleton
 public class FilePersister {
   private final FileResolver fileResolver;
-  private final ExprDb exprDb;
+  private final BExprDb exprDb;
   private final ConcurrentHashMap<FullPath, CachingLoader> fileBlobCache;
 
   @Inject
-  public FilePersister(FileResolver fileResolver, ExprDb exprDb) {
+  public FilePersister(FileResolver fileResolver, BExprDb exprDb) {
     this.fileResolver = fileResolver;
     this.exprDb = exprDb;
     this.fileBlobCache = new ConcurrentHashMap<>();

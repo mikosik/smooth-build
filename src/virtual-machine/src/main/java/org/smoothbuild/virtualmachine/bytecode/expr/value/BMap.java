@@ -2,18 +2,18 @@ package org.smoothbuild.virtualmachine.bytecode.expr.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BMapCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BMapKind;
 
 /**
  * 'Map' function.
  * This class is thread-safe.
  */
 public final class BMap extends BFunc {
-  public BMap(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BMap(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.category() instanceof BMapCategory);
+    checkArgument(merkleRoot.kind() instanceof BMapKind);
   }
 
   @Override

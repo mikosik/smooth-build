@@ -12,9 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
-import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
-import org.smoothbuild.virtualmachine.testing.TestingCategoryB;
+import org.smoothbuild.virtualmachine.testing.TestingBKind;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BArrayTest extends TestingVirtualMachine {
@@ -139,11 +139,11 @@ public class BArrayTest extends TestingVirtualMachine {
   public void type(BType elemT) throws Exception {
     var arrayTH = arrayTB(elemT);
     var arrayH = exprDb().newArrayBuilder(arrayTH).build();
-    assertThat(arrayH.category()).isEqualTo(arrayTH);
+    assertThat(arrayH.kind()).isEqualTo(arrayTH);
   }
 
-  private static List<BCategory> type_test_data() {
-    return TestingCategoryB.CATS_TO_TEST;
+  private static List<BKind> type_test_data() {
+    return TestingBKind.CATS_TO_TEST;
   }
 
   @Test

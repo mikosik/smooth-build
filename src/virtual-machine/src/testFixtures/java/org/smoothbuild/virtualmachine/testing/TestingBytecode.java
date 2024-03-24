@@ -33,22 +33,22 @@ import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BCallCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BCombineCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BOrderCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BPickCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BReferenceCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BSelectCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BCallKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BOrderKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BPickKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BReferenceKind;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIfCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BLambdaCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BMapCategory;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BNativeFuncCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BLambdaKind;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BMapKind;
+import org.smoothbuild.virtualmachine.bytecode.type.value.BNativeFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
@@ -57,7 +57,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public abstract class TestingBytecode {
 
-  protected abstract CategoryDb categoryDb();
+  protected abstract BKindDb kindDb();
 
   protected abstract BytecodeFactory bytecodeF();
 
@@ -72,36 +72,35 @@ public abstract class TestingBytecode {
   }
 
   public BArrayType arrayTB(BType elemT) throws BytecodeException {
-    return categoryDb().array(elemT);
+    return kindDb().array(elemT);
   }
 
   public BBlobType blobTB() throws BytecodeException {
-    return categoryDb().blob();
+    return kindDb().blob();
   }
 
   public BBoolType boolTB() throws BytecodeException {
-    return categoryDb().bool();
+    return kindDb().bool();
   }
 
   public BTupleType fileTB() throws BytecodeException {
     return bytecodeF().fileType();
   }
 
-  public BLambdaCategory lambdaCB() throws BytecodeException {
+  public BLambdaKind lambdaCB() throws BytecodeException {
     return lambdaCB(blobTB(), stringTB(), intTB());
   }
 
-  public BLambdaCategory lambdaCB(BType resultT) throws BytecodeException {
-    return categoryDb().lambda(funcTB(resultT));
+  public BLambdaKind lambdaCB(BType resultT) throws BytecodeException {
+    return kindDb().lambda(funcTB(resultT));
   }
 
-  public BLambdaCategory lambdaCB(BType param, BType resultT) throws BytecodeException {
-    return categoryDb().lambda(funcTB(param, resultT));
+  public BLambdaKind lambdaCB(BType param, BType resultT) throws BytecodeException {
+    return kindDb().lambda(funcTB(param, resultT));
   }
 
-  public BLambdaCategory lambdaCB(BType param1, BType param2, BType resultT)
-      throws BytecodeException {
-    return categoryDb().lambda(funcTB(param1, param2, resultT));
+  public BLambdaKind lambdaCB(BType param1, BType param2, BType resultT) throws BytecodeException {
+    return kindDb().lambda(funcTB(param1, param2, resultT));
   }
 
   public BFuncType funcTB() throws BytecodeException {
@@ -121,28 +120,28 @@ public abstract class TestingBytecode {
   }
 
   public BFuncType funcTB(List<BType> paramTs, BType resultT) throws BytecodeException {
-    return categoryDb().funcT(paramTs, resultT);
+    return kindDb().funcT(paramTs, resultT);
   }
 
   public BIntType intTB() throws BytecodeException {
-    return categoryDb().int_();
+    return kindDb().int_();
   }
 
-  public BNativeFuncCategory nativeFuncCB() throws BytecodeException {
+  public BNativeFuncKind nativeFuncCB() throws BytecodeException {
     return nativeFuncCB(boolTB(), blobTB());
   }
 
-  public BNativeFuncCategory nativeFuncCB(BType resultT) throws BytecodeException {
-    return categoryDb().nativeFunc(funcTB(resultT));
+  public BNativeFuncKind nativeFuncCB(BType resultT) throws BytecodeException {
+    return kindDb().nativeFunc(funcTB(resultT));
   }
 
-  public BNativeFuncCategory nativeFuncCB(BType param, BType resultT) throws BytecodeException {
-    return categoryDb().nativeFunc(funcTB(param, resultT));
+  public BNativeFuncKind nativeFuncCB(BType param, BType resultT) throws BytecodeException {
+    return kindDb().nativeFunc(funcTB(param, resultT));
   }
 
-  public BNativeFuncCategory nativeFuncCB(BType param1, BType param2, BType resultT)
+  public BNativeFuncKind nativeFuncCB(BType param1, BType param2, BType resultT)
       throws BytecodeException {
-    return categoryDb().nativeFunc(funcTB(param1, param2, resultT));
+    return kindDb().nativeFunc(funcTB(param1, param2, resultT));
   }
 
   public BTupleType personTB() throws BytecodeException {
@@ -150,73 +149,73 @@ public abstract class TestingBytecode {
   }
 
   public BStringType stringTB() throws BytecodeException {
-    return categoryDb().string();
+    return kindDb().string();
   }
 
   public BTupleType tupleTB(BType... itemTs) throws BytecodeException {
-    return categoryDb().tuple(itemTs);
+    return kindDb().tuple(itemTs);
   }
 
   // OperB categories
 
-  public BCallCategory callCB() throws BytecodeException {
+  public BCallKind callCB() throws BytecodeException {
     return callCB(intTB());
   }
 
-  public BCallCategory callCB(BType evaluationType) throws BytecodeException {
-    return categoryDb().call(evaluationType);
+  public BCallKind callCB(BType evaluationType) throws BytecodeException {
+    return kindDb().call(evaluationType);
   }
 
-  public BCombineCategory combineCB(BType... itemTs) throws BytecodeException {
-    return categoryDb().combine(tupleTB(itemTs));
+  public BCombineKind combineCB(BType... itemTs) throws BytecodeException {
+    return kindDb().combine(tupleTB(itemTs));
   }
 
-  public BIfCategory ifFuncCB() throws BytecodeException {
+  public BIfKind ifFuncCB() throws BytecodeException {
     return ifFuncCB(intTB());
   }
 
-  public BIfCategory ifFuncCB(BType t) throws BytecodeException {
-    return categoryDb().ifFunc(t);
+  public BIfKind ifFuncCB(BType t) throws BytecodeException {
+    return kindDb().ifFunc(t);
   }
 
-  public BMapCategory mapFuncCB() throws BytecodeException {
+  public BMapKind mapFuncCB() throws BytecodeException {
     return mapFuncCB(intTB(), boolTB());
   }
 
-  public BMapCategory mapFuncCB(BType r, BType s) throws BytecodeException {
-    return categoryDb().mapFunc(r, s);
+  public BMapKind mapFuncCB(BType r, BType s) throws BytecodeException {
+    return kindDb().mapFunc(r, s);
   }
 
-  public BOrderCategory orderCB() throws BytecodeException {
+  public BOrderKind orderCB() throws BytecodeException {
     return orderCB(intTB());
   }
 
-  public BOrderCategory orderCB(BType elemT) throws BytecodeException {
-    return categoryDb().order(arrayTB(elemT));
+  public BOrderKind orderCB(BType elemT) throws BytecodeException {
+    return kindDb().order(arrayTB(elemT));
   }
 
-  public BPickCategory pickCB() throws BytecodeException {
+  public BPickKind pickCB() throws BytecodeException {
     return pickCB(intTB());
   }
 
-  public BPickCategory pickCB(BType evaluationType) throws BytecodeException {
-    return categoryDb().pick(evaluationType);
+  public BPickKind pickCB(BType evaluationType) throws BytecodeException {
+    return kindDb().pick(evaluationType);
   }
 
-  public BReferenceCategory varCB() throws BytecodeException {
+  public BReferenceKind varCB() throws BytecodeException {
     return varCB(intTB());
   }
 
-  public BReferenceCategory varCB(BType evaluationType) throws BytecodeException {
-    return categoryDb().reference(evaluationType);
+  public BReferenceKind varCB(BType evaluationType) throws BytecodeException {
+    return kindDb().reference(evaluationType);
   }
 
-  public BSelectCategory selectCB() throws BytecodeException {
+  public BSelectKind selectCB() throws BytecodeException {
     return selectCB(intTB());
   }
 
-  public BSelectCategory selectCB(BType evaluationType) throws BytecodeException {
-    return categoryDb().select(evaluationType);
+  public BSelectKind selectCB(BType evaluationType) throws BytecodeException {
+    return kindDb().select(evaluationType);
   }
 
   // ValueB-s

@@ -12,11 +12,11 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.ExprDbException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.BCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 /**
@@ -27,9 +27,9 @@ public abstract class BExpr {
   public static final String DATA_PATH = "data";
 
   private final MerkleRoot merkleRoot;
-  private final ExprDb exprDb;
+  private final BExprDb exprDb;
 
-  public BExpr(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BExpr(MerkleRoot merkleRoot, BExprDb exprDb) {
     this.merkleRoot = merkleRoot;
     this.exprDb = exprDb;
   }
@@ -38,7 +38,7 @@ public abstract class BExpr {
     return merkleRoot;
   }
 
-  protected ExprDb exprDb() {
+  protected BExprDb exprDb() {
     return exprDb;
   }
 
@@ -54,8 +54,8 @@ public abstract class BExpr {
     return merkleRoot.dataHash();
   }
 
-  public BCategory category() {
-    return merkleRoot.category();
+  public BKind kind() {
+    return merkleRoot.kind();
   }
 
   public abstract BType evaluationType();
@@ -64,7 +64,7 @@ public abstract class BExpr {
 
   protected <T> T readData(Function0<T, HashedDbException> reader) throws BytecodeException {
     return invokeAndChainHashedDbException(
-        reader, e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
+        reader, e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
   protected <T extends BExpr> T readData(Class<T> clazz) throws BytecodeException {
@@ -79,7 +79,7 @@ public abstract class BExpr {
   protected long readDataAsHashChainSize() throws BytecodeException {
     return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChainSize(dataHash()),
-        e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
+        e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
   protected List<BValue> readDataAsValueChain(int expectedSize) throws BytecodeException {
@@ -104,19 +104,19 @@ public abstract class BExpr {
         .map(tuple -> readNode(dataNodePath(tuple.element2()), chain.get(tuple.element2())));
   }
 
-  private List<Hash> readDataAsHashChain(int expectedSize) throws ExprDbException {
+  private List<Hash> readDataAsHashChain(int expectedSize) throws BExprDbException {
     List<Hash> data = readDataAsHashChain();
     if (data.size() != expectedSize) {
       throw new DecodeExprWrongChainSizeException(
-          hash(), category(), DATA_PATH, expectedSize, data.size());
+          hash(), kind(), DATA_PATH, expectedSize, data.size());
     }
     return data;
   }
 
-  private List<Hash> readDataAsHashChain() throws ExprDbException {
+  private List<Hash> readDataAsHashChain() throws BExprDbException {
     return invokeAndChainHashedDbException(
         () -> exprDb.hashedDb().readHashChain(dataHash()),
-        e -> new DecodeExprNodeException(hash(), category(), DATA_PATH, e));
+        e -> new DecodeExprNodeException(hash(), kind(), DATA_PATH, e));
   }
 
   protected <T> T readElementFromDataAsInstanceChain(int i, int expectedSize, Class<T> clazz)
@@ -132,11 +132,10 @@ public abstract class BExpr {
 
   private BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
     return invokeAndChainBytecodeException(
-        () -> exprDb.get(nodeHash),
-        e -> new DecodeExprNodeException(hash(), category(), nodePath, e));
+        () -> exprDb.get(nodeHash), e -> new DecodeExprNodeException(hash(), kind(), nodePath, e));
   }
 
-  private Hash readHashFromDataAsHashChain(int i, int expectedSize) throws ExprDbException {
+  private Hash readHashFromDataAsHashChain(int i, int expectedSize) throws BExprDbException {
     checkElementIndex(i, expectedSize);
     return readDataAsHashChain(expectedSize).get(i);
   }
@@ -146,7 +145,7 @@ public abstract class BExpr {
   }
 
   private <T> List<T> castDataChainElements(List<BExpr> elements, Class<T> clazz)
-      throws ExprDbException {
+      throws BExprDbException {
     for (int i = 0; i < elements.size(); i++) {
       castNode(dataNodePath(i), elements.get(i), clazz);
     }
@@ -155,14 +154,14 @@ public abstract class BExpr {
     return result;
   }
 
-  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz) throws ExprDbException {
+  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz) throws BExprDbException {
     if (clazz.isInstance(nodeExpr)) {
       @SuppressWarnings("unchecked")
       T result = (T) nodeExpr;
       return result;
     } else {
       throw new DecodeExprWrongNodeClassException(
-          hash(), category(), nodePath, clazz, nodeExpr.getClass());
+          hash(), kind(), nodePath, clazz, nodeExpr.getClass());
     }
   }
 

@@ -12,21 +12,21 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BOrderTest extends TestingVirtualMachine {
   @Test
-  public void category_returns_category() throws Exception {
+  public void kind_returns_kind() throws Exception {
     var order = orderB(intTB());
-    assertThat(order.category()).isEqualTo(orderCB(intTB()));
+    assertThat(order.kind()).isEqualTo(orderCB(intTB()));
   }
 
   @Test
   public void creating_order_with_elemT_different_than_required_causes_exception()
       throws Exception {
-    assertCall(() -> orderB(intTB(), stringB("abc")).category())
+    assertCall(() -> orderB(intTB(), stringB("abc")).kind())
         .throwsException(new IllegalArgumentException("Illegal elem type. Expected "
             + intTB().q() + " but element at index 0 has type " + stringTB().q() + "."));
   }
 
   @Test
-  public void elemT_can_be_equal_elementT_specified_in_category() throws Exception {
+  public void elemT_can_be_equal_elementT_specified_in_kind() throws Exception {
     orderB(arrayTB(intTB()), arrayB(intB(3)));
   }
 

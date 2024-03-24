@@ -45,7 +45,7 @@ import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
-import org.smoothbuild.virtualmachine.bytecode.type.CategoryDb;
+import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
 import org.smoothbuild.virtualmachine.testing.TestingBytecode;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
@@ -173,8 +173,8 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   @Override
-  public CategoryDb categoryDb() {
-    return injector.getInstance(CategoryDb.class);
+  public BKindDb kindDb() {
+    return injector.getInstance(BKindDb.class);
   }
 
   @Override

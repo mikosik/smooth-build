@@ -64,7 +64,7 @@ public final class InvokeTask extends Task {
       logFaultyImplementation(
           container,
           "Its declared result type == " + outputType().q()
-              + " but it returned object with type == " + result.category().q() + ".");
+              + " but it returned object with type == " + result.kind().q() + ".");
       return new Output(null, container.messages());
     }
     if (hasErrors) {

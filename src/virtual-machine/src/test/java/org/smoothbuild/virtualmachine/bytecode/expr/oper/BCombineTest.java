@@ -11,9 +11,9 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BCombineTest extends TestingVirtualMachine {
   @Test
-  public void category_returns_category() throws Exception {
+  public void kind_returns_kind() throws Exception {
     var combine = combineB(intB(3));
-    assertThat(combine.category()).isEqualTo(combineCB(intTB()));
+    assertThat(combine.kind()).isEqualTo(combineCB(intTB()));
   }
 
   @Test

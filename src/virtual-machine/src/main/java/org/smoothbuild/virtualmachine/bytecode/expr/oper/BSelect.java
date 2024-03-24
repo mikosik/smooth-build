@@ -6,13 +6,13 @@ import static org.smoothbuild.common.collect.List.list;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BSelectCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
 
 /**
@@ -23,14 +23,14 @@ public class BSelect extends BOper {
   private static final int SELECTABLE_IDX = 0;
   private static final int IDX_IDX = 1;
 
-  public BSelect(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.category() instanceof BSelectCategory);
+    checkArgument(merkleRoot.kind() instanceof BSelectKind);
   }
 
   @Override
-  public BSelectCategory category() {
-    return (BSelectCategory) super.category();
+  public BSelectKind kind() {
+    return (BSelectKind) super.kind();
   }
 
   @Override
@@ -41,20 +41,16 @@ public class BSelect extends BOper {
       int i = index.toJavaBigInteger().intValue();
       int size = tupleT.elements().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsException(hash(), category(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsException(hash(), kind(), i, size);
       }
       var fieldT = tupleT.elements().get(i);
       if (!evaluationType().equals(fieldT)) {
-        throw new DecodeSelectWrongEvaluationTypeException(hash(), category(), fieldT);
+        throw new DecodeSelectWrongEvaluationTypeException(hash(), kind(), fieldT);
       }
       return new SubExprsB(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassException(
-          hash(),
-          category(),
-          "tuple",
-          BTupleType.class,
-          selectable.evaluationType().getClass());
+          hash(), kind(), "tuple", BTupleType.class, selectable.evaluationType().getClass());
     }
   }
 

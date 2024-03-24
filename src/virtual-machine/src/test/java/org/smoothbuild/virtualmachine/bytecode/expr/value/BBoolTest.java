@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 public class BBoolTest extends TestingVirtualMachine {
   @Test
   public void type_of_bool_is_bool_type() throws Exception {
-    assertThat(boolB(true).category()).isEqualTo(boolTB());
+    assertThat(boolB(true).kind()).isEqualTo(boolTB());
   }
 
   @Test

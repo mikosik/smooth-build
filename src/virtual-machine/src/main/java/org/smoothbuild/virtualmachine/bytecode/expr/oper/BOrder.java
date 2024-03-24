@@ -5,29 +5,29 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.ExprDb;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BOrderCategory;
+import org.smoothbuild.virtualmachine.bytecode.type.oper.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 
 /**
  * This class is thread-safe.
  */
 public class BOrder extends BOper {
-  public BOrder(MerkleRoot merkleRoot, ExprDb exprDb) {
+  public BOrder(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.category() instanceof BOrderCategory);
+    checkArgument(merkleRoot.kind() instanceof BOrderKind);
   }
 
   @Override
-  public BOrderCategory category() {
-    return (BOrderCategory) super.category();
+  public BOrderKind kind() {
+    return (BOrderKind) super.kind();
   }
 
   @Override
   public BArrayType evaluationType() {
-    return category().evaluationType();
+    return kind().evaluationType();
   }
 
   @Override
@@ -37,12 +37,12 @@ public class BOrder extends BOper {
 
   public List<BExpr> elements() throws BytecodeException {
     var elements = readDataAsExprChain(BExpr.class);
-    var expectedElementT = category().evaluationType().elem();
+    var expectedElementT = kind().evaluationType().elem();
     for (int i = 0; i < elements.size(); i++) {
       var actualT = elements.get(i).evaluationType();
       if (!expectedElementT.equals(actualT)) {
         throw new DecodeExprWrongNodeTypeException(
-            hash(), category(), "elements", i, expectedElementT, actualT);
+            hash(), kind(), "elements", i, expectedElementT, actualT);
       }
     }
     return elements;
