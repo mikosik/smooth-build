@@ -13,6 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public class BReferenceInliner {
   private final BytecodeFactory bytecodeFactory;
@@ -42,7 +43,7 @@ public class BReferenceInliner {
       case BReference reference -> rewriteVar(reference, resolver);
       case BSelect select -> rewriteSelect(select, resolver);
       case BLambda lambda -> rewriteLambda(lambda, resolver);
-      default -> expr;
+      case BValue value -> value;
     };
   }
 

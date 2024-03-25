@@ -24,7 +24,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
  * Bytecode expression.
  * This class is thread-safe.
  */
-public abstract class BExpr {
+public abstract sealed class BExpr permits BOper, BValue {
   public static final String DATA_PATH = "data";
 
   private final MerkleRoot merkleRoot;
