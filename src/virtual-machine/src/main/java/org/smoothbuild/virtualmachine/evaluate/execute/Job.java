@@ -5,8 +5,8 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.PromisedValue;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public record Job(
     BExpr expr,

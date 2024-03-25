@@ -8,10 +8,10 @@ import okio.ForwardingSink;
 import okio.Okio;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlobBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class OutputClassFile extends SimpleJavaFileObject {

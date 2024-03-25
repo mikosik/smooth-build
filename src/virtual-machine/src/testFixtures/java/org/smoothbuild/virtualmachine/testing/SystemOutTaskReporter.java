@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.sto
 
 import java.io.PrintWriter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;

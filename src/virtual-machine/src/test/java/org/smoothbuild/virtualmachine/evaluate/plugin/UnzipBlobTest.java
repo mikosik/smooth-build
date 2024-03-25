@@ -6,7 +6,7 @@ import static org.smoothbuild.virtualmachine.evaluate.plugin.UnzipBlob.unzipBlob
 import static org.smoothbuild.virtualmachine.testing.JarTester.jar;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class UnzipBlobTest extends TestingVirtualMachine {

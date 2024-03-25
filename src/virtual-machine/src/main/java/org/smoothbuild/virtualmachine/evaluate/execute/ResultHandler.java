@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 

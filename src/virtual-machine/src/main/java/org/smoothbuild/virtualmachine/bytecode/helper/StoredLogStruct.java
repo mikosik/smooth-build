@@ -8,10 +8,10 @@ import static org.smoothbuild.common.log.base.Level.WARNING;
 import java.util.Set;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 
 public class StoredLogStruct {
   private static final Set<String> LEVELS =

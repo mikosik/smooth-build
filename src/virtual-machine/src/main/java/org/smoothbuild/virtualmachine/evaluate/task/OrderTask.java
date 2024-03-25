@@ -1,9 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.task;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;

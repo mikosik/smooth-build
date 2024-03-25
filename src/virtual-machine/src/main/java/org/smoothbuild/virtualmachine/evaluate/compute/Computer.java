@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.wire.Sandbox;

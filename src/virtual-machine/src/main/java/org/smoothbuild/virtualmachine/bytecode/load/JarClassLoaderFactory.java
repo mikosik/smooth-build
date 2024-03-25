@@ -14,9 +14,9 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 
 /**
  * Factory for creating classLoaders that load classes from jar file provided as BlobB.

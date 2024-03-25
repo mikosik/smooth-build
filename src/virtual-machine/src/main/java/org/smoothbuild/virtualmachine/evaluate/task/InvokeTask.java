@@ -7,10 +7,10 @@ import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 

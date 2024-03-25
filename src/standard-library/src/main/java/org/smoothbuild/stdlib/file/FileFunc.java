@@ -7,9 +7,9 @@ import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FileFunc {

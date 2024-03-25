@@ -4,15 +4,15 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BCombine;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BIf;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BPick;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BReference;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 
 public class BReferenceInliner {
   private final BytecodeFactory bytecodeFactory;

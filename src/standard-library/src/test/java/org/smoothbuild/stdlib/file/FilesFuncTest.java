@@ -5,8 +5,8 @@ import static org.smoothbuild.common.log.base.Log.error;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.stdlib.StandardLibraryTestCase;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public class FilesFuncTest extends StandardLibraryTestCase {
   @Test

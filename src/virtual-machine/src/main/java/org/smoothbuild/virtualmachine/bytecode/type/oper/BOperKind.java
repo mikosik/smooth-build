@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.type.oper;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 

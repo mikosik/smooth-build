@@ -7,6 +7,7 @@ import com.google.common.testing.EqualsTester;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public abstract class AbstractBExprTestSuite<T extends BExpr> extends TestingVirtualMachine {

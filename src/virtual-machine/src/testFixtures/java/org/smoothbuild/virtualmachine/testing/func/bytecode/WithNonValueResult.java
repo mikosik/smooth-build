@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.testing.func.bytecode;
 
 import java.util.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BOrder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 public class WithNonValueResult {

@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class UnzipHelper {

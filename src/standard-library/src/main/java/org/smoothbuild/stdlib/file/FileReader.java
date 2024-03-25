@@ -4,9 +4,9 @@ import java.io.IOException;
 import okio.BufferedSource;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FileReader {

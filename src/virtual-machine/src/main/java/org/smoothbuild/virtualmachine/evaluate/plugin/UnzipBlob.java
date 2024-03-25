@@ -11,11 +11,11 @@ import java.util.function.Predicate;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
 
 public class UnzipBlob {
   public static Either<String, BArray> unzipBlob(

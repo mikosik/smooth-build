@@ -16,8 +16,8 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BArrayBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayBuilder;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {

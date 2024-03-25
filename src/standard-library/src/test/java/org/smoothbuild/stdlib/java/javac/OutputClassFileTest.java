@@ -8,7 +8,7 @@ import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class OutputClassFileTest extends TestingVirtualMachine {

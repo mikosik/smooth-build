@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.bytecode.type;
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeIllegalKindException;
 
 /**

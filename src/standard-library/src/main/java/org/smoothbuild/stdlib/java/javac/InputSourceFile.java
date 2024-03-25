@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.Scanner;
 import javax.tools.SimpleJavaFileObject;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final BTuple file;
