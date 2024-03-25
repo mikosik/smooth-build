@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 
 public final class BLambdaKind extends BFuncKind {
   public BLambdaKind(Hash hash, BFuncType funcType) {

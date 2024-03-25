@@ -5,7 +5,7 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import org.smoothbuild.common.bucket.base.IllegalPathException;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class PathArgValidator {

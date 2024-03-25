@@ -4,8 +4,8 @@ import jakarta.inject.Inject;
 import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.Consumer0;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 

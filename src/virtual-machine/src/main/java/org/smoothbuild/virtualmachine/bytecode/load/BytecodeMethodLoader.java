@@ -13,9 +13,9 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 /**
  * Loads java methods as instances of {@link Method}.

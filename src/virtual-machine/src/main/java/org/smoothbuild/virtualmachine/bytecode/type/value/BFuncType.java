@@ -3,11 +3,11 @@ package org.smoothbuild.virtualmachine.bytecode.type.value;
 import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.funcTypeName;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeIllegalKindException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BFunc;
 
 public final class BFuncType extends BType {
   private final BTupleType params;

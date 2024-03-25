@@ -4,10 +4,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.oper.BSelect;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BInt;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 

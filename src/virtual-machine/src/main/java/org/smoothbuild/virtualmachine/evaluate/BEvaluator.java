@@ -9,8 +9,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 

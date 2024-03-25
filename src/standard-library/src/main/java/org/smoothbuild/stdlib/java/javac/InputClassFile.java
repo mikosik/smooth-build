@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.Objects;
 import javax.tools.SimpleJavaFileObject;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BTuple;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final BTuple file;

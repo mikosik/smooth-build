@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public record EvaluatedExprs(List<SExpr> sExprs, List<BValue> bValues) {
   public static EvaluatedExprs evaluatedExprs(List<SExpr> sExprs, List<BValue> bValues) {

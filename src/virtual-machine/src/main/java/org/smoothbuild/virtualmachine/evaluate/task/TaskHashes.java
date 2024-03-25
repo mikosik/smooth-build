@@ -3,8 +3,8 @@ package org.smoothbuild.virtualmachine.evaluate.task;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BNativeFunc;
-import org.smoothbuild.virtualmachine.bytecode.expr.value.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 public class TaskHashes {

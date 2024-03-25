@@ -7,6 +7,7 @@ import java.util.List;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BExprCollisionTest extends TestingVirtualMachine {
