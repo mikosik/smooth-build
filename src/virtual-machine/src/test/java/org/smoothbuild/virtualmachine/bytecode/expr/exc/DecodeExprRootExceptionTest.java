@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.bytecode.exc;
+package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;

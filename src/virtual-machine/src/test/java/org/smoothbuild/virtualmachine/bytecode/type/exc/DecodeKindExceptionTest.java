@@ -1,10 +1,9 @@
-package org.smoothbuild.virtualmachine.bytecode.exc;
+package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeKindException;
 
 public class DecodeKindExceptionTest {
   @Test
