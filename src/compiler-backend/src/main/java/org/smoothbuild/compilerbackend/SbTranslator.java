@@ -362,7 +362,7 @@ public class SbTranslator {
     var bExpr = bytecode.right();
     if (!bExpr.evaluationType().equals(bType)) {
       throw new SbTranslatorException(annotation.location()
-          + ": Bytecode provider returned object of wrong type "
+          + ": Bytecode provider returned expression of wrong type "
           + bExpr.evaluationType().q()
           + " when " + q(name) + " is declared as " + bType.q() + ".");
     }

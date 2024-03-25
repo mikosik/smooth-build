@@ -354,7 +354,7 @@ public class NativeTest extends EvaluatorTestCase {
 
   private static Log faultyTypeOfReturnedObject(String declared, String actual) {
     return faultyNativeImplFatal("Its declared result type == " + q(declared)
-        + " but it returned object with type == " + q(actual) + ".");
+        + " but it returned expression with type == " + q(actual) + ".");
   }
 
   private static Log nonNullValueAndError() {

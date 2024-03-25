@@ -154,8 +154,7 @@ public abstract class BExpr {
     return result;
   }
 
-  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz)
-      throws BExprDbException {
+  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz) throws BExprDbException {
     if (clazz.isInstance(nodeExpr)) {
       @SuppressWarnings("unchecked")
       T result = (T) nodeExpr;

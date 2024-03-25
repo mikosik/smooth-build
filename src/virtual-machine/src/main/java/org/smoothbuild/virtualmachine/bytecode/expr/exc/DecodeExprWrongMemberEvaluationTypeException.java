@@ -19,7 +19,7 @@ public class DecodeExprWrongMemberEvaluationTypeException extends DecodeExprExce
 
   private static String buildMessage(
       Hash hash, BKind kind, String memberName, String expected, BType actual) {
-    return "Cannot decode " + kind.q() + " object at " + hash + ". Its `" + memberName
+    return "Cannot decode " + kind.q() + " expression at " + hash + ". Its `" + memberName
         + "` has wrong evaluation type. Expected " + expected + " but is " + actual.q()
         + ". ";
   }

@@ -13,7 +13,7 @@ public class DecodeExprNodeExceptionTest extends TestingVirtualMachine {
     var exception =
         new DecodeExprNodeException(Hash.of(13), bIntType(), "node-path", "Detailed message.");
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode `Int` object at "
+        .isEqualTo("Cannot decode `Int` expression at "
             + "43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "
             + "Cannot decode its node at `node-path` path in Merkle tree. Detailed message.");
   }

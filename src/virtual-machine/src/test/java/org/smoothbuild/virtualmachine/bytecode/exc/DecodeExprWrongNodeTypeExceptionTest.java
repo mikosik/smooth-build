@@ -14,7 +14,7 @@ public class DecodeExprWrongNodeTypeExceptionTest extends TestingVirtualMachine 
         Hash.of(123), bIntType(), "node-path", bBoolType(), bStringType());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` "
-            + "object at a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
+            + "expression at a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
             + "Cannot decode its node at `node-path` path in Merkle tree. "
             + "Node has unexpected type. Expected `Bool` but was `String`.");
   }
@@ -24,7 +24,7 @@ public class DecodeExprWrongNodeTypeExceptionTest extends TestingVirtualMachine 
     var exception = new DecodeExprWrongNodeTypeException(
         Hash.of(123), bIntType(), "node-path", 7, bBoolType(), bStringType());
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode `Int` object at "
+        .isEqualTo("Cannot decode `Int` expression at "
             + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
             + "Cannot decode its node at `node-path[7]` path in Merkle tree. "
             + "Node has unexpected type. Expected `Bool` but was `String`.");

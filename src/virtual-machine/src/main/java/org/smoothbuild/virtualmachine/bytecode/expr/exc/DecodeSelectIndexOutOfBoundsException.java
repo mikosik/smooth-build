@@ -9,7 +9,7 @@ public class DecodeSelectIndexOutOfBoundsException extends DecodeExprException {
   }
 
   private static String buildMessage(Hash hash, BKind kind, int index, int size) {
-    return "Cannot decode %s object at %s. Its index component is %s while TUPLE size is %s."
+    return "Cannot decode %s expression at %s. Its index component is %s while TUPLE size is %s."
         .formatted(kind.q(), hash, index, size);
   }
 }
