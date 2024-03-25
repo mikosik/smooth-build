@@ -17,7 +17,7 @@ public class DecodeExprNodeException extends DecodeExprException {
   }
 
   private static String buildMessage(Hash hash, BKind kind, String path, String message) {
-    return "Cannot decode " + kind.q() + " object at " + hash + ". Cannot decode its node at `"
+    return "Cannot decode " + kind.q() + " expression at " + hash + ". Cannot decode its node at `"
         + path + "` path in Merkle tree. " + (message != null ? message : "");
   }
 }

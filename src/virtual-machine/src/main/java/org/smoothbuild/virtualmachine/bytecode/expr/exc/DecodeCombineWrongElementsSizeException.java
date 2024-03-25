@@ -9,7 +9,7 @@ public class DecodeCombineWrongElementsSizeException extends DecodeExprException
   }
 
   private static String buildMessage(Hash hash, BCombineKind kind, int actual) {
-    return ("Cannot decode %s object at %s. Evaluation type elements size (%s)"
+    return ("Cannot decode %s expression at %s. Evaluation type elements size (%s)"
             + " is not equal to actual elements size (%s).")
         .formatted(kind.q(), hash, kind.evaluationType().elements().size(), actual);
   }

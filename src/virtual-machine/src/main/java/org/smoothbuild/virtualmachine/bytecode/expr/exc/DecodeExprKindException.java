@@ -8,6 +8,6 @@ public class DecodeExprKindException extends DecodeExprException {
   }
 
   public DecodeExprKindException(Hash hash, Throwable e) {
-    super("Cannot decode object at " + hash + ". Cannot decode its kind.", e);
+    super("Cannot decode expression at " + hash + ". Cannot decode its kind.", e);
   }
 }

@@ -37,6 +37,6 @@ public class DecodeExprRootException extends DecodeExprException {
   }
 
   private DecodeExprRootException(Hash hash, String message, Throwable cause) {
-    super("Cannot decode object at " + hash + ". " + message, cause);
+    super("Cannot decode expression at " + hash + ". " + message, cause);
   }
 }

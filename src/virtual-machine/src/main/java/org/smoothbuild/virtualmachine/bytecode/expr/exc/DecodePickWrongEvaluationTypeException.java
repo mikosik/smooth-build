@@ -10,7 +10,7 @@ public class DecodePickWrongEvaluationTypeException extends DecodeExprException 
   }
 
   private static String buildMessage(Hash hash, BPickKind kind, BType actualElemType) {
-    return ("Cannot decode %s object at %s. Its pickable is array with elem type %s while this "
+    return ("Cannot decode %s expression at %s. Its pickable is array with elem type %s while this "
             + "expression defines its evaluation type as %s.")
         .formatted(kind.q(), hash, actualElemType.q(), kind.evaluationType().q());
   }
