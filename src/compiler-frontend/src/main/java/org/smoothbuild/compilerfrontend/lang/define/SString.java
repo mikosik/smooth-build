@@ -9,6 +9,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 public record SString(SStringType type, String string, Location location) implements SConstant {
   @Override
   public String toString() {
-    return "StringS(" + list(type, qq(string), location).toString(", ") + ")";
+    return "SString(" + list(type, qq(string), location).toString(", ") + ")";
   }
 }

@@ -9,6 +9,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SIntType;
 public record SInt(SIntType type, BigInteger bigInteger, Location location) implements SConstant {
   @Override
   public String toString() {
-    return "IntS(" + list(type, bigInteger, location).toString(", ") + ")";
+    return "SInt(" + list(type, bigInteger, location).toString(", ") + ")";
   }
 }

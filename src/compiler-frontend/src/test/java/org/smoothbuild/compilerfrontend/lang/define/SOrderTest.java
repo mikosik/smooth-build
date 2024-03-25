@@ -13,11 +13,11 @@ public class SOrderTest {
     assertThat(orderS.toString())
         .isEqualTo(
             """
-            OrderS(
+            SOrder(
               evaluationType = [Int]
               elems = [
-                IntS(Int, 44, {prj}/build.smooth:4)
-                IntS(Int, 55, {prj}/build.smooth:5)
+                SInt(Int, 44, {prj}/build.smooth:4)
+                SInt(Int, 55, {prj}/build.smooth:5)
               ]
               location = {prj}/build.smooth:3
             )""");

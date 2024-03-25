@@ -14,7 +14,7 @@ public class SReferenceTest {
     assertThat(refS.toString())
         .isEqualTo(
             """
-            ReferenceS(
+            SReference(
               schema = <>Int
               referencedName = referenced
               location = {prj}/build.smooth:7

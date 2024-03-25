@@ -16,11 +16,11 @@ public class SNamedExprValueTest {
     assertThat(namedExprValueS.toString())
         .isEqualTo(
             """
-            NamedExprValue(
+            SNamedExprValue(
               schema = <>String
               name = myVal
               location = {prj}/build.smooth:7
-              body = IntS(Int, 9, {prj}/build.smooth:1)
+              body = SInt(Int, 9, {prj}/build.smooth:1)
             )""");
   }
 }

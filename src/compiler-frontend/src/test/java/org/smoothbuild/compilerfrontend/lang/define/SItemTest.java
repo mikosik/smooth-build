@@ -42,7 +42,7 @@ public class SItemTest {
     assertThat(param.toString())
         .isEqualTo(
             """
-            ItemS(
+            SItem(
               type = String
               name = name
               defaultValue = None

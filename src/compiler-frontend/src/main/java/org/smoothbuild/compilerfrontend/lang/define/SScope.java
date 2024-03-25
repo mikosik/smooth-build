@@ -4,11 +4,11 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 
 import org.smoothbuild.common.bindings.ImmutableBindings;
 
-public record ScopeS(
+public record SScope(
     ImmutableBindings<STypeDefinition> types, ImmutableBindings<SNamedEvaluable> evaluables) {
 
-  public static ScopeS scopeS(ScopeS outer, ScopeS inner) {
-    return new ScopeS(
+  public static SScope scopeS(SScope outer, SScope inner) {
+    return new SScope(
         immutableBindings(outer.types(), inner.types()),
         immutableBindings(outer.evaluables(), inner.evaluables()));
   }

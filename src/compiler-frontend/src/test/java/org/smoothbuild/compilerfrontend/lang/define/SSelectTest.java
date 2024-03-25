@@ -11,7 +11,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStruc
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
-public class SelectSTest {
+public class SSelectTest {
   @Test
   public void to_string() {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
@@ -22,10 +22,10 @@ public class SelectSTest {
     assertThat(selectS.toString())
         .isEqualTo(
             """
-            SelectS(
-              selectable = InstantiateS(
+            SSelect(
+              selectable = SInstantiate(
                 typeArgs = <>
-                polymorphicS = ReferenceS(
+                polymorphicS = SReference(
                   schema = <>MyStruct
                   referencedName = structValue
                   location = {prj}/build.smooth:12

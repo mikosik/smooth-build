@@ -13,6 +13,6 @@ public record SAnnotation(String name, SString path, Location location) {
   public String toString() {
     var fields =
         list("name = " + name, "path = " + path, "location = " + location).toString("\n");
-    return "AnnotationS(\n" + indent(fields) + "\n)";
+    return "SAnnotation(\n" + indent(fields) + "\n)";
   }
 }

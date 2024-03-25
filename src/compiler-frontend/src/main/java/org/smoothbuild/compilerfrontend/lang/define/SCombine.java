@@ -17,6 +17,6 @@ public record SCombine(STupleType evaluationType, List<SExpr> elems, Location lo
             "elems = [\n" + indent(elemsString) + "\n]",
             "location = " + location)
         .toString("\n");
-    return "CombineS(\n" + indent(fields) + "\n)";
+    return "SCombine(\n" + indent(fields) + "\n)";
   }
 }

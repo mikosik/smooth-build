@@ -32,6 +32,6 @@ public record SInstantiate(
             "evaluationType = " + evaluationType,
             "location = " + location)
         .toString("\n");
-    return "InstantiateS(\n" + indent(fields) + "\n)";
+    return "SInstantiate(\n" + indent(fields) + "\n)";
   }
 }

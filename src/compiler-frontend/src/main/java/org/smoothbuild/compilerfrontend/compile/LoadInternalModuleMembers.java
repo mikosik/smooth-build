@@ -9,8 +9,8 @@ import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 
@@ -25,7 +25,7 @@ public class LoadInternalModuleMembers implements TryFunction0<SModule> {
     var logger = new Logger();
     var types =
         immutableBindings(STypes.baseTypes().toMap(SType::name, t -> baseTypeDefinitions(t)));
-    var members = new ScopeS(types, immutableBindings());
+    var members = new SScope(types, immutableBindings());
     return Try.of(new SModule(members, members), logger);
   }
 

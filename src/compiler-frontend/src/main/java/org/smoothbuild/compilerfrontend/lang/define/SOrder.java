@@ -16,6 +16,6 @@ public record SOrder(SArrayType evaluationType, List<SExpr> elems, Location loca
             "elems = [\n" + indent(elems.toString("\n")) + "\n]",
             "location = " + location)
         .toString("\n");
-    return "OrderS(\n" + indent(fields) + "\n)";
+    return "SOrder(\n" + indent(fields) + "\n)";
   }
 }
