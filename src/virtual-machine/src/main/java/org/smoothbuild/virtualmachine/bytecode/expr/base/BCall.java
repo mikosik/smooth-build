@@ -17,7 +17,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
 /**
  * This class is thread-safe.
  */
-public class BCall extends BOper {
+public final class BCall extends BOper {
   private static final int DATA_SEQ_SIZE = 2;
   private static final int CALLABLE_IDX = 0;
   private static final int ARGS_IDX = 1;

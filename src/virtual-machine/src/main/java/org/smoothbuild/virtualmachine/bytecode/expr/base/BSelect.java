@@ -16,7 +16,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
 /**
  * This class is thread-safe.
  */
-public class BSelect extends BOper {
+public final class BSelect extends BOper {
   private static final int DATA_SEQ_SIZE = 2;
   private static final int SELECTABLE_IDX = 0;
   private static final int IDX_IDX = 1;

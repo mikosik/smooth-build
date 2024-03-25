@@ -96,9 +96,6 @@ public class BScheduler {
       case BPick pick -> scheduleOperTask(job, pick, PickTask::new);
       case BReference reference -> scheduleVarB(job, reference);
       case BSelect select -> scheduleOperTask(job, select, SelectTask::new);
-        // `default` is needed because ExprB is not sealed because it is in different package
-        // than its subclasses and code is not modularized.
-      default -> throw new RuntimeException("shouldn't happen");
     }
   }
 

@@ -12,7 +12,8 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
  * Operation.
  * This class is thread-safe.
  */
-public abstract class BOper extends BExpr {
+public abstract sealed class BOper extends BExpr
+    permits BCall, BCombine, BIf, BOrder, BPick, BReference, BSelect {
   public BOper(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BOperKind);

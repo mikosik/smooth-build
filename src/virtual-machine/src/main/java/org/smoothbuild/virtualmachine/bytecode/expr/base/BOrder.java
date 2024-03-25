@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
 /**
  * This class is thread-safe.
  */
-public class BOrder extends BOper {
+public final class BOrder extends BOper {
   public BOrder(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BOrderKind);
