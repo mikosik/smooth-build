@@ -15,7 +15,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
@@ -23,10 +23,10 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class TypeTeller {
-  private final ScopeS imported;
+  private final SScope imported;
   private final PScope pScope;
 
-  public TypeTeller(ScopeS imported, PScope pScope) {
+  public TypeTeller(SScope imported, PScope pScope) {
     this.imported = imported;
     this.pScope = pScope;
   }

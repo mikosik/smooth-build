@@ -21,7 +21,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -39,14 +39,14 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements TryFunction2<PModule, ScopeS, PModule> {
+public class InferTypes implements TryFunction2<PModule, SScope, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "inferTypes");
   }
 
   @Override
-  public Try<PModule> apply(PModule pModule, ScopeS environment) {
+  public Try<PModule> apply(PModule pModule, SScope environment) {
     var logger = new Logger();
     var typeTeller = new TypeTeller(environment, pModule.scope());
     new Worker(typeTeller, logger).visitModule(pModule);

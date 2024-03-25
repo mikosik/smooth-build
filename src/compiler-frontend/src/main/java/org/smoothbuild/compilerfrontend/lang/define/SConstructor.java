@@ -37,6 +37,6 @@ public final class SConstructor extends SNamedFunc {
   @Override
   public String toString() {
     var fields = list("name = " + name(), fieldsToString()).toString("\n");
-    return "ConstructorS(\n" + indent(fields) + "\n)";
+    return "SConstructor(\n" + indent(fields) + "\n)";
   }
 }

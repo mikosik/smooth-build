@@ -34,27 +34,27 @@ import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
-public class InjectDefaultArguments implements TryFunction2<PModule, ScopeS, PModule> {
+public class InjectDefaultArguments implements TryFunction2<PModule, SScope, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "injectDefaultArguments");
   }
 
   @Override
-  public Try<PModule> apply(PModule pModule, ScopeS environment) {
+  public Try<PModule> apply(PModule pModule, SScope environment) {
     var logger = new Logger();
     new Visitor(environment, immutableBindings(), logger).visitModule(pModule);
     return Try.of(pModule, logger);
   }
 
   private static class Visitor extends PScopingModuleVisitor {
-    private final ScopeS imported;
+    private final SScope imported;
     private final Bindings<PReferenceable> referenceables;
     private final Logger logger;
 
-    public Visitor(ScopeS imported, Bindings<PReferenceable> referenceables, Logger logger) {
+    public Visitor(SScope imported, Bindings<PReferenceable> referenceables, Logger logger) {
       this.imported = imported;
       this.referenceables = referenceables;
       this.logger = logger;

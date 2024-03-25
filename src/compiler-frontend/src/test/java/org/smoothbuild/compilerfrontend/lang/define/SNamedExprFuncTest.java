@@ -19,11 +19,11 @@ public class SNamedExprFuncTest {
     assertThat(func.toString())
         .isEqualTo(
             """
-            NamedExprFuncS(
+            SNamedExprFunc(
               name = myFunc
               schema = <>(Int)->String
               params = [
-                ItemS(
+                SItem(
                   type = Int
                   name = myParam
                   defaultValue = None
@@ -31,7 +31,7 @@ public class SNamedExprFuncTest {
                 )
               ]
               location = {prj}/build.smooth:1
-              body = IntS(Int, 17, {prj}/build.smooth:1)
+              body = SInt(Int, 17, {prj}/build.smooth:1)
             )""");
   }
 }

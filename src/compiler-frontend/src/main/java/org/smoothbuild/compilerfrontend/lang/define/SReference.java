@@ -17,6 +17,6 @@ public record SReference(SchemaS schema, String referencedName, Location locatio
     var fields = list(
             "schema = " + schema, "referencedName = " + referencedName, "location = " + location)
         .toString("\n");
-    return "ReferenceS(\n" + indent(fields) + "\n)";
+    return "SReference(\n" + indent(fields) + "\n)";
   }
 }

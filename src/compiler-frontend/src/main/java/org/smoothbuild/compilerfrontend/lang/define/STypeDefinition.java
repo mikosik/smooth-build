@@ -18,6 +18,6 @@ public class STypeDefinition extends Tanal {
   @Override
   public String toString() {
     var fields = list("type = " + type(), "location = " + location()).toString("\n");
-    return "TypeDefinitionS(\n" + indent(fields) + "\n)";
+    return "STypeDefinition(\n" + indent(fields) + "\n)";
   }
 }

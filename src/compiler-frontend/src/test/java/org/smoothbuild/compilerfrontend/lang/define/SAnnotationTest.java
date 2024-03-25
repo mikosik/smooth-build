@@ -13,9 +13,9 @@ public class SAnnotationTest {
     assertThat(annS.toString())
         .isEqualTo(
             """
-            AnnotationS(
+            SAnnotation(
               name = myAnnotation
-              path = StringS(String, "myPath", {prj}/build.smooth:7)
+              path = SString(String, "myPath", {prj}/build.smooth:7)
               location = {prj}/build.smooth:17
             )""");
   }

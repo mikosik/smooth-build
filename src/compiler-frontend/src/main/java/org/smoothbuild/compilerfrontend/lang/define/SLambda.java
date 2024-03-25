@@ -65,6 +65,6 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   @Override
   public String toString() {
     var fields = fieldsToString() + "\nbody = " + body;
-    return "LambdaS(\n" + indent(fields) + "\n)";
+    return "SLambda(\n" + indent(fields) + "\n)";
   }
 }

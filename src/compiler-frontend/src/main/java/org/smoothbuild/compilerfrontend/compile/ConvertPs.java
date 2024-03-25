@@ -53,32 +53,32 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
-import org.smoothbuild.compilerfrontend.lang.define.SelectS;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
-public class ConvertPs implements TryFunction2<PModule, ScopeS, SModule> {
+public class ConvertPs implements TryFunction2<PModule, SScope, SModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "buildIr");
   }
 
   @Override
-  public Try<SModule> apply(PModule pModule, ScopeS environment) {
+  public Try<SModule> apply(PModule pModule, SScope environment) {
     var typeTeller = new TypeTeller(environment, pModule.scope());
     return success(new Worker(typeTeller, environment).convertModule(pModule));
   }
 
   public static class Worker {
     private final TypeTeller typeTeller;
-    private final ScopeS imported;
+    private final SScope imported;
 
-    private Worker(TypeTeller typeTeller, ScopeS imported) {
+    private Worker(TypeTeller typeTeller, SScope imported) {
       this.typeTeller = typeTeller;
       this.imported = imported;
     }
@@ -87,8 +87,8 @@ public class ConvertPs implements TryFunction2<PModule, ScopeS, SModule> {
       var scopeP = pModule.scope();
       var structs = scopeP.types().toMap().mapValues(this::convertStruct);
       var evaluables = scopeP.referencables().toMap().mapValues(this::convertReferenceableP);
-      var members = new ScopeS(immutableBindings(structs), immutableBindings(evaluables));
-      var scopeS = ScopeS.scopeS(imported, members);
+      var members = new SScope(immutableBindings(structs), immutableBindings(evaluables));
+      var scopeS = SScope.scopeS(imported, members);
       return new SModule(members, scopeS);
     }
 
@@ -243,7 +243,7 @@ public class ConvertPs implements TryFunction2<PModule, ScopeS, SModule> {
 
     private SExpr convertSelect(PSelect pSelect) {
       var selectable = convertExpr(pSelect.selectable());
-      return new SelectS(selectable, pSelect.field(), pSelect.location());
+      return new SSelect(selectable, pSelect.field(), pSelect.location());
     }
 
     private SString convertString(PString string) {

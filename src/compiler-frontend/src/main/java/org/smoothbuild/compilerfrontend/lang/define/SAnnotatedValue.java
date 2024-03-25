@@ -42,6 +42,6 @@ public final class SAnnotatedValue extends SNamedValue {
   @Override
   public String toString() {
     var fieldsString = annotation().toString() + "\n" + fieldsToString();
-    return "AnnotatedValue(\n" + indent(fieldsString) + "\n)";
+    return "SAnnotatedValue(\n" + indent(fieldsString) + "\n)";
   }
 }

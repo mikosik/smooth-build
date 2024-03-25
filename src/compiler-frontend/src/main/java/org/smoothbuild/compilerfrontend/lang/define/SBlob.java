@@ -9,6 +9,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SBlobType;
 public record SBlob(SBlobType type, ByteString byteString, Location location) implements SConstant {
   @Override
   public String toString() {
-    return "BlobS(" + list(type, "0x" + byteString.hex(), location).toString(", ") + ")";
+    return "SBlob(" + list(type, "0x" + byteString.hex(), location).toString(", ") + ")";
   }
 }

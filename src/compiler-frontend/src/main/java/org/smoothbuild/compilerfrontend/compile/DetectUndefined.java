@@ -21,30 +21,30 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 /**
  * Detect undefined referencables and types.
  */
-public class DetectUndefined implements TryFunction2<PModule, ScopeS, PModule> {
+public class DetectUndefined implements TryFunction2<PModule, SScope, PModule> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "detectUndefined");
   }
 
   @Override
-  public Try<PModule> apply(PModule pModule, ScopeS imported) {
+  public Try<PModule> apply(PModule pModule, SScope imported) {
     var logger = new Logger();
     new Detector(imported, emptyScope(), logger).visitModule(pModule);
     return Try.of(pModule, logger);
   }
 
   private static class Detector extends PScopingModuleVisitor {
-    private final ScopeS imported;
+    private final SScope imported;
     private final PScope scope;
     private final Logger log;
 
-    public Detector(ScopeS imported, PScope scope, Logger log) {
+    public Detector(SScope imported, PScope scope, Logger log) {
       this.scope = scope;
       this.imported = imported;
       this.log = log;

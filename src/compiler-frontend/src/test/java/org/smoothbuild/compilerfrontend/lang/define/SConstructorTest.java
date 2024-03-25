@@ -17,11 +17,11 @@ public class SConstructorTest {
     assertThat(constructorS.toString())
         .isEqualTo(
             """
-            ConstructorS(
+            SConstructor(
               name = constructorName
               schema = <>(Int)->MyStruct
               params = [
-                ItemS(
+                SItem(
                   type = Int
                   name = field
                   defaultValue = None

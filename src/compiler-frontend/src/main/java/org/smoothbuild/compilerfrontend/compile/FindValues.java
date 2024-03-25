@@ -15,16 +15,16 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
-public class FindValues implements TryFunction2<ScopeS, List<String>, List<SExpr>> {
+public class FindValues implements TryFunction2<SScope, List<String>, List<SExpr>> {
   @Override
   public Label label() {
     return Label.label(COMPILE_PREFIX, "findValues");
   }
 
   @Override
-  public Try<List<SExpr>> apply(ScopeS environment, List<String> valueNames) {
+  public Try<List<SExpr>> apply(SScope environment, List<String> valueNames) {
     var logger = new Logger();
     var namedEvaluables = new ArrayList<SNamedValue>();
     var evaluables = environment.evaluables();

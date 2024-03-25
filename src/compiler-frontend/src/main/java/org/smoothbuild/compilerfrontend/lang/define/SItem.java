@@ -38,7 +38,7 @@ public final class SItem extends Tanal implements SReferenceable {
             "defaultValue = " + defaultValue,
             "location = " + location())
         .toString("\n");
-    return "ItemS(\n" + indent(fields) + "\n)";
+    return "SItem(\n" + indent(fields) + "\n)";
   }
 
   @Override

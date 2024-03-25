@@ -8,8 +8,8 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public record SelectS(SExpr selectable, String field, Location location) implements SExpr {
-  public SelectS {
+public record SSelect(SExpr selectable, String field, Location location) implements SExpr {
+  public SSelect {
     checkArgument(selectable.evaluationType() instanceof SStructType);
   }
 
@@ -23,6 +23,6 @@ public record SelectS(SExpr selectable, String field, Location location) impleme
   public String toString() {
     var fields = list("selectable = " + selectable, "field = " + field, "location = " + location)
         .toString("\n");
-    return "SelectS(\n" + indent(fields) + "\n)";
+    return "SSelect(\n" + indent(fields) + "\n)";
   }
 }

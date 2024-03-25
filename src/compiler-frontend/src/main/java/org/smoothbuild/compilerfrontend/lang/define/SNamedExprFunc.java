@@ -47,6 +47,6 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
   @Override
   public String toString() {
     var fields = list("name = " + name(), fieldsToString(), "body = " + body).toString("\n");
-    return "NamedExprFuncS(\n" + indent(fields) + "\n)";
+    return "SNamedExprFunc(\n" + indent(fields) + "\n)";
   }
 }

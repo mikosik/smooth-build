@@ -49,6 +49,6 @@ public final class SAnnotatedFunc extends SNamedFunc {
   @Override
   public String toString() {
     var fields = annotation.toString() + "\n" + fieldsToString();
-    return "AnnotatedFuncS(\n" + indent(fields) + "\n)";
+    return "SAnnotatedFunc(\n" + indent(fields) + "\n)";
   }
 }

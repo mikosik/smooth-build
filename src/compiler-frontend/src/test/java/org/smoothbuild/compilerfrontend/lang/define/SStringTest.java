@@ -9,6 +9,6 @@ public class SStringTest {
   @Test
   public void to_string() {
     assertThat(sString(7, "abc").toString())
-        .isEqualTo("StringS(String, \"abc\", {prj}/build.smooth:7)");
+        .isEqualTo("SString(String, \"abc\", {prj}/build.smooth:7)");
   }
 }

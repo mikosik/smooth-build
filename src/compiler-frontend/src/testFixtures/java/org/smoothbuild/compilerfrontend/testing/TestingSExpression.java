@@ -69,10 +69,10 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.define.STrace;
 import org.smoothbuild.compilerfrontend.lang.define.STrace.Element;
-import org.smoothbuild.compilerfrontend.lang.define.SelectS;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SBlobType;
 import org.smoothbuild.compilerfrontend.lang.type.SBoolType;
@@ -426,12 +426,12 @@ public class TestingSExpression {
     return new SReference(schema, name, location);
   }
 
-  public static SelectS sSelect(SExpr selectable, String field) {
+  public static SSelect sSelect(SExpr selectable, String field) {
     return sSelect(1, selectable, field);
   }
 
-  public static SelectS sSelect(int line, SExpr selectable, String field) {
-    return new SelectS(selectable, field, location(line));
+  public static SSelect sSelect(int line, SExpr selectable, String field) {
+    return new SSelect(selectable, field, location(line));
   }
 
   public static SString sString() {

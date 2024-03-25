@@ -49,8 +49,8 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
-import org.smoothbuild.compilerfrontend.lang.define.SelectS;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -135,7 +135,7 @@ public class SbTranslator {
       case SCombine sCombine -> saveLocAndReturn(sCombine, translateCombine(sCombine));
       case SInt sInt -> saveLocAndReturn(sInt, translateInt(sInt));
       case SOrder sOrder -> saveLocAndReturn(sOrder, translateOrder(sOrder));
-      case SelectS selectS -> saveLocAndReturn(selectS, translateSelect(selectS));
+      case SSelect sSelect -> saveLocAndReturn(sSelect, translateSelect(sSelect));
       case SString sString -> saveLocAndReturn(sString, translateString(sString));
       case SInstantiate sInstantiate -> translateInstantiate(sInstantiate);
     };
@@ -289,13 +289,13 @@ public class SbTranslator {
     return bytecodeF.order(arrayTB, elementsB);
   }
 
-  private BSelect translateSelect(SelectS selectS) throws SbTranslatorException {
-    var selectableB = translateExpr(selectS.selectable());
-    var structTS = (SStructType) selectS.selectable().evaluationType();
-    var indexJ = structTS.fields().indexOf(selectS.field());
+  private BSelect translateSelect(SSelect sSelect) throws SbTranslatorException {
+    var selectableB = translateExpr(sSelect.selectable());
+    var structTS = (SStructType) sSelect.selectable().evaluationType();
+    var indexJ = structTS.fields().indexOf(sSelect.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var indexB = bytecodeF.int_(bigInteger);
-    saveLoc(indexB, selectS);
+    saveLoc(indexB, sSelect);
     return bytecodeF.select(selectableB, indexB);
   }
 

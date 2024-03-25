@@ -37,6 +37,6 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
   public String toString() {
     var fields =
         list("callee = " + callee, "args = " + args, "location = " + location).toString("\n");
-    return "CallS(\n" + indent(fields) + "\n)";
+    return "SCall(\n" + indent(fields) + "\n)";
   }
 }

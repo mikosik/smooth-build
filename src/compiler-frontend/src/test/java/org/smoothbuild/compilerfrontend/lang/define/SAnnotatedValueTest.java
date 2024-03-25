@@ -17,10 +17,10 @@ public class SAnnotatedValueTest {
     assertThat(annotatedValueS.toString())
         .isEqualTo(
             """
-            AnnotatedValue(
-              AnnotationS(
+            SAnnotatedValue(
+              SAnnotation(
                 name = myAnnotation
-                path = StringS(String, "myPath", {prj}/build.smooth:7)
+                path = SString(String, "myPath", {prj}/build.smooth:7)
                 location = {prj}/build.smooth:17
               )
               schema = <>String

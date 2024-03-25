@@ -19,15 +19,15 @@ public class SAnnotatedFuncTest {
     assertThat(func.toString())
         .isEqualTo(
             """
-            AnnotatedFuncS(
-              AnnotationS(
+            SAnnotatedFunc(
+              SAnnotation(
                 name = Native
-                path = StringS(String, "impl", {prj}/build.smooth:1)
+                path = SString(String, "impl", {prj}/build.smooth:1)
                 location = {prj}/build.smooth:1
               )
               schema = <>(Int)->String
               params = [
-                ItemS(
+                SItem(
                   type = Int
                   name = myParam
                   defaultValue = None

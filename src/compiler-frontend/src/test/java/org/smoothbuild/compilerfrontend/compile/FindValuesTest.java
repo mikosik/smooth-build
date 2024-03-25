@@ -14,7 +14,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchem
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class FindValuesTest {
@@ -23,7 +23,7 @@ public class FindValuesTest {
     var schemaS = sSchema(sArrayType(sIntType()));
     var valueS =
         TestingSExpression.sValue(schemaS, "myValue", TestingSExpression.sOrder(sIntType()));
-    var scopeS = new ScopeS(immutableBindings(), immutableBindings(map(valueS.name(), valueS)));
+    var scopeS = new SScope(immutableBindings(), immutableBindings(map(valueS.name(), valueS)));
 
     var exprs = new FindValues().apply(scopeS, list(valueS.name()));
 
@@ -35,7 +35,7 @@ public class FindValuesTest {
   void find_polymorphic_evaluable_fails() {
     var value = TestingSExpression.sValue(
         sSchema(sArrayType(varA())), "myValue", TestingSExpression.sOrder(varA()));
-    var scopeS = new ScopeS(immutableBindings(), immutableBindings(map(value.name(), value)));
+    var scopeS = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
 
     var exprs = new FindValues().apply(scopeS, list(value.name()));
 

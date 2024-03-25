@@ -14,7 +14,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntTy
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
-import org.smoothbuild.compilerfrontend.lang.define.ScopeS;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class InjectDefaultArgumentsTest {
@@ -24,7 +24,7 @@ public class InjectDefaultArgumentsTest {
         "myFunc",
         nlist(TestingSExpression.sItem("param", TestingSExpression.sInt(7))),
         TestingSExpression.sParamRef(sIntType(), "param"));
-    var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
+    var importedS = new SScope(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
     var callP = pCall(TestingSExpression.pReference("myFunc"), callLocation);
     var namedValueP = pNamedValue("value", callP);
@@ -42,7 +42,7 @@ public class InjectDefaultArgumentsTest {
         "myFunc",
         nlist(TestingSExpression.sItem("param", TestingSExpression.sInt(7))),
         TestingSExpression.sParamRef(sIntType(), "param"));
-    var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
+    var importedS = new SScope(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
     var callP = pCall(TestingSExpression.pReference("myFunc"), callLocation);
     var namedValueP =
@@ -54,7 +54,7 @@ public class InjectDefaultArgumentsTest {
     assertThat(callP.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
 
-  private static void callInjectDefaultArguments(ScopeS importedS, PModule pModule) {
+  private static void callInjectDefaultArguments(SScope importedS, PModule pModule) {
     new InitializeScopes().apply(pModule);
     new InjectDefaultArguments().apply(pModule, importedS);
   }

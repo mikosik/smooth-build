@@ -42,6 +42,6 @@ public final class SNamedExprValue extends SNamedValue {
   @Override
   public String toString() {
     var fieldsString = fieldsToString() + "\nbody = " + body;
-    return "NamedExprValue(\n" + indent(fieldsString) + "\n)";
+    return "SNamedExprValue(\n" + indent(fieldsString) + "\n)";
   }
 }
