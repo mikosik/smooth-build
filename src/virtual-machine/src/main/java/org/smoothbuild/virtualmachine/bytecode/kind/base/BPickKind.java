@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 /**
  * This class is immutable.
  */
-public class BPickKind extends BOperKind {
+public class BPickKind extends BOperationKind {
   public BPickKind(Hash hash, BType evaluationType) {
     super(hash, "PICK", BPick.class, evaluationType);
   }

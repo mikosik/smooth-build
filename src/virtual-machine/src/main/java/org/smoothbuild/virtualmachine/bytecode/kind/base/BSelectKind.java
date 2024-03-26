@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 /**
  * This class is immutable.
  */
-public class BSelectKind extends BOperKind {
+public class BSelectKind extends BOperationKind {
   public BSelectKind(Hash hash, BType evaluationType) {
     super(hash, "SELECT", BSelect.class, evaluationType);
   }

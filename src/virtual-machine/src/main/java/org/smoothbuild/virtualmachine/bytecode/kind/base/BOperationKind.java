@@ -3,10 +3,10 @@ package org.smoothbuild.virtualmachine.bytecode.kind.base;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 
-public abstract class BOperKind extends BKind {
+public abstract class BOperationKind extends BKind {
   private final BType evaluationType;
 
-  protected BOperKind(
+  protected BOperationKind(
       Hash hash, String name, Class<? extends BExpr> javaType, BType evaluationType) {
     super(hash, name, javaType);
     this.evaluationType = evaluationType;

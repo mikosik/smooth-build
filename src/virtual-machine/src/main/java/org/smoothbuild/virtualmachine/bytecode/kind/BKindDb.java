@@ -30,7 +30,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BNativeFuncKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
@@ -123,7 +123,7 @@ public class BKindDb {
   }
 
   public BIfKind if_(BType type) throws BKindDbException {
-    return newOper(KindId.IF, type, BIfKind::new);
+    return newOperation(KindId.IF, type, BIfKind::new);
   }
 
   public BIntType int_() throws BKindDbException {
@@ -158,27 +158,27 @@ public class BKindDb {
   // methods for getting ExprB types
 
   public BCallKind call(BType evaluationType) throws BKindDbException {
-    return newOper(KindId.CALL, evaluationType, BCallKind::new);
+    return newOperation(KindId.CALL, evaluationType, BCallKind::new);
   }
 
   public BCombineKind combine(BTupleType evaluationType) throws BKindDbException {
-    return newOper(KindId.COMBINE, evaluationType, BCombineKind::new);
+    return newOperation(KindId.COMBINE, evaluationType, BCombineKind::new);
   }
 
   public BOrderKind order(BArrayType evaluationType) throws BKindDbException {
-    return newOper(KindId.ORDER, evaluationType, BOrderKind::new);
+    return newOperation(KindId.ORDER, evaluationType, BOrderKind::new);
   }
 
   public BPickKind pick(BType evaluationType) throws BKindDbException {
-    return newOper(KindId.PICK, evaluationType, BPickKind::new);
+    return newOperation(KindId.PICK, evaluationType, BPickKind::new);
   }
 
   public BReferenceKind reference(BType evaluationType) throws BKindDbException {
-    return newOper(KindId.REFERENCE, evaluationType, BReferenceKind::new);
+    return newOperation(KindId.REFERENCE, evaluationType, BReferenceKind::new);
   }
 
   public BSelectKind select(BType evaluationType) throws BKindDbException {
-    return newOper(KindId.SELECT, evaluationType, BSelectKind::new);
+    return newOperation(KindId.SELECT, evaluationType, BSelectKind::new);
   }
 
   // methods for reading from db
@@ -198,15 +198,15 @@ public class BKindDb {
       case STRING -> newBaseType(hash, id, rootChain, BStringType::new);
       case LAMBDA -> readFuncKind(hash, rootChain, id, BLambdaKind::new);
       case FUNC -> readFuncType(hash, rootChain);
-      case IF -> readOperKind(hash, rootChain, id, BType.class, BIfKind::new);
+      case IF -> readOperationKind(hash, rootChain, id, BType.class, BIfKind::new);
       case MAP_FUNC -> readMapKind(hash, rootChain, id);
       case NATIVE_FUNC -> readFuncKind(hash, rootChain, id, BNativeFuncKind::new);
-      case CALL -> readOperKind(hash, rootChain, id, BType.class, BCallKind::new);
-      case COMBINE -> readOperKind(hash, rootChain, id, BTupleType.class, BCombineKind::new);
-      case ORDER -> readOperKind(hash, rootChain, id, BArrayType.class, BOrderKind::new);
-      case PICK -> readOperKind(hash, rootChain, id, BType.class, BPickKind::new);
-      case REFERENCE -> readOperKind(hash, rootChain, id, BType.class, BReferenceKind::new);
-      case SELECT -> readOperKind(hash, rootChain, id, BType.class, BSelectKind::new);
+      case CALL -> readOperationKind(hash, rootChain, id, BType.class, BCallKind::new);
+      case COMBINE -> readOperationKind(hash, rootChain, id, BTupleType.class, BCombineKind::new);
+      case ORDER -> readOperationKind(hash, rootChain, id, BArrayType.class, BOrderKind::new);
+      case PICK -> readOperationKind(hash, rootChain, id, BType.class, BPickKind::new);
+      case REFERENCE -> readOperationKind(hash, rootChain, id, BType.class, BReferenceKind::new);
+      case SELECT -> readOperationKind(hash, rootChain, id, BType.class, BSelectKind::new);
       case TUPLE -> readTupleType(hash, rootChain);
     };
   }
@@ -243,7 +243,7 @@ public class BKindDb {
     return cache(factory.apply(hash));
   }
 
-  private <T extends BOperKind> T readOperKind(
+  private <T extends BOperationKind> T readOperationKind(
       Hash hash,
       List<Hash> rootChain,
       KindId id,
@@ -251,7 +251,7 @@ public class BKindDb {
       BiFunction<Hash, BType, T> factory)
       throws DecodeKindException {
     var evaluationType = readDataAsType(hash, rootChain, id, dataTypeClass);
-    return newOper(factory, hash, evaluationType);
+    return newOperation(factory, hash, evaluationType);
   }
 
   private BFuncType readFuncType(Hash rootHash, List<Hash> rootChain) throws DecodeKindException {
@@ -413,13 +413,13 @@ public class BKindDb {
     return cache(new BTupleType(rootHash, items));
   }
 
-  private <T extends BOperKind> T newOper(
+  private <T extends BOperationKind> T newOperation(
       KindId id, BType evaluationType, BiFunction<Hash, BType, T> factory) throws BKindDbException {
     var rootHash = writeRoot(id, evaluationType);
-    return newOper(factory, rootHash, evaluationType);
+    return newOperation(factory, rootHash, evaluationType);
   }
 
-  private <T extends BOperKind> T newOper(
+  private <T extends BOperationKind> T newOperation(
       BiFunction<Hash, BType, T> factory, Hash rootHash, BType evaluationType) {
     return cache(factory.apply(rootHash, evaluationType));
   }

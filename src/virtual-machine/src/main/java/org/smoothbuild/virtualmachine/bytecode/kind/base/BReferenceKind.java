@@ -7,7 +7,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 
-public class BReferenceKind extends BOperKind {
+public class BReferenceKind extends BOperationKind {
   public BReferenceKind(Hash hash, BType evaluationType) {
     super(hash, "REFERENCE", BReference.class, evaluationType);
   }

@@ -141,7 +141,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_type_being_oper_type() throws Exception {
+      public void with_type_being_operation_type() throws Exception {
         var hash = hash(hash(ARRAY.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -245,7 +245,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_func_type_being_oper_type() throws Exception {
+      public void with_func_type_being_operation_type() throws Exception {
         var notFuncType = bReferenceKind(bIntType());
         var typeHash = hash(hash(kindId().byteMarker()), hash(notFuncType));
         assertCall(() -> kindDb().get(typeHash))
@@ -331,7 +331,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_result_being_oper_type() throws Exception {
+      public void with_result_being_operation_type() throws Exception {
         var paramType = bTupleType(bStringType(), bBoolType());
         var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
         assertCall(() -> kindDb().get(typeHash))
@@ -366,7 +366,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_params_being_oper_type() throws Exception {
+      public void with_params_being_operation_type() throws Exception {
         var typeHash =
             hash(hash(FUNC.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
@@ -427,7 +427,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_elements_being_chain_of_oper_types() throws Exception {
+      public void with_elements_being_chain_of_operation_types() throws Exception {
         var hash = hash(hash(TUPLE.byteMarker()), hash(hash(bReferenceKind())));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -525,7 +525,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _oper {
+  class _operation {
     @Nested
     class _call {
       @Test
@@ -539,8 +539,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(CALL);
         }
       }
@@ -559,8 +559,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(COMBINE, BTupleType.class);
         }
       }
@@ -587,8 +587,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(IF);
         }
       }
@@ -607,8 +607,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(ORDER, BArrayType.class);
         }
       }
@@ -635,8 +635,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(PICK);
         }
       }
@@ -655,8 +655,8 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(REFERENCE);
         }
       }
@@ -675,22 +675,22 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Nested
-      class _oper_kind_tests extends AbstractOperKindTestSuite {
-        protected _oper_kind_tests() {
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
           super(SELECT);
         }
       }
     }
 
-    private abstract class AbstractOperKindTestSuite {
+    private abstract class AbstractOperationKindTestSuite {
       private final KindId kindId;
       private final Class<? extends BKind> type;
 
-      protected AbstractOperKindTestSuite(KindId kindId) {
+      protected AbstractOperationKindTestSuite(KindId kindId) {
         this(kindId, BType.class);
       }
 
-      protected AbstractOperKindTestSuite(KindId kindId, Class<? extends BKind> type) {
+      protected AbstractOperationKindTestSuite(KindId kindId, Class<? extends BKind> type) {
         this.kindId = kindId;
         this.type = type;
       }
@@ -716,7 +716,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_evaluation_type_being_oper_kind() throws Exception {
+      public void with_evaluation_type_being_operation_kind() throws Exception {
         var hash = hash(hash(kindId.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(

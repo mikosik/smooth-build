@@ -22,7 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.SubExprsB;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BOper;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -88,14 +88,14 @@ public class BScheduler {
   private void scheduleJobTasksEvaluation(Job job) throws BytecodeException {
     switch (job.expr()) {
       case BCall call -> new CallScheduler(job, call).scheduleCall();
-      case BCombine combine -> scheduleOperTask(job, combine, CombineTask::new);
+      case BCombine combine -> scheduleOperationTask(job, combine, CombineTask::new);
       case BIf if_ -> scheduleIfFunc(job, if_);
       case BLambda lambda -> scheduleConstTask(job, (BValue) bReferenceInliner.inline(job));
       case BValue value -> scheduleConstTask(job, value);
-      case BOrder order -> scheduleOperTask(job, order, OrderTask::new);
-      case BPick pick -> scheduleOperTask(job, pick, PickTask::new);
+      case BOrder order -> scheduleOperationTask(job, order, OrderTask::new);
+      case BPick pick -> scheduleOperationTask(job, pick, PickTask::new);
       case BReference reference -> scheduleVarB(job, reference);
-      case BSelect select -> scheduleOperTask(job, select, SelectTask::new);
+      case BSelect select -> scheduleOperationTask(job, select, SelectTask::new);
     }
   }
 
@@ -201,12 +201,12 @@ public class BScheduler {
     scheduleJobEvaluation(newJob(expr, ifJob), ifJob.promisedValue());
   }
 
-  private <T extends BOper> void scheduleOperTask(
-      Job job, T operB, BiFunction<T, BTrace, Task> taskCreator) throws BytecodeException {
-    var operTask = taskCreator.apply(operB, job.trace());
-    var subExprJobs = operB.subExprs().toList().map(e -> newJob(e, job));
+  private <T extends BOperation> void scheduleOperationTask(
+      Job job, T operation, BiFunction<T, BTrace, Task> taskCreator) throws BytecodeException {
+    var operationTask = taskCreator.apply(operation, job.trace());
+    var subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
     subExprJobs.forEach(this::scheduleJobEvaluation);
-    scheduleJobTask(job, operTask, subExprJobs);
+    scheduleJobTask(job, operationTask, subExprJobs);
   }
 
   private void scheduleVarB(Job job, BReference reference) throws BytecodeException {

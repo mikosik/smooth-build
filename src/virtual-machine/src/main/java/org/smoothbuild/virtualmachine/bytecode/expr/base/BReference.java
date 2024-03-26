@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
  * <p>
  * This class is thread-safe.
  */
-public final class BReference extends BOper {
+public final class BReference extends BOperation {
   public BReference(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
   }

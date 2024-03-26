@@ -206,7 +206,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     }
 
     @Nested
-    class _operators {
+    class _operation {
       @Nested
       class _call {
         @Test

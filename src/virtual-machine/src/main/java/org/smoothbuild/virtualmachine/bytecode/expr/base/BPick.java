@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
 /**
  * This class is thread-safe.
  */
-public final class BPick extends BOper {
+public final class BPick extends BOperation {
   public BPick(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BPickKind);

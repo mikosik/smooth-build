@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 /**
  * This class is thread-safe.
  */
-public final class BCall extends BOper {
+public final class BCall extends BOperation {
   public BCall(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BCallKind);
