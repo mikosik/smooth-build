@@ -181,11 +181,11 @@ public abstract class TestingBytecode {
   }
 
   public BMapKind bMapKind() throws BytecodeException {
-    return bMapKind(bIntType(), bBoolType());
+    return bMapKind(bArrayType(bIntType()));
   }
 
-  public BMapKind bMapKind(BType r, BType s) throws BytecodeException {
-    return kindDb().mapFunc(r, s);
+  public BMapKind bMapKind(BType evaluationType) throws BytecodeException {
+    return kindDb().map(evaluationType);
   }
 
   public BOrderKind bOrderKind() throws BytecodeException {
@@ -338,8 +338,12 @@ public abstract class TestingBytecode {
     return bytecodeF().lambda(type, body);
   }
 
-  public BLambda bIdFunc() throws BytecodeException {
+  public BLambda bIntIdFunc() throws BytecodeException {
     return bLambda(list(bIntType()), bReference(bIntType(), 0));
+  }
+
+  public BLambda bStringIdFunc() throws BytecodeException {
+    return bLambda(list(bStringType()), bReference(bStringType(), 0));
   }
 
   public BLambda bReturnAbcFunc() throws BytecodeException {
@@ -464,7 +468,7 @@ public abstract class TestingBytecode {
   // Operations
 
   public BCall bCall() throws BytecodeException {
-    return bCall(bIdFunc(), bInt());
+    return bCall(bIntIdFunc(), bInt());
   }
 
   public BCall bCall(BExpr func, BExpr... args) throws BytecodeException {
@@ -483,8 +487,8 @@ public abstract class TestingBytecode {
     return bytecodeF().if_(condition, then_, else_);
   }
 
-  public BMap bMap(BType r, BType s) throws BytecodeException {
-    return bytecodeF().mapFunc(r, s);
+  public BMap bMap(BExpr array, BExpr mapper) throws BytecodeException {
+    return bytecodeF().map(array, mapper);
   }
 
   public BOrder bOrder() throws BytecodeException {

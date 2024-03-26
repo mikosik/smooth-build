@@ -247,9 +247,9 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   class _map_func {
     @Test
     public void map_func() throws Exception {
-      assertThat(bMap(bIntType(), bStringType()).hash())
+      assertThat(bMap(bArray(bInt()), bIntIdFunc()).hash())
           .isEqualTo(
-              Hash.decode("e19869a3801eb1b732bc8800aad5ff3756f16729d52c9a4d15efd831c20c3380"));
+              Hash.decode("27b9890243e1580f8ce51b0394e931e2fb4d168bddaa1cd4e3ccdb2b40517980"));
     }
   }
 

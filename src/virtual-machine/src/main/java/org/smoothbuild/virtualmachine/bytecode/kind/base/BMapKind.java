@@ -7,19 +7,20 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 
-public final class BMapKind extends BFuncKind {
-  public BMapKind(Hash hash, BFuncType funcType) {
-    super(hash, "MAP", funcType, BMap.class);
+public class BMapKind extends BOperationKind {
+  public BMapKind(Hash hash, BType evaluationType) {
+    super(hash, "MAP", BMap.class, evaluationType);
+    checkArgument(evaluationType instanceof BArrayType);
+  }
+
+  @Override
+  public BArrayType evaluationType() {
+    return (BArrayType) super.evaluationType();
   }
 
   @Override
   public BMap newExpr(MerkleRoot merkleRoot, BExprDb exprDb) {
     checkArgument(merkleRoot.kind() instanceof BMapKind);
     return new BMap(merkleRoot, exprDb);
-  }
-
-  @Override
-  public boolean containsData() {
-    return false;
   }
 }

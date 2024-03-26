@@ -9,6 +9,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -38,11 +39,12 @@ public class BReferenceInliner {
       case BCall call -> rewriteCall(call, resolver);
       case BCombine combine -> rewriteCombine(combine, resolver);
       case BIf if_ -> rewriteIf(if_, resolver);
+      case BLambda lambda -> rewriteLambda(lambda, resolver);
+      case BMap map -> rewriteMap(map, resolver);
       case BOrder order -> rewriteOrder(order, resolver);
       case BPick pick -> rewritePick(pick, resolver);
       case BReference reference -> rewriteVar(reference, resolver);
       case BSelect select -> rewriteSelect(select, resolver);
-      case BLambda lambda -> rewriteLambda(lambda, resolver);
       case BValue value -> value;
     };
   }
@@ -84,6 +86,20 @@ public class BReferenceInliner {
       return if_;
     } else {
       return bytecodeFactory.if_(rewrittenCondition, rewrittenThen, rewrittenElse);
+    }
+  }
+
+  private BExpr rewriteMap(BMap map, Resolver resolver) throws BytecodeException {
+    var subExprs = map.subExprs();
+    var array = subExprs.array();
+    var mapper = subExprs.mapper();
+
+    var rewrittenArray = rewriteExpr(array, resolver);
+    var rewrittenMapper = rewriteExpr(mapper, resolver);
+    if (array.equals(rewrittenArray) && mapper.equals(rewrittenMapper)) {
+      return map;
+    } else {
+      return bytecodeFactory.map(rewrittenArray, rewrittenMapper);
     }
   }
 

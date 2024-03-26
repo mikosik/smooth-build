@@ -63,7 +63,6 @@ import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -96,20 +95,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bInt(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
-      }
-
-      @Test
-      public void no_task_is_executed_for_func_expr_in_call_to_map_when_array_expr_is_empty()
-          throws Exception {
-        var map = bMap(bIntType(), bIntType());
-        var mappingFunc = bPick(bOrder(bIdFunc()), bInt(0));
-        var emptyIntArray = bArray(bIntType());
-        var call = bCall(map, emptyIntArray, mappingFunc);
-
-        var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bArray(bIntType()));
-
-        verify(spyingExecutor, never()).enqueue(isA(PickTask.class), any(), any());
       }
 
       @Test
@@ -254,16 +239,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void map_func() throws Exception {
-          var s = bIntType();
-          var r = bTupleType(s);
-          var lambda = bLambda(bFuncType(s, r), bCombine(bReference(s, 0)));
-          var mapFunc = bMap(r, s);
-          var map = bCall(mapFunc, bArray(bInt(1), bInt(2)), lambda);
-          assertThat(evaluate(map)).isEqualTo(bArray(bTuple(bInt(1)), bTuple(bInt(2))));
-        }
-
-        @Test
         public void native_func() throws Exception {
           var nativeFunc =
               bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
@@ -322,6 +297,20 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void if_with_false_condition() throws Exception {
         var if_ = bIf(bBool(false), bInt(1), bInt(2));
         assertThat(evaluate(if_)).isEqualTo(bInt(2));
+      }
+
+      @Test
+      public void map() throws Exception {
+        var array = bArray(bInt(1), bInt(4));
+        var mapper = bLambda(list(bIntType()), bCombine(bReference(bIntType(), 0)));
+        var map = bMap(array, mapper);
+        assertThat(evaluate(map)).isEqualTo(bArray(bTuple(bInt(1)), bTuple(bInt(4))));
+      }
+
+      @Test
+      public void map_with_empty_array() throws Exception {
+        var map = bMap(bArray(bIntType()), bIntIdFunc());
+        assertThat(evaluate(map)).isEqualTo(bArray(bIntType()));
       }
 
       @Test
@@ -513,8 +502,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             t.bArray(t.bInt(17)),
             t.bBlob(17),
             t.bBool(true),
-            t.bIdFunc(),
-            t.bMap(t.bIntType(), t.bBlobType()),
+            t.bIntIdFunc(),
             t.bNativeFunc(),
             t.bInt(17),
             t.bString("abc"),
@@ -541,6 +529,17 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         evaluate(bEvaluator(taskReporter), if_);
         verify(taskReporter).report(constTask(condition), computationResult(condition, NOOP));
         verify(taskReporter).report(constTask(then_), computationResult(then_, NOOP));
+      }
+
+      @Test
+      public void report_map_as_map_task() throws Exception {
+        var array = bArray(bInt(3));
+        var mapper = bIntIdFunc();
+        var if_ = bMap(array, mapper);
+        var taskReporter = mock(TaskReporter.class);
+        evaluate(bEvaluator(taskReporter), if_);
+        verify(taskReporter).report(constTask(array), computationResult(array, NOOP));
+        verify(taskReporter).report(constTask(mapper), computationResult(mapper, NOOP));
       }
 
       @Test

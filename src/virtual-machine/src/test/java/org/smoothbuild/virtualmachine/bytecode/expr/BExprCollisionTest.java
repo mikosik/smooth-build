@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,9 +74,10 @@ public class BExprCollisionTest extends TestingVirtualMachine {
         bIf(bBool(false), bInt(2), bInt(1)),
         bIf(bBool(false), bInt(2), bInt(2)),
         bIf(bBool(true), bInt(1), bInt(2)),
-        bMap(bIntType(), bStringType()),
-        bMap(bIntType(), bBoolType()),
-        bMap(bBoolType(), bStringType()),
+        bMap(bArray(bIntType()), bIntIdFunc()),
+        bMap(bArray(bInt(1)), bIntIdFunc()),
+        bMap(bArray(bInt(2)), bIntIdFunc()),
+        bMap(bArray(bInt(1)), bLambda(list(bIntType()), bInt(1))),
         bOrder(bStringType()),
         bOrder(bIntType(), bInt(1)),
         bOrder(bIntType(), bInt(2)),
