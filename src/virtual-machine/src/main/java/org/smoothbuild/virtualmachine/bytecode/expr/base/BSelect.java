@@ -17,10 +17,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
  * This class is thread-safe.
  */
 public final class BSelect extends BOper {
-  private static final int DATA_SEQ_SIZE = 2;
-  private static final int SELECTABLE_IDX = 0;
-  private static final int IDX_IDX = 1;
-
   public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BSelectKind);
@@ -33,31 +29,24 @@ public final class BSelect extends BOper {
 
   @Override
   public SubExprsB subExprs() throws BytecodeException {
-    var selectable = readSelectable();
-    if (selectable.evaluationType() instanceof BTupleType tupleT) {
-      var index = readIndex();
+    var hashes = readDataAsHashChain(2);
+    var selectable = readMemberFromHashChain(hashes, 0);
+    var index = readAndCastMemberFromHashChain(hashes, 1, "index", BInt.class);
+    if (selectable.evaluationType() instanceof BTupleType tupleType) {
       int i = index.toJavaBigInteger().intValue();
-      int size = tupleT.elements().size();
+      int size = tupleType.elements().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), kind(), i, size);
       }
-      var fieldT = tupleT.elements().get(i);
-      if (!evaluationType().equals(fieldT)) {
-        throw new DecodeSelectWrongEvaluationTypeException(hash(), kind(), fieldT);
+      var fieldType = tupleType.elements().get(i);
+      if (!evaluationType().equals(fieldType)) {
+        throw new DecodeSelectWrongEvaluationTypeException(hash(), kind(), fieldType);
       }
       return new SubExprsB(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassException(
           hash(), kind(), "tuple", BTupleType.class, selectable.evaluationType().getClass());
     }
-  }
-
-  private BExpr readSelectable() throws BytecodeException {
-    return readElementFromDataAsInstanceChain(SELECTABLE_IDX, DATA_SEQ_SIZE, BExpr.class);
-  }
-
-  private BInt readIndex() throws BytecodeException {
-    return readElementFromDataAsInstanceChain(IDX_IDX, DATA_SEQ_SIZE, BInt.class);
   }
 
   public static record SubExprsB(BExpr selectable, BInt index) implements BExprs {

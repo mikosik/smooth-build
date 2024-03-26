@@ -61,7 +61,7 @@ public class BReferenceInliner {
   }
 
   private BCombine rewriteCombine(BCombine combine, Resolver resolver) throws BytecodeException {
-    var items = combine.items();
+    var items = combine.subExprs().items();
     var rewrittenItems = rewriteExprs(resolver, items);
     if (items.equals(rewrittenItems)) {
       return combine;

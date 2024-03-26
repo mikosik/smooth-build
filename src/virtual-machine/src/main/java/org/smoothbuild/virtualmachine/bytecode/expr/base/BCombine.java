@@ -37,7 +37,7 @@ public final class BCombine extends BOper {
   }
 
   public List<BExpr> items() throws BytecodeException {
-    List<BType> expectedTypes = kind().evaluationType().elements();
+    List<BType> expectedTypes = evaluationType().elements();
     List<BExpr> items = readDataAsExprChain(BExpr.class);
     if (items.size() != expectedTypes.size()) {
       throw new DecodeCombineWrongElementsSizeException(hash(), kind(), items.size());

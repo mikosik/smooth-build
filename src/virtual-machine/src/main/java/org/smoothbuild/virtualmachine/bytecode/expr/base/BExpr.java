@@ -14,9 +14,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
+import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
@@ -41,6 +44,10 @@ public abstract sealed class BExpr permits BOper, BValue {
 
   protected BExprDb exprDb() {
     return exprDb;
+  }
+
+  protected BKindDb kindDb() {
+    return exprDb.kindDb();
   }
 
   protected HashedDb hashedDb() {
@@ -71,6 +78,13 @@ public abstract sealed class BExpr permits BOper, BValue {
   protected <T extends BExpr> T readData(Class<T> clazz) throws BytecodeException {
     var exprB = readData();
     return castNode(DATA_PATH, exprB, clazz);
+  }
+
+  protected BExpr readData(String memberName, BType expectedEvaluationType)
+      throws BytecodeException {
+    var expr = readNode(DATA_PATH, dataHash());
+    validateEvaluationType(memberName, expectedEvaluationType, expr.evaluationType());
+    return expr;
   }
 
   protected BExpr readData() throws BytecodeException {
@@ -131,6 +145,34 @@ public abstract sealed class BExpr permits BOper, BValue {
     return readNode(dataNodePath(i), elemHash);
   }
 
+  protected BExpr readMemberFromHashChain(
+      List<Hash> hashes, int index, String nodeName, BType expectedEvaluationType)
+      throws BytecodeException {
+    var expr = readMemberFromHashChain(hashes, index);
+    validateEvaluationType(nodeName, expectedEvaluationType, expr.evaluationType());
+    return expr;
+  }
+
+  protected void validateEvaluationType(
+      String nodeName, BType expectedEvaluationType, BType evaluationType)
+      throws DecodeExprWrongMemberEvaluationTypeException {
+    if (!(evaluationType.equals(expectedEvaluationType))) {
+      throw new DecodeExprWrongMemberEvaluationTypeException(
+          hash(), kind(), nodeName, expectedEvaluationType, evaluationType);
+    }
+  }
+
+  protected <T extends BExpr> T readAndCastMemberFromHashChain(
+      List<Hash> hashes, int index, String name, Class<T> clazz) throws BytecodeException {
+    return castMember(readMemberFromHashChain(hashes, index), name, clazz);
+  }
+
+  protected BExpr readMemberFromHashChain(List<Hash> hashes, int nodeIndex)
+      throws BytecodeException {
+    var nodePath = dataNodePath(nodeIndex);
+    return readNode(nodePath, hashes.get(nodeIndex));
+  }
+
   protected BExpr readNode(String nodePath, Hash nodeHash) throws BytecodeException {
     return invokeAndChainBytecodeException(
         () -> exprDb.get(nodeHash), e -> new DecodeExprNodeException(hash(), kind(), nodePath, e));
@@ -155,7 +197,19 @@ public abstract sealed class BExpr permits BOper, BValue {
     return result;
   }
 
-  private <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz) throws BExprDbException {
+  protected <T> T castMember(BExpr nodeExpr, String name, Class<T> clazz) throws BExprDbException {
+    if (clazz.isInstance(nodeExpr)) {
+      @SuppressWarnings("unchecked")
+      T result = (T) nodeExpr;
+      return result;
+    } else {
+      throw new DecodeExprWrongMemberTypeException(
+          hash(), kind(), name, clazz, nodeExpr.getClass());
+    }
+  }
+
+  protected <T> T castNode(String nodePath, BExpr nodeExpr, Class<T> clazz)
+      throws BExprDbException {
     if (clazz.isInstance(nodeExpr)) {
       @SuppressWarnings("unchecked")
       T result = (T) nodeExpr;

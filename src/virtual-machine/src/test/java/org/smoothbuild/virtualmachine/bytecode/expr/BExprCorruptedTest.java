@@ -48,9 +48,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprExce
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodePickWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBooleanException;
@@ -59,8 +59,6 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
@@ -349,13 +347,13 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void func_component_evaluation_type_is_not_func() throws Exception {
-      var func = bInt(3);
-      var args = bCombine(bString(), bInt());
+      var notFunc = bInt(3);
+      var args = bCombine(bInt());
       var type = bCallKind(bStringType());
-      var hash = hash(hash(type), hash(hash(func), hash(args)));
+      var hash = hash(hash(type), hash(hash(notFunc), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, type, "func", BFuncType.class, bIntType()));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, type, "lambda", bFuncType(bIntType(), bStringType()), bIntType()));
     }
 
     @Test
@@ -365,8 +363,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bCallKind(bIntType());
       var hash = hash(hash(type), hash(hash(func), hash(bInt())));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeClassException(
-              hash, type, DATA_PATH + "[1]", BCombine.class, BInt.class));
+          .throwsException(new DecodeExprWrongMemberTypeException(
+              hash, type, "arguments", BCombine.class, BInt.class));
     }
 
     @Test
@@ -375,10 +373,11 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var funcType = bFuncType(bStringType(), bIntType(), bIntType());
       var func = bLambda(funcType, bInt());
       var type = bCallKind(bIntType());
-      var hash = hash(hash(type), hash(hash(func), hash(bReference(1))));
+      var notCombine = bOrder();
+      var hash = hash(hash(type), hash(hash(func), hash(notCombine)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeClassException(
-              hash, type, DATA_PATH + "[1]", BCombine.class, BReference.class));
+          .throwsException(new DecodeExprWrongMemberTypeException(
+              hash, type, "arguments", BCombine.class, BOrder.class));
     }
 
     @Test
@@ -389,8 +388,12 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bCallKind(bStringType());
       var hash = hash(hash(type), hash(hash(func), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, type, "call.result", bStringType(), bIntType()));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash,
+              type,
+              "lambda",
+              bFuncType(bStringType(), bStringType()),
+              bFuncType(bStringType(), bIntType())));
     }
 
     @Test
@@ -399,15 +402,15 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var funcType = bFuncType(bStringType(), bBoolType(), bIntType());
       var func = bLambda(funcType, bInt());
       var args = bCombine(bString(), bInt());
-      var spec = bCallKind(bIntType());
-      var hash = hash(hash(spec), hash(hash(func), hash(args)));
+      var kind = bCallKind(bIntType());
+      var hash = hash(hash(kind), hash(hash(func), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
               hash,
-              spec,
-              "args",
-              bTupleType(bStringType(), bBoolType()),
-              bTupleType(bStringType(), bIntType())));
+              kind,
+              "lambda",
+              bFuncType(bStringType(), bIntType(), bIntType()),
+              bFuncType(bStringType(), bBoolType(), bIntType())));
     }
   }
 
@@ -532,8 +535,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bLambdaKind(bIntType(), bStringType(), bBoolType());
       var hash = hash(hash(kind), hash(body));
       assertCall(() -> ((BLambda) exprDb().get(hash)).body())
-          .throwsException(
-              new DecodeExprWrongNodeTypeException(hash, kind, DATA_PATH, bBoolType(), bIntType()));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "body", bBoolType(), bIntType()));
     }
   }
 
@@ -616,7 +619,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
-              hash, kind, "condition", "Bool", bStringType()));
+              hash, kind, "condition", bBoolType(), bStringType()));
     }
 
     @Test
@@ -933,14 +936,14 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void array_is_not_array_expr() throws Exception {
-      var array = bInt(3);
+      var notArray = bInt(3);
       var index = bInt(0);
       var type = bPickKind(bStringType());
-      var hash = hash(hash(type), hash(hash(array), hash(index)));
+      var hash = hash(hash(type), hash(hash(notArray), hash(index)));
 
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, type, "array", BArrayType.class, bIntType()));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, type, "pickable", bArrayType(bStringType()), bIntType()));
     }
 
     @Test
@@ -950,8 +953,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var index = bReference(bStringType(), 7);
       var hash = hash(hash(type), hash(hash(pickable), hash(index)));
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, type, DATA_PATH, 1, BInt.class, bStringType()));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, type, "index", bIntType(), bStringType()));
     }
 
     @Test
@@ -962,7 +965,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(tuple), hash(index)));
 
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodePickWrongEvaluationTypeException(hash, type, bStringType()));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, type, "pickable", bArrayType(bIntType()), bArrayType(bStringType())));
     }
   }
 
@@ -1100,8 +1104,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var string = bString("abc");
       var hash = hash(hash(type), hash(hash(tuple), hash(string)));
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeClassException(
-              hash, type, DATA_PATH + "[1]", BInt.class, BString.class));
+          .throwsException(new DecodeExprWrongMemberTypeException(
+              hash, type, "index", BInt.class, BString.class));
     }
   }
 
