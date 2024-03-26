@@ -6,7 +6,7 @@ import jakarta.inject.Singleton;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
+import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 
 public class VirtualMachineWiring extends AbstractModule {
   @Override

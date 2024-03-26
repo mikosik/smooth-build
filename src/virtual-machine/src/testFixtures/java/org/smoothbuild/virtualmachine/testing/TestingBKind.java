@@ -5,11 +5,11 @@ import static org.smoothbuild.common.collect.List.list;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class TestingBKind {
   public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();
@@ -38,7 +38,7 @@ public class TestingBKind {
 
   public static final List<BKind> CATS_TO_TEST = ARRAY_CATS_TO_TEST.appendAll(BASE_CATS_TO_TEST);
 
-  public static final List<BKind> ALL_CATS_TO_TEST = wrapException(TestingBKind::createAllKinds);
+  public static final List<BKind> ALL_KINDS_TO_TEST = wrapException(TestingBKind::createAllKinds);
 
   private static <R, T extends Throwable> R wrapException(Function0<R, T> function0) {
     try {

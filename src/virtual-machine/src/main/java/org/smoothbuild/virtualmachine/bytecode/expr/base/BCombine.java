@@ -8,9 +8,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BCombineKind;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
  * This class is thread-safe.

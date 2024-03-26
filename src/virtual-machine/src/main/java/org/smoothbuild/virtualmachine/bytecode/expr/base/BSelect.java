@@ -10,8 +10,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BSelectKind;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 
 /**
  * This class is thread-safe.

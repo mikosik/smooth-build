@@ -39,15 +39,15 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BBlobType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BBoolType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BIntType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BStringType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
  * This class is thread-safe.

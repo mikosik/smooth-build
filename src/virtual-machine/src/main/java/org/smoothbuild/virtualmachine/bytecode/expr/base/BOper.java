@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BOperKind;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
  * Operation.

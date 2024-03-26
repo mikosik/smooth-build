@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.virtualmachine.bytecode.type.base.Validator.validateArgs;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.Validator.validateArgs;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -10,9 +10,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BCallKind;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 
 /**
  * This class is thread-safe.

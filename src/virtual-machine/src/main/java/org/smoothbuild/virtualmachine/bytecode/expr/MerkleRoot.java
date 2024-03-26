@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 
 public class MerkleRoot {
   private final Hash hash;
