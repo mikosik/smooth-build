@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 
 public class DecodeExprNodeException extends DecodeExprException {
   public DecodeExprNodeException(Hash hash, BKind kind, String path, String message) {

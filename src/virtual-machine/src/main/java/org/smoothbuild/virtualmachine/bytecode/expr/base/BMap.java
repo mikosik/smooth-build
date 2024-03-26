@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BMapKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 
 /**
  * 'Map' function.

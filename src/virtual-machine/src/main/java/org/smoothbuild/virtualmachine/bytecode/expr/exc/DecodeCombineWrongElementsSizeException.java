@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 
 public class DecodeCombineWrongElementsSizeException extends DecodeExprException {
   public DecodeCombineWrongElementsSizeException(Hash hash, BCombineKind kind, int actual) {

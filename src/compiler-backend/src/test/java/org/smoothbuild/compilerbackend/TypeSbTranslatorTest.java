@@ -18,7 +18,7 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class TypeSbTranslatorTest extends TestingVirtualMachine {

@@ -4,7 +4,7 @@ import java.util.function.Function;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.exc.BKindDbException;
+import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
 
 public class Helpers {
   public static <R, T extends Throwable> R invokeAndChainBytecodeException(

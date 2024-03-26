@@ -3,8 +3,8 @@ package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 import static org.smoothbuild.common.base.Strings.q;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
-import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class DecodeExprWrongMemberEvaluationTypeException extends DecodeExprException {
   public DecodeExprWrongMemberEvaluationTypeException(
