@@ -1,9 +1,7 @@
-package org.smoothbuild.virtualmachine.bytecode.type.oper;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 public abstract class BOperKind extends BKind {
   private final BType evaluationType;

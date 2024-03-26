@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
-import static org.smoothbuild.virtualmachine.bytecode.type.Validator.validateArgs;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.Validator.validateArgs;
 
 import java.math.BigInteger;
 import org.smoothbuild.common.base.Hash;
@@ -37,15 +37,15 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashingSink;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 import org.smoothbuild.virtualmachine.bytecode.type.BKindDb;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BReferenceKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.BKindDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BReferenceKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 /**
  * This class is thread-safe.

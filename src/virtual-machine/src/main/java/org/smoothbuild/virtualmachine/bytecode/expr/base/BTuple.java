@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static java.util.Objects.checkIndex;
 import static org.smoothbuild.common.function.Function0.memoizer;
-import static org.smoothbuild.virtualmachine.bytecode.type.Validator.validateTuple;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.Validator.validateTuple;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
@@ -10,8 +10,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 /**
  * This class is thread-safe.

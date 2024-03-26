@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 public class TaskHashes {
   public static Hash taskHash(Task task) {

@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.bytecode.type.KindId.INT;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.KindId.INT;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;

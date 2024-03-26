@@ -1,10 +1,7 @@
-package org.smoothbuild.virtualmachine.bytecode.type;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
 
 public class Validator {
   public static <T extends Throwable> void validateArgs(

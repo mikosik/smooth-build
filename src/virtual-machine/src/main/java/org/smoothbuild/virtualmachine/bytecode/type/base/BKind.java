@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.bytecode.type;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;

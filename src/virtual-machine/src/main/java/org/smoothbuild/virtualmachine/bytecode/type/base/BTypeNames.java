@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.bytecode.type.value;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 import org.smoothbuild.common.collect.List;
 

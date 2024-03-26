@@ -59,12 +59,12 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.type.exc.DecodeKindException;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BExprCorruptedTest extends TestingVirtualMachine {

@@ -9,8 +9,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BIfKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BIfKind;
 
 /**
  * 'If' operation.

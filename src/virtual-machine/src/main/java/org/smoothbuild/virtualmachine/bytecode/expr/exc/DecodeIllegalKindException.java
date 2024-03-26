@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
 
 public class DecodeIllegalKindException extends DecodeExprException {
   public DecodeIllegalKindException(Hash hash, BFuncType funcType) {

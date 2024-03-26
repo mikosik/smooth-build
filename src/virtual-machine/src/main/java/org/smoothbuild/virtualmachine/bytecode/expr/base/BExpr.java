@@ -17,8 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSize
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 /**
  * Bytecode expression.

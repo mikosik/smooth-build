@@ -67,8 +67,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 public class SbTranslator {
   private final ChainingBytecodeFactory bytecodeF;

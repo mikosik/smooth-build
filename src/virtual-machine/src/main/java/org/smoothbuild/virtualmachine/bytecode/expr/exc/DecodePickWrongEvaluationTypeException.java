@@ -1,8 +1,8 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BPickKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BPickKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 public class DecodePickWrongEvaluationTypeException extends DecodeExprException {
   public DecodePickWrongEvaluationTypeException(Hash hash, BPickKind kind, BType actualElemType) {

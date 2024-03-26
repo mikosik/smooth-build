@@ -29,7 +29,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;

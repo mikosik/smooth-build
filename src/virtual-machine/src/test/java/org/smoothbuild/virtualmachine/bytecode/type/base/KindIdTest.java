@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.virtualmachine.bytecode.type.base.KindId;
 
 public class KindIdTest {
   @Test

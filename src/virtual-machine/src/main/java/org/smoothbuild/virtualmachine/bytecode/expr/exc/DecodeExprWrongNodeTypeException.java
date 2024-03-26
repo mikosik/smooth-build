@@ -1,8 +1,8 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 public class DecodeExprWrongNodeTypeException extends DecodeExprNodeException {
   public DecodeExprWrongNodeTypeException(

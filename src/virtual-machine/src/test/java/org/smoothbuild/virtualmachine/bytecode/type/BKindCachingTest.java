@@ -7,8 +7,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BKindCachingTest extends TestingVirtualMachine {

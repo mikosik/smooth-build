@@ -1,6 +1,6 @@
-package org.smoothbuild.virtualmachine.bytecode.type.value;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
-import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.funcTypeName;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.BTypeNames.funcTypeName;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;

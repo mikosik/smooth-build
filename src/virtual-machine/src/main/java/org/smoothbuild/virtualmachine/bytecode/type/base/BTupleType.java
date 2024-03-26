@@ -1,7 +1,7 @@
-package org.smoothbuild.virtualmachine.bytecode.type.value;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.tupleTypeName;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.BTypeNames.tupleTypeName;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
