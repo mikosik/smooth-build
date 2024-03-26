@@ -89,7 +89,8 @@ public class BScheduler {
     switch (job.expr()) {
       case BCall call -> new CallScheduler(job, call).scheduleCall();
       case BCombine combine -> scheduleOperationTask(job, combine, CombineTask::new);
-      case BIf if_ -> scheduleIfFunc(job, if_);
+      case BIf if_ -> scheduleIfOperation(job, if_);
+      case BMap map -> scheduleMapOperation(job, map);
       case BLambda lambda -> scheduleConstTask(job, (BValue) bReferenceInliner.inline(job));
       case BValue value -> scheduleConstTask(job, value);
       case BOrder order -> scheduleOperationTask(job, order, OrderTask::new);
@@ -121,7 +122,6 @@ public class BScheduler {
     private void onFuncEvaluated(BValue funcB) throws BytecodeException {
       switch ((BFunc) funcB) {
         case BLambda lambda -> handleLambda(lambda);
-        case BMap map -> handleMapFunc();
         case BNativeFunc nativeFunc -> handleNativeFunc(nativeFunc);
       }
     }
@@ -133,30 +133,6 @@ public class BScheduler {
       var bodyTrace = callTrace(lambda);
       var bodyJob = newJob(lambda.body(), bodyEnvironmentJobs, bodyTrace);
       scheduleJobEvaluation(bodyJob, callJob.promisedValue());
-    }
-
-    // handling MapFunc
-
-    private void handleMapFunc() throws BytecodeException {
-      var arrayArg = args().get(0);
-      var job = newJob(arrayArg, callJob);
-      scheduleJobEvaluation(job, v -> onMapArrayArgEvaluated((BArray) v));
-    }
-
-    private void onMapArrayArgEvaluated(BArray array) throws BytecodeException {
-      var mappingFuncArg = args().get(1);
-      var calls = array.elements(BValue.class).map(e -> newCallB(mappingFuncArg, e));
-      var mappingFuncResultType = ((BFuncType) mappingFuncArg.evaluationType()).result();
-      var order = bytecodeFactory.order(bytecodeFactory.arrayType(mappingFuncResultType), calls);
-      scheduleJobEvaluation(newJob(order, callJob), callJob.promisedValue());
-    }
-
-    private BExpr newCallB(BExpr funcExpr, BValue value) throws BytecodeException {
-      return bytecodeFactory.call(funcExpr, singleArg(value));
-    }
-
-    private BCombine singleArg(BValue value) throws BytecodeException {
-      return bytecodeFactory.combine(list(value));
     }
 
     // handling NativeFunc
@@ -189,10 +165,12 @@ public class BScheduler {
     scheduleJobTask(job, constTask, list());
   }
 
-  private void scheduleIfFunc(Job ifJob, BIf if_) throws BytecodeException {
-    var args = if_.subExprs();
-    var job = newJob(args.condition(), ifJob);
-    scheduleJobEvaluation(job, v -> onConditionEvaluated(v, ifJob, args));
+  // If operation
+
+  private void scheduleIfOperation(Job ifJob, BIf if_) throws BytecodeException {
+    var subExprs = if_.subExprs();
+    var job = newJob(subExprs.condition(), ifJob);
+    scheduleJobEvaluation(job, v -> onConditionEvaluated(v, ifJob, subExprs));
   }
 
   private void onConditionEvaluated(BValue condition, Job ifJob, SubExprsB args)
@@ -200,6 +178,33 @@ public class BScheduler {
     var expr = ((BBool) condition).toJavaBoolean() ? args.then_() : args.else_();
     scheduleJobEvaluation(newJob(expr, ifJob), ifJob.promisedValue());
   }
+
+  // Map operation
+
+  private void scheduleMapOperation(Job mapJob, BMap map) throws BytecodeException {
+    var arrayArg = map.subExprs().array();
+    var job = newJob(arrayArg, mapJob);
+    scheduleJobEvaluation(
+        job, v -> onMapArrayArgEvaluated((BArray) v, mapJob, map.subExprs().mapper()));
+  }
+
+  private void onMapArrayArgEvaluated(BArray array, Job mapJob, BExpr mapper)
+      throws BytecodeException {
+    var calls = array.elements(BValue.class).map(e -> newCallB(mapper, e));
+    var mappingFuncResultType = ((BFuncType) mapper.evaluationType()).result();
+    var order = bytecodeFactory.order(bytecodeFactory.arrayType(mappingFuncResultType), calls);
+    scheduleJobEvaluation(newJob(order, mapJob), mapJob.promisedValue());
+  }
+
+  private BExpr newCallB(BExpr funcExpr, BValue value) throws BytecodeException {
+    return bytecodeFactory.call(funcExpr, singleArg(value));
+  }
+
+  private BCombine singleArg(BValue value) throws BytecodeException {
+    return bytecodeFactory.combine(list(value));
+  }
+
+  // others
 
   private <T extends BOperation> void scheduleOperationTask(
       Job job, T operation, BiFunction<T, BTrace, Task> taskCreator) throws BytecodeException {

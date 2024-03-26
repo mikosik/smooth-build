@@ -150,10 +150,38 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BMap newMapFunc(BType r, BType s) throws BytecodeException {
-    var kind = kindDb.mapFunc(r, s);
-    var root = newRoot(kind);
+  public BMap newMap(BExpr array, BExpr mapper) throws BytecodeException {
+    var mapperArgumentType = validateMapSubExprsAndGetMapperResultType(array, mapper);
+    var kind = kindDb.map(kindDb.array(mapperArgumentType));
+
+    var data = writeChain(array.hash(), mapper.hash());
+    var root = newRoot(kind, data);
     return kind.newExpr(root, this);
+  }
+
+  private static BType validateMapSubExprsAndGetMapperResultType(BExpr array, BExpr mapper) {
+    var type = array.evaluationType();
+    if (!(type instanceof BArrayType arrayType)) {
+      throw new IllegalArgumentException(
+          "`array.evaluationType()` must be array type but is " + type.q() + ".");
+    }
+    var elementType = arrayType.elem();
+    var mapperType = mapper.evaluationType();
+    if (!(mapperType instanceof BFuncType funcType)) {
+      throw new IllegalArgumentException("`mapper.evaluationType()` must be "
+          + expectedMapperType(elementType) + " but is " + mapperType.q() + ".");
+    }
+    var params = funcType.params().elements();
+    if (!(params.size() == 1 && params.get(0).equals(elementType))) {
+      throw new IllegalArgumentException(
+          "`mapper.evaluationType()` must be " + expectedMapperType(elementType) + " but is `"
+              + params.toString("(", ", ", ")") + "->?`.");
+    }
+    return funcType.result();
+  }
+
+  private static String expectedMapperType(BType elementType) {
+    return "`(" + elementType.name() + ")->?`";
   }
 
   public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elems)

@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr.DATA_PATH;
@@ -34,6 +35,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
@@ -686,20 +688,129 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _map_func {
+  class _map {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save IF
        * in HashedDb.
        */
-      var hash = hash(hash(bMapKind(bIntType(), bStringType())));
-      assertThat(hash).isEqualTo(bMap(bIntType(), bStringType()).hash());
+      var array = bArray(bInt(1));
+      var mapper = bIntIdFunc();
+      var dataHash = hash(hash(array), hash(mapper));
+      var hash = hash(hash(bMapKind(bArrayType(bIntType()))), dataHash);
+      assertThat(((BMap) exprDb().get(hash)).subExprs())
+          .isEqualTo(new BMap.SubExprsB(array, mapper));
     }
 
     @Test
-    public void root_with_data_hash() throws Exception {
-      obj_root_with_data_hash(bMapKind(bIntType(), bStringType()));
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(bMapKind(bArrayType(bIntType())));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var array = bArray(bInt(1));
+      var mapper = bIntIdFunc();
+      var kind = bMapKind(bArrayType(bIntType()));
+      var dataHash = hash(hash(array), hash(mapper));
+      obj_root_with_two_data_hashes(
+          kind, dataHash, (Hash hash) -> ((BMap) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      var kind = bMapKind(bArrayType(bIntType()));
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          kind, (Hash hash) -> ((BMap) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    public void data_is_chain_with_one_element() throws Exception {
+      var array = bArray(bInt());
+      var dataHash = hash(hash(array));
+      var kind = bMapKind(bArrayType(bIntType()));
+      var hash = hash(hash(kind), dataHash);
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(
+              new DecodeExprWrongChainSizeException(hash, bMapKind(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_chain_with_three_elements() throws Exception {
+      var array = bArray(bInt());
+      var mapper = bIntIdFunc();
+      var dataHash = hash(hash(array), hash(mapper), hash(mapper));
+      var kind = bMapKind(bArrayType(bIntType()));
+      var hash = hash(hash(kind), dataHash);
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(
+              new DecodeExprWrongChainSizeException(hash, bMapKind(), DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void array_evaluation_type_is_not_array_type() throws Exception {
+      var notArray = bInt(1);
+      var mapper = bIntIdFunc();
+      var dataHash = hash(hash(notArray), hash(mapper));
+      var kind = bMapKind(bArrayType(bIntType()));
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "array", "BArrayType", bIntType()));
+    }
+
+    @Test
+    public void mapper_evaluation_type_is_not_lambda_type() throws Exception {
+      var array = bArray(bInt());
+      var notMapper = bInt();
+      var dataHash = hash(hash(array), hash(notMapper));
+      var kind = bMapKind(bArrayType(bIntType()));
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "mapper", "(Int)->Int", bIntType()));
+    }
+
+    @Test
+    public void mapper_has_more_than_one_parameter() throws Exception {
+      var array = bArray(bInt());
+      var mapperWithTwoParams = bLambda(list(bIntType(), bIntType()), bInt());
+      var dataHash = hash(hash(array), hash(mapperWithTwoParams));
+      var kind = bMapKind(bArrayType(bIntType()));
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "mapper", "(Int)->Int", mapperWithTwoParams.type()));
+    }
+
+    @Test
+    public void mapper_param_type_is_different_than_array_element_type() throws Exception {
+      var array = bArray(bString());
+      var mapper = bIntIdFunc();
+      var dataHash = hash(hash(array), hash(mapper));
+      var kind = bMapKind(bArrayType(bIntType()));
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "mapper", "(String)->Int", mapper.type()));
+    }
+
+    @Test
+    public void mapper_result_type_is_different_than_result_array_element_type() throws Exception {
+      var array = bArray(bInt());
+      var mapper = bIntIdFunc();
+      var dataHash = hash(hash(array), hash(mapper));
+      var kind = bMapKind(bArrayType(bStringType()));
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "mapper", "(Int)->String", mapper.type()));
     }
   }
 
@@ -1241,10 +1352,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
   }
 
-  private void obj_root_without_data_hash(BKind cat) throws HashedDbException {
-    var hash = hash(hash(cat));
+  private void obj_root_without_data_hash(BKind kind) throws HashedDbException {
+    var hash = hash(hash(kind));
     assertCall(() -> exprDb().get(hash))
-        .throwsException(wrongSizeOfRootChainException(hash, cat, 1));
+        .throwsException(wrongSizeOfRootChainException(hash, kind, 1));
   }
 
   private void obj_root_with_data_hash(BKind kind) throws HashedDbException {

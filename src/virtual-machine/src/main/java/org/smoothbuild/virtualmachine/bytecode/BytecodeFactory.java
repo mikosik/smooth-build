@@ -121,8 +121,8 @@ public class BytecodeFactory {
     return exprDb.newInt(value);
   }
 
-  public BMap mapFunc(BType r, BType s) throws BytecodeException {
-    return exprDb.newMapFunc(r, s);
+  public BMap map(BExpr array, BExpr mapper) throws BytecodeException {
+    return exprDb.newMap(array, mapper);
   }
 
   public BNativeFunc nativeFunc(

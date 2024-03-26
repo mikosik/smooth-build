@@ -7,6 +7,24 @@ import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainKindDbException;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ARRAY;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.NATIVE_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REFERENCE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SELECT;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.STRING;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.TUPLE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.fromOrdinal;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +58,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.KindId;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
-import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeFuncKindWrongFuncTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindIllegalIdException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindNodeException;
@@ -69,10 +86,10 @@ public class BKindDb {
   public BKindDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.cache = new ConcurrentHashMap<>();
-    this.blobSupplier = createAndCacheTypeMemoizer(BBlobType::new, KindId.BLOB);
-    this.boolSupplier = createAndCacheTypeMemoizer(BBoolType::new, KindId.BOOL);
-    this.intSupplier = createAndCacheTypeMemoizer(BIntType::new, KindId.INT);
-    this.stringSupplier = createAndCacheTypeMemoizer(BStringType::new, KindId.STRING);
+    this.blobSupplier = createAndCacheTypeMemoizer(BBlobType::new, BLOB);
+    this.boolSupplier = createAndCacheTypeMemoizer(BBoolType::new, BOOL);
+    this.intSupplier = createAndCacheTypeMemoizer(BIntType::new, INT);
+    this.stringSupplier = createAndCacheTypeMemoizer(BStringType::new, STRING);
   }
 
   private <A extends BType> Function0<A, BKindDbException> createAndCacheTypeMemoizer(
@@ -95,11 +112,11 @@ public class BKindDb {
   }
 
   public BLambdaKind lambda(List<BType> params, BType result) throws BKindDbException {
-    return funcC(KindId.LAMBDA, params, result, BLambdaKind::new);
+    return funcC(LAMBDA, params, result, BLambdaKind::new);
   }
 
   public BLambdaKind lambda(BFuncType funcType) throws BKindDbException {
-    return funcC(KindId.LAMBDA, funcType, BLambdaKind::new);
+    return funcC(LAMBDA, funcType, BLambdaKind::new);
   }
 
   private <T extends BFuncKind> T funcC(
@@ -123,24 +140,23 @@ public class BKindDb {
   }
 
   public BIfKind if_(BType type) throws BKindDbException {
-    return newOperation(KindId.IF, type, BIfKind::new);
+    return newOperation(IF, type, BIfKind::new);
   }
 
   public BIntType int_() throws BKindDbException {
     return intSupplier.apply();
   }
 
-  public BMapKind mapFunc(BType r, BType s) throws BKindDbException {
-    var funcT = funcT(list(array(s), funcT(list(s), r)), array(r));
-    return funcC(KindId.MAP_FUNC, funcT, BMapKind::new);
+  public BMapKind map(BType evaluationType) throws BKindDbException {
+    return newOperation(MAP, evaluationType, BMapKind::new);
   }
 
   public BNativeFuncKind nativeFunc(List<BType> params, BType result) throws BKindDbException {
-    return funcC(KindId.NATIVE_FUNC, params, result, BNativeFuncKind::new);
+    return funcC(NATIVE_FUNC, params, result, BNativeFuncKind::new);
   }
 
   public BNativeFuncKind nativeFunc(BFuncType funcType) throws BKindDbException {
-    return funcC(KindId.NATIVE_FUNC, funcType, BNativeFuncKind::new);
+    return funcC(NATIVE_FUNC, funcType, BNativeFuncKind::new);
   }
 
   public BTupleType tuple(BType... items) throws BKindDbException {
@@ -158,27 +174,27 @@ public class BKindDb {
   // methods for getting ExprB types
 
   public BCallKind call(BType evaluationType) throws BKindDbException {
-    return newOperation(KindId.CALL, evaluationType, BCallKind::new);
+    return newOperation(CALL, evaluationType, BCallKind::new);
   }
 
   public BCombineKind combine(BTupleType evaluationType) throws BKindDbException {
-    return newOperation(KindId.COMBINE, evaluationType, BCombineKind::new);
+    return newOperation(COMBINE, evaluationType, BCombineKind::new);
   }
 
   public BOrderKind order(BArrayType evaluationType) throws BKindDbException {
-    return newOperation(KindId.ORDER, evaluationType, BOrderKind::new);
+    return newOperation(ORDER, evaluationType, BOrderKind::new);
   }
 
   public BPickKind pick(BType evaluationType) throws BKindDbException {
-    return newOperation(KindId.PICK, evaluationType, BPickKind::new);
+    return newOperation(PICK, evaluationType, BPickKind::new);
   }
 
   public BReferenceKind reference(BType evaluationType) throws BKindDbException {
-    return newOperation(KindId.REFERENCE, evaluationType, BReferenceKind::new);
+    return newOperation(REFERENCE, evaluationType, BReferenceKind::new);
   }
 
   public BSelectKind select(BType evaluationType) throws BKindDbException {
-    return newOperation(KindId.SELECT, evaluationType, BSelectKind::new);
+    return newOperation(SELECT, evaluationType, BSelectKind::new);
   }
 
   // methods for reading from db
@@ -199,7 +215,7 @@ public class BKindDb {
       case LAMBDA -> readFuncKind(hash, rootChain, id, BLambdaKind::new);
       case FUNC -> readFuncType(hash, rootChain);
       case IF -> readOperationKind(hash, rootChain, id, BType.class, BIfKind::new);
-      case MAP_FUNC -> readMapKind(hash, rootChain, id);
+      case MAP -> readOperationKind(hash, rootChain, id, BArrayType.class, BMapKind::new);
       case NATIVE_FUNC -> readFuncKind(hash, rootChain, id, BNativeFuncKind::new);
       case CALL -> readOperationKind(hash, rootChain, id, BType.class, BCallKind::new);
       case COMBINE -> readOperationKind(hash, rootChain, id, BTupleType.class, BCombineKind::new);
@@ -224,7 +240,7 @@ public class BKindDb {
   private KindId decodeKindId(Hash hash, Hash markerHash) throws DecodeKindException {
     byte byteMarker = invokeAndChainHashedDbException(
         () -> hashedDb.readByte(markerHash), e -> new DecodeKindException(hash, e));
-    var id = KindId.fromOrdinal(byteMarker);
+    var id = fromOrdinal(byteMarker);
     if (id == null) {
       throw new DecodeKindIllegalIdException(hash, byteMarker);
     }
@@ -255,11 +271,10 @@ public class BKindDb {
   }
 
   private BFuncType readFuncType(Hash rootHash, List<Hash> rootChain) throws DecodeKindException {
-    assertKindRootChainSize(rootHash, KindId.FUNC, rootChain, 2);
-    var nodes = readDataChainAsTypes(KindId.FUNC, rootHash, rootChain);
+    assertKindRootChainSize(rootHash, FUNC, rootChain, 2);
+    var nodes = readDataChainAsTypes(FUNC, rootHash, rootChain);
     if (nodes.size() != 2) {
-      throw new DecodeKindWrongChainSizeException(
-          rootHash, KindId.FUNC, DATA_PATH, 2, nodes.size());
+      throw new DecodeKindWrongChainSizeException(rootHash, FUNC, DATA_PATH, 2, nodes.size());
     }
     var result = nodes.get(FUNC_RESULT_IDX);
     var params = nodes.get(FUNC_PARAMS_IDX);
@@ -267,35 +282,8 @@ public class BKindDb {
       return cache(new BFuncType(rootHash, paramsTuple, result));
     } else {
       throw new DecodeKindWrongNodeKindException(
-          rootHash, KindId.FUNC, FUNC_PARAMS_PATH, BTupleType.class, params.getClass());
+          rootHash, FUNC, FUNC_PARAMS_PATH, BTupleType.class, params.getClass());
     }
-  }
-
-  private BKind readMapKind(Hash hash, List<Hash> rootChain, KindId id) throws BKindDbException {
-    return readFuncKind(hash, rootChain, id, BMapKind::new, (BFuncType funcType) -> {
-      var params = funcType.params();
-      if (!(funcType.result() instanceof BArrayType outputArrayT)) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-      if (params.size() != 2) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-      if (!(params.get(0) instanceof BArrayType inputArrayT)) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-      if (!(params.get(1) instanceof BFuncType mappingFuncT)) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-      if (mappingFuncT.params().size() != 1) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-      if (!inputArrayT.elem().equals(mappingFuncT.params().get(0))) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-      if (!outputArrayT.elem().equals(mappingFuncT.result())) {
-        throw DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc(hash, funcType);
-      }
-    });
   }
 
   private <T extends BFuncKind> BKind readFuncKind(
@@ -325,8 +313,8 @@ public class BKindDb {
   }
 
   private BTupleType readTupleType(Hash rootHash, List<Hash> rootChain) throws DecodeKindException {
-    assertKindRootChainSize(rootHash, KindId.TUPLE, rootChain, 2);
-    var items = readDataChainAsTypes(KindId.TUPLE, rootHash, rootChain);
+    assertKindRootChainSize(rootHash, TUPLE, rootChain, 2);
+    var items = readDataChainAsTypes(TUPLE, rootHash, rootChain);
     return newTuple(rootHash, items);
   }
 
@@ -433,12 +421,12 @@ public class BKindDb {
   // Methods for writing kind root
 
   private Hash writeArrayRoot(BKind elementKind) throws BKindDbException {
-    return writeRoot(KindId.ARRAY, elementKind);
+    return writeRoot(ARRAY, elementKind);
   }
 
   private Hash writeFuncTypeRoot(BTupleType params, BType result) throws BKindDbException {
     var dataHash = writeChain(params.hash(), result.hash());
-    return writeRoot(KindId.FUNC, dataHash);
+    return writeRoot(FUNC, dataHash);
   }
 
   private Hash writeFuncKindRoot(KindId id, BFuncType funcType) throws BKindDbException {
@@ -447,7 +435,7 @@ public class BKindDb {
 
   private Hash writeTupleRoot(List<BType> items) throws BKindDbException {
     var dataHash = writeChain(items);
-    return writeRoot(KindId.TUPLE, dataHash);
+    return writeRoot(TUPLE, dataHash);
   }
 
   // Helper methods for writing roots

@@ -76,7 +76,7 @@ public class BKindTest extends TestingVirtualMachine {
         args(f -> f.funcT(list(), f.string()), "()->String"),
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
         args(f -> f.if_(f.int_()), "IF"),
-        args(f -> f.mapFunc(f.int_(), f.string()), "MAP"),
+        args(f -> f.map(f.array(f.int_())), "MAP"),
         args(f -> f.nativeFunc(list(), f.string()), "NATIVE_FUNC"),
         args(f -> f.nativeFunc(list(f.string()), f.string()), "NATIVE_FUNC"),
         args(f -> f.tuple(), "{}"),

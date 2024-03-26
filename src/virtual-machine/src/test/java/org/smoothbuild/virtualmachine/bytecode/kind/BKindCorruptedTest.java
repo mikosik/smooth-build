@@ -13,7 +13,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.NATIVE_FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
@@ -21,7 +21,6 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REFERENCE
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.STRING;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.TUPLE;
-import static org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeFuncKindWrongFuncTypeException.illegalMapFuncTypeExc;
 
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
@@ -166,38 +165,6 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       @Override
       protected KindId kindId() {
         return LAMBDA;
-      }
-    }
-
-    @Nested
-    class _map_func extends _abstract_func_kind_test_suite {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save map func kind in HashedDb.
-         */
-        var specHash = hash(
-            hash(MAP_FUNC.byteMarker()),
-            hash(bFuncType(
-                bArrayType(bBlobType()),
-                bFuncType(bBlobType(), bIntType()),
-                bArrayType(bIntType()))));
-        assertThat(specHash).isEqualTo(bMapKind(bIntType(), bBlobType()).hash());
-      }
-
-      @Test
-      public void illegal_func_type_causes_error() throws Exception {
-        var illegalType = bFuncType(
-            bArrayType(bBlobType()), bFuncType(bStringType(), bIntType()), bArrayType(bIntType()));
-        var kindHash = hash(hash(MAP_FUNC.byteMarker()), hash(illegalType));
-        assertCall(() -> kindDb().get(kindHash))
-            .throwsException(illegalMapFuncTypeExc(kindHash, illegalType));
-      }
-
-      @Override
-      protected KindId kindId() {
-        return MAP_FUNC;
       }
     }
 
@@ -591,6 +558,34 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
         protected _operation_kind_tests() {
           super(IF);
         }
+      }
+    }
+
+    @Nested
+    class _map_func {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save MAP kind in HashedDb.
+         */
+        var hash = hash(hash(MAP.byteMarker()), hash(bArrayType(bIntType())));
+        assertThat(hash).isEqualTo(bMapKind(bArrayType(bIntType())).hash());
+      }
+
+      @Nested
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
+          super(MAP, BArrayType.class);
+        }
+      }
+
+      @Test
+      public void with_evaluation_type_not_being_array_type() throws Exception {
+        var hash = hash(hash(MAP.byteMarker()), hash(bIntType()));
+        assertThatGet(hash)
+            .throwsException(new DecodeKindWrongNodeKindException(
+                hash, MAP, DATA_PATH, BArrayType.class, BIntType.class));
       }
     }
 

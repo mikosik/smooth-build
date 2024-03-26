@@ -16,7 +16,7 @@ public enum KindId {
   PICK,
   IF,
   REFERENCE,
-  MAP_FUNC,
+  MAP,
   FUNC,
   ;
 
