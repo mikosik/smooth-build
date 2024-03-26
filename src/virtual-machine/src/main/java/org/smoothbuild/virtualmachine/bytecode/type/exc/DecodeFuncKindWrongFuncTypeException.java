@@ -1,11 +1,11 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
 import static org.smoothbuild.virtualmachine.bytecode.type.BKindDb.DATA_PATH;
-import static org.smoothbuild.virtualmachine.bytecode.type.KindId.MAP_FUNC;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.KindId.MAP_FUNC;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.KindId;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.KindId;
 
 public class DecodeFuncKindWrongFuncTypeException extends DecodeKindNodeException {
   public static DecodeFuncKindWrongFuncTypeException illegalMapFuncTypeExc(

@@ -48,7 +48,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;

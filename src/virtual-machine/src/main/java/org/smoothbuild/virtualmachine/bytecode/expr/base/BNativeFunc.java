@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BNativeFuncKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BNativeFuncKind;
 
 /**
  * Native function. Encapsulates java jar and thus java method to invoke.

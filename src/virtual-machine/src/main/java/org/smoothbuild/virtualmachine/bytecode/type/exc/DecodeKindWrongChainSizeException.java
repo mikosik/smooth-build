@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.type.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.KindId;
+import org.smoothbuild.virtualmachine.bytecode.type.base.KindId;
 
 public class DecodeKindWrongChainSizeException extends DecodeKindNodeException {
   public DecodeKindWrongChainSizeException(

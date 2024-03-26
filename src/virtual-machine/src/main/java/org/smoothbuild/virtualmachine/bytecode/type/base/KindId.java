@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.bytecode.type;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 public enum KindId {
   BLOB,

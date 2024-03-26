@@ -23,14 +23,14 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BBlobType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BBoolType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BStringType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BBlobType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BStringType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 /**
  * Wrapper for BytecodeFactory that chains BytecodeExceptions inside SbTranslatorException.

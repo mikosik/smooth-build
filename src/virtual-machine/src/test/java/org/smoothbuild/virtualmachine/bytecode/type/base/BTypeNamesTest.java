@@ -2,9 +2,9 @@ package org.smoothbuild.virtualmachine.bytecode.type.value;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.arrayTypeName;
-import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.funcTypeName;
-import static org.smoothbuild.virtualmachine.bytecode.type.value.BTypeNames.tupleTypeName;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.BTypeNames.arrayTypeName;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.BTypeNames.funcTypeName;
+import static org.smoothbuild.virtualmachine.bytecode.type.base.BTypeNames.tupleTypeName;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

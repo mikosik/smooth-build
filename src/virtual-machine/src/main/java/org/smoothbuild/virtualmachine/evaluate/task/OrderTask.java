@@ -4,7 +4,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 

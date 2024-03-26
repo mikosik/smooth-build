@@ -5,11 +5,11 @@ import static org.smoothbuild.common.collect.List.list;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BFuncType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BTupleType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 public class TestingBKind {
   public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();

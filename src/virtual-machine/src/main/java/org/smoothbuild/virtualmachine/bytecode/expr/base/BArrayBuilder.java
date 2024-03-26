@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import java.util.ArrayList;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
 
 public class BArrayBuilder {
   private final BArrayType type;

@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BType;
 
 /**
  * Instance of a value.

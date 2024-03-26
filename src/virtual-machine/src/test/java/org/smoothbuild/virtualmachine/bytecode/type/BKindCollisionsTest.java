@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 

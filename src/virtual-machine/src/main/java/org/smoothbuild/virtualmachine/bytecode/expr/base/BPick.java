@@ -9,9 +9,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodePickWrongEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.type.oper.BPickKind;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.type.value.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BPickKind;
 
 /**
  * This class is thread-safe.

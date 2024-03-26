@@ -1,8 +1,7 @@
-package org.smoothbuild.virtualmachine.bytecode.type.value;
+package org.smoothbuild.virtualmachine.bytecode.type.base;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
 
 public abstract sealed class BFuncKind extends BKind
     permits BLambdaKind, BMapKind, BNativeFuncKind {

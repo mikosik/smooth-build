@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.type.BKind;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
 
 public class DecodeSelectIndexOutOfBoundsException extends DecodeExprException {
   public DecodeSelectIndexOutOfBoundsException(Hash hash, BKind kind, int index, int size) {

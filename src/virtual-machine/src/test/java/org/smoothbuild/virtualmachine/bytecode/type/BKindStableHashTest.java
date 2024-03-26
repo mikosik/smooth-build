@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.type.base.BKind;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BKindStableHashTest extends TestingVirtualMachine {
