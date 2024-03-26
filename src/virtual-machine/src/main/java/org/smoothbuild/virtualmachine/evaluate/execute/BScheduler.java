@@ -180,7 +180,7 @@ public class BScheduler {
     }
 
     private List<BExpr> args() throws BytecodeException {
-      return call.subExprs().args().items();
+      return call.subExprs().args().subExprs().items();
     }
   }
 

@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaKind;
 
 /**
@@ -19,13 +18,7 @@ public final class BLambda extends BFunc {
   }
 
   public BExpr body() throws BytecodeException {
-    var body = readData();
-    var resultType = type().result();
-    var bodyType = body.evaluationType();
-    if (!resultType.equals(bodyType)) {
-      throw new DecodeExprWrongNodeTypeException(hash(), kind(), DATA_PATH, resultType, bodyType);
-    }
-    return body;
+    return readData("body", type().result());
   }
 
   @Override

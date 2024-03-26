@@ -363,6 +363,10 @@ public class BExprDb {
         () -> hashedDb.writeHashChain(hashes), BExprDbException::new);
   }
 
+  public BKindDb kindDb() {
+    return kindDb;
+  }
+
   // visible for classes from db.object package tree until creating ExprB is cached and
   // moved completely to ObjectDb class
   public HashedDb hashedDb() {
