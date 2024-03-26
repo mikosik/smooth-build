@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
 /**
  * This class is thread-safe.
  */
-public final class BOrder extends BOper {
+public final class BOrder extends BOperation {
   public BOrder(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BOrderKind);

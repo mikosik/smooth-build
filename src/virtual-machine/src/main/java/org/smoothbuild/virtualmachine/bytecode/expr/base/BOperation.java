@@ -5,23 +5,23 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
  * Operation.
  * This class is thread-safe.
  */
-public abstract sealed class BOper extends BExpr
+public abstract sealed class BOperation extends BExpr
     permits BCall, BCombine, BIf, BOrder, BPick, BReference, BSelect {
-  public BOper(MerkleRoot merkleRoot, BExprDb exprDb) {
+  public BOperation(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
-    checkArgument(merkleRoot.kind() instanceof BOperKind);
+    checkArgument(merkleRoot.kind() instanceof BOperationKind);
   }
 
   @Override
-  public BOperKind kind() {
-    return (BOperKind) super.kind();
+  public BOperationKind kind() {
+    return (BOperationKind) super.kind();
   }
 
   @Override

@@ -16,7 +16,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 /**
  * This class is thread-safe.
  */
-public final class BSelect extends BOper {
+public final class BSelect extends BOperation {
   public BSelect(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BSelectKind);

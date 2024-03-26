@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 /**
  * This class is immutable.
  */
-public class BOrderKind extends BOperKind {
+public class BOrderKind extends BOperationKind {
   public BOrderKind(Hash hash, BType evaluationType) {
     super(hash, "ORDER", BOrder.class, evaluationType);
     checkArgument(evaluationType instanceof BArrayType);

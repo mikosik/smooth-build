@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 /**
  * This class is thread-safe.
  */
-public final class BCombine extends BOper {
+public final class BCombine extends BOperation {
   public BCombine(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BCombineKind);

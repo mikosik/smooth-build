@@ -284,7 +284,7 @@ public class BKindTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _oper {
+  class _operation {
     @ParameterizedTest
     @MethodSource("types")
     public void call(BType type) throws Exception {

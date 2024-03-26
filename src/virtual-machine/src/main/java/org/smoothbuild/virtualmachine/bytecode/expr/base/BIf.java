@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
  * 'If' operation.
  * This class is thread-safe.
  */
-public final class BIf extends BOper {
+public final class BIf extends BOperation {
   public BIf(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BIfKind);

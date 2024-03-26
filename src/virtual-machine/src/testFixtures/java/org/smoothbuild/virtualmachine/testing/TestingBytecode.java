@@ -158,7 +158,7 @@ public abstract class TestingBytecode {
     return kindDb().tuple(itemTypes);
   }
 
-  // Oper categories
+  // Operation kinds
 
   public BCallKind bCallKind() throws BytecodeException {
     return bCallKind(bIntType());

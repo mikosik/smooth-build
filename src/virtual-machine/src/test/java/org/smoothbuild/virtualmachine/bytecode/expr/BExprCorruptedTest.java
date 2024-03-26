@@ -178,7 +178,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void with_one_elem_being_oper() throws Exception {
+    public void with_one_elem_being_operation() throws Exception {
       var arrayType = bArrayType(bStringType());
       var hash =
           hash(hash(arrayType), hash(hash(hash(bStringType()), hash("aaa")), hash(bReference(1))));
@@ -368,7 +368,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void args_component_evaluation_type_is_not_combine_but_different_oper()
+    public void args_component_evaluation_type_is_not_combine_but_different_operation()
         throws Exception {
       var funcType = bFuncType(bStringType(), bIntType(), bIntType());
       var func = bLambda(funcType, bInt());
@@ -1232,7 +1232,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void with_element_being_oper() throws Exception {
+    public void with_element_being_operation() throws Exception {
       var hash = hash(hash(bPersonType()), hash(hash(bString("John")), hash(bReference(1))));
       var tuple = (BTuple) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
