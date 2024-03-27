@@ -263,10 +263,10 @@ public class BKindDb {
       Hash hash,
       List<Hash> rootChain,
       KindId id,
-      Class<? extends BType> dataTypeClass,
+      Class<? extends BType> expectedEvaluationTypeClass,
       BiFunction<Hash, BType, T> factory)
       throws DecodeKindException {
-    var evaluationType = readDataAsType(hash, rootChain, id, dataTypeClass);
+    var evaluationType = readDataAsType(hash, rootChain, id, expectedEvaluationTypeClass);
     return newOperation(factory, hash, evaluationType);
   }
 
@@ -321,19 +321,19 @@ public class BKindDb {
   // helper methods for reading
 
   private <T extends BType> T readDataAsType(
-      Hash rootHash, List<Hash> rootChain, KindId id, Class<T> typeClass)
+      Hash rootHash, List<Hash> rootChain, KindId id, Class<T> expectedTypeClass)
       throws DecodeKindException {
     assertKindRootChainSize(rootHash, id, rootChain, 2);
-    var hash = rootChain.get(DATA_IDX);
-    var kindB = invokeAndChainKindDbException(
-        () -> get(hash), e -> new DecodeKindNodeException(rootHash, id, DATA_PATH, e));
-    if (typeClass.isAssignableFrom(kindB.getClass())) {
+    var dataHash = rootChain.get(DATA_IDX);
+    BKind kind = invokeAndChainKindDbException(
+        () -> get(dataHash), e -> new DecodeKindNodeException(rootHash, id, DATA_PATH, e));
+    if (expectedTypeClass.isAssignableFrom(kind.getClass())) {
       @SuppressWarnings("unchecked")
-      T result = (T) kindB;
+      T result = (T) kind;
       return result;
     } else {
       throw new DecodeKindWrongNodeKindException(
-          rootHash, id, DATA_PATH, typeClass, kindB.getClass());
+          rootHash, id, DATA_PATH, expectedTypeClass, kind.getClass());
     }
   }
 
