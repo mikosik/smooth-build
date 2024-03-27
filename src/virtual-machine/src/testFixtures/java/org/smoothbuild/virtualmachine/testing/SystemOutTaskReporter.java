@@ -20,7 +20,8 @@ class SystemOutTaskReporter implements TaskReporter {
   @Override
   public void report(Task task, ComputationResult result) throws BytecodeException {
     for (BTuple message : result.output().storedLogs().elements(BTuple.class)) {
-      printWriter.println(storedLogLevel(message) + " " + storedLogMessage(message));
+      printWriter.println(storedLogLevel(message).toJavaString() + " "
+          + storedLogMessage(message).toJavaString());
     }
   }
 
