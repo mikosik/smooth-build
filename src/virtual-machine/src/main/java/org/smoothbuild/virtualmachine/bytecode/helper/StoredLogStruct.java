@@ -16,8 +16,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 public class StoredLogStruct {
   private static final Set<String> LEVELS =
       Set.of(FATAL.name(), ERROR.name(), WARNING.name(), INFO.name());
-  private static final int MESSAGE_IDX = 0;
-  private static final int LEVEL_IDX = 1;
+  private static final int LEVEL_IDX = 0;
+  private static final int MESSAGE_IDX = 1;
 
   public static boolean containsErrorOrAbove(BArray storedLogs) throws BytecodeException {
     return storedLogs.elements(BTuple.class).anyMatches(StoredLogStruct::isErrorOrAbove);

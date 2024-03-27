@@ -222,7 +222,7 @@ public class BytecodeFactory {
   private BTuple storedLog(Level level, String message) throws BytecodeException {
     var messageValue = exprDb.newString(message);
     var levelValue = exprDb.newString(level.name());
-    return exprDb.newTuple(list(messageValue, levelValue));
+    return exprDb.newTuple(list(levelValue, messageValue));
   }
 
   private static BTupleType createStoredLogType(BKindDb kindDb) throws BytecodeException {
