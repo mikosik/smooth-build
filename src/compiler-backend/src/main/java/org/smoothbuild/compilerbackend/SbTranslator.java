@@ -61,10 +61,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
@@ -260,13 +260,27 @@ public class SbTranslator {
     return bytecodeF.lambda(funcT, bodyB);
   }
 
-  private BNativeFunc translateNativeFunc(SAnnotatedFunc nativeFuncS) throws SbTranslatorException {
-    var funcTB = typeF.translate(nativeFuncS.schema().type());
-    var annS = nativeFuncS.annotation();
-    var jarB = persistNativeJar(annS.location());
-    var classBinaryNameB = bytecodeF.string(annS.path().string());
-    var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
-    return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
+  private BLambda translateNativeFunc(SAnnotatedFunc sNativeFunc) throws SbTranslatorException {
+    var sAnnotation = sNativeFunc.annotation();
+    var bJar = persistNativeJar(sAnnotation.location());
+    var bClassBinaryName = bytecodeF.string(sAnnotation.path().string());
+    var bIsPure = bytecodeF.bool(sAnnotation.name().equals(NATIVE_PURE));
+
+    var bLambdaType = typeF.translate(sNativeFunc.schema().type());
+    var bArguments = referencesToAllArguments(bLambdaType);
+    var bInvoke =
+        bytecodeF.invoke(bLambdaType.result(), bJar, bClassBinaryName, bIsPure, bArguments);
+    saveNal(bInvoke, sNativeFunc);
+    return bytecodeF.lambda(bLambdaType, bInvoke);
+  }
+
+  private BCombine referencesToAllArguments(BFuncType lambdaType) throws SbTranslatorException {
+    List<BExpr> argumentReferences = lambdaType
+        .params()
+        .elements()
+        .zipWithIndex()
+        .map(t -> bytecodeF.reference(t.element1(), BigInteger.valueOf(t.element2())));
+    return bytecodeF.combine(argumentReferences);
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
@@ -331,10 +345,10 @@ public class SbTranslator {
   private BExpr translateNamedExprValue(Location refLocation, SNamedExprValue sNamedExprValue)
       throws SbTranslatorException {
     var bResultType = typeF.translate(sNamedExprValue.schema().type());
-    var bFuncType = bytecodeF.funcType(list(), bResultType);
-    var bFunc = bytecodeF.lambda(bFuncType, translateExpr(sNamedExprValue.body()));
-    saveNal(bFunc, sNamedExprValue);
-    var bCall = bytecodeF.call(bFunc, bytecodeF.combine(list()));
+    var bLambdaType = bytecodeF.funcType(list(), bResultType);
+    var bLambda = bytecodeF.lambda(bLambdaType, translateExpr(sNamedExprValue.body()));
+    saveNal(bLambda, sNamedExprValue);
+    var bCall = bytecodeF.call(bLambda, bytecodeF.combine(list()));
     saveLoc(bCall, refLocation);
     return bCall;
   }

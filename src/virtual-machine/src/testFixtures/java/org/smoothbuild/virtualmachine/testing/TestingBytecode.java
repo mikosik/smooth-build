@@ -22,9 +22,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -42,9 +42,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BNativeFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
@@ -128,22 +128,12 @@ public abstract class TestingBytecode {
     return kindDb().int_();
   }
 
-  public BNativeFuncKind bNativeFuncKind() throws BytecodeException {
-    return bNativeFuncKind(bBoolType(), bBlobType());
+  public BInvokeKind bInvokeKind() throws BytecodeException {
+    return bInvokeKind(bIntType());
   }
 
-  public BNativeFuncKind bNativeFuncKind(BType resultType) throws BytecodeException {
-    return kindDb().nativeFunc(bFuncType(resultType));
-  }
-
-  public BNativeFuncKind bNativeFuncKind(BType paramType, BType resultType)
-      throws BytecodeException {
-    return kindDb().nativeFunc(bFuncType(paramType, resultType));
-  }
-
-  public BNativeFuncKind bNativeFuncKind(BType param1Type, BType param2Type, BType resultType)
-      throws BytecodeException {
-    return kindDb().nativeFunc(bFuncType(param1Type, param2Type, resultType));
+  public BInvokeKind bInvokeKind(BType evaluationType) throws BytecodeException {
+    return kindDb().invoke(evaluationType);
   }
 
   public BTupleType bPersonType() throws BytecodeException {
@@ -362,51 +352,65 @@ public abstract class TestingBytecode {
     return bytecodeF().int_(value);
   }
 
-  public BNativeFunc bReturnAbcNativeFunc(boolean isPure) throws IOException, BytecodeException {
-    return bNativeFunc(bFuncType(bStringType()), ReturnAbcFunc.class, isPure);
+  public BInvoke bReturnAbcInvoke() throws BytecodeException {
+    return bReturnAbcInvoke(true);
   }
 
-  public BNativeFunc bReturnAbcNativeFunc() throws IOException, BytecodeException {
-    return bReturnAbcNativeFunc(true);
+  public BInvoke bReturnAbcInvoke(boolean isPure) throws BytecodeException {
+    return bInvoke(bStringType(), ReturnAbcFunc.class, isPure);
   }
 
   public static class ReturnAbcFunc {
-    public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
+    public static BValue func(NativeApi nativeApi, BTuple arguments) throws BytecodeException {
       return nativeApi.factory().string("abc");
     }
   }
 
-  public BNativeFunc bNativeFunc(Class<?> clazz) throws IOException, BytecodeException {
-    return bNativeFunc(bFuncType(), clazz);
+  public BInvoke bInvoke() throws BytecodeException {
+    return bInvoke(bIntType());
   }
 
-  public BNativeFunc bNativeFunc(BFuncType funcType, Class<?> clazz)
-      throws IOException, BytecodeException {
-    return bNativeFunc(funcType, clazz, true);
+  public BInvoke bInvoke(BType evaluationType) throws BytecodeException {
+    return bInvoke(evaluationType, bBlob(7), bString("class binary name"), bBool(true), bTuple());
   }
 
-  public BNativeFunc bNativeFunc(BFuncType funcType, Class<?> clazz, boolean isPure)
-      throws IOException, BytecodeException {
-    return bNativeFunc(
-        funcType, blobBJarWithPluginApi(clazz), bString(clazz.getName()), bBool(isPure));
+  public BInvoke bInvoke(Class<?> clazz) throws BytecodeException {
+    return bInvoke(bIntType(), clazz);
   }
 
-  public BNativeFunc bNativeFunc() throws BytecodeException {
-    return bNativeFunc(bFuncType());
+  public BInvoke bInvoke(BType evaluationType, Class<?> clazz) throws BytecodeException {
+    return bInvoke(evaluationType, clazz, true);
   }
 
-  public BNativeFunc bNativeFunc(BFuncType funcType) throws BytecodeException {
-    return bNativeFunc(funcType, bBlob(7), bString("class binary name"), bBool(true));
-  }
-
-  public BNativeFunc bNativeFunc(BFuncType type, BBlob jar, BString classBinaryName)
+  public BInvoke bInvoke(BType evaluationType, BExpr jar, BExpr classBinaryName)
       throws BytecodeException {
-    return bNativeFunc(type, jar, classBinaryName, bBool(true));
+    return bInvoke(evaluationType, jar, classBinaryName, bBool(true), bTuple());
   }
 
-  public BNativeFunc bNativeFunc(BFuncType type, BBlob jar, BString classBinaryName, BBool isPure)
+  public BInvoke bInvoke(BType evaluationType, Class<?> clazz, boolean isPure)
       throws BytecodeException {
-    return bytecodeF().nativeFunc(type, jar, classBinaryName, isPure);
+    return bInvoke(evaluationType, clazz, isPure, bTuple());
+  }
+
+  public BInvoke bInvoke(BType evaluationType, Class<?> clazz, boolean isPure, BTuple arguments)
+      throws BytecodeException {
+    return bInvoke(
+        evaluationType,
+        blobBJarWithPluginApi(clazz),
+        bString(clazz.getName()),
+        bBool(isPure),
+        arguments);
+  }
+
+  public BInvoke bInvoke(BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr arguments)
+      throws BytecodeException {
+    return bytecodeF().invoke(evaluationType, jar, classBinaryName, bBool(true), arguments);
+  }
+
+  public BInvoke bInvoke(
+      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+      throws BytecodeException {
+    return bytecodeF().invoke(evaluationType, jar, classBinaryName, isPure, arguments);
   }
 
   public BTuple bPerson(String firstName, String lastName) throws BytecodeException {

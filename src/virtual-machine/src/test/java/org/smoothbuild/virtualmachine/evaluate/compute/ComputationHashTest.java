@@ -1,12 +1,12 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -66,22 +66,12 @@ public class ComputationHashTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() throws Exception {
-    var nativeFuncB = bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("1"), bBool(true));
-    var task = new InvokeTask(bCall(nativeFuncB), nativeFuncB, bTrace());
+  public void hash_of_computation_with_invoke_task_and_empty_input_is_stable() throws Exception {
+    var invoke = bInvoke(bIntType(), bBlob(1), bString("1"), bBool(true), bTuple());
+    var task = newInvokeTask(invoke, bTrace());
     var input = bTuple();
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("38c1af6ca8f69718173ff5db0d2f1fe51cbfcb0ccc9185ec3c3daef0199cdf1e"));
-  }
-
-  @Test
-  public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable()
-      throws Exception {
-    var nativeFuncB = bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("1"), bBool(true));
-    var task = new InvokeTask(bCall(nativeFuncB), nativeFuncB, bTrace());
-    var input = bTuple(bString("abc"), bString("def"));
-    assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("8afeb389e75e86790d622a92d4454b484a62f04a624db873f2fc4c9d2d4dd772"));
+        .isEqualTo(Hash.decode("af39446a6505d825626406b7e483387f993ddeccc432bf45bbcf1d262deeb05d"));
   }
 
   @Test

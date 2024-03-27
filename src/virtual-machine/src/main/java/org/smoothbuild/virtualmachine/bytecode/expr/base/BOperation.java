@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
  * This class is thread-safe.
  */
 public abstract sealed class BOperation extends BExpr
-    permits BCall, BCombine, BIf, BMap, BOrder, BPick, BReference, BSelect {
+    permits BCall, BCombine, BIf, BInvoke, BMap, BOrder, BPick, BReference, BSelect {
   public BOperation(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
     checkArgument(merkleRoot.kind() instanceof BOperationKind);

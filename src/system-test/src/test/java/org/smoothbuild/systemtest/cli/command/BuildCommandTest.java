@@ -89,36 +89,36 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _call_matcher extends SystemTestCase {
+    class _invoke_matcher extends SystemTestCase {
       private static final String NATIVE_FUNCTION_CALL =
           """
           result = concat([["a"], ["b"]]);
           """;
       private static final String NATIVE_CALL_TASK_HEADER =
           """
-          :evaluate:call:concat                                                      exec
+          :evaluate:invoke:concat                                                    exec
           """;
 
       @Test
       public void shows_call_to_native_func_when_enabled() throws IOException {
-        testThatTaskHeaderShownWhenCallIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
+        testThatTaskHeaderShownWhenInvokeIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_call_to_native_func_when_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenCallIsDisabled(
+        testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
             NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
-      private void testThatTaskHeaderShownWhenCallIsEnabled(
+      private void testThatTaskHeaderShownWhenInvokeIsEnabled(
           String callDeclaration, String expectedHeaderToBeShown) throws IOException {
         createUserModule(callDeclaration);
-        runSmooth(buildCommand("--show-tasks=call", "result"));
+        runSmooth(buildCommand("--show-tasks=invoke", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(expectedHeaderToBeShown);
       }
 
-      private void testThatTaskHeaderIsNotShownWhenCallIsDisabled(
+      private void testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
           String callDeclaration, String headerThatShouldNotBeShows) throws IOException {
         createUserModule(callDeclaration);
         runSmooth(buildCommand("--show-tasks=none", "result"));
@@ -525,7 +525,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          :evaluate:call:myFunc                                                      exec
+          :evaluate:invoke:myFunc                                                    exec
           """);
     }
 

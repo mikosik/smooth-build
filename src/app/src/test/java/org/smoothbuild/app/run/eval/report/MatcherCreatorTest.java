@@ -3,12 +3,12 @@ package org.smoothbuild.app.run.eval.report;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.ALL;
-import static org.smoothbuild.app.run.eval.report.ReportMatchers.CALL;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.COMBINE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.CONST;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.ERROR;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.FATAL;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.INFO;
+import static org.smoothbuild.app.run.eval.report.ReportMatchers.INVOKE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.NONE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.ORDER;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.PICK;
@@ -91,8 +91,8 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
     return Stream.of(
         arguments("all", ALL),
         arguments("a", ALL),
-        arguments("default", or(CALL, INFO)),
-        arguments("d", or(CALL, INFO)),
+        arguments("default", or(INVOKE, INFO)),
+        arguments("d", or(INVOKE, INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
         arguments("fatal", FATAL),
@@ -103,7 +103,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
         arguments("lw", WARNING),
         arguments("info", INFO),
         arguments("li", INFO),
-        arguments("call", CALL),
+        arguments("invoke", INVOKE),
         arguments("combine", COMBINE),
         arguments("const", CONST),
         arguments("order", ORDER),
@@ -112,14 +112,14 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
         arguments("   order", ORDER),
         arguments("order   ", ORDER),
         arguments("   order   ", ORDER),
-        arguments("call & error", and(CALL, ERROR)),
-        arguments("call | error", or(CALL, ERROR)),
-        arguments("call | select | warning", or(CALL, or(SELECT, WARNING))),
-        arguments("call & error | select", or(and(CALL, ERROR), SELECT)),
-        arguments("select | call & warning", or(and(CALL, WARNING), SELECT)),
-        arguments("(call)", CALL),
-        arguments("call & (select | warning)", and(CALL, or(SELECT, WARNING))),
-        arguments("(select | warning) & call", and(CALL, or(SELECT, WARNING))));
+        arguments("invoke & error", and(INVOKE, ERROR)),
+        arguments("invoke | error", or(INVOKE, ERROR)),
+        arguments("invoke | select | warning", or(INVOKE, or(SELECT, WARNING))),
+        arguments("invoke & error | select", or(and(INVOKE, ERROR), SELECT)),
+        arguments("select | invoke & warning", or(and(INVOKE, WARNING), SELECT)),
+        arguments("(invoke)", INVOKE),
+        arguments("invoke & (select | warning)", and(INVOKE, or(SELECT, WARNING))),
+        arguments("(select | warning) & invoke", and(INVOKE, or(SELECT, WARNING))));
   }
 
   @Nested

@@ -8,6 +8,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
@@ -39,6 +40,7 @@ public class BReferenceInliner {
       case BCall call -> rewriteCall(call, resolver);
       case BCombine combine -> rewriteCombine(combine, resolver);
       case BIf if_ -> rewriteIf(if_, resolver);
+      case BInvoke invoke -> rewriteInvoke(invoke, resolver);
       case BLambda lambda -> rewriteLambda(lambda, resolver);
       case BMap map -> rewriteMap(map, resolver);
       case BOrder order -> rewriteOrder(order, resolver);
@@ -89,6 +91,43 @@ public class BReferenceInliner {
     }
   }
 
+  private BExpr rewriteInvoke(BInvoke invoke, Resolver resolver) throws BytecodeException {
+    var subExprs = invoke.subExprs();
+    var jar = subExprs.jar();
+    var classBinaryName = subExprs.classBinaryName();
+    var isPure = subExprs.isPure();
+    var arguments = subExprs.arguments();
+    var rewrittenJar = rewriteExpr(jar, resolver);
+    var rewrittenClassBinaryName = rewriteExpr(classBinaryName, resolver);
+    var rewrittenIsPure = rewriteExpr(isPure, resolver);
+    var rewrittenArguments = rewriteExpr(arguments, resolver);
+    if (jar.equals(rewrittenJar)
+        && classBinaryName.equals(rewrittenClassBinaryName)
+        && isPure.equals(rewrittenIsPure)
+        && arguments.equals(rewrittenArguments)) {
+      return invoke;
+    } else {
+      return bytecodeFactory.invoke(
+          invoke.evaluationType(),
+          rewrittenJar,
+          rewrittenClassBinaryName,
+          rewrittenIsPure,
+          rewrittenArguments);
+    }
+  }
+
+  private BLambda rewriteLambda(BLambda lambda, Resolver resolver) throws BytecodeException {
+    var funcType = lambda.type();
+    int paramsSize = funcType.params().size();
+    var body = lambda.body();
+    var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramsSize));
+    if (body.equals(rewrittenBody)) {
+      return lambda;
+    } else {
+      return bytecodeFactory.lambda(funcType, rewrittenBody);
+    }
+  }
+
   private BExpr rewriteMap(BMap map, Resolver resolver) throws BytecodeException {
     var subExprs = map.subExprs();
     var array = subExprs.array();
@@ -126,10 +165,6 @@ public class BReferenceInliner {
     }
   }
 
-  private BExpr rewriteVar(BReference var, Resolver resolver) throws BytecodeException {
-    return resolver.resolve(var);
-  }
-
   private BExpr rewriteSelect(BSelect select, Resolver resolver) throws BytecodeException {
     var subExprs = select.subExprs();
     var selectable = subExprs.selectable();
@@ -141,16 +176,8 @@ public class BReferenceInliner {
     }
   }
 
-  private BLambda rewriteLambda(BLambda lambda, Resolver resolver) throws BytecodeException {
-    var funcType = lambda.type();
-    int paramsSize = funcType.params().size();
-    var body = lambda.body();
-    var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramsSize));
-    if (body.equals(rewrittenBody)) {
-      return lambda;
-    } else {
-      return bytecodeFactory.lambda(funcType, rewrittenBody);
-    }
+  private BExpr rewriteVar(BReference var, Resolver resolver) throws BytecodeException {
+    return resolver.resolve(var);
   }
 
   private static class Resolver {

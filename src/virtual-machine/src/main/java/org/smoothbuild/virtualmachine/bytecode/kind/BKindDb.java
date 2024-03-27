@@ -15,9 +15,9 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.NATIVE_FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REFERENCE;
@@ -44,10 +44,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BNativeFuncKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
@@ -151,12 +151,8 @@ public class BKindDb {
     return newOperation(MAP, evaluationType, BMapKind::new);
   }
 
-  public BNativeFuncKind nativeFunc(List<BType> params, BType result) throws BKindDbException {
-    return funcC(NATIVE_FUNC, params, result, BNativeFuncKind::new);
-  }
-
-  public BNativeFuncKind nativeFunc(BFuncType funcType) throws BKindDbException {
-    return funcC(NATIVE_FUNC, funcType, BNativeFuncKind::new);
+  public BInvokeKind invoke(BType evaluationType) throws BKindDbException {
+    return newOperation(INVOKE, evaluationType, BInvokeKind::new);
   }
 
   public BTupleType tuple(BType... items) throws BKindDbException {
@@ -216,7 +212,7 @@ public class BKindDb {
       case FUNC -> readFuncType(hash, rootChain);
       case IF -> readOperationKind(hash, rootChain, id, BType.class, BIfKind::new);
       case MAP -> readOperationKind(hash, rootChain, id, BArrayType.class, BMapKind::new);
-      case NATIVE_FUNC -> readFuncKind(hash, rootChain, id, BNativeFuncKind::new);
+      case INVOKE -> readOperationKind(hash, rootChain, id, BType.class, BInvokeKind::new);
       case CALL -> readOperationKind(hash, rootChain, id, BType.class, BCallKind::new);
       case COMBINE -> readOperationKind(hash, rootChain, id, BTupleType.class, BCombineKind::new);
       case ORDER -> readOperationKind(hash, rootChain, id, BArrayType.class, BOrderKind::new);

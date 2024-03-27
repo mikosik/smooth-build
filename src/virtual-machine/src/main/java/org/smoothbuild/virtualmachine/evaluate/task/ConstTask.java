@@ -14,13 +14,13 @@ public final class ConstTask extends Task {
     super(value, trace, FAST);
   }
 
-  public BValue valueB() {
-    return (BValue) exprB();
+  public BValue value() {
+    return (BValue) expr();
   }
 
   @Override
   public Output run(BTuple input, Container container) throws BytecodeException {
     checkArgument(input.elements().isEmpty());
-    return new Output(valueB(), container.messages());
+    return new Output(value(), container.messages());
   }
 }

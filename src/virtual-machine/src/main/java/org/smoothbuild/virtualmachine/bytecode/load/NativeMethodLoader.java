@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -17,13 +17,13 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 /**
  * Loads java methods as instances of {@link Method}.
- * Method to load is specified by providing {@link BNativeFunc}.
+ * Method to load is specified by providing {@link BInvoke}.
  * This class is thread-safe.
  */
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final Function1<BNativeFunc, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BInvoke, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -31,13 +31,13 @@ public class NativeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BNativeFunc nativeFunc) throws BytecodeException {
-    return memoizer.apply(nativeFunc);
+  public Either<String, Method> load(BInvoke invoke) throws BytecodeException {
+    return memoizer.apply(invoke);
   }
 
-  private Either<String, Method> loadImpl(BNativeFunc nativeFunc) throws BytecodeException {
-    var classBinaryName = nativeFunc.classBinaryName().toJavaString();
-    var methodSpec = new MethodSpec(nativeFunc.jar(), classBinaryName, NATIVE_METHOD_NAME);
+  private Either<String, Method> loadImpl(BInvoke invoke) throws BytecodeException {
+    var classBinaryName = invoke.classBinaryName().toJavaString();
+    var methodSpec = new MethodSpec(invoke.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader
         .load(methodSpec)
         .flatMapRight(this::validateMethodSignature)

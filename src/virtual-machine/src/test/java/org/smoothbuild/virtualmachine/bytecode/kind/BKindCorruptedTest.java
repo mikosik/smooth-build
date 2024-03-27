@@ -12,9 +12,9 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.LAMBDA;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.MAP;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.NATIVE_FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ORDER;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REFERENCE;
@@ -34,6 +34,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
+import org.smoothbuild.virtualmachine.bytecode.kind.BKindCorruptedTest._composed._abstract_func_kind_test_suite;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
@@ -165,27 +166,6 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       @Override
       protected KindId kindId() {
         return LAMBDA;
-      }
-    }
-
-    @Nested
-    class _native_func extends _abstract_func_kind_test_suite {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save func type in HashedDb.
-         */
-        var specHash = hash(
-            hash(NATIVE_FUNC.byteMarker()),
-            hash(bFuncType(bStringType(), bBoolType(), bIntType())));
-        assertThat(specHash)
-            .isEqualTo(bNativeFuncKind(bStringType(), bBoolType(), bIntType()).hash());
-      }
-
-      @Override
-      protected KindId kindId() {
-        return NATIVE_FUNC;
       }
     }
 
@@ -557,6 +537,26 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       class _operation_kind_tests extends AbstractOperationKindTestSuite {
         protected _operation_kind_tests() {
           super(IF);
+        }
+      }
+    }
+
+    @Nested
+    class _invoke {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save INVOKE kind in HashedDb.
+         */
+        var hash = hash(hash(INVOKE.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bInvokeKind(bIntType()).hash());
+      }
+
+      @Nested
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
+          super(INVOKE);
         }
       }
     }

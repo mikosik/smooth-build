@@ -16,7 +16,7 @@ public class BIfTest extends TestingVirtualMachine {
   void creating_if_with_non_bool_condition_fails() {
     assertCall(() -> bIf(bInt(), bInt(), bInt()))
         .throwsException(new IllegalArgumentException(
-            "`condition.evaluationType()` should be `Bool` but is Int."));
+            "`condition.evaluationType()` should be `Bool` but is `Int`."));
   }
 
   @Test

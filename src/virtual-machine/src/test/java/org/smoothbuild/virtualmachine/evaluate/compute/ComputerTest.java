@@ -6,8 +6,8 @@ import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
+import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,11 +16,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
@@ -115,97 +116,102 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _invoke_task_with_pure_func {
-    @Test
-    public void when_cached_in_memory_and_disk() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(true);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-      var memory = bString("def");
-      var disk = bString("ghi");
+  class _invoke_task {
+    @Nested
+    class _with_pure_func {
+      @Test
+      public void when_cached_in_memory_and_disk() throws Exception {
+        var invoke = bReturnAbcInvoke(true);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+        var memory = bString("def");
+        var disk = bString("ghi");
 
-      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+        assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+      }
+
+      @Test
+      public void when_cached_on_disk() throws Exception {
+        var invoke = bReturnAbcInvoke(true);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+        var disk = bString("ghi");
+
+        assertComputationResult(task, input, null, disk, computationResult(output(disk), DISK));
+      }
+
+      @Test
+      public void when_not_cached() throws Exception {
+        var invoke = bReturnAbcInvoke(true);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+
+        var expected = computationResult(output(bString("abc")), EXECUTION);
+        assertComputationResult(task, input, null, null, expected);
+      }
+
+      @Test
+      public void executed_computation_is_cached_on_disk() throws Exception {
+        var invoke = bReturnAbcInvoke(true);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+
+        assertCachesState(task, input, null, bString("abc"));
+      }
     }
 
-    @Test
-    public void when_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(true);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-      var disk = bString("ghi");
+    @Nested
+    class _with_impure_func {
+      @Test
+      public void when_cached_in_memory_and_disk() throws Exception {
+        var invoke = bReturnAbcInvoke(false);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+        var memory = bString("def");
+        var disk = bString("ghi");
 
-      assertComputationResult(task, input, null, disk, computationResult(output(disk), DISK));
+        assertComputationResult(
+            task, input, memory, disk, computationResult(output(memory), MEMORY));
+      }
+
+      @Test
+      public void when_cached_on_disk() throws Exception {
+        var invoke = bReturnAbcInvoke(false);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+        var disk = bString("ghi");
+
+        var computationResult = computationResult(output(bString("abc")), EXECUTION);
+        assertComputationResult(task, input, null, disk, computationResult);
+      }
+
+      @Test
+      public void when_not_cached() throws Exception {
+        var invoke = bReturnAbcInvoke(false);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+
+        var expected = computationResult(output(bString("abc")), EXECUTION);
+        assertComputationResult(task, input, null, null, expected);
+      }
+
+      @Test
+      public void executed_computation_is_cached_on_disk() throws Exception {
+        var invoke = bReturnAbcInvoke(false);
+        var task = newInvokeTask(invoke, bTrace());
+        var input = argumentsForInvokeTask(invoke);
+
+        assertCachesState(task, input, computationResult(bString("abc"), EXECUTION), null);
+      }
     }
 
-    @Test
-    public void when_not_cached() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(true);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-
-      var expected = computationResult(output(bString("abc")), EXECUTION);
-      assertComputationResult(task, input, null, null, expected);
-    }
-
-    @Test
-    public void executed_computation_is_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(true);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-
-      assertCachesState(task, input, null, bString("abc"));
-    }
-  }
-
-  @Nested
-  class _invoke_task_with_impure_func {
-    @Test
-    public void when_cached_in_memory_and_disk() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(false);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-      var memory = bString("def");
-      var disk = bString("ghi");
-
-      assertComputationResult(task, input, memory, disk, computationResult(output(memory), MEMORY));
-    }
-
-    @Test
-    public void when_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(false);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-      var disk = bString("ghi");
-
-      var computationResult = computationResult(output(bString("abc")), EXECUTION);
-      assertComputationResult(task, input, null, disk, computationResult);
-    }
-
-    @Test
-    public void when_not_cached() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(false);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-
-      var expected = computationResult(output(bString("abc")), EXECUTION);
-      assertComputationResult(task, input, null, null, expected);
-    }
-
-    @Test
-    public void executed_computation_is_cached_on_disk() throws Exception, IOException {
-      var nativeFuncB = bReturnAbcNativeFunc(false);
-      var callB = bCall(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, bTrace());
-      var input = bTuple();
-
-      assertCachesState(task, input, computationResult(bString("abc"), EXECUTION), null);
+    private BTuple argumentsForInvokeTask(BInvoke invoke) throws BytecodeException {
+      var subExprs = invoke.subExprs();
+      return bTuple(
+          (BValue) subExprs.jar(),
+          (BValue) subExprs.classBinaryName(),
+          (BValue) subExprs.isPure(),
+          (BValue) subExprs.arguments());
     }
   }
 

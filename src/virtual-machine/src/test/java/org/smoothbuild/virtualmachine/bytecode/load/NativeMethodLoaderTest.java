@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -59,10 +58,9 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
     assertLoadingCausesError(WrongParameterType.class, wrongParametersErrorMessage());
   }
 
-  private void assertLoadingCausesError(Class<?> clazz, String message)
-      throws IOException, BytecodeException {
+  private void assertLoadingCausesError(Class<?> clazz, String message) throws BytecodeException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
-    assertThat(nativeMethodLoader.load(bNativeFunc(clazz))).isEqualTo(loadingError(clazz, message));
+    assertThat(nativeMethodLoader.load(bInvoke(clazz))).isEqualTo(loadingError(clazz, message));
   }
 
   private String wrongReturnTypeErrorMessage() {
@@ -115,9 +113,9 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var nativeFunc = bNativeFunc(bFuncType(bStringType()), jar, bString(classBinaryName));
-      var resultMethod1 = nativeMethodLoader.load(nativeFunc);
-      var resultMethod2 = nativeMethodLoader.load(nativeFunc);
+      var invoke = bInvoke(bFuncType(bStringType()), jar, bString(classBinaryName));
+      var resultMethod1 = nativeMethodLoader.load(invoke);
+      var resultMethod2 = nativeMethodLoader.load(invoke);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
       verify(methodLoader, times(1)).load(methodSpec);

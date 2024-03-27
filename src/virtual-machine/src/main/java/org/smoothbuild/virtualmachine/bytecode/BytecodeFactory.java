@@ -28,9 +28,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -125,10 +125,10 @@ public class BytecodeFactory {
     return exprDb.newMap(array, mapper);
   }
 
-  public BNativeFunc nativeFunc(
-      BFuncType funcType, BBlob jar, BString classBinaryName, BBool isPure)
+  public BInvoke invoke(
+      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
       throws BytecodeException {
-    return exprDb.newNativeFunc(funcType, jar, classBinaryName, isPure);
+    return exprDb.newInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
   }
 
   public BPick pick(BExpr pickable, BExpr index) throws BytecodeException {

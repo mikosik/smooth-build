@@ -14,7 +14,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class TestingBKind {
   public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();
 
-  public static final List<BType> BASE_CATS_TO_TEST = wrapException(() -> list(
+  public static final List<BType> BASE_KINDS_TO_TEST = wrapException(() -> list(
       CONTEXT.bBlobType(),
       CONTEXT.bBoolType(),
       func(CONTEXT.bBlobType(), CONTEXT.bBoolType()),
@@ -36,7 +36,7 @@ public class TestingBKind {
       array(array(CONTEXT.bStringType())),
       array(array(CONTEXT.bPersonType()))));
 
-  public static final List<BKind> CATS_TO_TEST = ARRAY_CATS_TO_TEST.appendAll(BASE_CATS_TO_TEST);
+  public static final List<BKind> KINDS_TO_TEST = ARRAY_CATS_TO_TEST.appendAll(BASE_KINDS_TO_TEST);
 
   public static final List<BKind> ALL_KINDS_TO_TEST = wrapException(TestingBKind::createAllKinds);
 
@@ -81,10 +81,8 @@ public class TestingBKind {
         CONTEXT.bIfKind(CONTEXT.bStringType()),
         CONTEXT.bMapKind(CONTEXT.bArrayType(CONTEXT.bBlobType())),
         CONTEXT.bMapKind(CONTEXT.bArrayType(CONTEXT.bStringType())),
-        CONTEXT.bNativeFuncKind(CONTEXT.bBlobType()),
-        CONTEXT.bNativeFuncKind(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
-        CONTEXT.bNativeFuncKind(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
-        CONTEXT.bNativeFuncKind(CONTEXT.bStringType()),
+        CONTEXT.bInvokeKind(CONTEXT.bBlobType()),
+        CONTEXT.bInvokeKind(CONTEXT.bStringType()),
         CONTEXT.bLambdaKind(CONTEXT.bBlobType()),
         CONTEXT.bLambdaKind(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
         CONTEXT.bLambdaKind(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),

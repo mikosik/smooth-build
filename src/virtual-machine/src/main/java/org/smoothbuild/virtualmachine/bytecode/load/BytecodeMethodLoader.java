@@ -14,12 +14,12 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 /**
  * Loads java methods as instances of {@link Method}.
- * Method to load is specified by providing {@link BNativeFunc}.
+ * Method to load is specified by providing {@link BInvoke}.
  * This class is thread-safe.
  */
 @Singleton

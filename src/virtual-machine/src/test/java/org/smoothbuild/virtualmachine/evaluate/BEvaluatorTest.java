@@ -15,7 +15,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
@@ -32,7 +31,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.smoothbuild.common.collect.List;
@@ -46,6 +44,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -64,6 +63,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.testing.FakeTaskReporter;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BEvaluatorTest extends TestingVirtualMachine {
@@ -237,48 +237,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           var middleReturnedByOuter = bCall(outerLambda, bInt(17));
           assertThat(evaluate(bCall(middleReturnedByOuter))).isEqualTo(bInt(17));
         }
-
-        @Test
-        public void native_func() throws Exception {
-          var nativeFunc =
-              bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
-          var call = bCall(nativeFunc, bInt(33));
-          var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(eq(nativeFunc)))
-              .thenReturn(right(
-                  BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(bInt(33));
-        }
-
-        @Test
-        public void native_func_passed_as_arg() throws Exception {
-          var nativeFunc =
-              bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
-          var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(eq(nativeFunc)))
-              .thenReturn(right(
-                  BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-
-          var nativeFuncType = nativeFunc.evaluationType();
-          var outerLambda =
-              bLambda(list(nativeFuncType), bCall(bReference(nativeFuncType, 0), bInt(7)));
-          var call = bCall(outerLambda, nativeFunc);
-          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(bInt(7));
-        }
-
-        @Test
-        public void native_func_returned_from_call() throws Exception {
-          var nativeFunc =
-              bNativeFunc(bFuncType(bIntType(), bIntType()), bBlob(77), bString("classBinaryName"));
-          var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(eq(nativeFunc)))
-              .thenReturn(right(
-                  BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-
-          var outerFunc = bLambda(nativeFunc);
-          var call = bCall(bCall(outerFunc), bInt(7));
-          assertThat(evaluate(bEvaluator(nativeMethodLoader), call)).isEqualTo(bInt(7));
-        }
       }
 
       @Test
@@ -297,6 +255,16 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void if_with_false_condition() throws Exception {
         var if_ = bIf(bBool(false), bInt(1), bInt(2));
         assertThat(evaluate(if_)).isEqualTo(bInt(2));
+      }
+
+      @Test
+      public void invoke() throws Exception {
+        var invoke = bInvoke(bIntType(), bBlob(77), bString("classBinaryName"), bTuple(bInt(33)));
+        var nativeMethodLoader = mock(NativeMethodLoader.class);
+        when(nativeMethodLoader.load(eq(invoke)))
+            .thenReturn(right(
+                BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
+        assertThat(evaluate(bEvaluator(nativeMethodLoader), invoke)).isEqualTo(bInt(33));
       }
 
       @Test
@@ -434,9 +402,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       private BCall throwExceptionCall() throws Exception {
-        var funcType = bFuncType(bStringType());
-        var nativeFunc = bNativeFunc(funcType, ThrowException.class);
-        return bCall(nativeFunc);
+        var lambdaType = bFuncType(bStringType());
+        var invoke = bInvoke(lambdaType, ThrowException.class);
+        return bCall(invoke);
       }
 
       public static class ThrowException {
@@ -503,20 +471,16 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             t.bBlob(17),
             t.bBool(true),
             t.bIntIdFunc(),
-            t.bNativeFunc(),
             t.bInt(17),
             t.bString("abc"),
             t.bTuple(t.bInt(17)));
       }
 
       @Test
-      public void report_native_call_as_invoke_task() throws Exception {
-        var func = bReturnAbcNativeFunc();
-        var call = bCall(func);
+      public void report_invoke_as_invoke_task() throws Exception {
+        var invoke = bReturnAbcInvoke();
         assertReport(
-            call,
-            invokeTask(call, func, bTrace(call, func)),
-            computationResult(bString("abc"), EXECUTION));
+            invoke, invokeTask(invoke, bTrace()), computationResult(bString("abc"), EXECUTION));
       }
 
       @Test
@@ -619,8 +583,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       COUNTERS.put(counterB, new AtomicInteger(20));
       COUNTDOWNS.put(countdown, new CountDownLatch(2));
       var expr = bOrder(
-          commandCall(testName, "INC2,COUNT1,WAIT1,GET1"),
-          commandCall(testName, "INC1,COUNT1,WAIT1,GET2"));
+          invokeExecuteCommands(testName, "INC2,COUNT1,WAIT1,GET1"),
+          invokeExecuteCommands(testName, "INC1,COUNT1,WAIT1,GET2"));
       assertThat(evaluate(expr)).isEqualTo(bArray(bString("11"), bString("21")));
     }
 
@@ -631,12 +595,12 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       var counterName = testName + "1";
       COUNTERS.put(counterName, new AtomicInteger());
       var bExpr = bOrder(
-          commandCall(testName, "INC1"),
-          commandCall(testName, "INC1"),
-          commandCall(testName, "INC1"),
-          commandCall(testName, "INC1"));
+          invokeExecuteCommands(testName, "INC1"),
+          invokeExecuteCommands(testName, "INC1"),
+          invokeExecuteCommands(testName, "INC1"),
+          invokeExecuteCommands(testName, "INC1"));
 
-      var taskReporter = mock(TaskReporter.class);
+      var taskReporter = fakeTaskReporter();
       var vm = new BEvaluator(() -> bScheduler(taskReporter, 4), taskReporter);
       assertThat(evaluate(vm, bExpr))
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
@@ -658,22 +622,22 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       COUNTDOWNS.put(countdown1, new CountDownLatch(1));
       COUNTDOWNS.put(countdown2, new CountDownLatch(1));
       var expr = bOrder(
-          commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
-          commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
-          commandCall(testName, "WAIT2,COUNT1,GET2"));
+          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
+          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
+          invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
       var vm = new BEvaluator(() -> bScheduler(2), fakeTaskReporter());
       assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
     }
 
-    private BCall commandCall(String testName, String commands) throws Exception {
-      return commandCall(testName, commands, true);
+    private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
+      return invokeExecuteCommands(testName, commands, true);
     }
 
-    private BCall commandCall(String testName, String commands, boolean isPure) throws Exception {
-      var nativeFunc = bNativeFunc(
-          bFuncType(bStringType(), bStringType(), bStringType()), ExecuteCommands.class, isPure);
-      return bCall(nativeFunc, bString(testName), bString(commands));
+    private BInvoke invokeExecuteCommands(String testName, String commands, boolean isPure)
+        throws Exception {
+      var arguments = bTuple(bString(testName), bString(commands));
+      return bInvoke(bStringType(), ExecuteCommands.class, isPure, arguments);
     }
 
     public static class ExecuteCommands {
@@ -734,15 +698,12 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   }
 
   private static void verifyConstTasksResSource(
-      int size, ResultSource expectedSource, TaskReporter reporter) throws Exception {
-    var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
-    verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
-    var resSources = listOfAll(argCaptor.getAllValues()).map(ComputationResult::source);
-    assertThat(resSources).containsExactlyElementsIn(resSourceList(size, expectedSource));
-  }
-
-  private static Task taskMatcher() {
-    return argThat(a -> a instanceof InvokeTask);
+      int size, ResultSource expectedSource, FakeTaskReporter fakeTaskReporter) {
+    var sources = fakeTaskReporter.getReported().stream()
+        .filter(r -> r.task() instanceof InvokeTask)
+        .map(r -> r.result().source())
+        .toList();
+    assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 
   private static ArrayList<ResultSource> resSourceList(int size, ResultSource expectedSource) {

@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.testing;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.logToString;
 
 import com.google.common.base.Throwables;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -50,6 +49,10 @@ public class FakeTaskReporter implements TaskReporter {
     } catch (BytecodeException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public List<Reported> getReported() {
+    return reports;
   }
 
   private void appendThrowables(StringBuilder builder) {

@@ -149,14 +149,13 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _native_func {
+  class _invoke {
     @Test
-    public void native_func() throws Exception {
-      assertThat(
-              bNativeFunc(bFuncType(bBoolType(), bIntType()), bBlob(1), bString("cbn"), bBool(true))
-                  .hash())
+    public void invoke() throws Exception {
+      assertThat(bInvoke(bBoolType(), bBlob(1), bString("cbn"), bBool(true), bTuple())
+              .hash())
           .isEqualTo(
-              Hash.decode("a86b59d69a244eeb96c059bc97ac7212445c45d37cb6346b27af19b78ecb0e98"));
+              Hash.decode("b153469bbfb56c10dfe6768958e2730ba26eeba558b7c533c5bbb0ad1978d104"));
     }
   }
 
