@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.task;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,38 +23,33 @@ public class TaskHashesCollisionTest extends TestingVirtualMachine {
     addHash(
         list,
         set,
-        new InvokeTask(
-            bCall(),
-            bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("1"), bBool(true)),
-            bTrace()));
+        newInvokeTask(
+            bInvoke(bIntType(), bBlob(1), bString("1"), bBool(true), bTuple()), bTrace()));
     addHash(
         list,
         set,
-        new InvokeTask(
-            bCall(),
-            bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("1"), bBool(false)),
-            bTrace()));
+        newInvokeTask(
+            bInvoke(bIntType(), bBlob(1), bString("1"), bBool(true), bTuple(bInt(1))), bTrace()));
     addHash(
         list,
         set,
-        new InvokeTask(
-            bCall(),
-            bNativeFunc(bFuncType(bIntType()), bBlob(1), bString("2"), bBool(true)),
-            bTrace()));
+        newInvokeTask(
+            bInvoke(bIntType(), bBlob(1), bString("1"), bBool(false), bTuple()), bTrace()));
     addHash(
         list,
         set,
-        new InvokeTask(
-            bCall(),
-            bNativeFunc(bFuncType(bIntType()), bBlob(2), bString("1"), bBool(true)),
-            bTrace()));
+        newInvokeTask(
+            bInvoke(bIntType(), bBlob(1), bString("2"), bBool(true), bTuple()), bTrace()));
     addHash(
         list,
         set,
-        new InvokeTask(
-            bCall(),
-            bNativeFunc(bFuncType(bBoolType()), bBlob(1), bString("1"), bBool(true)),
-            bTrace()));
+        newInvokeTask(
+            bInvoke(bIntType(), bBlob(2), bString("1"), bBool(true), bTuple()), bTrace()));
+    addHash(
+        list,
+        set,
+        newInvokeTask(
+            bInvoke(bBoolType(), bBlob(1), bString("1"), bBool(true), bTuple()), bTrace()));
     addHash(list, set, new OrderTask(bOrder(bIntType()), bTrace()));
     addHash(list, set, new OrderTask(bOrder(bBlobType()), bTrace()));
     addHash(list, set, new PickTask(bPick(), bTrace()));

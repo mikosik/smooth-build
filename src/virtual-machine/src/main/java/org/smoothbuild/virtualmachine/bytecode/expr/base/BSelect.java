@@ -7,7 +7,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberTypeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
@@ -33,7 +33,7 @@ public final class BSelect extends BOperation {
     var selectable = readMemberFromHashChain(hashes, 0);
     var index = readAndCastMemberFromHashChain(hashes, 1, "index", BInt.class);
     if (!(selectable.evaluationType() instanceof BTupleType tupleType)) {
-      throw new DecodeExprWrongNodeClassException(
+      throw new DecodeExprWrongMemberTypeException(
           hash(), kind(), "tuple", BTupleType.class, selectable.evaluationType().getClass());
     }
     int i = index.toJavaBigInteger().intValue();

@@ -143,7 +143,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   private static List<BKind> type_test_data() {
-    return TestingBKind.CATS_TO_TEST;
+    return TestingBKind.KINDS_TO_TEST;
   }
 
   @Test

@@ -8,7 +8,7 @@ public enum KindId {
   ARRAY,
   TUPLE,
   LAMBDA,
-  NATIVE_FUNC,
+  INVOKE,
   ORDER,
   COMBINE,
   SELECT,

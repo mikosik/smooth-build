@@ -38,14 +38,14 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
 
   @Test
   public void invokeTaskHeaderForFuncWithoutMappedName() throws Exception {
-    testHeader(invokeTask(), label("call", "???"));
+    testHeader(invokeTask(), label("invoke", "???"));
   }
 
   @Test
   public void invokeTaskHeaderForFuncWithMappedName() throws Exception {
     var task = invokeTask();
-    var funcHash = task.nativeFunc().hash();
-    testHeader(bsMapping(funcHash, "myFunc"), task, label("call", "myFunc"));
+    var invokeHash = task.invoke().hash();
+    testHeader(bsMapping(invokeHash, "myFunc"), task, label("invoke", "myFunc"));
   }
 
   @Test

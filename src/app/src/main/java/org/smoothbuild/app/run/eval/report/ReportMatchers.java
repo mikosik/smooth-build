@@ -19,14 +19,14 @@ public class ReportMatchers {
   static final ReportMatcher WARNING = logLevelMatcher(Level.WARNING);
   static final ReportMatcher INFO = logLevelMatcher(Level.INFO);
 
-  static final ReportMatcher CALL = labelPrefixMatcher(EVALUATE.append(label("call")));
+  static final ReportMatcher INVOKE = labelPrefixMatcher(EVALUATE.append(label("invoke")));
   static final ReportMatcher COMBINE = labelPrefixMatcher(EVALUATE.append(label("combine")));
   static final ReportMatcher CONST = labelPrefixMatcher(EVALUATE.append(label("const")));
   static final ReportMatcher ORDER = labelPrefixMatcher(EVALUATE.append(label("order")));
   static final ReportMatcher PICK = labelPrefixMatcher(EVALUATE.append(label("pick")));
   static final ReportMatcher SELECT = labelPrefixMatcher(EVALUATE.append(label("select")));
 
-  static final ReportMatcher DEFAULT = or(INFO, CALL);
+  static final ReportMatcher DEFAULT = or(INFO, INVOKE);
 
   private static final ImmutableMap<String, ReportMatcher> MATCHERS_MAP =
       ImmutableMap.<String, ReportMatcher>builder()
@@ -44,7 +44,7 @@ public class ReportMatchers {
           .put("lw", WARNING)
           .put("info", INFO)
           .put("li", INFO)
-          .put("call", CALL)
+          .put("invoke", INVOKE)
           .put("combine", COMBINE)
           .put("const", CONST)
           .put("order", ORDER)

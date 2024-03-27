@@ -22,8 +22,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -77,8 +77,8 @@ public class BKindTest extends TestingVirtualMachine {
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
         args(f -> f.if_(f.int_()), "IF"),
         args(f -> f.map(f.array(f.int_())), "MAP"),
-        args(f -> f.nativeFunc(list(), f.string()), "NATIVE_FUNC"),
-        args(f -> f.nativeFunc(list(f.string()), f.string()), "NATIVE_FUNC"),
+        args(f -> f.invoke(f.string()), "INVOKE"),
+        args(f -> f.invoke(f.int_()), "INVOKE"),
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
@@ -163,43 +163,6 @@ public class BKindTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _native_func {
-    @ParameterizedTest
-    @MethodSource("result_cases")
-    public void result(
-        Function1<BKindDb, BNativeFuncKind, BytecodeException> factoryCall,
-        Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
-        throws Exception {
-      assertThat(execute(factoryCall).type().result()).isEqualTo(execute(expected));
-    }
-
-    public static java.util.List<Arguments> result_cases() {
-      return asList(
-          args(f -> f.nativeFunc(f.funcT(list(), f.int_())), f -> f.int_()),
-          args(f -> f.nativeFunc(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.nativeFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob()));
-    }
-
-    @ParameterizedTest
-    @MethodSource("params_cases")
-    public void params(
-        Function1<BKindDb, BNativeFuncKind, BytecodeException> factoryCall,
-        Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
-        throws Exception {
-      assertThat(execute(factoryCall).type().params()).isEqualTo(execute(expected));
-    }
-
-    public static java.util.List<Arguments> params_cases() {
-      return asList(
-          args(f -> f.nativeFunc(f.funcT(list(), f.int_())), f -> f.tuple()),
-          args(f -> f.nativeFunc(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
-          args(
-              f -> f.nativeFunc(f.funcT(list(f.bool(), f.int_()), f.blob())),
-              f -> f.tuple(f.bool(), f.int_())));
-    }
-  }
-
-  @Nested
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
@@ -265,7 +228,7 @@ public class BKindTest extends TestingVirtualMachine {
         arguments(test.bIfKind(), BIf.class),
         arguments(test.bMapKind(), BMap.class),
         arguments(test.bIntType(), BInt.class),
-        arguments(test.bNativeFuncKind(test.bBoolType(), test.bBlobType()), BNativeFunc.class),
+        arguments(test.bInvokeKind(test.bIntType()), BInvoke.class),
         arguments(test.bPersonType(), BTuple.class),
         arguments(test.bStringType(), BString.class),
         arguments(test.bArrayType(test.bBlobType()), BArray.class),
@@ -307,6 +270,24 @@ public class BKindTest extends TestingVirtualMachine {
 
     @ParameterizedTest
     @MethodSource("types")
+    public void if_(BType type) throws Exception {
+      assertThat(bIfKind(type).evaluationType()).isEqualTo(type);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void invoke(BType type) throws Exception {
+      assertThat(bInvokeKind(type).evaluationType()).isEqualTo(type);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void map(BType type) throws Exception {
+      assertThat(bMapKind(bArrayType(type)).evaluationType()).isEqualTo(bArrayType(type));
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
     public void order(BType type) throws Exception {
       var arrayType = bArrayType(type);
       assertThat(bOrderKind(type).evaluationType()).isEqualTo(arrayType);
@@ -331,7 +312,7 @@ public class BKindTest extends TestingVirtualMachine {
     }
 
     public static List<BKind> types() {
-      return TestingBKind.CATS_TO_TEST;
+      return TestingBKind.KINDS_TO_TEST;
     }
   }
 

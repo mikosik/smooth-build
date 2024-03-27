@@ -10,24 +10,24 @@ import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class ResultHandler implements Consumer1<ComputationResult, BytecodeException> {
   private final SoftTerminationExecutor executor;
-  private final TaskReporter reporter;
+  private final TaskReporter taskReporter;
   private final Consumer<BValue> consumer;
   private final Task task;
 
   public ResultHandler(
       Task task,
       SoftTerminationExecutor executor,
-      TaskReporter reporter,
+      TaskReporter taskReporter,
       Consumer<BValue> consumer) {
     this.task = task;
     this.executor = executor;
-    this.reporter = reporter;
+    this.taskReporter = taskReporter;
     this.consumer = consumer;
   }
 
   @Override
   public void accept(ComputationResult result) throws BytecodeException {
-    reporter.report(task, result);
+    taskReporter.report(task, result);
     if (result.output().value() != null) {
       consumer.accept(result.output().value());
     } else {

@@ -15,8 +15,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
@@ -53,12 +53,12 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.bool(value));
   }
 
-  public BCall call(BExpr callableB, BCombine argsB) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.call(callableB, argsB));
+  public BCall call(BExpr lambda, BCombine arguments) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.call(lambda, arguments));
   }
 
-  public BCombine combine(List<BExpr> elemBs) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.combine(elemBs));
+  public BCombine combine(List<BExpr> elements) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.combine(elements));
   }
 
   public BInt int_(BigInteger value) throws SbTranslatorException {
@@ -69,19 +69,19 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.lambda(type, body));
   }
 
-  public BNativeFunc nativeFunc(
-      BFuncType funcType, BBlob jarB, BString classBinaryNameB, BBool isPureB)
+  public BInvoke invoke(
+      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
       throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.nativeFunc(funcType, jarB, classBinaryNameB, isPureB));
+        () -> bytecodeFactory.invoke(evaluationType, jar, classBinaryName, isPure, arguments));
   }
 
-  public BOrder order(BArrayType arrayType, List<BExpr> elemsB) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.order(arrayType, elemsB));
+  public BOrder order(BArrayType arrayType, List<BExpr> elements) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.order(arrayType, elements));
   }
 
-  public BSelect select(BExpr selectableB, BInt indexB) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.select(selectableB, indexB));
+  public BSelect select(BExpr selectable, BInt index) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.select(selectable, index));
   }
 
   public BString string(String string) throws SbTranslatorException {
@@ -99,8 +99,8 @@ class ChainingBytecodeFactory {
 
   // types
 
-  public BArrayType arrayType(BType elemT) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.arrayType(elemT));
+  public BArrayType arrayType(BType elementType) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.arrayType(elementType));
   }
 
   public BBlobType blobType() throws SbTranslatorException {
@@ -111,12 +111,14 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(bytecodeFactory::boolType);
   }
 
-  public BFuncType funcType(List<BType> paramTs, BType resultT) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.funcType(paramTs, resultT));
+  public BFuncType funcType(List<BType> paramTypes, BType resultType) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(
+        () -> bytecodeFactory.funcType(paramTypes, resultType));
   }
 
-  public BFuncType funcType(BTupleType paramTs, BType resultT) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.funcType(paramTs, resultT));
+  public BFuncType funcType(BTupleType paramTypes, BType resultType) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(
+        () -> bytecodeFactory.funcType(paramTypes, resultType));
   }
 
   public BIntType intType() throws SbTranslatorException {
@@ -127,12 +129,12 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(bytecodeFactory::stringType);
   }
 
-  public BTupleType tupleType(BType... itemTs) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.tupleType(itemTs));
+  public BTupleType tupleType(BType... itemTypes) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.tupleType(itemTypes));
   }
 
-  public BTupleType tupleType(List<BType> itemTs) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.tupleType(itemTs));
+  public BTupleType tupleType(List<BType> itemTypes) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.tupleType(itemTypes));
   }
 
   private static <R> R invokeTranslatingBytecodeException(Function0<R, BytecodeException> function0)

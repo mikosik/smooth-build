@@ -55,9 +55,9 @@ public class BuildCommand extends ProjectCommand {
             lw, warning        - contains a log with at least warning level
             li, info           - contains any log
 
-            call               - evaluates function call
             combine            - evaluates tuple creation
             const              - evaluates compile time constant
+            invoke             - evaluates native function call
             order              - evaluates array creation
             pick               - evaluates array element picking
             select             - evaluates field selection

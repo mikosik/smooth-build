@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
@@ -20,9 +21,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -84,10 +85,32 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BNativeFunc newNativeFunc(BFuncType type, BBlob jar, BString classBinaryName, BBool isPure)
+  public BInvoke newInvoke(
+      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
       throws BytecodeException {
-    var kind = kindDb.nativeFunc(type);
-    var dataHash = writeChain(jar.hash(), classBinaryName.hash(), isPure.hash());
+    var jarEvaluationType = jar.evaluationType();
+    if (!jarEvaluationType.equals(kindDb.blob())) {
+      throw new IllegalArgumentException("`jar.evaluationType()` should be "
+          + kindDb.blob().q() + " but is " + jarEvaluationType.q() + ".");
+    }
+    var classBinaryNameEvaluationType = classBinaryName.evaluationType();
+    if (!classBinaryNameEvaluationType.equals(kindDb.string())) {
+      throw new IllegalArgumentException("`classBinaryName.evaluationType()` should be "
+          + kindDb.string().q() + " but is " + classBinaryNameEvaluationType.q() + ".");
+    }
+    var isPureEvaluationType = isPure.evaluationType();
+    if (!isPureEvaluationType.equals(kindDb.bool())) {
+      throw new IllegalArgumentException("`isPure.evaluationType()` should be "
+          + kindDb.bool().q() + " but is " + isPureEvaluationType.q() + ".");
+    }
+    var argumentsEvaluationType = arguments.evaluationType();
+    if (!(argumentsEvaluationType instanceof BTupleType)) {
+      throw new IllegalArgumentException("`arguments.evaluationType()` should be `BTupleType` but "
+          + "is " + q(argumentsEvaluationType.getClass().getSimpleName()) + ".");
+    }
+
+    var kind = kindDb.invoke(evaluationType);
+    var dataHash = writeChain(jar.hash(), classBinaryName.hash(), isPure.hash(), arguments.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
@@ -136,7 +159,7 @@ public class BExprDb {
     var conditionType = condition.evaluationType();
     if (!conditionType.equals(kindDb.bool())) {
       throw new IllegalArgumentException(
-          "`condition.evaluationType()` should be `Bool` but is " + conditionType + ".");
+          "`condition.evaluationType()` should be `Bool` but is " + conditionType.q() + ".");
     }
     var thenType = then_.evaluationType();
     var elseType = else_.evaluationType();

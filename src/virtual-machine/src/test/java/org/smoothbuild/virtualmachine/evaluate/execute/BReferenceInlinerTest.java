@@ -64,8 +64,29 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
+    public void if_() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bIf(bBool(), bInt(), bInt()));
+    }
+
+    @Test
     public void int_() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bInt());
+    }
+
+    @Test
+    public void invoke() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(
+          r -> bInvoke(bIntType(), bBlob(), bString(), bBool(), bTuple()));
+    }
+
+    @Test
+    public void lambda_without_references() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bLambda(bInt()));
+    }
+
+    @Test
+    public void map() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bMap(bArray(bInt()), bIntIdFunc()));
     }
 
     @Test
@@ -76,29 +97,6 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     @Test
     public void tuple() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bTuple(bInt()));
-    }
-
-    // callables
-
-    @Test
-    public void lambda_without_references() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bLambda(bInt()));
-    }
-
-    @Test
-    public void if_() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bIf(bBool(), bInt(), bInt()));
-    }
-
-    @Test
-    public void map() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bMap(bArray(bInt()), bIntIdFunc()));
-    }
-
-    @Test
-    public void native_func() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(
-          r -> bNativeFunc(bFuncType(bIntType(), bBlobType())));
     }
   }
 
@@ -158,6 +156,42 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     @Test
     public void if_else() throws Exception {
       assertReferenceInliningReplacesReference(r -> bIf(bBool(), bInt(33), r));
+    }
+
+    @Test
+    public void invoke_jar() throws Exception {
+      assertReferenceInliningReplacesReference(
+          2,
+          bBlob(2),
+          list(bBlob(0), bBlob(1), bBlob(2)),
+          r -> bInvoke(bIntType(), r, bString(), bBool(), bTuple()));
+    }
+
+    @Test
+    public void invoke_class_binary_name() throws Exception {
+      assertReferenceInliningReplacesReference(
+          2,
+          bString("2"),
+          list(bString("0"), bString("1"), bString("2")),
+          r -> bInvoke(bIntType(), bBlob(), r, bBool(), bTuple()));
+    }
+
+    @Test
+    public void invoke_is_pure() throws Exception {
+      assertReferenceInliningReplacesReference(
+          2,
+          bBool(true),
+          list(bBool(false), bBool(false), bBool(true)),
+          r -> bInvoke(bIntType(), bBlob(), bString(), r, bTuple()));
+    }
+
+    @Test
+    public void invoke_arguments() throws Exception {
+      assertReferenceInliningReplacesReference(
+          2,
+          bTuple(bInt(2)),
+          list(bTuple(), bTuple(), bTuple(bInt(2))),
+          r -> bInvoke(bIntType(), bBlob(), bString(), bBool(), r));
     }
 
     @Test

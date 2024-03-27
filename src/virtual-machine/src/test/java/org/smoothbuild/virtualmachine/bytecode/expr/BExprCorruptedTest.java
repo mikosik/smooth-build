@@ -34,9 +34,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -820,103 +820,155 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
-       * Method in HashedDb.
+       * INVOKE in HashedDb.
        */
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+      var kind = bInvokeKind(bIntType());
       var jar = bBlob();
       var classBinaryName = bString();
       var isPure = bBool(true);
-      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var arguments = bTuple(bInt());
+      var hash =
+          hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
 
-      assertThat(((BNativeFunc) exprDb().get(hash)).jar()).isEqualTo(jar);
-      assertThat(((BNativeFunc) exprDb().get(hash)).classBinaryName()).isEqualTo(classBinaryName);
-      assertThat(((BNativeFunc) exprDb().get(hash)).isPure()).isEqualTo(isPure);
+      var invokeSubExprs = ((BInvoke) exprDb().get(hash)).subExprs();
+      assertThat(invokeSubExprs.jar()).isEqualTo(jar);
+      assertThat(invokeSubExprs.classBinaryName()).isEqualTo(classBinaryName);
+      assertThat(invokeSubExprs.isPure()).isEqualTo(isPure);
+      assertThat(invokeSubExprs.arguments()).isEqualTo(arguments);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(bFuncType(bIntType(), bStringType()));
+      obj_root_without_data_hash(bIntType());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+      var kind = bInvokeKind(bIntType());
       var jar = bBlob();
       var classBinaryName = bString();
       var isPure = bBool(true);
-      var dataHash = hash(hash(jar), hash(classBinaryName), hash(isPure));
+      var arguments = bTuple(bInt(3));
+      var dataHash = hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments));
       obj_root_with_two_data_hashes(
-          kind, dataHash, (Hash hash) -> ((BNativeFunc) exprDb().get(hash)).classBinaryName());
+          kind, dataHash, (Hash hash) -> ((BInvoke) exprDb().get(hash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+      var kind = bInvokeKind(bIntType());
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          kind, (Hash hash) -> ((BNativeFunc) exprDb().get(hash)).classBinaryName());
+          kind, (Hash hash) -> ((BInvoke) exprDb().get(hash)).classBinaryName());
+    }
+
+    @Test
+    public void data_is_chain_with_one_element() throws Exception {
+      var kind = bInvokeKind(bIntType());
+      var jar = bBlob();
+      var dataHash = hash(hash(jar));
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 4, 1));
     }
 
     @Test
     public void data_is_chain_with_two_elements() throws Exception {
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+      var kind = bInvokeKind(bIntType());
       var jar = bBlob();
       var classBinaryName = bString();
       var dataHash = hash(hash(jar), hash(classBinaryName));
       var hash = hash(hash(kind), dataHash);
 
-      assertCall(() -> ((BNativeFunc) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 3, 2));
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 4, 2));
     }
 
     @Test
-    public void data_is_chain_with_four_elements() throws Exception {
-      var type = bNativeFuncKind(bIntType(), bStringType());
+    public void data_is_chain_with_three_elements() throws Exception {
+      var kind = bInvokeKind(bIntType());
       var jar = bBlob();
       var classBinaryName = bString();
       var isPure = bBool(true);
-      var dataHash = hash(hash(jar), hash(classBinaryName), hash(isPure), hash(isPure));
-      var hash = hash(hash(type), dataHash);
+      var dataHash = hash(hash(jar), hash(classBinaryName), hash(isPure));
+      var hash = hash(hash(kind), dataHash);
 
-      assertCall(() -> ((BNativeFunc) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, type, DATA_PATH, 3, 4));
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 4, 3));
     }
 
     @Test
-    public void jar_file_is_not_blob_value() throws Exception {
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+    public void data_is_chain_with_five_elements() throws Exception {
+      var type = bInvokeKind(bIntType());
+      var jar = bBlob();
+      var classBinaryName = bString();
+      var isPure = bBool(true);
+      var arguments = bTuple(bInt());
+      var dataHash =
+          hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments), hash(arguments));
+      var hash = hash(hash(type), dataHash);
+
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
+          .throwsException(new DecodeExprWrongChainSizeException(hash, type, DATA_PATH, 4, 5));
+    }
+
+    @Test
+    public void jar_file_evaluation_type_is_not_blob() throws Exception {
+      var kind = bInvokeKind(bIntType());
       var jar = bString();
       var classBinaryName = bString();
       var isPure = bBool(true);
-      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
-      assertCall(() -> ((BNativeFunc) exprDb().get(hash)).jar())
-          .throwsException(new DecodeExprWrongNodeClassException(
-              hash, kind, DATA_PATH + "[0]", BBlob.class, BString.class));
+      var arguments = bTuple(bInt());
+      var hash =
+          hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().jar())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "jar", bBlobType(), bStringType()));
     }
 
     @Test
-    public void class_binary_name_is_not_string_value() throws Exception {
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+    public void class_binary_name_evaluation_type_is_not_string() throws Exception {
+      var kind = bInvokeKind(bIntType());
       var jar = bBlob();
       var classBinaryName = bInt();
       var isPure = bBool(true);
-      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var arguments = bTuple(bInt());
+      var hash =
+          hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
 
-      assertCall(() -> ((BNativeFunc) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongNodeClassException(
-              hash, kind, DATA_PATH + "[1]", BString.class, BInt.class));
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().classBinaryName())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "classBinaryName", bStringType(), bIntType()));
     }
 
     @Test
-    public void is_pure_is_not_bool_value() throws Exception {
-      var kind = bNativeFuncKind(bIntType(), bStringType());
+    public void is_pure_evaluation_type_is_not_bool() throws Exception {
+      var kind = bInvokeKind(bIntType());
       var jar = bBlob();
       var classBinaryName = bString();
       var isPure = bString();
-      var hash = hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure)));
+      var arguments = bTuple(bInt());
+      var hash =
+          hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
 
-      assertCall(() -> ((BNativeFunc) exprDb().get(hash)).isPure())
-          .throwsException(new DecodeExprWrongNodeClassException(
-              hash, kind, DATA_PATH + "[2]", BBool.class, BString.class));
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().isPure())
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, kind, "isPure", bBoolType(), bStringType()));
+    }
+
+    @Test
+    public void arguments_evaluation_type_is_not_tuple() throws Exception {
+      var kind = bInvokeKind(bIntType());
+      var jar = bBlob();
+      var classBinaryName = bString();
+      var isPure = bBool();
+      var arguments = bInt();
+      var hash =
+          hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
+
+      assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().arguments())
+          .throwsException(new DecodeExprWrongMemberTypeException(
+              hash, kind, "arguments", BTupleType.class, BIntType.class));
     }
   }
 
@@ -1181,7 +1233,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(expr), hash(index)));
 
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeClassException(
+          .throwsException(new DecodeExprWrongMemberTypeException(
               hash, type, "tuple", BTupleType.class, BIntType.class));
     }
 

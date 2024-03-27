@@ -7,36 +7,40 @@ import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class InvokeTask extends Task {
-  private final BNativeFunc nativeFunc;
+  public InvokeTask(BInvoke invoke, BTrace trace, Purity purity) {
+    super(invoke, trace, purity);
+  }
 
-  public InvokeTask(BCall call, BNativeFunc nativeFunc, BTrace trace) throws BytecodeException {
-    super(call, trace, nativeFunc.isPure().toJavaBoolean() ? PURE : IMPURE);
-    this.nativeFunc = nativeFunc;
+  public static InvokeTask newInvokeTask(BInvoke invoke, BTrace trace) throws BytecodeException {
+    return new InvokeTask(invoke, trace, invoke.isPure().toJavaBoolean() ? PURE : IMPURE);
+  }
+
+  public BInvoke invoke() {
+    return ((BInvoke) expr());
   }
 
   @Override
   public Output run(BTuple input, Container container) throws BytecodeException {
     return container
         .nativeMethodLoader()
-        .load(nativeFunc)
-        .mapRight(m -> invokeMethod(m, input, container))
+        .load(((BInvoke) expr()))
+        .mapRight(m -> invokeMethod(m, input.get(3), container))
         .ifLeft(left -> container.log().fatal(left))
         .rightOrGet(() -> new Output(null, container.messages()));
   }
 
-  private Output invokeMethod(Method method, BTuple args, Container container)
+  private Output invokeMethod(Method method, BValue arguments, Container container)
       throws BytecodeException {
     BValue result = null;
     try {
-      result = (BValue) method.invoke(null, new Object[] {container, args});
+      result = (BValue) method.invoke(null, new Object[] {container, arguments});
     } catch (IllegalAccessException e) {
       reportExceptionAsFatal(container, "Cannot invoke native method", e);
     } catch (InvocationTargetException e) {
@@ -77,9 +81,5 @@ public final class InvokeTask extends Task {
   private void logFaultyImplementation(Container container, String message)
       throws BytecodeException {
     container.log().fatal("Faulty native implementation: " + message);
-  }
-
-  public BNativeFunc nativeFunc() {
-    return nativeFunc;
   }
 }

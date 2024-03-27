@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
+import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
 import jakarta.inject.Provider;
 import java.io.IOException;
@@ -20,10 +21,9 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
@@ -163,7 +163,7 @@ public class TestingVirtualMachine extends TestingBytecode {
     return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
   }
 
-  public TaskReporter fakeTaskReporter() {
+  public FakeTaskReporter fakeTaskReporter() {
     if (fakeTaskReporter == null) {
       fakeTaskReporter = new FakeTaskReporter();
     }
@@ -299,16 +299,15 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public InvokeTask invokeTask() throws BytecodeException {
-    return invokeTask(bCall(), bNativeFunc(), bTrace());
+    return invokeTask(bInvoke(), bTrace());
   }
 
-  public InvokeTask invokeTask(BCall call, BNativeFunc nativeFunc) throws BytecodeException {
-    return invokeTask(call, nativeFunc, null);
+  public InvokeTask invokeTask(BInvoke invoke) throws BytecodeException {
+    return invokeTask(invoke, null);
   }
 
-  public InvokeTask invokeTask(BCall call, BNativeFunc nativeFunc, BTrace trace)
-      throws BytecodeException {
-    return new InvokeTask(call, nativeFunc, trace);
+  public InvokeTask invokeTask(BInvoke invoke, BTrace trace) throws BytecodeException {
+    return newInvokeTask(invoke, trace);
   }
 
   public CombineTask combineTask() throws BytecodeException {

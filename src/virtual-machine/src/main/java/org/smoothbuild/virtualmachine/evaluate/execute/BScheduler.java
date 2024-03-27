@@ -4,11 +4,11 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
 import jakarta.inject.Inject;
-import java.util.function.BiFunction;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.function.Consumer1;
+import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -16,12 +16,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.SubExprsB;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BNativeFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOperation;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
@@ -87,7 +86,7 @@ public class BScheduler {
 
   private void scheduleJobTasksEvaluation(Job job) throws BytecodeException {
     switch (job.expr()) {
-      case BCall call -> new CallScheduler(job, call).scheduleCall();
+      case BCall call -> scheduleApply(job, call);
       case BCombine combine -> scheduleOperationTask(job, combine, CombineTask::new);
       case BIf if_ -> scheduleIfOperation(job, if_);
       case BMap map -> scheduleMapOperation(job, map);
@@ -97,68 +96,27 @@ public class BScheduler {
       case BPick pick -> scheduleOperationTask(job, pick, PickTask::new);
       case BReference reference -> scheduleVarB(job, reference);
       case BSelect select -> scheduleOperationTask(job, select, SelectTask::new);
+      case BInvoke bInvoke -> scheduleOperationTask(job, bInvoke, InvokeTask::newInvokeTask);
     }
   }
 
-  /**
-   * Helper class that stores job and call so they do not have to be passed to every method
-   * that deals with call handling.
-   */
-  private class CallScheduler {
-    private final Job callJob;
-    private final BCall call;
+  // Apply operation
 
-    private CallScheduler(Job callJob, BCall call) {
-      this.callJob = callJob;
-      this.call = call;
-    }
-
-    public void scheduleCall() throws BytecodeException {
-      var funcExpr = call.subExprs().func();
-      var funcJob = newJob(funcExpr, callJob);
-      scheduleJobEvaluation(funcJob, this::onFuncEvaluated);
-    }
-
-    private void onFuncEvaluated(BValue funcB) throws BytecodeException {
-      switch ((BFunc) funcB) {
-        case BLambda lambda -> handleLambda(lambda);
-        case BNativeFunc nativeFunc -> handleNativeFunc(nativeFunc);
-      }
-    }
-
-    // functions with body
-
-    private void handleLambda(BLambda lambda) throws BytecodeException {
-      var bodyEnvironmentJobs = argJobs().appendAll(callJob.environment());
-      var bodyTrace = callTrace(lambda);
-      var bodyJob = newJob(lambda.body(), bodyEnvironmentJobs, bodyTrace);
-      scheduleJobEvaluation(bodyJob, callJob.promisedValue());
-    }
-
-    // handling NativeFunc
-
-    private void handleNativeFunc(BNativeFunc nativeFunc) throws BytecodeException {
-      var trace = callTrace(nativeFunc);
-      var task = new InvokeTask(call, nativeFunc, trace);
-      var subExprJobs = argJobs();
-      subExprJobs.forEach(BScheduler.this::scheduleJobEvaluation);
-      scheduleJobTask(callJob, task, subExprJobs);
-    }
-
-    // helpers
-
-    private List<Job> argJobs() throws BytecodeException {
-      return args().map(e -> newJob(e, callJob));
-    }
-
-    private BTrace callTrace(BFunc func) {
-      return new BTrace(call.hash(), func.hash(), callJob.trace());
-    }
-
-    private List<BExpr> args() throws BytecodeException {
-      return call.subExprs().args().subExprs().items();
-    }
+  public void scheduleApply(Job applyJob, BCall apply) throws BytecodeException {
+    var lambdaJob = newJob(apply.subExprs().func(), applyJob);
+    scheduleJobEvaluation(lambdaJob, lambda -> handleLambda((BLambda) lambda, applyJob, apply));
   }
+
+  private void handleLambda(BLambda lambda, Job callJob, BCall call) throws BytecodeException {
+    var arguments = call.subExprs().args().subExprs().items();
+    var argumentJobs = arguments.map(e -> newJob(e, callJob));
+    var bodyEnvironmentJobs = argumentJobs.appendAll(callJob.environment());
+    var bodyTrace = new BTrace(call.hash(), lambda.hash(), callJob.trace());
+    var bodyJob = newJob(lambda.body(), bodyEnvironmentJobs, bodyTrace);
+    scheduleJobEvaluation(bodyJob, callJob.promisedValue());
+  }
+
+  // Const task
 
   private void scheduleConstTask(Job job, BValue value) {
     var constTask = new ConstTask(value, job.trace());
@@ -204,10 +162,9 @@ public class BScheduler {
     return bytecodeFactory.combine(list(value));
   }
 
-  // others
-
   private <T extends BOperation> void scheduleOperationTask(
-      Job job, T operation, BiFunction<T, BTrace, Task> taskCreator) throws BytecodeException {
+      Job job, T operation, Function2<T, BTrace, Task, BytecodeException> taskCreator)
+      throws BytecodeException {
     var operationTask = taskCreator.apply(operation, job.trace());
     var subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
     subExprJobs.forEach(this::scheduleJobEvaluation);

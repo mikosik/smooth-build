@@ -24,7 +24,7 @@ public abstract sealed class Task
     this.purity = purity;
   }
 
-  public BExpr exprB() {
+  public BExpr expr() {
     return expr;
   }
 
@@ -51,7 +51,7 @@ public abstract sealed class Task
   public boolean equals(Object object) {
     return object instanceof Task that
         && Objects.equals(this.getClass(), that.getClass())
-        && Objects.equals(this.expr, that.exprB())
+        && Objects.equals(this.expr, that.expr())
         && Objects.equals(this.trace, that.trace);
   }
 }
