@@ -53,8 +53,4 @@ public abstract class BKind {
   public String toString() {
     return name();
   }
-
-  public boolean containsData() {
-    return true;
-  }
 }

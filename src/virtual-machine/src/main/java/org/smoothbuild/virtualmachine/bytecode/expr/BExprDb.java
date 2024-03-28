@@ -295,18 +295,11 @@ public class BExprDb {
       throw wrongSizeOfRootChainException(rootHash, rootChainSize);
     }
     var kind = getKindOrChainException(rootHash, hashes.get(0));
-    if (kind.containsData()) {
-      if (rootChainSize != 2) {
-        throw wrongSizeOfRootChainException(rootHash, kind, rootChainSize);
-      }
-      var dataHash = hashes.get(1);
-      return kind.newExpr(new MerkleRoot(rootHash, kind, dataHash), this);
-    } else {
-      if (rootChainSize != 1) {
-        throw wrongSizeOfRootChainException(rootHash, kind, rootChainSize);
-      }
-      return kind.newExpr(new MerkleRoot(rootHash, kind, null), this);
+    if (rootChainSize != 2) {
+      throw wrongSizeOfRootChainException(rootHash, kind, rootChainSize);
     }
+    var dataHash = hashes.get(1);
+    return kind.newExpr(new MerkleRoot(rootHash, kind, dataHash), this);
   }
 
   private BKind getKindOrChainException(Hash rootHash, Hash typeHash)

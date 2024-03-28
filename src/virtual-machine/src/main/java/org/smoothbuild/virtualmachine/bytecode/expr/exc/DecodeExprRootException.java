@@ -20,16 +20,8 @@ public class DecodeExprRootException extends DecodeExprException {
     return new DecodeExprRootException(
         hash,
         "Its root points to hash sequence with " + actualSize
-            + " elements. First element is " + kind.name() + " kind which means "
-            + rootShouldPointToSequence(kind));
-  }
-
-  private static String rootShouldPointToSequence(BKind kind) {
-    if (kind.containsData()) {
-      return "its root should point to sequence of 2 elements.";
-    } else {
-      return "its root should point to sequence of 1 element.";
-    }
+            + " elements. First element is " + kind.name()
+            + " kind which means its root should point to sequence of 2 elements.");
   }
 
   private DecodeExprRootException(Hash hash, String message) {
