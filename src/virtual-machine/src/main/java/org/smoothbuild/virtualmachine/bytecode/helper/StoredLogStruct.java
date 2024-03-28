@@ -44,6 +44,10 @@ public class StoredLogStruct {
     return Level.valueOf(levelAsString(storedLogs));
   }
 
+  public static String logToString(BTuple log) throws BytecodeException {
+    return levelAsString(log) + ": " + message(log);
+  }
+
   public static String levelAsString(BExpr storedLog) throws BytecodeException {
     return storedLogLevel((BTuple) storedLog).toJavaString();
   }

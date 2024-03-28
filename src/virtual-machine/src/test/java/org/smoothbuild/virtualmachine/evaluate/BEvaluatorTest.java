@@ -662,7 +662,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new BEvaluator(() -> bScheduler(2), taskReporter());
+      var vm = new BEvaluator(() -> bScheduler(2), fakeTaskReporter());
       assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
     }
 
@@ -716,7 +716,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   private BValue evaluate(BEvaluator bEvaluator, BExpr expr) {
     var maybeResult = bEvaluator.evaluate(list(expr));
     assertWithMessage(
-            " ==== Console logs ==== \n" + inMemorySystemOut().toString() + "\n ==========\n")
+            " ==== Console logs ==== \n" + fakeTaskReporter().toString() + "\n ==========\n")
         .that(maybeResult.isSome())
         .isTrue();
     var results = maybeResult.get();
