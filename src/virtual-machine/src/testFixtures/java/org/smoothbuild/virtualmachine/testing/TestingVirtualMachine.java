@@ -8,9 +8,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
 
 import jakarta.inject.Provider;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
@@ -66,7 +64,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   private HashedDb hashedDb;
   private Bucket projectBucket;
   private Bucket hashedDbBucket;
-  private ByteArrayOutputStream systemOut;
+  private FakeTaskReporter fakeTaskReporter;
 
   public BEvaluator bEvaluator(TaskReporter taskReporter) {
     return bEvaluator(taskExecutor(taskReporter));
@@ -77,7 +75,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BEvaluator bEvaluator(Provider<BScheduler> schedulerB) {
-    return bEvaluator(schedulerB, taskReporter());
+    return bEvaluator(schedulerB, fakeTaskReporter());
   }
 
   public BEvaluator bEvaluator(Provider<BScheduler> schedulerB, TaskReporter taskReporter) {
@@ -109,7 +107,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BScheduler bScheduler(int threadCount) {
-    return bScheduler(computer(), taskReporter(), threadCount);
+    return bScheduler(computer(), fakeTaskReporter(), threadCount);
   }
 
   public BScheduler bScheduler(TaskReporter reporter, int threadCount) {
@@ -125,11 +123,11 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public TaskExecutor taskExecutor() {
-    return taskExecutor(taskReporter());
+    return taskExecutor(fakeTaskReporter());
   }
 
   public TaskExecutor taskExecutor(NativeMethodLoader nativeMethodLoader) {
-    return taskExecutor(taskReporter(), nativeMethodLoader);
+    return taskExecutor(fakeTaskReporter(), nativeMethodLoader);
   }
 
   public TaskExecutor taskExecutor(TaskReporter taskReporter) {
@@ -165,15 +163,11 @@ public class TestingVirtualMachine extends TestingBytecode {
     return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
   }
 
-  public TaskReporter taskReporter() {
-    return new SystemOutTaskReporter(new PrintWriter(inMemorySystemOut()));
-  }
-
-  public ByteArrayOutputStream inMemorySystemOut() {
-    if (systemOut == null) {
-      systemOut = new ByteArrayOutputStream();
+  public TaskReporter fakeTaskReporter() {
+    if (fakeTaskReporter == null) {
+      fakeTaskReporter = new FakeTaskReporter();
     }
-    return systemOut;
+    return fakeTaskReporter;
   }
 
   public Computer computer() {
