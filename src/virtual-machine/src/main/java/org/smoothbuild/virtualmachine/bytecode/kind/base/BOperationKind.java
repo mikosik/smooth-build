@@ -3,7 +3,16 @@ package org.smoothbuild.virtualmachine.bytecode.kind.base;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 
-public abstract class BOperationKind extends BKind {
+public abstract sealed class BOperationKind extends BKind
+    permits BCallKind,
+        BCombineKind,
+        BIfKind,
+        BInvokeKind,
+        BMapKind,
+        BOrderKind,
+        BPickKind,
+        BReferenceKind,
+        BSelectKind {
   private final BType evaluationType;
 
   protected BOperationKind(

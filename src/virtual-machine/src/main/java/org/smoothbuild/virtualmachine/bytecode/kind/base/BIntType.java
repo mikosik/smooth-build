@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 /**
  * This class is immutable.
  */
-public class BIntType extends BType {
+public final class BIntType extends BType {
   public BIntType(Hash hash) {
     super(hash, BTypeNames.INT, BInt.class);
   }

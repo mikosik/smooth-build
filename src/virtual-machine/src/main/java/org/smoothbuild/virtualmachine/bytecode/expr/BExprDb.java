@@ -187,7 +187,7 @@ public class BExprDb {
       throw new IllegalArgumentException(
           "`array.evaluationType()` must be array type but is " + type.q() + ".");
     }
-    var elementType = arrayType.elem();
+    var elementType = arrayType.element();
     var mapperType = mapper.evaluationType();
     if (!(mapperType instanceof BLambdaType lambdaType)) {
       throw new IllegalArgumentException("`mapper.evaluationType()` must be "
@@ -206,11 +206,11 @@ public class BExprDb {
     return "`(" + elementType.name() + ")->?`";
   }
 
-  public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elems)
+  public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elements)
       throws BytecodeException {
-    validateOrderElements(evaluationType.elem(), elems);
+    validateOrderElements(evaluationType.element(), elements);
     var kind = kindDb.order(evaluationType);
-    var dataHash = writeChain(elems);
+    var dataHash = writeChain(elements);
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
@@ -333,8 +333,8 @@ public class BExprDb {
 
   private BType pickEvaluationType(BExpr pickable) {
     var evaluationType = pickable.evaluationType();
-    if (evaluationType instanceof BArrayType arrayT) {
-      return arrayT.elem();
+    if (evaluationType instanceof BArrayType arrayType) {
+      return arrayType.element();
     } else {
       throw new IllegalArgumentException(
           "pickable.evaluationType() should be `Array` but is " + evaluationType.q() + ".");

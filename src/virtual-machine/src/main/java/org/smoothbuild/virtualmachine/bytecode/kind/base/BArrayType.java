@@ -12,15 +12,15 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
  * This class is immutable.
  */
 public final class BArrayType extends BType {
-  private final BType elem;
+  private final BType element;
 
-  public BArrayType(Hash hash, BType elem) {
-    super(hash, BTypeNames.arrayTypeName(elem), BArray.class);
-    this.elem = requireNonNull(elem);
+  public BArrayType(Hash hash, BType element) {
+    super(hash, BTypeNames.arrayTypeName(element), BArray.class);
+    this.element = requireNonNull(element);
   }
 
-  public BType elem() {
-    return elem;
+  public BType element() {
+    return element;
   }
 
   @Override

@@ -45,8 +45,8 @@ public final class BArray extends BValue {
   }
 
   private <T extends BValue> void assertIsIterableAs(Class<T> clazz) {
-    var elemT = type().elem();
-    if (!clazz.isAssignableFrom(elemT.javaType())) {
+    var elementType = type().element();
+    if (!clazz.isAssignableFrom(elementType.javaType())) {
       throw new IllegalArgumentException(
           kind().name() + " cannot be viewed as Iterable of " + clazz.getCanonicalName() + ".");
     }
@@ -54,12 +54,12 @@ public final class BArray extends BValue {
 
   private List<BValue> instantiateElements() throws BytecodeException {
     var elements = readElements();
-    var expectedElemT = type().elem();
+    var expectedElementType = type().element();
     for (int i = 0; i < elements.size(); i++) {
       var elemT = elements.get(i).type();
-      if (!expectedElemT.equals(elemT)) {
+      if (!expectedElementType.equals(elemT)) {
         throw new DecodeExprWrongNodeTypeException(
-            hash(), kind(), DATA_PATH, i, expectedElemT, elemT);
+            hash(), kind(), DATA_PATH, i, expectedElementType, elemT);
       }
     }
     return elements;

@@ -168,7 +168,7 @@ public class BKindTest extends TestingVirtualMachine {
         throws Exception {
       var elementType = execute(factoryCall);
       var arrayType = kindDb().array(elementType);
-      assertThat(arrayType.elem()).isEqualTo(elementType);
+      assertThat(arrayType.element()).isEqualTo(elementType);
     }
 
     public static java.util.List<Arguments> elemType_test_data() {

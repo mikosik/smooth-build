@@ -36,7 +36,7 @@ public final class BOrder extends BOperation {
 
   public List<BExpr> elements() throws BytecodeException {
     var elements = readDataAsExprChain(BExpr.class);
-    var expectedElementT = evaluationType().elem();
+    var expectedElementT = evaluationType().element();
     for (int i = 0; i < elements.size(); i++) {
       var actualT = elements.get(i).evaluationType();
       if (!expectedElementT.equals(actualT)) {

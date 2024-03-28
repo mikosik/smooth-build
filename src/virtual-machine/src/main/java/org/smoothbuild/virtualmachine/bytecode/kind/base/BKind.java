@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 /**
  * Kind of Bytecode Expression ({@link BExpr}).
  */
-public abstract class BKind {
+public abstract sealed class BKind permits BOperationKind, BType {
   private final Hash hash;
   private final String name;
   private final Class<? extends BExpr> javaType;

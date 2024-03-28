@@ -11,10 +11,10 @@ public class Concat {
     BArray first = (BArray) args.get(0);
     BArray second = (BArray) args.get(1);
 
-    var elementT = first.evaluationType().elem();
+    var elementType = first.evaluationType().element();
     return nativeApi
         .factory()
-        .arrayBuilderWithElements(elementT)
+        .arrayBuilderWithElements(elementType)
         .addAll(first.elements(BValue.class))
         .addAll(second.elements(BValue.class))
         .build();

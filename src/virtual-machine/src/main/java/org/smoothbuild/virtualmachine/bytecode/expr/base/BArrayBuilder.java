@@ -25,11 +25,11 @@ public class BArrayBuilder {
   }
 
   public BArrayBuilder add(BValue elem) {
-    if (!type.elem().equals(elem.type())) {
-      throw new IllegalArgumentException(
-          "Element type must be " + type.elem().q() + " but was " + elem.type().q() + ".");
+    if (!type.element().equals(elem.type())) {
+      throw new IllegalArgumentException("Element type must be "
+          + type.element().q() + " but was " + elem.type().q() + ".");
     }
-    Class<?> required = type.elem().javaType();
+    Class<?> required = type.element().javaType();
     if (!required.isInstance(elem)) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
