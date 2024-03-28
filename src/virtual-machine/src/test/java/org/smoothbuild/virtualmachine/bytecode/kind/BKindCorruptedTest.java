@@ -3,13 +3,12 @@ package org.smoothbuild.virtualmachine.bytecode.kind;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.kind.BKindDb.DATA_PATH;
-import static org.smoothbuild.virtualmachine.bytecode.kind.BKindDb.FUNC_PARAMS_PATH;
+import static org.smoothbuild.virtualmachine.bytecode.kind.BKindDb.LAMBDA_PARAMS_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ARRAY;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
@@ -34,11 +33,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.bytecode.kind.BKindCorruptedTest._composed._abstract_func_kind_test_suite;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
@@ -150,109 +148,58 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     }
 
     @Nested
-    class _expression_func extends _abstract_func_kind_test_suite {
+    class _lambda {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save expression function type in HashedDb.
+         * to save lambda type in HashedDb.
          */
         var specHash = hash(
-            hash(LAMBDA.byteMarker()), hash(bFuncType(bStringType(), bBoolType(), bIntType())));
-        assertThat(specHash)
-            .isEqualTo(bLambdaKind(bStringType(), bBoolType(), bIntType()).hash());
-      }
-
-      @Override
-      protected KindId kindId() {
-        return LAMBDA;
-      }
-    }
-
-    abstract class _abstract_func_kind_test_suite {
-      protected abstract KindId kindId();
-
-      @Test
-      public void without_data() throws Exception {
-        assert_reading_kind_without_data_causes_exc(kindId());
-      }
-
-      @Test
-      public void with_additional_data() throws Exception {
-        assert_reading_kind_with_additional_data_causes_exc(kindId());
-      }
-
-      @Test
-      public void with_func_type_hash_pointing_nowhere() throws Exception {
-        var dataHash = Hash.of(33);
-        var typeHash = hash(hash(kindId().byteMarker()), dataHash);
-        assertCall(() -> kindDb().get(typeHash))
-            .throwsException(new DecodeKindNodeException(typeHash, kindId(), DATA_PATH))
-            .withCause(new DecodeKindException(dataHash));
-      }
-
-      @Test
-      public void with_func_type_being_operation_type() throws Exception {
-        var notFuncType = bReferenceKind(bIntType());
-        var typeHash = hash(hash(kindId().byteMarker()), hash(notFuncType));
-        assertCall(() -> kindDb().get(typeHash))
-            .throwsException(new DecodeKindWrongNodeKindException(
-                typeHash, kindId(), DATA_PATH, BFuncType.class, BReferenceKind.class));
-      }
-    }
-
-    @Nested
-    class _func {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save func type in HashedDb.
-         */
-        var specHash = hash(
-            hash(FUNC.byteMarker()),
+            hash(LAMBDA.byteMarker()),
             hash(hash(bTupleType(bStringType(), bBoolType())), hash(bIntType())));
         assertThat(specHash)
-            .isEqualTo(bFuncType(bStringType(), bBoolType(), bIntType()).hash());
+            .isEqualTo(bLambdaType(bStringType(), bBoolType(), bIntType()).hash());
       }
 
       @Test
       public void without_data() throws Exception {
-        assert_reading_kind_without_data_causes_exc(FUNC);
+        assert_reading_kind_without_data_causes_exc(LAMBDA);
       }
 
       @Test
       public void with_additional_data() throws Exception {
-        assert_reading_kind_with_additional_data_causes_exc(FUNC);
+        assert_reading_kind_with_additional_data_causes_exc(LAMBDA);
       }
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_kind_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(FUNC);
+        assert_reading_kind_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(LAMBDA);
       }
 
       @Test
       public void with_data_not_being_hash_chain() throws Exception {
         var notHashOfChain = hash("abc");
-        var hash = hash(hash(FUNC.byteMarker()), notHashOfChain);
-        assertThatGet(hash).throwsException(new DecodeKindNodeException(hash, FUNC, DATA_PATH));
+        var hash = hash(hash(LAMBDA.byteMarker()), notHashOfChain);
+        assertThatGet(hash).throwsException(new DecodeKindNodeException(hash, LAMBDA, DATA_PATH));
       }
 
       @Test
       public void with_data_having_three_elements() throws Exception {
         var paramTs = bTupleType(bStringType(), bBoolType());
         var resultT = bIntType();
-        var hash = hash(hash(FUNC.byteMarker()), hash(hash(paramTs), hash(resultT), hash(resultT)));
+        var hash =
+            hash(hash(LAMBDA.byteMarker()), hash(hash(paramTs), hash(resultT), hash(resultT)));
         assertThatGet(hash)
-            .throwsException(new DecodeKindWrongChainSizeException(hash, FUNC, DATA_PATH, 2, 3));
+            .throwsException(new DecodeKindWrongChainSizeException(hash, LAMBDA, DATA_PATH, 2, 3));
       }
 
       @Test
       public void with_data_having_one_elements() throws Exception {
         var paramTs = bTupleType(bStringType(), bBoolType());
-        var hash = hash(hash(FUNC.byteMarker()), hash(hash(paramTs)));
+        var hash = hash(hash(LAMBDA.byteMarker()), hash(hash(paramTs)));
         assertThatGet(hash)
-            .throwsException(new DecodeKindWrongChainSizeException(hash, FUNC, DATA_PATH, 2, 1));
+            .throwsException(new DecodeKindWrongChainSizeException(hash, LAMBDA, DATA_PATH, 2, 1));
       }
 
       @ParameterizedTest
@@ -260,9 +207,9 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       public void with_data_chain_size_different_than_multiple_of_hash_size(int byteCount)
           throws Exception {
         var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
-        var typeHash = hash(hash(FUNC.byteMarker()), notHashOfChain);
-        assertCall(() -> ((BFuncType) kindDb().get(typeHash)).result())
-            .throwsException(new DecodeKindNodeException(typeHash, FUNC, DATA_PATH))
+        var typeHash = hash(hash(LAMBDA.byteMarker()), notHashOfChain);
+        assertCall(() -> ((BLambdaType) kindDb().get(typeHash)).result())
+            .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, DATA_PATH))
             .withCause(
                 new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
       }
@@ -271,61 +218,64 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       public void with_result_pointing_nowhere() throws Exception {
         var paramTypes = bTupleType(bStringType(), bBoolType());
         var nowhere = Hash.of(33);
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramTypes), nowhere));
+        var typeHash = hash(hash(LAMBDA.byteMarker()), hash(hash(paramTypes), nowhere));
         assertCall(() -> kindDb().get(typeHash))
-            .throwsException(new DecodeKindNodeException(typeHash, FUNC, BKindDb.FUNC_RES_PATH))
+            .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH))
             .withCause(new DecodeKindException(nowhere));
       }
 
       @Test
       public void with_result_being_operation_type() throws Exception {
         var paramType = bTupleType(bStringType(), bBoolType());
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
+        var typeHash =
+            hash(hash(LAMBDA.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
-                typeHash, FUNC, BKindDb.FUNC_RES_PATH, BType.class, BReferenceKind.class));
+                typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH, BType.class, BReferenceKind.class));
       }
 
       @Test
       public void with_result_type_corrupted() throws Exception {
         var paramTypes = bTupleType(bStringType(), bBoolType());
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(paramTypes), corruptedArrayTHash()));
+        var typeHash =
+            hash(hash(LAMBDA.byteMarker()), hash(hash(paramTypes), corruptedArrayTHash()));
         assertCall(() -> kindDb().get(typeHash))
-            .throwsException(new DecodeKindNodeException(typeHash, FUNC, BKindDb.FUNC_RES_PATH))
+            .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH))
             .withCause(corruptedArrayTypeExc());
       }
 
       @Test
       public void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(nowhere, hash(bIntType())));
+        var typeHash = hash(hash(LAMBDA.byteMarker()), hash(nowhere, hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
-            .throwsException(new DecodeKindNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
+            .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
             .withCause(new DecodeKindException(nowhere));
       }
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(hash(bStringType()), hash(bIntType())));
+        var typeHash = hash(hash(LAMBDA.byteMarker()), hash(hash(bStringType()), hash(bIntType())));
         assertThatGet(typeHash)
             .throwsException(new DecodeKindWrongNodeKindException(
-                typeHash, FUNC, FUNC_PARAMS_PATH, BTupleType.class, BStringType.class));
+                typeHash, LAMBDA, LAMBDA_PARAMS_PATH, BTupleType.class, BStringType.class));
       }
 
       @Test
       public void with_params_being_operation_type() throws Exception {
         var typeHash =
-            hash(hash(FUNC.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
+            hash(hash(LAMBDA.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
-                typeHash, FUNC, FUNC_PARAMS_PATH, BType.class, BReferenceKind.class));
+                typeHash, LAMBDA, LAMBDA_PARAMS_PATH, BType.class, BReferenceKind.class));
       }
 
       @Test
       public void with_params_type_corrupted() throws Exception {
-        var typeHash = hash(hash(FUNC.byteMarker()), hash(corruptedArrayTHash(), hash(bIntType())));
+        var typeHash =
+            hash(hash(LAMBDA.byteMarker()), hash(corruptedArrayTHash(), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
-            .throwsException(new DecodeKindNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
+            .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
       }
     }

@@ -176,7 +176,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         public void poly_expression_function() throws Exception {
           var funcS = idSFunc();
           var instantiateS = sInstantiate(list(sIntType()), funcS);
-          var lambdaB = bLambda(bFuncType(bIntType(), bIntType()), bReference(bIntType(), 0));
+          var lambdaB = bLambda(bLambdaType(bIntType(), bIntType()), bReference(bIntType(), 0));
           assertTranslation(bindings(funcS), instantiateS, lambdaB);
         }
 
@@ -192,10 +192,10 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var wrapFuncS = TestingSExpression.sFunc(b, "wrap", nlist(sItem(b, "p")), bodyS);
           var wrapMonoFuncS = sInstantiate(list(sIntType()), wrapFuncS);
 
-          var idFuncB = bLambda(bFuncType(bIntType(), bIntType()), bReference(bIntType(), 0));
-          var wrapFuncB =
-              bLambda(bFuncType(bIntType(), bIntType()), bCall(idFuncB, bReference(bIntType(), 0)));
-          assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, wrapFuncB);
+          var bIdLambda = bLambda(bLambdaType(bIntType(), bIntType()), bReference(bIntType(), 0));
+          var bWrapLambda = bLambda(
+              bLambdaType(bIntType(), bIntType()), bCall(bIdLambda, bReference(bIntType(), 0)));
+          assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, bWrapLambda);
         }
 
         @Test
@@ -313,7 +313,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
             TestingSExpression.sFunc("myFunc", nlist(sItem(sIntType(), "p")), monoLambdaS);
 
         var bodyB = bLambda(bReference(bIntType(), 0));
-        var lambdaB = bLambda(bFuncType(bIntType(), bFuncType(bIntType())), bodyB);
+        var lambdaB = bLambda(bLambdaType(bIntType(), bLambdaType(bIntType())), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
       }
@@ -390,7 +390,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var instantiateS = sInstantiate(list(sIntType()), funcS);
 
         var bodyB = bLambda(bReference(bIntType(), 0));
-        var lambdaB = bLambda(bFuncType(bIntType(), bFuncType(bIntType())), bodyB);
+        var lambdaB = bLambda(bLambdaType(bIntType(), bLambdaType(bIntType())), bodyB);
 
         assertTranslation(bindings(funcS), instantiateS, lambdaB);
       }
@@ -710,7 +710,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       throws Exception {
     var call = ((BCall) sbTranslator.translateExpr(sExpr));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
-    var called = call.subExprs().func();
+    var called = call.subExprs().lambda();
     assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
   }
 

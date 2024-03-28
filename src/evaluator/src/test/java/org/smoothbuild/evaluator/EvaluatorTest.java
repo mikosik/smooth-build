@@ -308,7 +308,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               TestingSExpression.sConstructor(
                   sStructType("MyStruct", nlist(sSig(sIntType(), "field")))),
               bLambda(
-                  bFuncType(bIntType(), bTupleType(bIntType())),
+                  bLambdaType(bIntType(), bTupleType(bIntType())),
                   bCombine(bReference(bIntType(), 0))));
         }
       }

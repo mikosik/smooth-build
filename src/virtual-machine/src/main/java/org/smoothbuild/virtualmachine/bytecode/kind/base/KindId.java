@@ -17,7 +17,6 @@ public enum KindId {
   IF,
   REFERENCE,
   MAP,
-  FUNC,
   ;
 
   public byte byteMarker() {

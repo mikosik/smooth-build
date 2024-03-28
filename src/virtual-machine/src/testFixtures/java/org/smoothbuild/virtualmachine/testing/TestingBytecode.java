@@ -39,11 +39,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
@@ -87,41 +86,25 @@ public abstract class TestingBytecode {
     return bytecodeF().fileType();
   }
 
-  public BLambdaKind bLambdaKind() throws BytecodeException {
-    return bLambdaKind(bBlobType(), bStringType(), bIntType());
+  public BLambdaType bLambdaType() throws BytecodeException {
+    return bLambdaType(bBlobType(), bStringType(), bIntType());
   }
 
-  public BLambdaKind bLambdaKind(BType resultT) throws BytecodeException {
-    return kindDb().lambda(bFuncType(resultT));
+  public BLambdaType bLambdaType(BType resultT) throws BytecodeException {
+    return bLambdaType(list(), resultT);
   }
 
-  public BLambdaKind bLambdaKind(BType param, BType resultT) throws BytecodeException {
-    return kindDb().lambda(bFuncType(param, resultT));
+  public BLambdaType bLambdaType(BType param1, BType resultT) throws BytecodeException {
+    return bLambdaType(list(param1), resultT);
   }
 
-  public BLambdaKind bLambdaKind(BType param1, BType param2, BType resultT)
+  public BLambdaType bLambdaType(BType param1, BType param2, BType resultT)
       throws BytecodeException {
-    return kindDb().lambda(bFuncType(param1, param2, resultT));
+    return bLambdaType(list(param1, param2), resultT);
   }
 
-  public BFuncType bFuncType() throws BytecodeException {
-    return bFuncType(bBlobType(), bStringType(), bIntType());
-  }
-
-  public BFuncType bFuncType(BType resultT) throws BytecodeException {
-    return bFuncType(list(), resultT);
-  }
-
-  public BFuncType bFuncType(BType param1, BType resultT) throws BytecodeException {
-    return bFuncType(list(param1), resultT);
-  }
-
-  public BFuncType bFuncType(BType param1, BType param2, BType resultT) throws BytecodeException {
-    return bFuncType(list(param1, param2), resultT);
-  }
-
-  public BFuncType bFuncType(List<BType> paramTs, BType resultT) throws BytecodeException {
-    return kindDb().funcT(paramTs, resultT);
+  public BLambdaType bLambdaType(List<BType> paramTs, BType resultT) throws BytecodeException {
+    return kindDb().lambda(paramTs, resultT);
   }
 
   public BIntType bIntType() throws BytecodeException {
@@ -320,11 +303,11 @@ public abstract class TestingBytecode {
   }
 
   public BLambda bLambda(List<BType> paramTs, BExpr body) throws BytecodeException {
-    var funcTB = bFuncType(paramTs, body.evaluationType());
+    var funcTB = bLambdaType(paramTs, body.evaluationType());
     return bLambda(funcTB, body);
   }
 
-  public BLambda bLambda(BFuncType type, BExpr body) throws BytecodeException {
+  public BLambda bLambda(BLambdaType type, BExpr body) throws BytecodeException {
     return bytecodeF().lambda(type, body);
   }
 

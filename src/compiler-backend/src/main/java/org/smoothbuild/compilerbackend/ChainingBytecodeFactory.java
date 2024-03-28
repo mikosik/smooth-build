@@ -26,8 +26,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -65,7 +65,7 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.int_(value));
   }
 
-  public BLambda lambda(BFuncType type, BExpr body) throws SbTranslatorException {
+  public BLambda lambda(BLambdaType type, BExpr body) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.lambda(type, body));
   }
 
@@ -111,14 +111,16 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(bytecodeFactory::boolType);
   }
 
-  public BFuncType funcType(List<BType> paramTypes, BType resultType) throws SbTranslatorException {
+  public BLambdaType funcType(List<BType> paramTypes, BType resultType)
+      throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.funcType(paramTypes, resultType));
+        () -> bytecodeFactory.lambdaType(paramTypes, resultType));
   }
 
-  public BFuncType funcType(BTupleType paramTypes, BType resultType) throws SbTranslatorException {
+  public BLambdaType funcType(BTupleType paramTypes, BType resultType)
+      throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.funcType(paramTypes, resultType));
+        () -> bytecodeFactory.lambdaType(paramTypes, resultType));
   }
 
   public BIntType intType() throws SbTranslatorException {

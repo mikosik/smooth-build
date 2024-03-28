@@ -1,11 +1,13 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
 
 /**
  * References bound value using De Bruijn indexing with zero-based numbering.
@@ -16,6 +18,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 public final class BReference extends BOperation {
   public BReference(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
+    checkArgument(merkleRoot.kind() instanceof BReferenceKind);
   }
 
   @Override

@@ -19,10 +19,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BFunc;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
@@ -71,10 +71,8 @@ public class BKindTest extends TestingVirtualMachine {
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
-        args(f -> f.lambda(list(), f.string()), "LAMBDA"),
-        args(f -> f.lambda(list(f.string()), f.string()), "LAMBDA"),
-        args(f -> f.funcT(list(), f.string()), "()->String"),
-        args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
+        args(f -> f.lambda(list(), f.string()), "()->String"),
+        args(f -> f.lambda(list(f.string()), f.int_()), "(String)->Int"),
         args(f -> f.if_(f.int_()), "IF"),
         args(f -> f.map(f.array(f.int_())), "MAP"),
         args(f -> f.invoke(f.string()), "INVOKE"),
@@ -95,7 +93,7 @@ public class BKindTest extends TestingVirtualMachine {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function1<BKindDb, BFuncType, BytecodeException> factoryCall,
+        Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
         Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
         throws Exception {
       assertThat(execute(factoryCall).result()).isEqualTo(execute(expected));
@@ -103,15 +101,15 @@ public class BKindTest extends TestingVirtualMachine {
 
     public static java.util.List<Arguments> result_cases() {
       return asList(
-          args(f -> f.funcT(list(), f.int_()), f -> f.int_()),
-          args(f -> f.funcT(list(f.bool()), f.blob()), f -> f.blob()),
-          args(f -> f.funcT(list(f.bool(), f.int_()), f.blob()), f -> f.blob()));
+          args(f -> f.lambda(list(), f.int_()), f -> f.int_()),
+          args(f -> f.lambda(list(f.bool()), f.blob()), f -> f.blob()),
+          args(f -> f.lambda(list(f.bool(), f.int_()), f.blob()), f -> f.blob()));
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function1<BKindDb, BFuncType, BytecodeException> factoryCall,
+        Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
         Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
         throws Exception {
       assertThat(execute(factoryCall).params()).isEqualTo(execute(expected));
@@ -119,9 +117,10 @@ public class BKindTest extends TestingVirtualMachine {
 
     public static java.util.List<Arguments> params_cases() {
       return asList(
-          args(f -> f.funcT(list(), f.int_()), f -> f.tuple()),
-          args(f -> f.funcT(list(f.bool()), f.blob()), f -> f.tuple(f.bool())),
-          args(f -> f.funcT(list(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_())));
+          args(f -> f.lambda(list(), f.int_()), f -> f.tuple()),
+          args(f -> f.lambda(list(f.bool()), f.blob()), f -> f.tuple(f.bool())),
+          args(
+              f -> f.lambda(list(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_())));
     }
   }
 
@@ -130,35 +129,34 @@ public class BKindTest extends TestingVirtualMachine {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function1<BKindDb, BLambdaKind, BytecodeException> factoryCall,
+        Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
         Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
         throws Exception {
-      assertThat(execute(factoryCall).type().result()).isEqualTo(execute(expected));
+      assertThat(execute(factoryCall).result()).isEqualTo(execute(expected));
     }
 
     public static java.util.List<Arguments> result_cases() {
       return asList(
-          args(f -> f.lambda(f.funcT(list(), f.int_())), f -> f.int_()),
-          args(f -> f.lambda(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.lambda(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob()));
+          args(f -> f.lambda(list(), f.int_()), f -> f.int_()),
+          args(f -> f.lambda(list(f.bool()), f.blob()), f -> f.blob()),
+          args(f -> f.lambda(list(f.bool(), f.int_()), f.blob()), f -> f.blob()));
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function1<BKindDb, BLambdaKind, BytecodeException> factoryCall,
+        Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
         Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
         throws Exception {
-      assertThat(execute(factoryCall).type().params()).isEqualTo(execute(expected));
+      assertThat(execute(factoryCall).params()).isEqualTo(execute(expected));
     }
 
     public static java.util.List<Arguments> params_cases() {
       return asList(
-          args(f -> f.lambda(f.funcT(list(), f.int_())), f -> f.tuple()),
-          args(f -> f.lambda(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
+          args(f -> f.lambda(list(), f.int_()), f -> f.tuple()),
+          args(f -> f.lambda(list(f.bool()), f.blob()), f -> f.tuple(f.bool())),
           args(
-              f -> f.lambda(f.funcT(list(f.bool(), f.int_()), f.blob())),
-              f -> f.tuple(f.bool(), f.int_())));
+              f -> f.lambda(list(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_())));
     }
   }
 
@@ -177,13 +175,13 @@ public class BKindTest extends TestingVirtualMachine {
       return asList(
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.funcT(list(), f.string())),
+          args(f -> f.lambda(list(), f.string())),
           args(f -> f.int_()),
           args(f -> f.string()),
           args(f -> f.tuple(f.int_())),
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.funcT(list(), f.string()))),
+          args(f -> f.array(f.lambda(list(), f.string()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.string())));
     }
@@ -215,7 +213,7 @@ public class BKindTest extends TestingVirtualMachine {
 
   @ParameterizedTest
   @MethodSource("typeJ_test_data")
-  public void typeJ(BKind type, Class<?> expected) throws Exception {
+  public void typeJ(BKind type, Class<?> expected) {
     assertThat(type.javaType()).isEqualTo(expected);
   }
 
@@ -224,7 +222,7 @@ public class BKindTest extends TestingVirtualMachine {
     return list(
         arguments(test.bBlobType(), BBlob.class),
         arguments(test.bBoolType(), BBool.class),
-        arguments(test.bFuncType(test.bBoolType(), test.bBlobType()), BFunc.class),
+        arguments(test.bLambdaType(test.bBoolType(), test.bBlobType()), BLambda.class),
         arguments(test.bIfKind(), BIf.class),
         arguments(test.bMapKind(), BMap.class),
         arguments(test.bIntType(), BInt.class),
@@ -234,7 +232,7 @@ public class BKindTest extends TestingVirtualMachine {
         arguments(test.bArrayType(test.bBlobType()), BArray.class),
         arguments(test.bArrayType(test.bBoolType()), BArray.class),
         arguments(
-            test.bArrayType(test.bFuncType(test.bBoolType(), test.bBlobType())), BArray.class),
+            test.bArrayType(test.bLambdaType(test.bBoolType(), test.bBlobType())), BArray.class),
         arguments(test.bArrayType(test.bIntType()), BArray.class),
         arguments(test.bArrayType(test.bPersonType()), BArray.class),
         arguments(test.bArrayType(test.bStringType()), BArray.class),
@@ -322,7 +320,7 @@ public class BKindTest extends TestingVirtualMachine {
     tester.addEqualityGroup(bBlobType(), bBlobType());
     tester.addEqualityGroup(bBoolType(), bBoolType());
     tester.addEqualityGroup(
-        bFuncType(bBoolType(), bBlobType()), bFuncType(bBoolType(), bBlobType()));
+        bLambdaType(bBoolType(), bBlobType()), bLambdaType(bBoolType(), bBlobType()));
     tester.addEqualityGroup(bIntType(), bIntType());
     tester.addEqualityGroup(bStringType(), bStringType());
     tester.addEqualityGroup(bPersonType(), bPersonType());
@@ -330,8 +328,8 @@ public class BKindTest extends TestingVirtualMachine {
     tester.addEqualityGroup(bArrayType(bBlobType()), bArrayType(bBlobType()));
     tester.addEqualityGroup(bArrayType(bBoolType()), bArrayType(bBoolType()));
     tester.addEqualityGroup(
-        bArrayType(bFuncType(bBoolType(), bBlobType())),
-        bArrayType(bFuncType(bBoolType(), bBlobType())));
+        bArrayType(bLambdaType(bBoolType(), bBlobType())),
+        bArrayType(bLambdaType(bBoolType(), bBlobType())));
     tester.addEqualityGroup(bArrayType(bIntType()), bArrayType(bIntType()));
     tester.addEqualityGroup(bArrayType(bStringType()), bArrayType(bStringType()));
     tester.addEqualityGroup(bArrayType(bPersonType()), bArrayType(bPersonType()));
@@ -341,8 +339,8 @@ public class BKindTest extends TestingVirtualMachine {
     tester.addEqualityGroup(
         bArrayType(bArrayType(bBoolType())), bArrayType(bArrayType(bBoolType())));
     tester.addEqualityGroup(
-        bArrayType(bArrayType(bFuncType(bIntType()))),
-        bArrayType(bArrayType(bFuncType(bIntType()))));
+        bArrayType(bArrayType(bLambdaType(bIntType()))),
+        bArrayType(bArrayType(bLambdaType(bIntType()))));
     tester.addEqualityGroup(bArrayType(bArrayType(bIntType())), bArrayType(bArrayType(bIntType())));
     tester.addEqualityGroup(
         bArrayType(bArrayType(bStringType())), bArrayType(bArrayType(bStringType())));

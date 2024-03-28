@@ -27,15 +27,15 @@ public final class BCall extends BOperation {
   public SubExprsB subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(2);
     var args = readAndCastMemberFromHashChain(hashes, 1, "arguments", BCombine.class);
-    var expectedLambdaType = kindDb().funcT(args.evaluationType(), evaluationType());
-    var func = readMemberFromHashChain(hashes, 0, "lambda", expectedLambdaType);
-    return new SubExprsB(func, castNode(dataNodePath(1), args, BCombine.class));
+    var expectedLambdaType = kindDb().lambda(args.evaluationType(), evaluationType());
+    var lambda = readMemberFromHashChain(hashes, 0, "lambda", expectedLambdaType);
+    return new SubExprsB(lambda, castNode(dataNodePath(1), args, BCombine.class));
   }
 
-  public static record SubExprsB(BExpr func, BCombine args) implements BExprs {
+  public static record SubExprsB(BExpr lambda, BCombine args) implements BExprs {
     @Override
     public List<BExpr> toList() {
-      return list(func, args());
+      return list(lambda, args());
     }
   }
 }

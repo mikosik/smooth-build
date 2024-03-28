@@ -16,7 +16,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
@@ -61,7 +61,7 @@ class TypeSbTranslator {
     return bytecodeF.tupleType(listOfAll(struct.fields()).map(isig -> translate(isig.type())));
   }
 
-  public BFuncType translate(SFuncType func) throws SbTranslatorException {
+  public BLambdaType translate(SFuncType func) throws SbTranslatorException {
     return bytecodeF.funcType(translate(func.params()), translate(func.result()));
   }
 

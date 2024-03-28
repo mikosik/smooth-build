@@ -7,8 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -40,7 +40,7 @@ public class BKindCachingTest extends TestingVirtualMachine {
         kindDb -> kindDb.call(kindDb.int_()),
         kindDb -> kindDb.combine(kindDb.tuple()),
         kindDb -> kindDb.combine(kindDb.tuple(kindDb.int_())),
-        kindDb -> kindDb.lambda(kindDb.funcT(list(), kindDb.int_())),
+        kindDb -> kindDb.lambda(list(), kindDb.int_()),
         kindDb -> kindDb.if_(kindDb.int_()),
         kindDb -> kindDb.map(kindDb.array(kindDb.int_())),
         kindDb -> kindDb.order(kindDb.array(kindDb.int_())),
@@ -65,7 +65,7 @@ public class BKindCachingTest extends TestingVirtualMachine {
     return kindDb.tuple(kindDb.string(), kindDb.string());
   }
 
-  private static BFuncType funcT(BKindDb kindDb) throws BytecodeException {
-    return kindDb.funcT(list(kindDb.bool(), kindDb.blob()), kindDb.string());
+  private static BLambdaType funcT(BKindDb kindDb) throws BytecodeException {
+    return kindDb.lambda(list(kindDb.bool(), kindDb.blob()), kindDb.string());
   }
 }

@@ -402,7 +402,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       private BCall throwExceptionCall() throws Exception {
-        var lambdaType = bFuncType(bStringType());
+        var lambdaType = bLambdaType(bStringType());
         var invoke = bInvoke(lambdaType, ThrowException.class);
         return bCall(invoke);
       }

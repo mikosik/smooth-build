@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 public class ReturnReturnAbcFunc {
   public static BValue bytecode(BytecodeFactory f, Map<String, BType> varMap)
       throws BytecodeException {
-    var funcType = f.funcType(list(), f.stringType());
-    return f.lambda(funcType, f.string("abc"));
+    var lambdaType = f.lambdaType(list(), f.stringType());
+    return f.lambda(lambdaType, f.string("abc"));
   }
 }

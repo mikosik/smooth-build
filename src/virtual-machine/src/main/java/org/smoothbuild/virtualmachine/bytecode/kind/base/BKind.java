@@ -6,7 +6,6 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeIllegalKindException;
 
 /**
  * Kind of Bytecode Expression ({@link BExpr}).
@@ -38,8 +37,7 @@ public abstract class BKind {
     return Strings.q(name);
   }
 
-  public abstract BExpr newExpr(MerkleRoot merkleRoot, BExprDb exprDb)
-      throws DecodeIllegalKindException;
+  public abstract BExpr newExpr(MerkleRoot merkleRoot, BExprDb exprDb);
 
   @Override
   public boolean equals(Object object) {

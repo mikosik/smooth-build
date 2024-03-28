@@ -109,18 +109,18 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   class _lambda {
     @Test
     public void with_zero_params() throws Exception {
-      var lambdaB = bLambda(bFuncType(bIntType()), bInt(1));
+      var lambdaB = bLambda(bLambdaType(bIntType()), bInt(1));
       assertThat(lambdaB.hash())
           .isEqualTo(
-              Hash.decode("ca7332dde14f5b0385f6919dd5a0bb7516b985218cb5b3ab7fe231b02827a615"));
+              Hash.decode("cbebb7b4c0262db1ee75678b2cf4f8d0b4d587e53c9d0167234d3f75b5c82e45"));
     }
 
     @Test
     public void with_one_param() throws Exception {
-      var lambdaB = bLambda(bFuncType(bBlobType(), bIntType()), bInt(1));
+      var lambdaB = bLambda(bLambdaType(bBlobType(), bIntType()), bInt(1));
       assertThat(lambdaB.hash())
           .isEqualTo(
-              Hash.decode("b4fe4202b949e583a75d441a2f7654fd94ff5c616f206343f707fc24df25031a"));
+              Hash.decode("8ce918aa234ebc3ab7a490fd559d31b4be576a465c4f3307c476bcf280872d5a"));
     }
   }
 
@@ -199,11 +199,11 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   class _call {
     @Test
     public void call_without_args() throws Exception {
-      var type = bFuncType(bIntType());
+      var type = bLambdaType(bIntType());
       var funcB = bLambda(type, bInt());
       assertThat(bCall(funcB).hash())
           .isEqualTo(
-              Hash.decode("ad58f94040c8d5a6551a1ada94aab077ea710a97b364428ebc07e4c066a5916b"));
+              Hash.decode("5fde6253d2a350e28562f50735745f89d40e8c471cbc67264cdd6a47751ceb24"));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class BExprStableHashTest extends TestingVirtualMachine {
       var lambdaB = bLambda(list(bStringType()), bInt());
       assertThat(bCall(lambdaB, bString("abc")).hash())
           .isEqualTo(
-              Hash.decode("a09ab8dc2cda31a74cb0f2cde880a272f7e6e5d6e506a744402d4a0afe0c20ba"));
+              Hash.decode("3b252948eca848beff114959af5f9fe1e39fbf0a01279dd66b52d5f008f2fcc9"));
     }
   }
 
@@ -248,7 +248,7 @@ public class BExprStableHashTest extends TestingVirtualMachine {
     public void map_func() throws Exception {
       assertThat(bMap(bArray(bInt()), bIntIdFunc()).hash())
           .isEqualTo(
-              Hash.decode("27b9890243e1580f8ce51b0394e931e2fb4d168bddaa1cd4e3ccdb2b40517980"));
+              Hash.decode("03dfaa1ba8fb539e33af03360e83237a69d3152fd8c4181eefd3166280c25574"));
     }
   }
 

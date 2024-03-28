@@ -27,9 +27,9 @@ public class BKindStableHashTest extends TestingVirtualMachine {
         arguments(
             t.bBoolType(), "9c12cfdc04c74584d787ac3d23772132c18524bc7ab28dec4219b8fc5b425f70"),
         arguments(
-            t.bLambdaKind(), "6bc8397b7832905afad31d92d07c1d21f1302196b142d0b004549aec72962c07"),
+            t.bLambdaType(), "d5dc1882e9878254ec1a555848df4fb8fa2a42fbfbb96769c2f2c68aa0462a25"),
         arguments(
-            t.bFuncType(), "2efc8dc079b8693ac751fc181888b64bb53404b0c1aba4c54f9dafbe2e1ec254"),
+            t.bLambdaType(), "d5dc1882e9878254ec1a555848df4fb8fa2a42fbfbb96769c2f2c68aa0462a25"),
         arguments(t.bIfKind(), "40899d393a16038b9b21d71dc422370e69c623d07e98b88b2c37b232506188a1"),
         arguments(t.bIntType(), "1cc3adea40ebfd94433ac004777d68150cce9db4c771bc7de1b297a7b795bbba"),
         arguments(t.bMapKind(), "ca811c526ab80f8e138d35e5bfa56fc715a3f91525d6cc2725b5b8174f24c46b"),
@@ -47,8 +47,8 @@ public class BKindStableHashTest extends TestingVirtualMachine {
             t.bArrayType(t.bBoolType()),
             "d2f329dc9ff111fadbf744f3baa9ddd497ba6254cb04811bd765698164e8bf68"),
         arguments(
-            t.bArrayType(t.bFuncType()),
-            "9b57a68d69b3fe00d196de001f50b545c8ef53386fb42c98227b86b3ab966532"),
+            t.bArrayType(t.bLambdaType()),
+            "b8b7e24699498e50ff3b633bd471c776c533920652860b4d486748b60c9e0848"),
         arguments(
             t.bArrayType(t.bIntType()),
             "5a627db2a53ab5c02ea2aa798b79c6e4717c14afa433f39daf1acc45bd8e8c90"),

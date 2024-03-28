@@ -12,7 +12,6 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FUNC;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
@@ -32,7 +31,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
@@ -40,13 +38,11 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOperationKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
@@ -71,10 +67,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindWrongNodeKindE
 public class BKindDb {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
-  private static final int FUNC_PARAMS_IDX = 0;
-  public static final String FUNC_PARAMS_PATH = DATA_PATH + "[" + FUNC_PARAMS_IDX + "]";
-  private static final int FUNC_RESULT_IDX = 1;
-  public static final String FUNC_RES_PATH = DATA_PATH + "[" + FUNC_RESULT_IDX + "]";
+  private static final int LAMBDA_PARAMS_IDX = 0;
+  public static final String LAMBDA_PARAMS_PATH = DATA_PATH + "[" + LAMBDA_PARAMS_IDX + "]";
+  private static final int LAMBDA_RESULT_IDX = 1;
+  public static final String LAMBDA_RES_PATH = DATA_PATH + "[" + LAMBDA_RESULT_IDX + "]";
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, BKind> cache;
@@ -111,32 +107,12 @@ public class BKindDb {
     return boolSupplier.apply();
   }
 
-  public BLambdaKind lambda(List<BType> params, BType result) throws BKindDbException {
-    return funcC(LAMBDA, params, result, BLambdaKind::new);
+  public BLambdaType lambda(List<BType> params, BType result) throws BKindDbException {
+    return lambda(tuple(params), result);
   }
 
-  public BLambdaKind lambda(BFuncType funcType) throws BKindDbException {
-    return funcC(LAMBDA, funcType, BLambdaKind::new);
-  }
-
-  private <T extends BFuncKind> T funcC(
-      KindId id, List<BType> params, BType result, BiFunction<Hash, BFuncType, T> factory)
-      throws BKindDbException {
-    return funcC(id, funcT(params, result), factory);
-  }
-
-  private <T extends BFuncKind> T funcC(
-      KindId id, BFuncType funcType, BiFunction<Hash, BFuncType, T> factory)
-      throws BKindDbException {
-    return newFuncC(id, funcType, factory);
-  }
-
-  public BFuncType funcT(List<BType> params, BType result) throws BKindDbException {
-    return funcT(tuple(params), result);
-  }
-
-  public BFuncType funcT(BTupleType params, BType result) throws BKindDbException {
-    return newFuncT(params, result);
+  public BLambdaType lambda(BTupleType params, BType result) throws BKindDbException {
+    return newLambda(params, result);
   }
 
   public BIfKind if_(BType type) throws BKindDbException {
@@ -208,8 +184,7 @@ public class BKindDb {
       case BOOL -> newBaseType(hash, id, rootChain, BBoolType::new);
       case INT -> newBaseType(hash, id, rootChain, BIntType::new);
       case STRING -> newBaseType(hash, id, rootChain, BStringType::new);
-      case LAMBDA -> readFuncKind(hash, rootChain, id, BLambdaKind::new);
-      case FUNC -> readFuncType(hash, rootChain);
+      case LAMBDA -> readLambdaType(hash, rootChain);
       case IF -> readOperationKind(hash, rootChain, id, BType.class, BIfKind::new);
       case MAP -> readOperationKind(hash, rootChain, id, BArrayType.class, BMapKind::new);
       case INVOKE -> readOperationKind(hash, rootChain, id, BType.class, BInvokeKind::new);
@@ -266,45 +241,20 @@ public class BKindDb {
     return newOperation(factory, hash, evaluationType);
   }
 
-  private BFuncType readFuncType(Hash rootHash, List<Hash> rootChain) throws DecodeKindException {
-    assertKindRootChainSize(rootHash, FUNC, rootChain, 2);
-    var nodes = readDataChainAsTypes(FUNC, rootHash, rootChain);
+  private BLambdaType readLambdaType(Hash rootHash, List<Hash> rootChain)
+      throws DecodeKindException {
+    assertKindRootChainSize(rootHash, LAMBDA, rootChain, 2);
+    var nodes = readDataChainAsTypes(LAMBDA, rootHash, rootChain);
     if (nodes.size() != 2) {
-      throw new DecodeKindWrongChainSizeException(rootHash, FUNC, DATA_PATH, 2, nodes.size());
+      throw new DecodeKindWrongChainSizeException(rootHash, LAMBDA, DATA_PATH, 2, nodes.size());
     }
-    var result = nodes.get(FUNC_RESULT_IDX);
-    var params = nodes.get(FUNC_PARAMS_IDX);
+    var result = nodes.get(LAMBDA_RESULT_IDX);
+    var params = nodes.get(LAMBDA_PARAMS_IDX);
     if (params instanceof BTupleType paramsTuple) {
-      return cache(new BFuncType(rootHash, paramsTuple, result));
+      return cache(new BLambdaType(rootHash, paramsTuple, result));
     } else {
       throw new DecodeKindWrongNodeKindException(
-          rootHash, FUNC, FUNC_PARAMS_PATH, BTupleType.class, params.getClass());
-    }
-  }
-
-  private <T extends BFuncKind> BKind readFuncKind(
-      Hash rootHash, List<Hash> rootChain, KindId id, BiFunction<Hash, BFuncType, T> instantiator)
-      throws BKindDbException {
-    return readFuncKind(rootHash, rootChain, id, instantiator, t -> {});
-  }
-
-  private <T extends BFuncKind> BKind readFuncKind(
-      Hash rootHash,
-      List<Hash> rootChain,
-      KindId kindId,
-      BiFunction<Hash, BFuncType, T> factory,
-      Consumer1<BFuncType, BKindDbException> typeVerifier)
-      throws BKindDbException {
-    assertKindRootChainSize(rootHash, kindId, rootChain, 2);
-    var dataHash = rootChain.get(DATA_IDX);
-    var typeComponent = invokeAndChainKindDbException(
-        () -> read(dataHash), e -> new DecodeKindNodeException(rootHash, kindId, DATA_PATH, e));
-    if (typeComponent instanceof BFuncType funcType) {
-      typeVerifier.accept(funcType);
-      return cache(factory.apply(rootHash, funcType));
-    } else {
-      throw new DecodeKindWrongNodeKindException(
-          rootHash, kindId, DATA_PATH, BFuncType.class, typeComponent.getClass());
+          rootHash, LAMBDA, LAMBDA_PARAMS_PATH, BTupleType.class, params.getClass());
     }
   }
 
@@ -376,16 +326,9 @@ public class BKindDb {
     return cache(new BArrayType(rootHash, element));
   }
 
-  private BFuncType newFuncT(BTupleType params, BType result) throws BKindDbException {
-    var rootHash = writeFuncTypeRoot(params, result);
-    return cache(new BFuncType(rootHash, params, result));
-  }
-
-  private <T extends BFuncKind> T newFuncC(
-      KindId id, BFuncType funcType, BiFunction<Hash, BFuncType, T> factory)
-      throws BKindDbException {
-    var rootHash = writeFuncKindRoot(id, funcType);
-    return cache(factory.apply(rootHash, funcType));
+  private BLambdaType newLambda(BTupleType params, BType result) throws BKindDbException {
+    var rootHash = writeLambdaTypeRoot(params, result);
+    return cache(new BLambdaType(rootHash, params, result));
   }
 
   private BTupleType newTuple(List<BType> items) throws BKindDbException {
@@ -420,13 +363,9 @@ public class BKindDb {
     return writeRoot(ARRAY, elementKind);
   }
 
-  private Hash writeFuncTypeRoot(BTupleType params, BType result) throws BKindDbException {
+  private Hash writeLambdaTypeRoot(BTupleType params, BType result) throws BKindDbException {
     var dataHash = writeChain(params.hash(), result.hash());
-    return writeRoot(FUNC, dataHash);
-  }
-
-  private Hash writeFuncKindRoot(KindId id, BFuncType funcType) throws BKindDbException {
-    return writeRoot(id, funcType);
+    return writeRoot(LAMBDA, dataHash);
   }
 
   private Hash writeTupleRoot(List<BType> items) throws BKindDbException {

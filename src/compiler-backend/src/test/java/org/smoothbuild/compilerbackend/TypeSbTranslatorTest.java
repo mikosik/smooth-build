@@ -67,7 +67,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     public void func_type() throws Exception {
       assertTranslation(
           TestingSExpression.sFuncType(sBlobType(), sStringType(), sIntType()),
-          bFuncType(bBlobType(), bStringType(), bIntType()));
+          bLambdaType(bBlobType(), bStringType(), bIntType()));
     }
   }
 
@@ -99,7 +99,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType(), varC(), bStringType()),
           TestingSExpression.sFuncType(varB(), varC(), varA()),
-          bFuncType(bBlobType(), bStringType(), bIntType()));
+          bLambdaType(bBlobType(), bStringType(), bIntType()));
     }
 
     @Test

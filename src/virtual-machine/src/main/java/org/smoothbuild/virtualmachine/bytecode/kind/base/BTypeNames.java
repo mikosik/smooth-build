@@ -12,7 +12,7 @@ public class BTypeNames {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(List<? extends BType> paramTs, BType resultT) {
+  public static String lambdaTypeName(List<? extends BType> paramTs, BType resultT) {
     return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resultT.name();
   }
 

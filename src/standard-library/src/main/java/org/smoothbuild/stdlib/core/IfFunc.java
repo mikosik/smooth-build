@@ -21,7 +21,7 @@ public class IfFunc {
     var thenParamReference = f.reference(resultType, f.int_(BigInteger.ONE));
     var elseParamReference = f.reference(resultType, f.int_(BigInteger.TWO));
 
-    var funcType = f.funcType(parameterTypes, resultType);
+    var funcType = f.lambdaType(parameterTypes, resultType);
     var body = f.if_(conditionParamReference, thenParamReference, elseParamReference);
     return f.lambda(funcType, body);
   }
