@@ -6,8 +6,8 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
@@ -17,21 +17,21 @@ public class TestingBKind {
   public static final List<BType> BASE_KINDS_TO_TEST = wrapException(() -> list(
       CONTEXT.bBlobType(),
       CONTEXT.bBoolType(),
-      func(CONTEXT.bBlobType(), CONTEXT.bBoolType()),
+      lambda(CONTEXT.bBlobType(), CONTEXT.bBoolType()),
       CONTEXT.bIntType(),
       CONTEXT.bStringType(),
       CONTEXT.bPersonType()));
 
   public static final List<BKind> ARRAY_CATS_TO_TEST = wrapException(() -> list(
       array(CONTEXT.bBlobType()),
-      array(func(CONTEXT.bBlobType(), CONTEXT.bBoolType())),
+      array(lambda(CONTEXT.bBlobType(), CONTEXT.bBoolType())),
       array(CONTEXT.bBoolType()),
       array(CONTEXT.bIntType()),
       array(CONTEXT.bStringType()),
       array(CONTEXT.bPersonType()),
       array(array(CONTEXT.bBlobType())),
       array(array(CONTEXT.bBoolType())),
-      array(array(func(CONTEXT.bBlobType(), CONTEXT.bBoolType()))),
+      array(array(lambda(CONTEXT.bBlobType(), CONTEXT.bBoolType()))),
       array(array(CONTEXT.bIntType())),
       array(array(CONTEXT.bStringType())),
       array(array(CONTEXT.bPersonType()))));
@@ -53,10 +53,10 @@ public class TestingBKind {
         CONTEXT.bBlobType(),
         CONTEXT.bBoolType(),
         CONTEXT.bIntType(),
-        func(CONTEXT.bBlobType()),
-        func(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
-        func(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
-        func(CONTEXT.bStringType()),
+        lambda(CONTEXT.bBlobType()),
+        lambda(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        lambda(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
+        lambda(CONTEXT.bStringType()),
         CONTEXT.bStringType(),
         tuple(),
         tuple(CONTEXT.bBlobType()),
@@ -64,7 +64,7 @@ public class TestingBKind {
         tuple(CONTEXT.bStringType()));
     var arrayKinds = baseKinds.map(CONTEXT::bArrayType);
     var valueKinds = baseKinds.appendAll(arrayKinds);
-    var exprKinds = list(
+    List<BKind> exprKinds = list(
         CONTEXT.bCallKind(CONTEXT.bBlobType()),
         CONTEXT.bCallKind(CONTEXT.bStringType()),
         CONTEXT.bCombineKind(CONTEXT.bTupleType(CONTEXT.bBlobType())),
@@ -82,11 +82,7 @@ public class TestingBKind {
         CONTEXT.bMapKind(CONTEXT.bArrayType(CONTEXT.bBlobType())),
         CONTEXT.bMapKind(CONTEXT.bArrayType(CONTEXT.bStringType())),
         CONTEXT.bInvokeKind(CONTEXT.bBlobType()),
-        CONTEXT.bInvokeKind(CONTEXT.bStringType()),
-        CONTEXT.bLambdaKind(CONTEXT.bBlobType()),
-        CONTEXT.bLambdaKind(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
-        CONTEXT.bLambdaKind(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
-        CONTEXT.bLambdaKind(CONTEXT.bStringType()));
+        CONTEXT.bInvokeKind(CONTEXT.bStringType()));
 
     return exprKinds.appendAll(valueKinds);
   }
@@ -95,8 +91,9 @@ public class TestingBKind {
     return CONTEXT.bArrayType(elementType);
   }
 
-  private static BFuncType func(BType resultType, BType... paramTypes) throws BytecodeException {
-    return CONTEXT.bFuncType(list(paramTypes), resultType);
+  private static BLambdaType lambda(BType resultType, BType... paramTypes)
+      throws BytecodeException {
+    return CONTEXT.bLambdaType(list(paramTypes), resultType);
   }
 
   private static BTupleType tuple(BType... paramTypes) throws BytecodeException {

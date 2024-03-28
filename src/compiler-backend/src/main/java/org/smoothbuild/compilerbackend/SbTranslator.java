@@ -64,7 +64,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
@@ -274,7 +274,7 @@ public class SbTranslator {
     return bytecodeF.lambda(bLambdaType, bInvoke);
   }
 
-  private BCombine referencesToAllArguments(BFuncType lambdaType) throws SbTranslatorException {
+  private BCombine referencesToAllArguments(BLambdaType lambdaType) throws SbTranslatorException {
     List<BExpr> argumentReferences = lambdaType
         .params()
         .elements()

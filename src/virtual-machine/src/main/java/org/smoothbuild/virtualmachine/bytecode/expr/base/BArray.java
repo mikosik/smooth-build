@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.function.Function0.memoizer;
 
 import org.smoothbuild.common.collect.List;
@@ -18,6 +19,7 @@ public final class BArray extends BValue {
 
   public BArray(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
+    checkArgument(merkleRoot.kind() instanceof BArrayType);
     this.elementsMemoizer = memoizer(this::instantiateElements);
   }
 

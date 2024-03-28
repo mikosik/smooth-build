@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.checkIndex;
 import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.Validator.validateTuple;
@@ -21,6 +22,7 @@ public final class BTuple extends BValue {
 
   public BTuple(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
+    checkArgument(merkleRoot.kind() instanceof BTupleType);
     this.elementsMemoizer = memoizer(this::instantiateItems);
   }
 

@@ -40,9 +40,9 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -77,12 +77,11 @@ public class BExprDb {
     return type.newExpr(root, this);
   }
 
-  public BLambda newLambda(BFuncType type, BExpr body) throws BytecodeException {
+  public BLambda newLambda(BLambdaType type, BExpr body) throws BytecodeException {
     validateBodyEvaluationType(type, body);
-    var kind = kindDb.lambda(type);
     var dataHash = body.hash();
-    var root = newRoot(kind, dataHash);
-    return kind.newExpr(root, this);
+    var root = newRoot(type, dataHash);
+    return type.newExpr(root, this);
   }
 
   public BInvoke newInvoke(
@@ -138,11 +137,11 @@ public class BExprDb {
 
   // methods for creating OperB subclasses
 
-  public BCall newCall(BExpr func, BCombine args) throws BytecodeException {
-    var funcType = castEvaluationTypeToFuncTB(func);
-    validateArgsInCall(funcType, args);
-    var kind = kindDb.call(funcType.result());
-    var dataHash = writeChain(func.hash(), args.hash());
+  public BCall newCall(BExpr lambda, BCombine args) throws BytecodeException {
+    var lambdaType = castEvaluationTypeToLambdaType(lambda);
+    validateArgsInCall(lambdaType, args);
+    var kind = kindDb.call(lambdaType.result());
+    var dataHash = writeChain(lambda.hash(), args.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
@@ -190,17 +189,17 @@ public class BExprDb {
     }
     var elementType = arrayType.elem();
     var mapperType = mapper.evaluationType();
-    if (!(mapperType instanceof BFuncType funcType)) {
+    if (!(mapperType instanceof BLambdaType lambdaType)) {
       throw new IllegalArgumentException("`mapper.evaluationType()` must be "
           + expectedMapperType(elementType) + " but is " + mapperType.q() + ".");
     }
-    var params = funcType.params().elements();
+    var params = lambdaType.params().elements();
     if (!(params.size() == 1 && params.get(0).equals(elementType))) {
       throw new IllegalArgumentException(
           "`mapper.evaluationType()` must be " + expectedMapperType(elementType) + " but is `"
               + params.toString("(", ", ", ")") + "->?`.");
     }
-    return funcType.result();
+    return lambdaType.result();
   }
 
   private static String expectedMapperType(BType elementType) {
@@ -244,10 +243,10 @@ public class BExprDb {
 
   // validators
 
-  private static void validateBodyEvaluationType(BFuncType funcType, BExpr body) {
-    if (!body.evaluationType().equals(funcType.result())) {
-      var message = "body.evaluationType() = %s should be equal to funcTB.res() = %s."
-          .formatted(body.evaluationType().q(), funcType.result().q());
+  private static void validateBodyEvaluationType(BLambdaType lambdaType, BExpr body) {
+    if (!body.evaluationType().equals(lambdaType.result())) {
+      var message = "body.evaluationType() = %s should be equal to lambdaType.result() = %s."
+          .formatted(body.evaluationType().q(), lambdaType.result().q());
       throw new IllegalArgumentException(message);
     }
   }
@@ -262,29 +261,29 @@ public class BExprDb {
     }
   }
 
-  private BFuncType castEvaluationTypeToFuncTB(BExpr func) {
-    if (func.evaluationType() instanceof BFuncType funcT) {
-      return funcT;
+  private BLambdaType castEvaluationTypeToLambdaType(BExpr lambda) {
+    if (lambda.evaluationType() instanceof BLambdaType lambdaType) {
+      return lambdaType;
     } else {
-      throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
+      throw new IllegalArgumentException("`lambda` component doesn't evaluate to BLambda.");
     }
   }
 
-  private void validateArgsInCall(BFuncType funcType, BCombine args) {
+  private void validateArgsInCall(BLambdaType lambdaType, BCombine arguments) {
     validateArgs(
-        funcType,
-        args.evaluationType().elements(),
-        () -> illegalArgs(funcType, args.evaluationType()));
+        lambdaType,
+        arguments.evaluationType().elements(),
+        () -> illegalArgs(lambdaType, arguments.evaluationType()));
   }
 
-  private IllegalArgumentException illegalArgs(BFuncType funcType, BTupleType argsT) {
+  private IllegalArgumentException illegalArgs(BLambdaType lambdaType, BTupleType argumentTypes) {
     return new IllegalArgumentException(
-        "Argument evaluation types %s should be equal to function parameter types %s."
-            .formatted(itemTsToString(argsT), itemTsToString(funcType.params())));
+        "Argument evaluation types %s should be equal to lambda parameter types %s."
+            .formatted(itemTsToString(argumentTypes), itemTsToString(lambdaType.params())));
   }
 
-  private static String itemTsToString(BTupleType argsT) {
-    return argsT.elements().toString("(", ",", ")");
+  private static String itemTsToString(BTupleType argumentTypes) {
+    return argumentTypes.elements().toString("(", ",", ")");
   }
 
   // generic getter

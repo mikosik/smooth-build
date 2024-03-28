@@ -28,7 +28,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
 import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
@@ -103,7 +103,7 @@ public class BScheduler {
   // Apply operation
 
   public void scheduleApply(Job applyJob, BCall apply) throws BytecodeException {
-    var lambdaJob = newJob(apply.subExprs().func(), applyJob);
+    var lambdaJob = newJob(apply.subExprs().lambda(), applyJob);
     scheduleJobEvaluation(lambdaJob, lambda -> handleLambda((BLambda) lambda, applyJob, apply));
   }
 
@@ -149,13 +149,13 @@ public class BScheduler {
   private void onMapArrayArgEvaluated(BArray array, Job mapJob, BExpr mapper)
       throws BytecodeException {
     var calls = array.elements(BValue.class).map(e -> newCallB(mapper, e));
-    var mappingFuncResultType = ((BFuncType) mapper.evaluationType()).result();
+    var mappingFuncResultType = ((BLambdaType) mapper.evaluationType()).result();
     var order = bytecodeFactory.order(bytecodeFactory.arrayType(mappingFuncResultType), calls);
     scheduleJobEvaluation(newJob(order, mapJob), mapJob.promisedValue());
   }
 
-  private BExpr newCallB(BExpr funcExpr, BValue value) throws BytecodeException {
-    return bytecodeFactory.call(funcExpr, singleArg(value));
+  private BExpr newCallB(BExpr lambdaExpr, BValue value) throws BytecodeException {
+    return bytecodeFactory.call(lambdaExpr, singleArg(value));
   }
 
   private BCombine singleArg(BValue value) throws BytecodeException {

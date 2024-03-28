@@ -46,30 +46,54 @@ public class BInvokeTest extends TestingVirtualMachine {
     protected List<BInvoke> equalExprs() throws BytecodeException {
       return list(
           bInvoke(
-              bFuncType(bIntType(), bStringType()), bBlob(7), bString("a"), bBool(true), bTuple()),
+              bLambdaType(bIntType(), bStringType()),
+              bBlob(7),
+              bString("a"),
+              bBool(true),
+              bTuple()),
           bInvoke(
-              bFuncType(bIntType(), bStringType()), bBlob(7), bString("a"), bBool(true), bTuple()));
+              bLambdaType(bIntType(), bStringType()),
+              bBlob(7),
+              bString("a"),
+              bBool(true),
+              bTuple()));
     }
 
     @Override
     protected List<BInvoke> nonEqualExprs() throws BytecodeException {
       return list(
           bInvoke(
-              bFuncType(bIntType(), bStringType()), bBlob(7), bString("a"), bBool(true), bTuple()),
+              bLambdaType(bIntType(), bStringType()),
+              bBlob(7),
+              bString("a"),
+              bBool(true),
+              bTuple()),
           bInvoke(
-              bFuncType(bIntType(), bStringType()),
+              bLambdaType(bIntType(), bStringType()),
               bBlob(7),
               bString("a"),
               bBool(true),
               bTuple(bInt(1))),
           bInvoke(
-              bFuncType(bIntType(), bStringType()), bBlob(7), bString("a"), bBool(false), bTuple()),
+              bLambdaType(bIntType(), bStringType()),
+              bBlob(7),
+              bString("a"),
+              bBool(false),
+              bTuple()),
           bInvoke(
-              bFuncType(bIntType(), bStringType()), bBlob(7), bString("b"), bBool(true), bTuple()),
+              bLambdaType(bIntType(), bStringType()),
+              bBlob(7),
+              bString("b"),
+              bBool(true),
+              bTuple()),
           bInvoke(
-              bFuncType(bIntType(), bStringType()), bBlob(9), bString("a"), bBool(true), bTuple()),
+              bLambdaType(bIntType(), bStringType()),
+              bBlob(9),
+              bString("a"),
+              bBool(true),
+              bTuple()),
           bInvoke(
-              bFuncType(bStringType(), bStringType()),
+              bLambdaType(bStringType(), bStringType()),
               bBlob(7),
               bString("a"),
               bBool(true),

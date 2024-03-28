@@ -20,7 +20,7 @@ public class ElemFunc {
     var arrayParamReference = f.reference(arrayParamType, f.int_(BigInteger.ZERO));
     var indexParamReference = f.reference(indexParamType, f.int_(BigInteger.ONE));
     var body = f.pick(arrayParamReference, indexParamReference);
-    var funcType = f.funcType(paramTypes, varA);
+    var funcType = f.lambdaType(paramTypes, varA);
     return f.lambda(funcType, body);
   }
 }

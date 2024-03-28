@@ -5,8 +5,8 @@ import org.smoothbuild.common.collect.List;
 
 public class Validator {
   public static <T extends Throwable> void validateArgs(
-      BFuncType funcType, List<BType> items, Supplier<T> exceptionSupplier) throws T {
-    validateTuple(funcType.params(), items, exceptionSupplier);
+      BLambdaType lambdaType, List<BType> items, Supplier<T> exceptionSupplier) throws T {
+    validateTuple(lambdaType.params(), items, exceptionSupplier);
   }
 
   public static <T extends Throwable> void validateTuple(

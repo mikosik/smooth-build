@@ -1,9 +1,12 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.math.BigInteger;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 
 /**
  * This class is thread-safe.
@@ -11,6 +14,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 public final class BInt extends BValue {
   public BInt(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
+    checkArgument(merkleRoot.kind() instanceof BIntType);
   }
 
   public BigInteger toJavaBigInteger() throws BytecodeException {

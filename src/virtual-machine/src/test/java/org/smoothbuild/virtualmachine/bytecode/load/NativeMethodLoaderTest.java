@@ -113,7 +113,7 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var invoke = bInvoke(bFuncType(bStringType()), jar, bString(classBinaryName));
+      var invoke = bInvoke(bLambdaType(bStringType()), jar, bString(classBinaryName));
       var resultMethod1 = nativeMethodLoader.load(invoke);
       var resultMethod2 = nativeMethodLoader.load(invoke);
       assertThat(resultMethod1).isEqualTo(expected);

@@ -13,7 +13,7 @@ public class ReturnIdFunc {
   public static BValue bytecode(BytecodeFactory f, Map<String, BType> varMap)
       throws BytecodeException {
     var a = varMap.get("A");
-    var funcType = f.funcType(list(a), a);
-    return f.lambda(funcType, f.reference(a, f.int_(ZERO)));
+    var lambdaType = f.lambdaType(list(a), a);
+    return f.lambda(lambdaType, f.reference(a, f.int_(ZERO)));
   }
 }

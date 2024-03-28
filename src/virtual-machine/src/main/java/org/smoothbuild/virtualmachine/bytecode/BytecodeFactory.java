@@ -43,8 +43,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BFuncType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -97,8 +97,8 @@ public class BytecodeFactory {
     return exprDb.newBool(value);
   }
 
-  public BCall call(BExpr func, BCombine args) throws BytecodeException {
-    return exprDb.newCall(func, args);
+  public BCall call(BExpr lambda, BCombine arguments) throws BytecodeException {
+    return exprDb.newCall(lambda, arguments);
   }
 
   public BCombine combine(List<BExpr> items) throws BytecodeException {
@@ -109,7 +109,7 @@ public class BytecodeFactory {
     return exprDb.newTuple(list(content, path));
   }
 
-  public BLambda lambda(BFuncType type, BExpr body) throws BytecodeException {
+  public BLambda lambda(BLambdaType type, BExpr body) throws BytecodeException {
     return exprDb.newLambda(type, body);
   }
 
@@ -169,12 +169,12 @@ public class BytecodeFactory {
     return kindDb.bool();
   }
 
-  public BFuncType funcType(List<BType> paramTypes, BType resultType) throws BytecodeException {
-    return kindDb.funcT(listOfAll(paramTypes), resultType);
+  public BLambdaType lambdaType(List<BType> paramTypes, BType resultType) throws BytecodeException {
+    return kindDb.lambda(listOfAll(paramTypes), resultType);
   }
 
-  public BFuncType funcType(BTupleType paramTypes, BType resultType) throws BytecodeException {
-    return kindDb.funcT(paramTypes, resultType);
+  public BLambdaType lambdaType(BTupleType paramTypes, BType resultType) throws BytecodeException {
+    return kindDb.lambda(paramTypes, resultType);
   }
 
   public BIntType intType() throws BytecodeException {

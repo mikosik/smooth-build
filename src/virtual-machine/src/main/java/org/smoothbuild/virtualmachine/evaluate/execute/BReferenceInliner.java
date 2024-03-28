@@ -53,14 +53,14 @@ public class BReferenceInliner {
 
   private BExpr rewriteCall(BCall call, Resolver resolver) throws BytecodeException {
     var subExprs = call.subExprs();
-    var func = subExprs.func();
+    var lambda = subExprs.lambda();
     var args = subExprs.args();
-    var inlinedFunc = rewriteExpr(func, resolver);
+    var inlinedLambda = rewriteExpr(lambda, resolver);
     var inlinedArgs = rewriteCombine(args, resolver);
-    if (func.equals(inlinedFunc) && args.equals(inlinedArgs)) {
+    if (lambda.equals(inlinedLambda) && args.equals(inlinedArgs)) {
       return call;
     } else {
-      return bytecodeFactory.call(inlinedFunc, inlinedArgs);
+      return bytecodeFactory.call(inlinedLambda, inlinedArgs);
     }
   }
 
@@ -117,14 +117,14 @@ public class BReferenceInliner {
   }
 
   private BLambda rewriteLambda(BLambda lambda, Resolver resolver) throws BytecodeException {
-    var funcType = lambda.type();
-    int paramsSize = funcType.params().size();
+    var lambdaType = lambda.type();
+    int paramsSize = lambdaType.params().size();
     var body = lambda.body();
     var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramsSize));
     if (body.equals(rewrittenBody)) {
       return lambda;
     } else {
-      return bytecodeFactory.lambda(funcType, rewrittenBody);
+      return bytecodeFactory.lambda(lambdaType, rewrittenBody);
     }
   }
 
