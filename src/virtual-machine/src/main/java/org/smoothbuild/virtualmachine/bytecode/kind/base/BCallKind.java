@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 /**
  * This class is immutable.
  */
-public class BCallKind extends BOperationKind {
+public final class BCallKind extends BOperationKind {
   public BCallKind(Hash hash, BType evaluationType) {
     super(hash, "CALL", BCall.class, evaluationType);
   }

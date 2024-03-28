@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 /**
  * This class is immutable.
  */
-public class BBlobType extends BType {
+public final class BBlobType extends BType {
   public BBlobType(Hash hash) {
     super(hash, BTypeNames.BLOB, BBlob.class);
   }

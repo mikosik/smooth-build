@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 /**
  * This class is immutable.
  */
-public class BBoolType extends BType {
+public final class BBoolType extends BType {
   public BBoolType(Hash hash) {
     super(hash, BTypeNames.BOOL, BBool.class);
   }

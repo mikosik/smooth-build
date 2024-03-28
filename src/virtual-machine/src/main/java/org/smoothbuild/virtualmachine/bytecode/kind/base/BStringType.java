@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 /**
  * This class is immutable.
  */
-public class BStringType extends BType {
+public final class BStringType extends BType {
   public BStringType(Hash hash) {
     super(hash, BTypeNames.STRING, BString.class);
   }

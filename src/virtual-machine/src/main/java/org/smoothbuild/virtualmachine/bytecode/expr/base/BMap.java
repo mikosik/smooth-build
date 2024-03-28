@@ -43,7 +43,7 @@ public final class BMap extends BOperation {
     var mapper = readMemberFromHashChain(hashes, 1);
     var mapperEvaluationType = mapper.evaluationType();
     var expectedMapperEvaluationType =
-        kindDb().lambda(list(arrayType.elem()), evaluationType().elem());
+        kindDb().lambda(list(arrayType.element()), evaluationType().element());
     if (!(mapperEvaluationType.equals(expectedMapperEvaluationType))) {
       throw new DecodeExprWrongMemberEvaluationTypeException(
           hash(), kind(), "mapper", expectedMapperEvaluationType, mapperEvaluationType);
