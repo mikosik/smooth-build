@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.checkIndex;
 import static org.smoothbuild.common.function.Function0.memoizer;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.Validator.validateTuple;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
@@ -51,12 +50,25 @@ public final class BTuple extends BValue {
     var expectedElementTs = type.elements();
     var elements = readDataAsValueChain(expectedElementTs.size());
     var elementTypes = elements.map(BValue::type);
-    validateTuple(
-        type,
-        elementTypes,
-        () -> new DecodeExprWrongNodeTypeException(
-            hash(), kind(), DATA_PATH, type, asTupleToString(elementTypes)));
+    validateTuple(type, elementTypes);
     return elements;
+  }
+
+  private void validateTuple(BTupleType type, List<BType> elementTypes)
+      throws DecodeExprWrongNodeTypeException {
+    List<BType> expectedTypes = type.elements();
+    if (expectedTypes.size() != elementTypes.size()) {
+      throw new DecodeExprWrongNodeTypeException(
+          hash(), kind(), DATA_PATH, type, asTupleToString(elementTypes));
+    }
+    for (int i = 0; i < expectedTypes.size(); i++) {
+      BType expectedType = expectedTypes.get(i);
+      BType itemType = elementTypes.get(i);
+      if (!itemType.equals(expectedType)) {
+        throw new DecodeExprWrongNodeTypeException(
+            hash(), kind(), dataNodePath(i), type, asTupleToString(elementTypes));
+      }
+    }
   }
 
   private static String asTupleToString(List<BType> elementTypes) {

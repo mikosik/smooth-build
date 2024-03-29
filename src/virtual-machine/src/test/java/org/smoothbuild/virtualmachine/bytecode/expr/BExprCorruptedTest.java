@@ -1389,7 +1389,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var tuple = (BTuple) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, bPersonType(), DATA_PATH, bPersonType(), "`{String,Bool}`"));
+              hash, bPersonType(), DATA_PATH + "[1]", bPersonType(), "`{String,Bool}`"));
     }
 
     @Test

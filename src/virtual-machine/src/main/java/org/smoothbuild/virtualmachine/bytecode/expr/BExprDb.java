@@ -38,7 +38,6 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
@@ -134,22 +133,23 @@ public class BExprDb {
   // methods for creating OperB subclasses
 
   public BCall newCall(BExpr lambda, BExpr args) throws BytecodeException {
-    var kind = calculateCallKind(lambda, args);
+    var lambdaType = validateFunctionType(lambda, args);
+    var kind = kindDb.call(lambdaType.result());
     var dataHash = writeChain(lambda.hash(), args.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
 
-  private BCallKind calculateCallKind(BExpr lambda, BExpr args) throws BKindDbException {
+  private static BLambdaType validateFunctionType(BExpr lambda, BExpr arguments) {
     var lambdaEvaluationType = lambda.evaluationType();
     if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
       throw illegalEvaluationType("lambda", BLambdaType.class, lambdaEvaluationType);
     }
-    var argumentsEvaluationType = args.evaluationType();
+    var argumentsEvaluationType = arguments.evaluationType();
     if (!lambdaType.params().equals(argumentsEvaluationType)) {
       throw illegalEvaluationType("arguments", lambdaType.params(), argumentsEvaluationType);
     }
-    return kindDb.call(lambdaType.result());
+    return lambdaType;
   }
 
   public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {
