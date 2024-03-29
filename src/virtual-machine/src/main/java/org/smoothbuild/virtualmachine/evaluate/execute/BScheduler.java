@@ -104,12 +104,49 @@ public class BScheduler {
 
   public void scheduleApply(Job applyJob, BCall apply) throws BytecodeException {
     var lambdaJob = newJob(apply.subExprs().lambda(), applyJob);
-    scheduleJobEvaluation(lambdaJob, lambda -> handleLambda((BLambda) lambda, applyJob, apply));
+    scheduleJobEvaluation(
+        lambdaJob, lambda -> handleCallWithEvaluatedLambda((BLambda) lambda, applyJob, apply));
   }
 
-  private void handleLambda(BLambda lambda, Job callJob, BCall call) throws BytecodeException {
-    var arguments = call.subExprs().args().subExprs().items();
+  private void handleCallWithEvaluatedLambda(BLambda lambda, Job callJob, BCall call)
+      throws BytecodeException {
+    BExpr argumentsExpr = call.subExprs().arguments();
+    if (argumentsExpr instanceof BCombine combine) {
+      handleCallWhenArgumentsIsCombineExpr(lambda, callJob, call, combine);
+    } else if (argumentsExpr instanceof BTuple tuple) {
+      handleCallWhenArgumentsIsTupleValue(lambda, callJob, call, tuple);
+    } else {
+      handleCallWhenArgumentsIsExpr(lambda, callJob, call, argumentsExpr);
+    }
+  }
+
+  private void handleCallWhenArgumentsIsCombineExpr(
+      BLambda lambda, Job callJob, BCall call, BCombine combine) throws BytecodeException {
+    var arguments = combine.subExprs().items();
     var argumentJobs = arguments.map(e -> newJob(e, callJob));
+    handleCallWithEvaluatedLambdaAndArgumentJobs(lambda, callJob, call, argumentJobs);
+  }
+
+  private void handleCallWhenArgumentsIsTupleValue(
+      BLambda lambda, Job callJob, BCall call, BTuple tuple) throws BytecodeException {
+    var argumentJobs = tuple.elements().map(this::newJob);
+    handleCallWithEvaluatedLambdaAndArgumentJobs(lambda, callJob, call, argumentJobs);
+  }
+
+  /*
+   * Performance of this schedule can be improved. Currently, it just evaluates whole expression
+   * without taking into account whether function's body actually uses any argument at all.
+   */
+  private void handleCallWhenArgumentsIsExpr(
+      BLambda lambda, Job callJob, BCall call, BExpr argumentsExpr) {
+    scheduleJobEvaluation(
+        newJob(argumentsExpr, callJob),
+        arguments ->
+            handleCallWhenArgumentsIsTupleValue(lambda, callJob, call, (BTuple) arguments));
+  }
+
+  private void handleCallWithEvaluatedLambdaAndArgumentJobs(
+      BLambda lambda, Job callJob, BCall call, List<Job> argumentJobs) throws BytecodeException {
     var bodyEnvironmentJobs = argumentJobs.appendAll(callJob.environment());
     var bodyTrace = new BTrace(call.hash(), lambda.hash(), callJob.trace());
     var bodyJob = newJob(lambda.body(), bodyEnvironmentJobs, bodyTrace);
@@ -158,8 +195,8 @@ public class BScheduler {
     return bytecodeFactory.call(lambdaExpr, singleArg(value));
   }
 
-  private BCombine singleArg(BValue value) throws BytecodeException {
-    return bytecodeFactory.combine(list(value));
+  private BExpr singleArg(BValue value) throws BytecodeException {
+    return bytecodeFactory.tuple(list(value));
   }
 
   private <T extends BOperation> void scheduleOperationTask(

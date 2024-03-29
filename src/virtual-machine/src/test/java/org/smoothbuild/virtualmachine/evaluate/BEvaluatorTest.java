@@ -195,9 +195,31 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _call {
         @Test
-        public void lambda() throws Exception {
+        public void lambda_without_arguments() throws Exception {
           var func = bLambda(bInt(7));
           var call = bCall(func);
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
+        }
+
+        @Test
+        public void lambda_with_single_argument_passed_inside_combine() throws Exception {
+          var func = bIntIdFunc();
+          var call = bCallWithArguments(func, bTuple(bInt(7)));
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
+        }
+
+        @Test
+        public void lambda_with_single_argument_passed_inside_tuple() throws Exception {
+          var func = bIntIdFunc();
+          var call = bCallWithArguments(func, bCombine(bInt(7)));
+          assertThat(evaluate(call)).isEqualTo(bInt(7));
+        }
+
+        @Test
+        public void lambda_with_single_argument_passed_as_expression_that_evaluates_to_tuple()
+            throws Exception {
+          var func = bIntIdFunc();
+          var call = bCallWithArguments(func, bPick(bOrder(bTuple(bInt(7))), 0));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 

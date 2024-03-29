@@ -54,10 +54,10 @@ public class BReferenceInliner {
   private BExpr rewriteCall(BCall call, Resolver resolver) throws BytecodeException {
     var subExprs = call.subExprs();
     var lambda = subExprs.lambda();
-    var args = subExprs.args();
+    var arguments = subExprs.arguments();
     var inlinedLambda = rewriteExpr(lambda, resolver);
-    var inlinedArgs = rewriteCombine(args, resolver);
-    if (lambda.equals(inlinedLambda) && args.equals(inlinedArgs)) {
+    var inlinedArgs = rewriteExpr(arguments, resolver);
+    if (lambda.equals(inlinedLambda) && arguments.equals(inlinedArgs)) {
       return call;
     } else {
       return bytecodeFactory.call(inlinedLambda, inlinedArgs);

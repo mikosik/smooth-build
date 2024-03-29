@@ -39,15 +39,15 @@ public class BCallTest extends TestingVirtualMachine {
 
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
-    return new IllegalArgumentException("Argument evaluation types (" + args + ") should be"
-        + " equal to lambda parameter types (" + params + ").");
+    return new IllegalArgumentException("Argument evaluation types `{" + args + "}` should be"
+        + " equal to lambda parameter types `{" + params + "}`.");
   }
 
   @Test
   public void sub_exprs_returns_sub_exprs() throws Exception {
     var func = bLambda(list(bStringType()), bInt());
-    var args = bCombine(bString());
-    assertThat(bCall(func, args).subExprs()).isEqualTo(new SubExprsB(func, args));
+    var argument = bString();
+    assertThat(bCall(func, argument).subExprs()).isEqualTo(new SubExprsB(func, bCombine(argument)));
   }
 
   @Nested
@@ -77,10 +77,10 @@ public class BCallTest extends TestingVirtualMachine {
   @Test
   public void call_read_back_by_hash_has_same_data() throws Exception {
     var func = bLambda(list(bStringType()), bInt());
-    var args = bCombine(bString());
-    var call = bCall(func, args);
+    var argument = bString();
+    var call = bCall(func, argument);
     assertThat(((BCall) exprDbOther().get(call.hash())).subExprs())
-        .isEqualTo(new BCall.SubExprsB(func, args));
+        .isEqualTo(new BCall.SubExprsB(func, bCombine(argument)));
   }
 
   @Test

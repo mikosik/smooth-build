@@ -146,14 +146,14 @@ public class SbTranslator {
   }
 
   private BCall translateCall(SCall sCall) throws SbTranslatorException {
-    var callableB = translateExpr(sCall.callee());
-    var argsB = (BCombine) translateExpr(sCall.args());
-    return bytecodeF.call(callableB, argsB);
+    var bFunction = translateExpr(sCall.callee());
+    var bArguments = translateExpr(sCall.args());
+    return bytecodeF.call(bFunction, bArguments);
   }
 
   private BCombine translateCombine(SCombine sCombine) throws SbTranslatorException {
-    var elemBs = translateExprs(sCombine.elems());
-    return bytecodeF.combine(elemBs);
+    var bElements = translateExprs(sCombine.elems());
+    return bytecodeF.combine(bElements);
   }
 
   private BInt translateInt(SInt sInt) throws SbTranslatorException {

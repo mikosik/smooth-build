@@ -127,6 +127,10 @@ public abstract class TestingBytecode {
     return kindDb().string();
   }
 
+  public BTupleType bTupleType(List<BType> itemTypes) throws BytecodeException {
+    return kindDb().tuple(itemTypes);
+  }
+
   public BTupleType bTupleType(BType... itemTypes) throws BytecodeException {
     return kindDb().tuple(itemTypes);
   }
@@ -458,12 +462,12 @@ public abstract class TestingBytecode {
     return bCall(bIntIdFunc(), bInt());
   }
 
-  public BCall bCall(BExpr func, BExpr... args) throws BytecodeException {
-    return bCall(func, bCombine(args));
+  public BCall bCall(BExpr func, BExpr... arguments) throws BytecodeException {
+    return bytecodeF().call(func, bCombine(arguments));
   }
 
-  public BCall bCall(BExpr func, BCombine args) throws BytecodeException {
-    return bytecodeF().call(func, args);
+  public BCall bCallWithArguments(BExpr func, BExpr arguments) throws BytecodeException {
+    return bytecodeF().call(func, arguments);
   }
 
   public BCombine bCombine(BExpr... items) throws BytecodeException {
@@ -495,6 +499,10 @@ public abstract class TestingBytecode {
     return bPick(bArray(bInt()), bInt(0));
   }
 
+  public BPick bPick(BExpr array, int index) throws BytecodeException {
+    return bytecodeF().pick(array, bInt(index));
+  }
+
   public BPick bPick(BExpr array, BExpr index) throws BytecodeException {
     return bytecodeF().pick(array, index);
   }
@@ -508,7 +516,11 @@ public abstract class TestingBytecode {
   }
 
   public BSelect bSelect() throws BytecodeException {
-    return bytecodeF().select(bTuple(bInt()), bInt(0));
+    return bSelect(bTuple(bInt()), 0);
+  }
+
+  public BSelect bSelect(BExpr tuple, int index) throws BytecodeException {
+    return bytecodeF().select(tuple, bInt(index));
   }
 
   public BSelect bSelect(BExpr tuple, BInt index) throws BytecodeException {

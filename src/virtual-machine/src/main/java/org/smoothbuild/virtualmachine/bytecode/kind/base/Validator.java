@@ -4,11 +4,6 @@ import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 
 public class Validator {
-  public static <T extends Throwable> void validateArgs(
-      BLambdaType lambdaType, List<BType> items, Supplier<T> exceptionSupplier) throws T {
-    validateTuple(lambdaType.params(), items, exceptionSupplier);
-  }
-
   public static <T extends Throwable> void validateTuple(
       BTupleType tupleType, List<BType> itemTypes, Supplier<T> exceptionSupplier) throws T {
     List<BType> expectedTypes = tupleType.elements();
