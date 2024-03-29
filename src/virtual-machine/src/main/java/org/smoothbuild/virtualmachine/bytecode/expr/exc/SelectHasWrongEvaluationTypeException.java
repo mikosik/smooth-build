@@ -4,8 +4,8 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
-public class DecodeSelectWrongEvaluationTypeException extends DecodeExprException {
-  public DecodeSelectWrongEvaluationTypeException(Hash hash, BSelectKind kind, BType actual) {
+public class SelectHasWrongEvaluationTypeException extends DecodeExprException {
+  public SelectHasWrongEvaluationTypeException(Hash hash, BSelectKind kind, BType actual) {
     super(buildMessage(hash, kind, actual));
   }
 

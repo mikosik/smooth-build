@@ -6,8 +6,8 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.CombineHasWrongElementsSizeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -40,13 +40,13 @@ public final class BCombine extends BOperation {
     List<BType> expectedTypes = evaluationType().elements();
     List<BExpr> items = readDataAsExprChain(BExpr.class);
     if (items.size() != expectedTypes.size()) {
-      throw new DecodeCombineWrongElementsSizeException(hash(), kind(), items.size());
+      throw new CombineHasWrongElementsSizeException(hash(), kind(), items.size());
     }
     for (int i = 0; i < items.size(); i++) {
       BExpr item = items.get(i);
       BType type = expectedTypes.get(i);
       if (!type.equals(item.evaluationType())) {
-        throw new DecodeExprWrongNodeTypeException(
+        throw new NodeHasWrongTypeException(
             hash(), kind(), "elements", i, expectedTypes.get(i), items.get(i).evaluationType());
       }
     }

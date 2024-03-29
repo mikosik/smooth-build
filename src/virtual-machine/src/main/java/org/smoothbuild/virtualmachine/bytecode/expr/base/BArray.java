@@ -8,7 +8,7 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 
 /**
@@ -58,7 +58,7 @@ public final class BArray extends BValue {
     for (int i = 0; i < elements.size(); i++) {
       var elemT = elements.get(i).type();
       if (!expectedElementType.equals(elemT)) {
-        throw new DecodeExprWrongNodeTypeException(
+        throw new NodeHasWrongTypeException(
             hash(), kind(), DATA_PATH, i, expectedElementType, elemT);
       }
     }

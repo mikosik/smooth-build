@@ -6,7 +6,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BOrderKind;
 
@@ -40,7 +40,7 @@ public final class BOrder extends BOperation {
     for (int i = 0; i < elements.size(); i++) {
       var actualT = elements.get(i).evaluationType();
       if (!expectedElementT.equals(actualT)) {
-        throw new DecodeExprWrongNodeTypeException(
+        throw new NodeHasWrongTypeException(
             hash(), kind(), "elements", i, expectedElementT, actualT);
       }
     }

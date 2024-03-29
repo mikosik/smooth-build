@@ -7,7 +7,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 
@@ -35,7 +35,7 @@ public final class BInvoke extends BOperation {
     var isPure = readMemberFromHashChain(hashes, 2, "isPure", kindDb().bool());
     var arguments = readMemberFromHashChain(hashes, 3);
     if (!(arguments.evaluationType() instanceof BTupleType)) {
-      throw new DecodeExprWrongMemberTypeException(
+      throw new MemberHasWrongTypeException(
           hash(),
           kind(),
           "arguments",

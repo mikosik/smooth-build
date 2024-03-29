@@ -6,13 +6,13 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
-public class DecodeExprWrongMemberEvaluationTypeException extends DecodeExprException {
-  public DecodeExprWrongMemberEvaluationTypeException(
+public class MemberHasWrongEvaluationTypeException extends DecodeExprException {
+  public MemberHasWrongEvaluationTypeException(
       Hash hash, BKind kind, String memberName, BType expected, BType actual) {
     super(buildMessage(hash, kind, memberName, expected.name(), actual.name()));
   }
 
-  public DecodeExprWrongMemberEvaluationTypeException(
+  public MemberHasWrongEvaluationTypeException(
       Hash hash, BKind kind, String memberName, String expected, BType actual) {
     super(buildMessage(hash, kind, memberName, expected, actual.name()));
   }

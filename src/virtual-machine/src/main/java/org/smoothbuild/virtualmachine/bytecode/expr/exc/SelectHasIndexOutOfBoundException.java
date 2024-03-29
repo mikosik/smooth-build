@@ -3,8 +3,8 @@ package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 
-public class DecodeSelectIndexOutOfBoundsException extends DecodeExprException {
-  public DecodeSelectIndexOutOfBoundsException(Hash hash, BKind kind, int index, int size) {
+public class SelectHasIndexOutOfBoundException extends DecodeExprException {
+  public SelectHasIndexOutOfBoundException(Hash hash, BKind kind, int index, int size) {
     super(buildMessage(hash, kind, index, size));
   }
 

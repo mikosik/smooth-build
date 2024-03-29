@@ -13,10 +13,10 @@ import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeChainSizeIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeClassIsWrongException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
@@ -122,8 +122,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
   protected List<Hash> readDataAsHashChain(int expectedSize) throws BExprDbException {
     List<Hash> data = readDataAsHashChain();
     if (data.size() != expectedSize) {
-      throw new DecodeExprWrongChainSizeException(
-          hash(), kind(), DATA_PATH, expectedSize, data.size());
+      throw new NodeChainSizeIsWrongException(hash(), kind(), DATA_PATH, expectedSize, data.size());
     }
     return data;
   }
@@ -155,9 +154,9 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   protected void validateEvaluationType(
       String nodeName, BType expectedEvaluationType, BType evaluationType)
-      throws DecodeExprWrongMemberEvaluationTypeException {
+      throws MemberHasWrongEvaluationTypeException {
     if (!(evaluationType.equals(expectedEvaluationType))) {
-      throw new DecodeExprWrongMemberEvaluationTypeException(
+      throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), nodeName, expectedEvaluationType, evaluationType);
     }
   }
@@ -203,8 +202,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
       T result = (T) nodeExpr;
       return result;
     } else {
-      throw new DecodeExprWrongMemberTypeException(
-          hash(), kind(), name, clazz, nodeExpr.getClass());
+      throw new MemberHasWrongTypeException(hash(), kind(), name, clazz, nodeExpr.getClass());
     }
   }
 
@@ -215,8 +213,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
       T result = (T) nodeExpr;
       return result;
     } else {
-      throw new DecodeExprWrongNodeClassException(
-          hash(), kind(), nodePath, clazz, nodeExpr.getClass());
+      throw new NodeClassIsWrongException(hash(), kind(), nodePath, clazz, nodeExpr.getClass());
     }
   }
 

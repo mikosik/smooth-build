@@ -7,7 +7,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 
@@ -31,12 +31,12 @@ public final class BCall extends BOperation {
     var lambda = readMemberFromHashChain(hashes, 0);
     var lambdaEvaluationType = lambda.evaluationType();
     if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
-      throw new DecodeExprWrongMemberEvaluationTypeException(
+      throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "lambda", BLambdaType.class.getSimpleName(), lambdaEvaluationType);
     }
     var args = readMemberFromHashChain(hashes, 1, "arguments", lambdaType.params());
     if (!evaluationType().equals(lambdaType.result())) {
-      throw new DecodeExprWrongMemberEvaluationTypeException(
+      throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "function.resultType", evaluationType(), lambdaType.result());
     }
     return new SubExprsB(lambda, args);

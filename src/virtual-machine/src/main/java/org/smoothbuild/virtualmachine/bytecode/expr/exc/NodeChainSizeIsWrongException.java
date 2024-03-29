@@ -3,8 +3,8 @@ package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 
-public class DecodeExprWrongChainSizeException extends DecodeExprNodeException {
-  public DecodeExprWrongChainSizeException(
+public class NodeChainSizeIsWrongException extends DecodeExprNodeException {
+  public NodeChainSizeIsWrongException(
       Hash hash, BKind kind, String path, int expectedSize, int actualSize) {
     super(
         hash,
