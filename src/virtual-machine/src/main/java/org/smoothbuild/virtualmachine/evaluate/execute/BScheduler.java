@@ -86,7 +86,7 @@ public class BScheduler {
 
   private void scheduleJobTasksEvaluation(Job job) throws BytecodeException {
     switch (job.expr()) {
-      case BCall call -> scheduleApply(job, call);
+      case BCall call -> scheduleCall(job, call);
       case BCombine combine -> scheduleOperationTask(job, combine, CombineTask::new);
       case BIf if_ -> scheduleIfOperation(job, if_);
       case BMap map -> scheduleMapOperation(job, map);
@@ -100,12 +100,12 @@ public class BScheduler {
     }
   }
 
-  // Apply operation
+  // Call operation
 
-  public void scheduleApply(Job applyJob, BCall apply) throws BytecodeException {
-    var lambdaJob = newJob(apply.subExprs().lambda(), applyJob);
+  public void scheduleCall(Job callJob, BCall call) throws BytecodeException {
+    var lambdaJob = newJob(call.subExprs().lambda(), callJob);
     scheduleJobEvaluation(
-        lambdaJob, lambda -> handleCallWithEvaluatedLambda((BLambda) lambda, applyJob, apply));
+        lambdaJob, lambda -> handleCallWithEvaluatedLambda((BLambda) lambda, callJob, call));
   }
 
   private void handleCallWithEvaluatedLambda(BLambda lambda, Job callJob, BCall call)
