@@ -16,7 +16,7 @@ public class BSelectTest extends TestingVirtualMachine {
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> bSelect(bInt(3), bInt(2)))
         .throwsException(new IllegalArgumentException(
-            "selectable.evaluationType() should be `Tuple` but is `Int`."));
+            "`selectable.evaluationType()` should be `BTupleType` but is `BIntType`."));
   }
 
   @Test

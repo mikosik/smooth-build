@@ -22,9 +22,8 @@ public class BIfTest extends TestingVirtualMachine {
   @Test
   void creating_if_with_then_and_else_having_different_evaluation_type_fails() {
     assertCall(() -> bIf(bBool(), bInt(), bString()))
-        .throwsException(
-            new IllegalArgumentException(
-                "`then.evaluationType()` (which is `Int`) should be equal to `else.evaluationType()` (which is `String`)."));
+        .throwsException(new IllegalArgumentException(
+            "`then.evaluationType()` should be `String` but is `Int`."));
   }
 
   @Nested

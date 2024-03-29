@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
@@ -89,23 +88,20 @@ public class BExprDb {
       throws BytecodeException {
     var jarEvaluationType = jar.evaluationType();
     if (!jarEvaluationType.equals(kindDb.blob())) {
-      throw new IllegalArgumentException("`jar.evaluationType()` should be "
-          + kindDb.blob().q() + " but is " + jarEvaluationType.q() + ".");
+      throw illegalEvaluationType("jar", kindDb.blob(), jarEvaluationType);
     }
     var classBinaryNameEvaluationType = classBinaryName.evaluationType();
     if (!classBinaryNameEvaluationType.equals(kindDb.string())) {
-      throw new IllegalArgumentException("`classBinaryName.evaluationType()` should be "
-          + kindDb.string().q() + " but is " + classBinaryNameEvaluationType.q() + ".");
+      throw illegalEvaluationType(
+          "classBinaryName", kindDb.string(), classBinaryNameEvaluationType);
     }
     var isPureEvaluationType = isPure.evaluationType();
     if (!isPureEvaluationType.equals(kindDb.bool())) {
-      throw new IllegalArgumentException("`isPure.evaluationType()` should be "
-          + kindDb.bool().q() + " but is " + isPureEvaluationType.q() + ".");
+      throw illegalEvaluationType("isPure", kindDb.bool(), isPureEvaluationType);
     }
     var argumentsEvaluationType = arguments.evaluationType();
     if (!(argumentsEvaluationType instanceof BTupleType)) {
-      throw new IllegalArgumentException("`arguments.evaluationType()` should be `BTupleType` but "
-          + "is " + q(argumentsEvaluationType.getClass().getSimpleName()) + ".");
+      throw illegalEvaluationType("arguments", BTupleType.class, argumentsEvaluationType);
     }
 
     var kind = kindDb.invoke(evaluationType);
@@ -145,14 +141,13 @@ public class BExprDb {
   }
 
   private BCallKind calculateCallKind(BExpr lambda, BExpr args) throws BKindDbException {
-    if (!(lambda.evaluationType() instanceof BLambdaType lambdaType)) {
-      throw new IllegalArgumentException("`lambda` component doesn't evaluate to BLambda.");
+    var lambdaEvaluationType = lambda.evaluationType();
+    if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
+      throw illegalEvaluationType("lambda", BLambdaType.class, lambdaEvaluationType);
     }
     var argumentsEvaluationType = args.evaluationType();
     if (!lambdaType.params().equals(argumentsEvaluationType)) {
-      throw new IllegalArgumentException(
-          "Argument evaluation types %s should be equal to lambda parameter types %s."
-              .formatted(argumentsEvaluationType.q(), lambdaType.params().q()));
+      throw illegalEvaluationType("arguments", lambdaType.params(), argumentsEvaluationType);
     }
     return kindDb.call(lambdaType.result());
   }
@@ -166,16 +161,14 @@ public class BExprDb {
   }
 
   public BIf newIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
-    var conditionType = condition.evaluationType();
-    if (!conditionType.equals(kindDb.bool())) {
-      throw new IllegalArgumentException(
-          "`condition.evaluationType()` should be `Bool` but is " + conditionType.q() + ".");
+    var conditionEvaluationType = condition.evaluationType();
+    if (!conditionEvaluationType.equals(kindDb.bool())) {
+      throw illegalEvaluationType("condition", kindDb.bool(), conditionEvaluationType);
     }
     var thenType = then_.evaluationType();
     var elseType = else_.evaluationType();
     if (!thenType.equals(elseType)) {
-      throw new IllegalArgumentException("`then.evaluationType()` (which is " + thenType.q()
-          + ") should be equal to `else.evaluationType()` (which is " + elseType.q() + ").");
+      throw illegalEvaluationType("then", elseType, thenType);
     }
     var kind = kindDb.if_(thenType);
     var data = writeChain(condition.hash(), then_.hash(), else_.hash());
@@ -192,29 +185,27 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  private static BType validateMapSubExprsAndGetMapperResultType(BExpr array, BExpr mapper) {
+  private BType validateMapSubExprsAndGetMapperResultType(BExpr array, BExpr mapper)
+      throws BKindDbException {
     var type = array.evaluationType();
     if (!(type instanceof BArrayType arrayType)) {
-      throw new IllegalArgumentException(
-          "`array.evaluationType()` must be array type but is " + type.q() + ".");
+      throw illegalEvaluationType("array", BArrayType.class, type);
     }
     var elementType = arrayType.element();
     var mapperType = mapper.evaluationType();
     if (!(mapperType instanceof BLambdaType lambdaType)) {
-      throw new IllegalArgumentException("`mapper.evaluationType()` must be "
-          + expectedMapperType(elementType) + " but is " + mapperType.q() + ".");
+      throw illegalEvaluationType("mapper", BLambdaType.class, mapperType);
     }
     var params = lambdaType.params().elements();
     if (!(params.size() == 1 && params.get(0).equals(elementType))) {
-      throw new IllegalArgumentException(
-          "`mapper.evaluationType()` must be " + expectedMapperType(elementType) + " but is `"
-              + params.toString("(", ", ", ")") + "->?`.");
+      throw illegalEvaluationType(
+          "mapper.arguments", expectedMapperArgumentsType(elementType), lambdaType.params());
     }
     return lambdaType.result();
   }
 
-  private static String expectedMapperType(BType elementType) {
-    return "`(" + elementType.name() + ")->?`";
+  private BTupleType expectedMapperArgumentsType(BType elementType) throws BKindDbException {
+    return kindDb.tuple(elementType);
   }
 
   public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elements)
@@ -228,9 +219,9 @@ public class BExprDb {
 
   public BPick newPick(BExpr pickable, BExpr index) throws BytecodeException {
     var evaluationType = pickEvaluationType(pickable);
-    if (!(index.evaluationType() instanceof BIntType)) {
-      throw new IllegalArgumentException("index.evaluationType() should be `Int` but is "
-          + index.evaluationType().q() + ".");
+    var indexEvaluationType = index.evaluationType();
+    if (!(indexEvaluationType instanceof BIntType)) {
+      throw illegalEvaluationType("index", BIntType.class, indexEvaluationType);
     }
     var kind = kindDb.pick(evaluationType);
     var dataHash = writeChain(pickable.hash(), index.hash());
@@ -255,10 +246,10 @@ public class BExprDb {
   // validators
 
   private static void validateBodyEvaluationType(BLambdaType lambdaType, BExpr body) {
-    if (!body.evaluationType().equals(lambdaType.result())) {
-      var message = "body.evaluationType() = %s should be equal to lambdaType.result() = %s."
-          .formatted(body.evaluationType().q(), lambdaType.result().q());
-      throw new IllegalArgumentException(message);
+    var bodyEvaluationType = body.evaluationType();
+    var lambdaEvaluationType = lambdaType.result();
+    if (!bodyEvaluationType.equals(lambdaEvaluationType)) {
+      throw illegalEvaluationType("body", lambdaEvaluationType, bodyEvaluationType);
     }
   }
 
@@ -266,10 +257,26 @@ public class BExprDb {
     for (int i = 0; i < elems.size(); i++) {
       var iElementType = elems.get(i).evaluationType();
       if (!elementType.equals(iElementType)) {
-        throw new IllegalArgumentException("Illegal elem type. Expected " + elementType.q()
-            + " but element at index " + i + " has type " + iElementType.q() + ".");
+        throw illegalEvaluationType("element" + i, elementType, iElementType);
       }
     }
+  }
+
+  private static IllegalArgumentException illegalEvaluationType(
+      String name, Class<?> expected, BType actual) {
+    return illegalEvaluationType(
+        name, expected.getSimpleName(), actual.getClass().getSimpleName());
+  }
+
+  private static IllegalArgumentException illegalEvaluationType(
+      String name, BType expected, BType actual) {
+    return illegalEvaluationType(name, expected.name(), actual.name());
+  }
+
+  private static IllegalArgumentException illegalEvaluationType(
+      String name, String expected, String actual) {
+    return new IllegalArgumentException(
+        "`%s.evaluationType()` should be `%s` but is `%s`.".formatted(name, expected, actual));
   }
 
   // generic getter
@@ -318,25 +325,23 @@ public class BExprDb {
   // methods for creating types
 
   private BType pickEvaluationType(BExpr pickable) {
-    var evaluationType = pickable.evaluationType();
-    if (evaluationType instanceof BArrayType arrayType) {
+    var pickableEvaluationType = pickable.evaluationType();
+    if (pickableEvaluationType instanceof BArrayType arrayType) {
       return arrayType.element();
     } else {
-      throw new IllegalArgumentException(
-          "pickable.evaluationType() should be `Array` but is " + evaluationType.q() + ".");
+      throw illegalEvaluationType("pickable", BArrayType.class, pickableEvaluationType);
     }
   }
 
   private BType selectEvaluationType(BExpr selectable, BInt index) throws BytecodeException {
-    var evaluationType = selectable.evaluationType();
-    if (evaluationType instanceof BTupleType tuple) {
+    var selectableEvaluationType = selectable.evaluationType();
+    if (selectableEvaluationType instanceof BTupleType tuple) {
       int intIndex = index.toJavaBigInteger().intValue();
       var elements = tuple.elements();
       checkElementIndex(intIndex, elements.size());
       return elements.get(intIndex);
     } else {
-      throw new IllegalArgumentException(
-          "selectable.evaluationType() should be `Tuple` but is " + evaluationType.q() + ".");
+      throw illegalEvaluationType("selectable", BTupleType.class, selectableEvaluationType);
     }
   }
 

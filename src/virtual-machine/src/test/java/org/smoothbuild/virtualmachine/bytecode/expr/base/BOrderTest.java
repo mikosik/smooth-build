@@ -18,12 +18,10 @@ public class BOrderTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void creating_order_with_elemT_different_than_required_causes_exception()
-      throws Exception {
+  public void creating_order_with_elemT_different_than_required_causes_exception() {
     assertCall(() -> bOrder(bIntType(), bString("abc")).kind())
         .throwsException(new IllegalArgumentException(
-            "Illegal elem type. Expected " + bIntType().q() + " but element at index 0 has type "
-                + bStringType().q() + "."));
+            "`element0.evaluationType()` should be `Int` but is `String`."));
   }
 
   @Test
