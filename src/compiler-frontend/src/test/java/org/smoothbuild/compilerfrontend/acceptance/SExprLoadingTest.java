@@ -192,7 +192,7 @@ public class SExprLoadingTest {
               .evaluables()
               .get("result");
           SExpr actualDefArg =
-              ((SCall) ((SNamedExprValue) result).body()).args().elems().get(0);
+              ((SCall) ((SNamedExprValue) result).body()).args().elements().get(0);
           assertThat(actualDefArg).isEqualTo(expected);
         }
       }

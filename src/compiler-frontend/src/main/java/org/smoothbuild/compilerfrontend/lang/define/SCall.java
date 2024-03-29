@@ -21,7 +21,7 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
 
   private static void validateArgsSize(SFuncType sFuncType, SCombine args) {
     int paramsCount = sFuncType.params().size();
-    int argsCount = args.elems().size();
+    int argsCount = args.elements().size();
     if (argsCount != paramsCount) {
       throw new IllegalArgumentException(
           "Call requires " + paramsCount + " but args size is " + argsCount + ".");

@@ -15,7 +15,7 @@ public class SOrderTest {
             """
             SOrder(
               evaluationType = [Int]
-              elems = [
+              elements = [
                 SInt(Int, 44, {prj}/build.smooth:4)
                 SInt(Int, 55, {prj}/build.smooth:5)
               ]

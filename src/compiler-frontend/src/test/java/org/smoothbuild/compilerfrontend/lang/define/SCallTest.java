@@ -31,7 +31,7 @@ public class SCallTest {
               )
               args = SCombine(
                 evaluationType = (Int)
-                elems = [
+                elements = [
                   SInt(Int, 7, {prj}/build.smooth:3)
                 ]
                 location = {prj}/build.smooth:3
