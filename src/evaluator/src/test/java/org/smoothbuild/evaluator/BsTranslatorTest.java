@@ -11,7 +11,6 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -27,7 +26,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
   public void empty_trace() {
     var bsMapping = new BsMapping();
     var bsTraceTranslator = new BsTranslator(bsMapping);
-    assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(TestingSExpression.sTrace());
+    assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(sTrace());
   }
 
   @Test
@@ -42,7 +41,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(TestingSExpression.sTrace("name4", location(3), "name2", location(1)));
+        .isEqualTo(sTrace("name4", location(3), "name2", location(1)));
   }
 
   @Test
@@ -50,7 +49,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(TestingSExpression.sTrace("name4", location(3), "???", location(1)));
+        .isEqualTo(sTrace("name4", location(3), "???", location(1)));
   }
 
   @Test
@@ -58,7 +57,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(TestingSExpression.sTrace("name4", location(3), "name2", unknownLocation()));
+        .isEqualTo(sTrace("name4", location(3), "name2", unknownLocation()));
   }
 
   private static BsMapping createBsMapping() {

@@ -1,68 +1,75 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.arrayTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.funcTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.isLowerCase;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.isUpperCase;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.isVarName;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.startsWithLowerCase;
+import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.startsWithUpperCase;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class TypeNamesSTest {
   @Test
   public void is_upper_case() {
     for (char i = 'A'; i <= 'Z'; i++) {
-      assertThat(TypeNamesS.isUpperCase(i)).isTrue();
+      assertThat(isUpperCase(i)).isTrue();
     }
     for (char i = 'a'; i <= 'z'; i++) {
-      assertThat(TypeNamesS.isUpperCase(i)).isFalse();
+      assertThat(isUpperCase(i)).isFalse();
     }
     for (char i = '0'; i <= '9'; i++) {
-      assertThat(TypeNamesS.isUpperCase(i)).isFalse();
+      assertThat(isUpperCase(i)).isFalse();
     }
-    assertThat(TypeNamesS.isUpperCase('_')).isFalse();
+    assertThat(isUpperCase('_')).isFalse();
   }
 
   @Test
   public void is_lower_case() {
     for (char i = 'A'; i <= 'Z'; i++) {
-      assertThat(TypeNamesS.isLowerCase(i)).isFalse();
+      assertThat(isLowerCase(i)).isFalse();
     }
     for (char i = 'a'; i <= 'z'; i++) {
-      assertThat(TypeNamesS.isLowerCase(i)).isTrue();
+      assertThat(isLowerCase(i)).isTrue();
     }
     for (char i = '0'; i <= '9'; i++) {
-      assertThat(TypeNamesS.isLowerCase(i)).isFalse();
+      assertThat(isLowerCase(i)).isFalse();
     }
-    assertThat(TypeNamesS.isLowerCase('_')).isFalse();
+    assertThat(isLowerCase('_')).isFalse();
   }
 
   @Nested
   class _starts_with_upper_case {
     @Test
     public void lower_case() {
-      assertThat(TypeNamesS.startsWithUpperCase("abc")).isFalse();
+      assertThat(startsWithUpperCase("abc")).isFalse();
     }
 
     @Test
     public void upper_case() {
-      assertThat(TypeNamesS.startsWithUpperCase("Abc")).isTrue();
+      assertThat(startsWithUpperCase("Abc")).isTrue();
     }
 
     @Test
     public void empty_string_does_not_start_with_uppercase() {
-      assertThat(TypeNamesS.startsWithUpperCase("")).isFalse();
+      assertThat(startsWithUpperCase("")).isFalse();
     }
 
     @Test
     public void digit() {
-      assertThat(TypeNamesS.startsWithUpperCase("3")).isFalse();
+      assertThat(startsWithUpperCase("3")).isFalse();
     }
 
     @Test
     public void underscore() {
-      assertThat(TypeNamesS.startsWithLowerCase("_")).isFalse();
+      assertThat(startsWithLowerCase("_")).isFalse();
     }
   }
 
@@ -70,27 +77,27 @@ public class TypeNamesSTest {
   class _starts_with_lower_case {
     @Test
     public void lower_case() {
-      assertThat(TypeNamesS.startsWithLowerCase("abc")).isTrue();
+      assertThat(startsWithLowerCase("abc")).isTrue();
     }
 
     @Test
     public void upper_case() {
-      assertThat(TypeNamesS.startsWithLowerCase("Abc")).isFalse();
+      assertThat(startsWithLowerCase("Abc")).isFalse();
     }
 
     @Test
     public void empty_string_does_not_start_with_lowercase() {
-      assertThat(TypeNamesS.startsWithLowerCase("")).isFalse();
+      assertThat(startsWithLowerCase("")).isFalse();
     }
 
     @Test
     public void digit() {
-      assertThat(TypeNamesS.startsWithLowerCase("3")).isFalse();
+      assertThat(startsWithLowerCase("3")).isFalse();
     }
 
     @Test
     public void underscore() {
-      assertThat(TypeNamesS.startsWithLowerCase("_")).isFalse();
+      assertThat(startsWithLowerCase("_")).isFalse();
     }
   }
 
@@ -98,62 +105,62 @@ public class TypeNamesSTest {
   class _var_name {
     @Test
     public void uppercase_A_character_is_type_var_name() {
-      assertThat(TypeNamesS.isVarName("A")).isTrue();
+      assertThat(isVarName("A")).isTrue();
     }
 
     @Test
     public void lowercase_a_character_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("a")).isFalse();
+      assertThat(isVarName("a")).isFalse();
     }
 
     @Test
     public void uppercase_AA_character_is_type_var_name() {
-      assertThat(TypeNamesS.isVarName("AA")).isTrue();
+      assertThat(isVarName("AA")).isTrue();
     }
 
     @Test
     public void mixed_case_Aa_character_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("Aa")).isFalse();
+      assertThat(isVarName("Aa")).isFalse();
     }
 
     @Test
     public void uppercase_B_character_is_type_var_name() {
-      assertThat(TypeNamesS.isVarName("B")).isTrue();
+      assertThat(isVarName("B")).isTrue();
     }
 
     @Test
     public void lowercase_b_character_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("b")).isFalse();
+      assertThat(isVarName("b")).isFalse();
     }
 
     @Test
     public void empty_string_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("")).isFalse();
+      assertThat(isVarName("")).isFalse();
     }
 
     @Test
     public void underscore_character_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("_")).isFalse();
+      assertThat(isVarName("_")).isFalse();
     }
 
     @Test
     public void uppercase_A_with_underscore_character_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("A_")).isFalse();
+      assertThat(isVarName("A_")).isFalse();
     }
 
     @Test
     public void whitespace_string_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName(" ")).isFalse();
+      assertThat(isVarName(" ")).isFalse();
     }
 
     @Test
     public void longer_string_starting_with_lowercase_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("alphabet")).isFalse();
+      assertThat(isVarName("alphabet")).isFalse();
     }
 
     @Test
     public void longer_string_starting_with_uppercase_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName("Alphabet")).isFalse();
+      assertThat(isVarName("Alphabet")).isFalse();
     }
   }
 
@@ -161,7 +168,7 @@ public class TypeNamesSTest {
   class _array_type_name {
     @Test
     public void array_type_name() {
-      assertThat(TypeNamesS.arrayTypeName(sStringType())).isEqualTo("[String]");
+      assertThat(arrayTypeName(sStringType())).isEqualTo("[String]");
     }
   }
 
@@ -169,8 +176,7 @@ public class TypeNamesSTest {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(TypeNamesS.funcTypeName(
-              TestingSExpression.sTupleType(sBlobType(), sBoolType()), sStringType()))
+      assertThat(funcTypeName(sTupleType(sBlobType(), sBoolType()), sStringType()))
           .isEqualTo("(Blob,Bool)->String");
     }
   }

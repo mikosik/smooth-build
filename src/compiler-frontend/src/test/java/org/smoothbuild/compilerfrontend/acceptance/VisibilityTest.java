@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
@@ -11,7 +12,6 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userMo
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class VisibilityTest {
   @Nested
@@ -786,8 +786,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema(
-                  "otherModuleValue", sSchema(TestingSExpression.sFuncType(sIntType())));
+              .containsEvaluableWithSchema("otherModuleValue", sSchema(sFuncType(sIntType())));
         }
 
         @Test
@@ -797,8 +796,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema(
-                  "otherModuleFunc", sSchema(TestingSExpression.sFuncType(sIntType())));
+              .containsEvaluableWithSchema("otherModuleFunc", sSchema(sFuncType(sIntType())));
         }
 
         @Test
@@ -808,8 +806,7 @@ public class VisibilityTest {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema(
-                  "otherModuleStruct", sSchema(TestingSExpression.sFuncType(sIntType())));
+              .containsEvaluableWithSchema("otherModuleStruct", sSchema(sFuncType(sIntType())));
         }
       }
 
