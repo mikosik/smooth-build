@@ -294,13 +294,13 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
-      var func = bLambda(funcType, bInt());
+      var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var args = bCombine(bString(), bInt());
-      var hash = hash(hash(bCallKind(bIntType())), hash(hash(func), hash(args)));
+      var hash = hash(hash(bCallKind(bIntType())), hash(hash(lambda), hash(args)));
 
       assertThat(((BCall) exprDb().get(hash)).subExprs())
-          .isEqualTo(new BCall.SubExprsB(func, args));
+          .isEqualTo(new BCall.SubExprsB(lambda, args));
     }
 
     @Test
@@ -310,10 +310,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
-      var func = bLambda(funcType, bInt());
+      var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var args = bCombine(bString(), bInt());
-      var dataHash = hash(hash(func), hash(args));
+      var dataHash = hash(hash(lambda), hash(args));
       obj_root_with_two_data_hashes(
           bCallKind(bIntType()), dataHash, (Hash hash) -> ((BCall) exprDb().get(hash)).subExprs());
     }
@@ -326,9 +326,9 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void data_is_chain_with_one_elem() throws Exception {
-      var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
-      var func = bLambda(funcType, bInt());
-      var dataHash = hash(hash(func));
+      var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
+      var dataHash = hash(hash(lambda));
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
@@ -337,10 +337,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
 
     @Test
     public void data_is_chain_with_three_elements() throws Exception {
-      var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
-      var func = bLambda(funcType, bInt());
+      var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var args = bCombine(bString(), bInt());
-      var dataHash = hash(hash(func), hash(args), hash(args));
+      var dataHash = hash(hash(lambda), hash(args), hash(args));
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
@@ -348,11 +348,11 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void func_component_evaluation_type_is_not_func() throws Exception {
-      var notFunc = bInt(3);
+    public void lambda_component_evaluation_type_is_not_lambda() throws Exception {
+      var notLambda = bInt(3);
       var args = bCombine(bInt());
       var type = bCallKind(bStringType());
-      var hash = hash(hash(type), hash(hash(notFunc), hash(args)));
+      var hash = hash(hash(type), hash(hash(notLambda), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "lambda", "BLambdaType", bIntType()));
@@ -361,10 +361,10 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void arguments_is_value_instead_of_expression_with_tuple_evaluation_type()
         throws Exception {
-      var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
-      var func = bLambda(funcType, bInt());
+      var lambdaType = bLambdaType(bStringType(), bIntType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var type = bCallKind(bIntType());
-      var hash = hash(hash(type), hash(hash(func), hash(bInt())));
+      var hash = hash(hash(type), hash(hash(lambda), hash(bInt())));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "arguments", bTupleType(bStringType(), bIntType()), bIntType()));
@@ -374,36 +374,36 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     public void args_component_evaluation_type_is_not_tuple_but_different_operation()
         throws Exception {
       var argumentTypes = list(bStringType(), bIntType());
-      var funcType = bLambdaType(argumentTypes, bIntType());
-      var func = bLambda(funcType, bInt());
+      var lambdaType = bLambdaType(argumentTypes, bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var type = bCallKind(bIntType());
       var notTuple = bOrder();
-      var hash = hash(hash(type), hash(hash(func), hash(notTuple)));
+      var hash = hash(hash(type), hash(hash(lambda), hash(notTuple)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "arguments", bTupleType(argumentTypes), notTuple.evaluationType()));
     }
 
     @Test
-    public void evaluation_type_is_different_than_func_evaluation_type_result() throws Exception {
-      var funcType = bLambdaType(bStringType(), bIntType());
-      var func = bLambda(funcType, bInt());
+    public void evaluation_type_is_different_than_lambda_evaluation_type_result() throws Exception {
+      var lambdaType = bLambdaType(bStringType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var args = bCombine(bString());
       var type = bCallKind(bStringType());
-      var hash = hash(hash(type), hash(hash(func), hash(args)));
+      var hash = hash(hash(type), hash(hash(lambda), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
-              hash, type, "function.resultType", bStringType(), bIntType()));
+              hash, type, "lambda.resultType", bStringType(), bIntType()));
     }
 
     @Test
-    public void func_evaluation_type_params_does_not_match_args_evaluation_types()
+    public void lambda_evaluation_type_params_does_not_match_args_evaluation_types()
         throws Exception {
-      var funcType = bLambdaType(bStringType(), bBoolType(), bIntType());
-      var func = bLambda(funcType, bInt());
+      var lambdaType = bLambdaType(bStringType(), bBoolType(), bIntType());
+      var lambda = bLambda(lambdaType, bInt());
       var args = bCombine(bString(), bInt());
       var kind = bCallKind(bIntType());
-      var hash = hash(hash(kind), hash(hash(func), hash(args)));
+      var hash = hash(hash(kind), hash(hash(lambda), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
               hash,
@@ -530,7 +530,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
+    public void body_evaluation_type_is_not_equal_lambda_type_result() throws Exception {
       var body = bInt(17);
       var kind = bLambdaType(bIntType(), bStringType(), bBoolType());
       var hash = hash(hash(kind), hash(body));
@@ -694,7 +694,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
        * in HashedDb.
        */
       var array = bArray(bInt(1));
-      var mapper = bIntIdFunc();
+      var mapper = bIntIdLambda();
       var dataHash = hash(hash(array), hash(mapper));
       var hash = hash(hash(bMapKind(bArrayType(bIntType()))), dataHash);
       assertThat(((BMap) exprDb().get(hash)).subExprs())
@@ -709,7 +709,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var array = bArray(bInt(1));
-      var mapper = bIntIdFunc();
+      var mapper = bIntIdLambda();
       var kind = bMapKind(bArrayType(bIntType()));
       var dataHash = hash(hash(array), hash(mapper));
       obj_root_with_two_data_hashes(
@@ -736,7 +736,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void data_is_chain_with_three_elements() throws Exception {
       var array = bArray(bInt());
-      var mapper = bIntIdFunc();
+      var mapper = bIntIdLambda();
       var dataHash = hash(hash(array), hash(mapper), hash(mapper));
       var kind = bMapKind(bArrayType(bIntType()));
       var hash = hash(hash(kind), dataHash);
@@ -747,7 +747,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void array_evaluation_type_is_not_array_type() throws Exception {
       var notArray = bInt(1);
-      var mapper = bIntIdFunc();
+      var mapper = bIntIdLambda();
       var dataHash = hash(hash(notArray), hash(mapper));
       var kind = bMapKind(bArrayType(bIntType()));
       var hash = hash(hash(kind), dataHash);
@@ -786,7 +786,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void mapper_param_type_is_different_than_array_element_type() throws Exception {
       var array = bArray(bString());
-      var mapper = bIntIdFunc();
+      var mapper = bIntIdLambda();
       var dataHash = hash(hash(array), hash(mapper));
       var kind = bMapKind(bArrayType(bIntType()));
       var hash = hash(hash(kind), dataHash);
@@ -799,7 +799,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void mapper_result_type_is_different_than_result_array_element_type() throws Exception {
       var array = bArray(bInt());
-      var mapper = bIntIdFunc();
+      var mapper = bIntIdLambda();
       var dataHash = hash(hash(array), hash(mapper));
       var kind = bMapKind(bArrayType(bStringType()));
       var hash = hash(hash(kind), dataHash);

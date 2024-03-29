@@ -200,8 +200,8 @@ public class BExprStableHashTest extends TestingVirtualMachine {
     @Test
     public void call_without_args() throws Exception {
       var type = bLambdaType(bIntType());
-      var funcB = bLambda(type, bInt());
-      assertThat(bCall(funcB).hash())
+      var lambda = bLambda(type, bInt());
+      assertThat(bCall(lambda).hash())
           .isEqualTo(
               Hash.decode("5fde6253d2a350e28562f50735745f89d40e8c471cbc67264cdd6a47751ceb24"));
     }
@@ -233,9 +233,9 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _if_func {
+  class _if_operation {
     @Test
-    public void if_func() throws Exception {
+    public void if_operation() throws Exception {
       assertThat(bIf(bBool(true), bInt(1), bInt(2)).hash())
           .isEqualTo(
               Hash.decode("ae2abb3bad2420d56b3777571d60d2b9086d8153d22d332e7da71918e7f830de"));
@@ -243,10 +243,10 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _map_func {
+  class _map_operation {
     @Test
-    public void map_func() throws Exception {
-      assertThat(bMap(bArray(bInt()), bIntIdFunc()).hash())
+    public void map_operation() throws Exception {
+      assertThat(bMap(bArray(bInt()), bIntIdLambda()).hash())
           .isEqualTo(
               Hash.decode("03dfaa1ba8fb539e33af03360e83237a69d3152fd8c4181eefd3166280c25574"));
     }

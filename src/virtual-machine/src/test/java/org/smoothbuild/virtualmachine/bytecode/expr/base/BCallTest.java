@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BCallTest extends TestingVirtualMachine {
   @Test
-  public void creating_call_with_func_type_not_being_func_causes_exception() {
+  public void creating_call_with_lambda_type_not_being_lambda_causes_exception() {
     assertCall(() -> bCall(bInt()))
         .throwsException(new IllegalArgumentException(
             "`lambda.evaluationType()` should be `BLambdaType` but is `BIntType`."));
@@ -45,9 +45,10 @@ public class BCallTest extends TestingVirtualMachine {
 
   @Test
   public void sub_exprs_returns_sub_exprs() throws Exception {
-    var func = bLambda(list(bStringType()), bInt());
+    var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
-    assertThat(bCall(func, argument).subExprs()).isEqualTo(new SubExprsB(func, bCombine(argument)));
+    assertThat(bCall(lambda, argument).subExprs())
+        .isEqualTo(new SubExprsB(lambda, bCombine(argument)));
   }
 
   @Nested
@@ -76,17 +77,17 @@ public class BCallTest extends TestingVirtualMachine {
 
   @Test
   public void call_read_back_by_hash_has_same_data() throws Exception {
-    var func = bLambda(list(bStringType()), bInt());
+    var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
-    var call = bCall(func, argument);
+    var call = bCall(lambda, argument);
     assertThat(((BCall) exprDbOther().get(call.hash())).subExprs())
-        .isEqualTo(new BCall.SubExprsB(func, bCombine(argument)));
+        .isEqualTo(new BCall.SubExprsB(lambda, bCombine(argument)));
   }
 
   @Test
   public void to_string() throws Exception {
-    var func = bLambda(list(bStringType()), bInt());
-    var call = bCall(func, bString());
+    var lambda = bLambda(list(bStringType()), bInt());
+    var call = bCall(lambda, bString());
     assertThat(call.toString()).isEqualTo("CALL:Int(???)@" + call.hash());
   }
 }

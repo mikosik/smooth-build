@@ -37,7 +37,7 @@ public final class BCall extends BOperation {
     var args = readMemberFromHashChain(hashes, 1, "arguments", lambdaType.params());
     if (!evaluationType().equals(lambdaType.result())) {
       throw new MemberHasWrongEvaluationTypeException(
-          hash(), kind(), "function.resultType", evaluationType(), lambdaType.result());
+          hash(), kind(), "lambda.resultType", evaluationType(), lambdaType.result());
     }
     return new SubExprsB(lambda, args);
   }

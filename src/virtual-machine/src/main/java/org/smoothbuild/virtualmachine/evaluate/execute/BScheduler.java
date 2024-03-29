@@ -186,8 +186,8 @@ public class BScheduler {
   private void onMapArrayArgEvaluated(BArray array, Job mapJob, BExpr mapper)
       throws BytecodeException {
     var calls = array.elements(BValue.class).map(e -> newCallB(mapper, e));
-    var mappingFuncResultType = ((BLambdaType) mapper.evaluationType()).result();
-    var order = bytecodeFactory.order(bytecodeFactory.arrayType(mappingFuncResultType), calls);
+    var mappingLambdaResultType = ((BLambdaType) mapper.evaluationType()).result();
+    var order = bytecodeFactory.order(bytecodeFactory.arrayType(mappingLambdaResultType), calls);
     scheduleJobEvaluation(newJob(order, mapJob), mapJob.promisedValue());
   }
 

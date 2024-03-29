@@ -13,30 +13,30 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BLambdaTest extends TestingVirtualMachine {
   @Test
-  public void creating_func_with_body_evaluation_type_not_equal_result_type_causes_exception()
+  public void creating_lambda_with_body_evaluation_type_not_equal_result_type_causes_exception()
       throws Exception {
-    var funcType = bLambdaType(bStringType(), bIntType());
-    assertCall(() -> bLambda(funcType, bBool(true)))
+    var lambdaType = bLambdaType(bStringType(), bIntType());
+    assertCall(() -> bLambda(lambdaType, bBool(true)))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_body_to_null_throws_exception() throws Exception {
-    var funcType = bLambdaType(bBoolType(), bIntType());
-    assertCall(() -> bLambda(funcType, null)).throwsException(NullPointerException.class);
+    var lambdaType = bLambdaType(bBoolType(), bIntType());
+    assertCall(() -> bLambda(lambdaType, null)).throwsException(NullPointerException.class);
   }
 
   @Test
-  public void type_of_func_is_func_type() throws Exception {
-    var funcType = bLambdaType(bStringType(), bIntType());
-    assertThat(bLambda(funcType, bInt()).evaluationType()).isEqualTo(funcType);
+  public void type_of_lambda_is_lambda_type() throws Exception {
+    var lambdaType = bLambdaType(bStringType(), bIntType());
+    assertThat(bLambda(lambdaType, bInt()).evaluationType()).isEqualTo(lambdaType);
   }
 
   @Test
   public void body_contains_object_passed_during_construction() throws Exception {
-    var funcType = bLambdaType(bBoolType(), bIntType());
+    var lambdaType = bLambdaType(bBoolType(), bIntType());
     var body = bInt(33);
-    var lambda = bLambda(funcType, body);
+    var lambda = bLambda(lambdaType, body);
     assertThat(lambda.body()).isEqualTo(body);
   }
 
@@ -60,24 +60,24 @@ public class BLambdaTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void func_can_be_read_by_hash() throws Exception {
-    var funcType = bLambdaType(bStringType(), bIntType());
-    var lambda = bLambda(funcType, bInt());
+  public void lambda_can_be_read_by_hash() throws Exception {
+    var lambdaType = bLambdaType(bStringType(), bIntType());
+    var lambda = bLambda(lambdaType, bInt());
     assertThat(exprDbOther().get(lambda.hash())).isEqualTo(lambda);
   }
 
   @Test
-  public void funcs_read_by_hash_have_equal_bodies() throws Exception {
-    var funcType = bLambdaType(bStringType(), bIntType());
-    var lambda = bLambda(funcType, bInt());
+  public void lambda_read_by_hash_have_equal_bodies() throws Exception {
+    var lambdaType = bLambdaType(bStringType(), bIntType());
+    var lambda = bLambda(lambdaType, bInt());
     var lambdaRead = (BLambda) exprDbOther().get(lambda.hash());
     assertThat(lambda.body()).isEqualTo(lambdaRead.body());
   }
 
   @Test
   public void to_string() throws Exception {
-    var funcType = bLambdaType(bStringType(), bIntType());
-    var func = bLambda(funcType, bInt());
-    assertThat(func.toString()).isEqualTo("Lambda((String)->Int)@" + func.hash());
+    var lambdaType = bLambdaType(bStringType(), bIntType());
+    var lambda = bLambda(lambdaType, bInt());
+    assertThat(lambda.toString()).isEqualTo("Lambda((String)->Int)@" + lambda.hash());
   }
 }

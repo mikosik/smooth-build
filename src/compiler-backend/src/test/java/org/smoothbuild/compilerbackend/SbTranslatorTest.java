@@ -131,7 +131,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var filePersister = createFilePersisterMock(
               fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = sInstantiate(list(sIntType()), bytecodeValueS);
-          assertTranslation(filePersister, bindings(bytecodeValueS), instantiateS, bIntIdFunc());
+          assertTranslation(filePersister, bindings(bytecodeValueS), instantiateS, bIntIdLambda());
         }
       }
 
@@ -226,7 +226,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
               filePersister,
               bindings(bytecodeFuncS),
               sInstantiate(bytecodeFuncS),
-              bReturnAbcFunc());
+              bReturnAbcLambda());
         }
 
         @Test
@@ -243,7 +243,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
           var filePersister = createFilePersisterMock(
               fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var instantiateS = sInstantiate(list(sIntType()), bytecodeFuncS);
-          assertTranslation(filePersister, bindings(bytecodeFuncS), instantiateS, bIntIdFunc());
+          assertTranslation(filePersister, bindings(bytecodeFuncS), instantiateS, bIntIdLambda());
         }
       }
     }
@@ -321,7 +321,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Test
       public void param_ref() throws Exception {
         var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
-        assertTranslation(funcS, bIntIdFunc());
+        assertTranslation(funcS, bIntIdLambda());
       }
 
       @Test

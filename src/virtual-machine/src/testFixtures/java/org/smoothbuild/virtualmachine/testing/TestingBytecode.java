@@ -306,24 +306,24 @@ public abstract class TestingBytecode {
     return bLambda(list(), body);
   }
 
-  public BLambda bLambda(List<BType> paramTs, BExpr body) throws BytecodeException {
-    var funcTB = bLambdaType(paramTs, body.evaluationType());
-    return bLambda(funcTB, body);
+  public BLambda bLambda(List<BType> paramTypes, BExpr body) throws BytecodeException {
+    var lambdaType = bLambdaType(paramTypes, body.evaluationType());
+    return bLambda(lambdaType, body);
   }
 
   public BLambda bLambda(BLambdaType type, BExpr body) throws BytecodeException {
     return bytecodeF().lambda(type, body);
   }
 
-  public BLambda bIntIdFunc() throws BytecodeException {
+  public BLambda bIntIdLambda() throws BytecodeException {
     return bLambda(list(bIntType()), bReference(bIntType(), 0));
   }
 
-  public BLambda bStringIdFunc() throws BytecodeException {
+  public BLambda bStringIdLambda() throws BytecodeException {
     return bLambda(list(bStringType()), bReference(bStringType(), 0));
   }
 
-  public BLambda bReturnAbcFunc() throws BytecodeException {
+  public BLambda bReturnAbcLambda() throws BytecodeException {
     return bLambda(bString("abc"));
   }
 
@@ -459,15 +459,15 @@ public abstract class TestingBytecode {
   // Operations
 
   public BCall bCall() throws BytecodeException {
-    return bCall(bIntIdFunc(), bInt());
+    return bCall(bIntIdLambda(), bInt());
   }
 
-  public BCall bCall(BExpr func, BExpr... arguments) throws BytecodeException {
-    return bytecodeF().call(func, bCombine(arguments));
+  public BCall bCall(BExpr lambda, BExpr... arguments) throws BytecodeException {
+    return bytecodeF().call(lambda, bCombine(arguments));
   }
 
-  public BCall bCallWithArguments(BExpr func, BExpr arguments) throws BytecodeException {
-    return bytecodeF().call(func, arguments);
+  public BCall bCallWithArguments(BExpr lambda, BExpr arguments) throws BytecodeException {
+    return bytecodeF().call(lambda, arguments);
   }
 
   public BCombine bCombine(BExpr... items) throws BytecodeException {
