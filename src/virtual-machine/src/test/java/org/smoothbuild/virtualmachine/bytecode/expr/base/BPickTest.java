@@ -16,14 +16,14 @@ public class BPickTest extends TestingVirtualMachine {
   public void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
     assertCall(() -> bPick(bInt(3), bInt(2)))
         .throwsException(new IllegalArgumentException(
-            "pickable.evaluationType() should be `Array` but is `Int`."));
+            "`pickable.evaluationType()` should be `BArrayType` but is `BIntType`."));
   }
 
   @Test
   public void creating_pick_with_non_int_expr_as_index_causes_exception() {
     assertCall(() -> bPick(bArray(bBoolType()), bString()))
         .throwsException(new IllegalArgumentException(
-            "index.evaluationType() should be `Int` but is `String`."));
+            "`index.evaluationType()` should be `BIntType` but is `BStringType`."));
   }
 
   @Test

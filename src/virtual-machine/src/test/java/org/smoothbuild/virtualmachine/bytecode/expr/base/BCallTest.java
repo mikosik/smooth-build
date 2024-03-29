@@ -15,8 +15,8 @@ public class BCallTest extends TestingVirtualMachine {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> bCall(bInt()))
-        .throwsException(
-            new IllegalArgumentException("`lambda` component doesn't evaluate to BLambda."));
+        .throwsException(new IllegalArgumentException(
+            "`lambda.evaluationType()` should be `BLambdaType` but is `BIntType`."));
   }
 
   @Test
@@ -39,8 +39,8 @@ public class BCallTest extends TestingVirtualMachine {
 
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
-    return new IllegalArgumentException("Argument evaluation types `{" + args + "}` should be"
-        + " equal to lambda parameter types `{" + params + "}`.");
+    return new IllegalArgumentException(
+        "`arguments.evaluationType()` should be `{" + params + "}` but is `{" + args + "}`.");
   }
 
   @Test

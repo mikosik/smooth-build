@@ -16,28 +16,28 @@ public class BMapTest extends TestingVirtualMachine {
   void creating_map_with_non_array_fails() {
     assertCall(() -> bMap(bInt(), bIntIdFunc()))
         .throwsException(new IllegalArgumentException(
-            "`array.evaluationType()` must be array type but is `Int`."));
+            "`array.evaluationType()` should be `BArrayType` but is `BIntType`."));
   }
 
   @Test
   void creating_map_with_non_lambda_fails() {
     assertCall(() -> bMap(bArray(bInt()), bInt()))
         .throwsException(new IllegalArgumentException(
-            "`mapper.evaluationType()` must be `(Int)->?` but is `Int`."));
+            "`mapper.evaluationType()` should be `BLambdaType` but is `BIntType`."));
   }
 
   @Test
   void creating_map_with_mapper_which_parameter_count_is_different_than_one_fails() {
     assertCall(() -> bMap(bArray(bInt()), bLambda(list(bIntType(), bIntType()), bInt())))
         .throwsException(new IllegalArgumentException(
-            "`mapper.evaluationType()` must be `(Int)->?` but is `(Int, Int)->?`."));
+            "`mapper.arguments.evaluationType()` should be `{Int}` but is `{Int,Int}`."));
   }
 
   @Test
   void creating_map_with_mapper_that_has_different_type_than_array_element_type_fails() {
     assertCall(() -> bMap(bArray(bString()), bIntIdFunc()))
         .throwsException(new IllegalArgumentException(
-            "`mapper.evaluationType()` must be `(String)->?` but is `(Int)->?`."));
+            "`mapper.arguments.evaluationType()` should be `{String}` but is `{Int}`."));
   }
 
   @Nested
