@@ -6,8 +6,11 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varC;
@@ -17,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -51,22 +53,18 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
 
     @Test
     public void tuple_type() throws Exception {
-      assertTranslation(
-          TestingSExpression.sTupleType(sIntType(), sBlobType()),
-          bTupleType(bIntType(), bBlobType()));
+      assertTranslation(sTupleType(sIntType(), sBlobType()), bTupleType(bIntType(), bBlobType()));
     }
 
     @Test
     public void struct_type() throws Exception {
-      assertTranslation(
-          TestingSExpression.sStructType(sIntType(), sBlobType()),
-          bTupleType(bIntType(), bBlobType()));
+      assertTranslation(sStructType(sIntType(), sBlobType()), bTupleType(bIntType(), bBlobType()));
     }
 
     @Test
     public void func_type() throws Exception {
       assertTranslation(
-          TestingSExpression.sFuncType(sBlobType(), sStringType(), sIntType()),
+          sFuncType(sBlobType(), sStringType(), sIntType()),
           bLambdaType(bBlobType(), bStringType(), bIntType()));
     }
   }
@@ -82,7 +80,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     public void tuple_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType()),
-          TestingSExpression.sTupleType(varA(), varB()),
+          sTupleType(varA(), varB()),
           bTupleType(bIntType(), bBlobType()));
     }
 
@@ -90,7 +88,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     public void struct_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType()),
-          TestingSExpression.sStructType(varA(), varB()),
+          sStructType(varA(), varB()),
           bTupleType(bIntType(), bBlobType()));
     }
 
@@ -98,7 +96,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     public void func_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType(), varC(), bStringType()),
-          TestingSExpression.sFuncType(varB(), varC(), varA()),
+          sFuncType(varB(), varC(), varA()),
           bLambdaType(bBlobType(), bStringType(), bIntType()));
     }
 

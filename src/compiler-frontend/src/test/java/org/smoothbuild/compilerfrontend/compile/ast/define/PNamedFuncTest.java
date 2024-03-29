@@ -1,8 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedFunc;
+
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class PNamedFuncTest {
   @Test
@@ -19,6 +20,6 @@ public class PNamedFuncTest {
   }
 
   private static PNamedFunc func(String name, int line) {
-    return TestingSExpression.pNamedFunc(name, line);
+    return pNamedFunc(name, line);
   }
 }

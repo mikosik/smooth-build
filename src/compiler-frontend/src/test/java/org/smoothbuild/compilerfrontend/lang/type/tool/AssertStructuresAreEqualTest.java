@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTempVar;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
 
 import com.google.common.truth.Truth;
 import java.util.function.Function;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class AssertStructuresAreEqualTest {
   @ParameterizedTest
@@ -59,8 +59,8 @@ public class AssertStructuresAreEqualTest {
   @Test
   public void
       type_have_not_equal_structure_when_two_different_temp_vars_are_replaced_with_single_one() {
-    var type1 = TestingSExpression.sTupleType(sTempVar("1"), sTempVar("1"));
-    var type2 = TestingSExpression.sTupleType(sTempVar("2"), sTempVar("3"));
+    var type1 = sTupleType(sTempVar("1"), sTempVar("1"));
+    var type2 = sTupleType(sTempVar("2"), sTempVar("3"));
     structuresAreEqualReturnsFalse(type1, type2);
   }
 

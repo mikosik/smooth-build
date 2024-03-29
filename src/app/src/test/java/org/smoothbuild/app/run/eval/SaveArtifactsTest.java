@@ -18,8 +18,11 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnot
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;
@@ -35,7 +38,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
@@ -95,7 +97,7 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
 
   @Test
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
-    var typeS = TestingSExpression.sStructType("NotAFile", sBlobType(), sStringType());
+    var typeS = sStructType("NotAFile", sBlobType(), sStringType());
     var valueB = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
     var byteString = readFile(hashedDbBucket(), HashedDb.dbPathTo(valueB.dataHash()));
 
@@ -260,11 +262,10 @@ public class SaveArtifactsTest extends TestingVirtualMachine {
   }
 
   private static SInstantiate instantiateS(SType sType, String name) {
-    return TestingSExpression.sInstantiate(
-        list(), sAnnotatedValue(TestingSExpression.sNativeAnnotation(), sType, name, location()));
+    return sInstantiate(list(), sAnnotatedValue(sNativeAnnotation(), sType, name, location()));
   }
 
   public static SStructType fileTS() {
-    return TestingSExpression.sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
+    return sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
   }
 }

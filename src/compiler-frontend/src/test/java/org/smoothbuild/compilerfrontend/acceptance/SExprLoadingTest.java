@@ -10,6 +10,7 @@ import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.mo
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.returnIntSFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlob;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
@@ -18,17 +19,22 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBytec
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sConstructor;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItemPoly;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sLambda;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sParamRef;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSelect;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 
@@ -38,7 +44,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SCall;
 import org.smoothbuild.compilerfrontend.lang.define.SEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SExprLoadingTest {
   @Nested
@@ -50,7 +55,7 @@ public class SExprLoadingTest {
             0x07;
           """)
           .loadsWithSuccess()
-          .containsEvaluable(TestingSExpression.sValue(1, sBlobType(), "result", sBlob(2, 7)));
+          .containsEvaluable(sValue(1, sBlobType(), "result", sBlob(2, 7)));
     }
 
     @Test
@@ -60,7 +65,7 @@ public class SExprLoadingTest {
             123;
           """)
           .loadsWithSuccess()
-          .containsEvaluable(TestingSExpression.sValue(1, sIntType(), "result", sInt(2, 123)));
+          .containsEvaluable(sValue(1, sIntType(), "result", sInt(2, 123)));
     }
 
     @Test
@@ -70,8 +75,7 @@ public class SExprLoadingTest {
             "abc";
           """)
           .loadsWithSuccess()
-          .containsEvaluable(
-              TestingSExpression.sValue(1, sStringType(), "result", sString(2, "abc")));
+          .containsEvaluable(sValue(1, sStringType(), "result", sString(2, "abc")));
     }
   }
 
@@ -87,10 +91,9 @@ public class SExprLoadingTest {
               (Int int)
                 -> int;
             """;
-        var lambda =
-            sLambda(2, nlist(TestingSExpression.sItem(2, INT, "int")), sParamRef(3, INT, "int"));
-        var instantiated = TestingSExpression.sInstantiate(2, lambda);
-        var result = TestingSExpression.sValue(1, "result", instantiated);
+        var lambda = sLambda(2, nlist(sItem(2, INT, "int")), sParamRef(3, INT, "int"));
+        var instantiated = sInstantiate(2, lambda);
+        var result = sValue(1, "result", instantiated);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -103,11 +106,9 @@ public class SExprLoadingTest {
                 -> a;
             """;
         var body = sParamRef(3, varA(), "a");
-        var lambda = TestingSExpression.sLambda(
-            2, varSetS(), nlist(TestingSExpression.sItem(2, varA(), "a")), body);
-        var instantiated = TestingSExpression.sInstantiate(2, lambda);
-        var myFunc = TestingSExpression.sFunc(
-            1, "myFunc", nlist(TestingSExpression.sItem(1, varA(), "outerA")), instantiated);
+        var lambda = sLambda(2, varSetS(), nlist(sItem(2, varA(), "a")), body);
+        var instantiated = sInstantiate(2, lambda);
+        var myFunc = sFunc(1, "myFunc", nlist(sItem(1, varA(), "outerA")), instantiated);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
 
@@ -121,13 +122,11 @@ public class SExprLoadingTest {
                   -> a;
             """;
         var deeperBody = sParamRef(4, varA(), "a");
-        var deeperLambda = TestingSExpression.sLambda(
-            3, varSetS(), nlist(TestingSExpression.sItem(3, varA(), "a")), deeperBody);
-        var monoDeeperLambda = TestingSExpression.sInstantiate(3, deeperLambda);
-        var anonFunc = TestingSExpression.sLambda(2, varSetS(), nlist(), monoDeeperLambda);
-        var monoLambda = TestingSExpression.sInstantiate(2, anonFunc);
-        var myFunc = TestingSExpression.sFunc(
-            1, "myFunc", nlist(TestingSExpression.sItem(1, varA(), "outerA")), monoLambda);
+        var deeperLambda = sLambda(3, varSetS(), nlist(sItem(3, varA(), "a")), deeperBody);
+        var monoDeeperLambda = sInstantiate(3, deeperLambda);
+        var anonFunc = sLambda(2, varSetS(), nlist(), monoDeeperLambda);
+        var monoLambda = sInstantiate(2, anonFunc);
+        var myFunc = sFunc(1, "myFunc", nlist(sItem(1, varA(), "outerA")), monoLambda);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
 
@@ -139,10 +138,9 @@ public class SExprLoadingTest {
               (A a)
                 -> a;
             """;
-        var lambda =
-            sLambda(2, nlist(TestingSExpression.sItem(2, varA(), "a")), sParamRef(3, varA(), "a"));
-        var instantiateS = TestingSExpression.sInstantiate(2, list(varA()), lambda);
-        var result = TestingSExpression.sValue(1, "result", instantiateS);
+        var lambda = sLambda(2, nlist(sItem(2, varA(), "a")), sParamRef(3, varA(), "a"));
+        var instantiateS = sInstantiate(2, list(varA()), lambda);
+        var result = sValue(1, "result", instantiateS);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
     }
@@ -154,25 +152,24 @@ public class SExprLoadingTest {
         @Test
         public void with_reference_to_poly_val() {
           var polyVal = sBytecodeValue(4, varA(), "polyVal");
-          var instantiateS = TestingSExpression.sInstantiate(1, list(varA()), polyVal);
-          var arg = TestingSExpression.sInstantiate(
-              2, list(sIntType()), TestingSExpression.sValue(1, "myFunc:b", instantiateS));
+          var instantiateS = sInstantiate(1, list(varA()), polyVal);
+          var arg = sInstantiate(2, list(sIntType()), sValue(1, "myFunc:b", instantiateS));
           test_default_arg("polyVal", arg);
         }
 
         @Test
         public void with_reference_to_poly_func() {
-          var polyFunc = TestingSExpression.sBytecodeFunc(6, varA(), "polyFunc", nlist());
-          var instantiateS = TestingSExpression.sInstantiate(1, list(varA()), polyFunc);
-          var paramDefaultValue = TestingSExpression.sValue("myFunc:b", sCall(1, instantiateS));
-          var expected = TestingSExpression.sInstantiate(2, list(sIntType()), paramDefaultValue);
+          var polyFunc = sBytecodeFunc(6, varA(), "polyFunc", nlist());
+          var instantiateS = sInstantiate(1, list(varA()), polyFunc);
+          var paramDefaultValue = sValue("myFunc:b", sCall(1, instantiateS));
+          var expected = sInstantiate(2, list(sIntType()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
-          var paramDefaultValue = TestingSExpression.sValue("myFunc:b", sInt(1, 7));
-          test_default_arg("7", TestingSExpression.sInstantiate(2, paramDefaultValue));
+          var paramDefaultValue = sValue("myFunc:b", sInt(1, 7));
+          test_default_arg("7", sInstantiate(2, paramDefaultValue));
         }
 
         private void test_default_arg(String bodyCode, SExpr expected) {
@@ -208,8 +205,7 @@ public class SExprLoadingTest {
             result = myReturnInt();
             """;
         var myReturnInt = returnIntSFunc();
-        var result = TestingSExpression.sValue(
-            2, sIntType(), "result", sCall(2, TestingSExpression.sInstantiate(2, myReturnInt)));
+        var result = sValue(2, sIntType(), "result", sCall(2, sInstantiate(2, myReturnInt)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -221,11 +217,8 @@ public class SExprLoadingTest {
             result = myIntId(3);
             """;
         var myIntId = intIdSFunc();
-        var result = TestingSExpression.sValue(
-            2,
-            sIntType(),
-            "result",
-            sCall(2, TestingSExpression.sInstantiate(2, myIntId), sInt(2, 3)));
+        var result =
+            sValue(2, sIntType(), "result", sCall(2, sInstantiate(2, myIntId), sInt(2, 3)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -238,11 +231,8 @@ public class SExprLoadingTest {
               7);
             """;
         var myIntId = intIdSFunc();
-        var result = TestingSExpression.sValue(
-            2,
-            sIntType(),
-            "result",
-            sCall(2, TestingSExpression.sInstantiate(2, myIntId), sInt(3, 7)));
+        var result =
+            sValue(2, sIntType(), "result", sCall(2, sInstantiate(2, myIntId), sInt(3, 7)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -255,11 +245,8 @@ public class SExprLoadingTest {
               > myIntId();
             """;
         var myIntId = intIdSFunc();
-        var result = TestingSExpression.sValue(
-            2,
-            sIntType(),
-            "result",
-            sCall(3, TestingSExpression.sInstantiate(3, myIntId), sInt(2, 7)));
+        var result =
+            sValue(2, sIntType(), "result", sCall(3, sInstantiate(3, myIntId), sInt(2, 7)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -270,14 +257,11 @@ public class SExprLoadingTest {
             result = myId(7);
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sValue(
+            .containsEvaluable(sValue(
                 2,
                 sIntType(),
                 "result",
-                sCall(
-                    2,
-                    TestingSExpression.sInstantiate(2, list(sIntType()), idSFunc()),
-                    sInt(2, 7))));
+                sCall(2, sInstantiate(2, list(sIntType()), idSFunc()), sInt(2, 7))));
       }
 
       @Test
@@ -289,13 +273,8 @@ public class SExprLoadingTest {
             result = myValue();
             """;
         var myReturnInt = returnIntSFunc();
-        var myValue = TestingSExpression.sValue(
-            2,
-            TestingSExpression.sFuncType(sIntType()),
-            "myValue",
-            TestingSExpression.sInstantiate(2, myReturnInt));
-        var result = TestingSExpression.sValue(
-            3, sIntType(), "result", sCall(3, TestingSExpression.sInstantiate(3, myValue)));
+        var myValue = sValue(2, sFuncType(sIntType()), "myValue", sInstantiate(2, myReturnInt));
+        var result = sValue(3, sIntType(), "result", sCall(3, sInstantiate(3, myValue)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -309,16 +288,10 @@ public class SExprLoadingTest {
               7);
             """;
         var myIntId = intIdSFunc();
-        var myValue = TestingSExpression.sValue(
-            2,
-            TestingSExpression.sFuncType(sIntType(), sIntType()),
-            "myValue",
-            TestingSExpression.sInstantiate(2, myIntId));
-        var result = TestingSExpression.sValue(
-            3,
-            sIntType(),
-            "result",
-            sCall(3, TestingSExpression.sInstantiate(3, myValue), sInt(4, 7)));
+        var myValue =
+            sValue(2, sFuncType(sIntType(), sIntType()), "myValue", sInstantiate(2, myIntId));
+        var result =
+            sValue(3, sIntType(), "result", sCall(3, sInstantiate(3, myValue), sInt(4, 7)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -346,10 +319,9 @@ public class SExprLoadingTest {
               "aaa");
             """;
         var struct = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
-        var constructor = TestingSExpression.sConstructor(1, struct);
-        var resultBody =
-            sCall(4, TestingSExpression.sInstantiate(4, constructor), sString(5, "aaa"));
-        var result = TestingSExpression.sValue(4, struct, "result", resultBody);
+        var constructor = sConstructor(1, struct);
+        var resultBody = sCall(4, sInstantiate(4, constructor), sString(5, "aaa"));
+        var result = sValue(4, struct, "result", resultBody);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -363,12 +335,8 @@ public class SExprLoadingTest {
                 1,
                 sStringType(),
                 "result",
-                nlist(
-                    TestingSExpression.sItem(1, TestingSExpression.sFuncType(sStringType()), "f")),
-                sCall(
-                    1,
-                    TestingSExpression.sParamRef(
-                        TestingSExpression.sFuncType(sStringType()), "f"))));
+                nlist(sItem(1, sFuncType(sStringType()), "f")),
+                sCall(1, sParamRef(sFuncType(sStringType()), "f"))));
       }
 
       @Test
@@ -381,13 +349,8 @@ public class SExprLoadingTest {
                 1,
                 sStringType(),
                 "result",
-                nlist(TestingSExpression.sItem(
-                    1, TestingSExpression.sFuncType(sBlobType(), sStringType()), "f")),
-                sCall(
-                    1,
-                    TestingSExpression.sParamRef(
-                        TestingSExpression.sFuncType(sBlobType(), sStringType()), "f"),
-                    sBlob(1, 9))));
+                nlist(sItem(1, sFuncType(sBlobType(), sStringType()), "f")),
+                sCall(1, sParamRef(sFuncType(sBlobType(), sStringType()), "f"), sBlob(1, 9))));
       }
     }
 
@@ -401,10 +364,8 @@ public class SExprLoadingTest {
             String result =
               myValue;
             """;
-        var myValue = TestingSExpression.sValue(
-            1, sStringType(), "myValue", TestingSExpression.sString("abc"));
-        var result = TestingSExpression.sValue(
-            2, sStringType(), "result", TestingSExpression.sInstantiate(3, myValue));
+        var myValue = sValue(1, sStringType(), "myValue", sString("abc"));
+        var result = sValue(2, sStringType(), "result", sInstantiate(3, myValue));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -417,15 +378,14 @@ public class SExprLoadingTest {
               myValue;
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sValue(
+            .containsEvaluable(sValue(
                 2,
                 sArrayType(sIntType()),
                 "result",
-                TestingSExpression.sInstantiate(
+                sInstantiate(
                     3,
                     list(sIntType()),
-                    TestingSExpression.sValue(
-                        1, sArrayType(varA()), "myValue", TestingSExpression.sOrder(varA())))));
+                    sValue(1, sArrayType(varA()), "myValue", sOrder(varA())))));
       }
 
       @Test
@@ -436,13 +396,8 @@ public class SExprLoadingTest {
             ()->String result =
               myFunc;
             """;
-        var myFunc =
-            TestingSExpression.sFunc(1, "myFunc", nlist(), TestingSExpression.sString("abc"));
-        var result = TestingSExpression.sValue(
-            2,
-            TestingSExpression.sFuncType(sStringType()),
-            "result",
-            TestingSExpression.sInstantiate(3, myFunc));
+        var myFunc = sFunc(1, "myFunc", nlist(), sString("abc"));
+        var result = sValue(2, sFuncType(sStringType()), "result", sInstantiate(3, myFunc));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -454,11 +409,9 @@ public class SExprLoadingTest {
             (Int)->Int result =
               myId;
             """;
-        var myId = TestingSExpression.sFunc(
-            1, "myId", nlist(TestingSExpression.sItem(varA(), "a")), sParamRef(1, varA(), "a"));
-        var resultBody = TestingSExpression.sInstantiate(3, list(sIntType()), myId);
-        var result = TestingSExpression.sValue(
-            2, TestingSExpression.sFuncType(sIntType(), sIntType()), "result", resultBody);
+        var myId = sFunc(1, "myId", nlist(sItem(varA(), "a")), sParamRef(1, varA(), "a"));
+        var resultBody = sInstantiate(3, list(sIntType()), myId);
+        var result = sValue(2, sFuncType(sIntType(), sIntType()), "result", resultBody);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -471,12 +424,8 @@ public class SExprLoadingTest {
               MyStruct;
             """;
         var structT = sStructType("MyStruct", nlist());
-        var constructor = TestingSExpression.sConstructor(1, structT);
-        var result = TestingSExpression.sValue(
-            2,
-            TestingSExpression.sFuncType(structT),
-            "result",
-            TestingSExpression.sInstantiate(3, constructor));
+        var constructor = sConstructor(1, structT);
+        var result = sValue(2, sFuncType(structT), "result", sInstantiate(3, constructor));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
     }
@@ -494,7 +443,7 @@ public class SExprLoadingTest {
             ];
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sValue(
+            .containsEvaluable(sValue(
                 1,
                 sArrayType(sBlobType()),
                 "result",
@@ -511,7 +460,7 @@ public class SExprLoadingTest {
             ];
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sValue(
+            .containsEvaluable(sValue(
                 1,
                 sArrayType(sBlobType()),
                 "result",
@@ -528,9 +477,9 @@ public class SExprLoadingTest {
             returnInt,
           ];
           """;
-        var returnInt = TestingSExpression.sFunc(1, "returnInt", nlist(), sInt(1, 7));
-        var orderS = TestingSExpression.sOrder(3, TestingSExpression.sInstantiate(4, returnInt));
-        var expected = TestingSExpression.sValue(2, "result", orderS);
+        var returnInt = sFunc(1, "returnInt", nlist(), sInt(1, 7));
+        var orderS = sOrder(3, sInstantiate(4, returnInt));
+        var expected = sValue(2, "result", orderS);
         module(code).loadsWithSuccess().containsEvaluable(expected);
       }
     }
@@ -542,12 +491,7 @@ public class SExprLoadingTest {
             = param1;
           """;
       var body = sParamRef(2, sBlobType(), "param1");
-      var myFunc = sFunc(
-          1,
-          sBlobType(),
-          "myFunc",
-          nlist(TestingSExpression.sItem(1, sBlobType(), "param1")),
-          body);
+      var myFunc = sFunc(1, sBlobType(), "myFunc", nlist(sItem(1, sBlobType(), "param1")), body);
       module(code).loadsWithSuccess().containsEvaluable(myFunc);
     }
 
@@ -564,11 +508,9 @@ public class SExprLoadingTest {
             .field;
           """;
       var myStruct = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
-      var getStruct = TestingSExpression.sAnnotatedFunc(
-          2, TestingSExpression.sNativeAnnotation(), myStruct, "getStruct", nlist());
-      var resultBody = TestingSExpression.sSelect(
-          7, sCall(6, TestingSExpression.sInstantiate(6, getStruct)), "field");
-      var result = TestingSExpression.sValue(6, sStringType(), "result", resultBody);
+      var getStruct = sAnnotatedFunc(2, sNativeAnnotation(), myStruct, "getStruct", nlist());
+      var resultBody = sSelect(7, sCall(6, sInstantiate(6, getStruct)), "field");
+      var result = sValue(6, sStringType(), "result", resultBody);
       module(code).loadsWithSuccess().containsEvaluable(result);
     }
   }
@@ -585,7 +527,7 @@ public class SExprLoadingTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sValue(1, sBlobType(), "myValue", sBlob(2, 7)));
+            .containsEvaluable(sValue(1, sBlobType(), "myValue", sBlob(2, 7)));
       }
 
       @Test
@@ -596,8 +538,7 @@ public class SExprLoadingTest {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                TestingSExpression.sValue(1, sArrayType(varA()), "myValue", sOrder(2, varA())));
+            .containsEvaluable(sValue(1, sArrayType(varA()), "myValue", sOrder(2, varA())));
       }
 
       @Test
@@ -656,7 +597,7 @@ public class SExprLoadingTest {
                 1,
                 sStringType(),
                 "myFunc",
-                nlist(TestingSExpression.sItem(2, sBlobType(), "param1")),
+                nlist(sItem(2, sBlobType(), "param1")),
                 sString(3, "abc")));
       }
 
@@ -669,11 +610,7 @@ public class SExprLoadingTest {
             """)
             .loadsWithSuccess()
             .containsEvaluable(sFunc(
-                1,
-                varA(),
-                "myFunc",
-                nlist(TestingSExpression.sItem(2, varA(), "a")),
-                sParamRef(3, varA(), "a")));
+                1, varA(), "myFunc", nlist(sItem(2, varA(), "a")), sParamRef(3, varA(), "a")));
       }
 
       @Test
@@ -685,8 +622,8 @@ public class SExprLoadingTest {
                 0x07)
                 = "abc";
             """;
-        var params = nlist(sItem(
-            2, sBlobType(), "param1", TestingSExpression.sValue(2, "myFunc:param1", sBlob(3, 7))));
+        var params =
+            nlist(sItem(2, sBlobType(), "param1", sValue(2, "myFunc:param1", sBlob(3, 7))));
         var myFunc = sFunc(1, sStringType(), "myFunc", params, sString(4, "abc"));
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
@@ -700,8 +637,7 @@ public class SExprLoadingTest {
                 7)
                 = a;
             """;
-        var params =
-            nlist(sItem(2, varA(), "a", TestingSExpression.sValue(2, "myFunc:a", sInt(3, 7))));
+        var params = nlist(sItem(2, varA(), "a", sValue(2, "myFunc:a", sInt(3, 7))));
         var myFunc = sFunc(1, varA(), "myFunc", params, sParamRef(4, varA(), "a"));
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
@@ -714,9 +650,9 @@ public class SExprLoadingTest {
             String myFunc();
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sAnnotatedFunc(
+            .containsEvaluable(sAnnotatedFunc(
                 2,
-                TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"), false),
+                sNativeAnnotation(1, sString(1, "Impl.met"), false),
                 sStringType(),
                 "myFunc",
                 nlist()));
@@ -729,12 +665,8 @@ public class SExprLoadingTest {
             A myFunc();
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sAnnotatedFunc(
-                2,
-                TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"), false),
-                varA(),
-                "myFunc",
-                nlist()));
+            .containsEvaluable(sAnnotatedFunc(
+                2, sNativeAnnotation(1, sString(1, "Impl.met"), false), varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -744,9 +676,9 @@ public class SExprLoadingTest {
             String myFunc();
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sAnnotatedFunc(
+            .containsEvaluable(sAnnotatedFunc(
                 2,
-                TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"), true),
+                sNativeAnnotation(1, sString(1, "Impl.met"), true),
                 sStringType(),
                 "myFunc",
                 nlist()));
@@ -759,12 +691,8 @@ public class SExprLoadingTest {
             A myFunc();
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sAnnotatedFunc(
-                2,
-                TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"), true),
-                varA(),
-                "myFunc",
-                nlist()));
+            .containsEvaluable(sAnnotatedFunc(
+                2, sNativeAnnotation(1, sString(1, "Impl.met"), true), varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -776,10 +704,9 @@ public class SExprLoadingTest {
               Blob p1 =
                 0x07);
             """;
-        var params = nlist(
-            sItem(3, sBlobType(), "p1", TestingSExpression.sValue(3, "myFunc:p1", sBlob(4, 7))));
-        var ann = TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"), true);
-        var myFunc = TestingSExpression.sAnnotatedFunc(2, ann, sStringType(), "myFunc", params);
+        var params = nlist(sItem(3, sBlobType(), "p1", sValue(3, "myFunc:p1", sBlob(4, 7))));
+        var ann = sNativeAnnotation(1, sString(1, "Impl.met"), true);
+        var myFunc = sAnnotatedFunc(2, ann, sStringType(), "myFunc", params);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
 
@@ -792,10 +719,9 @@ public class SExprLoadingTest {
               Blob p1 =
                 0x07);
             """;
-        var params = nlist(
-            sItem(3, sBlobType(), "p1", TestingSExpression.sValue(3, "myFunc:p1", sBlob(4, 7))));
-        var ann = TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"), true);
-        var myFunc = TestingSExpression.sAnnotatedFunc(2, ann, varA(), "myFunc", params);
+        var params = nlist(sItem(3, sBlobType(), "p1", sValue(3, "myFunc:p1", sBlob(4, 7))));
+        var ann = sNativeAnnotation(1, sString(1, "Impl.met"), true);
+        var myFunc = sAnnotatedFunc(2, ann, varA(), "myFunc", params);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
 
@@ -806,8 +732,7 @@ public class SExprLoadingTest {
             String myFunc();
             """)
             .loadsWithSuccess()
-            .containsEvaluable(
-                TestingSExpression.sBytecodeFunc(2, sStringType(), "myFunc", nlist()));
+            .containsEvaluable(sBytecodeFunc(2, sStringType(), "myFunc", nlist()));
       }
 
       @Test
@@ -817,7 +742,7 @@ public class SExprLoadingTest {
             A myFunc();
             """)
             .loadsWithSuccess()
-            .containsEvaluable(TestingSExpression.sBytecodeFunc(2, varA(), "myFunc", nlist()));
+            .containsEvaluable(sBytecodeFunc(2, varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -829,8 +754,8 @@ public class SExprLoadingTest {
               Blob param1 =
                 0x07);
             """;
-        var params = nlist(sItem(
-            3, sBlobType(), "param1", TestingSExpression.sValue(3, "myFunc:param1", sBlob(4, 7))));
+        var params =
+            nlist(sItem(3, sBlobType(), "param1", sValue(3, "myFunc:param1", sBlob(4, 7))));
         var myFunc = sBytecodeFunc(2, "Impl.met", sStringType(), "myFunc", params);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
@@ -844,8 +769,8 @@ public class SExprLoadingTest {
               Blob param1 =
                 0x07);
             """;
-        var params = nlist(sItem(
-            3, sBlobType(), "param1", TestingSExpression.sValue(3, "myFunc:param1", sBlob(4, 7))));
+        var params =
+            nlist(sItem(3, sBlobType(), "param1", sValue(3, "myFunc:param1", sBlob(4, 7))));
         var myFunc = sBytecodeFunc(2, "Impl.met", varA(), "myFunc", params);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
@@ -887,9 +812,8 @@ public class SExprLoadingTest {
                 = 7;
             [A] empty = [];
             """;
-        var empty = TestingSExpression.sValue(5, "empty", sOrder(5, varA()));
-        var defaultValue = TestingSExpression.sValue(
-            2, "myFunc:param1", TestingSExpression.sInstantiate(3, list(varA()), empty));
+        var empty = sValue(5, "empty", sOrder(5, varA()));
+        var defaultValue = sValue(2, "myFunc:param1", sInstantiate(3, list(varA()), empty));
         var params = nlist(sItem(2, sArrayType(sIntType()), "param1", defaultValue));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         module(code).loadsWithSuccess().containsEvaluable(func);
@@ -905,9 +829,8 @@ public class SExprLoadingTest {
                 = 7;
             [A] empty = [];
             """;
-        var empty = TestingSExpression.sValue(5, "empty", sOrder(5, varA()));
-        var defaultValue = TestingSExpression.sValue(
-            2, "myFunc:param1", TestingSExpression.sInstantiate(3, list(varA()), empty));
+        var empty = sValue(5, "empty", sOrder(5, varA()));
+        var defaultValue = sValue(2, "myFunc:param1", sInstantiate(3, list(varA()), empty));
         var params = nlist(sItemPoly(2, sArrayType(varB()), "param1", some(defaultValue)));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         module(code).loadsWithSuccess().containsEvaluable(func);
@@ -922,7 +845,7 @@ public class SExprLoadingTest {
                 11)
                 = 7;
             """;
-        var defaultValue = TestingSExpression.sValue(2, "myFunc:param1", sInt(3, 11));
+        var defaultValue = sValue(2, "myFunc:param1", sInt(3, 11));
         var params = nlist(sItem(2, sIntType(), "param1", defaultValue));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         module(code).loadsWithSuccess().containsEvaluable(func);
@@ -939,7 +862,7 @@ public class SExprLoadingTest {
             (0x07);
           """)
           .loadsWithSuccess()
-          .containsEvaluable(TestingSExpression.sValue(1, sBlobType(), "result", sBlob(2, 7)));
+          .containsEvaluable(sValue(1, sBlobType(), "result", sBlob(2, 7)));
     }
 
     @Test
@@ -953,7 +876,7 @@ public class SExprLoadingTest {
           ]);
           """)
           .loadsWithSuccess()
-          .containsEvaluable(TestingSExpression.sValue(
+          .containsEvaluable(sValue(
               1,
               sArrayType(sBlobType()),
               "result",

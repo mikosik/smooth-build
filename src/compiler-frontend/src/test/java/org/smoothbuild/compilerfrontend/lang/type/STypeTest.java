@@ -10,10 +10,13 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInterfaceType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sVar;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
@@ -30,7 +33,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class STypeTest {
   @Test
@@ -79,21 +81,20 @@ public class STypeTest {
         arguments(sIntType(), "Int"),
         arguments(sStringType(), "String"),
         arguments(varA(), "A"),
-        arguments(TestingSExpression.sTupleType(), "()"),
-        arguments(TestingSExpression.sTupleType(sIntType()), "(Int)"),
-        arguments(TestingSExpression.sTupleType(sIntType(), sBoolType()), "(Int,Bool)"),
-        arguments(TestingSExpression.sTupleType(varA()), "(A)"),
-        arguments(TestingSExpression.sTupleType(varA(), varB()), "(A,B)"),
+        arguments(sTupleType(), "()"),
+        arguments(sTupleType(sIntType()), "(Int)"),
+        arguments(sTupleType(sIntType(), sBoolType()), "(Int,Bool)"),
+        arguments(sTupleType(varA()), "(A)"),
+        arguments(sTupleType(varA(), varB()), "(A,B)"),
         arguments(sArrayType(sBlobType()), "[Blob]"),
         arguments(sArrayType(sBoolType()), "[Bool]"),
         arguments(sArrayType(sIntType()), "[Int]"),
         arguments(sArrayType(sStringType()), "[String]"),
-        arguments(sArrayType(TestingSExpression.sTupleType()), "[()]"),
-        arguments(sArrayType(TestingSExpression.sTupleType(sIntType())), "[(Int)]"),
-        arguments(
-            sArrayType(TestingSExpression.sTupleType(sIntType(), sBoolType())), "[(Int,Bool)]"),
-        arguments(sArrayType(TestingSExpression.sTupleType(varA())), "[(A)]"),
-        arguments(sArrayType(TestingSExpression.sTupleType(varA(), varB())), "[(A,B)]"),
+        arguments(sArrayType(sTupleType()), "[()]"),
+        arguments(sArrayType(sTupleType(sIntType())), "[(Int)]"),
+        arguments(sArrayType(sTupleType(sIntType(), sBoolType())), "[(Int,Bool)]"),
+        arguments(sArrayType(sTupleType(varA())), "[(A)]"),
+        arguments(sArrayType(sTupleType(varA(), varB())), "[(A,B)]"),
         arguments(sArrayType(sStructType("MyStruct", nlist())), "[MyStruct]"),
         arguments(
             sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "field")))),
@@ -103,32 +104,26 @@ public class STypeTest {
         arguments(sArrayType(sArrayType(sBlobType())), "[[Blob]]"),
         arguments(sArrayType(sArrayType(sBoolType())), "[[Bool]]"),
         arguments(sArrayType(sArrayType(sIntType())), "[[Int]]"),
-        arguments(sArrayType(sArrayType(TestingSExpression.sTupleType())), "[[()]]"),
-        arguments(sArrayType(sArrayType(TestingSExpression.sTupleType(sIntType()))), "[[(Int)]]"),
-        arguments(
-            sArrayType(sArrayType(TestingSExpression.sTupleType(sIntType(), sBoolType()))),
-            "[[(Int,Bool)]]"),
-        arguments(sArrayType(sArrayType(TestingSExpression.sTupleType(varA()))), "[[(A)]]"),
-        arguments(
-            sArrayType(sArrayType(TestingSExpression.sTupleType(varA(), varB()))), "[[(A,B)]]"),
+        arguments(sArrayType(sArrayType(sTupleType())), "[[()]]"),
+        arguments(sArrayType(sArrayType(sTupleType(sIntType()))), "[[(Int)]]"),
+        arguments(sArrayType(sArrayType(sTupleType(sIntType(), sBoolType()))), "[[(Int,Bool)]]"),
+        arguments(sArrayType(sArrayType(sTupleType(varA()))), "[[(A)]]"),
+        arguments(sArrayType(sArrayType(sTupleType(varA(), varB()))), "[[(A,B)]]"),
         arguments(sArrayType(sArrayType(sStructType("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(
             sArrayType(sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "filed"))))),
             "[[MyStruct]]"),
         arguments(sArrayType(sArrayType(sStringType())), "[[String]]"),
-        arguments(TestingSExpression.sFuncType(sArrayType(varA()), varA()), "([A])->A"),
-        arguments(TestingSExpression.sFuncType(sArrayType(varA()), sStringType()), "([A])->String"),
-        arguments(TestingSExpression.sFuncType(varA(), varA()), "(A)->A"),
-        arguments(TestingSExpression.sFuncType(sStringType()), "()->String"),
-        arguments(TestingSExpression.sFuncType(sStringType(), sStringType()), "(String)->String"),
+        arguments(sFuncType(sArrayType(varA()), varA()), "([A])->A"),
+        arguments(sFuncType(sArrayType(varA()), sStringType()), "([A])->String"),
+        arguments(sFuncType(varA(), varA()), "(A)->A"),
+        arguments(sFuncType(sStringType()), "()->String"),
+        arguments(sFuncType(sStringType(), sStringType()), "(String)->String"),
+        arguments(sFuncType(sTupleType(sIntType()), sStringType()), "((Int))->String"),
+        arguments(sInterfaceType(), "()"),
+        arguments(sInterfaceType(sSig(sIntType(), "field1")), "(Int field1)"),
         arguments(
-            TestingSExpression.sFuncType(TestingSExpression.sTupleType(sIntType()), sStringType()),
-            "((Int))->String"),
-        arguments(TestingSExpression.sInterfaceType(), "()"),
-        arguments(TestingSExpression.sInterfaceType(sSig(sIntType(), "field1")), "(Int field1)"),
-        arguments(
-            TestingSExpression.sInterfaceType(
-                sSig(sIntType(), "field1"), sSig(sBlobType(), "field2")),
+            sInterfaceType(sSig(sIntType(), "field1"), sSig(sBlobType(), "field2")),
             "(Int field1,Blob field2)"));
   }
 
@@ -144,20 +139,20 @@ public class STypeTest {
         arguments(sBoolType(), varSetS()),
         arguments(sIntType(), varSetS()),
         arguments(sStringType(), varSetS()),
-        arguments(TestingSExpression.sTupleType(sIntType()), varSetS()),
-        arguments(TestingSExpression.sTupleType(varA(), varB()), varSetS(varA(), varB())),
+        arguments(sTupleType(sIntType()), varSetS()),
+        arguments(sTupleType(varA(), varB()), varSetS(varA(), varB())),
         arguments(sArrayType(sIntType()), varSetS()),
         arguments(sArrayType(varA()), varSetS(varA())),
-        arguments(TestingSExpression.sFuncType(sBoolType(), sBlobType()), varSetS()),
-        arguments(TestingSExpression.sFuncType(sBoolType(), varA()), varSetS(varA())),
-        arguments(TestingSExpression.sFuncType(varA(), sBlobType()), varSetS(varA())),
-        arguments(TestingSExpression.sFuncType(varB(), varA()), varSetS(varA(), varB())),
-        arguments(TestingSExpression.sStructType(sIntType()), varSetS()),
-        arguments(TestingSExpression.sStructType(sIntType(), varA()), varSetS(varA())),
-        arguments(TestingSExpression.sStructType(varB(), varA()), varSetS(varA(), varB())),
-        arguments(TestingSExpression.sInterfaceType(sIntType()), varSetS()),
-        arguments(TestingSExpression.sInterfaceType(sIntType(), varA()), varSetS(varA())),
-        arguments(TestingSExpression.sInterfaceType(varB(), varA()), varSetS(varA(), varB())));
+        arguments(sFuncType(sBoolType(), sBlobType()), varSetS()),
+        arguments(sFuncType(sBoolType(), varA()), varSetS(varA())),
+        arguments(sFuncType(varA(), sBlobType()), varSetS(varA())),
+        arguments(sFuncType(varB(), varA()), varSetS(varA(), varB())),
+        arguments(sStructType(sIntType()), varSetS()),
+        arguments(sStructType(sIntType(), varA()), varSetS(varA())),
+        arguments(sStructType(varB(), varA()), varSetS(varA(), varB())),
+        arguments(sInterfaceType(sIntType()), varSetS()),
+        arguments(sInterfaceType(sIntType(), varA()), varSetS(varA())),
+        arguments(sInterfaceType(varB(), varA()), varSetS(varA(), varB())));
   }
 
   @ParameterizedTest
@@ -175,61 +170,33 @@ public class STypeTest {
         arguments(sStringType(), sStringType()),
         arguments(sVar("A"), sVar("prefix.A")),
         arguments(sVar("pre.A"), sVar("prefix.pre.A")),
-        arguments(
-            TestingSExpression.sTupleType(sIntType()), TestingSExpression.sTupleType(sIntType())),
-        arguments(
-            TestingSExpression.sTupleType(varA(), varB()),
-            TestingSExpression.sTupleType(sVar("prefix.A"), sVar("prefix.B"))),
-        arguments(
-            TestingSExpression.sTupleType(TestingSExpression.sTupleType(varA())),
-            TestingSExpression.sTupleType(TestingSExpression.sTupleType(sVar("prefix.A")))),
+        arguments(sTupleType(sIntType()), sTupleType(sIntType())),
+        arguments(sTupleType(varA(), varB()), sTupleType(sVar("prefix.A"), sVar("prefix.B"))),
+        arguments(sTupleType(sTupleType(varA())), sTupleType(sTupleType(sVar("prefix.A")))),
         arguments(sArrayType(sIntType()), sArrayType(sIntType())),
         arguments(sArrayType(sVar("A")), sArrayType(sVar("prefix.A"))),
         arguments(sArrayType(sVar("p.A")), sArrayType(sVar("prefix.p.A"))),
         arguments(sArrayType(sArrayType(sVar("A"))), sArrayType(sArrayType(sVar("prefix.A")))),
+        arguments(sFuncType(sBoolType(), sBlobType()), sFuncType(sBoolType(), sBlobType())),
+        arguments(sFuncType(sBoolType(), sVar("A")), sFuncType(sBoolType(), sVar("prefix.A"))),
+        arguments(sFuncType(sVar("A"), sBlobType()), sFuncType(sVar("prefix.A"), sBlobType())),
+        arguments(sFuncType(sBoolType(), sVar("p.A")), sFuncType(sBoolType(), sVar("prefix.p.A"))),
+        arguments(sFuncType(sVar("p.A"), sBlobType()), sFuncType(sVar("prefix.p.A"), sBlobType())),
+        arguments(sFuncType(sFuncType(sVar("A"))), sFuncType(sFuncType(sVar("prefix.A")))),
         arguments(
-            TestingSExpression.sFuncType(sBoolType(), sBlobType()),
-            TestingSExpression.sFuncType(sBoolType(), sBlobType())),
+            sFuncType(sFuncType(sVar("A"), sIntType()), sIntType()),
+            sFuncType(sFuncType(sVar("prefix.A"), sIntType()), sIntType())),
+        arguments(sStructType("MyStruct", sIntType()), sStructType("MyStruct", sIntType())),
+        arguments(sStructType(varA(), varB()), sStructType(sVar("prefix.A"), sVar("prefix.B"))),
         arguments(
-            TestingSExpression.sFuncType(sBoolType(), sVar("A")),
-            TestingSExpression.sFuncType(sBoolType(), sVar("prefix.A"))),
+            sStructType("S1", sStructType("S2", sVar("A"))),
+            sStructType("S1", sStructType("S2", sVar("prefix.A")))),
+        arguments(sInterfaceType(sIntType()), sInterfaceType(sIntType())),
         arguments(
-            TestingSExpression.sFuncType(sVar("A"), sBlobType()),
-            TestingSExpression.sFuncType(sVar("prefix.A"), sBlobType())),
+            sInterfaceType(varA(), varB()), sInterfaceType(sVar("prefix.A"), sVar("prefix.B"))),
         arguments(
-            TestingSExpression.sFuncType(sBoolType(), sVar("p.A")),
-            TestingSExpression.sFuncType(sBoolType(), sVar("prefix.p.A"))),
-        arguments(
-            TestingSExpression.sFuncType(sVar("p.A"), sBlobType()),
-            TestingSExpression.sFuncType(sVar("prefix.p.A"), sBlobType())),
-        arguments(
-            TestingSExpression.sFuncType(TestingSExpression.sFuncType(sVar("A"))),
-            TestingSExpression.sFuncType(TestingSExpression.sFuncType(sVar("prefix.A")))),
-        arguments(
-            TestingSExpression.sFuncType(
-                TestingSExpression.sFuncType(sVar("A"), sIntType()), sIntType()),
-            TestingSExpression.sFuncType(
-                TestingSExpression.sFuncType(sVar("prefix.A"), sIntType()), sIntType())),
-        arguments(
-            TestingSExpression.sStructType("MyStruct", sIntType()),
-            TestingSExpression.sStructType("MyStruct", sIntType())),
-        arguments(
-            TestingSExpression.sStructType(varA(), varB()),
-            TestingSExpression.sStructType(sVar("prefix.A"), sVar("prefix.B"))),
-        arguments(
-            TestingSExpression.sStructType("S1", TestingSExpression.sStructType("S2", sVar("A"))),
-            TestingSExpression.sStructType(
-                "S1", TestingSExpression.sStructType("S2", sVar("prefix.A")))),
-        arguments(
-            TestingSExpression.sInterfaceType(sIntType()),
-            TestingSExpression.sInterfaceType(sIntType())),
-        arguments(
-            TestingSExpression.sInterfaceType(varA(), varB()),
-            TestingSExpression.sInterfaceType(sVar("prefix.A"), sVar("prefix.B"))),
-        arguments(
-            TestingSExpression.sInterfaceType(TestingSExpression.sInterfaceType(sVar("A"))),
-            TestingSExpression.sInterfaceType(
-                TestingSExpression.sInterfaceType(sVar("prefix.A")))));
+            sInterfaceType(sInterfaceType(sVar("A"))),
+            sInterfaceType(sInterfaceType(sVar("prefix.A")))));
   }
 
   @Nested
@@ -245,14 +212,14 @@ public class STypeTest {
       return list(
           arguments(sBlobType()),
           arguments(sBoolType()),
-          arguments(TestingSExpression.sFuncType(sStringType())),
+          arguments(sFuncType(sStringType())),
           arguments(sIntType()),
           arguments(sStringType()),
           arguments(sStructType("MyStruct", nlist())),
           arguments(varA()),
           arguments(sArrayType(sBlobType())),
           arguments(sArrayType(sBoolType())),
-          arguments(sArrayType(TestingSExpression.sFuncType(sStringType()))),
+          arguments(sArrayType(sFuncType(sStringType()))),
           arguments(sArrayType(sIntType())),
           arguments(sArrayType(sStringType())),
           arguments(sArrayType(varA())));
@@ -269,10 +236,9 @@ public class STypeTest {
 
     public static List<Arguments> func_result_cases() {
       return list(
-          arguments(TestingSExpression.sFuncType(sIntType()), sIntType()),
-          arguments(TestingSExpression.sFuncType(sBoolType(), sBlobType()), sBlobType()),
-          arguments(
-              TestingSExpression.sFuncType(sBoolType(), sIntType(), sBlobType()), sBlobType()));
+          arguments(sFuncType(sIntType()), sIntType()),
+          arguments(sFuncType(sBoolType(), sBlobType()), sBlobType()),
+          arguments(sFuncType(sBoolType(), sIntType(), sBlobType()), sBlobType()));
     }
 
     @ParameterizedTest
@@ -283,13 +249,11 @@ public class STypeTest {
 
     public static List<Arguments> func_params_cases() {
       return list(
-          arguments(TestingSExpression.sFuncType(sIntType()), TestingSExpression.sTupleType()),
+          arguments(sFuncType(sIntType()), sTupleType()),
+          arguments(sFuncType(sBoolType(), sBlobType()), sTupleType(sBoolType())),
           arguments(
-              TestingSExpression.sFuncType(sBoolType(), sBlobType()),
-              TestingSExpression.sTupleType(sBoolType())),
-          arguments(
-              TestingSExpression.sFuncType(sBoolType(), sIntType(), sBlobType()),
-              TestingSExpression.sTupleType(sBoolType(), sIntType())));
+              sFuncType(sBoolType(), sIntType(), sBlobType()),
+              sTupleType(sBoolType(), sIntType())));
     }
   }
 
@@ -340,22 +304,21 @@ public class STypeTest {
         sBoolType(),
         sIntType(),
         sStringType(),
-        TestingSExpression.sTupleType(),
-        TestingSExpression.sTupleType(sIntType(), sBoolType()),
+        sTupleType(),
+        sTupleType(sIntType(), sBoolType()),
         sStructType("MyStruct", nlist()),
         sStructType("MyStruct", nlist(itemSigS(sIntType(), "field"))),
         varA(),
         varB(),
         varC(),
-        TestingSExpression.sFuncType(sBlobType()),
-        TestingSExpression.sFuncType(sStringType()),
-        TestingSExpression.sFuncType(sStringType(), sBlobType()),
-        TestingSExpression.sFuncType(sBlobType(), sBlobType()));
+        sFuncType(sBlobType()),
+        sFuncType(sStringType()),
+        sFuncType(sStringType(), sBlobType()),
+        sFuncType(sBlobType(), sBlobType()));
 
     for (SType type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(
-          TestingSExpression.sTupleType(type), TestingSExpression.sTupleType(type));
+      equalsTester.addEqualityGroup(sTupleType(type), sTupleType(type));
       equalsTester.addEqualityGroup(sArrayType(type), sArrayType(type));
       equalsTester.addEqualityGroup(sArrayType(sArrayType(type)), sArrayType(sArrayType(type)));
     }
@@ -372,11 +335,9 @@ public class STypeTest {
 
     public static List<Arguments> tuple_items_cases() {
       return list(
-          arguments(TestingSExpression.sTupleType(), list()),
-          arguments(TestingSExpression.sTupleType(sBoolType()), list(sBoolType())),
-          arguments(
-              TestingSExpression.sTupleType(sBoolType(), sIntType()),
-              list(sBoolType(), sIntType())));
+          arguments(sTupleType(), list()),
+          arguments(sTupleType(sBoolType()), list(sBoolType())),
+          arguments(sTupleType(sBoolType(), sIntType()), list(sBoolType(), sIntType())));
     }
   }
 

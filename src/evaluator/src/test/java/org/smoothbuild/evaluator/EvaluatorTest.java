@@ -17,12 +17,27 @@ import static org.smoothbuild.common.dag.Dag.value;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlob;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBytecodeFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCombine;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sConstructor;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sLambda;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sParamRef;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSelect;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 
 import com.google.common.collect.ImmutableMap;
@@ -39,7 +54,6 @@ import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -65,17 +79,17 @@ public class EvaluatorTest extends TestingVirtualMachine {
     class _constant {
       @Test
       public void blob() throws BytecodeException {
-        assertEvaluation(TestingSExpression.sBlob(7), bBlob(7));
+        assertEvaluation(sBlob(7), bBlob(7));
       }
 
       @Test
       public void int_() throws BytecodeException {
-        assertEvaluation(TestingSExpression.sInt(8), bInt(8));
+        assertEvaluation(sInt(8), bInt(8));
       }
 
       @Test
       public void string() throws BytecodeException {
-        assertEvaluation(TestingSExpression.sString("abc"), bString("abc"));
+        assertEvaluation(sString("abc"), bString("abc"));
       }
     }
 
@@ -85,60 +99,48 @@ public class EvaluatorTest extends TestingVirtualMachine {
       class _call {
         @Test
         public void call_lambda() throws BytecodeException {
-          var LambdaS = TestingSExpression.sLambda(nlist(), TestingSExpression.sInt(7));
-          var callS = TestingSExpression.sCall(TestingSExpression.sInstantiate(LambdaS));
+          var LambdaS = sLambda(nlist(), sInt(7));
+          var callS = sCall(sInstantiate(LambdaS));
           assertEvaluation(callS, bInt(7));
         }
 
         @Test
         public void call_lambda_returning_enclosing_func_param() throws BytecodeException {
-          var lambdaS = TestingSExpression.sInstantiate(
-              TestingSExpression.sLambda(nlist(), TestingSExpression.sParamRef(sIntType(), "p")));
-          var funcS = TestingSExpression.sFunc(
-              "myFunc",
-              nlist(TestingSExpression.sItem(sIntType(), "p")),
-              TestingSExpression.sCall(lambdaS));
-          var callS = TestingSExpression.sCall(
-              TestingSExpression.sInstantiate(funcS), TestingSExpression.sInt(7));
+          var lambdaS = sInstantiate(sLambda(nlist(), sParamRef(sIntType(), "p")));
+          var funcS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sCall(lambdaS));
+          var callS = sCall(sInstantiate(funcS), sInt(7));
           assertEvaluation(bindings(funcS), callS, bInt(7));
         }
 
         @Test
         public void call_expression_function() throws BytecodeException {
-          var funcS = TestingSExpression.sFunc("n", nlist(), TestingSExpression.sInt(7));
-          var callS = TestingSExpression.sCall(TestingSExpression.sInstantiate(funcS));
+          var funcS = sFunc("n", nlist(), sInt(7));
+          var callS = sCall(sInstantiate(funcS));
           assertEvaluation(bindings(funcS), callS, bInt(7));
         }
 
         @Test
         public void call_poly_expression_function() throws BytecodeException {
           var a = varA();
-          var orderS = TestingSExpression.sOrder(a, TestingSExpression.sParamRef(a, "e"));
-          var funcS = TestingSExpression.sFunc(
-              sArrayType(a), "n", nlist(TestingSExpression.sItem(a, "e")), orderS);
-          var callS = TestingSExpression.sCall(
-              TestingSExpression.sInstantiate(list(sIntType()), funcS), TestingSExpression.sInt(7));
+          var orderS = sOrder(a, sParamRef(a, "e"));
+          var funcS = sFunc(sArrayType(a), "n", nlist(sItem(a, "e")), orderS);
+          var callS = sCall(sInstantiate(list(sIntType()), funcS), sInt(7));
           assertEvaluation(bindings(funcS), callS, bArray(bIntType(), bInt(7)));
         }
 
         @Test
         public void call_constructor() throws BytecodeException {
-          var constructorS = TestingSExpression.sConstructor(
-              sStructType("MyStruct", nlist(sSig(sIntType(), "field"))));
-          var callS = TestingSExpression.sCall(
-              TestingSExpression.sInstantiate(constructorS), TestingSExpression.sInt(7));
+          var constructorS =
+              sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))));
+          var callS = sCall(sInstantiate(constructorS), sInt(7));
           assertEvaluation(bindings(constructorS), callS, bTuple(bInt(7)));
         }
 
         @Test
         public void call_native_argless_func() throws Exception {
-          var funcS = TestingSExpression.sAnnotatedFunc(
-              TestingSExpression.sNativeAnnotation(
-                  1, TestingSExpression.sString("class binary name")),
-              sIntType(),
-              "f",
-              nlist());
-          var callS = TestingSExpression.sCall(TestingSExpression.sInstantiate(funcS));
+          var funcS = sAnnotatedFunc(
+              sNativeAnnotation(1, sString("class binary name")), sIntType(), "f", nlist());
+          var callS = sCall(sInstantiate(funcS));
           var jarB = bBlob(137);
           when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jarB);
@@ -150,14 +152,12 @@ public class EvaluatorTest extends TestingVirtualMachine {
 
         @Test
         public void call_native_func_with_param() throws Exception {
-          var funcS = TestingSExpression.sAnnotatedFunc(
-              TestingSExpression.sNativeAnnotation(
-                  1, TestingSExpression.sString("class binary name")),
+          var funcS = sAnnotatedFunc(
+              sNativeAnnotation(1, sString("class binary name")),
               sIntType(),
               "f",
-              nlist(TestingSExpression.sItem(sIntType(), "p")));
-          var callS = TestingSExpression.sCall(
-              TestingSExpression.sInstantiate(funcS), TestingSExpression.sInt(77));
+              nlist(sItem(sIntType(), "p")));
+          var callS = sCall(sInstantiate(funcS), sInt(77));
           var jarB = bBlob(137);
           when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jarB);
@@ -172,9 +172,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       class _combine {
         @Test
         public void combine() throws BytecodeException {
-          assertEvaluation(
-              sCombine(TestingSExpression.sInt(7), TestingSExpression.sString("abc")),
-              bTuple(bInt(7), bString("abc")));
+          assertEvaluation(sCombine(sInt(7), sString("abc")), bTuple(bInt(7), bString("abc")));
         }
       }
 
@@ -183,9 +181,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         @Test
         public void order() throws BytecodeException {
           assertEvaluation(
-              TestingSExpression.sOrder(
-                  sIntType(), TestingSExpression.sInt(7), TestingSExpression.sInt(8)),
-              bArray(bIntType(), bInt(7), bInt(8)));
+              sOrder(sIntType(), sInt(7), sInt(8)), bArray(bIntType(), bInt(7), bInt(8)));
         }
       }
 
@@ -193,12 +189,8 @@ public class EvaluatorTest extends TestingVirtualMachine {
       class _param_ref {
         @Test
         public void param_ref() throws BytecodeException {
-          var funcS = TestingSExpression.sFunc(
-              "n",
-              nlist(TestingSExpression.sItem(sIntType(), "p")),
-              TestingSExpression.sParamRef(sIntType(), "p"));
-          var callS = TestingSExpression.sCall(
-              TestingSExpression.sInstantiate(funcS), TestingSExpression.sInt(7));
+          var funcS = sFunc("n", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
+          var callS = sCall(sInstantiate(funcS), sInt(7));
           assertEvaluation(bindings(funcS), callS, bInt(7));
         }
       }
@@ -208,9 +200,8 @@ public class EvaluatorTest extends TestingVirtualMachine {
         @Test
         public void select() throws BytecodeException {
           var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "f")));
-          var constructorS = TestingSExpression.sConstructor(structTS);
-          var callS = TestingSExpression.sCall(
-              TestingSExpression.sInstantiate(constructorS), TestingSExpression.sInt(7));
+          var constructorS = sConstructor(structTS);
+          var callS = sCall(sInstantiate(constructorS), sInt(7));
           assertEvaluation(bindings(constructorS), sSelect(callS, "f"), bInt(7));
         }
       }
@@ -222,18 +213,14 @@ public class EvaluatorTest extends TestingVirtualMachine {
       class _lambda {
         @Test
         public void mono_lambda() throws BytecodeException {
-          assertEvaluation(
-              TestingSExpression.sInstantiate(
-                  TestingSExpression.sLambda(TestingSExpression.sInt(7))),
-              bLambda(bInt(7)));
+          assertEvaluation(sInstantiate(sLambda(sInt(7))), bLambda(bInt(7)));
         }
 
         @Test
         public void poly_lambda() throws BytecodeException {
           var a = varA();
-          var polyLambdaS = TestingSExpression.sLambda(
-              nlist(TestingSExpression.sItem(a, "a")), TestingSExpression.sParamRef(a, "a"));
-          var monoLambdaS = TestingSExpression.sInstantiate(list(sIntType()), polyLambdaS);
+          var polyLambdaS = sLambda(nlist(sItem(a, "a")), sParamRef(a, "a"));
+          var monoLambdaS = sInstantiate(list(sIntType()), polyLambdaS);
           assertEvaluation(monoLambdaS, bLambda(list(bIntType()), bReference(bIntType(), 0)));
         }
       }
@@ -248,9 +235,8 @@ public class EvaluatorTest extends TestingVirtualMachine {
         @Test
         public void poly_expression_function() throws BytecodeException {
           var a = varA();
-          var funcS = TestingSExpression.sFunc(
-              "n", nlist(TestingSExpression.sItem(a, "e")), TestingSExpression.sParamRef(a, "e"));
-          var instantiateS = TestingSExpression.sInstantiate(list(sIntType()), funcS);
+          var funcS = sFunc("n", nlist(sItem(a, "e")), sParamRef(a, "e"));
+          var instantiateS = sInstantiate(list(sIntType()), funcS);
           assertEvaluation(bindings(funcS), instantiateS, bIntIdFunc());
         }
 
@@ -265,18 +251,15 @@ public class EvaluatorTest extends TestingVirtualMachine {
           when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(bFunc));
 
           var a = varA();
-          var bytecodeFuncS = TestingSExpression.sBytecodeFunc(
-              className, a, "myFunc", nlist(TestingSExpression.sItem(a, "p")));
+          var bytecodeFuncS = sBytecodeFunc(className, a, "myFunc", nlist(sItem(a, "p")));
           assertEvaluation(
-              bindings(bytecodeFuncS),
-              TestingSExpression.sInstantiate(list(sIntType()), bytecodeFuncS),
-              bFunc);
+              bindings(bytecodeFuncS), sInstantiate(list(sIntType()), bytecodeFuncS), bFunc);
         }
 
         @Test
         public void constructor() throws BytecodeException {
-          var constructorS = TestingSExpression.sConstructor(
-              sStructType("MyStruct", nlist(sSig(sIntType(), "myField"))));
+          var constructorS =
+              sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "myField"))));
           assertEvaluation(
               constructorS, bLambda(list(bIntType()), bCombine(bReference(bIntType(), 0))));
         }
@@ -286,16 +269,15 @@ public class EvaluatorTest extends TestingVirtualMachine {
       class _named_value {
         @Test
         public void mono_expression_value() throws BytecodeException {
-          var valueS = TestingSExpression.sValue(1, sIntType(), "name", TestingSExpression.sInt(7));
-          assertEvaluation(bindings(valueS), TestingSExpression.sInstantiate(valueS), bInt(7));
+          var valueS = sValue(1, sIntType(), "name", sInt(7));
+          assertEvaluation(bindings(valueS), sInstantiate(valueS), bInt(7));
         }
 
         @Test
         public void poly_value() throws BytecodeException {
           var a = varA();
-          var polyValue =
-              TestingSExpression.sValue(1, sArrayType(a), "name", TestingSExpression.sOrder(a));
-          var instantiatedValue = TestingSExpression.sInstantiate(list(sIntType()), polyValue);
+          var polyValue = sValue(1, sArrayType(a), "name", sOrder(a));
+          var instantiatedValue = sInstantiate(list(sIntType()), polyValue);
           assertEvaluation(bindings(polyValue), instantiatedValue, bArray(bIntType()));
         }
       }
@@ -305,8 +287,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         @Test
         public void constructor() throws BytecodeException {
           assertEvaluation(
-              TestingSExpression.sConstructor(
-                  sStructType("MyStruct", nlist(sSig(sIntType(), "field")))),
+              sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field")))),
               bLambda(
                   bLambdaType(bIntType(), bTupleType(bIntType())),
                   bCombine(bReference(bIntType(), 0))));
@@ -316,8 +297,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
   }
 
   private void assertEvaluation(SNamedEvaluable sNamedEvaluable, BExpr bExpr) {
-    assertThat(
-            evaluate(bindings(sNamedEvaluable), TestingSExpression.sInstantiate(sNamedEvaluable)))
+    assertThat(evaluate(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable)))
         .isEqualTo(bExpr);
   }
 

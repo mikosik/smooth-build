@@ -7,19 +7,23 @@ import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.er
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestedTSF.TESTED_TYPES;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlob;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +35,6 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.compilerfrontend.testing.TestedTS;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class DeclarationTest {
   @Nested
@@ -803,15 +806,10 @@ public class DeclarationTest {
                 String nonDefault);
               """;
           var myFuncParams = nlist(
-              sItem(
-                  3,
-                  sStringType(),
-                  "default",
-                  TestingSExpression.sValue(3, "myFunc:default", sString(3, "value"))),
-              TestingSExpression.sItem(4, sStringType(), "nonDefault"));
-          var ann = TestingSExpression.sNativeAnnotation(1, sString(1, "Impl.met"));
-          var myFunc =
-              TestingSExpression.sAnnotatedFunc(2, ann, sStringType(), "myFunc", myFuncParams);
+              sItem(3, sStringType(), "default", sValue(3, "myFunc:default", sString(3, "value"))),
+              sItem(4, sStringType(), "nonDefault"));
+          var ann = sNativeAnnotation(1, sString(1, "Impl.met"));
+          var myFunc = sAnnotatedFunc(2, ann, sStringType(), "myFunc", myFuncParams);
           module(code).loadsWithSuccess().containsEvaluable(myFunc);
         }
 
@@ -844,7 +842,7 @@ public class DeclarationTest {
                   1,
                   sStringType(),
                   "myFunc",
-                  nlist(TestingSExpression.sItem(1, sStringType(), "param1")),
+                  nlist(sItem(1, sStringType(), "param1")),
                   sString(1, "abc")));
         }
 
@@ -1069,11 +1067,8 @@ public class DeclarationTest {
         public void can_have_trailing_comma() {
           module(funcCall("7,"))
               .loadsWithSuccess()
-              .containsEvaluable(TestingSExpression.sValue(
-                  2,
-                  sIntType(),
-                  "result",
-                  sCall(2, TestingSExpression.sInstantiate(2, intIdSFunc()), sInt(2, 7))));
+              .containsEvaluable(sValue(
+                  2, sIntType(), "result", sCall(2, sInstantiate(2, intIdSFunc()), sInt(2, 7))));
         }
 
         @Test
@@ -1250,7 +1245,7 @@ public class DeclarationTest {
         public void can_have_trailing_comma() {
           module(arrayLiteral("0x07,"))
               .loadsWithSuccess()
-              .containsEvaluable(TestingSExpression.sValue(
+              .containsEvaluable(sValue(
                   1, sArrayType(sBlobType()), "result", sOrder(1, sBlobType(), sBlob(1, 7))));
         }
 

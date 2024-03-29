@@ -3,19 +3,20 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncSchema;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SAnnotatedFuncTest {
   @Test
   public void to_string() {
-    var params = nlist(TestingSExpression.sItem(sIntType(), "myParam"));
-    var funcTS = TestingSExpression.sFuncSchema(params, sStringType());
-    var func = new SAnnotatedFunc(
-        TestingSExpression.sNativeAnnotation(), funcTS, "myFunc", params, location(1));
+    var params = nlist(sItem(sIntType(), "myParam"));
+    var funcTS = sFuncSchema(params, sStringType());
+    var func = new SAnnotatedFunc(sNativeAnnotation(), funcTS, "myFunc", params, location(1));
     assertThat(func.toString())
         .isEqualTo(
             """

@@ -5,14 +5,16 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncSchema;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.testing.TestingSExpression;
 
 public class SFuncTest {
   @Test
@@ -34,16 +36,15 @@ public class SFuncTest {
   }
 
   private SItem paramWithDefault(String name) {
-    return TestingSExpression.sItem(sIntType(), name, some(TestingSExpression.sString()));
+    return sItem(sIntType(), name, some(sString()));
   }
 
   private SItem paramWithoutDefault(String name) {
-    return TestingSExpression.sItem(sIntType(), name, none());
+    return sItem(sIntType(), name, none());
   }
 
   private SFunc myFunc(SType resultT, List<SItem> params) {
-    var schema = sFuncSchema(SItem.toTypes(params), resultT);
-    return new SNamedExprFunc(
-        schema, "name", nlist(params), TestingSExpression.sString(), location(1));
+    var schema = sFuncSchema(toTypes(params), resultT);
+    return new SNamedExprFunc(schema, "name", nlist(params), sString(), location(1));
   }
 }
