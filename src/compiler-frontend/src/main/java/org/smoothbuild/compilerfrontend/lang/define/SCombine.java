@@ -7,14 +7,14 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 
-public record SCombine(STupleType evaluationType, List<SExpr> elems, Location location)
+public record SCombine(STupleType evaluationType, List<SExpr> elements, Location location)
     implements SExpr {
   @Override
   public String toString() {
-    var elemsString = elems.toString("\n");
+    var elemsString = elements.toString("\n");
     var fields = list(
             "evaluationType = " + evaluationType,
-            "elems = [\n" + indent(elemsString) + "\n]",
+            "elements = [\n" + indent(elemsString) + "\n]",
             "location = " + location)
         .toString("\n");
     return "SCombine(\n" + indent(fields) + "\n)";

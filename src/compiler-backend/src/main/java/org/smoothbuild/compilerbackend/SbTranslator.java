@@ -152,7 +152,7 @@ public class SbTranslator {
   }
 
   private BCombine translateCombine(SCombine sCombine) throws SbTranslatorException {
-    var bElements = translateExprs(sCombine.elems());
+    var bElements = translateExprs(sCombine.elements());
     return bytecodeF.combine(bElements);
   }
 
@@ -299,7 +299,7 @@ public class SbTranslator {
 
   private BOrder translateOrder(SOrder sOrder) throws SbTranslatorException {
     var arrayTB = typeF.translate(sOrder.evaluationType());
-    var elementsB = translateExprs(sOrder.elems());
+    var elementsB = translateExprs(sOrder.elements());
     return bytecodeF.order(arrayTB, elementsB);
   }
 
