@@ -334,14 +334,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
       @Test
       public void select() throws Exception {
-        var structTS = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
-        var constructorS = sConstructor(structTS);
-        var callS = sCall(sInstantiate(constructorS), sString("abc"));
-        var selectS = sSelect(callS, "field");
+        var sStructType = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
+        var sConstructor = sConstructor(sStructType);
+        var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
+        var sSelect = sSelect(sCall, "field");
 
-        var ctorB = bLambda(list(bStringType()), bCombine(bReference(bStringType(), 0)));
-        var callB = bCall(ctorB, bString("abc"));
-        assertTranslation(bindings(constructorS), selectS, bSelect(callB, bInt(0)));
+        var bConstructor = bLambda(list(bStringType()), bCombine(bReference(bStringType(), 0)));
+        var bCall = bCall(bConstructor, bString("abc"));
+        assertTranslation(bindings(sConstructor), sSelect, bSelect(bCall, bInt(0)));
       }
 
       @Test

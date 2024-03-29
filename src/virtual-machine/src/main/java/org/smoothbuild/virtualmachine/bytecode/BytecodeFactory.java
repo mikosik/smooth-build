@@ -97,7 +97,7 @@ public class BytecodeFactory {
     return exprDb.newBool(value);
   }
 
-  public BCall call(BExpr lambda, BCombine arguments) throws BytecodeException {
+  public BCall call(BExpr lambda, BExpr arguments) throws BytecodeException {
     return exprDb.newCall(lambda, arguments);
   }
 

@@ -5,7 +5,6 @@ import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
-import static org.smoothbuild.virtualmachine.bytecode.kind.base.Validator.validateArgs;
 
 import java.math.BigInteger;
 import org.smoothbuild.common.base.Hash;
@@ -40,6 +39,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
@@ -137,13 +137,24 @@ public class BExprDb {
 
   // methods for creating OperB subclasses
 
-  public BCall newCall(BExpr lambda, BCombine args) throws BytecodeException {
-    var lambdaType = castEvaluationTypeToLambdaType(lambda);
-    validateArgsInCall(lambdaType, args);
-    var kind = kindDb.call(lambdaType.result());
+  public BCall newCall(BExpr lambda, BExpr args) throws BytecodeException {
+    var kind = calculateCallKind(lambda, args);
     var dataHash = writeChain(lambda.hash(), args.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
+  }
+
+  private BCallKind calculateCallKind(BExpr lambda, BExpr args) throws BKindDbException {
+    if (!(lambda.evaluationType() instanceof BLambdaType lambdaType)) {
+      throw new IllegalArgumentException("`lambda` component doesn't evaluate to BLambda.");
+    }
+    var argumentsEvaluationType = args.evaluationType();
+    if (!lambdaType.params().equals(argumentsEvaluationType)) {
+      throw new IllegalArgumentException(
+          "Argument evaluation types %s should be equal to lambda parameter types %s."
+              .formatted(argumentsEvaluationType.q(), lambdaType.params().q()));
+    }
+    return kindDb.call(lambdaType.result());
   }
 
   public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {
@@ -259,31 +270,6 @@ public class BExprDb {
             + " but element at index " + i + " has type " + iElementType.q() + ".");
       }
     }
-  }
-
-  private BLambdaType castEvaluationTypeToLambdaType(BExpr lambda) {
-    if (lambda.evaluationType() instanceof BLambdaType lambdaType) {
-      return lambdaType;
-    } else {
-      throw new IllegalArgumentException("`lambda` component doesn't evaluate to BLambda.");
-    }
-  }
-
-  private void validateArgsInCall(BLambdaType lambdaType, BCombine arguments) {
-    validateArgs(
-        lambdaType,
-        arguments.evaluationType().elements(),
-        () -> illegalArgs(lambdaType, arguments.evaluationType()));
-  }
-
-  private IllegalArgumentException illegalArgs(BLambdaType lambdaType, BTupleType argumentTypes) {
-    return new IllegalArgumentException(
-        "Argument evaluation types %s should be equal to lambda parameter types %s."
-            .formatted(itemTsToString(argumentTypes), itemTsToString(lambdaType.params())));
-  }
-
-  private static String itemTsToString(BTupleType argumentTypes) {
-    return argumentTypes.elements().toString("(", ",", ")");
   }
 
   // generic getter

@@ -53,7 +53,7 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.bool(value));
   }
 
-  public BCall call(BExpr lambda, BCombine arguments) throws SbTranslatorException {
+  public BCall call(BExpr lambda, BExpr arguments) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.call(lambda, arguments));
   }
 

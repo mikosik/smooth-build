@@ -355,31 +355,33 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(notFunc), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
-              hash, type, "lambda", bLambdaType(bIntType(), bStringType()), bIntType()));
+              hash, type, "lambda", "BLambdaType", bIntType()));
     }
 
     @Test
-    public void args_is_val_instead_of_combine() throws Exception {
+    public void arguments_is_value_instead_of_expression_with_tuple_evaluation_type()
+        throws Exception {
       var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
       var func = bLambda(funcType, bInt());
       var type = bCallKind(bIntType());
       var hash = hash(hash(type), hash(hash(func), hash(bInt())));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberTypeException(
-              hash, type, "arguments", BCombine.class, BInt.class));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, type, "arguments", bTupleType(bStringType(), bIntType()), bIntType()));
     }
 
     @Test
-    public void args_component_evaluation_type_is_not_combine_but_different_operation()
+    public void args_component_evaluation_type_is_not_tuple_but_different_operation()
         throws Exception {
-      var funcType = bLambdaType(bStringType(), bIntType(), bIntType());
+      var argumentTypes = list(bStringType(), bIntType());
+      var funcType = bLambdaType(argumentTypes, bIntType());
       var func = bLambda(funcType, bInt());
       var type = bCallKind(bIntType());
-      var notCombine = bOrder();
-      var hash = hash(hash(type), hash(hash(func), hash(notCombine)));
+      var notTuple = bOrder();
+      var hash = hash(hash(type), hash(hash(func), hash(notTuple)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberTypeException(
-              hash, type, "arguments", BCombine.class, BOrder.class));
+          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+              hash, type, "arguments", bTupleType(argumentTypes), notTuple.evaluationType()));
     }
 
     @Test
@@ -391,11 +393,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(func), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
-              hash,
-              type,
-              "lambda",
-              bLambdaType(bStringType(), bStringType()),
-              bLambdaType(bStringType(), bIntType())));
+              hash, type, "function.resultType", bStringType(), bIntType()));
     }
 
     @Test
@@ -410,9 +408,9 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
           .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
               hash,
               kind,
-              "lambda",
-              bLambdaType(bStringType(), bIntType(), bIntType()),
-              bLambdaType(bStringType(), bBoolType(), bIntType())));
+              "arguments",
+              bTupleType(bStringType(), bBoolType()),
+              bTupleType(bStringType(), bIntType())));
     }
   }
 
