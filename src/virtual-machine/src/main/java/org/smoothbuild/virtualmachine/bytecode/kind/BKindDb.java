@@ -176,29 +176,29 @@ public class BKindDb {
   }
 
   private BKind read(Hash hash) throws BKindDbException {
-    List<Hash> rootChain = readKindRootChain(hash);
-    var id = decodeKindId(hash, rootChain.get(0));
+    List<Hash> children = readKindRootChildren(hash);
+    var id = decodeKindId(hash, children.get(0));
     return switch (id) {
-      case ARRAY -> readArrayType(hash, rootChain, id);
-      case BLOB -> newBaseType(hash, id, rootChain, BBlobType::new);
-      case BOOL -> newBaseType(hash, id, rootChain, BBoolType::new);
-      case INT -> newBaseType(hash, id, rootChain, BIntType::new);
-      case STRING -> newBaseType(hash, id, rootChain, BStringType::new);
-      case LAMBDA -> readLambdaType(hash, rootChain);
-      case IF -> readOperationKind(hash, rootChain, id, BType.class, BIfKind::new);
-      case MAP -> readOperationKind(hash, rootChain, id, BArrayType.class, BMapKind::new);
-      case INVOKE -> readOperationKind(hash, rootChain, id, BType.class, BInvokeKind::new);
-      case CALL -> readOperationKind(hash, rootChain, id, BType.class, BCallKind::new);
-      case COMBINE -> readOperationKind(hash, rootChain, id, BTupleType.class, BCombineKind::new);
-      case ORDER -> readOperationKind(hash, rootChain, id, BArrayType.class, BOrderKind::new);
-      case PICK -> readOperationKind(hash, rootChain, id, BType.class, BPickKind::new);
-      case REFERENCE -> readOperationKind(hash, rootChain, id, BType.class, BReferenceKind::new);
-      case SELECT -> readOperationKind(hash, rootChain, id, BType.class, BSelectKind::new);
-      case TUPLE -> readTupleType(hash, rootChain);
+      case ARRAY -> readArrayType(hash, children, id);
+      case BLOB -> newBaseType(hash, id, children, BBlobType::new);
+      case BOOL -> newBaseType(hash, id, children, BBoolType::new);
+      case INT -> newBaseType(hash, id, children, BIntType::new);
+      case STRING -> newBaseType(hash, id, children, BStringType::new);
+      case LAMBDA -> readLambdaType(hash, children);
+      case IF -> readOperationKind(hash, children, id, BType.class, BIfKind::new);
+      case MAP -> readOperationKind(hash, children, id, BArrayType.class, BMapKind::new);
+      case INVOKE -> readOperationKind(hash, children, id, BType.class, BInvokeKind::new);
+      case CALL -> readOperationKind(hash, children, id, BType.class, BCallKind::new);
+      case COMBINE -> readOperationKind(hash, children, id, BTupleType.class, BCombineKind::new);
+      case ORDER -> readOperationKind(hash, children, id, BArrayType.class, BOrderKind::new);
+      case PICK -> readOperationKind(hash, children, id, BType.class, BPickKind::new);
+      case REFERENCE -> readOperationKind(hash, children, id, BType.class, BReferenceKind::new);
+      case SELECT -> readOperationKind(hash, children, id, BType.class, BSelectKind::new);
+      case TUPLE -> readTupleType(hash, children);
     };
   }
 
-  private List<Hash> readKindRootChain(Hash hash) throws DecodeKindException {
+  private List<Hash> readKindRootChildren(Hash hash) throws DecodeKindException {
     var hashes = invokeAndChainHashedDbException(
         () -> hashedDb.readHashChain(hash), e -> new DecodeKindException(hash, e));
     int chainSize = hashes.size();
@@ -218,33 +218,33 @@ public class BKindDb {
     return id;
   }
 
-  private BArrayType readArrayType(Hash hash, List<Hash> rootChain, KindId id)
+  private BArrayType readArrayType(Hash hash, List<Hash> rootChildren, KindId id)
       throws DecodeKindException {
-    return newArray(hash, readDataAsType(hash, rootChain, id, BType.class));
+    return newArray(hash, readDataAsType(hash, rootChildren, id, BType.class));
   }
 
   private <T extends BType> T newBaseType(
-      Hash hash, KindId id, List<Hash> rootChain, Function<Hash, T> factory)
+      Hash hash, KindId id, List<Hash> rootChildren, Function<Hash, T> factory)
       throws DecodeKindRootException {
-    assertKindRootChainSize(hash, id, rootChain, 1);
+    assertKindRootChildrenSize(hash, id, rootChildren, 1);
     return cache(factory.apply(hash));
   }
 
   private <T extends BOperationKind> T readOperationKind(
       Hash hash,
-      List<Hash> rootChain,
+      List<Hash> rootChildren,
       KindId id,
       Class<? extends BType> expectedEvaluationTypeClass,
       BiFunction<Hash, BType, T> factory)
       throws DecodeKindException {
-    var evaluationType = readDataAsType(hash, rootChain, id, expectedEvaluationTypeClass);
+    var evaluationType = readDataAsType(hash, rootChildren, id, expectedEvaluationTypeClass);
     return newOperation(factory, hash, evaluationType);
   }
 
-  private BLambdaType readLambdaType(Hash rootHash, List<Hash> rootChain)
+  private BLambdaType readLambdaType(Hash rootHash, List<Hash> rootChildren)
       throws DecodeKindException {
-    assertKindRootChainSize(rootHash, LAMBDA, rootChain, 2);
-    var nodes = readDataChainAsTypes(LAMBDA, rootHash, rootChain);
+    assertKindRootChildrenSize(rootHash, LAMBDA, rootChildren, 2);
+    var nodes = readDataChainAsTypes(LAMBDA, rootHash, rootChildren);
     if (nodes.size() != 2) {
       throw new DecodeKindWrongChainSizeException(rootHash, LAMBDA, DATA_PATH, 2, nodes.size());
     }
@@ -258,19 +258,20 @@ public class BKindDb {
     }
   }
 
-  private BTupleType readTupleType(Hash rootHash, List<Hash> rootChain) throws DecodeKindException {
-    assertKindRootChainSize(rootHash, TUPLE, rootChain, 2);
-    var items = readDataChainAsTypes(TUPLE, rootHash, rootChain);
+  private BTupleType readTupleType(Hash rootHash, List<Hash> rootChildren)
+      throws DecodeKindException {
+    assertKindRootChildrenSize(rootHash, TUPLE, rootChildren, 2);
+    var items = readDataChainAsTypes(TUPLE, rootHash, rootChildren);
     return newTuple(rootHash, items);
   }
 
   // helper methods for reading
 
   private <T extends BType> T readDataAsType(
-      Hash rootHash, List<Hash> rootChain, KindId id, Class<T> expectedTypeClass)
+      Hash rootHash, List<Hash> rootChildren, KindId id, Class<T> expectedTypeClass)
       throws DecodeKindException {
-    assertKindRootChainSize(rootHash, id, rootChain, 2);
-    var dataHash = rootChain.get(DATA_IDX);
+    assertKindRootChildrenSize(rootHash, id, rootChildren, 2);
+    var dataHash = rootChildren.get(DATA_IDX);
     BKind kind = invokeAndChainKindDbException(
         () -> get(dataHash), e -> new DecodeKindNodeException(rootHash, id, DATA_PATH, e));
     if (expectedTypeClass.isAssignableFrom(kind.getClass())) {
@@ -283,10 +284,10 @@ public class BKindDb {
     }
   }
 
-  private List<BType> readDataChainAsTypes(KindId id, Hash rootHash, List<Hash> rootChain)
+  private List<BType> readDataChainAsTypes(KindId id, Hash rootHash, List<Hash> rootChildren)
       throws DecodeKindNodeException {
     var elemHashes = invokeAndChainHashedDbException(
-        () -> hashedDb.readHashChain(rootChain.get(DATA_IDX)),
+        () -> hashedDb.readHashChain(rootChildren.get(DATA_IDX)),
         e -> new DecodeKindNodeException(rootHash, id, DATA_PATH, e));
     var builder = new ArrayList<BType>();
     for (int i = 0; i < elemHashes.size(); i++) {
@@ -307,7 +308,7 @@ public class BKindDb {
     }
   }
 
-  private static void assertKindRootChainSize(
+  private static void assertKindRootChildrenSize(
       Hash rootHash, KindId id, List<Hash> hashes, int expectedSize)
       throws DecodeKindRootException {
     if (hashes.size() != expectedSize) {
@@ -351,9 +352,9 @@ public class BKindDb {
     return cache(factory.apply(rootHash, evaluationType));
   }
 
-  private <T extends BKind> T cache(T type) {
+  private <T extends BKind> T cache(T kind) {
     @SuppressWarnings("unchecked")
-    T result = (T) requireNonNullElse(cache.putIfAbsent(type.hash(), type), type);
+    T result = (T) requireNonNullElse(cache.putIfAbsent(kind.hash(), kind), kind);
     return result;
   }
 
