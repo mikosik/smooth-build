@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeCombineWrongElementsSizeExceptionTest extends TestingVirtualMachine {
+public class CombineHasWrongElementsSizeExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() throws Exception {
-    var exception = new DecodeCombineWrongElementsSizeException(
+    var exception = new CombineHasWrongElementsSizeException(
         Hash.of(13), bCombineKind(bIntType(), bStringType()), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `COMBINE` expression at "

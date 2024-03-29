@@ -7,7 +7,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BMapKind;
 
@@ -37,7 +37,7 @@ public final class BMap extends BOperation {
     var array = readMemberFromHashChain(hashes, 0);
     var arrayEvaluationType = array.evaluationType();
     if (!(arrayEvaluationType instanceof BArrayType arrayType)) {
-      throw new DecodeExprWrongMemberEvaluationTypeException(
+      throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "array", BArrayType.class.getSimpleName(), arrayEvaluationType);
     }
     var mapper = readMemberFromHashChain(hashes, 1);
@@ -45,7 +45,7 @@ public final class BMap extends BOperation {
     var expectedMapperEvaluationType =
         kindDb().lambda(list(arrayType.element()), evaluationType().element());
     if (!(mapperEvaluationType.equals(expectedMapperEvaluationType))) {
-      throw new DecodeExprWrongMemberEvaluationTypeException(
+      throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "mapper", expectedMapperEvaluationType, mapperEvaluationType);
     }
     return new SubExprsB(array, mapper);

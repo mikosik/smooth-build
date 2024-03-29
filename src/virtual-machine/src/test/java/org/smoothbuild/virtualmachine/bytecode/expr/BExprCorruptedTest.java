@@ -5,8 +5,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr.DATA_PATH;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -44,17 +44,17 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.CombineHasWrongElementsSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongChainSizeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberEvaluationTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongMemberTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeClassException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NoSuchExprException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeChainSizeIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeClassIsWrongException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasIndexOutOfBoundException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.SelectHasWrongEvaluationTypeException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBooleanException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeByteException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
@@ -103,7 +103,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     public void reading_elements_from_not_stored_object_throws_exception() {
       var hash = Hash.of(33);
       assertCall(() -> exprDb().get(hash))
-          .throwsException(new DecodeExprNoSuchExprException(hash))
+          .throwsException(new NoSuchExprException(hash))
           .withCause(new NoSuchDataException(hash));
     }
   }
@@ -165,7 +165,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(arrayType), dataHash);
       assertCall(() -> ((BArray) exprDb().get(hash)).elements(BString.class))
           .throwsException(new DecodeExprNodeException(hash, arrayType, DATA_PATH + "[0]"))
-          .withCause(new DecodeExprNoSuchExprException(nowhereHash));
+          .withCause(new NoSuchExprException(nowhereHash));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
           hash(arrayType),
           hash(hash(hash(bStringType()), hash("aaa")), hash(hash(bBoolType()), hash(true))));
       assertCall(() -> ((BArray) exprDb().get(hash)).elements(BString.class))
-          .throwsException(new DecodeExprWrongNodeTypeException(
+          .throwsException(new NodeHasWrongTypeException(
               hash, arrayType, DATA_PATH, 1, bStringType(), bBoolType()));
     }
 
@@ -185,7 +185,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash =
           hash(hash(arrayType), hash(hash(hash(bStringType()), hash("aaa")), hash(bReference(1))));
       assertCall(() -> ((BArray) exprDb().get(hash)).elements(BString.class))
-          .throwsException(new DecodeExprWrongNodeClassException(
+          .throwsException(new NodeClassIsWrongException(
               hash, arrayType, DATA_PATH, 1, BValue.class, BReference.class));
     }
   }
@@ -332,7 +332,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 2, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -344,7 +344,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 2, 3));
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -354,7 +354,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bCallKind(bStringType());
       var hash = hash(hash(type), hash(hash(notFunc), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "lambda", "BLambdaType", bIntType()));
     }
 
@@ -366,7 +366,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bCallKind(bIntType());
       var hash = hash(hash(type), hash(hash(func), hash(bInt())));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "arguments", bTupleType(bStringType(), bIntType()), bIntType()));
     }
 
@@ -380,7 +380,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var notTuple = bOrder();
       var hash = hash(hash(type), hash(hash(func), hash(notTuple)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "arguments", bTupleType(argumentTypes), notTuple.evaluationType()));
     }
 
@@ -392,7 +392,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bCallKind(bStringType());
       var hash = hash(hash(type), hash(hash(func), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "function.resultType", bStringType(), bIntType()));
     }
 
@@ -405,7 +405,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bCallKind(bIntType());
       var hash = hash(hash(kind), hash(hash(func), hash(args)));
       assertCall(() -> ((BCall) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash,
               kind,
               "arguments",
@@ -468,7 +468,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bCombineKind()), hash(nowhere));
       assertCall(() -> ((BCombine) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprNodeException(hash, bCombineKind(), DATA_PATH + "[0]"))
-          .withCause(new DecodeExprNoSuchExprException(nowhere));
+          .withCause(new NoSuchExprException(nowhere));
     }
 
     @Test
@@ -478,7 +478,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(item1)));
 
       assertCall(() -> ((BCombine) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeCombineWrongElementsSizeException(hash, type, 1));
+          .throwsException(new CombineHasWrongElementsSizeException(hash, type, 1));
     }
 
     @Test
@@ -490,8 +490,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(item1), hash(item2)));
 
       assertCall(() -> ((BCombine) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, type, "elements", 1, bBoolType(), bStringType()));
+          .throwsException(
+              new NodeHasWrongTypeException(hash, type, "elements", 1, bBoolType(), bStringType()));
     }
   }
 
@@ -535,7 +535,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bLambdaType(bIntType(), bStringType(), bBoolType());
       var hash = hash(hash(kind), hash(body));
       assertCall(() -> ((BLambda) exprDb().get(hash)).body())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "body", bBoolType(), bIntType()));
     }
   }
@@ -584,7 +584,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(condition));
       var hash = hash(hash(bIfKind()), dataHash);
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, bIfKind(), DATA_PATH, 3, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bIfKind(), DATA_PATH, 3, 1));
     }
 
     @Test
@@ -594,7 +594,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(condition), hash(then_));
       var hash = hash(hash(bIfKind()), dataHash);
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, bIfKind(), DATA_PATH, 3, 2));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bIfKind(), DATA_PATH, 3, 2));
     }
 
     @Test
@@ -605,7 +605,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(condition), hash(then_), hash(else_), hash(else_));
       var hash = hash(hash(bIfKind()), dataHash);
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, bIfKind(), DATA_PATH, 3, 4));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bIfKind(), DATA_PATH, 3, 4));
     }
 
     @Test
@@ -618,7 +618,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "condition", bBoolType(), bStringType()));
     }
 
@@ -632,7 +632,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "then", bIntType(), bStringType()));
     }
 
@@ -646,7 +646,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BIf) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "else", bIntType(), bStringType()));
     }
   }
@@ -730,8 +730,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bMapKind(bArrayType(bIntType()));
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bMapKind(), DATA_PATH, 2, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bMapKind(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -742,8 +741,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bMapKind(bArrayType(bIntType()));
       var hash = hash(hash(kind), dataHash);
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bMapKind(), DATA_PATH, 2, 3));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bMapKind(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -755,7 +753,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "array", "BArrayType", bIntType()));
     }
 
@@ -768,7 +766,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "mapper", "(Int)->Int", bIntType()));
     }
 
@@ -781,7 +779,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "mapper", "(Int)->Int", mapperWithTwoParams.type()));
     }
 
@@ -794,7 +792,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "mapper", "(String)->Int", mapper.type()));
     }
 
@@ -807,7 +805,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "mapper", "(Int)->String", mapper.type()));
     }
   }
@@ -867,7 +865,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 4, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 4, 1));
     }
 
     @Test
@@ -879,7 +877,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 4, 2));
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 4, 2));
     }
 
     @Test
@@ -892,7 +890,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(kind), dataHash);
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, kind, DATA_PATH, 4, 3));
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 4, 3));
     }
 
     @Test
@@ -907,7 +905,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), dataHash);
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).classBinaryName())
-          .throwsException(new DecodeExprWrongChainSizeException(hash, type, DATA_PATH, 4, 5));
+          .throwsException(new NodeChainSizeIsWrongException(hash, type, DATA_PATH, 4, 5));
     }
 
     @Test
@@ -920,7 +918,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash =
           hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
       assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().jar())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "jar", bBlobType(), bStringType()));
     }
 
@@ -935,7 +933,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
           hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().classBinaryName())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "classBinaryName", bStringType(), bIntType()));
     }
 
@@ -950,7 +948,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
           hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().isPure())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "isPure", bBoolType(), bStringType()));
     }
 
@@ -965,7 +963,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
           hash(hash(kind), hash(hash(jar), hash(classBinaryName), hash(isPure), hash(arguments)));
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().arguments())
-          .throwsException(new DecodeExprWrongMemberTypeException(
+          .throwsException(new MemberHasWrongTypeException(
               hash, kind, "arguments", BTupleType.class, BIntType.class));
     }
   }
@@ -1023,7 +1021,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bOrderKind()), hash(nowhereHash));
       assertCall(() -> ((BOrder) exprDb().get(hash)).subExprs())
           .throwsException(new DecodeExprNodeException(hash, bOrderKind(), DATA_PATH + "[0]"))
-          .withCause(new DecodeExprNoSuchExprException(nowhereHash));
+          .withCause(new NoSuchExprException(nowhereHash));
     }
 
     @Test
@@ -1034,8 +1032,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bOrderKind(bIntType());
       var hash = hash(hash(type), hash(hash(expr1), hash(expr2)));
       assertCall(() -> ((BOrder) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongNodeTypeException(
-              hash, type, "elements[1]", bIntType(), bStringType()));
+          .throwsException(
+              new NodeHasWrongTypeException(hash, type, "elements[1]", bIntType(), bStringType()));
     }
   }
 
@@ -1080,8 +1078,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(expr));
       var hash = hash(hash(bPickKind()), dataHash);
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bPickKind(), DATA_PATH, 2, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bPickKind(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1091,8 +1088,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(expr), hash(index), hash(index));
       var hash = hash(hash(bPickKind()), dataHash);
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bPickKind(), DATA_PATH, 2, 3));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bPickKind(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1103,7 +1099,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(notArray), hash(index)));
 
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "pickable", bArrayType(bStringType()), bIntType()));
     }
 
@@ -1114,7 +1110,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var index = bReference(bStringType(), 7);
       var hash = hash(hash(type), hash(hash(pickable), hash(index)));
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "index", bIntType(), bStringType()));
     }
 
@@ -1126,7 +1122,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(tuple), hash(index)));
 
       assertCall(() -> ((BPick) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberEvaluationTypeException(
+          .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, type, "pickable", bArrayType(bIntType()), bArrayType(bStringType())));
     }
   }
@@ -1208,8 +1204,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(expr));
       var hash = hash(hash(bSelectKind()), dataHash);
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bSelectKind(), DATA_PATH, 2, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bSelectKind(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1219,8 +1214,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(expr), hash(index), hash(index));
       var hash = hash(hash(bSelectKind()), dataHash);
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bSelectKind(), DATA_PATH, 2, 3));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bSelectKind(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1231,7 +1225,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(expr), hash(index)));
 
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberTypeException(
+          .throwsException(new MemberHasWrongTypeException(
               hash, type, "tuple", BTupleType.class, BIntType.class));
     }
 
@@ -1243,7 +1237,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(tuple), hash(index)));
 
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeSelectIndexOutOfBoundsException(hash, type, 1, 1));
+          .throwsException(new SelectHasIndexOutOfBoundException(hash, type, 1, 1));
     }
 
     @Test
@@ -1255,7 +1249,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(type), hash(hash(tuple), hash(index)));
 
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeSelectWrongEvaluationTypeException(hash, type, bStringType()));
+          .throwsException(new SelectHasWrongEvaluationTypeException(hash, type, bStringType()));
     }
 
     @Test
@@ -1265,8 +1259,8 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var string = bString("abc");
       var hash = hash(hash(type), hash(hash(tuple), hash(string)));
       assertCall(() -> ((BSelect) exprDb().get(hash)).subExprs())
-          .throwsException(new DecodeExprWrongMemberTypeException(
-              hash, type, "index", BInt.class, BString.class));
+          .throwsException(
+              new MemberHasWrongTypeException(hash, type, "index", BInt.class, BString.class));
     }
   }
 
@@ -1360,7 +1354,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bPersonType()), dataHash);
       assertCall(() -> ((BTuple) exprDb().get(hash)).get(0))
           .throwsException(new DecodeExprNodeException(hash, bPersonType(), DATA_PATH + "[0]"))
-          .withCause(new DecodeExprNoSuchExprException(nowhereHash));
+          .withCause(new NoSuchExprException(nowhereHash));
     }
 
     @Test
@@ -1369,8 +1363,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bPersonType()), dataHash);
       BTuple tuple = (BTuple) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bPersonType(), DATA_PATH, 2, 1));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bPersonType(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1379,8 +1372,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bPersonType()), dataHash);
       var tuple = (BTuple) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(
-              new DecodeExprWrongChainSizeException(hash, bPersonType(), DATA_PATH, 2, 3));
+          .throwsException(new NodeChainSizeIsWrongException(hash, bPersonType(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1388,7 +1380,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bPersonType()), hash(hash(bString("John")), hash(bBool(true))));
       var tuple = (BTuple) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeExprWrongNodeTypeException(
+          .throwsException(new NodeHasWrongTypeException(
               hash, bPersonType(), DATA_PATH + "[1]", bPersonType(), "`{String,Bool}`"));
     }
 
@@ -1397,7 +1389,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bPersonType()), hash(hash(bString("John")), hash(bReference(1))));
       var tuple = (BTuple) exprDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeExprWrongNodeClassException(
+          .throwsException(new NodeClassIsWrongException(
               hash, bPersonType(), DATA_PATH + "[1]", BValue.class, BReference.class));
     }
   }
@@ -1436,7 +1428,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     var hash = hash(hash(kind), dataHash);
     assertCall(() -> factory.accept(hash))
         .throwsException(new DecodeExprNodeException(hash, kind, DATA_PATH))
-        .withCause(new DecodeExprNoSuchExprException(dataHash));
+        .withCause(new NoSuchExprException(dataHash));
   }
 
   // helper methods

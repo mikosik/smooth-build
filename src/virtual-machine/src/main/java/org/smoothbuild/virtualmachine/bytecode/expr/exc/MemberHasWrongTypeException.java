@@ -5,8 +5,8 @@ import static org.smoothbuild.common.base.Strings.q;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 
-public class DecodeExprWrongMemberTypeException extends DecodeExprException {
-  public DecodeExprWrongMemberTypeException(
+public class MemberHasWrongTypeException extends DecodeExprException {
+  public MemberHasWrongTypeException(
       Hash hash, BKind kind, String memberName, Class<?> expected, Class<?> actual) {
     super(buildMessage(hash, kind, memberName, expected, actual));
   }

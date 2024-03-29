@@ -2,8 +2,8 @@ package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
 
 import java.math.BigInteger;
 import org.smoothbuild.common.base.Hash;
@@ -31,7 +31,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.BExprDbException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNoSuchExprException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NoSuchExprException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashingSink;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
@@ -361,7 +361,7 @@ public class BExprDb {
     try {
       return hashedDb.readHashChain(rootHash);
     } catch (NoSuchDataException e) {
-      throw new DecodeExprNoSuchExprException(rootHash, e);
+      throw new NoSuchExprException(rootHash, e);
     } catch (HashedDbException e) {
       throw cannotReadRootException(rootHash, e);
     }

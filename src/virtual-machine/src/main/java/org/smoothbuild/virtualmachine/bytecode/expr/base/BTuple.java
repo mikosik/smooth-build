@@ -9,7 +9,7 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
@@ -55,17 +55,17 @@ public final class BTuple extends BValue {
   }
 
   private void validateTuple(BTupleType type, List<BType> elementTypes)
-      throws DecodeExprWrongNodeTypeException {
+      throws NodeHasWrongTypeException {
     List<BType> expectedTypes = type.elements();
     if (expectedTypes.size() != elementTypes.size()) {
-      throw new DecodeExprWrongNodeTypeException(
+      throw new NodeHasWrongTypeException(
           hash(), kind(), DATA_PATH, type, asTupleToString(elementTypes));
     }
     for (int i = 0; i < expectedTypes.size(); i++) {
       BType expectedType = expectedTypes.get(i);
       BType itemType = elementTypes.get(i);
       if (!itemType.equals(expectedType)) {
-        throw new DecodeExprWrongNodeTypeException(
+        throw new NodeHasWrongTypeException(
             hash(), kind(), dataNodePath(i), type, asTupleToString(elementTypes));
       }
     }

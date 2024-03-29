@@ -1,14 +1,14 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
-import static org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootChainException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
+import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeExprRootExceptionTest extends TestingVirtualMachine {
+public class RootHashChainSizeIsWrongExceptionTest extends TestingVirtualMachine {
   @Test
   public void cannot_read_root_exception() {
     var exception = cannotReadRootException(Hash.of(123), new RuntimeException());

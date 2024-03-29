@@ -6,11 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class DecodeExprWrongChainSizeExceptionTest extends TestingVirtualMachine {
+public class NodeChainSizeIsWrongExceptionTest extends TestingVirtualMachine {
   @Test
   public void message() throws Exception {
-    var exception =
-        new DecodeExprWrongChainSizeException(Hash.of(123), bIntType(), "node-path", 7, 2);
+    var exception = new NodeChainSizeIsWrongException(Hash.of(123), bIntType(), "node-path", 7, 2);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` expression at "
             + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
