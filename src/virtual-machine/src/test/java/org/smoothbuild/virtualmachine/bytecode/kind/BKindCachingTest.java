@@ -33,7 +33,7 @@ public class BKindCachingTest extends TestingVirtualMachine {
     return list(
         BKindDb::blob,
         BKindDb::bool,
-        BKindCachingTest::funcT,
+        BKindCachingTest::lambdaType,
         BKindDb::int_,
         BKindDb::string,
         BKindCachingTest::tupleT,
@@ -52,20 +52,20 @@ public class BKindCachingTest extends TestingVirtualMachine {
         kindDb -> kindDb.array(kindDb.int_()),
         kindDb -> kindDb.array(kindDb.string()),
         kindDb -> kindDb.array(tupleT(kindDb)),
-        kindDb -> kindDb.array(funcT(kindDb)),
+        kindDb -> kindDb.array(lambdaType(kindDb)),
         kindDb -> kindDb.array(kindDb.array(kindDb.blob())),
         kindDb -> kindDb.array(kindDb.array(kindDb.bool())),
         kindDb -> kindDb.array(kindDb.array(kindDb.int_())),
         kindDb -> kindDb.array(kindDb.array(kindDb.string())),
         kindDb -> kindDb.array(kindDb.array(tupleT(kindDb))),
-        kindDb -> kindDb.array(kindDb.array(funcT(kindDb))));
+        kindDb -> kindDb.array(kindDb.array(lambdaType(kindDb))));
   }
 
   private static BTupleType tupleT(BKindDb kindDb) throws BytecodeException {
     return kindDb.tuple(kindDb.string(), kindDb.string());
   }
 
-  private static BLambdaType funcT(BKindDb kindDb) throws BytecodeException {
+  private static BLambdaType lambdaType(BKindDb kindDb) throws BytecodeException {
     return kindDb.lambda(list(kindDb.bool(), kindDb.blob()), kindDb.string());
   }
 }

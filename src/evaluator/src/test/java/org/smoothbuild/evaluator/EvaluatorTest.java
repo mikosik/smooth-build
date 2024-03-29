@@ -229,7 +229,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       class _named_func {
         @Test
         public void mono_expression_func() throws BytecodeException {
-          assertEvaluation(intIdSFunc(), bIntIdFunc());
+          assertEvaluation(intIdSFunc(), bIntIdLambda());
         }
 
         @Test
@@ -237,7 +237,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
           var a = varA();
           var funcS = sFunc("n", nlist(sItem(a, "e")), sParamRef(a, "e"));
           var instantiateS = sInstantiate(list(sIntType()), funcS);
-          assertEvaluation(bindings(funcS), instantiateS, bIntIdFunc());
+          assertEvaluation(bindings(funcS), instantiateS, bIntIdLambda());
         }
 
         @Test

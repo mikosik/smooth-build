@@ -29,7 +29,7 @@ public class BytecodeLoaderTest extends TestingVirtualMachine {
   @Test
   public void loading_monomorphised_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnIdFunc.class, map("A", bIntType())))
-        .isEqualTo(right(bIntIdFunc()));
+        .isEqualTo(right(bIntIdLambda()));
   }
 
   @Test

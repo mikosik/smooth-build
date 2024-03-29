@@ -133,14 +133,14 @@ public class BExprDb {
   // methods for creating OperB subclasses
 
   public BCall newCall(BExpr lambda, BExpr args) throws BytecodeException {
-    var lambdaType = validateFunctionType(lambda, args);
+    var lambdaType = validateLambdaType(lambda, args);
     var kind = kindDb.call(lambdaType.result());
     var dataHash = writeChain(lambda.hash(), args.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
 
-  private static BLambdaType validateFunctionType(BExpr lambda, BExpr arguments) {
+  private static BLambdaType validateLambdaType(BExpr lambda, BExpr arguments) {
     var lambdaEvaluationType = lambda.evaluationType();
     if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
       throw illegalEvaluationType("lambda", BLambdaType.class, lambdaEvaluationType);

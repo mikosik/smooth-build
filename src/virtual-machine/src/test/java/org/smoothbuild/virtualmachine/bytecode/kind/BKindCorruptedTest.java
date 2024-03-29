@@ -472,7 +472,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     }
 
     @Nested
-    class _if_func {
+    class _if {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -512,7 +512,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     }
 
     @Nested
-    class _map_func {
+    class _map {
       @Test
       public void learning_test() throws Exception {
         /*

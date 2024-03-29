@@ -89,42 +89,6 @@ public class BKindTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _func {
-    @ParameterizedTest
-    @MethodSource("result_cases")
-    public void result(
-        Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
-        Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
-        throws Exception {
-      assertThat(execute(factoryCall).result()).isEqualTo(execute(expected));
-    }
-
-    public static java.util.List<Arguments> result_cases() {
-      return asList(
-          args(f -> f.lambda(list(), f.int_()), f -> f.int_()),
-          args(f -> f.lambda(list(f.bool()), f.blob()), f -> f.blob()),
-          args(f -> f.lambda(list(f.bool(), f.int_()), f.blob()), f -> f.blob()));
-    }
-
-    @ParameterizedTest
-    @MethodSource("params_cases")
-    public void params(
-        Function1<BKindDb, BLambdaType, BytecodeException> factoryCall,
-        Function1<BKindDb, java.util.List<BType>, BytecodeException> expected)
-        throws Exception {
-      assertThat(execute(factoryCall).params()).isEqualTo(execute(expected));
-    }
-
-    public static java.util.List<Arguments> params_cases() {
-      return asList(
-          args(f -> f.lambda(list(), f.int_()), f -> f.tuple()),
-          args(f -> f.lambda(list(f.bool()), f.blob()), f -> f.tuple(f.bool())),
-          args(
-              f -> f.lambda(list(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_())));
-    }
-  }
-
-  @Nested
   class _lambda {
     @ParameterizedTest
     @MethodSource("result_cases")

@@ -86,7 +86,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
 
     @Test
     public void map() throws Exception {
-      assertReferenceInliningDoesNotChangeExpression(r -> bMap(bArray(bInt()), bIntIdFunc()));
+      assertReferenceInliningDoesNotChangeExpression(r -> bMap(bArray(bInt()), bIntIdLambda()));
     }
 
     @Test
@@ -129,11 +129,11 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
 
     @Test
     public void call_argument() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bCall(bIntIdFunc(), r));
+      assertReferenceInliningReplacesReference(r -> bCall(bIntIdLambda(), r));
     }
 
     @Test
-    public void call_func() throws Exception {
+    public void call_lambda() throws Exception {
       assertReferenceInliningReplacesReference(r -> bCall(bLambda(r)));
     }
 
@@ -196,7 +196,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
 
     @Test
     public void map_array() throws Exception {
-      assertReferenceInliningReplacesReference(r -> bMap(bOrder(r), bIntIdFunc()));
+      assertReferenceInliningReplacesReference(r -> bMap(bOrder(r), bIntIdLambda()));
     }
 
     @Test
