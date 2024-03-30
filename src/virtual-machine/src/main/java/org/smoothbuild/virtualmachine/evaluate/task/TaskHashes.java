@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.evaluate.task;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
@@ -12,7 +11,7 @@ public class TaskHashes {
     return switch (task) {
       case CombineTask combineTask -> combineHash();
       case ConstTask constTask -> constHash(constTask.value());
-      case InvokeTask invokeTask -> invokeHash(invokeTask.invoke());
+      case InvokeTask invokeTask -> invokeHash();
       case OrderTask orderTask -> orderHash(orderTask.outputType());
       case PickTask pickTask -> pickHash();
       case SelectTask selectTask -> selectHash();
@@ -27,8 +26,8 @@ public class TaskHashes {
     return hash(1);
   }
 
-  private static Hash invokeHash(BInvoke invoke) {
-    return hash(2, invoke.hash());
+  private static Hash invokeHash() {
+    return hash(2);
   }
 
   private static Hash orderHash(BType type) {
