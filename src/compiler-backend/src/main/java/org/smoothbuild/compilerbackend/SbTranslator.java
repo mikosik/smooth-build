@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerbackend;
 
 import static org.smoothbuild.common.base.Strings.q;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.Map.zipToMap;
@@ -198,7 +197,7 @@ public class SbTranslator {
       if (namedEvaluableS.isSome()) {
         return switch (namedEvaluableS.get()) {
           case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
-          case SNamedValue sNamedValue -> translateNamedValueWithCache(sReference, sNamedValue);
+          case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
         };
       } else {
         throw new SbTranslatorException("Cannot resolve `" + sReference.referencedName() + "` at "
@@ -317,18 +316,15 @@ public class SbTranslator {
     return bytecodeF.string(sString.string());
   }
 
-  private BExpr translateNamedValueWithCache(SReference sReference, SNamedValue sNamedValue)
-      throws SbTranslatorException {
+  private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
     var key = new CacheKey(sNamedValue.name(), typeF.varMap());
-    return computeIfAbsent(
-        cache, key, k -> translateNamedValue(sReference.location(), sNamedValue));
+    return computeIfAbsent(cache, key, k -> translateNamedValue(sNamedValue));
   }
 
-  private BExpr translateNamedValue(Location refLocation, SNamedValue sNamedValue)
-      throws SbTranslatorException {
+  private BExpr translateNamedValue(SNamedValue sNamedValue) throws SbTranslatorException {
     return switch (sNamedValue) {
       case SAnnotatedValue sAnnotatedValue -> translateAnnotatedValue(sAnnotatedValue);
-      case SNamedExprValue sNamedExprValue -> translateNamedExprValue(refLocation, sNamedExprValue);
+      case SNamedExprValue sNamedExprValue -> translateNamedExprValue(sNamedExprValue);
     };
   }
 
@@ -342,15 +338,11 @@ public class SbTranslator {
     }
   }
 
-  private BExpr translateNamedExprValue(Location refLocation, SNamedExprValue sNamedExprValue)
+  private BExpr translateNamedExprValue(SNamedExprValue sNamedExprValue)
       throws SbTranslatorException {
-    var bResultType = typeF.translate(sNamedExprValue.schema().type());
-    var bLambdaType = bytecodeF.funcType(list(), bResultType);
-    var bLambda = bytecodeF.lambda(bLambdaType, translateExpr(sNamedExprValue.body()));
-    saveNal(bLambda, sNamedExprValue);
-    var bCall = bytecodeF.call(bLambda, bytecodeF.combine(list()));
-    saveLoc(bCall, refLocation);
-    return bCall;
+    var body = translateExpr(sNamedExprValue.body());
+    saveNal(body, sNamedExprValue);
+    return body;
   }
 
   // helpers

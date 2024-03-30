@@ -23,7 +23,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
@@ -43,30 +42,27 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_expression_value() throws Exception {
           var valueS = sValue("myValue", sInt(7));
-          assertTranslation(valueS, bCall(bLambda(bInt(7))));
+          assertTranslation(valueS, bInt(7));
         }
 
         @Test
         public void poly_expression_value() throws Exception {
-          var emptyArrayVal = emptySArrayValue();
-          var instantiateS = sInstantiate(list(sIntType()), emptyArrayVal);
+          var emptyArrayValue = emptySArrayValue();
+          var instantiateS = sInstantiate(list(sIntType()), emptyArrayValue);
           var orderB = bOrder(bIntType());
-          assertTranslation(bindings(emptyArrayVal), instantiateS, bCall(bLambda(orderB)));
+          assertTranslation(bindings(emptyArrayValue), instantiateS, orderB);
         }
 
         @Test
         public void mono_expression_value_referencing_other_expression_value() throws Exception {
           var otherValue = sValue("otherValue", sInt(7));
           var myValue = sValue("myValue", sInstantiate(otherValue));
-          assertTranslation(
-              bindings(otherValue, myValue),
-              sInstantiate(myValue),
-              bCall(bLambda(bCall(bLambda(bInt(7))))));
+          assertTranslation(bindings(otherValue, myValue), sInstantiate(myValue), bInt(7));
         }
 
         @Test
         public void
-            poly_expression_value_instantitaed_with_type_param_of_enclosing_value_type_param()
+            poly_expression_value_instantiated_with_type_param_of_enclosing_value_type_param()
                 throws Exception {
           var a = varA();
           var b = varB();
@@ -79,13 +75,11 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
           var orderB = bOrder(bIntType());
           assertTranslation(
-              bindings(emptyArrayValueS, referencingValueS),
-              instantiatedReferencingValueS,
-              bCall(bLambda(bCall(bLambda(orderB)))));
+              bindings(emptyArrayValueS, referencingValueS), instantiatedReferencingValueS, orderB);
         }
 
         @Test
-        public void mono_native_value() throws Exception {
+        public void declaring_mono_native_value_fails() throws Exception {
           var fullPath = fullPath(bucketId("prj"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -369,20 +363,18 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void expression_value() throws Exception {
           var valueS = sValue(3, "myValue", sInt(7, 37));
-          assertValueNalMapping(
-              bindings(valueS), sInstantiate(9, valueS), location(9), "myValue", location(3));
+          ImmutableBindings<SNamedEvaluable> evaluables = bindings(valueS);
+          SExpr sExpr = sInstantiate(9, valueS);
+          assertNalMapping(evaluables, sExpr, "myValue", location(3));
         }
 
         @Test
         public void expression_value_referencing_other_expression_value() throws Exception {
           var otherValueS = sValue(6, "otherValue", sInt(7, 37));
           var valueS = sValue(5, "myValue", sInstantiate(otherValueS));
-          assertValueNalMapping(
-              bindings(otherValueS, valueS),
-              sInstantiate(9, valueS),
-              location(9),
-              "myValue",
-              location(5));
+          ImmutableBindings<SNamedEvaluable> evaluables = bindings(otherValueS, valueS);
+          SExpr sExpr = sInstantiate(9, valueS);
+          assertNalMapping(evaluables, sExpr, "myValue", location(5));
         }
 
         @Test
@@ -516,9 +508,9 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       class _instantiate {
         @Test
         public void expression_value() throws Exception {
-          var emptyArrayVal = sValue(7, "emptyArray", sOrder(varA()));
-          var instantiateS = sInstantiate(4, list(sIntType()), emptyArrayVal);
-          assertNalMapping(bindings(emptyArrayVal), instantiateS, null, location(4));
+          var sValue = sValue(7, "emptyArray", sOrder(varA()));
+          var sInstantiate = sInstantiate(4, list(sIntType()), sValue);
+          assertNalMapping(bindings(sValue), sInstantiate, "emptyArray", location(7));
         }
 
         @Test
@@ -645,44 +637,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     assertThat(sbTranslator.translateExpr(sExpr)).isEqualTo(expected);
   }
 
-  private void assertValueNalMapping(
-      SExpr sExpr, Location expectedCallLocation, String expectedName, Location expectedLocation)
-      throws Exception {
-    assertValueNalMapping(
-        newTranslator(), sExpr, expectedCallLocation, expectedName, expectedLocation);
-  }
-
-  private void assertValueNalMapping(
-      ImmutableBindings<SNamedEvaluable> evaluables,
-      SExpr sExpr,
-      Location expectedCallLocation,
-      String expectedName,
-      Location expectedLocation)
-      throws Exception {
-    assertValueNalMapping(
-        newTranslator(evaluables), sExpr, expectedCallLocation, expectedName, expectedLocation);
-  }
-
-  private static void assertValueNalMapping(
-      SbTranslator sbTranslator,
-      SExpr sExpr,
-      Location expectedCallLocation,
-      String expectedName,
-      Location expectedLocation)
-      throws Exception {
-    var call = ((BCall) sbTranslator.translateExpr(sExpr));
-    assertNalMapping(sbTranslator, call, null, expectedCallLocation);
-    var called = call.subExprs().lambda();
-    assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
-  }
-
   private void assertNalMapping(
       ImmutableBindings<SNamedEvaluable> evaluables,
       SExpr sExpr,
       String expectedName,
       Location expectedLocation)
       throws Exception {
-    assertNalMapping(newTranslator(evaluables), sExpr, expectedName, expectedLocation);
+    var sbTranslator = newTranslator(evaluables);
+    assertNalMapping(sbTranslator, sExpr, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(SExpr sExpr, String expectedName, Location expectedLocation)
@@ -690,7 +652,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     assertNalMapping(newTranslator(), sExpr, expectedName, expectedLocation);
   }
 
-  private void assertNalMapping(
+  private static void assertNalMapping(
       SbTranslator sbTranslator, SExpr sExpr, String expectedName, Location expectedLocation)
       throws SbTranslatorException {
     var exprB = sbTranslator.translateExpr(sExpr);

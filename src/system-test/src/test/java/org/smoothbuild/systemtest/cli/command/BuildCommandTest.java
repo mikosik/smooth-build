@@ -567,7 +567,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
-          :evaluate:const:()->String""");
+          :evaluate:const:String""");
     }
 
     @Test
