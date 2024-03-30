@@ -36,7 +36,7 @@ public class JavacTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(logs()).contains(warning("Param 'srcs' is empty list."));
+    assertThat(logs()).contains(warning("Parameter 'srcs' is empty list."));
   }
 
   @Test

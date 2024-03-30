@@ -73,7 +73,7 @@ public class JavacFunc {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          nativeApi.log().warning("Param 'srcs' is empty list.");
+          nativeApi.log().warning("Parameter 'srcs' is empty list.");
           return nativeApi
               .factory()
               .arrayBuilderWithElements(nativeApi.factory().fileType())
