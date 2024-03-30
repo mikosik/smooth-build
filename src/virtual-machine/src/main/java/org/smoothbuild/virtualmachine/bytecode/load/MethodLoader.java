@@ -38,19 +38,21 @@ public class MethodLoader {
 
   private Either<String, Class<?>> findClass(MethodSpec methodSpec) throws BytecodeException {
     return jarClassLoaderFactory
-        .classLoaderFor(methodSpec.jar())
+        .classLoaderFor(methodSpec.method().jar())
         .flatMapRight(classLoader -> loadClass(classLoader, methodSpec));
   }
 
-  private Either<String, Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
+  private Either<String, Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec)
+      throws BytecodeException {
     try {
-      return right(classLoader.loadClass(methodSpec.classBinaryName()));
+      return right(classLoader.loadClass(methodSpec.method().classBinaryName().toJavaString()));
     } catch (ClassNotFoundException e) {
       return left("Class not found in jar.");
     }
   }
 
-  private static Either<String, Method> findMethodInClass(MethodSpec methodSpec, Class<?> clazz) {
+  private static Either<String, Method> findMethodInClass(MethodSpec methodSpec, Class<?> clazz)
+      throws BytecodeException {
     var declaredMethods = list(clazz.getDeclaredMethods());
     var methods = declaredMethods.filter(m -> m.getName().equals(methodSpec.methodName()));
     return switch (methods.size()) {
@@ -60,13 +62,13 @@ public class MethodLoader {
     };
   }
 
-  private static String missingMethodError(MethodSpec methodSpec) {
+  private static String missingMethodError(MethodSpec methodSpec) throws BytecodeException {
     return "Class '%s' does not have '%s' method."
-        .formatted(methodSpec.classBinaryName(), methodSpec.methodName());
+        .formatted(methodSpec.method().classBinaryName().toJavaString(), methodSpec.methodName());
   }
 
-  private static String overloadedMethodError(MethodSpec methodSpec) {
+  private static String overloadedMethodError(MethodSpec methodSpec) throws BytecodeException {
     return "Class '%s' has more than one '%s' method."
-        .formatted(methodSpec.classBinaryName(), methodSpec.methodName());
+        .formatted(methodSpec.method().classBinaryName().toJavaString(), methodSpec.methodName());
   }
 }

@@ -108,7 +108,8 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
-      var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
+      var bMethod = bMethod(jar, classBinaryName);
+      var methodSpec = new MethodSpec(bMethod, method.getName());
       when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);

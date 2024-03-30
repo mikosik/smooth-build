@@ -378,10 +378,11 @@ public class SbTranslator {
   }
 
   private Either<String, BExpr> loadBytecode(
-      String name, BBlob jar, String path, Map<String, BType> varNameToTypeMap)
+      String name, BBlob jar, String classBinaryName, Map<String, BType> varNameToTypeMap)
       throws SbTranslatorException {
     try {
-      return bytecodeLoader.load(name, jar, path, varNameToTypeMap);
+      var bMethod = bytecodeF.method(jar, bytecodeF.string(classBinaryName));
+      return bytecodeLoader.load(name, bMethod, varNameToTypeMap);
     } catch (BytecodeException e) {
       throw new SbTranslatorException(e);
     }

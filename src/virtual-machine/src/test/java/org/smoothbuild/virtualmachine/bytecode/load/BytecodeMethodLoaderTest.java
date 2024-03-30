@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
@@ -46,13 +48,14 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
-      var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
+      var bMethod = bMethod(jar, classBinaryName);
+      var methodSpec = new MethodSpec(bMethod, method.getName());
       when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
 
       var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
-      var resultMethod1 = bytecodeMethodLoader.load(jar, classBinaryName);
-      var resultMethod2 = bytecodeMethodLoader.load(jar, classBinaryName);
+      var resultMethod1 = bytecodeMethodLoader.load(bMethod);
+      var resultMethod2 = bytecodeMethodLoader.load(bMethod);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
       verify(methodLoader, times(1)).load(methodSpec);
@@ -71,8 +74,7 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
 
   @Test
   public void loading_method_without_native_api_param_causes_error() throws Exception {
-    var method =
-        WithoutBytecodeF.class.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME);
+    var method = WithoutBytecodeF.class.getDeclaredMethod(BYTECODE_METHOD_NAME);
     assertLoadingCausesError(
         method,
         "Providing method parameter is not of type " + BytecodeFactory.class.getCanonicalName()
@@ -82,7 +84,7 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   @Test
   public void loading_method_with_three_params_causes_error() throws Exception {
     var method = WithThreeParams.class.getDeclaredMethod(
-        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class, Map.class);
+        BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class, Map.class);
     assertLoadingCausesError(method, "Providing method parameter count is different than 2.");
   }
 
@@ -98,21 +100,19 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   }
 
   private void assertLoadingCausesError(Method method, String message) throws BytecodeException {
-    var methodSpec =
-        new MethodSpec(bBlob(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
-    assertThat(load(methodSpec, method)).isEqualTo(left(message));
+
+    var bMethod = bMethod(bBlob(), "class.binary.name");
+    assertThat(load(bMethod, method)).isEqualTo(left(message));
   }
 
-  private Either<String, Method> load(MethodSpec methodSpec, Method method)
-      throws BytecodeException {
+  private Either<String, Method> load(BMethod bMethod, Method method) throws BytecodeException {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(right(method)).when(methodLoader).load(methodSpec);
+    doReturn(right(method)).when(methodLoader).load(new MethodSpec(bMethod, BYTECODE_METHOD_NAME));
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
-    return bytecodeMethodLoader.load(methodSpec.jar(), methodSpec.classBinaryName());
+    return bytecodeMethodLoader.load(bMethod);
   }
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {
-    return clazz.getDeclaredMethod(
-        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class);
+    return clazz.getDeclaredMethod(BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class);
   }
 }

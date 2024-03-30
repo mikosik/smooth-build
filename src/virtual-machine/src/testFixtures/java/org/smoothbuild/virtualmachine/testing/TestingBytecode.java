@@ -25,6 +25,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -398,6 +399,14 @@ public abstract class TestingBytecode {
       BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
       throws BytecodeException {
     return bytecodeF().invoke(evaluationType, jar, classBinaryName, isPure, arguments);
+  }
+
+  public BMethod bMethod(BBlob jar, String classBinaryName) throws BytecodeException {
+    return bMethod(jar, bString(classBinaryName));
+  }
+
+  public BMethod bMethod(BBlob jar, BString classBinaryName1) throws BytecodeException {
+    return bytecodeF().method(jar, classBinaryName1);
   }
 
   public BTuple bPerson(String firstName, String lastName) throws BytecodeException {

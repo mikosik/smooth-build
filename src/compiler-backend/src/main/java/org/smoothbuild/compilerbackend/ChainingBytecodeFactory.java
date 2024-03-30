@@ -17,6 +17,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
@@ -61,6 +62,13 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.combine(elements));
   }
 
+  public BInvoke invoke(
+      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+      throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(
+        () -> bytecodeFactory.invoke(evaluationType, jar, classBinaryName, isPure, arguments));
+  }
+
   public BInt int_(BigInteger value) throws SbTranslatorException {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.int_(value));
   }
@@ -69,11 +77,8 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.lambda(type, body));
   }
 
-  public BInvoke invoke(
-      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
-      throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.invoke(evaluationType, jar, classBinaryName, isPure, arguments));
+  public BMethod method(BBlob jar, BString classBinaryName) throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(() -> bytecodeFactory.method(jar, classBinaryName));
   }
 
   public BOrder order(BArrayType arrayType, List<BExpr> elements) throws SbTranslatorException {

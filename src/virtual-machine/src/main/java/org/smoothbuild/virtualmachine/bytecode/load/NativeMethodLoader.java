@@ -36,12 +36,12 @@ public class NativeMethodLoader {
   }
 
   private Either<String, Method> loadImpl(BInvoke invoke) throws BytecodeException {
-    var classBinaryName = invoke.classBinaryName().toJavaString();
-    var methodSpec = new MethodSpec(invoke.jar(), classBinaryName, NATIVE_METHOD_NAME);
+    var method = invoke.method();
+    var methodSpec = new MethodSpec(method, NATIVE_METHOD_NAME);
     return methodLoader
         .load(methodSpec)
         .flatMapRight(this::validateMethodSignature)
-        .mapLeft(e -> loadingError(classBinaryName, e));
+        .mapLeft(e -> loadingError(method.classBinaryName().toJavaString(), e));
   }
 
   private Either<String, Method> validateMethodSignature(Method method) {

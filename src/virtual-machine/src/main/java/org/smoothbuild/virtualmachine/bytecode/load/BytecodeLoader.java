@@ -11,8 +11,8 @@ import java.util.Map;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
@@ -29,13 +29,12 @@ public class BytecodeLoader {
     this.bytecodeFactory = bytecodeFactory;
   }
 
-  public Either<String, BExpr> load(
-      String name, BBlob jar, String classBinaryName, Map<String, BType> varMap)
+  public Either<String, BExpr> load(String name, BMethod bMethod, Map<String, BType> varMap)
       throws BytecodeException {
     return methodLoader
-        .load(jar, classBinaryName)
-        .flatMapRight(method -> invoke(method, varMap))
-        .mapLeft(e -> loadingError(name, classBinaryName, e));
+        .load(bMethod)
+        .flatMapRight(jMethod -> invoke(jMethod, varMap))
+        .mapLeft(e -> loadingError(name, bMethod.classBinaryName().toJavaString(), e));
   }
 
   private Either<String, BExpr> invoke(Method method, Map<String, BType> varMap) {

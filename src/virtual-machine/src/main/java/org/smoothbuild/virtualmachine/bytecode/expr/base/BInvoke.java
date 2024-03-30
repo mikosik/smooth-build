@@ -45,6 +45,10 @@ public final class BInvoke extends BOperation {
     return new BSubExprs(jar, classBinaryName, isPure, arguments);
   }
 
+  public BMethod method() throws BytecodeException {
+    return new BMethod(exprDb().newTuple(list(jar(), classBinaryName())));
+  }
+
   public BBlob jar() throws BytecodeException {
     return readElementFromDataAsInstanceChain(JAR_IDX, DATA_SEQ_SIZE, BBlob.class);
   }

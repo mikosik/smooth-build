@@ -31,6 +31,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
@@ -109,10 +110,6 @@ public class BytecodeFactory {
     return exprDb.newTuple(list(content, path));
   }
 
-  public BLambda lambda(BLambdaType type, BExpr body) throws BytecodeException {
-    return exprDb.newLambda(type, body);
-  }
-
   public BIf if_(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
     return exprDb.newIf(condition, then_, else_);
   }
@@ -121,14 +118,22 @@ public class BytecodeFactory {
     return exprDb.newInt(value);
   }
 
-  public BMap map(BExpr array, BExpr mapper) throws BytecodeException {
-    return exprDb.newMap(array, mapper);
-  }
-
   public BInvoke invoke(
       BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
       throws BytecodeException {
     return exprDb.newInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
+  }
+
+  public BLambda lambda(BLambdaType type, BExpr body) throws BytecodeException {
+    return exprDb.newLambda(type, body);
+  }
+
+  public BMap map(BExpr array, BExpr mapper) throws BytecodeException {
+    return exprDb.newMap(array, mapper);
+  }
+
+  public BMethod method(BBlob jar, BString classBinaryName) throws BytecodeException {
+    return new BMethod(tuple(list(jar, classBinaryName)));
   }
 
   public BPick pick(BExpr pickable, BExpr index) throws BytecodeException {

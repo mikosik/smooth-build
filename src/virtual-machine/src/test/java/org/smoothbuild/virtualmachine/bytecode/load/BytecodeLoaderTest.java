@@ -43,11 +43,11 @@ public class BytecodeLoaderTest extends TestingVirtualMachine {
       throws NoSuchMethodException, BytecodeException {
     var jar = bBlob();
     var classBinaryName = "binary.name";
+    var bMethod = bMethod(jar, classBinaryName);
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);
-    when(bytecodeMethodLoader.load(jar, classBinaryName)).thenReturn(fetchMethod(clazz));
+    when(bytecodeMethodLoader.load(bMethod)).thenReturn(fetchMethod(clazz));
 
-    return new BytecodeLoader(bytecodeMethodLoader, bytecodeF())
-        .load("name", jar, classBinaryName, varMap);
+    return new BytecodeLoader(bytecodeMethodLoader, bytecodeF()).load("name", bMethod, varMap);
   }
 
   private static Either<String, Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
