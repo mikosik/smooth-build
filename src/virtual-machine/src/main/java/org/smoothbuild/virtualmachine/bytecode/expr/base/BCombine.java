@@ -32,8 +32,8 @@ public final class BCombine extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
-    return new SubExprsB(items());
+  public BSubExprs subExprs() throws BytecodeException {
+    return new BSubExprs(items());
   }
 
   public List<BExpr> items() throws BytecodeException {
@@ -53,7 +53,7 @@ public final class BCombine extends BOperation {
     return items;
   }
 
-  public static record SubExprsB(List<BExpr> items) implements BExprs {
+  public static record BSubExprs(List<BExpr> items) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return items;

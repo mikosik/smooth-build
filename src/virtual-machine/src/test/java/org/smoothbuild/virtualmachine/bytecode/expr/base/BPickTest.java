@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BPickTest extends TestingVirtualMachine {
@@ -30,7 +31,7 @@ public class BPickTest extends TestingVirtualMachine {
   public void data_returns_array_and_index() throws Exception {
     var pickable = bArray(bInt(7));
     var index = bInt(0);
-    assertThat(bPick(pickable, index).subExprs()).isEqualTo(new BPick.SubExprsB(pickable, index));
+    assertThat(bPick(pickable, index).subExprs()).isEqualTo(new BSubExprs(pickable, index));
   }
 
   @Nested
@@ -65,7 +66,7 @@ public class BPickTest extends TestingVirtualMachine {
     var index = bInt(0);
     var pick = bPick(array, index);
     assertThat(((BPick) exprDbOther().get(pick.hash())).subExprs())
-        .isEqualTo(new BPick.SubExprsB(array, index));
+        .isEqualTo(new BSubExprs(array, index));
   }
 
   @Test

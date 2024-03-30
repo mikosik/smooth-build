@@ -32,7 +32,7 @@ public final class BMap extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
+  public BSubExprs subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(2);
     var array = readMemberFromHashChain(hashes, 0);
     var arrayEvaluationType = array.evaluationType();
@@ -48,10 +48,10 @@ public final class BMap extends BOperation {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "mapper", expectedMapperEvaluationType, mapperEvaluationType);
     }
-    return new SubExprsB(array, mapper);
+    return new BSubExprs(array, mapper);
   }
 
-  public static record SubExprsB(BExpr array, BExpr mapper) implements BExprs {
+  public static record BSubExprs(BExpr array, BExpr mapper) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return list(array, mapper);

@@ -17,7 +17,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.SubExprsB;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap;
@@ -168,7 +168,7 @@ public class BScheduler {
     scheduleJobEvaluation(job, v -> onConditionEvaluated(v, ifJob, subExprs));
   }
 
-  private void onConditionEvaluated(BValue condition, Job ifJob, SubExprsB args)
+  private void onConditionEvaluated(BValue condition, Job ifJob, BSubExprs args)
       throws BytecodeException {
     var expr = ((BBool) condition).toJavaBoolean() ? args.then_() : args.else_();
     scheduleJobEvaluation(newJob(expr, ifJob), ifJob.promisedValue());
