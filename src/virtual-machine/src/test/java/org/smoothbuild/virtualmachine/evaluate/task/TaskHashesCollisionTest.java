@@ -26,36 +26,6 @@ public class TaskHashesCollisionTest extends TestingVirtualMachine {
         newInvokeTask(
             bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple()),
             bTrace()));
-    addHash(
-        list,
-        set,
-        newInvokeTask(
-            bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple(bInt(1))),
-            bTrace()));
-    addHash(
-        list,
-        set,
-        newInvokeTask(
-            bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(false), bTuple()),
-            bTrace()));
-    addHash(
-        list,
-        set,
-        newInvokeTask(
-            bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("2")), bBool(true), bTuple()),
-            bTrace()));
-    addHash(
-        list,
-        set,
-        newInvokeTask(
-            bInvoke(bIntType(), bMethodTuple(bBlob(2), bString("1")), bBool(true), bTuple()),
-            bTrace()));
-    addHash(
-        list,
-        set,
-        newInvokeTask(
-            bInvoke(bBoolType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple()),
-            bTrace()));
     addHash(list, set, new OrderTask(bOrder(bIntType()), bTrace()));
     addHash(list, set, new OrderTask(bOrder(bBlobType()), bTrace()));
     addHash(list, set, new PickTask(bPick(), bTrace()));

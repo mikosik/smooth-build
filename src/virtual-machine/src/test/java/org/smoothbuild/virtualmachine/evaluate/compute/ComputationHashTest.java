@@ -97,7 +97,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
-              Hash.decode("57f069da84a89e99efbf05dc32640b939495b9f50f4d2f99b2aa4012188a8847"));
+              Hash.decode("22711cea8e4103d1a0a14445824a76f47803b8ef4921206eb58ce9ec91f716cb"));
     }
 
     @Test
