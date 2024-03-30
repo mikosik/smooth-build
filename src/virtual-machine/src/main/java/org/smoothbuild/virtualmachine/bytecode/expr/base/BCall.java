@@ -26,7 +26,7 @@ public final class BCall extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
+  public BSubExprs subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(2);
     var lambda = readMemberFromHashChain(hashes, 0);
     var lambdaEvaluationType = lambda.evaluationType();
@@ -39,10 +39,10 @@ public final class BCall extends BOperation {
       throw new MemberHasWrongEvaluationTypeException(
           hash(), kind(), "lambda.resultType", evaluationType(), lambdaType.result());
     }
-    return new SubExprsB(lambda, args);
+    return new BSubExprs(lambda, args);
   }
 
-  public static record SubExprsB(BExpr lambda, BExpr arguments) implements BExprs {
+  public static record BSubExprs(BExpr lambda, BExpr arguments) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return list(lambda, arguments);

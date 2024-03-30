@@ -22,8 +22,8 @@ public final class BReference extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() {
-    return new SubExprsB();
+  public BSubExprs subExprs() {
+    return new BSubExprs();
   }
 
   public BInt index() throws BytecodeException {
@@ -35,7 +35,7 @@ public final class BReference extends BOperation {
     return kind().name() + ":" + evaluationType() + "(" + index().toJavaBigInteger() + ")";
   }
 
-  public static record SubExprsB() implements BExprs {
+  public static record BSubExprs() implements BExprs {
     @Override
     public List<BExpr> toList() {
       return list();

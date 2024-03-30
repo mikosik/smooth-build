@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BInvokeTest extends TestingVirtualMachine {
@@ -121,7 +122,7 @@ public class BInvokeTest extends TestingVirtualMachine {
     var evaluationType = bIntType();
     var invoke = bInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
     assertThat(((BInvoke) exprDbOther().get(invoke.hash())).subExprs())
-        .isEqualTo(new BInvoke.SubExprsB(jar, classBinaryName, isPure, arguments));
+        .isEqualTo(new BSubExprs(jar, classBinaryName, isPure, arguments));
   }
 
   @Test

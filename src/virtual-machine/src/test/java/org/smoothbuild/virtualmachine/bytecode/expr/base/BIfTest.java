@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BIfTest extends TestingVirtualMachine {
@@ -57,7 +58,7 @@ public class BIfTest extends TestingVirtualMachine {
     var else_ = bInt(2);
     var ifB = bIf(condition, then_, else_);
     assertThat(((BIf) exprDbOther().get(ifB.hash())).subExprs())
-        .isEqualTo(new BIf.SubExprsB(condition, then_, else_));
+        .isEqualTo(new BSubExprs(condition, then_, else_));
   }
 
   @Test

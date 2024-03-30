@@ -24,14 +24,14 @@ public final class BPick extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
+  public BSubExprs subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(2);
     var pickable = readMemberFromHashChain(hashes, 0, "pickable", kindDb().array(evaluationType()));
     var index = readMemberFromHashChain(hashes, 1, "index", kindDb().int_());
-    return new SubExprsB(pickable, index);
+    return new BSubExprs(pickable, index);
   }
 
-  public static record SubExprsB(BExpr pickable, BExpr index) implements BExprs {
+  public static record BSubExprs(BExpr pickable, BExpr index) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return list(pickable, index);

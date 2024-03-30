@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall.SubExprsB;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BCallTest extends TestingVirtualMachine {
@@ -48,7 +48,7 @@ public class BCallTest extends TestingVirtualMachine {
     var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
     assertThat(bCall(lambda, argument).subExprs())
-        .isEqualTo(new SubExprsB(lambda, bCombine(argument)));
+        .isEqualTo(new BSubExprs(lambda, bCombine(argument)));
   }
 
   @Nested
@@ -81,7 +81,7 @@ public class BCallTest extends TestingVirtualMachine {
     var argument = bString();
     var call = bCall(lambda, argument);
     assertThat(((BCall) exprDbOther().get(call.hash())).subExprs())
-        .isEqualTo(new BCall.SubExprsB(lambda, bCombine(argument)));
+        .isEqualTo(new BSubExprs(lambda, bCombine(argument)));
   }
 
   @Test

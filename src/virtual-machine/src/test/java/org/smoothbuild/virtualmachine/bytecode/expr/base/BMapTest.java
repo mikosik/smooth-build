@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BMapTest extends TestingVirtualMachine {
@@ -69,7 +70,7 @@ public class BMapTest extends TestingVirtualMachine {
     var mapper = bIntIdLambda();
     var map = bMap(array, mapper);
     assertThat(((BMap) exprDbOther().get(map.hash())).subExprs())
-        .isEqualTo(new BMap.SubExprsB(array, mapper));
+        .isEqualTo(new BSubExprs(array, mapper));
   }
 
   @Test

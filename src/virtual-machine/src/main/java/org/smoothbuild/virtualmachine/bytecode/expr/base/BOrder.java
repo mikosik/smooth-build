@@ -30,8 +30,8 @@ public final class BOrder extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
-    return new SubExprsB(elements());
+  public BSubExprs subExprs() throws BytecodeException {
+    return new BSubExprs(elements());
   }
 
   public List<BExpr> elements() throws BytecodeException {
@@ -47,7 +47,7 @@ public final class BOrder extends BOperation {
     return elements;
   }
 
-  public static record SubExprsB(List<BExpr> elements) implements BExprs {
+  public static record BSubExprs(List<BExpr> elements) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return elements;

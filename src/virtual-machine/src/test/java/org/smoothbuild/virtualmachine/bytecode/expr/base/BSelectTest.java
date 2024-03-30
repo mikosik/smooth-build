@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BSelectTest extends TestingVirtualMachine {
@@ -37,8 +38,7 @@ public class BSelectTest extends TestingVirtualMachine {
   public void sub_expressions_contains_tuple_and_index() throws Exception {
     var selectable = bTuple(bInt(7));
     var index = bInt(0);
-    assertThat(bSelect(selectable, index).subExprs())
-        .isEqualTo(new BSelect.SubExprsB(selectable, index));
+    assertThat(bSelect(selectable, index).subExprs()).isEqualTo(new BSubExprs(selectable, index));
   }
 
   @Nested
@@ -75,7 +75,7 @@ public class BSelectTest extends TestingVirtualMachine {
     var index = bInt(0);
     var select = bSelect(selectable, index);
     assertThat(((BSelect) exprDbOther().get(select.hash())).subExprs())
-        .isEqualTo(new BSelect.SubExprsB(selectable, index));
+        .isEqualTo(new BSubExprs(selectable, index));
   }
 
   @Test

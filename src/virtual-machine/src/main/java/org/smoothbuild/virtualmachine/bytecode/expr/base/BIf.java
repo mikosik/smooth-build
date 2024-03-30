@@ -20,15 +20,15 @@ public final class BIf extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
+  public BSubExprs subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(3);
     var condition = readMemberFromHashChain(hashes, 0, "condition", kindDb().bool());
     var then_ = readMemberFromHashChain(hashes, 1, "then", evaluationType());
     var else_ = readMemberFromHashChain(hashes, 2, "else", evaluationType());
-    return new SubExprsB(condition, then_, else_);
+    return new BSubExprs(condition, then_, else_);
   }
 
-  public static record SubExprsB(BExpr condition, BExpr then_, BExpr else_) implements BExprs {
+  public static record BSubExprs(BExpr condition, BExpr then_, BExpr else_) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return list(condition, then_, else_);

@@ -27,7 +27,7 @@ public final class BInvoke extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
+  public BSubExprs subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(4);
     var jar = readMemberFromHashChain(hashes, 0, "jar", kindDb().blob());
     var classBinaryName =
@@ -42,7 +42,7 @@ public final class BInvoke extends BOperation {
           BTupleType.class,
           arguments.evaluationType().getClass());
     }
-    return new SubExprsB(jar, classBinaryName, isPure, arguments);
+    return new BSubExprs(jar, classBinaryName, isPure, arguments);
   }
 
   public BBlob jar() throws BytecodeException {
@@ -57,7 +57,7 @@ public final class BInvoke extends BOperation {
     return readElementFromDataAsInstanceChain(IS_PURE_IDX, DATA_SEQ_SIZE, BBool.class);
   }
 
-  public static record SubExprsB(BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+  public static record BSubExprs(BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
       implements BExprs {
     @Override
     public List<BExpr> toList() {

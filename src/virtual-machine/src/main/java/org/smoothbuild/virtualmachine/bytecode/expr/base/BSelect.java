@@ -28,7 +28,7 @@ public final class BSelect extends BOperation {
   }
 
   @Override
-  public SubExprsB subExprs() throws BytecodeException {
+  public BSubExprs subExprs() throws BytecodeException {
     var hashes = readDataAsHashChain(2);
     var selectable = readMemberFromHashChain(hashes, 0);
     var index = readAndCastMemberFromHashChain(hashes, 1, "index", BInt.class);
@@ -45,10 +45,10 @@ public final class BSelect extends BOperation {
     if (!evaluationType().equals(fieldType)) {
       throw new SelectHasWrongEvaluationTypeException(hash(), kind(), fieldType);
     }
-    return new SubExprsB(selectable, index);
+    return new BSubExprs(selectable, index);
   }
 
-  public static record SubExprsB(BExpr selectable, BInt index) implements BExprs {
+  public static record BSubExprs(BExpr selectable, BInt index) implements BExprs {
     @Override
     public List<BExpr> toList() {
       return list(selectable, index);

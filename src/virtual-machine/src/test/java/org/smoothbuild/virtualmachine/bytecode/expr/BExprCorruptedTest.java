@@ -41,6 +41,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -300,7 +301,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var hash = hash(hash(bCallKind(bIntType())), hash(hash(lambda), hash(args)));
 
       assertThat(((BCall) exprDb().get(hash)).subExprs())
-          .isEqualTo(new BCall.SubExprsB(lambda, args));
+          .isEqualTo(new BCall.BSubExprs(lambda, args));
     }
 
     @Test
@@ -554,7 +555,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(condition), hash(then_), hash(else_));
       var hash = hash(hash(bIfKind(bIntType())), dataHash);
       assertThat(((BIf) exprDb().get(hash)).subExprs())
-          .isEqualTo(new BIf.SubExprsB(condition, then_, else_));
+          .isEqualTo(new BIf.BSubExprs(condition, then_, else_));
     }
 
     @Test
@@ -698,7 +699,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var dataHash = hash(hash(array), hash(mapper));
       var hash = hash(hash(bMapKind(bArrayType(bIntType()))), dataHash);
       assertThat(((BMap) exprDb().get(hash)).subExprs())
-          .isEqualTo(new BMap.SubExprsB(array, mapper));
+          .isEqualTo(new BMap.BSubExprs(array, mapper));
     }
 
     @Test
@@ -1049,7 +1050,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var index = bReference(bIntType(), 7);
       var hash = hash(hash(bPickKind(bStringType())), hash(hash(pickable), hash(index)));
       assertThat(((BPick) exprDb().get(hash)).subExprs())
-          .isEqualTo(new BPick.SubExprsB(pickable, index));
+          .isEqualTo(new BPick.BSubExprs(pickable, index));
     }
 
     @Test
@@ -1175,7 +1176,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var index = bInt(0);
       var hash = hash(hash(bSelectKind(bStringType())), hash(hash(selectable), hash(index)));
       assertThat(((BSelect) exprDb().get(hash)).subExprs())
-          .isEqualTo(new BSelect.SubExprsB(selectable, index));
+          .isEqualTo(new BSubExprs(selectable, index));
     }
 
     @Test
