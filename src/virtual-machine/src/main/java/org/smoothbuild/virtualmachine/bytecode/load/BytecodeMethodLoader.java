@@ -13,8 +13,8 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 /**
@@ -34,8 +34,8 @@ public class BytecodeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BBlob jar, String classBinaryName) throws BytecodeException {
-    var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
+  public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
+    var methodSpec = new MethodSpec(bMethod, BYTECODE_METHOD_NAME);
     return memoizer.apply(methodSpec);
   }
 

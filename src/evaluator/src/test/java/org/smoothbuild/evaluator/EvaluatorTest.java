@@ -244,11 +244,12 @@ public class EvaluatorTest extends TestingVirtualMachine {
         public void ann_func() throws Exception {
           var jar = bBlob(123);
           var className = ReturnIdFunc.class.getCanonicalName();
+          var bMethod = bMethod(jar, className);
           when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, BType>of("A", bIntType());
           var bFunc = ReturnIdFunc.bytecode(bytecodeF(), varMap);
-          when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(bFunc));
+          when(bytecodeLoader.load("myFunc", bMethod, varMap)).thenReturn(right(bFunc));
 
           var a = varA();
           var bytecodeFuncS = sBytecodeFunc(className, a, "myFunc", nlist(sItem(a, "p")));

@@ -25,7 +25,8 @@ public class MethodLoaderTest extends TestingVirtualMachine {
   @Test
   public void class_not_found_in_jar_error() throws Exception {
     var methodLoader = methodLoaderWithPlatformClassLoader();
-    var methodSpec = new MethodSpec(blobBJarWithJavaByteCode(), "com.missing.Class", "methodName");
+    var bBlob = blobBJarWithJavaByteCode();
+    var methodSpec = new MethodSpec(bMethod(bBlob, "com.missing.Class"), "methodName");
     assertThat(methodLoader.load(methodSpec)).isEqualTo(left("Class not found in jar."));
   }
 
@@ -49,7 +50,8 @@ public class MethodLoaderTest extends TestingVirtualMachine {
 
   private MethodSpec methodSpec(Class<?> clazz) throws BytecodeException {
     var jar = blobBJarWithPluginApi(clazz);
-    return new MethodSpec(jar, clazz.getCanonicalName(), NATIVE_METHOD_NAME);
+    var bMethod = bMethod(jar, clazz.getCanonicalName());
+    return new MethodSpec(bMethod, NATIVE_METHOD_NAME);
   }
 
   private Either<String, Object> loadingError(Class<?> clazz, String message) {
@@ -75,6 +77,7 @@ public class MethodLoaderTest extends TestingVirtualMachine {
     private void testCaching(Class<?> clazz) throws Exception {
       var className = "className";
       var jar = bBlob();
+      var bMethod = bMethod(jar, className);
 
       var classLoader = mock(ClassLoader.class);
       doReturn(clazz).when(classLoader).loadClass(className);
@@ -82,7 +85,7 @@ public class MethodLoaderTest extends TestingVirtualMachine {
       doReturn(right(classLoader)).when(classLoaderFactory).classLoaderFor(jar);
 
       var methodLoader = new MethodLoader(classLoaderFactory);
-      var methodSpec = new MethodSpec(jar, className, "func");
+      var methodSpec = new MethodSpec(bMethod, "func");
       Either<String, Method> methodEither1 = methodLoader.load(methodSpec);
       Either<String, Method> methodEither2 = methodLoader.load(methodSpec);
       assertThat(methodEither1).isSameInstanceAs(methodEither2);
