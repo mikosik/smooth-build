@@ -118,7 +118,7 @@ public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _invoke_task {
     @Nested
-    class _with_pure_lambda {
+    class _with_pure_invoke {
       @Test
       public void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
@@ -161,7 +161,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Nested
-    class _with_impure_lambda {
+    class _with_impure_invoke {
       @Test
       public void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
