@@ -263,12 +263,11 @@ public class SbTranslator {
     var sAnnotation = sNativeFunc.annotation();
     var bJar = persistNativeJar(sAnnotation.location());
     var bClassBinaryName = bytecodeF.string(sAnnotation.path().string());
+    var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName).tuple();
     var bIsPure = bytecodeF.bool(sAnnotation.name().equals(NATIVE_PURE));
-
     var bLambdaType = typeF.translate(sNativeFunc.schema().type());
     var bArguments = referencesToAllArguments(bLambdaType);
-    var bInvoke =
-        bytecodeF.invoke(bLambdaType.result(), bJar, bClassBinaryName, bIsPure, bArguments);
+    var bInvoke = bytecodeF.invoke(bLambdaType.result(), bMethodTuple, bIsPure, bArguments);
     saveNal(bInvoke, sNativeFunc);
     var bLambda = bytecodeF.lambda(bLambdaType, bInvoke);
     saveNal(bLambda, sNativeFunc);

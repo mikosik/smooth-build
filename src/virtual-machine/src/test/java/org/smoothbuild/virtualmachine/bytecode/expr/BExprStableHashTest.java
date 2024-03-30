@@ -152,10 +152,10 @@ public class BExprStableHashTest extends TestingVirtualMachine {
   class _invoke {
     @Test
     public void invoke() throws Exception {
-      assertThat(bInvoke(bBoolType(), bBlob(1), bString("cbn"), bBool(true), bTuple())
-              .hash())
+      var method = bMethodTuple(bBlob(1), bString("cbn"));
+      assertThat(bInvoke(bBoolType(), method, bBool(true), bTuple()).hash())
           .isEqualTo(
-              Hash.decode("b153469bbfb56c10dfe6768958e2730ba26eeba558b7c533c5bbb0ad1978d104"));
+              Hash.decode("2a69b4c3ba407d2c38ac080d54e7de504b159f6a061a7def68f9ffdce7faf9e0"));
     }
   }
 

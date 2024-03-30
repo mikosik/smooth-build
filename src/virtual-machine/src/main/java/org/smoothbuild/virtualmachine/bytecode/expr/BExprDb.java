@@ -82,17 +82,11 @@ public class BExprDb {
     return type.newExpr(root, this);
   }
 
-  public BInvoke newInvoke(
-      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+  public BInvoke newInvoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
       throws BytecodeException {
-    var jarEvaluationType = jar.evaluationType();
-    if (!jarEvaluationType.equals(kindDb.blob())) {
-      throw illegalEvaluationType("jar", kindDb.blob(), jarEvaluationType);
-    }
-    var classBinaryNameEvaluationType = classBinaryName.evaluationType();
-    if (!classBinaryNameEvaluationType.equals(kindDb.string())) {
-      throw illegalEvaluationType(
-          "classBinaryName", kindDb.string(), classBinaryNameEvaluationType);
+    var methodEvaluationType = method.evaluationType();
+    if (!methodEvaluationType.equals(kindDb.method())) {
+      throw illegalEvaluationType("method", kindDb.method(), methodEvaluationType);
     }
     var isPureEvaluationType = isPure.evaluationType();
     if (!isPureEvaluationType.equals(kindDb.bool())) {
@@ -104,7 +98,7 @@ public class BExprDb {
     }
 
     var kind = kindDb.invoke(evaluationType);
-    var dataHash = writeChain(jar.hash(), classBinaryName.hash(), isPure.hash(), arguments.hash());
+    var dataHash = writeChain(method.hash(), isPure.hash(), arguments.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }

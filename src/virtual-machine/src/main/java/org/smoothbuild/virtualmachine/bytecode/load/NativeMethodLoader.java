@@ -10,6 +10,7 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -23,7 +24,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final Function1<BInvoke, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BMethod, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -31,17 +32,16 @@ public class NativeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BInvoke invoke) throws BytecodeException {
-    return memoizer.apply(invoke);
+  public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
+    return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> loadImpl(BInvoke invoke) throws BytecodeException {
-    var method = invoke.method();
-    var methodSpec = new MethodSpec(method, NATIVE_METHOD_NAME);
+  private Either<String, Method> loadImpl(BMethod bMethod) throws BytecodeException {
+    var methodSpec = new MethodSpec(bMethod, NATIVE_METHOD_NAME);
     return methodLoader
         .load(methodSpec)
         .flatMapRight(this::validateMethodSignature)
-        .mapLeft(e -> loadingError(method.classBinaryName().toJavaString(), e));
+        .mapLeft(e -> loadingError(bMethod.classBinaryName().toJavaString(), e));
   }
 
   private Either<String, Method> validateMethodSignature(Method method) {

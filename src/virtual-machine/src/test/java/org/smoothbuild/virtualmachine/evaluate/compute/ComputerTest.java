@@ -208,10 +208,7 @@ public class ComputerTest extends TestingVirtualMachine {
     private BTuple argumentsForInvokeTask(BInvoke invoke) throws BytecodeException {
       var subExprs = invoke.subExprs();
       return bTuple(
-          (BValue) subExprs.jar(),
-          (BValue) subExprs.classBinaryName(),
-          (BValue) subExprs.isPure(),
-          (BValue) subExprs.arguments());
+          (BValue) subExprs.method(), (BValue) subExprs.isPure(), (BValue) subExprs.arguments());
     }
   }
 

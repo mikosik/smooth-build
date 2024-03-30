@@ -62,11 +62,10 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.combine(elements));
   }
 
-  public BInvoke invoke(
-      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+  public BInvoke invoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
       throws SbTranslatorException {
     return invokeTranslatingBytecodeException(
-        () -> bytecodeFactory.invoke(evaluationType, jar, classBinaryName, isPure, arguments));
+        () -> bytecodeFactory.invoke(evaluationType, method, isPure, arguments));
   }
 
   public BInt int_(BigInteger value) throws SbTranslatorException {

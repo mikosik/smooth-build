@@ -60,7 +60,7 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws BytecodeException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
-    assertThat(nativeMethodLoader.load(bInvoke(clazz))).isEqualTo(loadingError(clazz, message));
+    assertThat(nativeMethodLoader.load(bMethod(clazz))).isEqualTo(loadingError(clazz, message));
   }
 
   private String wrongReturnTypeErrorMessage() {
@@ -114,9 +114,8 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var invoke = bInvoke(bLambdaType(bStringType()), jar, bString(classBinaryName));
-      var resultMethod1 = nativeMethodLoader.load(invoke);
-      var resultMethod2 = nativeMethodLoader.load(invoke);
+      var resultMethod1 = nativeMethodLoader.load(bMethod);
+      var resultMethod2 = nativeMethodLoader.load(bMethod);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
       verify(methodLoader, times(1)).load(methodSpec);

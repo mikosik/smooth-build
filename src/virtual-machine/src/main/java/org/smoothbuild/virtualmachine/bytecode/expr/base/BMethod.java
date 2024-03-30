@@ -17,6 +17,10 @@ public class BMethod {
     return (BString) method.elements().get(1);
   }
 
+  public BTuple tuple() {
+    return method;
+  }
+
   @Override
   public boolean equals(Object object) {
     return object instanceof BMethod that && this.method.equals(that.method);

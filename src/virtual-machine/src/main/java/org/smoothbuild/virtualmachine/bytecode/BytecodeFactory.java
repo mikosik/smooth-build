@@ -118,10 +118,9 @@ public class BytecodeFactory {
     return exprDb.newInt(value);
   }
 
-  public BInvoke invoke(
-      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+  public BInvoke invoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
       throws BytecodeException {
-    return exprDb.newInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
+    return exprDb.newInvoke(evaluationType, method, isPure, arguments);
   }
 
   public BLambda lambda(BLambdaType type, BExpr body) throws BytecodeException {

@@ -45,6 +45,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -281,9 +282,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
       @Test
       public void invoke() throws Exception {
-        var invoke = bInvoke(bIntType(), bBlob(77), bString("classBinaryName"), bTuple(bInt(33)));
+        var methodTuple = bMethodTuple(bBlob(77), "classBinaryName");
+        var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
-        when(nativeMethodLoader.load(eq(invoke)))
+        when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
             .thenReturn(right(
                 BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
         assertThat(evaluate(bEvaluator(nativeMethodLoader), invoke)).isEqualTo(bInt(33));

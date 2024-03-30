@@ -31,6 +31,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
+import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -206,6 +207,15 @@ public class BKindTest extends TestingVirtualMachine {
         arguments(test.bPickKind(), BPick.class),
         arguments(test.bReferenceKind(test.bIntType()), BReference.class),
         arguments(test.bSelectKind(test.bIntType()), BSelect.class));
+  }
+
+  @Nested
+  class _method {
+    @Test
+    void method_elements() throws BKindDbException {
+      assertThat(kindDb().method().elements())
+          .isEqualTo(list(kindDb().blob(), kindDb().string()));
+    }
   }
 
   @Nested

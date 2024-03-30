@@ -166,6 +166,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_native_function() throws Exception {
           var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
           var sNativeFunc =
@@ -173,13 +174,12 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
           var bInvoke = bInvoke(
               bIntType(),
-              bBlob(37),
-              bString(classBinaryName),
+              bMethodTuple(jar, bString(classBinaryName)),
               bBool(true),
               bCombine(bReference(bBlobType(), 0)));
           var bLambda = bLambda(list(bBlobType()), bInvoke);
 
-          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), bBlob(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), jar);
           assertTranslation(
               filePersister, bindings(sNativeFunc), sInstantiate(sNativeFunc), bLambda);
         }
@@ -188,19 +188,19 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         public void poly_native_function() throws Exception {
           var a = varA();
           var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
           var annotationS = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
           var sNativeFunc = sAnnotatedFunc(annotationS, a, "myIdentity", nlist(sItem(a, "param")));
 
           var bInvoke = bInvoke(
               bIntType(),
-              bBlob(37),
-              bString(classBinaryName),
+              bMethodTuple(jar, bString(classBinaryName)),
               bBool(true),
               bCombine(bReference(bIntType(), 0)));
           var bLambda = bLambda(list(bIntType()), bInvoke);
 
-          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), bBlob(37));
+          var filePersister = createFilePersisterMock(fullPath.withExtension("jar"), jar);
           var instantiateS = sInstantiate(list(sIntType()), sNativeFunc);
           assertTranslation(filePersister, bindings(sNativeFunc), instantiateS, bLambda);
         }

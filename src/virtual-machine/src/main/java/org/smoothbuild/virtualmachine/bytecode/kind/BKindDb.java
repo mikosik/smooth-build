@@ -78,6 +78,7 @@ public class BKindDb {
   private final Function0<BBoolType, BKindDbException> boolSupplier;
   private final Function0<BIntType, BKindDbException> intSupplier;
   private final Function0<BStringType, BKindDbException> stringSupplier;
+  private final Function0<BTupleType, BKindDbException> methodSupplier;
 
   public BKindDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -86,6 +87,7 @@ public class BKindDb {
     this.boolSupplier = createAndCacheTypeMemoizer(BBoolType::new, BOOL);
     this.intSupplier = createAndCacheTypeMemoizer(BIntType::new, INT);
     this.stringSupplier = createAndCacheTypeMemoizer(BStringType::new, STRING);
+    this.methodSupplier = memoizer(() -> cache(tuple(blob(), string())));
   }
 
   private <A extends BType> Function0<A, BKindDbException> createAndCacheTypeMemoizer(
@@ -123,12 +125,16 @@ public class BKindDb {
     return intSupplier.apply();
   }
 
+  public BInvokeKind invoke(BType evaluationType) throws BKindDbException {
+    return newOperation(INVOKE, evaluationType, BInvokeKind::new);
+  }
+
   public BMapKind map(BType evaluationType) throws BKindDbException {
     return newOperation(MAP, evaluationType, BMapKind::new);
   }
 
-  public BInvokeKind invoke(BType evaluationType) throws BKindDbException {
-    return newOperation(INVOKE, evaluationType, BInvokeKind::new);
+  public BTupleType method() throws BKindDbException {
+    return methodSupplier.apply();
   }
 
   public BTupleType tuple(BType... items) throws BKindDbException {
