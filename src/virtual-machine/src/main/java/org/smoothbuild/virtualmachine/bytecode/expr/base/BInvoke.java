@@ -16,10 +16,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
  * This class is thread-safe.
  */
 public final class BInvoke extends BOperation {
-  private static final int DATA_SEQ_SIZE = 4;
-  private static final int JAR_IDX = 0;
-  private static final int CLASS_BINARY_NAME_IDX = 1;
-  private static final int IS_PURE_IDX = 2;
+  private static final int DATA_SEQ_SIZE = 3;
+  public static final int METHOD_INDEX = 0;
+  public static final int IS_PURE_IDX = 1;
+  public static final int ARGUMENTS_INDEX = 2;
 
   public BInvoke(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
@@ -28,12 +28,11 @@ public final class BInvoke extends BOperation {
 
   @Override
   public BSubExprs subExprs() throws BytecodeException {
-    var hashes = readDataAsHashChain(4);
-    var jar = readMemberFromHashChain(hashes, 0, "jar", kindDb().blob());
-    var classBinaryName =
-        readMemberFromHashChain(hashes, 1, "classBinaryName", kindDb().string());
-    var isPure = readMemberFromHashChain(hashes, 2, "isPure", kindDb().bool());
-    var arguments = readMemberFromHashChain(hashes, 3);
+    var hashes = readDataAsHashChain(DATA_SEQ_SIZE);
+    var method =
+        readMemberFromHashChain(hashes, METHOD_INDEX, "method", kindDb().method());
+    var isPure = readMemberFromHashChain(hashes, IS_PURE_IDX, "isPure", kindDb().bool());
+    var arguments = readMemberFromHashChain(hashes, ARGUMENTS_INDEX);
     if (!(arguments.evaluationType() instanceof BTupleType)) {
       throw new MemberHasWrongTypeException(
           hash(),
@@ -42,30 +41,17 @@ public final class BInvoke extends BOperation {
           BTupleType.class,
           arguments.evaluationType().getClass());
     }
-    return new BSubExprs(jar, classBinaryName, isPure, arguments);
-  }
-
-  public BMethod method() throws BytecodeException {
-    return new BMethod(exprDb().newTuple(list(jar(), classBinaryName())));
-  }
-
-  public BBlob jar() throws BytecodeException {
-    return readElementFromDataAsInstanceChain(JAR_IDX, DATA_SEQ_SIZE, BBlob.class);
-  }
-
-  public BString classBinaryName() throws BytecodeException {
-    return readElementFromDataAsInstanceChain(CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, BString.class);
+    return new BSubExprs(method, isPure, arguments);
   }
 
   public BBool isPure() throws BytecodeException {
     return readElementFromDataAsInstanceChain(IS_PURE_IDX, DATA_SEQ_SIZE, BBool.class);
   }
 
-  public static record BSubExprs(BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
-      implements BExprs {
+  public static record BSubExprs(BExpr method, BExpr isPure, BExpr arguments) implements BExprs {
     @Override
     public List<BExpr> toList() {
-      return list(jar, classBinaryName, isPure, arguments);
+      return list(method, isPure, arguments);
     }
   }
 }

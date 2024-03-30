@@ -93,26 +93,21 @@ public class BReferenceInliner {
 
   private BExpr rewriteInvoke(BInvoke invoke, Resolver resolver) throws BytecodeException {
     var subExprs = invoke.subExprs();
-    var jar = subExprs.jar();
-    var classBinaryName = subExprs.classBinaryName();
+    var method = subExprs.method();
     var isPure = subExprs.isPure();
     var arguments = subExprs.arguments();
-    var rewrittenJar = rewriteExpr(jar, resolver);
-    var rewrittenClassBinaryName = rewriteExpr(classBinaryName, resolver);
+
+    var rewrittenMethod = rewriteExpr(method, resolver);
     var rewrittenIsPure = rewriteExpr(isPure, resolver);
     var rewrittenArguments = rewriteExpr(arguments, resolver);
-    if (jar.equals(rewrittenJar)
-        && classBinaryName.equals(rewrittenClassBinaryName)
+
+    if (method.equals(rewrittenMethod)
         && isPure.equals(rewrittenIsPure)
         && arguments.equals(rewrittenArguments)) {
       return invoke;
     } else {
       return bytecodeFactory.invoke(
-          invoke.evaluationType(),
-          rewrittenJar,
-          rewrittenClassBinaryName,
-          rewrittenIsPure,
-          rewrittenArguments);
+          invoke.evaluationType(), rewrittenMethod, rewrittenIsPure, rewrittenArguments);
     }
   }
 

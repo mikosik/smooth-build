@@ -14,29 +14,22 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BInvokeTest extends TestingVirtualMachine {
   @Test
-  void creating_fails_when_jar_evaluation_type_is_not_blob() {
-    assertCall(() -> bInvoke(bIntType(), bString(), bString(), bBool(), bTuple()))
+  void creating_fails_when_method_evaluation_type_is_not_tuple() {
+    assertCall(() -> bInvoke(bIntType(), bInt(), bBool(), bTuple()))
         .throwsException(new IllegalArgumentException(
-            "`jar.evaluationType()` should be `Blob` but is `String`."));
-  }
-
-  @Test
-  void creating_fails_when_class_binary_name_evaluation_type_is_not_string() {
-    assertCall(() -> bInvoke(bIntType(), bBlob(), bInt(), bBool(), bTuple()))
-        .throwsException(new IllegalArgumentException(
-            "`classBinaryName.evaluationType()` should be `String` but is `Int`."));
+            "`method.evaluationType()` should be `{Blob,String}` but is `Int`."));
   }
 
   @Test
   void creating_fails_when_is_pure_evaluation_type_is_not_bool() {
-    assertCall(() -> bInvoke(bIntType(), bBlob(), bString(), bString(), bTuple()))
+    assertCall(() -> bInvoke(bIntType(), bMethodTuple(), bString(), bTuple()))
         .throwsException(new IllegalArgumentException(
             "`isPure.evaluationType()` should be `Bool` but is `String`."));
   }
 
   @Test
   void creating_fails_when_arguments_evaluation_type_is_not_tuple() {
-    assertCall(() -> bInvoke(bIntType(), bBlob(), bString(), bBool(), bString()))
+    assertCall(() -> bInvoke(bIntType(), bMethodTuple(), bBool(), bString()))
         .throwsException(new IllegalArgumentException(
             "`arguments.evaluationType()` should be `BTupleType` but is `BStringType`."));
   }
@@ -48,14 +41,12 @@ public class BInvokeTest extends TestingVirtualMachine {
       return list(
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(7),
-              bString("a"),
+              bMethodTuple(bBlob(7), "a"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(7),
-              bString("a"),
+              bMethodTuple(bBlob(7), "a"),
               bBool(true),
               bTuple()));
     }
@@ -65,38 +56,32 @@ public class BInvokeTest extends TestingVirtualMachine {
       return list(
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(7),
-              bString("a"),
+              bMethodTuple(bBlob(7), "a"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(7),
-              bString("a"),
+              bMethodTuple(bBlob(7), "a"),
               bBool(true),
               bTuple(bInt(1))),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(7),
-              bString("a"),
+              bMethodTuple(bBlob(7), "a"),
               bBool(false),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(7),
-              bString("b"),
+              bMethodTuple(bBlob(7), "b"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bBlob(9),
-              bString("a"),
+              bMethodTuple(bBlob(9), "a"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bStringType(), bStringType()),
-              bBlob(7),
-              bString("a"),
+              bMethodTuple(bBlob(7), "a"),
               bBool(true),
               bTuple()));
     }
@@ -109,7 +94,7 @@ public class BInvokeTest extends TestingVirtualMachine {
     var isPure = bBool(true);
     var arguments = bTuple(bInt(1));
     var evaluationType = bIntType();
-    var invoke = bInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
+    var invoke = bInvoke(evaluationType, bMethodTuple(jar, classBinaryName), isPure, arguments);
     assertThat(exprDbOther().get(invoke.hash())).isEqualTo(invoke);
   }
 
@@ -117,12 +102,13 @@ public class BInvokeTest extends TestingVirtualMachine {
   public void invoke_read_back_by_hash_has_same_data() throws Exception {
     var jar = bBlob();
     var classBinaryName = bString();
+    var method = bMethodTuple(jar, classBinaryName);
     var isPure = bBool(true);
     var arguments = bTuple(bInt(1));
     var evaluationType = bIntType();
-    var invoke = bInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
+    var invoke = bInvoke(evaluationType, method, isPure, arguments);
     assertThat(((BInvoke) exprDbOther().get(invoke.hash())).subExprs())
-        .isEqualTo(new BSubExprs(jar, classBinaryName, isPure, arguments));
+        .isEqualTo(new BSubExprs(method, isPure, arguments));
   }
 
   @Test
@@ -132,7 +118,7 @@ public class BInvokeTest extends TestingVirtualMachine {
     var isPure = bBool(true);
     var arguments = bTuple(bInt(1));
     var evaluationType = bIntType();
-    var invoke = bInvoke(evaluationType, jar, classBinaryName, isPure, arguments);
+    var invoke = bInvoke(evaluationType, bMethodTuple(jar, classBinaryName), isPure, arguments);
     assertThat(invoke.toString()).isEqualTo("INVOKE:Int(???)@" + invoke.hash());
   }
 }

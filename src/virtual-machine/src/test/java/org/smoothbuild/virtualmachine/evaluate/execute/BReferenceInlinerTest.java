@@ -76,7 +76,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     @Test
     public void invoke() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> bInvoke(bIntType(), bBlob(), bString(), bBool(), bTuple()));
+          r -> bInvoke(bIntType(), bMethodTuple(), bBool(), bTuple()));
     }
 
     @Test
@@ -159,21 +159,12 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void invoke_jar() throws Exception {
+    public void invoke_method() throws Exception {
       assertReferenceInliningReplacesReference(
           2,
-          bBlob(2),
-          list(bBlob(0), bBlob(1), bBlob(2)),
-          r -> bInvoke(bIntType(), r, bString(), bBool(), bTuple()));
-    }
-
-    @Test
-    public void invoke_class_binary_name() throws Exception {
-      assertReferenceInliningReplacesReference(
-          2,
-          bString("2"),
-          list(bString("0"), bString("1"), bString("2")),
-          r -> bInvoke(bIntType(), bBlob(), r, bBool(), bTuple()));
+          bMethodTuple("2"),
+          list(bMethodTuple("0"), bMethodTuple("1"), bMethodTuple("2")),
+          r -> bInvoke(bIntType(), r, bBool(), bTuple()));
     }
 
     @Test
@@ -182,7 +173,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
           2,
           bBool(true),
           list(bBool(false), bBool(false), bBool(true)),
-          r -> bInvoke(bIntType(), bBlob(), bString(), r, bTuple()));
+          r -> bInvoke(bIntType(), bMethodTuple(), r, bTuple()));
     }
 
     @Test
@@ -191,7 +182,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
           2,
           bTuple(bInt(2)),
           list(bTuple(), bTuple(), bTuple(bInt(2))),
-          r -> bInvoke(bIntType(), bBlob(), bString(), bBool(), r));
+          r -> bInvoke(bIntType(), bMethodTuple(), bBool(), r));
     }
 
     @Test

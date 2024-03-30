@@ -1,6 +1,8 @@
 package org.smoothbuild.virtualmachine.evaluate.task;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.ARGUMENTS_INDEX;
+import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.METHOD_INDEX;
 import static org.smoothbuild.virtualmachine.evaluate.task.Purity.IMPURE;
 import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
 
@@ -8,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -30,8 +33,8 @@ public final class InvokeTask extends Task {
   public Output run(BTuple input, Container container) throws BytecodeException {
     return container
         .nativeMethodLoader()
-        .load(((BInvoke) expr()))
-        .mapRight(m -> invokeMethod(m, input.get(3), container))
+        .load(new BMethod((BTuple) input.get(METHOD_INDEX)))
+        .mapRight(m -> invokeMethod(m, input.get(ARGUMENTS_INDEX), container))
         .ifLeft(left -> container.log().fatal(left))
         .rightOrGet(() -> new Output(null, container.messages()));
   }

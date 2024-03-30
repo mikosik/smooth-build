@@ -120,6 +120,10 @@ public abstract class TestingBytecode {
     return kindDb().invoke(evaluationType);
   }
 
+  public BTupleType bMethodType() throws BytecodeException {
+    return kindDb().method();
+  }
+
   public BTupleType bPersonType() throws BytecodeException {
     return bTupleType(bStringType(), bStringType());
   }
@@ -359,7 +363,8 @@ public abstract class TestingBytecode {
   }
 
   public BInvoke bInvoke(BType evaluationType) throws BytecodeException {
-    return bInvoke(evaluationType, bBlob(7), bString("class binary name"), bBool(true), bTuple());
+    var bMethodTuple = bMethodTuple(bBlob(7), "class binary name");
+    return bInvoke(evaluationType, bMethodTuple, bBool(true), bTuple());
   }
 
   public BInvoke bInvoke(Class<?> clazz) throws BytecodeException {
@@ -370,9 +375,8 @@ public abstract class TestingBytecode {
     return bInvoke(evaluationType, clazz, true);
   }
 
-  public BInvoke bInvoke(BType evaluationType, BExpr jar, BExpr classBinaryName)
-      throws BytecodeException {
-    return bInvoke(evaluationType, jar, classBinaryName, bBool(true), bTuple());
+  public BInvoke bInvoke(BType evaluationType, BExpr method) throws BytecodeException {
+    return bInvoke(evaluationType, method, bBool(true), bTuple());
   }
 
   public BInvoke bInvoke(BType evaluationType, Class<?> clazz, boolean isPure)
@@ -382,31 +386,52 @@ public abstract class TestingBytecode {
 
   public BInvoke bInvoke(BType evaluationType, Class<?> clazz, boolean isPure, BTuple arguments)
       throws BytecodeException {
-    return bInvoke(
-        evaluationType,
-        blobBJarWithPluginApi(clazz),
-        bString(clazz.getName()),
-        bBool(isPure),
-        arguments);
+    var bMethodTuple = bMethodTuple(clazz);
+    return bInvoke(evaluationType, bMethodTuple, bBool(isPure), arguments);
   }
 
-  public BInvoke bInvoke(BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr arguments)
+  public BInvoke bInvoke(BType evaluationType, BExpr method, BExpr arguments)
       throws BytecodeException {
-    return bytecodeF().invoke(evaluationType, jar, classBinaryName, bBool(true), arguments);
+    return bytecodeF().invoke(evaluationType, method, bBool(true), arguments);
   }
 
-  public BInvoke bInvoke(
-      BType evaluationType, BExpr jar, BExpr classBinaryName, BExpr isPure, BExpr arguments)
+  public BInvoke bInvoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
       throws BytecodeException {
-    return bytecodeF().invoke(evaluationType, jar, classBinaryName, isPure, arguments);
+    return bytecodeF().invoke(evaluationType, method, isPure, arguments);
+  }
+
+  public BExpr bMethodTuple() throws BytecodeException {
+    var jar = bBlob();
+    var classBinaryName = bString();
+    return bMethodTuple(jar, classBinaryName);
+  }
+
+  public BTuple bMethodTuple(Class<?> clazz) throws BytecodeException {
+    return bMethodTuple(blobBJarWithPluginApi(clazz), clazz.getName());
+  }
+
+  public BTuple bMethodTuple(BBlob jar, String classBinaryName) throws BytecodeException {
+    return bMethod(jar, bString(classBinaryName)).tuple();
+  }
+
+  public BExpr bMethodTuple(String classBinaryName) throws BytecodeException {
+    return bMethodTuple(bBlob(), bString(classBinaryName));
+  }
+
+  public BExpr bMethodTuple(BBlob jar, BString classBinaryName) throws BytecodeException {
+    return bMethod(jar, classBinaryName).tuple();
+  }
+
+  public BMethod bMethod(Class<?> clazz) throws BytecodeException {
+    return new BMethod(bMethodTuple(clazz));
   }
 
   public BMethod bMethod(BBlob jar, String classBinaryName) throws BytecodeException {
     return bMethod(jar, bString(classBinaryName));
   }
 
-  public BMethod bMethod(BBlob jar, BString classBinaryName1) throws BytecodeException {
-    return bytecodeF().method(jar, classBinaryName1);
+  public BMethod bMethod(BBlob jar, BString classBinaryName) throws BytecodeException {
+    return bytecodeF().method(jar, classBinaryName);
   }
 
   public BTuple bPerson(String firstName, String lastName) throws BytecodeException {

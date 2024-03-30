@@ -92,12 +92,12 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void invoke_task_and_empty_input() throws Exception {
-      var invoke = bInvoke(bIntType(), bBlob(1), bString("1"), bBool(true), bTuple());
+      var invoke = bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
       var task = newInvokeTask(invoke, bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
-              Hash.decode("af39446a6505d825626406b7e483387f993ddeccc432bf45bbcf1d262deeb05d"));
+              Hash.decode("57f069da84a89e99efbf05dc32640b939495b9f50f4d2f99b2aa4012188a8847"));
     }
 
     @Test
