@@ -270,7 +270,9 @@ public class SbTranslator {
     var bInvoke =
         bytecodeF.invoke(bLambdaType.result(), bJar, bClassBinaryName, bIsPure, bArguments);
     saveNal(bInvoke, sNativeFunc);
-    return bytecodeF.lambda(bLambdaType, bInvoke);
+    var bLambda = bytecodeF.lambda(bLambdaType, bInvoke);
+    saveNal(bLambda, sNativeFunc);
+    return bLambda;
   }
 
   private BCombine referencesToAllArguments(BLambdaType lambdaType) throws SbTranslatorException {
@@ -340,9 +342,9 @@ public class SbTranslator {
 
   private BExpr translateNamedExprValue(SNamedExprValue sNamedExprValue)
       throws SbTranslatorException {
-    var body = translateExpr(sNamedExprValue.body());
-    saveNal(body, sNamedExprValue);
-    return body;
+    var bValue = translateExpr(sNamedExprValue.body());
+    saveNal(bValue, sNamedExprValue);
+    return bValue;
   }
 
   // helpers
