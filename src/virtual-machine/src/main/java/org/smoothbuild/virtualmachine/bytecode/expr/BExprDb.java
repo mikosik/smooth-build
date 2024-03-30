@@ -76,7 +76,7 @@ public class BExprDb {
   }
 
   public BLambda newLambda(BLambdaType type, BExpr body) throws BytecodeException {
-    validateBodyEvaluationType(type, body);
+    validateMemberEvaluationType("body", body, type.result());
     var dataHash = body.hash();
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
@@ -84,19 +84,9 @@ public class BExprDb {
 
   public BInvoke newInvoke(BType evaluationType, BExpr method, BExpr isPure, BExpr arguments)
       throws BytecodeException {
-    var methodEvaluationType = method.evaluationType();
-    if (!methodEvaluationType.equals(kindDb.method())) {
-      throw illegalEvaluationType("method", kindDb.method(), methodEvaluationType);
-    }
-    var isPureEvaluationType = isPure.evaluationType();
-    if (!isPureEvaluationType.equals(kindDb.bool())) {
-      throw illegalEvaluationType("isPure", kindDb.bool(), isPureEvaluationType);
-    }
-    var argumentsEvaluationType = arguments.evaluationType();
-    if (!(argumentsEvaluationType instanceof BTupleType)) {
-      throw illegalEvaluationType("arguments", BTupleType.class, argumentsEvaluationType);
-    }
-
+    validateMemberEvaluationType("method", method, kindDb.method());
+    validateMemberEvaluationType("isPure", isPure, kindDb.bool());
+    validateMemberEvaluationTypeClass("arguments", arguments, BTupleType.class);
     var kind = kindDb.invoke(evaluationType);
     var dataHash = writeChain(method.hash(), isPure.hash(), arguments.hash());
     var root = newRoot(kind, dataHash);
@@ -127,23 +117,12 @@ public class BExprDb {
   // methods for creating OperB subclasses
 
   public BCall newCall(BExpr lambda, BExpr args) throws BytecodeException {
-    var lambdaType = validateLambdaType(lambda, args);
+    var lambdaType = validateMemberEvaluationTypeClass("lambda", lambda, BLambdaType.class);
+    validateMemberEvaluationType("arguments", args, lambdaType.params());
     var kind = kindDb.call(lambdaType.result());
     var dataHash = writeChain(lambda.hash(), args.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
-  }
-
-  private static BLambdaType validateLambdaType(BExpr lambda, BExpr arguments) {
-    var lambdaEvaluationType = lambda.evaluationType();
-    if (!(lambdaEvaluationType instanceof BLambdaType lambdaType)) {
-      throw illegalEvaluationType("lambda", BLambdaType.class, lambdaEvaluationType);
-    }
-    var argumentsEvaluationType = arguments.evaluationType();
-    if (!lambdaType.params().equals(argumentsEvaluationType)) {
-      throw illegalEvaluationType("arguments", lambdaType.params(), argumentsEvaluationType);
-    }
-    return lambdaType;
   }
 
   public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {
@@ -155,16 +134,9 @@ public class BExprDb {
   }
 
   public BIf newIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
-    var conditionEvaluationType = condition.evaluationType();
-    if (!conditionEvaluationType.equals(kindDb.bool())) {
-      throw illegalEvaluationType("condition", kindDb.bool(), conditionEvaluationType);
-    }
-    var thenType = then_.evaluationType();
-    var elseType = else_.evaluationType();
-    if (!thenType.equals(elseType)) {
-      throw illegalEvaluationType("then", elseType, thenType);
-    }
-    var kind = kindDb.if_(thenType);
+    validateMemberEvaluationType("condition", condition, kindDb.bool());
+    validateMemberEvaluationType("then", then_, else_.evaluationType());
+    var kind = kindDb.if_(then_.evaluationType());
     var data = writeChain(condition.hash(), then_.hash(), else_.hash());
     var root = newRoot(kind, data);
     return kind.newExpr(root, this);
@@ -173,7 +145,6 @@ public class BExprDb {
   public BMap newMap(BExpr array, BExpr mapper) throws BytecodeException {
     var mapperArgumentType = validateMapSubExprsAndGetMapperResultType(array, mapper);
     var kind = kindDb.map(kindDb.array(mapperArgumentType));
-
     var data = writeChain(array.hash(), mapper.hash());
     var root = newRoot(kind, data);
     return kind.newExpr(root, this);
@@ -181,16 +152,10 @@ public class BExprDb {
 
   private BType validateMapSubExprsAndGetMapperResultType(BExpr array, BExpr mapper)
       throws BKindDbException {
-    var type = array.evaluationType();
-    if (!(type instanceof BArrayType arrayType)) {
-      throw illegalEvaluationType("array", BArrayType.class, type);
-    }
-    var elementType = arrayType.element();
-    var mapperType = mapper.evaluationType();
-    if (!(mapperType instanceof BLambdaType lambdaType)) {
-      throw illegalEvaluationType("mapper", BLambdaType.class, mapperType);
-    }
+    var lambdaType = validateMemberEvaluationTypeClass("mapper", mapper, BLambdaType.class);
+    var arrayType = validateMemberEvaluationTypeClass("array", array, BArrayType.class);
     var params = lambdaType.params().elements();
+    var elementType = arrayType.element();
     if (!(params.size() == 1 && params.get(0).equals(elementType))) {
       throw illegalEvaluationType(
           "mapper.arguments", expectedMapperArgumentsType(elementType), lambdaType.params());
@@ -212,12 +177,8 @@ public class BExprDb {
   }
 
   public BPick newPick(BExpr pickable, BExpr index) throws BytecodeException {
-    var evaluationType = pickEvaluationType(pickable);
-    var indexEvaluationType = index.evaluationType();
-    if (!(indexEvaluationType instanceof BIntType)) {
-      throw illegalEvaluationType("index", BIntType.class, indexEvaluationType);
-    }
-    var kind = kindDb.pick(evaluationType);
+    validateMemberEvaluationTypeClass("index", index, BIntType.class);
+    var kind = kindDb.pick(pickEvaluationType(pickable));
     var dataHash = writeChain(pickable.hash(), index.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
@@ -239,20 +200,31 @@ public class BExprDb {
 
   // validators
 
-  private static void validateBodyEvaluationType(BLambdaType lambdaType, BExpr body) {
-    var bodyEvaluationType = body.evaluationType();
-    var lambdaEvaluationType = lambdaType.result();
-    if (!bodyEvaluationType.equals(lambdaEvaluationType)) {
-      throw illegalEvaluationType("body", lambdaEvaluationType, bodyEvaluationType);
-    }
-  }
-
   private void validateOrderElements(BType elementType, List<? extends BExpr> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElementType = elems.get(i).evaluationType();
       if (!elementType.equals(iElementType)) {
         throw illegalEvaluationType("element" + i, elementType, iElementType);
       }
+    }
+  }
+
+  private static <T extends BType> T validateMemberEvaluationTypeClass(
+      String memberName, BExpr member, Class<T> clazz) {
+    var lambdaEvaluationType = member.evaluationType();
+    if (!(lambdaEvaluationType.getClass().equals(clazz))) {
+      throw illegalEvaluationType(memberName, clazz, lambdaEvaluationType);
+    }
+    @SuppressWarnings("unchecked")
+    var cast = (T) lambdaEvaluationType;
+    return cast;
+  }
+
+  private static void validateMemberEvaluationType(
+      String memberName, BExpr method, BType expectedType) {
+    var methodEvaluationType = method.evaluationType();
+    if (!methodEvaluationType.equals(expectedType)) {
+      throw illegalEvaluationType(memberName, expectedType, methodEvaluationType);
     }
   }
 
@@ -319,34 +291,21 @@ public class BExprDb {
   // methods for creating types
 
   private BType pickEvaluationType(BExpr pickable) {
-    var pickableEvaluationType = pickable.evaluationType();
-    if (pickableEvaluationType instanceof BArrayType arrayType) {
-      return arrayType.element();
-    } else {
-      throw illegalEvaluationType("pickable", BArrayType.class, pickableEvaluationType);
-    }
+    var arrayType = validateMemberEvaluationTypeClass("pickable", pickable, BArrayType.class);
+    return arrayType.element();
   }
 
   private BType selectEvaluationType(BExpr selectable, BInt index) throws BytecodeException {
-    var selectableEvaluationType = selectable.evaluationType();
-    if (selectableEvaluationType instanceof BTupleType tuple) {
-      int intIndex = index.toJavaBigInteger().intValue();
-      var elements = tuple.elements();
-      checkElementIndex(intIndex, elements.size());
-      return elements.get(intIndex);
-    } else {
-      throw illegalEvaluationType("selectable", BTupleType.class, selectableEvaluationType);
-    }
+    var tuple = validateMemberEvaluationTypeClass("selectable", selectable, BTupleType.class);
+    int intIndex = index.toJavaBigInteger().intValue();
+    var elements = tuple.elements();
+    checkElementIndex(intIndex, elements.size());
+    return elements.get(intIndex);
   }
 
   private MerkleRoot newRoot(BKind kind, Hash dataHash) throws BytecodeException {
     Hash rootHash = writeChain(kind.hash(), dataHash);
     return new MerkleRoot(rootHash, kind, dataHash);
-  }
-
-  private MerkleRoot newRoot(BKind kind) throws BytecodeException {
-    Hash rootHash = writeChain(kind.hash());
-    return new MerkleRoot(rootHash, kind, null);
   }
 
   // hashedDb calls with exception chaining
