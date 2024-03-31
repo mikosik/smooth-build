@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
@@ -72,18 +70,16 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
 
   @Test
   public void loading_method_without_native_api_param_causes_error() throws Exception {
-    var method = WithoutBytecodeF.class.getDeclaredMethod(BYTECODE_METHOD_NAME);
     assertLoadingCausesError(
-        method,
+        WithoutBytecodeF.class,
         "Providing method parameter is not of type " + BytecodeFactory.class.getCanonicalName()
             + ".");
   }
 
   @Test
   public void loading_method_with_three_params_causes_error() throws Exception {
-    var method = WithThreeParams.class.getDeclaredMethod(
-        BYTECODE_METHOD_NAME, BytecodeFactory.class, Map.class, Map.class);
-    assertLoadingCausesError(method, "Providing method parameter count is different than 2.");
+    assertLoadingCausesError(
+        WithThreeParams.class, "Providing method parameter count is different than 2.");
   }
 
   @Test
@@ -94,19 +90,9 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   }
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws Exception {
-    assertLoadingCausesError(fetchJMethod(clazz), message);
-  }
-
-  private void assertLoadingCausesError(Method method, String message) throws BytecodeException {
-    var bMethod = bMethod(bBlob(), "class.binary.name", BYTECODE_METHOD_NAME);
-    assertThat(load(bMethod, method)).isEqualTo(left(message));
-  }
-
-  private Either<String, Method> load(BMethod bMethod, Method jMethod) throws BytecodeException {
-    var methodLoader = mock(MethodLoader.class);
-    doReturn(right(jMethod)).when(methodLoader).load(bMethod);
-    var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
-    return bytecodeMethodLoader.load(bMethod);
+    var bMethod = bMethod(clazz, BYTECODE_METHOD_NAME);
+    var bytecodeMethodLoader = bytecodeMethodLoader();
+    assertThat(bytecodeMethodLoader.load(bMethod)).isEqualTo(left(message));
   }
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {

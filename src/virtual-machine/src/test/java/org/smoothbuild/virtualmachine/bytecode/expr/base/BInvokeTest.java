@@ -41,12 +41,12 @@ public class BInvokeTest extends TestingVirtualMachine {
       return list(
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(7), "a"),
+              bMethodTuple(bBlob(7), "a", "b"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(7), "a"),
+              bMethodTuple(bBlob(7), "a", "b"),
               bBool(true),
               bTuple()));
     }
@@ -56,32 +56,32 @@ public class BInvokeTest extends TestingVirtualMachine {
       return list(
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(7), "a"),
+              bMethodTuple(bBlob(7), "a", "b"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(7), "a"),
+              bMethodTuple(bBlob(7), "a", "b"),
               bBool(true),
               bTuple(bInt(1))),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(7), "a"),
+              bMethodTuple(bBlob(7), "a", "b"),
               bBool(false),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(7), "b"),
+              bMethodTuple(bBlob(7), "x", "b"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
-              bMethodTuple(bBlob(9), "a"),
+              bMethodTuple(bBlob(9), "a", "b"),
               bBool(true),
               bTuple()),
           bInvoke(
               bLambdaType(bStringType(), bStringType()),
-              bMethodTuple(bBlob(7), "a"),
+              bMethodTuple(bBlob(7), "a", "b"),
               bBool(true),
               bTuple()));
     }

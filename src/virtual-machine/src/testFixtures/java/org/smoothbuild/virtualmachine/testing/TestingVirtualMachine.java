@@ -151,7 +151,7 @@ public class TestingVirtualMachine extends TestingBytecode {
     return new BytecodeLoader(bytecodeMethodLoader(), bytecodeF());
   }
 
-  private BytecodeMethodLoader bytecodeMethodLoader() {
+  public BytecodeMethodLoader bytecodeMethodLoader() {
     return new BytecodeMethodLoader(methodLoader());
   }
 
