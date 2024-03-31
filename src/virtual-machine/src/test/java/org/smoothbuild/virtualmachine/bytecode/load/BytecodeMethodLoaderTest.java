@@ -33,24 +33,22 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
     @Test
     public void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
-      testCaching(method, right(method), right(method));
+      testCaching(right(method), right(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(method, left("error message"), left("error message"));
+      testCaching(left("error message"), left("error message"));
     }
 
-    private void testCaching(
-        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
+    private void testCaching(Either<String, Method> eitherMethod, Either<String, Method> expected)
         throws BytecodeException {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
-      var bMethod = bMethod(jar, classBinaryName);
-      var methodSpec = new MethodSpec(bMethod, method.getName());
-      when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
+      var bMethod = bMethod(jar, classBinaryName, BYTECODE_METHOD_NAME);
+      when(methodLoader.load(bMethod)).thenReturn(eitherMethod);
 
       var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
@@ -58,7 +56,7 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
       var resultMethod2 = bytecodeMethodLoader.load(bMethod);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
-      verify(methodLoader, times(1)).load(methodSpec);
+      verify(methodLoader, times(1)).load(bMethod);
     }
   }
 
@@ -100,14 +98,13 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   }
 
   private void assertLoadingCausesError(Method method, String message) throws BytecodeException {
-
-    var bMethod = bMethod(bBlob(), "class.binary.name");
+    var bMethod = bMethod(bBlob(), "class.binary.name", BYTECODE_METHOD_NAME);
     assertThat(load(bMethod, method)).isEqualTo(left(message));
   }
 
-  private Either<String, Method> load(BMethod bMethod, Method method) throws BytecodeException {
+  private Either<String, Method> load(BMethod bMethod, Method jMethod) throws BytecodeException {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(right(method)).when(methodLoader).load(new MethodSpec(bMethod, BYTECODE_METHOD_NAME));
+    doReturn(right(jMethod)).when(methodLoader).load(bMethod);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
     return bytecodeMethodLoader.load(bMethod);
   }

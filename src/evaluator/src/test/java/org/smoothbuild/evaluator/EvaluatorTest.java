@@ -39,6 +39,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStrin
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
+import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
@@ -244,7 +245,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         public void ann_func() throws Exception {
           var jar = bBlob(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          var bMethod = bMethod(jar, className);
+          var bMethod = bMethod(jar, className, BYTECODE_METHOD_NAME);
           when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, BType>of("A", bIntType());

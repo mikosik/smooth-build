@@ -155,7 +155,7 @@ public class BExprStableHashTest extends TestingVirtualMachine {
       var method = bMethodTuple(bBlob(1), bString("cbn"));
       assertThat(bInvoke(bBoolType(), method, bBool(true), bTuple()).hash())
           .isEqualTo(
-              Hash.decode("2a69b4c3ba407d2c38ac080d54e7de504b159f6a061a7def68f9ffdce7faf9e0"));
+              Hash.decode("88c48c17f85b313ad685177d3e37583d09a5518ddecaabbea5f5f647b5897218"));
     }
   }
 

@@ -131,8 +131,9 @@ public class BytecodeFactory {
     return exprDb.newMap(array, mapper);
   }
 
-  public BMethod method(BBlob jar, BString classBinaryName) throws BytecodeException {
-    return new BMethod(tuple(list(jar, classBinaryName)));
+  public BMethod method(BBlob jar, BString classBinaryName, BString methodName)
+      throws BytecodeException {
+    return new BMethod(tuple(list(jar, classBinaryName, methodName)));
   }
 
   public BPick pick(BExpr pickable, BExpr index) throws BytecodeException {

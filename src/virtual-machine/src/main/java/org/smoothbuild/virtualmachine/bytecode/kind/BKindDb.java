@@ -87,7 +87,7 @@ public class BKindDb {
     this.boolSupplier = createAndCacheTypeMemoizer(BBoolType::new, BOOL);
     this.intSupplier = createAndCacheTypeMemoizer(BIntType::new, INT);
     this.stringSupplier = createAndCacheTypeMemoizer(BStringType::new, STRING);
-    this.methodSupplier = memoizer(() -> cache(tuple(blob(), string())));
+    this.methodSupplier = memoizer(() -> cache(tuple(blob(), string(), string())));
   }
 
   private <A extends BType> Function0<A, BKindDbException> createAndCacheTypeMemoizer(

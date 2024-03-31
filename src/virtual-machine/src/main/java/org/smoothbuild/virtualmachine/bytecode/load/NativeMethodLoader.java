@@ -37,9 +37,8 @@ public class NativeMethodLoader {
   }
 
   private Either<String, Method> loadImpl(BMethod bMethod) throws BytecodeException {
-    var methodSpec = new MethodSpec(bMethod, NATIVE_METHOD_NAME);
     return methodLoader
-        .load(methodSpec)
+        .load(bMethod)
         .flatMapRight(this::validateMethodSignature)
         .mapLeft(e -> loadingError(bMethod.classBinaryName().toJavaString(), e));
   }
