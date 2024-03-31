@@ -822,7 +822,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bBool(true);
-      var arguments = bTuple(bInt());
+      var arguments = bCombine(bInt());
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
 
       var invokeSubExprs = ((BInvoke) exprDb().get(hash)).subExprs();
@@ -841,7 +841,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bBool(true);
-      var arguments = bTuple(bInt());
+      var arguments = bCombine(bInt());
       var dataHash = hash(hash(method), hash(isPure), hash(arguments));
       obj_root_with_two_data_hashes(
           kind, dataHash, (Hash hash) -> ((BInvoke) exprDb().get(hash)).subExprs());
@@ -882,7 +882,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var type = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bBool(true);
-      var arguments = bTuple(bInt());
+      var arguments = bCombine(bInt());
       var dataHash = hash(hash(method), hash(isPure), hash(arguments), hash(arguments));
       var hash = hash(hash(type), dataHash);
 
@@ -893,9 +893,9 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
     @Test
     public void method_evaluation_type_is_not_method_tuple() throws Exception {
       var kind = bInvokeKind(bIntType());
-      var method = bTuple(bBlob(), bInt());
+      var method = bCombine(bBlob(), bInt());
       var isPure = bBool(true);
-      var arguments = bTuple(bInt());
+      var arguments = bCombine(bInt());
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
       assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
@@ -907,7 +907,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
       var kind = bInvokeKind(bIntType());
       var method = bMethodTuple();
       var isPure = bString();
-      var arguments = bTuple(bInt());
+      var arguments = bCombine(bInt());
       var hash = hash(hash(kind), hash(hash(method), hash(isPure), hash(arguments)));
 
       assertCall(() -> ((BInvoke) exprDb().get(hash)).subExprs().isPure())
