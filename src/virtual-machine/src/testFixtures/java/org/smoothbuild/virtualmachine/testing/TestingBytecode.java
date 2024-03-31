@@ -364,7 +364,7 @@ public abstract class TestingBytecode {
   }
 
   public BInvoke bInvoke(BType evaluationType) throws BytecodeException {
-    var bMethodTuple = bMethodTuple(bBlob(7), "class binary name");
+    var bMethodTuple = bMethodTuple(bBlob(7));
     return bInvoke(evaluationType, bMethodTuple, bBool(true), bTuple());
   }
 
@@ -408,11 +408,15 @@ public abstract class TestingBytecode {
   }
 
   public BTuple bMethodTuple(Class<?> clazz) throws BytecodeException {
-    return bMethodTuple(blobBJarWithPluginApi(clazz), clazz.getName());
+    return bMethodTuple(clazz, NATIVE_METHOD_NAME);
   }
 
-  public BTuple bMethodTuple(BBlob jar, String classBinaryName) throws BytecodeException {
-    return bMethodTuple(jar, classBinaryName, NATIVE_METHOD_NAME);
+  public BTuple bMethodTuple(Class<?> clazz, String methodName) throws BytecodeException {
+    return bMethodTuple(blobBJarWithPluginApi(clazz), clazz.getName(), methodName);
+  }
+
+  public BTuple bMethodTuple(BBlob jar) throws BytecodeException {
+    return bMethodTuple(jar, "classBinaryName", NATIVE_METHOD_NAME);
   }
 
   public BTuple bMethodTuple(BBlob jar, String classBinaryName, String methodName)
@@ -429,7 +433,11 @@ public abstract class TestingBytecode {
   }
 
   public BMethod bMethod(Class<?> clazz) throws BytecodeException {
-    return new BMethod(bMethodTuple(clazz));
+    return bMethod(clazz, NATIVE_METHOD_NAME);
+  }
+
+  public BMethod bMethod(Class<?> clazz, String methodName) throws BytecodeException {
+    return new BMethod(bMethodTuple(clazz, methodName));
   }
 
   public BMethod bMethod(BBlob jar, String classBinaryName) throws BytecodeException {
