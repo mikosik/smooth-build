@@ -108,9 +108,8 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
-      var bMethod = bMethod(jar, classBinaryName);
-      var methodSpec = new MethodSpec(bMethod, method.getName());
-      when(methodLoader.load(methodSpec)).thenReturn(eitherMethod);
+      var bMethod = bMethod(jar, classBinaryName, method.getName());
+      when(methodLoader.load(bMethod)).thenReturn(eitherMethod);
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
@@ -118,7 +117,7 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
       var resultMethod2 = nativeMethodLoader.load(bMethod);
       assertThat(resultMethod1).isEqualTo(expected);
       assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
-      verify(methodLoader, times(1)).load(methodSpec);
+      verify(methodLoader, times(1)).load(bMethod);
     }
   }
 }

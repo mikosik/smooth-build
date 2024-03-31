@@ -17,7 +17,7 @@ public class BInvokeTest extends TestingVirtualMachine {
   void creating_fails_when_method_evaluation_type_is_not_tuple() {
     assertCall(() -> bInvoke(bIntType(), bInt(), bBool(), bTuple()))
         .throwsException(new IllegalArgumentException(
-            "`method.evaluationType()` should be `{Blob,String}` but is `Int`."));
+            "`method.evaluationType()` should be `{Blob,String,String}` but is `Int`."));
   }
 
   @Test

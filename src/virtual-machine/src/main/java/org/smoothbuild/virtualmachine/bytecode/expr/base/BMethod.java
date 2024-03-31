@@ -17,6 +17,10 @@ public class BMethod {
     return (BString) method.elements().get(1);
   }
 
+  public BString methodName() throws BytecodeException {
+    return (BString) method.elements().get(2);
+  }
+
   public BTuple tuple() {
     return method;
   }

@@ -214,7 +214,7 @@ public class BKindTest extends TestingVirtualMachine {
     @Test
     void method_elements() throws BKindDbException {
       assertThat(kindDb().method().elements())
-          .isEqualTo(list(kindDb().blob(), kindDb().string()));
+          .isEqualTo(list(kindDb().blob(), kindDb().string(), kindDb().string()));
     }
   }
 

@@ -10,6 +10,8 @@ import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
+import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import jakarta.inject.Inject;
 import java.math.BigInteger;
@@ -263,7 +265,8 @@ public class SbTranslator {
     var sAnnotation = sNativeFunc.annotation();
     var bJar = persistNativeJar(sAnnotation.location());
     var bClassBinaryName = bytecodeF.string(sAnnotation.path().string());
-    var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName).tuple();
+    var bMethodName = bytecodeF.string(NATIVE_METHOD_NAME);
+    var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName, bMethodName).tuple();
     var bIsPure = bytecodeF.bool(sAnnotation.name().equals(NATIVE_PURE));
     var bLambdaType = typeF.translate(sNativeFunc.schema().type());
     var bArguments = referencesToAllArguments(bLambdaType);
@@ -380,7 +383,9 @@ public class SbTranslator {
       String name, BBlob jar, String classBinaryName, Map<String, BType> varNameToTypeMap)
       throws SbTranslatorException {
     try {
-      var bMethod = bytecodeF.method(jar, bytecodeF.string(classBinaryName));
+      var bClassBinaryName = bytecodeF.string(classBinaryName);
+      var bMethodName = bytecodeF.string(BYTECODE_METHOD_NAME);
+      var bMethod = bytecodeF.method(jar, bClassBinaryName, bMethodName);
       return bytecodeLoader.load(name, bMethod, varNameToTypeMap);
     } catch (BytecodeException e) {
       throw new SbTranslatorException(e);

@@ -24,9 +24,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
  */
 @Singleton
 public class BytecodeMethodLoader {
-  static final String BYTECODE_METHOD_NAME = "bytecode";
+  public static final String BYTECODE_METHOD_NAME = "bytecode";
   private final MethodLoader methodLoader;
-  private final Function1<MethodSpec, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BMethod, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public BytecodeMethodLoader(MethodLoader methodLoader) {
@@ -35,12 +35,11 @@ public class BytecodeMethodLoader {
   }
 
   public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
-    var methodSpec = new MethodSpec(bMethod, BYTECODE_METHOD_NAME);
-    return memoizer.apply(methodSpec);
+    return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> loadImpl(MethodSpec methodSpec) throws BytecodeException {
-    return methodLoader.load(methodSpec).flatMapRight(this::validateSignature);
+  private Either<String, Method> loadImpl(BMethod bMethod) throws BytecodeException {
+    return methodLoader.load(bMethod).flatMapRight(this::validateSignature);
   }
 
   private Either<String, Method> validateSignature(Method method) {

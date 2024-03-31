@@ -76,8 +76,10 @@ class ChainingBytecodeFactory {
     return invokeTranslatingBytecodeException(() -> bytecodeFactory.lambda(type, body));
   }
 
-  public BMethod method(BBlob jar, BString classBinaryName) throws SbTranslatorException {
-    return invokeTranslatingBytecodeException(() -> bytecodeFactory.method(jar, classBinaryName));
+  public BMethod method(BBlob jar, BString classBinaryName, BString methodName)
+      throws SbTranslatorException {
+    return invokeTranslatingBytecodeException(
+        () -> bytecodeFactory.method(jar, classBinaryName, methodName));
   }
 
   public BOrder order(BArrayType arrayType, List<BExpr> elements) throws SbTranslatorException {

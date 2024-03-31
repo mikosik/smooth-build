@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -411,7 +412,12 @@ public abstract class TestingBytecode {
   }
 
   public BTuple bMethodTuple(BBlob jar, String classBinaryName) throws BytecodeException {
-    return bMethod(jar, bString(classBinaryName)).tuple();
+    return bMethodTuple(jar, classBinaryName, NATIVE_METHOD_NAME);
+  }
+
+  public BTuple bMethodTuple(BBlob jar, String classBinaryName, String methodName)
+      throws BytecodeException {
+    return bMethod(jar, bString(classBinaryName), bString(methodName)).tuple();
   }
 
   public BExpr bMethodTuple(String classBinaryName) throws BytecodeException {
@@ -427,11 +433,21 @@ public abstract class TestingBytecode {
   }
 
   public BMethod bMethod(BBlob jar, String classBinaryName) throws BytecodeException {
-    return bMethod(jar, bString(classBinaryName));
+    return bMethod(jar, classBinaryName, NATIVE_METHOD_NAME);
+  }
+
+  public BMethod bMethod(BBlob jar, String classBinaryName, String methodName)
+      throws BytecodeException {
+    return bMethod(jar, bString(classBinaryName), bString(methodName));
   }
 
   public BMethod bMethod(BBlob jar, BString classBinaryName) throws BytecodeException {
-    return bytecodeF().method(jar, classBinaryName);
+    return bMethod(jar, classBinaryName, bString(NATIVE_METHOD_NAME));
+  }
+
+  public BMethod bMethod(BBlob jar, BString classBinaryName, BString methodName)
+      throws BytecodeException {
+    return bytecodeF().method(jar, classBinaryName, methodName);
   }
 
   public BTuple bPerson(String firstName, String lastName) throws BytecodeException {

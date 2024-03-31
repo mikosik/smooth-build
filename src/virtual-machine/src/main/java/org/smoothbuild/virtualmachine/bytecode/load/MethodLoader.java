@@ -11,16 +11,17 @@ import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 
 /**
  * Loads java methods as instances of {@link Method}.
- * Method to load is specified by providing {@link MethodSpec}.
+ * Method to load is specified by providing {@link BMethod}.
  * This class is thread-safe.
  */
 @Singleton
 public class MethodLoader {
   private final JarClassLoaderFactory jarClassLoaderFactory;
-  private final Function1<MethodSpec, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BMethod, Either<String, Method>, BytecodeException> memoizer;
 
   @Inject
   public MethodLoader(JarClassLoaderFactory jarClassLoaderFactory) {
@@ -28,47 +29,50 @@ public class MethodLoader {
     this.memoizer = memoizer(this::findMethod);
   }
 
-  public Either<String, Method> load(MethodSpec methodSpec) throws BytecodeException {
-    return memoizer.apply(methodSpec);
+  public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
+    return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> findMethod(MethodSpec methodSpec) throws BytecodeException {
-    return findClass(methodSpec).flatMapRight(c -> findMethodInClass(methodSpec, c));
+  private Either<String, Method> findMethod(BMethod bMethod) throws BytecodeException {
+    return findClass(bMethod).flatMapRight(c -> findMethodInClass(bMethod, c));
   }
 
-  private Either<String, Class<?>> findClass(MethodSpec methodSpec) throws BytecodeException {
+  private Either<String, Class<?>> findClass(BMethod bMethod) throws BytecodeException {
     return jarClassLoaderFactory
-        .classLoaderFor(methodSpec.method().jar())
-        .flatMapRight(classLoader -> loadClass(classLoader, methodSpec));
+        .classLoaderFor(bMethod.jar())
+        .flatMapRight(classLoader -> loadClass(classLoader, bMethod));
   }
 
-  private Either<String, Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec)
+  private Either<String, Class<?>> loadClass(ClassLoader classLoader, BMethod bMethod)
       throws BytecodeException {
     try {
-      return right(classLoader.loadClass(methodSpec.method().classBinaryName().toJavaString()));
+      return right(classLoader.loadClass(bMethod.classBinaryName().toJavaString()));
     } catch (ClassNotFoundException e) {
       return left("Class not found in jar.");
     }
   }
 
-  private static Either<String, Method> findMethodInClass(MethodSpec methodSpec, Class<?> clazz)
+  private static Either<String, Method> findMethodInClass(BMethod bMethod, Class<?> clazz)
       throws BytecodeException {
     var declaredMethods = list(clazz.getDeclaredMethods());
-    var methods = declaredMethods.filter(m -> m.getName().equals(methodSpec.methodName()));
+    var methods =
+        declaredMethods.filter(m -> m.getName().equals(bMethod.methodName().toJavaString()));
     return switch (methods.size()) {
-      case 0 -> left(missingMethodError(methodSpec));
+      case 0 -> left(missingMethodError(bMethod));
       case 1 -> right(methods.get(0));
-      default -> left(overloadedMethodError(methodSpec));
+      default -> left(overloadedMethodError(bMethod));
     };
   }
 
-  private static String missingMethodError(MethodSpec methodSpec) throws BytecodeException {
-    return "Class '%s' does not have '%s' method."
-        .formatted(methodSpec.method().classBinaryName().toJavaString(), methodSpec.methodName());
+  private static String missingMethodError(BMethod bMethod) throws BytecodeException {
+    var classBinaryName = bMethod.classBinaryName().toJavaString();
+    var methodName = bMethod.methodName().toJavaString();
+    return "Class '%s' does not have '%s' method.".formatted(classBinaryName, methodName);
   }
 
-  private static String overloadedMethodError(MethodSpec methodSpec) throws BytecodeException {
-    return "Class '%s' has more than one '%s' method."
-        .formatted(methodSpec.method().classBinaryName().toJavaString(), methodSpec.methodName());
+  private static String overloadedMethodError(BMethod bMethod) throws BytecodeException {
+    var classBinaryName = bMethod.classBinaryName().toJavaString();
+    var methodName = bMethod.methodName().toJavaString();
+    return "Class '%s' has more than one '%s' method.".formatted(classBinaryName, methodName);
   }
 }

@@ -8,13 +8,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
-import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.nativ.MissingMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
@@ -26,16 +24,16 @@ public class MethodLoaderTest extends TestingVirtualMachine {
   public void class_not_found_in_jar_error() throws Exception {
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var bBlob = blobBJarWithJavaByteCode();
-    var methodSpec = new MethodSpec(bMethod(bBlob, "com.missing.Class"), "methodName");
-    assertThat(methodLoader.load(methodSpec)).isEqualTo(left("Class not found in jar."));
+    var bMethod = bMethod(bBlob, "com.missing.Class", "methodName");
+    assertThat(methodLoader.load(bMethod)).isEqualTo(left("Class not found in jar."));
   }
 
   @Test
   public void overloaded_method_causes_error() throws Exception {
     var clazz = OverloadedMethod.class;
     var methodLoader = methodLoaderWithPlatformClassLoader();
-    var methodSpec = methodSpec(clazz);
-    assertThat(methodLoader.load(methodSpec))
+    var bMethod = bMethod(clazz);
+    assertThat(methodLoader.load(bMethod))
         .isEqualTo(loadingError(clazz, "has more than one 'func' method."));
   }
 
@@ -43,15 +41,9 @@ public class MethodLoaderTest extends TestingVirtualMachine {
   public void missing_method_causes_error() throws Exception {
     var clazz = MissingMethod.class;
     var methodLoader = methodLoaderWithPlatformClassLoader();
-    var methodSpec = methodSpec(clazz);
-    assertThat(methodLoader.load(methodSpec))
+    var bMethod = bMethod(clazz);
+    assertThat(methodLoader.load(bMethod))
         .isEqualTo(loadingError(clazz, "does not have 'func' method."));
-  }
-
-  private MethodSpec methodSpec(Class<?> clazz) throws BytecodeException {
-    var jar = blobBJarWithPluginApi(clazz);
-    var bMethod = bMethod(jar, clazz.getCanonicalName());
-    return new MethodSpec(bMethod, NATIVE_METHOD_NAME);
   }
 
   private Either<String, Object> loadingError(Class<?> clazz, String message) {
@@ -85,9 +77,8 @@ public class MethodLoaderTest extends TestingVirtualMachine {
       doReturn(right(classLoader)).when(classLoaderFactory).classLoaderFor(jar);
 
       var methodLoader = new MethodLoader(classLoaderFactory);
-      var methodSpec = new MethodSpec(bMethod, "func");
-      Either<String, Method> methodEither1 = methodLoader.load(methodSpec);
-      Either<String, Method> methodEither2 = methodLoader.load(methodSpec);
+      Either<String, Method> methodEither1 = methodLoader.load(bMethod);
+      Either<String, Method> methodEither2 = methodLoader.load(bMethod);
       assertThat(methodEither1).isSameInstanceAs(methodEither2);
       verify(classLoader, times(1)).loadClass(className);
     }
