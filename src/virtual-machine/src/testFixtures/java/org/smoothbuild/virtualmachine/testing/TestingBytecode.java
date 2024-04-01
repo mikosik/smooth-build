@@ -401,7 +401,7 @@ public abstract class TestingBytecode {
     return bytecodeF().invoke(evaluationType, method, isPure, arguments);
   }
 
-  public BExpr bMethodTuple() throws BytecodeException {
+  public BTuple bMethodTuple() throws BytecodeException {
     var jar = bBlob();
     var classBinaryName = bString();
     return bMethodTuple(jar, classBinaryName);
@@ -424,11 +424,11 @@ public abstract class TestingBytecode {
     return bMethod(jar, bString(classBinaryName), bString(methodName)).tuple();
   }
 
-  public BExpr bMethodTuple(String classBinaryName) throws BytecodeException {
+  public BTuple bMethodTuple(String classBinaryName) throws BytecodeException {
     return bMethodTuple(bBlob(), bString(classBinaryName));
   }
 
-  public BExpr bMethodTuple(BBlob jar, BString classBinaryName) throws BytecodeException {
+  public BTuple bMethodTuple(BBlob jar, BString classBinaryName) throws BytecodeException {
     return bMethod(jar, classBinaryName).tuple();
   }
 
