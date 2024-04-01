@@ -213,11 +213,11 @@ public abstract class SystemTestCase {
   }
 
   public String systemOut() {
-    return systemOut;
+    return convertOsLineSeparatorsToNewLine(systemOut);
   }
 
   public String systemErr() {
-    return systemErr;
+    return convertOsLineSeparatorsToNewLine(systemErr);
   }
 
   /**
