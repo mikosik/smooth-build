@@ -20,6 +20,7 @@ import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.task.Output;
+import org.smoothbuild.virtualmachine.evaluate.task.Purity;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 
@@ -53,10 +54,19 @@ public class Computer {
 
   public void compute(Task task, BTuple input, Consumer<ComputationResult> consumer)
       throws ComputeException {
-    if (task.purity() == FAST) {
+    var purity = purityOf(task, input);
+    if (purity == FAST) {
       computeFast(task, input, consumer);
     } else {
-      computeWithCache(task, input, consumer);
+      computeWithCache(task, purity, input, consumer);
+    }
+  }
+
+  private static Purity purityOf(Task task, BTuple input) throws ComputeException {
+    try {
+      return task.purity(input);
+    } catch (BytecodeException e) {
+      throw computeException(e);
     }
   }
 
@@ -66,23 +76,23 @@ public class Computer {
     consumer.accept(new ComputationResult(output, NOOP));
   }
 
-  private void computeWithCache(Task task, BTuple input, Consumer<ComputationResult> consumer)
+  private void computeWithCache(
+      Task task, Purity purity, BTuple input, Consumer<ComputationResult> consumer)
       throws ComputeException {
     var hash = computationHash(task, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
     PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
-      prevPromised.chain(c -> computationResultFromPromise(c, task)).addConsumer(consumer);
+      prevPromised.chain(c -> computationResultFromPromise(c, purity)).addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
-      var isPure = task.purity() == PURE;
-      if (isPure && diskCache.contains(hash)) {
+      if (purity == PURE && diskCache.contains(hash)) {
         var output = diskCache.read(hash, task.outputType());
         newPromised.accept(new ComputationResult(output, DISK));
         memoryCache.remove(hash);
       } else {
         var output = runComputation(task, input);
-        if (isPure) {
+        if (purity == PURE) {
           if (!outputContainsFatalMessage(output)) {
             diskCache.write(hash, output);
           }
@@ -102,9 +112,9 @@ public class Computer {
   }
 
   private static ComputationResult computationResultFromPromise(
-      ComputationResult computationResult, Task task) {
+      ComputationResult computationResult, Purity purity) {
     var resultSource =
-        switch (task.purity()) {
+        switch (purity) {
           case PURE -> DISK;
           case IMPURE -> MEMORY;
           case FAST -> throw new RuntimeException("shouldn't happen");

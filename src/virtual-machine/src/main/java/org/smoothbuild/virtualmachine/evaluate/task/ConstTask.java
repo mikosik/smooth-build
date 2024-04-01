@@ -11,11 +11,16 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class ConstTask extends Task {
   public ConstTask(BValue value, BTrace trace) {
-    super(value, trace, FAST);
+    super(value, trace);
   }
 
   public BValue value() {
     return (BValue) expr();
+  }
+
+  @Override
+  public Purity purity(BTuple input) {
+    return FAST;
   }
 
   @Override

@@ -1,5 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.task;
 
+import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
+
 import java.util.Objects;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -11,17 +13,11 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 public abstract sealed class Task
     permits CombineTask, ConstTask, InvokeTask, OrderTask, PickTask, SelectTask {
   private final BExpr expr;
-  private final Purity purity;
   private final BTrace trace;
 
   public Task(BExpr expr, BTrace trace) {
-    this(expr, trace, Purity.PURE);
-  }
-
-  public Task(BExpr expr, BTrace trace, Purity purity) {
     this.expr = expr;
     this.trace = trace;
-    this.purity = purity;
   }
 
   public BExpr expr() {
@@ -36,8 +32,8 @@ public abstract sealed class Task
     return expr.evaluationType();
   }
 
-  public Purity purity() {
-    return purity;
+  public Purity purity(BTuple input) throws BytecodeException {
+    return PURE;
   }
 
   public abstract Output run(BTuple input, Container container) throws BytecodeException;
