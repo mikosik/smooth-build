@@ -9,6 +9,7 @@ import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -17,16 +18,22 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class InvokeTask extends Task {
-  public InvokeTask(BInvoke invoke, BTrace trace, Purity purity) {
-    super(invoke, trace, purity);
+  public InvokeTask(BInvoke invoke, BTrace trace) {
+    super(invoke, trace);
   }
 
-  public static InvokeTask newInvokeTask(BInvoke invoke, BTrace trace) throws BytecodeException {
-    return new InvokeTask(invoke, trace, invoke.isPure().toJavaBoolean() ? PURE : IMPURE);
+  public static InvokeTask newInvokeTask(BInvoke invoke, BTrace trace) {
+    return new InvokeTask(invoke, trace);
   }
 
   public BInvoke invoke() {
     return ((BInvoke) expr());
+  }
+
+  @Override
+  public Purity purity(BTuple input) throws BytecodeException {
+    var isPure = ((BBool) input.get(BInvoke.IS_PURE_IDX)).toJavaBoolean();
+    return isPure ? PURE : IMPURE;
   }
 
   @Override
