@@ -24,7 +24,7 @@ public class TryTest {
       @Test
       void and_no_failure() {
         var tryOf = Try.of(null, warning("warning message"));
-        assertThat(tryOf.value()).isNull();
+        assertThat(tryOf.get()).isNull();
         assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
       }
 
@@ -41,7 +41,7 @@ public class TryTest {
       @Test
       void and_no_failure() {
         var tryOf = Try.of("abc", warning("warning message"));
-        assertThat(tryOf.value()).isEqualTo("abc");
+        assertThat(tryOf.get()).isEqualTo("abc");
         assertThat(tryOf.logs()).isEqualTo(list(warning("warning message")));
       }
 
@@ -61,7 +61,7 @@ public class TryTest {
       @Test
       public void has_value() {
         var success = success(null);
-        assertThat(success.value()).isNull();
+        assertThat(success.get()).isNull();
       }
 
       @Test
@@ -73,7 +73,7 @@ public class TryTest {
       @Test
       public void creation_with_non_problem_log_is_allowed() {
         var success = success(null, warning("warning message"));
-        assertThat(success.value()).isNull();
+        assertThat(success.get()).isNull();
       }
 
       @Test
@@ -88,7 +88,7 @@ public class TryTest {
       @Test
       public void has_value() {
         var success = success("abc");
-        assertThat(success.value()).isEqualTo("abc");
+        assertThat(success.get()).isEqualTo("abc");
       }
 
       @Test
@@ -100,7 +100,7 @@ public class TryTest {
       @Test
       public void creation_with_non_problem_log_is_allowed() {
         var success = success("abc", warning("warning message"));
-        assertThat(success.value()).isEqualTo("abc");
+        assertThat(success.get()).isEqualTo("abc");
       }
 
       @Test
@@ -122,7 +122,7 @@ public class TryTest {
     @Test
     public void has_no_value() {
       var failure = failure(error("error message"));
-      assertCall(failure::value).throwsException(IllegalStateException.class);
+      assertCall(failure::get).throwsException(IllegalStateException.class);
     }
 
     @Test

@@ -49,7 +49,7 @@ public class Try<V> {
     this.logs = listOfAll(logs);
   }
 
-  public V value() {
+  public V get() {
     checkState(value.isSome(), "No value is stored in this Try.");
     return value.get();
   }

@@ -70,7 +70,7 @@ public class FrontendCompilerTester {
   }
 
   private SNamedEvaluable assertContainsEvaluable(String name) {
-    var evaluables = moduleS.value().members().evaluables();
+    var evaluables = moduleS.get().members().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(evaluables.contains(name))
         .isTrue();
@@ -79,7 +79,7 @@ public class FrontendCompilerTester {
 
   public void containsType(SType expected) {
     var name = expected.name();
-    var types = moduleS.value().members().types();
+    var types = moduleS.get().members().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.contains(name))
         .isTrue();
@@ -88,7 +88,7 @@ public class FrontendCompilerTester {
   }
 
   public SModule getLoadedModule() {
-    return moduleS.value();
+    return moduleS.get();
   }
 
   public void loadsWithProblems() {
