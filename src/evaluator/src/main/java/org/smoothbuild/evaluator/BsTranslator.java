@@ -32,8 +32,8 @@ public class BsTranslator {
     }
   }
 
-  public String nameFor(Hash funcHash) {
-    return bsMapping.nameMapping().getOrDefault(funcHash, "???");
+  public String nameFor(Hash bExprHash) {
+    return bsMapping.nameMapping().getOrDefault(bExprHash, "???");
   }
 
   private Location locationFor(Hash hash) {
