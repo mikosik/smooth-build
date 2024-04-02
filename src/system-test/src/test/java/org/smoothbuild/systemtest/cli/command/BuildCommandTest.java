@@ -197,7 +197,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void shows_string_when_consts_enabled() throws IOException {
+      public void shows_string_when_const_enabled() throws IOException {
         testThatTaskHeaderShownWhenConstAreEnabled(STRING_CONST, STRING_CONST_TASK_HEADER);
       }
 
