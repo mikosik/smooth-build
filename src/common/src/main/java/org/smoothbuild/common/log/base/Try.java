@@ -31,6 +31,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> success(T value, Collection<Log> logs) {
+    checkArgument(!containsAnyFailure(logs), "Logs must not contain failure.");
     return new Try<>(some(value), logs);
   }
 
@@ -39,11 +40,11 @@ public class Try<V> {
   }
 
   public static <T> Try<T> failure(Collection<Log> logs) {
+    checkArgument(containsAnyFailure(logs), "Logs must contain failure.");
     return new Try<>(none(), logs);
   }
 
   private Try(Maybe<V> value, Collection<Log> logs) {
-    checkArgument((value.isNone()) == containsAnyFailure(logs));
     this.value = value;
     this.logs = listOfAll(logs);
   }
