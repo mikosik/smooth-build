@@ -27,25 +27,13 @@ public class TaskReporterImplTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void constIntTaskHeader() throws Exception {
-    testHeader(constTask(bInt()), label("const", "Int"));
-  }
-
-  @Test
-  public void constStringTaskHeader() throws Exception {
-    testHeader(constTask(bString()), label("const", "String"));
-  }
-
-  @Test
-  public void invokeTaskHeaderForFuncWithoutMappedName() throws Exception {
-    testHeader(invokeTask(), label("invoke", "???"));
+  public void constTaskHeader() throws Exception {
+    testHeader(constTask(bInt()), label("const"));
   }
 
   @Test
   public void invokeTaskHeaderForFuncWithMappedName() throws Exception {
-    var task = invokeTask();
-    var invokeHash = task.invoke().hash();
-    testHeader(bsMapping(invokeHash, "myFunc"), task, label("invoke", "myFunc"));
+    testHeader(invokeTask(), label("invoke"));
   }
 
   @Test
