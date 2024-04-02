@@ -96,7 +96,7 @@ public class BuildCommandTest {
           """;
       private static final String NATIVE_CALL_TASK_HEADER =
           """
-          :evaluate:invoke:concat                                                    exec
+          :evaluate:invoke                                                           exec
           """;
 
       @Test
@@ -164,18 +164,17 @@ public class BuildCommandTest {
           result = 0xABCD;
           """;
       private static final String BLOB_CONST_TASK_HEADER = """
-          :evaluate:const:Blob""";
+          :evaluate:const""";
       private static final String INT_CONST = """
           result = 123;
           """;
       private static final String INT_CONST_TASK_HEADER = """
-          :evaluate:const:Int""";
+          :evaluate:const""";
       private static final String STRING_CONST = """
           result = "myLiteral";
           """;
-      private static final String STRING_CONST_TASK_HEADER =
-          """
-          :evaluate:const:String""";
+      private static final String STRING_CONST_TASK_HEADER = """
+          :evaluate:const""";
 
       @Test
       public void shows_blob_when_consts_enabled() throws IOException {
@@ -525,7 +524,7 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSystemOutContains(
           """
-          :evaluate:invoke:myFunc                                                    exec
+          :evaluate:invoke                                                           exec
           """);
     }
 
@@ -555,7 +554,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
-          :evaluate:const:()->Int""");
+          :evaluate:const""");
     }
 
     @Test
@@ -567,7 +566,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
-          :evaluate:const:String""");
+          :evaluate:const""");
     }
 
     @Test
@@ -591,7 +590,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
-          :evaluate:const:Blob""");
+          :evaluate:const""");
     }
 
     @Test
@@ -602,7 +601,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
-          :evaluate:const:String""");
+          :evaluate:const""");
     }
 
     @Test
@@ -613,7 +612,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
-          :evaluate:const:Int""");
+          :evaluate:const""");
     }
   }
 }

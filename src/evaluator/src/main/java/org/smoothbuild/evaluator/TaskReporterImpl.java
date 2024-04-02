@@ -15,7 +15,6 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
@@ -66,16 +65,11 @@ public class TaskReporterImpl implements TaskReporter {
   private Label taskLabel(Task task) {
     return switch (task) {
       case CombineTask combineTask -> label(EVALUATE_PREFIX, "combine");
-      case ConstTask constTask -> label(
-          EVALUATE_PREFIX, "const", constTask.value().type().name());
-      case InvokeTask invokeTask -> label(EVALUATE_PREFIX, "invoke", nameOf(invokeTask.invoke()));
+      case ConstTask constTask -> label(EVALUATE_PREFIX, "const");
+      case InvokeTask invokeTask -> label(EVALUATE_PREFIX, "invoke");
       case OrderTask orderTask -> label(EVALUATE_PREFIX, "order");
       case PickTask pickTask -> label(EVALUATE_PREFIX, "pick");
       case SelectTask selectTask -> label(EVALUATE_PREFIX, "select");
     };
-  }
-
-  private String nameOf(BInvoke invoke) {
-    return bsTranslator.nameFor(invoke.hash());
   }
 }
