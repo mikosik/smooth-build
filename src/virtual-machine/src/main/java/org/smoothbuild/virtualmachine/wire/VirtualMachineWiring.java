@@ -14,19 +14,18 @@ public class VirtualMachineWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  public BExprDb provideExprDb(@BytecodeDb HashedDb hashedDb, BKindDb kindDb) {
+  public BExprDb provideExprDb(HashedDb hashedDb, BKindDb kindDb) {
     return new BExprDb(hashedDb, kindDb);
   }
 
   @Provides
   @Singleton
-  public BKindDb provideKindDb(@BytecodeDb HashedDb hashedDb) {
+  public BKindDb provideKindDb(HashedDb hashedDb) {
     return new BKindDb(hashedDb);
   }
 
   @Provides
   @Singleton
-  @BytecodeDb
   private HashedDb provideHashedDb(@BytecodeDb Bucket bucket) {
     return new HashedDb(bucket);
   }
