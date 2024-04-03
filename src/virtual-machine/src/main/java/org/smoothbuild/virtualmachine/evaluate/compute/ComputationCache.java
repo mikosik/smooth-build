@@ -1,6 +1,9 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
@@ -9,12 +12,15 @@ import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.c
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.dag.Initializable;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -28,7 +34,8 @@ import org.smoothbuild.virtualmachine.wire.ComputationDb;
 /**
  * This class is thread-safe.
  */
-public class ComputationCache {
+@Singleton
+public class ComputationCache implements Initializable {
   private final Bucket bucket;
   private final BExprDb exprDb;
   private final BytecodeFactory bytecodeFactory;
@@ -39,6 +46,16 @@ public class ComputationCache {
     this.bucket = bucket;
     this.exprDb = exprDb;
     this.bytecodeFactory = bytecodeFactory;
+  }
+
+  @Override
+  public Try<Void> initialize() {
+    try {
+      bucket.createDir(Path.root());
+      return success(null);
+    } catch (IOException e) {
+      return failure(fatal(e));
+    }
   }
 
   public synchronized void write(Hash hash, Output output) throws ComputeException {

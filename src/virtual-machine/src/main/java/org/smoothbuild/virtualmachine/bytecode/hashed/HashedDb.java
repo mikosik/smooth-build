@@ -8,6 +8,9 @@ import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.log.base.Try.success;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -21,7 +24,9 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
+import org.smoothbuild.common.dag.Initializable;
 import org.smoothbuild.common.function.Consumer1;
+import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBigIntegerException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBooleanException;
@@ -34,13 +39,23 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 /**
  * This class is thread-safe.
  */
-public class HashedDb {
+public class HashedDb implements Initializable {
   static final Path TEMP_DIR_PATH = path("tmp");
   private final Bucket bucket;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
   public HashedDb(Bucket bucket) {
     this.bucket = bucket;
+  }
+
+  @Override
+  public Try<Void> initialize() {
+    try {
+      bucket.createDir(TEMP_DIR_PATH);
+      return success(null);
+    } catch (IOException e) {
+      return failure(fatal(e));
+    }
   }
 
   public Hash writeBigInteger(BigInteger value) throws HashedDbException {
