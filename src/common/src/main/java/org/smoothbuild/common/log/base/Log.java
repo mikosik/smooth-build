@@ -1,5 +1,6 @@
 package org.smoothbuild.common.log.base;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
@@ -12,6 +13,10 @@ public record Log(Level level, String message) {
   public Log(Level level, String message) {
     this.level = requireNonNull(level);
     this.message = requireNonNull(message);
+  }
+
+  public static Log fatal(Throwable throwable) {
+    return fatal(getStackTraceAsString(throwable).stripTrailing());
   }
 
   public static Log fatal(String log) {

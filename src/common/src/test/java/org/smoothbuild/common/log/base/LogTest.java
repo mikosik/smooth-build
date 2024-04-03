@@ -12,6 +12,21 @@ import org.junit.jupiter.api.Test;
 
 public class LogTest {
   @Test
+  void fatal_message_from_stack_trace() {
+    var throwable = new RuntimeException();
+    StackTraceElement[] stackTrace =
+        new StackTraceElement[] {new StackTraceElement("MyClass", "myMethod", "MyClass.java", 10)};
+    throwable.setStackTrace(stackTrace);
+    var fatal = fatal(throwable);
+    assertThat(fatal.message())
+        .isEqualTo(
+            """
+            java.lang.RuntimeException
+            \tat MyClass.myMethod(MyClass.java:10)\
+            """);
+  }
+
+  @Test
   void equality() {
     new EqualsTester()
         .addEqualityGroup(fatal("message"), fatal("message"))
