@@ -6,6 +6,9 @@ import static org.smoothbuild.common.bucket.base.AssertPath.assertPathExists;
 import static org.smoothbuild.common.bucket.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.common.bucket.base.AssertPath.assertPathIsFile;
 import static org.smoothbuild.common.bucket.base.AssertPath.assertPathIsUnused;
+import static org.smoothbuild.common.bucket.base.PathState.DIR;
+import static org.smoothbuild.common.bucket.base.PathState.FILE;
+import static org.smoothbuild.common.bucket.base.PathState.NOTHING;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.io.IOException;
@@ -35,12 +38,12 @@ public class DiskBucket implements Bucket {
   public PathState pathState(Path path) {
     java.nio.file.Path jdkPath = jdkPath(path);
     if (!Files.exists(jdkPath)) {
-      return PathState.NOTHING;
+      return NOTHING;
     }
     if (Files.isDirectory(jdkPath)) {
-      return PathState.DIR;
+      return DIR;
     }
-    return PathState.FILE;
+    return FILE;
   }
 
   @Override
@@ -57,17 +60,17 @@ public class DiskBucket implements Bucket {
 
   @Override
   public void move(Path source, Path target) throws IOException {
-    if (pathState(source) == PathState.NOTHING) {
+    if (pathState(source) == NOTHING) {
       throw new IOException("Cannot move " + source.q() + ". It doesn't exist.");
     }
-    if (pathState(source) == PathState.DIR) {
+    if (pathState(source) == DIR) {
       throw new IOException("Cannot move " + source.q() + ". It is directory.");
     }
-    if (pathState(target) == PathState.DIR) {
+    if (pathState(target) == DIR) {
       throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
     Path targetParent = target.parent();
-    if (pathState(targetParent) == PathState.NOTHING) {
+    if (pathState(targetParent) == NOTHING) {
       createDir(targetParent);
     }
     Files.move(jdkPath(source), jdkPath(target), ATOMIC_MOVE);
@@ -92,7 +95,7 @@ public class DiskBucket implements Bucket {
 
   @Override
   public Sink sinkWithoutBuffer(Path path) throws IOException {
-    if (pathState(path) == PathState.DIR) {
+    if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
     createDir(path.parent());
@@ -106,7 +109,7 @@ public class DiskBucket implements Bucket {
 
   @Override
   public void delete(Path path) throws IOException {
-    if (pathState(path) == PathState.NOTHING) {
+    if (pathState(path) == NOTHING) {
       return;
     }
     RecursiveDeleter.deleteRecursively(jdkPath(path));
