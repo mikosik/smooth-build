@@ -1,6 +1,6 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.ExecuteDag.executeDag;
+import static org.smoothbuild.app.cli.base.ExecuteDag.executeDagWithInitializables;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
 import static org.smoothbuild.app.run.ListEvaluablesDag.listEvaluablesDag;
 
@@ -17,6 +17,6 @@ public class ListCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel);
-    return executeDag(injector, listEvaluablesDag());
+    return executeDagWithInitializables(injector, listEvaluablesDag());
   }
 }

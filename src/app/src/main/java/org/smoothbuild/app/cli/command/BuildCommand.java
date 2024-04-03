@@ -1,6 +1,6 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.ExecuteDag.executeDag;
+import static org.smoothbuild.app.cli.base.ExecuteDag.executeDagWithInitializables;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
 import static org.smoothbuild.app.run.eval.report.MatcherCreator.createMatcher;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -85,6 +85,6 @@ public class BuildCommand extends ProjectCommand {
     var dag = apply1(SaveArtifacts.class, artifacts);
 
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
-    return executeDag(injector, dag);
+    return executeDagWithInitializables(injector, dag);
   }
 }
