@@ -1,6 +1,5 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.ExecuteDag.executeDagWithInitializables;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
 import static org.smoothbuild.app.run.eval.report.MatcherCreator.createMatcher;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -10,6 +9,7 @@ import static org.smoothbuild.common.dag.Dag.chain;
 import static org.smoothbuild.evaluator.SmoothEvaluationDag.smoothEvaluationDag;
 
 import java.nio.file.Path;
+import org.smoothbuild.app.cli.base.CommandExecutor;
 import org.smoothbuild.app.cli.base.ProjectCommand;
 import org.smoothbuild.app.layout.Layout;
 import org.smoothbuild.app.run.RemoveArtifacts;
@@ -85,6 +85,6 @@ public class BuildCommand extends ProjectCommand {
     var dag = apply1(SaveArtifacts.class, artifacts);
 
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
-    return executeDagWithInitializables(injector, dag);
+    return injector.getInstance(CommandExecutor.class).execute(dag);
   }
 }
