@@ -15,10 +15,6 @@ import org.smoothbuild.common.init.Initializator;
 public class ExecuteDag {
   public static Integer executeDagWithInitializables(Injector injector, Dag<Void> dag) {
     var dagWithInitializator = chain(apply0(Initializator.class), dag);
-    return executeDag(injector, dagWithInitializator);
-  }
-
-  public static Integer executeDag(Injector injector, Dag<Void> dagWithInitializator) {
     var dagEvaluator = injector.getInstance(DagEvaluator.class);
     var logSummaryPrinter = injector.getInstance(StatusPrinter.class);
 

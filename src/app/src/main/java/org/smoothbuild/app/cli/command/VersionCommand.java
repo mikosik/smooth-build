@@ -1,6 +1,6 @@
 package org.smoothbuild.app.cli.command;
 
-import static org.smoothbuild.app.cli.base.ExecuteDag.executeDag;
+import static org.smoothbuild.app.cli.base.ExecuteDag.executeDagWithInitializables;
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
 import static org.smoothbuild.common.dag.Dag.apply0;
 
@@ -17,6 +17,6 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
   public Integer call() {
     var injector = createInjector(out());
     var version = apply0(Version.class);
-    return executeDag(injector, version);
+    return executeDagWithInitializables(injector, version);
   }
 }
