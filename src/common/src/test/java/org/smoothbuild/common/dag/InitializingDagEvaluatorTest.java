@@ -20,7 +20,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.init.Initializator;
+import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
 
@@ -64,15 +64,15 @@ public class InitializingDagEvaluatorTest {
     assertThat(result).isEqualTo(some(STRING));
   }
 
-  private Initializator initializer(Try<Void> result) {
-    var initializator = mock(Initializator.class);
-    when(initializator.apply()).thenReturn(result);
-    return initializator;
+  private Initializer initializer(Try<Void> result) {
+    var initializer = mock(Initializer.class);
+    when(initializer.apply()).thenReturn(result);
+    return initializer;
   }
 
   private Maybe<String> runEvaluate(
-      Initializator initializator, DagEvaluator dagEvaluator, Reporter reporter) {
-    var evaluator = new InitializingDagEvaluator(initializator, dagEvaluator, reporter);
+      Initializer initializer, DagEvaluator dagEvaluator, Reporter reporter) {
+    var evaluator = new InitializingDagEvaluator(initializer, dagEvaluator, reporter);
     return evaluator.evaluate(value(STRING));
   }
 

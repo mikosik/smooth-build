@@ -10,16 +10,16 @@ import static org.smoothbuild.common.log.base.Try.success;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.init.Initializable;
-import org.smoothbuild.common.init.Initializator;
+import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Try;
 
-public class InitializatorTest {
+public class InitializerTest {
   @Test
   void fails_when_initializable_fails() {
     Try<Void> failure = failure(error("message"));
     Initializable initializable = () -> failure;
 
-    var result = new Initializator(Set.of(initializable)).apply();
+    var result = new Initializer(Set.of(initializable)).apply();
 
     assertThat(result).isEqualTo(failure);
   }
@@ -30,7 +30,7 @@ public class InitializatorTest {
     Try<Void> success = success(null, info);
     Initializable initializable = () -> success;
 
-    var result = new Initializator(Set.of(initializable)).apply();
+    var result = new Initializer(Set.of(initializable)).apply();
 
     assertThat(result).isEqualTo(success(null, info));
   }
@@ -44,7 +44,7 @@ public class InitializatorTest {
     Try<Void> success2 = success(null, info2);
     Initializable initializable2 = () -> success2;
 
-    var result = new Initializator(set(initializable1, initializable2)).apply();
+    var result = new Initializer(set(initializable1, initializable2)).apply();
 
     assertThat(result).isEqualTo(success(null, info1, info2));
   }
@@ -63,8 +63,7 @@ public class InitializatorTest {
     Try<Void> success2 = success(null, info2);
     Initializable initializable2 = () -> success2;
 
-    var result =
-        new Initializator(set(initializable1, failedInitializable, initializable2)).apply();
+    var result = new Initializer(set(initializable1, failedInitializable, initializable2)).apply();
 
     assertThat(result).isEqualTo(failure(info1, error));
   }

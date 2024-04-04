@@ -9,11 +9,11 @@ import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
 
-public class Initializator implements TryFunction0<Void> {
+public class Initializer implements TryFunction0<Void> {
   private final Set<Initializable> initializables;
 
   @Inject
-  public Initializator(Set<Initializable> initializables) {
+  public Initializer(Set<Initializable> initializables) {
     this.initializables = initializables;
   }
 
