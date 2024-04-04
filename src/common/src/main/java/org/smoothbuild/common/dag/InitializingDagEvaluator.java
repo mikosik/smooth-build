@@ -7,24 +7,24 @@ import static org.smoothbuild.common.log.report.Report.report;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.init.Initializator;
+import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.Reporter;
 
 public class InitializingDagEvaluator {
-  private final Initializator initializator;
+  private final Initializer initializer;
   private final DagEvaluator dagEvaluator;
   private final Reporter reporter;
 
   @Inject
   public InitializingDagEvaluator(
-      Initializator initializator, DagEvaluator dagEvaluator, Reporter reporter) {
-    this.initializator = initializator;
+      Initializer initializer, DagEvaluator dagEvaluator, Reporter reporter) {
+    this.initializer = initializer;
     this.dagEvaluator = dagEvaluator;
     this.reporter = reporter;
   }
 
   public <V> Maybe<V> evaluate(Dag<V> dag) {
-    var result = initializator.apply();
+    var result = initializer.apply();
     reporter.report(report(label("initialize"), "", EXECUTION, result.logs()));
     if (result.toMaybe().isNone()) {
       return none();
