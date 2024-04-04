@@ -48,7 +48,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var value = value("abc");
 
-      var result = stepExecutor().evaluate(value, reporter);
+      var result = stepExecutor(reporter).evaluate(value);
 
       assertThat(result).isEqualTo(some("abc"));
       verifyNoInteractions(reporter);
@@ -69,7 +69,7 @@ class DagEvaluatorTest {
       when(second.apply(any())).thenReturn(success("abc"));
       var applySecond = apply1(second, value("arg2"));
 
-      var result = stepExecutor().evaluate(chain(applyFirst, applySecond), reporter);
+      var result = stepExecutor(reporter).evaluate(chain(applyFirst, applySecond));
 
       assertThat(result).isEqualTo(some("abc"));
     }
@@ -84,7 +84,7 @@ class DagEvaluatorTest {
       when(second.apply(any())).thenReturn(success(""));
       var applySecond = apply1(second, value("def"));
 
-      var result = stepExecutor().evaluate(chain(first, applySecond), reporter);
+      var result = stepExecutor(reporter).evaluate(chain(first, applySecond));
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("error")));
@@ -99,7 +99,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
 
       Dag<TryFunction1<String, String>> append = inject(AppendWithInjected.class);
-      stepExecutor(":suffix").evaluate(append, reporter);
+      stepExecutor(reporter, ":suffix").evaluate(append);
 
       verifyNoInteractions(reporter);
     }
@@ -109,7 +109,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
 
       var result = apply1(AppendWithInjected.class, value("abc"));
-      var evaluation = stepExecutor(":suffix").evaluate(result, reporter);
+      var evaluation = stepExecutor(reporter, ":suffix").evaluate(result);
 
       assertThat(evaluation).isEqualTo(some("abc:suffix"));
     }
@@ -136,7 +136,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var graph = applyMaybeFunction(MaybeFunctionReturningSome.class, value(3));
 
-      var result = stepExecutor().evaluate(graph, reporter);
+      var result = stepExecutor(reporter).evaluate(graph);
 
       assertThat(result).isEqualTo(some("3"));
       verifyNoInteractions(reporter);
@@ -147,7 +147,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var graph = applyMaybeFunction(MaybeFunctionReturningNone.class, value(3));
 
-      var result = stepExecutor().evaluate(graph, reporter);
+      var result = stepExecutor(reporter).evaluate(graph);
 
       assertThat(result).isEqualTo(none());
       verifyNoInteractions(reporter);
@@ -158,7 +158,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var graph = applyMaybeFunction(maybeFunctionNodeThatFails(), value("abc"));
 
-      var result = stepExecutor().evaluate(graph, reporter);
+      var result = stepExecutor(reporter).evaluate(graph);
 
       assertThat(result).isEqualTo(none());
     }
@@ -185,7 +185,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       Dag<TryFunction0<String>> tryFunction = value(new ReturnSuccessString());
 
-      var result = stepExecutor().evaluate(apply0(tryFunction), reporter);
+      var result = stepExecutor(reporter).evaluate(apply0(tryFunction));
 
       assertThat(result).isEqualTo(some("success"));
       verifyReported(label("returnSuccessString"), reporter, list(info("message")));
@@ -208,7 +208,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       Dag<TryFunction0<String>> tryFunction = value(() -> failure(error("message")));
 
-      var result = stepExecutor().evaluate(apply0(tryFunction), reporter);
+      var result = stepExecutor(reporter).evaluate(apply0(tryFunction));
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("message")));
@@ -219,7 +219,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       Dag<TryFunction0<String>> tryFunction = tryFunction0NodeThatFails();
 
-      var result = stepExecutor().evaluate(apply0(tryFunction), reporter);
+      var result = stepExecutor(reporter).evaluate(apply0(tryFunction));
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("error")));
@@ -233,7 +233,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var apply1 = apply1(new ToUpperCase(), value("abc"));
 
-      var result = stepExecutor().evaluate(apply1, reporter);
+      var result = stepExecutor(reporter).evaluate(apply1);
 
       assertThat(result).isEqualTo(some("ABC"));
       verifyReported(label("toUpperCase"), reporter, list(info("message")));
@@ -256,7 +256,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var apply1 = apply1(s -> failure(error("message")), value("abc"));
 
-      var result = stepExecutor().evaluate(apply1, reporter);
+      var result = stepExecutor(reporter).evaluate(apply1);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("message")));
@@ -267,7 +267,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var apply1 = apply1(tryFunction1NodeThatFails(), value("abc"));
 
-      var result = stepExecutor().evaluate(apply1, reporter);
+      var result = stepExecutor(reporter).evaluate(apply1);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("error")));
@@ -281,7 +281,7 @@ class DagEvaluatorTest {
       var appender = apply1(factory, value(":suffix"));
       var apply1 = apply1(appender, value("string"));
 
-      var result = stepExecutor().evaluate(apply1, reporter);
+      var result = stepExecutor(reporter).evaluate(apply1);
 
       assertThat(result).isEqualTo(some("string:suffix"));
       var inOrder = inOrder(reporter);
@@ -298,7 +298,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var apply2 = apply2(new Concatenate(), value("abc"), value("def"));
 
-      var result = stepExecutor().evaluate(apply2, reporter);
+      var result = stepExecutor(reporter).evaluate(apply2);
 
       assertThat(result).isEqualTo(some("abc:def"));
       verifyReported(label("concatenate"), reporter, list(info("message")));
@@ -321,7 +321,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var apply2 = apply2((a, b) -> failure(error("message")), value("abc"), value("def"));
 
-      var result = stepExecutor().evaluate(apply2, reporter);
+      var result = stepExecutor(reporter).evaluate(apply2);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("message")));
@@ -332,7 +332,7 @@ class DagEvaluatorTest {
       var reporter = mock(Reporter.class);
       var apply2 = apply2(tryFunction2NodeThatFails(), value("abc"), value("def"));
 
-      var result = stepExecutor().evaluate(apply2, reporter);
+      var result = stepExecutor(reporter).evaluate(apply2);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, list(error("error")));
@@ -347,7 +347,7 @@ class DagEvaluatorTest {
       Dag<Dag<String>> dag = apply0(value(() -> success(value("abc"))));
       var evaluate = evaluate(dag);
 
-      var result = stepExecutor().evaluate(evaluate, reporter);
+      var result = stepExecutor(reporter).evaluate(evaluate);
 
       assertThat(result).isEqualTo(some("abc"));
     }
@@ -362,17 +362,19 @@ class DagEvaluatorTest {
     verifyNoMoreInteractions(reporter);
   }
 
-  private static DagEvaluator stepExecutor() {
-    return new DagEvaluator(Guice.createInjector());
+  private static DagEvaluator stepExecutor(Reporter reporter) {
+    return new DagEvaluator(Guice.createInjector(), reporter);
   }
 
-  private static DagEvaluator stepExecutor(String string) {
-    return new DagEvaluator(Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(String.class).toInstance(string);
-      }
-    }));
+  private static DagEvaluator stepExecutor(Reporter reporter, String string) {
+    return new DagEvaluator(
+        Guice.createInjector(new AbstractModule() {
+          @Override
+          protected void configure() {
+            bind(String.class).toInstance(string);
+          }
+        }),
+        reporter);
   }
 
   private static Dag<MaybeFunction<String, String>> maybeFunctionNodeThatFails() {
