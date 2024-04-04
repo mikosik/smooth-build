@@ -21,6 +21,7 @@ import org.smoothbuild.app.run.eval.report.ReportMatchers;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineWiring;
@@ -55,7 +56,8 @@ public class CreateInjector {
         PRODUCTION,
         new SmoothBucketWiring(false),
         new DiskBucketWiring(bucketIdToPath),
-        new ReportWiring(out, ReportMatchers.ALL, INFO));
+        new ReportWiring(out, ReportMatchers.ALL, INFO),
+        new InitWiring());
   }
 
   private static Path installationDir() {
