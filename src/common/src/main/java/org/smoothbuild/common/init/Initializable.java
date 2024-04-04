@@ -1,4 +1,4 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.init;
 
 import org.smoothbuild.common.log.base.Try;
 

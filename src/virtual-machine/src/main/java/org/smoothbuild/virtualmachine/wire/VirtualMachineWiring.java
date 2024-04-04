@@ -7,7 +7,7 @@ import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import jakarta.inject.Singleton;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.dag.Initializable;
+import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
