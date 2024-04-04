@@ -10,7 +10,7 @@ import org.smoothbuild.app.report.StatusPrinter;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.dag.Dag;
 import org.smoothbuild.common.dag.DagEvaluator;
-import org.smoothbuild.common.dag.Initializator;
+import org.smoothbuild.common.init.Initializator;
 
 public class ExecuteDag {
   public static Integer executeDagWithInitializables(Injector injector, Dag<Void> dag) {

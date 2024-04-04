@@ -1,9 +1,10 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.init;
 
 import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.util.Set;
+import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Try;
 
 public class Initializator implements TryFunction0<Void> {

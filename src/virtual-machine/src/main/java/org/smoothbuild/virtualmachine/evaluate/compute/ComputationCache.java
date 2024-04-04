@@ -19,7 +19,7 @@ import okio.BufferedSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.common.dag.Initializable;
+import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;

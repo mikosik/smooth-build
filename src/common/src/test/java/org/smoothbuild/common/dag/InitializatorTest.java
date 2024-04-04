@@ -9,6 +9,8 @@ import static org.smoothbuild.common.log.base.Try.success;
 
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.init.Initializable;
+import org.smoothbuild.common.init.Initializator;
 import org.smoothbuild.common.log.base.Try;
 
 public class InitializatorTest {
