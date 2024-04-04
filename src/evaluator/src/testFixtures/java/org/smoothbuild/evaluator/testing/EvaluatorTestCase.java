@@ -37,7 +37,7 @@ import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.dag.DagEvaluator;
+import org.smoothbuild.common.dag.InitializingDagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
@@ -112,7 +112,7 @@ public class EvaluatorTestCase extends TestingBytecode {
 
   protected void evaluate(String... names) {
     var evaluated = smoothEvaluationDag(modules, listOfAll(asList(names)));
-    this.evaluatedExprs = injector.getInstance(DagEvaluator.class).evaluate(evaluated);
+    this.evaluatedExprs = injector.getInstance(InitializingDagEvaluator.class).evaluate(evaluated);
   }
 
   protected void restartSmoothWithSameBuckets() {

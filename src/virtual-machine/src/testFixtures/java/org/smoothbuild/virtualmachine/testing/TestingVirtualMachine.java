@@ -214,7 +214,9 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public ComputationCache computationCache() {
-    return new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
+    var computationCache = new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
+    computationCache.initialize().toMaybe().getOrThrow(RuntimeException::new);
+    return computationCache;
   }
 
   public Bucket computationCacheBucket() {
@@ -263,6 +265,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   public HashedDb hashedDb() {
     if (hashedDb == null) {
       hashedDb = new HashedDb(hashedDbBucket());
+      hashedDb.initialize().toMaybe().getOrThrow(RuntimeException::new);
     }
     return hashedDb;
   }

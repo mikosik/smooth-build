@@ -3,14 +3,13 @@ package org.smoothbuild.common.bucket.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.testing.TestingBucket.writeFile;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.truth.Truth;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import okio.BufferedSink;
-import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 
@@ -46,9 +45,7 @@ public class RecursivePathsIteratorTest {
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     Bucket bucket = new MemoryBucket();
-    try (BufferedSink sink = bucket.sink(Path.path("my/file"))) {
-      sink.write(ByteString.encodeUtf8("abc"));
-    }
+    writeFile(bucket, Path.path("my/file"), "abc");
     try {
       RecursivePathsIterator.recursivePathsIterator(bucket, Path.path("my/file"));
       fail("exception should be thrown");
@@ -89,7 +86,7 @@ public class RecursivePathsIteratorTest {
   private void createFiles(Bucket bucket, String rootDir, List<String> names) throws IOException {
     for (String name : names) {
       Path path = Path.path(rootDir).append(Path.path(name));
-      bucket.sink(path).close();
+      writeFile(bucket, path, "");
     }
   }
 }

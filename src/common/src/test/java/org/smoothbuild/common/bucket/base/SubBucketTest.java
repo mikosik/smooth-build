@@ -7,24 +7,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 
 public class SubBucketTest extends AbstractBucketTestSuite {
-  private static final Path ROOT = Path.path("some/dir");
-  private MemoryBucket parentBucket;
+  private static final Path subDir = Path.path("some/dir");
+  private MemoryBucket superBucket;
 
   @BeforeEach
-  public void before() {
-    parentBucket = new MemoryBucket();
-    bucket = new SubBucket(parentBucket, ROOT);
+  public void before() throws IOException {
+    superBucket = new MemoryBucket();
+    superBucket.createDir(subDir);
+    bucket = new SubBucket(superBucket, subDir);
   }
 
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
-    try (BufferedSink sink = parentBucket.sink(ROOT.append(path))) {
+    createDir(path.parent());
+    try (BufferedSink sink = superBucket.sink(superPath(path))) {
       sink.write(content);
     }
   }
 
   @Override
+  protected void createDir(Path path) throws IOException {
+    superBucket.createDir(superPath(path));
+  }
+
+  @Override
   protected String resolve(Path path) {
-    return ROOT.append(path).q();
+    return superPath(path).q();
+  }
+
+  private static Path superPath(Path path) {
+    return subDir.append(path);
   }
 }
