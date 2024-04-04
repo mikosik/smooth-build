@@ -335,7 +335,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
     });
     var compilationResult = apply2(backendCompile, value(exprs), value(evaluables));
     var evaluationDag = applyMaybeFunction(BEvaluatorFacade.class, compilationResult);
-    return new DagEvaluator(injector).evaluate(evaluationDag, reporter);
+    return new DagEvaluator(injector, reporter).evaluate(evaluationDag);
   }
 
   public static BInt returnInt(NativeApi nativeApi, BTuple args) throws BytecodeException {

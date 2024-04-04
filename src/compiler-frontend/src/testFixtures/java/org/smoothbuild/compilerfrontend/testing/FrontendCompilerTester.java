@@ -28,6 +28,7 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -124,9 +125,13 @@ public class FrontendCompilerTester {
     Map<BucketId, Bucket> buckets =
         map(PROJECT_BUCKET_ID, projectBucket, STANDARD_LIBRARY_BUCKET_ID, slBucket);
     var fileResolver = new FileResolver(buckets);
+    var memoryReporter = new MemoryReporter();
+
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
       @Override
-      protected void configure() {}
+      protected void configure() {
+        bind(Reporter.class).toInstance(memoryReporter);
+      }
 
       @Provides
       public FileResolver provideFileResolver() {
@@ -136,8 +141,7 @@ public class FrontendCompilerTester {
     writeModuleFilesToBuckets(buckets);
     var moduleS =
         frontendCompilationDag(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
-    var memoryReporter = new MemoryReporter();
-    var module = injector.getInstance(DagEvaluator.class).evaluate(moduleS, memoryReporter);
+    var module = injector.getInstance(DagEvaluator.class).evaluate(moduleS);
     return Try.of(module.getOr(null), memoryReporter.logs());
   }
 

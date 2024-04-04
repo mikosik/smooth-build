@@ -14,27 +14,29 @@ import org.smoothbuild.common.log.report.Reporter;
 
 public class DagEvaluator {
   private final Injector injector;
+  private final Reporter reporter;
 
   @Inject
-  public DagEvaluator(Injector injector) {
+  public DagEvaluator(Injector injector, Reporter reporter) {
     this.injector = injector;
+    this.reporter = reporter;
   }
 
-  public <V> Maybe<V> evaluate(Dag<V> dag, Reporter reporter) {
+  public <V> Maybe<V> evaluate(Dag<V> dag) {
     return switch (dag) {
-      case Application0<V> application -> evaluateApplication0(application, reporter);
-      case Application1<?, V> application -> evaluateApplication1(application, reporter);
-      case Application2<?, ?, V> application -> evaluateApplication2(application, reporter);
-      case Chain<V> chain -> evaluateChain(chain, reporter);
-      case Evaluation<V> evaluation -> evaluateEvaluation(evaluation, reporter);
-      case Injection<V> injection -> evaluateInjection(injection, reporter);
-      case MaybeApplication<?, V> application -> evaluateMaybeApplication(application, reporter);
+      case Application0<V> application -> evaluateApplication0(application);
+      case Application1<?, V> application -> evaluateApplication1(application);
+      case Application2<?, ?, V> application -> evaluateApplication2(application);
+      case Chain<V> chain -> evaluateChain(chain);
+      case Evaluation<V> evaluation -> evaluateEvaluation(evaluation);
+      case Injection<V> injection -> evaluateInjection(injection);
+      case MaybeApplication<?, V> application -> evaluateMaybeApplication(application);
       case Value<V> value -> evaluateValue(value);
     };
   }
 
-  private <V> Maybe<V> evaluateApplication0(Application0<V> application, Reporter reporter) {
-    var maybeFunction = evaluate(application.function(), reporter);
+  private <V> Maybe<V> evaluateApplication0(Application0<V> application) {
+    var maybeFunction = evaluate(application.function());
     if (maybeFunction.isSome()) {
       TryFunction0<V> function = maybeFunction.get();
       Try<V> result = function.apply();
@@ -45,9 +47,9 @@ public class DagEvaluator {
     }
   }
 
-  private <A, V> Maybe<V> evaluateApplication1(Application1<A, V> application, Reporter reporter) {
-    var mabyeFunction = evaluate(application.function(), reporter);
-    var maybeArgument = evaluate(application.argument(), reporter);
+  private <A, V> Maybe<V> evaluateApplication1(Application1<A, V> application) {
+    var mabyeFunction = evaluate(application.function());
+    var maybeArgument = evaluate(application.argument());
     if (maybeArgument.isSome() && mabyeFunction.isSome()) {
       var function = mabyeFunction.get();
       Try<V> result = function.apply(maybeArgument.get());
@@ -57,11 +59,10 @@ public class DagEvaluator {
     return none();
   }
 
-  private <A, B, V> Maybe<V> evaluateApplication2(
-      Application2<A, B, V> application, Reporter reporter) {
-    var maybeFunction = evaluate(application.function(), reporter);
-    var maybeArgument1 = evaluate(application.argument1(), reporter);
-    var maybeArgument2 = evaluate(application.argument2(), reporter);
+  private <A, B, V> Maybe<V> evaluateApplication2(Application2<A, B, V> application) {
+    var maybeFunction = evaluate(application.function());
+    var maybeArgument1 = evaluate(application.argument1());
+    var maybeArgument2 = evaluate(application.argument2());
     if (maybeFunction.isSome() && maybeArgument1.isSome() && maybeArgument2.isSome()) {
       var function = maybeFunction.get();
       Try<V> result = function.apply(maybeArgument1.get(), maybeArgument2.get());
@@ -72,24 +73,23 @@ public class DagEvaluator {
     }
   }
 
-  private <V> Maybe<V> evaluateChain(Chain<V> chain, Reporter reporter) {
-    return evaluate(chain.first(), reporter).flatMap(v -> evaluate(chain.second(), reporter));
+  private <V> Maybe<V> evaluateChain(Chain<V> chain) {
+    return evaluate(chain.first()).flatMap(v -> evaluate(chain.second()));
   }
 
-  private <V> Maybe<V> evaluateEvaluation(Evaluation<V> evaluation, Reporter reporter) {
+  private <V> Maybe<V> evaluateEvaluation(Evaluation<V> evaluation) {
     Dag<Dag<V>> dag = evaluation.dag();
-    Maybe<Dag<V>> inflatedNode = evaluate(dag, reporter);
-    return inflatedNode.flatMap(n -> evaluate(n, reporter));
+    Maybe<Dag<V>> inflatedNode = evaluate(dag);
+    return inflatedNode.flatMap(n -> evaluate(n));
   }
 
-  private <V> Maybe<V> evaluateInjection(Injection<V> injection, Reporter reporter) {
+  private <V> Maybe<V> evaluateInjection(Injection<V> injection) {
     return some(injector.getInstance(injection.key()));
   }
 
-  private <A, V> Maybe<V> evaluateMaybeApplication(
-      MaybeApplication<A, V> application, Reporter reporter) {
-    var argument = evaluate(application.argument(), reporter);
-    var function = evaluate(application.function(), reporter);
+  private <A, V> Maybe<V> evaluateMaybeApplication(MaybeApplication<A, V> application) {
+    var argument = evaluate(application.argument());
+    var function = evaluate(application.function());
     if (argument.isSome() && function.isSome()) {
       return function.get().apply(argument.get());
     }
