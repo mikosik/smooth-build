@@ -11,7 +11,7 @@ import okio.ByteString;
 import okio.ForwardingSink;
 import org.smoothbuild.common.bucket.base.Path;
 
-public class MemoryFile implements MemoryElement {
+public final class MemoryFile implements MemoryElement {
   private final MemoryDir parent;
   private final Path name;
   private ByteString data;

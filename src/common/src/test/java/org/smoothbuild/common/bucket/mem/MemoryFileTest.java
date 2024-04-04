@@ -64,7 +64,7 @@ public class MemoryFileTest {
   @Test
   public void add_child_throws_exception() {
     file = new MemoryFile(parent, name);
-    assertCall(() -> file.addChild(Mockito.mock(MemoryElement.class)))
+    assertCall(() -> file.addChild(new MemoryDir(null, null)))
         .throwsException(UnsupportedOperationException.class);
   }
 

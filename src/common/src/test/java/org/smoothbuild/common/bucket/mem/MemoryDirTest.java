@@ -1,9 +1,9 @@
 package org.smoothbuild.common.bucket.mem;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.common.bucket.base.Path;
@@ -92,18 +92,16 @@ public class MemoryDirTest {
   @Test
   public void create_input_stream_throws_exception() {
     memoryDir = new MemoryDir(parent, path);
-    assertCall(() -> memoryDir.source()).throwsException(UnsupportedOperationException.class);
+    assertCall(() -> memoryDir.source()).throwsException(IOException.class);
   }
 
   @Test
   public void createOutputStreamThrowsException() {
     memoryDir = new MemoryDir(parent, path);
-    assertCall(() -> memoryDir.sink()).throwsException(UnsupportedOperationException.class);
+    assertCall(() -> memoryDir.sink()).throwsException(IOException.class);
   }
 
   private static MemoryElement createChild(Path name) {
-    MemoryElement childMock = Mockito.mock(MemoryElement.class);
-    when(childMock.name()).thenReturn(name);
-    return childMock;
+    return new MemoryDir(null, name);
   }
 }
