@@ -27,12 +27,14 @@ public class TestingBucket {
   }
 
   public static void writeFile(Bucket bucket, Path path, ByteString content) throws IOException {
+    bucket.createDir(path.parent());
     try (var bufferedSink = bucket.sink(path)) {
       bufferedSink.write(content);
     }
   }
 
   public static void writeFile(Bucket bucket, Path path, Source content) throws IOException {
+    bucket.createDir(path.parent());
     try (var bufferedSink = bucket.sink(path)) {
       bufferedSink.writeAll(content);
     }

@@ -1,7 +1,11 @@
 package org.smoothbuild.common.bucket.mem;
 
+import static java.text.MessageFormat.format;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.util.Iterator;
 import java.util.List;
 import okio.BufferedSink;
@@ -18,7 +22,7 @@ import org.smoothbuild.common.bucket.base.PathState;
  * This class is NOT thread-safe.
  */
 public class MemoryBucket implements Bucket {
-  private MemoryDir root = null;
+  private final MemoryDir root = new MemoryDir(null, Path.root());
 
   public MemoryBucket() {}
 
@@ -90,12 +94,30 @@ public class MemoryBucket implements Bucket {
 
   @Override
   public Sink sinkWithoutBuffer(Path path) throws IOException {
-    if (pathState(path) == PathState.DIR) {
-      throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
+    var parent = findElement(path.parent());
+    if (parent == null) {
+      throw new FileNotFoundException();
     }
+    return switch (resolveLinksFully(parent)) {
+      case MemoryFile file -> throw newParentExistAsFileException(path);
+      case MemoryDir dir -> createSink(dir, path);
+      case MemoryLink link -> throw new RuntimeException("Should not happen");
+    };
+  }
 
-    MemoryDir dir = createDirImpl(path.parent());
+  private static FileSystemException newParentExistAsFileException(Path path) {
+    return new FileSystemException(
+        format("Cannot create sink for {0} because parent path exists and is a file.", path.q()));
+  }
 
+  private MemoryElement resolveLinksFully(MemoryElement element) {
+    while (element instanceof MemoryLink link) {
+      element = link.target();
+    }
+    return element;
+  }
+
+  private static Sink createSink(MemoryDir dir, Path path) throws IOException {
     Path name = path.lastPart();
     if (dir.hasChild(name)) {
       return dir.child(name).sinkWithoutBuffer();
@@ -123,9 +145,6 @@ public class MemoryBucket implements Bucket {
   }
 
   private MemoryDir createDirImpl(Path dir) throws IOException {
-    if (root == null) {
-      root = new MemoryDir(null, Path.root());
-    }
     Iterator<Path> it = dir.parts().iterator();
     MemoryDir currentDir = root;
     while (it.hasNext()) {
@@ -148,15 +167,20 @@ public class MemoryBucket implements Bucket {
   }
 
   private MemoryElement getFile(Path path) throws IOException {
+    var found = getElement(path);
+    if (found.isFile()) {
+      return found;
+    } else {
+      throw new IOException("File " + path.q() + " doesn't exist. It is a dir.");
+    }
+  }
+
+  private MemoryElement getElement(Path path) throws IOException {
     MemoryElement found = findElement(path);
     if (found == null) {
       throw new IOException("File " + path.q() + " doesn't exist.");
     } else {
-      if (found.isFile()) {
-        return found;
-      } else {
-        throw new IOException("File " + path.q() + " doesn't exist. It is a dir.");
-      }
+      return found;
     }
   }
 
@@ -174,20 +198,16 @@ public class MemoryBucket implements Bucket {
   }
 
   private MemoryElement findElement(Path path) {
-    if (root == null) {
-      return null;
-    } else {
-      Iterator<Path> it = path.parts().iterator();
-      MemoryElement current = root;
-      while (it.hasNext()) {
-        Path name = it.next();
-        if (current.hasChild(name)) {
-          current = current.child(name);
-        } else {
-          return null;
-        }
+    Iterator<Path> it = path.parts().iterator();
+    MemoryElement current = root;
+    while (it.hasNext()) {
+      Path name = it.next();
+      if (current.hasChild(name)) {
+        current = current.child(name);
+      } else {
+        return null;
       }
-      return current;
     }
+    return current;
   }
 }

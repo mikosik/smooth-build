@@ -1,6 +1,7 @@
 package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.PathState.DIR;
 import static org.smoothbuild.common.bucket.base.PathState.FILE;
@@ -9,452 +10,466 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import okio.BufferedSink;
 import okio.ByteString;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.testing.TestingBucket;
 
 public abstract class AbstractBucketTestSuite {
   protected Bucket bucket;
 
-  // pathState()
-
-  @Test
-  public void root_path_is_a_nothing() {
-    assertThat(bucket.pathState(Path.root())).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void non_root_path_are_initially_nothing_state() {
-    assertThat(bucket.pathState(path("abc"))).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void file_path_has_file_state() throws Exception {
-    var path = path("some/dir/myFile");
-    createEmptyFile(path);
-    assertThat(bucket.pathState(path)).isEqualTo(FILE);
-  }
-
-  @Test
-  public void dir_path_has_dir_state() throws Exception {
-    var dir = path("my/dir");
-    createEmptyFile(dir.append(path("some/dir/myFile")));
-    assertThat(bucket.pathState(dir)).isEqualTo(DIR);
-  }
-
-  @Test
-  public void path_state_is_nothing_even_when_its_first_part_is_a_file() throws Exception {
-    var file = path("some/dir/myFile");
-    createEmptyFile(file);
-    assertThat(bucket.pathState(file.appendPart("something"))).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void creating_file_twice_is_possible() throws Exception {
-    var file = path("some/dir/myFile");
-    try (BufferedSink sink = bucket.sink(file)) {
-      sink.write(ByteString.of());
+  @Nested
+  class _path_state {
+    @Test
+    public void of_nonexistent_path_is_nothing() {
+      assertThat(bucket.pathState(path("abc"))).isEqualTo(NOTHING);
     }
-    try (BufferedSink sink = bucket.sink(file)) {
-      sink.write(ByteString.of());
+
+    @Test
+    public void of_file_path_is_file() throws Exception {
+      var path = path("myFile");
+      createFile(path);
+      assertThat(bucket.pathState(path)).isEqualTo(FILE);
     }
-    assertThat(bucket.pathState(file)).isEqualTo(FILE);
-  }
 
-  // files()
-
-  @Test
-  public void files_throws_exception_when_dir_does_not_exist() {
-    var dir = path("abc");
-    assertCall(() -> bucket.files(dir))
-        .throwsException(new IOException("Dir " + resolve(dir) + " doesn't exist."));
-  }
-
-  @Test
-  public void files_throws_exception_when_path_is_a_file() throws Exception {
-    var file = path("some/dir/myFile");
-    createEmptyFile(file);
-    assertCall(() -> bucket.files(file))
-        .throwsException(new IOException("Dir " + resolve(file) + " doesn't exist. It is a file."));
-  }
-
-  @Test
-  public void files_returns_all_children() throws Exception {
-    createEmptyFile(path("abc/dir1/file1.txt"));
-    createEmptyFile(path("abc/dir2/file2.txt"));
-    createEmptyFile(path("abc/text.txt"));
-    assertThat(bucket.files(path("abc")))
-        .containsExactly(path("dir1"), path("dir2"), path("text.txt"));
-  }
-
-  @Test
-  public void files_throws_exception_when_path_does_not_exist() {
-    assertCall(() -> bucket.files(path("abc"))).throwsException(IOException.class);
-  }
-
-  // size
-
-  @Test
-  public void empty_file_has_zero_size() throws Exception {
-    var file = path("some/dir/myFile");
-    createEmptyFile(file);
-    assertThat(bucket.size(file)).isEqualTo(0);
-  }
-
-  @Test
-  public void file_with_non_zero_size() throws Exception {
-    var file = path("some/dir/myFile");
-    createFile(file, byteString());
-    assertThat(bucket.size(file)).isEqualTo(3);
-  }
-
-  @Test
-  public void reading_size_of_dir_causes_exception() throws Exception {
-    var dir = path("my/dir");
-    var file = dir.append(path("some/dir/myFile"));
-    createEmptyFile(file);
-    assertCall(() -> bucket.size(dir))
-        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
-  }
-
-  @Test
-  public void reading_size_of_nothing_causes_exception() {
-    var dir = path("my/dir");
-    assertCall(() -> bucket.size(dir))
-        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist."));
-  }
-
-  @Test
-  public void reading_size_of_link_returns_size_of_target_file() throws IOException {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createFile(file, byteString());
-
-    bucket.createLink(link, file);
-
-    assertThat(bucket.size(link)).isEqualTo(byteString().size());
-  }
-
-  @Test
-  public void reading_size_of_link_that_targets_dir_causes_exception() throws IOException {
-    var dir = path("my/dir");
-    var file = dir.append(path("some/dir/myFile"));
-    var link = path("my/link");
-    createEmptyFile(file);
-
-    bucket.createLink(link, dir);
-
-    assertCall(() -> bucket.size(dir))
-        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
-  }
-
-  // source()
-
-  @Test
-  public void source_reads_file_content() throws Exception {
-    var file = path("some/dir/myFile");
-    createFile(file, byteString());
-    assertThat(bucket.source(file).readByteString()).isEqualTo(byteString());
-  }
-
-  @Test
-  public void source_throws_exception_when_file_does_not_exist() {
-    var file = path("dir/file");
-    assertCall(() -> bucket.source(file))
-        .throwsException(new IOException("File " + resolve(file) + " doesn't exist."));
-  }
-
-  @Test
-  public void source_throws_exception_when_path_is_dir() throws Exception {
-    var file = path("some/dir/myFile");
-    var dir = file.parent();
-    createEmptyFile(file);
-    assertCall(() -> bucket.source(dir))
-        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
-  }
-
-  @Test
-  public void source_throws_exception_when_path_is_root_dir() {
-    assertCall(() -> bucket.source(Path.root()))
-        .throwsException(new IOException("File " + resolve(Path.root()) + " doesn't exist."));
-  }
-
-  // sink()
-
-  @Test
-  public void data_written_via_sink_can_be_read_by_source() throws Exception {
-    var file = path("some/dir/myFile");
-    try (BufferedSink sink = bucket.sink(file)) {
-      sink.write(byteString());
+    @Test
+    public void of_directory_path_is_dir() throws Exception {
+      var dir = path("my/dir");
+      createDir(dir);
+      assertThat(bucket.pathState(dir)).isEqualTo(DIR);
     }
-    assertThat(bucket.source(file).readByteString()).isEqualTo(byteString());
-  }
 
-  @Test
-  public void sink_overwrites_existing_file() throws Exception {
-    var file = path("some/dir/myFile");
-    try (BufferedSink sink = bucket.sink(file)) {
-      sink.write(ByteString.encodeUtf8("abc"));
+    @Test
+    public void of_nonexistent_path_state_is_nothing_even_when_its_first_part_is_a_dir()
+        throws Exception {
+      var file = path("some/dir/myFile");
+      createDir(file.parent());
+      assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
     }
-    try (BufferedSink sink = bucket.sink(file)) {
-      sink.write(ByteString.encodeUtf8("def"));
+  }
+
+  @Nested
+  class _files {
+    @Test
+    public void throws_exception_when_path_does_not_exist() {
+      var path = path("abc");
+      assertCall(() -> bucket.files(path))
+          .throwsException(new IOException("Dir " + resolve(path) + " doesn't exist."));
     }
-    assertThat(bucket.source(file).readByteString()).isEqualTo(ByteString.encodeUtf8("def"));
+
+    @Test
+    public void throws_exception_when_path_is_a_file() throws Exception {
+      var file = path("some/dir/myFile");
+      createFile(file);
+      assertCall(() -> bucket.files(file))
+          .throwsException(
+              new IOException("Dir " + resolve(file) + " doesn't exist. It is a file."));
+    }
+
+    @Test
+    public void returns_all_children() throws Exception {
+      createFile(path("abc/dir1/file1.txt"));
+      createFile(path("abc/dir2/file2.txt"));
+      createFile(path("abc/text.txt"));
+      assertThat(bucket.files(path("abc")))
+          .containsExactly(path("dir1"), path("dir2"), path("text.txt"));
+    }
   }
 
-  @Test
-  public void sink_fails_when_target_file_is_a_dir() throws Exception {
-    var dir = path("my/dir");
-    var file = dir.append(path("some/dir/myFile"));
-    createEmptyFile(file);
-    assertCall(() -> bucket.sink(dir)).throwsException(IOException.class);
+  @Nested
+  class _size {
+    @Test
+    public void returns_zero_for_empty_file() throws Exception {
+      var file = path("some/dir/myFile");
+      createFile(file);
+      assertThat(bucket.size(file)).isEqualTo(0);
+    }
+
+    @Test
+    public void returns_file_size() throws Exception {
+      var file = path("some/dir/myFile");
+      createFile(file, byteString());
+      assertThat(bucket.size(file)).isEqualTo(3);
+    }
+
+    @Test
+    public void reading_size_of_dir_causes_exception() throws Exception {
+      var dir = path("my/dir");
+      createDir(dir);
+      assertCall(() -> bucket.size(dir))
+          .throwsException(
+              new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
+    }
+
+    @Test
+    public void fails_for_nonexistent_path() {
+      var dir = path("myFile");
+      assertCall(() -> bucket.size(dir)).throwsException(IOException.class);
+    }
+
+    @Test
+    public void returns_size_of_target_file_for_link() throws IOException {
+      var file = path("some/dir/myFile");
+      var link = path("myLink");
+      createFile(file, byteString());
+
+      bucket.createLink(link, file);
+
+      assertThat(bucket.size(link)).isEqualTo(byteString().size());
+    }
+
+    @Test
+    public void reading_size_of_link_that_targets_dir_causes_exception() throws IOException {
+      var dir = path("my/dir");
+      var link = path("myLink");
+      createDir(dir);
+
+      bucket.createLink(link, dir);
+
+      assertCall(() -> bucket.size(dir))
+          .throwsException(
+              new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
+    }
   }
 
-  // move()
+  @Nested
+  class _source {
+    @Test
+    public void provides_content_of_file() throws Exception {
+      var file = path("some/dir/myFile");
+      createFile(file, byteString());
+      assertThat(readFile(file)).isEqualTo(byteString());
+    }
 
-  @Test
-  public void moving_nonexistent_file_fails() {
-    var source = path("source");
-    var target = path("target");
-    assertCall(() -> bucket.move(source, target))
-        .throwsException(new IOException("Cannot move " + resolve(source) + ". It doesn't exist."));
+    @Test
+    public void provides_content_of_target_file_for_a_link() throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("myLink");
+      createFile(file, byteString());
+
+      bucket.createLink(link, file);
+
+      assertThat(readFile(link)).isEqualTo(byteString());
+    }
+
+    @Test
+    public void provides_file_content_of_file_when_one_part_of_path_is_link_to_directory()
+        throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("link");
+      createFile(file, byteString());
+
+      bucket.createLink(link, file.parent());
+
+      assertThat(readFile(link.append(file.lastPart()))).isEqualTo(byteString());
+    }
+
+    @Test
+    public void throws_exception_when_file_does_not_exist() {
+      var file = path("myFile");
+      assertCall(() -> readFile(file)).throwsException(IOException.class);
+    }
+
+    @Test
+    public void throws_exception_when_path_is_dir() throws Exception {
+      var dir = path("some/dir");
+      createDir(dir);
+      assertCall(() -> readFile(dir)).throwsException(IOException.class);
+    }
   }
 
-  @Test
-  public void moving_directory_fails() throws Exception {
-    var dir = path("dir");
-    var source = dir.appendPart("file");
-    var target = path("target");
-    createEmptyFile(source);
-    assertCall(() -> bucket.move(dir, target))
-        .throwsException(new IOException("Cannot move " + resolve(dir) + ". It is directory."));
+  @Nested
+  class _sink {
+    @Test
+    public void data_written_by_sink_can_be_read_by_source() throws Exception {
+      var file = path("myFile");
+      try (BufferedSink sink = bucket.sink(file)) {
+        sink.write(byteString());
+      }
+      assertThat(readFile(file)).isEqualTo(byteString());
+    }
+
+    @Test
+    public void data_written_to_sink_overwrites_existing_file() throws Exception {
+      var file = path("myFile");
+      try (BufferedSink sink = bucket.sink(file)) {
+        sink.write(ByteString.encodeUtf8("abc"));
+      }
+      try (BufferedSink sink = bucket.sink(file)) {
+        sink.write(ByteString.encodeUtf8("def"));
+      }
+      assertThat(readFile(file)).isEqualTo(ByteString.encodeUtf8("def"));
+    }
+
+    @Test
+    public void fails_when_path_is_a_directory() throws Exception {
+      var dir = path("myDir");
+      createDir(dir);
+      assertCall(() -> writeFile(dir)).throwsException(IOException.class);
+    }
+
+    @Test
+    public void fails_when_parent_is_link_targeting_file() throws Exception {
+      var file = path("myFile");
+      var link = path("link");
+      createFile(file);
+      bucket.createLink(link, file);
+
+      assertThrows(FileSystemException.class, () -> writeFile(link.appendPart("newFile")));
+    }
+
+    @Test
+    public void succeeds_when_parent_is_link_targeting_directory() throws Exception {
+      var dir = path("myFile");
+      var link = path("link");
+      createDir(dir);
+      bucket.createLink(link, dir);
+      var newFile = link.appendPart("newFile");
+      var content = byteString();
+
+      writeFile(newFile, content);
+
+      assertThat(readFile(newFile)).isEqualTo(content);
+    }
+
+    @Test
+    public void fails_when_parent_exists_and_is_a_file() throws Exception {
+      var file = path("myDir/myFile");
+      createFile(file);
+      var path = file.append(path("otherFile"));
+      assertThrows(FileSystemException.class, () -> writeFile(path));
+    }
   }
 
-  @Test
-  public void moving_to_directory_fails() throws Exception {
-    var source = path("source");
-    var dir = path("dir");
-    createEmptyFile(source);
-    createEmptyFile(path("dir/file"));
-    assertCall(() -> bucket.move(source, dir))
-        .throwsException(new IOException("Cannot move to " + resolve(dir) + ". It is directory."));
+  @Nested
+  class _move {
+    @Test
+    public void of_nonexistent_file_fails() {
+      var source = path("source");
+      var target = path("target");
+      assertCall(() -> bucket.move(source, target))
+          .throwsException(
+              new IOException("Cannot move " + resolve(source) + ". It doesn't exist."));
+    }
+
+    @Test
+    public void of_directory_fails() throws Exception {
+      var dir = path("dir");
+      var source = dir.appendPart("file");
+      var target = path("target");
+      createFile(source);
+      assertCall(() -> bucket.move(dir, target))
+          .throwsException(new IOException("Cannot move " + resolve(dir) + ". It is directory."));
+    }
+
+    @Test
+    public void that_targets_directory_fails() throws Exception {
+      var source = path("source");
+      var dir = path("dir");
+      createFile(source);
+      createFile(path("dir/file"));
+      assertCall(() -> bucket.move(source, dir))
+          .throwsException(
+              new IOException("Cannot move to " + resolve(dir) + ". It is directory."));
+    }
+
+    @Test
+    public void deletes_source_file() throws Exception {
+      var source = path("source");
+      var target = path("target");
+      createFile(source);
+
+      bucket.move(source, target);
+
+      assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void copies_file_content_to_target() throws Exception {
+      var source = path("source");
+      var target = path("target");
+      createFile(source, byteString());
+
+      bucket.move(source, target);
+
+      assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+      assertThat(readFile(target)).isEqualTo(byteString());
+    }
+
+    @Test
+    public void overwrites_target_file() throws Exception {
+      var source = path("source");
+      var target = path("target");
+      createFile(source, byteString());
+      createFile(target);
+
+      bucket.move(source, target);
+
+      assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+      assertThat(readFile(target)).isEqualTo(byteString());
+    }
   }
 
-  @Test
-  public void moved_file_is_deleted_from_source() throws Exception {
-    var source = path("source");
-    var target = path("target");
-    createEmptyFile(source);
+  @Nested
+  class _delete {
+    @Test
+    public void directory_removes_its_files_recursively() throws Exception {
+      var dir = path("some/dir");
+      var file1 = dir.append(path("myFile"));
+      var file2 = dir.append(path("dir2/myFile"));
+      createFile(file1);
 
-    bucket.move(source, target);
+      bucket.delete(dir);
 
-    assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+      assertThat(bucket.pathState(file1)).isEqualTo(NOTHING);
+      assertThat(bucket.pathState(file2)).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void file_removes_it() throws Exception {
+      var file = path("some/dir/myFile");
+      createFile(file);
+
+      bucket.delete(file);
+
+      assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void not_fails_for_nonexistent_path() throws Exception {
+      var path = path("some/dir/myFile");
+
+      bucket.delete(path);
+
+      assertThat(bucket.pathState(path)).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void root_path_removes_all_files() throws Exception {
+      var file = path("some/dir/myFile");
+      var file2 = path("other/dir/otherFile");
+      createFile(file);
+      createFile(file2);
+
+      bucket.delete(Path.root());
+
+      assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
+      assertThat(bucket.pathState(file2)).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void link_removes_it() throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("myLink");
+      createFile(file, byteString());
+      bucket.createLink(link, file);
+
+      bucket.delete(link);
+
+      assertThat(bucket.pathState(link)).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void link_not_removes_target_file() throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("myLink");
+      createFile(file, byteString());
+      bucket.createLink(link, file);
+
+      bucket.delete(link);
+
+      assertThat(bucket.pathState(file)).isEqualTo(FILE);
+    }
+
+    @Test
+    public void link_to_directory_not_removes_target_directory_nor_file_it_contains()
+        throws Exception {
+      var dir = path("my/dir");
+      var file = dir.appendPart("myFile");
+      var link = path("myLink");
+      createFile(file);
+      bucket.createLink(link, dir);
+
+      bucket.delete(link);
+
+      assertThat(bucket.pathState(link)).isEqualTo(NOTHING);
+      assertThat(bucket.pathState(dir)).isEqualTo(DIR);
+      assertThat(bucket.pathState(file)).isEqualTo(FILE);
+    }
   }
 
-  @Test
-  public void moved_file_is_copied_to_target() throws Exception {
-    var source = path("source");
-    var target = path("target");
-    createFile(source, byteString());
+  @Nested
+  class _link {
+    @Test
+    public void cannot_create_link_when_link_path_is_taken_by_file() throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("myLink");
+      createFile(file);
+      createFile(link);
 
-    bucket.move(source, target);
+      assertCall(() -> bucket.createLink(link, file))
+          .throwsException(
+              new IOException("Cannot use " + resolve(link) + " path. It is already taken."));
+    }
 
-    assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
-    assertThat(bucket.source(target).readByteString()).isEqualTo(byteString());
+    @Test
+    public void cannot_create_link_when_link_path_is_taken_by_dir() throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("myLink");
+      createFile(file);
+      createDir(link);
+
+      assertCall(() -> bucket.createLink(link.parent(), file))
+          .throwsException(new IOException(
+              "Cannot use " + resolve(link.parent()) + " path. It is already taken."));
+    }
   }
 
-  @Test
-  public void moved_file_overwrites_target_file() throws Exception {
-    var source = path("source");
-    var target = path("target");
-    createFile(source, byteString());
-    createEmptyFile(target);
+  @Nested
+  class _create_dir {
+    @Test
+    public void creates_directory() throws Exception {
+      var file = path("some/dir/myFile");
+      bucket.createDir(file);
+      assertThat(bucket.pathState(file)).isEqualTo(DIR);
+    }
 
-    bucket.move(source, target);
+    @Test
+    public void not_fails_when_directory_exists() throws Exception {
+      var file = path("some/dir/myFile");
+      bucket.createDir(file);
+      bucket.createDir(file);
+      assertThat(bucket.pathState(file)).isEqualTo(DIR);
+    }
 
-    assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
-    assertThat(bucket.source(target).readByteString()).isEqualTo(byteString());
-  }
-
-  @Test
-  public void moving_creates_missing_parent_directories_in_target_path() throws Exception {
-    var source = path("source");
-    var target = path("dir/target");
-    createFile(source, byteString());
-
-    bucket.move(source, target);
-
-    assertThat(bucket.source(target).readByteString()).isEqualTo(byteString());
-  }
-
-  // delete()
-
-  @Test
-  public void deleting_dir_removes_its_files() throws Exception {
-    var file = path("some/dir/myFile");
-    createEmptyFile(file);
-
-    bucket.delete(file.parent());
-
-    assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void delete_file() throws Exception {
-    var file = path("some/dir/myFile");
-    createEmptyFile(file);
-
-    bucket.delete(file);
-
-    assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void delete_does_nothing_for_nonexistet_path() throws Exception {
-    var path = path("some/dir/myFile");
-
-    bucket.delete(path);
-
-    assertThat(bucket.pathState(path)).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void deleting_root_path_removes_all_files() throws Exception {
-    var file = path("some/dir/myFile");
-    var file2 = path("other/dir/otherFile");
-    createEmptyFile(file);
-    createEmptyFile(file2);
-
-    bucket.delete(Path.root());
-
-    assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
-    assertThat(bucket.pathState(file2)).isEqualTo(NOTHING);
-  }
-
-  // links
-
-  @Test
-  public void link_contains_data_from_target() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createFile(file, byteString());
-
-    bucket.createLink(link, file);
-
-    assertThat(bucket.source(link).readByteString()).isEqualTo(byteString());
-  }
-
-  @Test
-  public void creating_links_creates_missing_dirs() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createFile(file, byteString());
-
-    bucket.createLink(link, file);
-
-    assertThat(bucket.pathState(link)).isEqualTo(FILE);
-  }
-
-  @Test
-  public void deleted_link_is_removed() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createFile(file, byteString());
-    bucket.createLink(link, file);
-
-    bucket.delete(link);
-
-    assertThat(bucket.pathState(link)).isEqualTo(NOTHING);
-  }
-
-  @Test
-  public void deleting_link_to_file_does_not_delete_target() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createFile(file, byteString());
-    bucket.createLink(link, file);
-
-    bucket.delete(link);
-
-    assertThat(bucket.pathState(file)).isEqualTo(FILE);
-  }
-
-  @Test
-  public void link_to_dir_can_be_used_to_access_its_file() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createFile(file, byteString());
-
-    bucket.createLink(link, file.parent());
-
-    assertThat(bucket.source(link.append(file.lastPart())).readByteString())
-        .isEqualTo(byteString());
-  }
-
-  @Test
-  public void deleting_link_to_dir_does_not_delete_target() throws Exception {
-    var dir = path("my/dir");
-    var link = path("some/dir/myFile");
-    createEmptyFile(dir.appendPart("ignore"));
-    bucket.createLink(link, dir);
-
-    bucket.delete(link);
-
-    assertThat(bucket.pathState(link)).isEqualTo(NOTHING);
-    assertThat(bucket.pathState(dir)).isEqualTo(DIR);
-  }
-
-  @Test
-  public void cannot_create_link_when_path_is_taken_by_file() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createEmptyFile(file);
-    createEmptyFile(link);
-
-    assertCall(() -> bucket.createLink(link, file))
-        .throwsException(
-            new IOException("Cannot use " + resolve(link) + " path. It is already taken."));
-  }
-
-  @Test
-  public void cannot_create_link_when_path_is_taken_by_dir() throws Exception {
-    var file = path("some/dir/myFile");
-    var link = path("my/link");
-    createEmptyFile(file);
-    createEmptyFile(link);
-
-    assertCall(() -> bucket.createLink(link.parent(), file))
-        .throwsException(new IOException(
-            "Cannot use " + resolve(link.parent()) + " path. It is already taken."));
-  }
-
-  // createDir()
-
-  @Test
-  public void created_dir_exists() throws Exception {
-    var file = path("some/dir/myFile");
-    bucket.createDir(file);
-    assertThat(bucket.pathState(file)).isEqualTo(DIR);
-  }
-
-  @Test
-  public void creating_existing_dir_does_not_cause_errors() throws Exception {
-    var file = path("some/dir/myFile");
-    bucket.createDir(file);
-    bucket.createDir(file);
-    assertThat(bucket.pathState(file)).isEqualTo(DIR);
-  }
-
-  @Test
-  public void cannot_create_dir_if_such_file_already_exists() throws Exception {
-    var file = path("some/dir/myFile");
-    createEmptyFile(file);
-    assertCall(() -> bucket.createDir(file)).throwsException(FileAlreadyExistsException.class);
+    @Test
+    public void fails_when_file_at_given_path_exists() throws Exception {
+      var file = path("some/dir/myFile");
+      createFile(file);
+      assertCall(() -> bucket.createDir(file)).throwsException(FileAlreadyExistsException.class);
+    }
   }
 
   // helpers
 
-  protected void createEmptyFile(Path path) throws IOException {
+  private void writeFile(Path path) throws IOException {
+    writeFile(path, ByteString.EMPTY);
+  }
+
+  private void writeFile(Path path, ByteString byteString) throws IOException {
+    try (var bufferedSink = bucket.sink(path)) {
+      bufferedSink.write(byteString);
+    }
+  }
+
+  private ByteString readFile(Path path) throws IOException {
+    return TestingBucket.readFile(bucket, path);
+  }
+
+  protected void createFile(Path path) throws IOException {
+    createDir(path.parent());
     createFile(path, ByteString.of());
   }
 
@@ -463,6 +478,8 @@ public abstract class AbstractBucketTestSuite {
   }
 
   protected abstract void createFile(Path path, ByteString content) throws IOException;
+
+  protected abstract void createDir(Path path) throws IOException;
 
   protected abstract String resolve(Path path);
 }

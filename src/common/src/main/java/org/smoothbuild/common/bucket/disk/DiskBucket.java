@@ -79,7 +79,7 @@ public class DiskBucket implements Bucket {
   @Override
   public long size(Path path) throws IOException {
     assertPathIsFile(this, path);
-    return jdkPath(path).toFile().length();
+    return Files.size(jdkPath(path));
   }
 
   @Override
@@ -98,7 +98,6 @@ public class DiskBucket implements Bucket {
     if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
-    createDir(path.parent());
     return Okio.sink(jdkPath(path));
   }
 
@@ -119,8 +118,6 @@ public class DiskBucket implements Bucket {
   public void createLink(Path link, Path target) throws IOException {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);
-
-    createDir(link.parent());
 
     var jdkTarget = jdkPath(target);
     var targetJdkPath = jdkPath(link.parent()).relativize(jdkTarget);

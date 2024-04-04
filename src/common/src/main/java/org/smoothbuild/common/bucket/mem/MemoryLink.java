@@ -18,6 +18,10 @@ public final class MemoryLink implements MemoryElement {
     this.target = target;
   }
 
+  public MemoryElement target() {
+    return target;
+  }
+
   @Override
   public Path name() {
     return name;

@@ -9,17 +9,24 @@ import org.smoothbuild.common.bucket.base.Path;
 
 public class MemoryBucketTest extends AbstractBucketTestSuite {
   @BeforeEach
-  public void before() {
+  public void before() throws IOException {
     bucket = new MemoryBucket();
+    bucket.createDir(Path.root());
   }
 
   // helpers
 
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
+    bucket.createDir(path.parent());
     try (BufferedSink sink = bucket.sink(path)) {
       sink.write(content);
     }
+  }
+
+  @Override
+  protected void createDir(Path path) throws IOException {
+    bucket.createDir(path);
   }
 
   @Override
