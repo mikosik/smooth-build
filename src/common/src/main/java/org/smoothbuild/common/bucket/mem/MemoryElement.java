@@ -7,7 +7,7 @@ import okio.BufferedSource;
 import okio.Sink;
 import org.smoothbuild.common.bucket.base.Path;
 
-public interface MemoryElement {
+public sealed interface MemoryElement permits MemoryDir, MemoryFile, MemoryLink {
   public Path name();
 
   public MemoryDir parent();
@@ -28,7 +28,7 @@ public interface MemoryElement {
 
   public BufferedSource source() throws IOException;
 
-  public BufferedSink sink();
+  public BufferedSink sink() throws IOException;
 
-  public Sink sinkWithoutBuffer();
+  public Sink sinkWithoutBuffer() throws IOException;
 }

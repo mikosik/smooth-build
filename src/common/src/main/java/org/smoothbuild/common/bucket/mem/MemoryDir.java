@@ -2,6 +2,7 @@ package org.smoothbuild.common.bucket.mem;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import okio.BufferedSink;
@@ -10,7 +11,7 @@ import okio.Sink;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 
-public class MemoryDir implements MemoryElement {
+public final class MemoryDir implements MemoryElement {
   private final MemoryDir parent;
   private final Path name;
   private final Map<Path, MemoryElement> map = new HashMap<>();
@@ -82,17 +83,17 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public BufferedSource source() {
-    throw new UnsupportedOperationException();
+  public BufferedSource source() throws IOException {
+    throw new IOException();
   }
 
   @Override
-  public BufferedSink sink() {
-    throw new UnsupportedOperationException();
+  public BufferedSink sink() throws IOException {
+    throw new IOException();
   }
 
   @Override
-  public Sink sinkWithoutBuffer() {
-    throw new UnsupportedOperationException();
+  public Sink sinkWithoutBuffer() throws IOException {
+    throw new IOException();
   }
 }
