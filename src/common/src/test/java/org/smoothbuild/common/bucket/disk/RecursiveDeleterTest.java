@@ -42,14 +42,14 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_sigle_file() throws Exception {
+  public void deleting_single_file() throws Exception {
     File file = createEmptyFile(root, "file");
     RecursiveDeleter.deleteRecursively(file.toPath());
     assertThat(file.exists()).isFalse();
   }
 
   @Test
-  public void deleting_sigle_file_does_not_delete_its_dir() throws Exception {
+  public void deleting_single_file_does_not_delete_its_dir() throws Exception {
     File dir = createDir(root, "dir");
     File file = createEmptyFile(dir, "file");
 
