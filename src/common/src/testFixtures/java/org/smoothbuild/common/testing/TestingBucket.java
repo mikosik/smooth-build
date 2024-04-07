@@ -22,19 +22,32 @@ public class TestingBucket {
     return result;
   }
 
-  public static void writeFile(Bucket bucket, Path path, String content) throws IOException {
+  public static void createFile(Bucket bucket, Path path, String content) throws IOException {
+    bucket.createDir(path.parent());
+    writeFile(bucket, path, content);
+  }
+
+  public static void createFile(Bucket bucket, Path path, ByteString content) throws IOException {
+    bucket.createDir(path.parent());
+    writeFile(bucket, path, content);
+  }
+
+  public static void createFile(Bucket bucket, Path path, Source content) throws IOException {
+    bucket.createDir(path.parent());
+    writeFile(bucket, path, content);
+  }
+
+  private static void writeFile(Bucket bucket, Path path, String content) throws IOException {
     writeFile(bucket, path, ByteString.encodeUtf8(content));
   }
 
   public static void writeFile(Bucket bucket, Path path, ByteString content) throws IOException {
-    bucket.createDir(path.parent());
     try (var bufferedSink = bucket.sink(path)) {
       bufferedSink.write(content);
     }
   }
 
   public static void writeFile(Bucket bucket, Path path, Source content) throws IOException {
-    bucket.createDir(path.parent());
     try (var bufferedSink = bucket.sink(path)) {
       bufferedSink.writeAll(content);
     }
