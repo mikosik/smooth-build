@@ -2,7 +2,6 @@ package org.smoothbuild.common.bucket.mem;
 
 import java.io.IOException;
 import java.util.List;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 import org.smoothbuild.common.bucket.base.Path;
@@ -73,12 +72,7 @@ public final class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public BufferedSink sink() throws IOException {
+  public Sink sink() throws IOException {
     return target.sink();
-  }
-
-  @Override
-  public Sink sinkWithoutBuffer() throws IOException {
-    return target.sinkWithoutBuffer();
   }
 }

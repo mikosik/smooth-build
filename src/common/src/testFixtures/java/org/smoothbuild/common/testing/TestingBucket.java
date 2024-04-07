@@ -1,5 +1,7 @@
 package org.smoothbuild.common.testing;
 
+import static okio.Okio.buffer;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,13 +44,13 @@ public class TestingBucket {
   }
 
   public static void writeFile(Bucket bucket, Path path, ByteString content) throws IOException {
-    try (var bufferedSink = bucket.sink(path)) {
+    try (var bufferedSink = buffer(bucket.sink(path))) {
       bufferedSink.write(content);
     }
   }
 
   public static void writeFile(Bucket bucket, Path path, Source content) throws IOException {
-    try (var bufferedSink = bucket.sink(path)) {
+    try (var bufferedSink = buffer(bucket.sink(path))) {
       bufferedSink.writeAll(content);
     }
   }

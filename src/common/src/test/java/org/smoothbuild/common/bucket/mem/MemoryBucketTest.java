@@ -1,5 +1,7 @@
 package org.smoothbuild.common.bucket.mem;
 
+import static okio.Okio.buffer;
+
 import java.io.IOException;
 import okio.BufferedSink;
 import okio.ByteString;
@@ -19,7 +21,7 @@ public class MemoryBucketTest extends AbstractBucketTestSuite {
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
     bucket.createDir(path.parent());
-    try (BufferedSink sink = bucket.sink(path)) {
+    try (BufferedSink sink = buffer(bucket.sink(path))) {
       sink.write(content);
     }
   }

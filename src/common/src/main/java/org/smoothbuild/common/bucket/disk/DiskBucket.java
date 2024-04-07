@@ -16,7 +16,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Objects;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
@@ -89,12 +88,7 @@ public class DiskBucket implements Bucket {
   }
 
   @Override
-  public BufferedSink sink(Path path) throws IOException {
-    return Okio.buffer(sinkWithoutBuffer(path));
-  }
-
-  @Override
-  public Sink sinkWithoutBuffer(Path path) throws IOException {
+  public Sink sink(Path path) throws IOException {
     if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }

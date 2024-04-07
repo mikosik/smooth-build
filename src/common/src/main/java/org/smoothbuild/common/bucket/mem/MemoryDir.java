@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 import org.smoothbuild.common.bucket.base.Path;
@@ -88,12 +87,7 @@ public final class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public BufferedSink sink() throws IOException {
-    throw new IOException();
-  }
-
-  @Override
-  public Sink sinkWithoutBuffer() throws IOException {
+  public Sink sink() throws IOException {
     throw new IOException();
   }
 }

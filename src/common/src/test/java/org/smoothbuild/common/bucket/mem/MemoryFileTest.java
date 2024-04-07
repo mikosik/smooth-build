@@ -75,17 +75,19 @@ public class MemoryFileTest {
   @Test
   public void data_written_to_memory_file_can_be_read_back() throws Exception {
     var file = new MemoryFile(parent, name);
-    var sink = file.sink();
-    sink.write(bytes);
-    sink.close();
-    assertThat(file.source().readByteString()).isEqualTo(bytes);
+    try (var sink = buffer(file.sink())) {
+      sink.write(bytes);
+    }
+    try (var source = file.source()) {
+      assertThat(source.readByteString()).isEqualTo(bytes);
+    }
   }
 
   // test reproducing a bug found in MemoryFile
   @Test
   public void closing_sink_twice_not_corrupts_stored_data() throws Exception {
     var file = new MemoryFile(parent, name);
-    try (var sink = file.sinkWithoutBuffer()) {
+    try (var sink = file.sink()) {
       try (var buffered = buffer(sink)) {
         buffered.write(bytes);
       }

@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Try.failure;
@@ -59,7 +60,7 @@ public class ComputationCache implements Initializable {
   }
 
   public synchronized void write(Hash hash, Output output) throws ComputeException {
-    try (BufferedSink sink = bucket.sink(toPath(hash))) {
+    try (BufferedSink sink = buffer(bucket.sink(toPath(hash)))) {
       var storedLogs = output.storedLogs();
       sink.write(storedLogs.hash().toByteString());
       var value = output.value();

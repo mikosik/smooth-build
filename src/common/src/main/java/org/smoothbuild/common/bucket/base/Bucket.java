@@ -1,7 +1,6 @@
 package org.smoothbuild.common.bucket.base;
 
 import java.io.IOException;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 
@@ -21,9 +20,7 @@ public interface Bucket {
 
   public BufferedSource source(Path path) throws IOException;
 
-  public BufferedSink sink(Path path) throws IOException;
-
-  public Sink sinkWithoutBuffer(Path path) throws IOException;
+  public Sink sink(Path path) throws IOException;
 
   public void createLink(Path link, Path target) throws IOException;
 

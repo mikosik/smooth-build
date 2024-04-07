@@ -16,7 +16,7 @@ public class HashingSink extends ForwardingSink {
   private final Function0<Hash, IOException> hashMemoizer;
 
   HashingSink(Bucket bucket, Path tempPath) throws IOException {
-    super(Hash.hashingSink(bucket.sinkWithoutBuffer(tempPath)));
+    super(Hash.hashingSink(bucket.sink(tempPath)));
     this.bucket = bucket;
     this.tempPath = tempPath;
     this.hashMemoizer = memoizer(this::calculateHash);

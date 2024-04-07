@@ -90,13 +90,13 @@ public class MemoryDirTest {
   }
 
   @Test
-  public void create_input_stream_throws_exception() {
+  public void source_throws_exception() {
     memoryDir = new MemoryDir(parent, path);
     assertCall(() -> memoryDir.source()).throwsException(IOException.class);
   }
 
   @Test
-  public void createOutputStreamThrowsException() {
+  public void sink_throws_exception() {
     memoryDir = new MemoryDir(parent, path);
     assertCall(() -> memoryDir.sink()).throwsException(IOException.class);
   }
