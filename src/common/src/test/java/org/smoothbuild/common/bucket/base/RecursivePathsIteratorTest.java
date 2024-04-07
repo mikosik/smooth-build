@@ -2,11 +2,12 @@ package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.bucket.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.testing.TestingBucket.writeFile;
+import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
-import com.google.common.truth.Truth;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +37,17 @@ public class RecursivePathsIteratorTest {
 
   @Test
   public void is_empty_when_dir_doesnt_exist() throws Exception {
-    Bucket bucket = new MemoryBucket();
-    var path = Path.path("my/file");
-    Truth.assertThat(RecursivePathsIterator.recursivePathsIterator(bucket, path).hasNext())
-        .isFalse();
+    var bucket = new MemoryBucket();
+    var path = path("my/file");
+    assertThat(recursivePathsIterator(bucket, path).hasNext()).isFalse();
   }
 
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     Bucket bucket = new MemoryBucket();
-    writeFile(bucket, Path.path("my/file"), "abc");
+    createFile(bucket, path("my/file"), "abc");
     try {
-      RecursivePathsIterator.recursivePathsIterator(bucket, Path.path("my/file"));
+      recursivePathsIterator(bucket, path("my/file"));
       fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -56,12 +56,12 @@ public class RecursivePathsIteratorTest {
 
   @Test
   public void throws_exception_when_dir_disappears_during_iteration() throws Exception {
-    Bucket bucket = new MemoryBucket();
+    var bucket = new MemoryBucket();
     createFiles(bucket, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
-    PathIterator iterator = RecursivePathsIterator.recursivePathsIterator(bucket, Path.path("dir"));
+    PathIterator iterator = recursivePathsIterator(bucket, path("dir"));
     iterator.next();
-    bucket.delete(Path.path("dir/subdir"));
+    bucket.delete(path("dir/subdir"));
 
     assertCall(iterator::next)
         .throwsException(new IOException(
@@ -71,11 +71,10 @@ public class RecursivePathsIteratorTest {
   private void doTestIterable(
       String rootDir, List<String> names, String expectedRootDir, List<String> expectedNames)
       throws IOException {
-    Bucket bucket = new MemoryBucket();
+    var bucket = new MemoryBucket();
     createFiles(bucket, rootDir, names);
 
-    PathIterator iterator =
-        RecursivePathsIterator.recursivePathsIterator(bucket, Path.path(expectedRootDir));
+    PathIterator iterator = recursivePathsIterator(bucket, path(expectedRootDir));
     List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
       created.add(iterator.next().toString());
@@ -85,8 +84,8 @@ public class RecursivePathsIteratorTest {
 
   private void createFiles(Bucket bucket, String rootDir, List<String> names) throws IOException {
     for (String name : names) {
-      Path path = Path.path(rootDir).append(Path.path(name));
-      writeFile(bucket, path, "");
+      var path = path(rootDir).append(path(name));
+      createFile(bucket, path, "");
     }
   }
 }

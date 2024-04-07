@@ -16,7 +16,7 @@ import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.common.testing.TestingBucket.writeFile;
+import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 import static org.smoothbuild.evaluator.SmoothEvaluationDag.smoothEvaluationDag;
 
@@ -87,7 +87,7 @@ public class EvaluatorTestCase extends TestingBytecode {
       }
     }
     try (var source = buffer(source(code))) {
-      writeFile(modulesBucket, LIB_MODULE_PATH, source.readUtf8());
+      createFile(modulesBucket, LIB_MODULE_PATH, source.readUtf8());
     }
     modules = modules.append(LIB_MODULE_FULL_PATH);
   }
@@ -98,12 +98,12 @@ public class EvaluatorTestCase extends TestingBytecode {
         saveBytecodeInJar(sink, list(classes));
       }
     }
-    writeFile(modulesBucket, USER_MODULE_PATH, code);
+    createFile(modulesBucket, USER_MODULE_PATH, code);
     modules = modules.append(USER_MODULE_FULL_PATH);
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
-    writeFile(projectBucket, path(path), content);
+    createFile(projectBucket, path(path), content);
   }
 
   protected Bucket projectBucket() {

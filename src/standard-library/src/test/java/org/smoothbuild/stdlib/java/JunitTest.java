@@ -7,7 +7,7 @@ import static okio.Okio.source;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.warning;
-import static org.smoothbuild.common.testing.TestingBucket.writeFile;
+import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -127,7 +127,7 @@ public class JunitTest extends StandardLibraryTestCase {
     try (var source = buffer(source(sourcePath.toAbsolutePath()))) {
       var destinationPath =
           path(dirInsideProject).appendPart(sourcePath.getFileName().toString());
-      writeFile(projectBucket(), destinationPath, source);
+      createFile(projectBucket(), destinationPath, source);
     }
   }
 }

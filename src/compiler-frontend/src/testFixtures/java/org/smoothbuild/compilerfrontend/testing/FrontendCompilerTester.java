@@ -7,7 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.testing.TestingBucket.writeFile;
+import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
@@ -156,7 +156,7 @@ public class FrontendCompilerTester {
   private static void writeModuleFile(
       Map<BucketId, Bucket> buckets, FullPath fullPath, String content) {
     try {
-      writeFile(buckets.get(fullPath.bucketId()), fullPath.path(), content);
+      createFile(buckets.get(fullPath.bucketId()), fullPath.path(), content);
     } catch (IOException e) {
       throw new RuntimeException("Can't happen for MemoryBucket.", e);
     }
