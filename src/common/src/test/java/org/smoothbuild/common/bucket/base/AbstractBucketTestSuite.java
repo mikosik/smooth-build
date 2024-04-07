@@ -461,9 +461,7 @@ public abstract class AbstractBucketTestSuite {
   }
 
   private void writeFile(Path path, ByteString byteString) throws IOException {
-    try (var bufferedSink = bucket.sink(path)) {
-      bufferedSink.write(byteString);
-    }
+    TestingBucket.writeFile(bucket, path, byteString);
   }
 
   private ByteString readFile(Path path) throws IOException {
