@@ -9,6 +9,7 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.ForwardingSink;
+import okio.Sink;
 import org.smoothbuild.common.bucket.base.Path;
 
 public final class MemoryFile implements MemoryElement {
@@ -81,18 +82,23 @@ public final class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public MySink sinkWithoutBuffer() {
+  public Sink sinkWithoutBuffer() {
     return new MySink();
   }
 
   private class MySink extends ForwardingSink {
+    private boolean closed = false;
+
     public MySink() {
       super(new Buffer());
     }
 
     @Override
     public void close() {
-      data = ((Buffer) this.delegate()).readByteString();
+      if (!closed) {
+        closed = true;
+        data = ((Buffer) this.delegate()).readByteString();
+      }
     }
   }
 }
