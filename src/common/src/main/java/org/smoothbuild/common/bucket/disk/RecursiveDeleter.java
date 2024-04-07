@@ -11,11 +11,7 @@ public class RecursiveDeleter {
    * followed.
    */
   public static void deleteRecursively(Path path) throws IOException {
-    boolean isNotSymbolicLink = !Files.isSymbolicLink(path);
-    if (!Files.exists(path) && isNotSymbolicLink) {
-      return;
-    }
-    if (Files.isDirectory(path) && isNotSymbolicLink) {
+    if (Files.isDirectory(path) && !Files.isSymbolicLink(path)) {
       deleteDirContents(path);
     }
 

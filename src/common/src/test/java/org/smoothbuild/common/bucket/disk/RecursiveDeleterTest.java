@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.commontesting.AssertCall;
 
 public class RecursiveDeleterTest {
   private List<File> files;
@@ -34,11 +35,10 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_non_existent_file_succeeds() throws Exception {
+  public void deleting_non_existent_file_fails() {
     File dir = createDir(root, "dir");
     File file = new File(dir, "file");
-    RecursiveDeleter.deleteRecursively(file.toPath());
-    assertThat(file.exists()).isFalse();
+    AssertCall.assertCall(() -> RecursiveDeleter.deleteRecursively(file.toPath()));
   }
 
   @Test
