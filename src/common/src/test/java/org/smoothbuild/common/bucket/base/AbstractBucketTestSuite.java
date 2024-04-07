@@ -6,6 +6,7 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.PathState.DIR;
 import static org.smoothbuild.common.bucket.base.PathState.FILE;
 import static org.smoothbuild.common.bucket.base.PathState.NOTHING;
+import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
@@ -195,12 +196,12 @@ public abstract class AbstractBucketTestSuite {
     public void data_written_to_sink_overwrites_existing_file() throws Exception {
       var file = path("myFile");
       try (BufferedSink sink = bucket.sink(file)) {
-        sink.write(ByteString.encodeUtf8("abc"));
+        sink.write(byteString("abc"));
       }
       try (BufferedSink sink = bucket.sink(file)) {
-        sink.write(ByteString.encodeUtf8("def"));
+        sink.write(byteString("def"));
       }
-      assertThat(readFile(file)).isEqualTo(ByteString.encodeUtf8("def"));
+      assertThat(readFile(file)).isEqualTo(byteString("def"));
     }
 
     @Test
@@ -472,10 +473,6 @@ public abstract class AbstractBucketTestSuite {
   protected void createFile(Path path) throws IOException {
     createDir(path.parent());
     createFile(path, ByteString.of());
-  }
-
-  private static ByteString byteString() {
-    return ByteString.encodeUtf8("abc");
   }
 
   protected abstract void createFile(Path path, ByteString content) throws IOException;
