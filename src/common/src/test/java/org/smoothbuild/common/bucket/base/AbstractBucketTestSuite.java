@@ -315,7 +315,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _delete {
     @Test
-    public void directory_removes_its_files_recursively() throws Exception {
+    public void directory_removes_it_and_its_files_recursively() throws Exception {
       var dir = path("some/dir");
       var file1 = dir.append(path("myFile"));
       var file2 = dir.append(path("dir2/myFile"));
@@ -325,6 +325,7 @@ public abstract class AbstractBucketTestSuite {
 
       assertThat(bucket.pathState(file1)).isEqualTo(NOTHING);
       assertThat(bucket.pathState(file2)).isEqualTo(NOTHING);
+      assertThat(bucket.pathState(dir)).isEqualTo(NOTHING);
     }
 
     @Test
