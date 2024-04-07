@@ -2,6 +2,7 @@ package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.PathState.DIR;
@@ -62,7 +63,7 @@ public class FileResolverTest {
   }
 
   private void createFile(Path path, String string) throws IOException {
-    try (var bufferedSink = bucket.sink(path)) {
+    try (var bufferedSink = buffer(bucket.sink(path))) {
       bufferedSink.writeUtf8(string);
     }
   }

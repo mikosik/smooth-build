@@ -1,11 +1,8 @@
 package org.smoothbuild.common.bucket.mem;
 
-import static okio.Okio.buffer;
-
 import java.io.IOException;
 import java.util.List;
 import okio.Buffer;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.ForwardingSink;
@@ -77,12 +74,7 @@ public final class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public BufferedSink sink() {
-    return buffer(sinkWithoutBuffer());
-  }
-
-  @Override
-  public Sink sinkWithoutBuffer() {
+  public Sink sink() {
     return new MySink();
   }
 

@@ -1,5 +1,7 @@
 package org.smoothbuild.common.bucket.base;
 
+import static okio.Okio.buffer;
+
 import java.io.IOException;
 import okio.BufferedSink;
 import okio.ByteString;
@@ -20,7 +22,7 @@ public class SubBucketTest extends AbstractBucketTestSuite {
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
     createDir(path.parent());
-    try (BufferedSink sink = superBucket.sink(superPath(path))) {
+    try (BufferedSink sink = buffer(superBucket.sink(superPath(path)))) {
       sink.write(content);
     }
   }

@@ -81,8 +81,8 @@ public class EvaluatorTestCase extends TestingBytecode {
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
-    try (var sink = modulesBucket.sink(LIB_MODULE_PATH.changeExtension("jar"))) {
-      try (var source = buffer(source(jar))) {
+    try (var sink = buffer(modulesBucket.sink(LIB_MODULE_PATH.changeExtension("jar")))) {
+      try (var source = source(jar)) {
         sink.writeAll(source);
       }
     }

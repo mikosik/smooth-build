@@ -8,9 +8,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
 import java.util.Iterator;
 import java.util.List;
-import okio.BufferedSink;
 import okio.BufferedSource;
-import okio.Okio;
 import okio.Sink;
 import org.smoothbuild.common.bucket.base.AssertPath;
 import org.smoothbuild.common.bucket.base.Bucket;
@@ -55,7 +53,7 @@ public class MemoryBucket implements Bucket {
       throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
     try (var bufferedSource = source(source)) {
-      try (var sink = sinkWithoutBuffer(target)) {
+      try (var sink = sink(target)) {
         bufferedSource.readAll(sink);
       }
     }
@@ -88,12 +86,7 @@ public class MemoryBucket implements Bucket {
   }
 
   @Override
-  public BufferedSink sink(Path path) throws IOException {
-    return Okio.buffer(sinkWithoutBuffer(path));
-  }
-
-  @Override
-  public Sink sinkWithoutBuffer(Path path) throws IOException {
+  public Sink sink(Path path) throws IOException {
     var parent = findElement(path.parent());
     if (parent == null) {
       throw new FileNotFoundException();
@@ -120,11 +113,11 @@ public class MemoryBucket implements Bucket {
   private static Sink createSink(MemoryDir dir, Path path) throws IOException {
     Path name = path.lastPart();
     if (dir.hasChild(name)) {
-      return dir.child(name).sinkWithoutBuffer();
+      return dir.child(name).sink();
     } else {
       MemoryFile child = new MemoryFile(dir, name);
       dir.addChild(child);
-      return child.sinkWithoutBuffer();
+      return child.sink();
     }
   }
 

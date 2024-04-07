@@ -1,7 +1,6 @@
 package org.smoothbuild.common.bucket.base;
 
 import java.io.IOException;
-import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 
@@ -46,13 +45,8 @@ public class SynchronizedBucket implements Bucket {
   }
 
   @Override
-  public synchronized BufferedSink sink(Path path) throws IOException {
+  public synchronized Sink sink(Path path) throws IOException {
     return bucket.sink(path);
-  }
-
-  @Override
-  public synchronized Sink sinkWithoutBuffer(Path path) throws IOException {
-    return bucket.sinkWithoutBuffer(path);
   }
 
   @Override

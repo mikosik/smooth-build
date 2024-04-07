@@ -1,6 +1,7 @@
 package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static okio.Okio.buffer;
 import static org.junit.Assert.assertThrows;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.PathState.DIR;
@@ -186,7 +187,7 @@ public abstract class AbstractBucketTestSuite {
     @Test
     public void data_written_by_sink_can_be_read_by_source() throws Exception {
       var file = path("myFile");
-      try (BufferedSink sink = bucket.sink(file)) {
+      try (BufferedSink sink = buffer(bucket.sink(file))) {
         sink.write(byteString());
       }
       assertThat(readFile(file)).isEqualTo(byteString());
@@ -195,10 +196,10 @@ public abstract class AbstractBucketTestSuite {
     @Test
     public void data_written_to_sink_overwrites_existing_file() throws Exception {
       var file = path("myFile");
-      try (BufferedSink sink = bucket.sink(file)) {
+      try (BufferedSink sink = buffer(bucket.sink(file))) {
         sink.write(byteString("abc"));
       }
-      try (BufferedSink sink = bucket.sink(file)) {
+      try (BufferedSink sink = buffer(bucket.sink(file))) {
         sink.write(byteString("def"));
       }
       assertThat(readFile(file)).isEqualTo(byteString("def"));
