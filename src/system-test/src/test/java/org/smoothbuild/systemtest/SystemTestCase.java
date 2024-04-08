@@ -13,6 +13,7 @@ import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.app.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.app.layout.Layout.SMOOTH_DIR;
 import static org.smoothbuild.common.Constants.CHARSET;
+import static org.smoothbuild.common.ExecuteOsProcess.executeOsProcess;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.bucket.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.common.collect.List.list;
@@ -41,12 +42,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
-import org.smoothbuild.common.CommandExecutor;
-import org.smoothbuild.common.CommandExecutor.CommandResult;
 import org.smoothbuild.common.function.Function1;
 
 public abstract class SystemTestCase {
-  public static final Path SYSTEM_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
   public static final Path SMOOTH_BINARY = findSmoothBinary();
 
   private static Path findSmoothBinary() {
@@ -129,10 +127,10 @@ public abstract class SystemTestCase {
     try {
       String[] allArgs = processArgs(command.commandPlusArgs());
       Path workingDir = projectDirAbsolutePath();
-      CommandResult r = CommandExecutor.execute(workingDir, allArgs);
-      exitCode = r.exitCode();
-      systemOut = r.systemOut();
-      systemErr = r.systemErr();
+      var processResult = executeOsProcess(workingDir, allArgs);
+      exitCode = processResult.exitCode();
+      systemOut = processResult.systemOut();
+      systemErr = processResult.systemErr();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);

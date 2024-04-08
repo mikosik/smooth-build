@@ -2,13 +2,14 @@ package org.smoothbuild.common;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.common.ExecuteOsProcess.executeOsProcess;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class CommandExecutorTest {
+public class ExecuteOsProcessTest {
   /**
    * This tests ensures that CommandExecutor closes all streams correctly so we won't suffer from
    * 'too many open files problem'. When it fails it provides misleading stack trace due to lack of
@@ -23,14 +24,14 @@ public class CommandExecutorTest {
     String[] command = new String[] {"sleep", "0"};
 
     for (int i = 0; i < 10000; i++) {
-      CommandExecutor.execute(Path.of("."), command);
+      executeOsProcess(Path.of("."), command);
     }
   }
 
   @Test
   public void running_unknown_binary_throws_IOException() throws Exception {
     try {
-      CommandExecutor.execute(Path.of("."), new String[] {"binary_file_that_does_not_exist"});
+      executeOsProcess(Path.of("."), new String[] {"binary_file_that_does_not_exist"});
       fail("exception should be thrown");
     } catch (IOException e) {
       // expected
@@ -42,7 +43,7 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
     String[] command = new String[] {"test", "-z", "abc"};
-    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode()).isEqualTo(1);
+    assertThat(executeOsProcess(Path.of("."), command).exitCode()).isEqualTo(1);
   }
 
   @Test
@@ -50,6 +51,6 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
     String[] command = new String[] {"test", "-n", "abc"};
-    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode()).isEqualTo(0);
+    assertThat(executeOsProcess(Path.of("."), command).exitCode()).isEqualTo(0);
   }
 }
