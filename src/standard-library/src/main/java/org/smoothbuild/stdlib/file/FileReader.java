@@ -1,7 +1,8 @@
 package org.smoothbuild.stdlib.file;
 
+import static okio.Okio.buffer;
+
 import java.io.IOException;
-import okio.BufferedSource;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
@@ -25,7 +26,7 @@ public class FileReader {
   }
 
   private BBlob createContent(Path path) throws IOException, BytecodeException {
-    try (BufferedSource source = container.bucket().source(path)) {
+    try (var source = buffer(container.bucket().source(path))) {
       return container.factory().blob(sink -> sink.writeAll(source));
     }
   }

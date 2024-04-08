@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.function.Function1.memoizer;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
@@ -58,7 +59,7 @@ public class JarClassLoaderFactory {
     return mapClassLoader(parentClassLoader, path -> {
       BTuple file = filesMap.get(path);
       try {
-        return file == null ? null : fileContent(file).source().inputStream();
+        return file == null ? null : buffer(fileContent(file).source()).inputStream();
       } catch (BytecodeException e) {
         throw e.toIOException();
       }

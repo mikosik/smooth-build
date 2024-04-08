@@ -2,8 +2,8 @@ package org.smoothbuild.common.bucket.mem;
 
 import java.io.IOException;
 import java.util.List;
-import okio.BufferedSource;
 import okio.Sink;
+import okio.Source;
 import org.smoothbuild.common.bucket.base.Path;
 
 public sealed interface MemoryElement permits MemoryDir, MemoryFile, MemoryLink {
@@ -25,7 +25,7 @@ public sealed interface MemoryElement permits MemoryDir, MemoryFile, MemoryLink 
 
   public long size();
 
-  public BufferedSource source() throws IOException;
+  public Source source() throws IOException;
 
   public Sink sink() throws IOException;
 }

@@ -2,8 +2,8 @@ package org.smoothbuild.common.bucket.mem;
 
 import java.io.IOException;
 import java.util.List;
-import okio.BufferedSource;
 import okio.Sink;
+import okio.Source;
 import org.smoothbuild.common.bucket.base.Path;
 
 public final class MemoryLink implements MemoryElement {
@@ -67,7 +67,7 @@ public final class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public BufferedSource source() throws IOException {
+  public Source source() throws IOException {
     return target.source();
   }
 

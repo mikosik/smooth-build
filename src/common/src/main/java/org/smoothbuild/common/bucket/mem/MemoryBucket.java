@@ -1,6 +1,7 @@
 package org.smoothbuild.common.bucket.mem;
 
 import static java.text.MessageFormat.format;
+import static okio.Okio.buffer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,8 +9,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
 import java.util.Iterator;
 import java.util.List;
-import okio.BufferedSource;
 import okio.Sink;
+import okio.Source;
 import org.smoothbuild.common.bucket.base.AssertPath;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
@@ -52,7 +53,7 @@ public class MemoryBucket implements Bucket {
     if (pathState(target) == PathState.DIR) {
       throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
-    try (var bufferedSource = source(source)) {
+    try (var bufferedSource = buffer(source(source))) {
       try (var sink = sink(target)) {
         bufferedSource.readAll(sink);
       }
@@ -81,7 +82,7 @@ public class MemoryBucket implements Bucket {
   }
 
   @Override
-  public BufferedSource source(Path path) throws IOException {
+  public Source source(Path path) throws IOException {
     return getFile(path).source();
   }
 

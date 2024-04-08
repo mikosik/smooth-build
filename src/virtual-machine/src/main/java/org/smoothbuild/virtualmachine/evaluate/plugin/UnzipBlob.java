@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.plugin;
 
+import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
@@ -22,7 +23,7 @@ public class UnzipBlob {
       BytecodeFactory bytecodeFactory, BBlob blob, Predicate<String> includePredicate)
       throws BytecodeException {
     var arrayBuilder = bytecodeFactory.arrayBuilderWithElements(bytecodeFactory.fileType());
-    try (var source = blob.source()) {
+    try (var source = buffer(blob.source())) {
       var errors = unzip(
           source, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeFactory, f, is)));
       if (errors.isSome()) {

@@ -1,5 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
+import static okio.Okio.buffer;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
@@ -47,7 +48,7 @@ public class InputClassFile extends SimpleJavaFileObject {
   @Override
   public InputStream openInputStream() throws IOException {
     try {
-      return fileContent(file).source().inputStream();
+      return buffer(fileContent(file).source()).inputStream();
     } catch (BytecodeException e) {
       throw e.toIOException();
     }

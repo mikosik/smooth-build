@@ -1,10 +1,11 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
+import static okio.Okio.buffer;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import okio.BufferedSource;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -56,7 +57,7 @@ public class FilePersister {
 
     private BBlob persistImpl() throws BytecodeException, IOException {
       try (BBlobBuilder blobBuilder = exprDb.newBlobBuilder()) {
-        try (BufferedSource source = fileResolver.source(fullPath)) {
+        try (var source = buffer(fileResolver.source(fullPath))) {
           source.readAll(blobBuilder);
         }
         return blobBuilder.build();

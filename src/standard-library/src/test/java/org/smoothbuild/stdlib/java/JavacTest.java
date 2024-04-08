@@ -1,6 +1,7 @@
 package org.smoothbuild.stdlib.java;
 
 import static com.google.common.truth.Truth.assertThat;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.warning;
 
@@ -108,7 +109,7 @@ public class JavacTest extends StandardLibraryTestCase {
   }
 
   private static ByteString fileBToByteStringContent(BTuple file) throws Exception {
-    try (var source = FileStruct.fileContent(file).source()) {
+    try (var source = buffer(FileStruct.fileContent(file).source())) {
       return source.readByteString();
     }
   }

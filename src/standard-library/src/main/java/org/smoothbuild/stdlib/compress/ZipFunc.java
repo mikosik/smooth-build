@@ -10,7 +10,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import okio.BufferedSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -46,7 +45,7 @@ public class ZipFunc {
     var zipEntry = new ZipEntry(filePath(file).toJavaString());
     zipEntry.setLastModifiedTime(FileTime.fromMillis(0));
     zipOutputStream.putNextEntry(zipEntry);
-    try (BufferedSource source = fileContent(file).source()) {
+    try (var source = buffer(fileContent(file).source())) {
       source.readAll(sink(zipOutputStream));
     }
     zipOutputStream.closeEntry();

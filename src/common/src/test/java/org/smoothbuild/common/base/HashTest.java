@@ -43,7 +43,8 @@ public class HashTest {
 
   @Test
   public void hash_of_source_is_equal_to_hash_of_its_bytes() throws IOException {
-    assertThat(Hash.of(new Buffer().write(someByteString()))).isEqualTo(Hash.of(someByteString()));
+    var source = new Buffer().write(someByteString());
+    assertThat(Hash.of(source)).isEqualTo(Hash.of(someByteString()));
   }
 
   @Test

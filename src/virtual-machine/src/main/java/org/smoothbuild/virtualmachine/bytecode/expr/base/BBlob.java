@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import okio.BufferedSource;
+import okio.Source;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -17,7 +17,7 @@ public final class BBlob extends BValue {
     checkArgument(merkleRoot.kind() instanceof BBlobType);
   }
 
-  public BufferedSource source() throws BytecodeException {
+  public Source source() throws BytecodeException {
     return readData(() -> hashedDb().source(dataHash()));
   }
 

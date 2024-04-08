@@ -78,7 +78,7 @@ public class MemoryFileTest {
     try (var sink = buffer(file.sink())) {
       sink.write(bytes);
     }
-    try (var source = file.source()) {
+    try (var source = buffer(file.source())) {
       assertThat(source.readByteString()).isEqualTo(bytes);
     }
   }
@@ -93,7 +93,7 @@ public class MemoryFileTest {
       }
     }
 
-    try (var source = file.source()) {
+    try (var source = buffer(file.source())) {
       assertThat(source.readByteString()).isEqualTo(bytes);
     }
   }

@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class BBlobTest extends TestingVirtualMachine {
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
     try (var builder = bBlobBuilder()) {
       var blob = builder.build();
-      try (var source = blob.source()) {
+      try (var source = buffer(blob.source())) {
         assertThat(source.readByteString()).isEqualTo(ByteString.of());
       }
     }
@@ -32,7 +33,7 @@ public class BBlobTest extends TestingVirtualMachine {
   @Test
   public void blob_has_content_passed_to_builder() throws Exception {
     var blob = bBlob(bytes);
-    try (var source = blob.source()) {
+    try (var source = buffer(blob.source())) {
       assertThat(source.readByteString()).isEqualTo(bytes);
     }
   }
@@ -64,8 +65,8 @@ public class BBlobTest extends TestingVirtualMachine {
   public void blob_read_by_hash_has_same_content() throws Exception {
     var blob = bBlob(bytes);
     var hash = blob.hash();
-    try (var source = blob.source()) {
-      try (var otherSource = ((BBlob) exprDbOther().get(hash)).source()) {
+    try (var source = buffer(blob.source())) {
+      try (var otherSource = buffer(((BBlob) exprDbOther().get(hash)).source())) {
         assertThat(otherSource.readByteString()).isEqualTo(source.readByteString());
       }
     }

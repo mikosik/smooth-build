@@ -52,15 +52,15 @@ public class Hash {
   }
 
   public static Hash of(Path path) throws IOException {
-    return Hash.of(source(path.toFile()));
+    try (var source = buffer(source(path.toFile()))) {
+      return Hash.of(source);
+    }
   }
 
   public static Hash of(Source source) throws IOException {
-    try (source) {
-      HashingSource hashingSource = hashingSource(source);
-      buffer(hashingSource).readAll(blackhole());
-      return new Hash(hashingSource.hash());
-    }
+    HashingSource hashingSource = hashingSource(source);
+    buffer(hashingSource).readAll(blackhole());
+    return new Hash(hashingSource.hash());
   }
 
   /*

@@ -16,9 +16,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Objects;
-import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
+import okio.Source;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.PathState;
@@ -82,9 +82,9 @@ public class DiskBucket implements Bucket {
   }
 
   @Override
-  public BufferedSource source(Path path) throws IOException {
+  public Source source(Path path) throws IOException {
     assertPathIsFile(this, path);
-    return Okio.buffer(Okio.source(jdkPath(path)));
+    return Okio.source(jdkPath(path));
   }
 
   @Override
