@@ -3,6 +3,8 @@ package org.smoothbuild.common.base;
 import static org.smoothbuild.common.base.UnescapeFailedException.illegalEscapeSeqException;
 import static org.smoothbuild.common.base.UnescapeFailedException.missingEscapeCodeException;
 
+import com.google.common.base.Splitter;
+
 public class Strings {
   private static final char TAB = '\t';
   private static final char BACKSPACE = '\b';
@@ -163,5 +165,16 @@ public class Strings {
       case '\\' -> BACKSLASH;
       default -> throw illegalEscapeSeqException(charIndex);
     };
+  }
+
+  /**
+   * Converts line separators to new line .
+   * On window OS call to `System.out.println("abc\n");` will produce two line separators. One
+   * is "\n" from string itself that won't be converted and the other ("\r\n") added by print_ln_
+   * method. To make it possible to write assertions in unit test using only "\n" we need to
+   * convert systemOut to use only "\n".
+   */
+  public static String convertOsLineSeparatorsToNewLine(String string) {
+    return String.join("\n", Splitter.on(System.lineSeparator()).split(string));
   }
 }
