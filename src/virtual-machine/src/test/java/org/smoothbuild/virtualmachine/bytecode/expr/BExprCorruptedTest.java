@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
@@ -201,7 +202,7 @@ public class BExprCorruptedTest extends TestingVirtualMachine {
        */
       var byteString = ByteString.of((byte) 1, (byte) 2);
       var hash = hash(hash(bBlobType()), hash(byteString));
-      try (var source = ((BBlob) exprDb().get(hash)).source()) {
+      try (var source = buffer(((BBlob) exprDb().get(hash)).source())) {
         assertThat(source.readByteString()).isEqualTo(byteString);
       }
     }

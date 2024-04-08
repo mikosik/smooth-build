@@ -1,8 +1,8 @@
 package org.smoothbuild.common.bucket.base;
 
 import java.io.IOException;
-import okio.BufferedSource;
 import okio.Sink;
+import okio.Source;
 
 /**
  * Container for files that are identified by {@link Path}.
@@ -18,7 +18,7 @@ public interface Bucket {
 
   public long size(Path path) throws IOException;
 
-  public BufferedSource source(Path path) throws IOException;
+  public Source source(Path path) throws IOException;
 
   public Sink sink(Path path) throws IOException;
 

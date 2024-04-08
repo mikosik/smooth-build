@@ -1,8 +1,8 @@
 package org.smoothbuild.common.bucket.base;
 
 import java.io.IOException;
-import okio.BufferedSource;
 import okio.Sink;
+import okio.Source;
 
 public class SubBucket implements Bucket {
   private final Bucket bucket;
@@ -39,7 +39,7 @@ public class SubBucket implements Bucket {
   }
 
   @Override
-  public BufferedSource source(Path path) throws IOException {
+  public Source source(Path path) throws IOException {
     return bucket.source(fullPath(path));
   }
 

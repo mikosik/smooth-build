@@ -1,6 +1,7 @@
 package org.smoothbuild.stdlib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromJar;
@@ -78,7 +79,7 @@ public class JunitFunc {
     return mapClassLoader(getPlatformClassLoader(), path -> {
       try {
         BTuple file = filesMap.get(path);
-        return file == null ? null : fileContent(file).source().inputStream();
+        return file == null ? null : buffer(fileContent(file).source()).inputStream();
       } catch (BytecodeException e) {
         throw e.toIOException();
       }

@@ -87,6 +87,8 @@ public class InstallationHashes {
   }
 
   private Hash hashOf(FullPath fullPath) throws IOException {
-    return Hash.of(fileResolver.source(fullPath));
+    try (var source = fileResolver.source(fullPath)) {
+      return Hash.of(source);
+    }
   }
 }

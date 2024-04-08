@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode;
 
 import static com.google.common.truth.Truth.assertThat;
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Level.INFO;
@@ -16,7 +17,7 @@ public class BytecodeFactoryTest extends TestingVirtualMachine {
 
   @Test
   public void blob_data_can_be_read_back() throws Exception {
-    try (var source = bytecodeF().blob(sink -> sink.write(bytes)).source()) {
+    try (var source = buffer(bytecodeF().blob(sink -> sink.write(bytes)).source())) {
       assertThat(source.readByteString()).isEqualTo(bytes);
     }
   }

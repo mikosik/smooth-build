@@ -1,10 +1,12 @@
 package org.smoothbuild.common.bucket.base;
 
+import static okio.Okio.buffer;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import okio.BufferedSource;
+import okio.Source;
 import org.smoothbuild.common.collect.Map;
 
 /**
@@ -20,12 +22,12 @@ public class FileResolver {
   }
 
   public String contentOf(FullPath fullPath, Charset charset) throws IOException {
-    try (BufferedSource source = source(fullPath)) {
+    try (var source = buffer(source(fullPath))) {
       return source.readString(charset);
     }
   }
 
-  public BufferedSource source(FullPath fullPath) throws IOException {
+  public Source source(FullPath fullPath) throws IOException {
     return bucketFor(fullPath).source(fullPath.path());
   }
 

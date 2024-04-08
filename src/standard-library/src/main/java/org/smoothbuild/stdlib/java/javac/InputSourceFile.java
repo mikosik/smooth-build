@@ -1,5 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
+import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
@@ -30,6 +31,6 @@ public class InputSourceFile extends SimpleJavaFileObject {
   }
 
   private Scanner scanner() throws BytecodeException {
-    return new Scanner(fileContent(file).source().inputStream(), CHARSET);
+    return new Scanner(buffer(fileContent(file).source()).inputStream(), CHARSET);
   }
 }

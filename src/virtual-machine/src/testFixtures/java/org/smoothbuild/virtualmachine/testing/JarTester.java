@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.testing;
 
+import static okio.Okio.buffer;
 import static okio.Okio.sink;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
@@ -7,7 +8,6 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import okio.Buffer;
-import okio.BufferedSource;
 import okio.ByteString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -31,7 +31,7 @@ public class JarTester {
   private static void addEntry(JarOutputStream jarOutputStream, BTuple file) throws Exception {
     JarEntry entry = new JarEntry(filePath(file).toJavaString());
     jarOutputStream.putNextEntry(entry);
-    try (BufferedSource source = fileContent(file).source()) {
+    try (var source = buffer(fileContent(file).source())) {
       var sink = sink(jarOutputStream);
       source.readAll(sink);
       sink.flush();

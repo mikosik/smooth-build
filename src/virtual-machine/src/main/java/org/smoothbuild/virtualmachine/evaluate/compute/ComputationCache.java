@@ -16,7 +16,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.BufferedSink;
-import okio.BufferedSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
@@ -82,7 +81,7 @@ public class ComputationCache implements Initializable {
   }
 
   public synchronized Output read(Hash hash, BType type) throws ComputeException {
-    try (BufferedSource source = bucket.source(toPath(hash))) {
+    try (var source = buffer(bucket.source(toPath(hash)))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
       var storedLogsArrayType = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());

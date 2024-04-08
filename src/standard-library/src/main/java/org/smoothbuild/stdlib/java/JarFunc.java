@@ -10,7 +10,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
-import okio.BufferedSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
@@ -51,7 +50,7 @@ public class JarFunc {
     var jarEntry = new JarEntry(filePath);
     jarEntry.setLastModifiedTime(FileTime.fromMillis(0));
     jarOutputStream.putNextEntry(jarEntry);
-    try (BufferedSource source = fileContent.source()) {
+    try (var source = buffer(fileContent.source())) {
       var sink = sink(jarOutputStream);
       source.readAll(sink);
       sink.flush();

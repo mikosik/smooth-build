@@ -56,7 +56,7 @@ public class HashedDbTest extends TestingVirtualMachine {
   @Test
   public void written_data_can_be_read_back() throws Exception {
     var hash = hashedDb().writeData(bufferedSink -> bufferedSink.write(encodeUtf8("abc")));
-    try (var source = hashedDb().source(hash)) {
+    try (var source = buffer(hashedDb().source(hash))) {
       assertThat(source.readUtf8()).isEqualTo("abc");
     }
   }
@@ -64,7 +64,7 @@ public class HashedDbTest extends TestingVirtualMachine {
   @Test
   public void written_zero_length_data_can_be_read_back() throws Exception {
     var hash = hashedDb().writeData(bufferedSink -> {});
-    try (var source = hashedDb().source(hash)) {
+    try (var source = buffer(hashedDb().source(hash))) {
       assertThat(source.readByteString()).isEqualTo(ByteString.of());
     }
   }
@@ -74,7 +74,7 @@ public class HashedDbTest extends TestingVirtualMachine {
     var hash = hashedDb().writeData(sink -> sink.write(BYTE_STRING_1));
     hashedDb().writeData(sink -> sink.write(BYTE_STRING_1));
 
-    try (var source = hashedDb().source(hash)) {
+    try (var source = buffer(hashedDb().source(hash))) {
       assertThat(source.readByteString()).isEqualTo(BYTE_STRING_1);
     }
   }

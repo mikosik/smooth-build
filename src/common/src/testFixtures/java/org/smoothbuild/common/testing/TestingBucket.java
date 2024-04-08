@@ -56,7 +56,7 @@ public class TestingBucket {
   }
 
   public static ByteString readFile(Bucket bucket, Path path) throws IOException {
-    try (var source = bucket.source(path)) {
+    try (var source = buffer(bucket.source(path))) {
       return source.readByteString();
     }
   }

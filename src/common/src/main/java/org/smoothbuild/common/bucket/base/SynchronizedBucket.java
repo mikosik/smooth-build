@@ -1,8 +1,8 @@
 package org.smoothbuild.common.bucket.base;
 
 import java.io.IOException;
-import okio.BufferedSource;
 import okio.Sink;
+import okio.Source;
 
 /**
  * This class is thread-safe.
@@ -40,7 +40,7 @@ public class SynchronizedBucket implements Bucket {
   }
 
   @Override
-  public synchronized BufferedSource source(Path path) throws IOException {
+  public synchronized Source source(Path path) throws IOException {
     return bucket.source(path);
   }
 

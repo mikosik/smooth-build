@@ -18,7 +18,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import okio.BufferedSink;
-import okio.BufferedSource;
+import okio.Source;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
@@ -63,7 +63,7 @@ public class HashedDb implements Initializable {
   }
 
   public BigInteger readBigInteger(Hash hash) throws HashedDbException {
-    try (BufferedSource source = source(hash)) {
+    try (var source = buffer(source(hash))) {
       byte[] bytes = source.readByteArray();
       if (bytes.length == 0) {
         throw new DecodeBigIntegerException(hash);
@@ -96,7 +96,7 @@ public class HashedDb implements Initializable {
   }
 
   public byte readByte(Hash hash) throws HashedDbException {
-    try (BufferedSource source = source(hash)) {
+    try (var source = buffer(source(hash))) {
       if (source.exhausted()) {
         throw new DecodeByteException(hash);
       }
@@ -115,7 +115,7 @@ public class HashedDb implements Initializable {
   }
 
   public String readString(Hash hash) throws HashedDbException {
-    try (BufferedSource source = source(hash)) {
+    try (var source = buffer(source(hash))) {
       CharsetDecoder charsetDecoder = CHARSET.newDecoder();
       charsetDecoder.onMalformedInput(REPORT);
       charsetDecoder.onUnmappableCharacter(REPORT);
@@ -177,7 +177,7 @@ public class HashedDb implements Initializable {
 
   public List<Hash> readHashChain(Hash hash) throws HashedDbException {
     var builder = new ArrayList<Hash>();
-    try (BufferedSource source = source(hash)) {
+    try (var source = buffer(source(hash))) {
       while (!source.exhausted()) {
         if (source.request(Hash.lengthInBytes())) {
           builder.add(Hash.read(source));
@@ -202,7 +202,7 @@ public class HashedDb implements Initializable {
     };
   }
 
-  public BufferedSource source(Hash hash) throws HashedDbException {
+  public Source source(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
     var pathState = bucket.pathState(path);
     return switch (pathState) {
@@ -213,7 +213,7 @@ public class HashedDb implements Initializable {
     };
   }
 
-  private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbException {
+  private Source sourceFile(Hash hash, Path path) throws HashedDbException {
     try {
       return bucket.source(path);
     } catch (IOException e) {
