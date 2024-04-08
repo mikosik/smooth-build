@@ -10,8 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class CommandExecutor {
-  public static CommandResult execute(Path workingDir, String[] allArgs)
+public class ExecuteOsProcess {
+  public static ProcessResult executeOsProcess(Path workingDir, String[] allArgs)
       throws IOException, InterruptedException, ExecutionException {
     ProcessBuilder processBuilder = new ProcessBuilder(allArgs);
     processBuilder.directory(workingDir.toFile());
@@ -22,9 +22,9 @@ public class CommandExecutor {
       int exitCode = process.waitFor();
       String systemOut = new String(inputStream.get(), CHARSET);
       String systemErr = new String(errorStream.get(), CHARSET);
-      return new CommandResult(exitCode, systemOut, systemErr);
+      return new ProcessResult(exitCode, systemOut, systemErr);
     }
   }
 
-  public static record CommandResult(int exitCode, String systemOut, String systemErr) {}
+  public static record ProcessResult(int exitCode, String systemOut, String systemErr) {}
 }
