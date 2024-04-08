@@ -1,6 +1,7 @@
 package org.smoothbuild.common.log.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.base.Strings.convertOsLineSeparatorsToNewLine;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -18,7 +19,7 @@ public class LogTest {
         new StackTraceElement[] {new StackTraceElement("MyClass", "myMethod", "MyClass.java", 10)};
     throwable.setStackTrace(stackTrace);
     var fatal = fatal(throwable);
-    assertThat(fatal.message())
+    assertThat(convertOsLineSeparatorsToNewLine(fatal.message()))
         .isEqualTo(
             """
             java.lang.RuntimeException

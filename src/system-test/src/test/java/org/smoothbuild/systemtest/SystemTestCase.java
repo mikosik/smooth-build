@@ -14,6 +14,7 @@ import static org.smoothbuild.app.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.app.layout.Layout.SMOOTH_DIR;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.ExecuteOsProcess.executeOsProcess;
+import static org.smoothbuild.common.base.Strings.convertOsLineSeparatorsToNewLine;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.bucket.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.common.collect.List.list;
@@ -24,7 +25,6 @@ import static org.smoothbuild.systemtest.CommandWithArgs.helpCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
 
-import com.google.common.base.Splitter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -198,16 +198,6 @@ public abstract class SystemTestCase {
             "================= SYSTEM-ERR END   ===================="))
         .that(convertOsLineSeparatorsToNewLine(systemOut))
         .doesNotContain(text);
-  }
-
-  /**
-   * On window OS call to `System.out.println("abc\n");` will produce two line separators. One
-   * is "\n" from string itself that won't be converted and the other ("\r\n") added by print_ln_
-   * method. To make it possible to write assertions in unit test using only "\n" we need to
-   * convert systemOut to use only "\n".
-   */
-  private static String convertOsLineSeparatorsToNewLine(String string) {
-    return String.join("\n", Splitter.on(System.lineSeparator()).split(string));
   }
 
   public String systemOut() {
