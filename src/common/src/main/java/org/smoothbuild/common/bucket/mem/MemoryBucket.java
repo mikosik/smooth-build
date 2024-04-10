@@ -15,6 +15,7 @@ import org.smoothbuild.common.bucket.base.AssertPath;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.PathState;
+import org.smoothbuild.common.function.Function1;
 
 /**
  * In memory implementation of Bucket.
@@ -88,20 +89,25 @@ public class MemoryBucket implements Bucket {
 
   @Override
   public Sink sink(Path path) throws IOException {
-    var parent = findElement(path.parent());
+    return createObject(path.parent(), (dir) -> createSink(dir, path));
+  }
+
+  private <T> T createObject(Path path, Function1<MemoryDir, T, IOException> creator)
+      throws IOException {
+    var parent = findElement(path);
     if (parent == null) {
       throw new NoSuchFileException(path.q());
     }
     return switch (resolveLinksFully(parent)) {
       case MemoryFile file -> throw parentExistAsFileException(path);
-      case MemoryDir dir -> createSink(dir, path);
+      case MemoryDir dir -> creator.apply(dir);
       case MemoryLink link -> throw new RuntimeException("Should not happen");
     };
   }
 
   private static FileSystemException parentExistAsFileException(Path path) {
     return new FileSystemException(
-        format("Cannot create sink for {0} because parent path exists and is a file.", path.q()));
+        format("Cannot create object because its parent {0} exists and is a file.", path.q()));
   }
 
   private MemoryElement resolveLinksFully(MemoryElement element) {
@@ -128,9 +134,11 @@ public class MemoryBucket implements Bucket {
     AssertPath.assertPathIsUnused(this, link);
 
     Path name = link.lastPart();
-    MemoryDir dir = createDirImpl(link.parent());
     MemoryElement targetElement = findElement(target);
-    dir.addChild(new MemoryLink(dir, name, targetElement));
+    createObject(link.parent(), (dir) -> {
+      dir.addChild(new MemoryLink(dir, name, targetElement));
+      return (Void) null;
+    });
   }
 
   @Override
@@ -138,7 +146,7 @@ public class MemoryBucket implements Bucket {
     createDirImpl(path);
   }
 
-  private MemoryDir createDirImpl(Path dir) throws IOException {
+  private void createDirImpl(Path dir) throws IOException {
     Iterator<Path> it = dir.parts().iterator();
     MemoryDir currentDir = root;
     while (it.hasNext()) {
@@ -157,7 +165,6 @@ public class MemoryBucket implements Bucket {
         currentDir = newDir;
       }
     }
-    return currentDir;
   }
 
   private MemoryElement getFile(Path path) throws IOException {
