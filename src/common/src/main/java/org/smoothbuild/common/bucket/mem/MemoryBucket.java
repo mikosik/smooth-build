@@ -3,10 +3,10 @@ package org.smoothbuild.common.bucket.mem;
 import static java.text.MessageFormat.format;
 import static okio.Okio.buffer;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
+import java.nio.file.NoSuchFileException;
 import java.util.Iterator;
 import java.util.List;
 import okio.Sink;
@@ -90,7 +90,7 @@ public class MemoryBucket implements Bucket {
   public Sink sink(Path path) throws IOException {
     var parent = findElement(path.parent());
     if (parent == null) {
-      throw new FileNotFoundException();
+      throw new NoSuchFileException(path.q());
     }
     return switch (resolveLinksFully(parent)) {
       case MemoryFile file -> throw newParentExistAsFileException(path);

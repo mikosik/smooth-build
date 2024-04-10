@@ -13,6 +13,7 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
+import java.nio.file.NoSuchFileException;
 import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
@@ -203,6 +204,11 @@ public abstract class AbstractBucketTestSuite {
         sink.write(byteString("def"));
       }
       assertThat(readFile(file)).isEqualTo(byteString("def"));
+    }
+
+    @Test
+    public void fails_when_parent_directory_not_exists() {
+      assertCall(() -> writeFile(path("dir/file"))).throwsException(NoSuchFileException.class);
     }
 
     @Test
