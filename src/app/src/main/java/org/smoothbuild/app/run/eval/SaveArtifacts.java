@@ -143,6 +143,7 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
         Path targetPath = targetPath(fileContent(file));
+        bucket.createDir(sourcePath.parent());
         bucket.createLink(sourcePath, targetPath);
       }
     }
