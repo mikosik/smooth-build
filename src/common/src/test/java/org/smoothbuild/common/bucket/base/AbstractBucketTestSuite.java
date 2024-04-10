@@ -55,14 +55,14 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _files {
     @Test
-    public void throws_exception_when_path_does_not_exist() {
+    public void fails_when_path_does_not_exist() {
       var path = path("abc");
       assertCall(() -> bucket.files(path))
           .throwsException(new IOException("Dir " + resolve(path) + " doesn't exist."));
     }
 
     @Test
-    public void throws_exception_when_path_is_a_file() throws Exception {
+    public void fails_when_path_is_a_file() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
       assertCall(() -> bucket.files(file))
@@ -169,13 +169,13 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void throws_exception_when_file_does_not_exist() {
+    public void fails_when_file_does_not_exist() {
       var file = path("myFile");
       assertCall(() -> readFile(file)).throwsException(IOException.class);
     }
 
     @Test
-    public void throws_exception_when_path_is_dir() throws Exception {
+    public void fails_when_path_is_dir() throws Exception {
       var dir = path("some/dir");
       createDir(dir);
       assertCall(() -> readFile(dir)).throwsException(IOException.class);
@@ -406,7 +406,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _link {
     @Test
-    public void cannot_create_link_when_link_path_is_taken_by_file() throws Exception {
+    public void fails_when_link_path_is_taken_by_file() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file);
@@ -418,7 +418,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void cannot_create_link_when_link_path_is_taken_by_dir() throws Exception {
+    public void fails_when_link_path_is_taken_by_dir() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file);
