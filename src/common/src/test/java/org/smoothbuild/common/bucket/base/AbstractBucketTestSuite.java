@@ -412,6 +412,15 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _link {
     @Test
+    public void fails_when_link_parent_directory_not_exists() throws Exception {
+      var file = path("some/dir/myFile");
+      var link = path("missing_directory/myLink");
+      createFile(file);
+
+      assertCall(() -> bucket.createLink(link, file)).throwsException(NoSuchFileException.class);
+    }
+
+    @Test
     public void fails_when_link_path_is_taken_by_file() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
