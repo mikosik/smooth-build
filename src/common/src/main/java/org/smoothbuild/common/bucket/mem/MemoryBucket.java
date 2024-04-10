@@ -93,13 +93,13 @@ public class MemoryBucket implements Bucket {
       throw new NoSuchFileException(path.q());
     }
     return switch (resolveLinksFully(parent)) {
-      case MemoryFile file -> throw newParentExistAsFileException(path);
+      case MemoryFile file -> throw parentExistAsFileException(path);
       case MemoryDir dir -> createSink(dir, path);
       case MemoryLink link -> throw new RuntimeException("Should not happen");
     };
   }
 
-  private static FileSystemException newParentExistAsFileException(Path path) {
+  private static FileSystemException parentExistAsFileException(Path path) {
     return new FileSystemException(
         format("Cannot create sink for {0} because parent path exists and is a file.", path.q()));
   }
