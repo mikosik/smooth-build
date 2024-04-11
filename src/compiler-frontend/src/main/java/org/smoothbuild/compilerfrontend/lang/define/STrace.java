@@ -1,8 +1,5 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static java.util.Objects.requireNonNullElse;
-
-import com.google.common.base.Strings;
 import java.util.Objects;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
@@ -46,22 +43,12 @@ public final class STrace {
 
     @Override
     public String toString() {
-      return toString(locationMaxWidth() + 1);
-    }
-
-    private String toString(int padding) {
-      var line =
-          "@ " + Strings.padEnd(location.toString(), padding, ' ') + Objects.toString(called, "");
+      var line = "@ " + location.toString() + " " + Objects.toString(called, "");
       if (tail == null) {
         return line;
       } else {
-        return line + "\n" + tail.toString(padding);
+        return line + "\n" + tail;
       }
-    }
-
-    private int locationMaxWidth() {
-      int length = requireNonNullElse(location, "").toString().length();
-      return tail == null ? length : Math.max(length, tail.locationMaxWidth());
     }
   }
 }
