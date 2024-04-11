@@ -8,6 +8,7 @@ import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.STrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 
 public class BsTranslator {
   private final BsMapping bsMapping;
@@ -18,17 +19,17 @@ public class BsTranslator {
   }
 
   public STrace translate(BTrace bTrace) {
-    return new STrace(translate(bTrace.elements()));
+    return new STrace(translate(bTrace.topLine()));
   }
 
-  private STrace.Element translate(BTrace.Element headElement) {
-    if (headElement == null) {
+  private STrace.Line translate(Line headLine) {
+    if (headLine == null) {
       return null;
     } else {
-      var name = nameFor(headElement.called());
-      var location = locationFor(headElement.call());
-      var tailS = translate(headElement.tail());
-      return new STrace.Element(name, location, tailS);
+      var name = nameFor(headLine.called());
+      var location = locationFor(headLine.call());
+      var next = translate(headLine.next());
+      return new STrace.Line(name, location, next);
     }
   }
 

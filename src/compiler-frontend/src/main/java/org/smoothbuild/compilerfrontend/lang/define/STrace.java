@@ -1,54 +1,32 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import java.util.Objects;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.compilerfrontend.lang.define.STrace.Line;
 
 /**
  * Smooth stack trace.
  */
-public final class STrace {
-  private final Element elements;
-
+public final class STrace extends Trace<Line> {
   public STrace() {
     this(null);
   }
 
-  public STrace(Element headElement) {
-    this.elements = headElement;
+  public STrace(Line topLine) {
+    super(topLine);
   }
 
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof STrace that && Objects.equals(elements, that.elements);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(elements);
-  }
-
-  @Override
-  public String toString() {
-    return elements == null ? "" : elements.toString();
-  }
-
-  public static record Element(String called, Location location, Element tail) {
-    public Element {
+  public record Line(String called, Location location, Line next) implements TraceLine<Line> {
+    public Line {
       Objects.requireNonNull(called);
       Objects.requireNonNull(location);
     }
 
     @Override
     public String toString() {
-      var line = "@ " + location.toString() + " " + Objects.toString(called, "");
-      if (tail == null) {
-        return line;
-      } else {
-        return line + "\n" + tail;
-      }
+      return "@ " + location.toString() + " " + Objects.toString(called, "");
     }
   }
 }

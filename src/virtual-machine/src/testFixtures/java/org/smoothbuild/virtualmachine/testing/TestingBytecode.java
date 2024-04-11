@@ -54,6 +54,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public abstract class TestingBytecode {
@@ -590,18 +591,22 @@ public abstract class TestingBytecode {
   }
 
   public static BTrace bTrace(BExpr call, BExpr called) {
-    return new BTrace(call.hash(), called.hash());
+    return bTrace(call.hash(), called.hash(), (Line) null);
   }
 
-  public static BTrace bTrace(BExpr call, BExpr called, BTrace tail) {
-    return bTrace(call.hash(), called.hash(), tail);
+  public static BTrace bTrace(BExpr call, BExpr called, BTrace next) {
+    return BTrace.bTrace(call.hash(), called.hash(), next);
   }
 
-  public static BTrace bTrace(Hash call, Hash called, BTrace tail) {
-    return new BTrace(call, called, tail);
+  public static BTrace bTrace(Hash call, Hash called, BTrace next) {
+    return BTrace.bTrace(call, called, next);
   }
 
   public static BTrace bTrace(Hash call, Hash called) {
-    return new BTrace(call, called);
+    return bTrace(call, called, (Line) null);
+  }
+
+  private static BTrace bTrace(Hash call, Hash called, Line next) {
+    return new BTrace(new Line(call, called, next));
   }
 }
