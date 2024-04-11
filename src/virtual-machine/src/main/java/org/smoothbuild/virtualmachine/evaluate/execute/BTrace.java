@@ -1,54 +1,27 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
-import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.log.report.TraceLine;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 
-public final class BTrace {
-  private final Element elements;
+public final class BTrace extends Trace<Line> {
+  public static BTrace bTrace(Hash call, Hash called, BTrace next) {
+    return new BTrace(new Line(call, called, next.topLine()));
+  }
 
   public BTrace() {
-    this.elements = null;
+    this(null);
   }
 
-  public BTrace(Hash call, Hash called) {
-    this(call, called, new BTrace());
+  public BTrace(Line topLine) {
+    super(topLine);
   }
 
-  public BTrace(Hash call, Hash called, BTrace tail) {
-    this.elements = new Element(call, called, tail.elements);
-  }
-
-  public Element elements() {
-    return elements;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof BTrace that && Objects.equals(elements, that.elements);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(elements);
-  }
-
-  @Override
-  public String toString() {
-    return elements == null ? "" : elements.toString();
-  }
-
-  public static record Element(Hash call, Hash called, Element tail) {
+  public static record Line(Hash call, Hash called, Line next) implements TraceLine<Line> {
     @Override
     public String toString() {
-      var line = call.toString() + " " + called.toString();
-      if (tail == null) {
-        return line;
-      } else {
-        return line + "\n" + tail;
-      }
+      return call.toString() + " " + called.toString();
     }
   }
 }

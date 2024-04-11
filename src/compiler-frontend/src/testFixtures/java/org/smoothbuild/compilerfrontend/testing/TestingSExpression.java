@@ -72,7 +72,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.define.STrace;
-import org.smoothbuild.compilerfrontend.lang.define.STrace.Element;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SBlobType;
 import org.smoothbuild.compilerfrontend.lang.type.SBoolType;
@@ -688,8 +687,8 @@ public class TestingSExpression {
   }
 
   public static STrace sTrace(String name2, Location location2, String name1, Location location1) {
-    var element1 = new Element(name1, location1, null);
-    var element2 = new Element(name2, location2, element1);
+    var element1 = new STrace.Line(name1, location1, null);
+    var element2 = new STrace.Line(name2, location2, element1);
     return new STrace(element2);
   }
 
@@ -698,7 +697,7 @@ public class TestingSExpression {
   }
 
   public static STrace sTrace(String name, Location location) {
-    return new STrace(new STrace.Element(name, location, null));
+    return new STrace(new STrace.Line(name, location, null));
   }
 
   // P - parsed objects

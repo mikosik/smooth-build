@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
@@ -148,7 +149,7 @@ public class BScheduler {
   private void handleCallWithEvaluatedLambdaAndArgumentJobs(
       BLambda lambda, Job callJob, BCall call, List<Job> argumentJobs) throws BytecodeException {
     var bodyEnvironmentJobs = argumentJobs.appendAll(callJob.environment());
-    var bodyTrace = new BTrace(call.hash(), lambda.hash(), callJob.trace());
+    var bodyTrace = bTrace(call.hash(), lambda.hash(), callJob.trace());
     var bodyJob = newJob(lambda.body(), bodyEnvironmentJobs, bodyTrace);
     scheduleJobEvaluation(bodyJob, callJob.promisedValue());
   }

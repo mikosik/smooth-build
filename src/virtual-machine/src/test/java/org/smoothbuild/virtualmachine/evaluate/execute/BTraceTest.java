@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.virtualmachine.testing.TestingBytecode.bTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
@@ -8,7 +9,7 @@ import org.smoothbuild.common.base.Hash;
 public class BTraceTest {
   @Test
   public void to_string() {
-    var trace = new BTrace(Hash.of(7), Hash.of(9), new BTrace(Hash.of(17), Hash.of(19)));
+    var trace = bTrace(Hash.of(7), Hash.of(9), bTrace(Hash.of(17), Hash.of(19)));
     assertThat(trace.toString())
         .isEqualTo(
             """
