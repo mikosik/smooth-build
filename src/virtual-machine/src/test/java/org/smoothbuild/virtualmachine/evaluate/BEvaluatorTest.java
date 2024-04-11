@@ -630,7 +630,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       assertThat(evaluate(vm, bExpr))
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
-      verifyConstTasksResSource(4, DISK, taskReporter);
+      verifyConstTasksResultSource(4, DISK, taskReporter);
     }
 
     @Test
@@ -722,7 +722,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     return (BInt) args.get(0);
   }
 
-  private static void verifyConstTasksResSource(
+  private static void verifyConstTasksResultSource(
       int size, ResultSource expectedSource, FakeTaskReporter fakeTaskReporter) {
     var sources = fakeTaskReporter.getReported().stream()
         .filter(r -> r.task() instanceof InvokeTask)
