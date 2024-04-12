@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.Trace;
 
 public class InitializingDagEvaluator {
   private final Initializer initializer;
@@ -25,7 +26,7 @@ public class InitializingDagEvaluator {
 
   public <V> Maybe<V> evaluate(Dag<V> dag) {
     var result = initializer.apply();
-    reporter.report(report(label("initialize"), "", EXECUTION, result.logs()));
+    reporter.report(report(label("initialize"), new Trace<>(), EXECUTION, result.logs()));
     if (result.toMaybe().isNone()) {
       return none();
     }

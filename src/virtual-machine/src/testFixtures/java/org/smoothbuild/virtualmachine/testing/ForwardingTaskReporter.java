@@ -15,6 +15,6 @@ public class ForwardingTaskReporter implements TaskReporter {
   @Override
   public void report(TaskReport taskReport) {
     reporter.report(Report.report(
-        taskReport.label(), taskReport.trace().toString(), taskReport.source(), taskReport.logs()));
+        taskReport.label(), taskReport.trace(), taskReport.source(), taskReport.logs()));
   }
 }

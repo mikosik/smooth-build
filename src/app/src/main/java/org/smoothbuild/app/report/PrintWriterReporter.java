@@ -36,9 +36,9 @@ public class PrintWriterReporter implements Reporter {
     var labelString = report.label().toString();
     var builder = new StringBuilder(labelString);
     builder.append(padStart(report.source().toString(), 79 - labelString.length(), ' '));
-    if (containsFailure(report.logs()) && !report.details().isEmpty()) {
+    if (containsFailure(report.logs()) && !(report.trace().topLine() == null)) {
       builder.append("\n");
-      builder.append(indent(report.details()));
+      builder.append(indent(report.trace().toString()));
     }
 
     for (Log log : report.logs()) {

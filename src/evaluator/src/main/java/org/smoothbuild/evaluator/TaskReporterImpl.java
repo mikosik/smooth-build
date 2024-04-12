@@ -16,9 +16,8 @@ public class TaskReporterImpl implements TaskReporter {
 
   @Override
   public void report(TaskReport taskReport) {
-    var traceS = bsTranslator.translate(taskReport.trace());
-    var details = traceS == null ? "" : traceS.toString();
+    var sTrace = bsTranslator.translate(taskReport.trace());
     reporter.report(
-        Report.report(taskReport.label(), details, taskReport.source(), taskReport.logs()));
+        Report.report(taskReport.label(), sTrace, taskReport.source(), taskReport.logs()));
   }
 }

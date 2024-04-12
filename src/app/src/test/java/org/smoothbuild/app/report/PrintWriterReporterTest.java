@@ -23,13 +23,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class PrintWriterReporterTest extends TestingVirtualMachine {
   @Test
   void report_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);
-    var report = report(label("name"), "details", DISK, logsWithAllLevels());
+    var report = report(label("name"), new Trace<>(), DISK, logsWithAllLevels());
     var reporter = new PrintWriterReporter(systemOut);
 
     reporter.report(report);
@@ -39,12 +41,13 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
 
   @Test
   void test_format_logs() {
-    var report = report(label("label-name"), "details", EXECUTION, logsWithAllLevels());
+    var trace = new Trace<>(new MyTraceLine("trace-line"));
+    var report = report(label("label-name"), trace, EXECUTION, logsWithAllLevels());
     assertThat(formatReport(report) + "\n")
         .isEqualTo(
             """
             :label-name                                                                exec
-              details
+              MyTraceLine[text=trace-line]
               [FATAL] fatal message
               [ERROR] error message
               [WARNING] warning message
@@ -64,5 +67,12 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
         arguments(error("message"), "  [ERROR] message"),
         arguments(warning("message"), "  [WARNING] message"),
         arguments(info("message"), "  [INFO] message"));
+  }
+
+  private record MyTraceLine(String text) implements TraceLine<MyTraceLine> {
+    @Override
+    public MyTraceLine next() {
+      return null;
+    }
   }
 }

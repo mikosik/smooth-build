@@ -16,6 +16,7 @@ import jakarta.inject.Provider;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
@@ -37,7 +38,7 @@ public class BEvaluator {
     try {
       scheduler.awaitTermination();
     } catch (InterruptedException e) {
-      var report = report(label(EVALUATE_PREFIX), "", EXECUTION, list(fatal(e)));
+      var report = report(label(EVALUATE_PREFIX), new Trace<>(), EXECUTION, list(fatal(e)));
       reporter.report(report);
       return none();
     }

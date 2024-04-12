@@ -24,10 +24,10 @@ public class FilteringReporterTest {
 
   private void testVisibility(boolean matches) {
     var reportLabel = label("name");
-    var details = "details";
+    var trace = new Trace<>();
     var logs1 = list(ERROR_LOG);
     var wrappedReporter = mock(Reporter.class);
-    var report = report(reportLabel, details, DISK, logs1);
+    var report = report(reportLabel, trace, DISK, logs1);
     var reporter = new FilteringReporter(wrappedReporter, (label, logs) -> matches);
 
     reporter.report(report);
