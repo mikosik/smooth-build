@@ -6,7 +6,7 @@ import static org.smoothbuild.app.run.eval.report.ReportMatchers.findMatcher;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.labelPrefixMatcher;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.not;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.or;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherBaseVisitor;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.AndContext;

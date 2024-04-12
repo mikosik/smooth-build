@@ -2,7 +2,7 @@ package org.smoothbuild.app.run.eval.report;
 
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.log.base.Label.label;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.Maybe;

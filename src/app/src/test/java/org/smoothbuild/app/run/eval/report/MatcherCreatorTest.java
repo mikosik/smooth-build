@@ -22,7 +22,7 @@ import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;

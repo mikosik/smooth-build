@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE_PREFIX;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE_PREFIX;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
