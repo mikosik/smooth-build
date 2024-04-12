@@ -33,10 +33,10 @@ public class CountingReporterTest {
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");
-    var details = "details";
-    countingReporter.report(report(label, details, DISK, list(ERROR_LOG)));
+    var trace = new Trace<>();
+    countingReporter.report(report(label, trace, DISK, list(ERROR_LOG)));
 
-    verify(stepReporter).report(report(label, details, DISK, list(ERROR_LOG)));
+    verify(stepReporter).report(report(label, trace, DISK, list(ERROR_LOG)));
   }
 
   @ParameterizedTest
@@ -47,8 +47,8 @@ public class CountingReporterTest {
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");
-    var details = "details";
-    countingReporter.report(report(label, details, DISK, list(log)));
+    var trace = new Trace<>();
+    countingReporter.report(report(label, trace, DISK, list(log)));
 
     verify(logCounters).increment(reportedLevel);
     verifyNoMoreInteractions(logCounters);

@@ -23,6 +23,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.Trace;
 
 public class InitializingDagEvaluatorTest {
   private static final String STRING = "abc";
@@ -47,7 +48,7 @@ public class InitializingDagEvaluatorTest {
     var reporter = mock(Reporter.class);
 
     var result = runEvaluate(initializer, dagEvaluator, reporter);
-    verify(reporter).report(report(label("initialize"), "", EXECUTION, list(error)));
+    verify(reporter).report(report(label("initialize"), new Trace<>(), EXECUTION, list(error)));
     assertThat(result).isEqualTo(none());
     verifyNoInteractions(dagEvaluator);
   }
@@ -60,7 +61,7 @@ public class InitializingDagEvaluatorTest {
     var reporter = mock(Reporter.class);
 
     var result = runEvaluate(initializer, dagEvaluator, reporter);
-    verify(reporter).report(report(label("initialize"), "", EXECUTION, list(info)));
+    verify(reporter).report(report(label("initialize"), new Trace<>(), EXECUTION, list(info)));
     assertThat(result).isEqualTo(some(STRING));
   }
 

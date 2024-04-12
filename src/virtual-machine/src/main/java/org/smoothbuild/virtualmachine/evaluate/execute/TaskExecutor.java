@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.Consumer0;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
@@ -50,7 +51,7 @@ public class TaskExecutor {
       try {
         consumer0.accept();
       } catch (Throwable e) {
-        reporter.report(report(label(EVALUATE_PREFIX), "", EXECUTION, list(fatal(e))));
+        reporter.report(report(label(EVALUATE_PREFIX), new Trace<>(), EXECUTION, list(fatal(e))));
         executor.terminate();
       }
     });

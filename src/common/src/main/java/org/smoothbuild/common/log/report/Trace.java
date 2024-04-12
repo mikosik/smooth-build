@@ -5,6 +5,10 @@ import java.util.Objects;
 public class Trace<T extends TraceLine<T>> {
   private final T topLine;
 
+  public Trace() {
+    this(null);
+  }
+
   public Trace(T topLine) {
     this.topLine = topLine;
   }

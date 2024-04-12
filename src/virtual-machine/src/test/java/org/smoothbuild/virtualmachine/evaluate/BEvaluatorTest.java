@@ -41,6 +41,7 @@ import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
@@ -452,7 +453,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
         evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
         assertThat(reporter().reports())
-            .contains(new Report(EVALUATE, "", EXECUTION, list(fatal(runtimeException))));
+            .contains(
+                new Report(EVALUATE, new Trace<>(), EXECUTION, list(fatal(runtimeException))));
       }
     }
   }

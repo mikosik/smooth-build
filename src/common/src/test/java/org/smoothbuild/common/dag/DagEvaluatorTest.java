@@ -41,6 +41,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.Trace;
 
 class DagEvaluatorTest {
   @Nested
@@ -287,8 +288,12 @@ class DagEvaluatorTest {
 
       assertThat(result).isEqualTo(some("string:suffix"));
       var inOrder = inOrder(reporter);
-      inOrder.verify(reporter).report(report(label(), "", EXECUTION, list(info("factory"))));
-      inOrder.verify(reporter).report(report(label(), "", EXECUTION, list(info("appender"))));
+      inOrder
+          .verify(reporter)
+          .report(report(label(), new Trace<>(), EXECUTION, list(info("factory"))));
+      inOrder
+          .verify(reporter)
+          .report(report(label(), new Trace<>(), EXECUTION, list(info("appender"))));
       verifyNoMoreInteractions(reporter);
     }
   }
@@ -360,7 +365,7 @@ class DagEvaluatorTest {
   }
 
   private static void verifyReported(Label label, Reporter reporter, List<Log> logs) {
-    verify(reporter).report(report(label, "", EXECUTION, logs));
+    verify(reporter).report(report(label, new Trace<>(), EXECUTION, logs));
     verifyNoMoreInteractions(reporter);
   }
 
