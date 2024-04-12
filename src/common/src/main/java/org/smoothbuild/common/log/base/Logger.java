@@ -50,7 +50,7 @@ public class Logger extends AbstractCollection<Log> {
   }
 
   public boolean containsFailure() {
-    return Log.containsAnyFailure(this);
+    return Log.containsFailure(this);
   }
 
   public List<Log> toList() {

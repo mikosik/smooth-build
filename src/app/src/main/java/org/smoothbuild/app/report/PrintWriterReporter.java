@@ -2,7 +2,7 @@ package org.smoothbuild.app.report;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -36,7 +36,7 @@ public class PrintWriterReporter implements Reporter {
     var labelString = report.label().toString();
     var builder = new StringBuilder(labelString);
     builder.append(padStart(report.source().toString(), 79 - labelString.length(), ' '));
-    if (containsAnyFailure(report.logs()) && !report.details().isEmpty()) {
+    if (containsFailure(report.logs()) && !report.details().isEmpty()) {
       builder.append("\n");
       builder.append(indent(report.details()));
     }

@@ -1,7 +1,6 @@
 package org.smoothbuild.common.testing;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
@@ -19,7 +18,7 @@ public class MemoryReporter implements Reporter {
   }
 
   public boolean containsFailure() {
-    return reports.stream().anyMatch(r -> containsAnyFailure(r.logs()));
+    return reports.stream().anyMatch(r -> Log.containsFailure(r.logs()));
   }
 
   public List<Report> reports() {

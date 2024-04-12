@@ -35,7 +35,7 @@ public record Log(Level level, String message) {
     return new Log(INFO, log);
   }
 
-  public static boolean containsAnyFailure(Collection<Log> list) {
+  public static boolean containsFailure(Collection<Log> list) {
     return list.stream().anyMatch(l -> l.level().hasPriorityAtLeast(ERROR));
   }
 

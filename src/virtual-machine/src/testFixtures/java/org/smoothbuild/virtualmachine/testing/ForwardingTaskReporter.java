@@ -1,7 +1,5 @@
 package org.smoothbuild.virtualmachine.testing;
 
-import static org.smoothbuild.common.log.base.Log.fatal;
-
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReport;
