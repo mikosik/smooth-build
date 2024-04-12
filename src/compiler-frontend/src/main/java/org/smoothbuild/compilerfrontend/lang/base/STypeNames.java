@@ -8,14 +8,14 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public class TypeNamesS {
+public class STypeNames {
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";
   public static final String INT = "Int";
   public static final String STRING = "String";
 
   public static boolean isVarName(String name) {
-    return !name.isEmpty() && name.chars().allMatch(TypeNamesS::isUpperCase);
+    return !name.isEmpty() && name.chars().allMatch(STypeNames::isUpperCase);
   }
 
   public static boolean startsWithLowerCase(String name) {

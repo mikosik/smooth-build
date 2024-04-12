@@ -1,12 +1,12 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
+import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 
 /**
  * This class is immutable.
  */
 public final class SBlobType extends SType {
   public SBlobType() {
-    super(TypeNamesS.BLOB);
+    super(STypeNames.BLOB);
   }
 }

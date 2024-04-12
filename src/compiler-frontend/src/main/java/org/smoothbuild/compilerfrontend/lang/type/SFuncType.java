@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.funcTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.funcTypeName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import java.util.Objects;

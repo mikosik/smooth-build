@@ -20,7 +20,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
+import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 /**
@@ -85,7 +85,7 @@ public class DetectUndefined implements TryFunction2<PModule, SScope, PModule> {
     }
 
     private boolean isKnownTypeName(String name) {
-      return TypeNamesS.isVarName(name)
+      return STypeNames.isVarName(name)
           || scope.types().contains(name)
           || imported.types().contains(name);
     }

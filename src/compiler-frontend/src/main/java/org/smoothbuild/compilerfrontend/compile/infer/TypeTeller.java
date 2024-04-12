@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
+import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -47,7 +47,7 @@ public class TypeTeller {
   }
 
   public Maybe<SType> translate(PType type) {
-    if (TypeNamesS.isVarName(type.name())) {
+    if (STypeNames.isVarName(type.name())) {
       return some(new SVar(type.name()));
     }
     return switch (type) {
