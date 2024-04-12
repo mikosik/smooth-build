@@ -131,9 +131,9 @@ public class BuildCommandTest {
     class _combine_matcher extends SystemTestCase {
       private static final String COMBINE =
           """
-          MyStruct(
+          MyStruct {
             String myField
-          )
+          }
           result = MyStruct("abc");
           """;
       private static final String COMBINE_TASK_HEADER =
@@ -286,9 +286,9 @@ public class BuildCommandTest {
     class _select_matcher extends SystemTestCase {
       private static final String SELECT =
           """
-            MyStruct(
+            MyStruct {
               String myField
-            )
+            }
             aStruct = MyStruct("abc");
             result = aStruct.myField;
             """;
@@ -532,9 +532,9 @@ public class BuildCommandTest {
     public void select() throws IOException {
       createUserModule(
           """
-          MyStruct(
+          MyStruct {
             String myField
-          )
+          }
           result = MyStruct("abc").myField;
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));

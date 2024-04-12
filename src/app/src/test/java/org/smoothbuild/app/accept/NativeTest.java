@@ -227,10 +227,10 @@ public class NativeTest extends EvaluatorTestCase {
         public void struct_of_wrong_type() throws Exception {
           var userModule = format(
               """
-                  Person(
+                  Person {
                     String firstName,
                     String lastName,
-                  )
+                  }
                   @Native("%s")
                   Person returnStringStruct();
                   result = returnStringStruct();

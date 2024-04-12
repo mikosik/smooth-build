@@ -27,8 +27,8 @@ public class TestedTSF {
   public static final TestedTS STRING = new TestedTS(sStringType());
   public static final TestedTS STRUCT = new TestedTS(
       sStructType("Person", nlist(itemSigS(sStringType(), "name"))),
-      Set.of("Person(String name)"),
-      Set.of("Person(String name)"));
+      Set.of("Person{String name}"),
+      Set.of("Person{String name}"));
   public static final List<TestedTS> TESTED_TYPES = list(
       BLOB,
       BOOL,

@@ -56,17 +56,17 @@ public class DeclarationTest {
     class _struct {
       @Test
       public void declaring_empty_struct_is_allowed() {
-        module("MyStruct()").loadsWithSuccess();
+        module("MyStruct{}").loadsWithSuccess();
       }
 
       @Test
       public void declaring_non_empty_struct_is_allowed() {
         var code =
             """
-            MyStruct(
+            MyStruct{
               String fieldA,
               String fieldB
-            )
+            }
             """;
         module(code).loadsWithSuccess();
       }
@@ -75,23 +75,23 @@ public class DeclarationTest {
       class _name {
         @Test
         public void that_is_normal_name() {
-          module("MyStruct()").loadsWithSuccess();
+          module("MyStruct{}").loadsWithSuccess();
         }
 
         @Test
         public void that_is_illegal_fails() {
-          module("MyStruct^()")
+          module("MyStruct^{}")
               .loadsWithError(
                   1,
                   """
             token recognition error at: '^'
-            MyStruct^()
+            MyStruct^{}
                     ^""");
         }
 
         @Test
         public void that_starts_with_small_letter_fails() {
-          module("myStruct()")
+          module("myStruct{}")
               .loadsWithError(
                   1,
                   "`myStruct` is illegal struct name. "
@@ -100,7 +100,7 @@ public class DeclarationTest {
 
         @Test
         public void that_is_single_capital_letter_fails() {
-          module("A()")
+          module("A{}")
               .loadsWithError(
                   1,
                   "`A` is illegal struct name. "
@@ -109,13 +109,13 @@ public class DeclarationTest {
 
         @Test
         public void that_is_underscore_fails() {
-          module("_()")
+          module("_{}")
               .loadsWithError(1, "`_` is illegal struct name. `_` is reserved for future use.");
         }
 
         @Test
         public void that_is_multiple_capital_letters_fails() {
-          module("ABC()")
+          module("ABC{}")
               .loadsWithError(
                   1,
                   "`ABC` is illegal struct name. "
@@ -132,9 +132,9 @@ public class DeclarationTest {
           public void can_be_monotype(TestedTS testedT) {
             var code = unlines(
                 testedT.typeDeclarationsAsString(),
-                "MyStruct(",
+                "MyStruct{",
                 "  " + testedT.name() + " field,",
-                ")");
+                "}");
             module(code).loadsWithSuccess();
           }
 
@@ -142,9 +142,9 @@ public class DeclarationTest {
           public void cannot_be_polytype() {
             var code =
                 """
-                MyStruct(
+                MyStruct{
                  (B)->A field
-                )
+                }
                 """;
             module(code)
                 .loadsWithError(
@@ -157,9 +157,9 @@ public class DeclarationTest {
             // references field's struct.
             var code =
                 """
-                MyStruct(
+                MyStruct{
                   (B)->A field
-                )
+                }
                 @Native("impl")
                 MyStruct myFunction();
                 """;
@@ -172,9 +172,9 @@ public class DeclarationTest {
           public void cannot_be_polytype_array() {
             var code =
                 """
-                MyStruct(
+                MyStruct{
                   [A] field
-                )
+                }
                 """;
             module(code)
                 .loadsWithError(
@@ -185,9 +185,9 @@ public class DeclarationTest {
           public void cannot_be_type_which_encloses_it() {
             var code =
                 """
-                MyStruct(
+                MyStruct{
                   MyStruct field
-                )
+                }
                 """;
             module(code)
                 .loadsWithError(
@@ -200,10 +200,10 @@ public class DeclarationTest {
           public void cannot_be_array_type_which_elem_type_encloses_it() {
             var code =
                 """
-                MyStruct(
+                MyStruct{
                   String firstField,
                   [MyStruct] field
-                )
+                }
                 """;
             module(code)
                 .loadsWithError(
@@ -216,9 +216,9 @@ public class DeclarationTest {
           public void cannot_declare_func_which_result_type_encloses_it() {
             var code =
                 """
-                MyStruct(
+                MyStruct{
                   ()->MyStruct field
-                )
+                }
                 """;
             module(code)
                 .loadsWithError(
@@ -231,9 +231,9 @@ public class DeclarationTest {
           public void cannot_declare_func_which_param_type_encloses_it() {
             var code =
                 """
-                MyStruct(
+                MyStruct{
                   (MyStruct)->Blob field
-                )
+                }
                 """;
             module(code)
                 .loadsWithError(
@@ -249,9 +249,9 @@ public class DeclarationTest {
           public void that_is_legal() {
             module(
                     """
-                MyStruct(
+                MyStruct{
                   String field
-                )
+                }
                 """)
                 .loadsWithSuccess();
           }
@@ -260,9 +260,9 @@ public class DeclarationTest {
           public void that_is_illegal_fails() {
             module(
                     """
-                MyStruct(
+                MyStruct{
                   String field^
-                )
+                }
                 """)
                 .loadsWithError(
                     2,
@@ -276,9 +276,9 @@ public class DeclarationTest {
           public void that_starts_with_large_letter_fails() {
             module(
                     """
-                MyStruct(
+                MyStruct{
                   String Field
-                )
+                }
                 """)
                 .loadsWithError(
                     2,
@@ -289,9 +289,9 @@ public class DeclarationTest {
           public void that_is_single_large_letter_fails() {
             module(
                     """
-                MyStruct(
+                MyStruct {
                   String A
-                )
+                }
                 """)
                 .loadsWithError(
                     2, "`A` is illegal identifier name. Identifiers should start with lowercase.");
@@ -301,9 +301,9 @@ public class DeclarationTest {
           public void that_is_single_underscore_fails() {
             module(
                     """
-                MyStruct(
+                MyStruct{
                   String _
-                )
+                }
                 """)
                 .loadsWithError(
                     2, "`_` is illegal identifier name. `_` is reserved for future use.");
@@ -316,9 +316,9 @@ public class DeclarationTest {
           public void is_illegal() {
             module(
                     """
-                MyStruct(
+                MyStruct{
                   Int myField = 7
-                )
+                }
                 """)
                 .loadsWithError(
                     2,
@@ -353,10 +353,7 @@ public class DeclarationTest {
         }
 
         private String structDeclaration(String string) {
-          return """
-              MyStruct( PLACEHOLDER )
-              """
-              .replace("PLACEHOLDER", string);
+          return "MyStruct{ PLACEHOLDER }".replace("PLACEHOLDER", string);
         }
       }
     }
@@ -1030,7 +1027,7 @@ public class DeclarationTest {
         public void creating_empty_struct_instance_is_allowed() {
           var code =
               """
-              MyStruct()
+              MyStruct{}
               result = MyStruct();
               """;
           module(code).loadsWithSuccess();
@@ -1040,9 +1037,9 @@ public class DeclarationTest {
         public void creating_non_empty_struct_is_allowed() {
           var code =
               """
-              MyStruct(
+              MyStruct{
                 String field,
-              )
+              }
               result = MyStruct("abc");
               """;
           module(code).loadsWithSuccess();
@@ -1052,9 +1049,9 @@ public class DeclarationTest {
         public void calling_ctor_without_all_params_causes_error() {
           var code =
               """
-              MyStruct(
+              MyStruct{
                 String field,
-              )
+              }
               result = MyStruct();
               """;
           module(code).loadsWithError(4, "Parameter `field` must be specified.");
@@ -1293,9 +1290,9 @@ public class DeclarationTest {
       public void reading_field() {
         var code =
             """
-            MyStruct(
+            MyStruct{
               String field,
-            )
+            }
             String result = MyStruct("abc").field;
             """;
         module(code).loadsWithSuccess();
@@ -1305,9 +1302,9 @@ public class DeclarationTest {
       public void reading_field_that_does_not_exist_causes_error() {
         var code =
             """
-            MyStruct(
+            MyStruct{
               String field,
-            )
+            }
             result = MyStruct("abc").otherField;
             """;
         module(code).loadsWithError(4, "Unknown field `otherField`.");
@@ -1556,9 +1553,9 @@ public class DeclarationTest {
       public void not_consumed_by_select() {
         var code =
             """
-            MyStruct(
-              String myField
-            )
+            MyStruct{
+              String myField,
+            }
             myValue = myStruct("def");
             result = "abc" > myValue.myField;
             """;
@@ -1638,9 +1635,9 @@ public class DeclarationTest {
       public void not_consumed_by_expression_after_parens_containing_inner_pipe() {
         var code =
             """
-            MyStruct(
-              Int myField
-            )
+            MyStruct{
+              Int myField,
+            }
             v = myStruct(7);
             A id(A a) = a;
             result = "abc" > (v > id()).myField;

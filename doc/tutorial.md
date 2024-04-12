@@ -151,14 +151,14 @@ and parameter types and names matching structure fields.
 Let's see all that in action.
 
 ```
-Person(
+Person {
   String firstName,
   String lastName,
-)
-Dog(
+}
+Dog {
   String name,
   Person owner,
-)
+}
 Dog rex = Dog("Rex", Person("John", "Doe"));
 String ownerName = rex.owner.lastName;
 ```
@@ -166,10 +166,10 @@ String ownerName = rex.owner.lastName;
 Most common structure is `File` that is defined in standard library:
 
 ```
-File(
+File {
   Blob content,
   String path,
-)
+}
 ```
 
 It is just file path and file content.
@@ -277,10 +277,10 @@ We call [map](api/map.md) function
 with an array of Persons and lambda for converting elements.
 
 ```
-Person(
+Person {
   String name,
   Int age,
-)
+}
 [Person] persons = [Person("John", 23), Person("Kate", 34)];
 [String] names = map(persons, (Person person) -> person.name);
 ```
@@ -356,19 +356,19 @@ it may (or may not) be used also after last element.
 For example following struct definition uses comma after last field
 
 ```
-Person(
+Person {
   String firstName,
   String lastName,
-)
+}
 ```
 
 but it is acceptable to skip it without changing semantics
 
 ```
-Person(
+Person {
   String firstName,
   String lastName
-)
+}
 ```
 
 This works the same when defining function parameters, arguments in function call,

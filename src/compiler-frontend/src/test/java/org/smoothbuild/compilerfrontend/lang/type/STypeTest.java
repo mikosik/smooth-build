@@ -68,10 +68,10 @@ public class STypeTest {
   public static List<Arguments> to_string() {
     return name_or_to_string()
         .appendAll(list(
-            arguments(sStructType("MyStruct", nlist()), "MyStruct()"),
+            arguments(sStructType("MyStruct", nlist()), "MyStruct{}"),
             arguments(
                 sStructType("MyStruct", nlist(itemSigS(sIntType(), "field"))),
-                "MyStruct(Int field)")));
+                "MyStruct{Int field}")));
   }
 
   public static List<Arguments> name_or_to_string() {
@@ -81,20 +81,20 @@ public class STypeTest {
         arguments(sIntType(), "Int"),
         arguments(sStringType(), "String"),
         arguments(varA(), "A"),
-        arguments(sTupleType(), "()"),
-        arguments(sTupleType(sIntType()), "(Int)"),
-        arguments(sTupleType(sIntType(), sBoolType()), "(Int,Bool)"),
-        arguments(sTupleType(varA()), "(A)"),
-        arguments(sTupleType(varA(), varB()), "(A,B)"),
+        arguments(sTupleType(), "{}"),
+        arguments(sTupleType(sIntType()), "{Int}"),
+        arguments(sTupleType(sIntType(), sBoolType()), "{Int,Bool}"),
+        arguments(sTupleType(varA()), "{A}"),
+        arguments(sTupleType(varA(), varB()), "{A,B}"),
         arguments(sArrayType(sBlobType()), "[Blob]"),
         arguments(sArrayType(sBoolType()), "[Bool]"),
         arguments(sArrayType(sIntType()), "[Int]"),
         arguments(sArrayType(sStringType()), "[String]"),
-        arguments(sArrayType(sTupleType()), "[()]"),
-        arguments(sArrayType(sTupleType(sIntType())), "[(Int)]"),
-        arguments(sArrayType(sTupleType(sIntType(), sBoolType())), "[(Int,Bool)]"),
-        arguments(sArrayType(sTupleType(varA())), "[(A)]"),
-        arguments(sArrayType(sTupleType(varA(), varB())), "[(A,B)]"),
+        arguments(sArrayType(sTupleType()), "[{}]"),
+        arguments(sArrayType(sTupleType(sIntType())), "[{Int}]"),
+        arguments(sArrayType(sTupleType(sIntType(), sBoolType())), "[{Int,Bool}]"),
+        arguments(sArrayType(sTupleType(varA())), "[{A}]"),
+        arguments(sArrayType(sTupleType(varA(), varB())), "[{A,B}]"),
         arguments(sArrayType(sStructType("MyStruct", nlist())), "[MyStruct]"),
         arguments(
             sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "field")))),
@@ -104,11 +104,11 @@ public class STypeTest {
         arguments(sArrayType(sArrayType(sBlobType())), "[[Blob]]"),
         arguments(sArrayType(sArrayType(sBoolType())), "[[Bool]]"),
         arguments(sArrayType(sArrayType(sIntType())), "[[Int]]"),
-        arguments(sArrayType(sArrayType(sTupleType())), "[[()]]"),
-        arguments(sArrayType(sArrayType(sTupleType(sIntType()))), "[[(Int)]]"),
-        arguments(sArrayType(sArrayType(sTupleType(sIntType(), sBoolType()))), "[[(Int,Bool)]]"),
-        arguments(sArrayType(sArrayType(sTupleType(varA()))), "[[(A)]]"),
-        arguments(sArrayType(sArrayType(sTupleType(varA(), varB()))), "[[(A,B)]]"),
+        arguments(sArrayType(sArrayType(sTupleType())), "[[{}]]"),
+        arguments(sArrayType(sArrayType(sTupleType(sIntType()))), "[[{Int}]]"),
+        arguments(sArrayType(sArrayType(sTupleType(sIntType(), sBoolType()))), "[[{Int,Bool}]]"),
+        arguments(sArrayType(sArrayType(sTupleType(varA()))), "[[{A}]]"),
+        arguments(sArrayType(sArrayType(sTupleType(varA(), varB()))), "[[{A,B}]]"),
         arguments(sArrayType(sArrayType(sStructType("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(
             sArrayType(sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "filed"))))),
@@ -119,12 +119,12 @@ public class STypeTest {
         arguments(sFuncType(varA(), varA()), "(A)->A"),
         arguments(sFuncType(sStringType()), "()->String"),
         arguments(sFuncType(sStringType(), sStringType()), "(String)->String"),
-        arguments(sFuncType(sTupleType(sIntType()), sStringType()), "((Int))->String"),
-        arguments(sInterfaceType(), "()"),
-        arguments(sInterfaceType(sSig(sIntType(), "field1")), "(Int field1)"),
+        arguments(sFuncType(sTupleType(sIntType()), sStringType()), "({Int})->String"),
+        arguments(sInterfaceType(), "{}"),
+        arguments(sInterfaceType(sSig(sIntType(), "field1")), "{Int field1}"),
         arguments(
             sInterfaceType(sSig(sIntType(), "field1"), sSig(sBlobType(), "field2")),
-            "(Int field1,Blob field2)"));
+            "{Int field1,Blob field2}"));
   }
 
   @ParameterizedTest

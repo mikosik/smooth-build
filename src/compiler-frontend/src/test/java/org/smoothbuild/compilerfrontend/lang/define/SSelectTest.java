@@ -31,7 +31,7 @@ public class SSelectTest {
                   referencedName = structValue
                   location = {prj}/build.smooth:12
                 )
-                evaluationType = MyStruct(Int field)
+                evaluationType = MyStruct{Int field}
                 location = {prj}/build.smooth:12
               )
               field = field

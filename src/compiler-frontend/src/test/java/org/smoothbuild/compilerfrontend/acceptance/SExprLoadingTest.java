@@ -296,25 +296,25 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_ctor_reference() {
+      public void with_constructor_reference() {
         var struct = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
         var constructor = sConstructor(1, struct, "MyStruct");
         module("""
-            MyStruct(
+            MyStruct{
               String field
-            )
+            }
             """)
             .loadsWithSuccess()
             .containsEvaluable(constructor);
       }
 
       @Test
-      public void with_ctor_reference_and_arg() {
+      public void with_constructor_reference_and_argument() {
         var code =
             """
-            MyStruct(
+            MyStruct {
               String field
-            )
+            }
             result = MyStruct(
               "aaa");
             """;
@@ -419,7 +419,7 @@ public class SExprLoadingTest {
       public void to_constructor() {
         var code =
             """
-            MyStruct()
+            MyStruct{}
             ()->MyStruct result =
               MyStruct;
             """;
@@ -501,9 +501,9 @@ public class SExprLoadingTest {
           """
           @Native("impl")
           MyStruct getStruct();
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           result = getStruct()
             .field;
           """;
@@ -781,8 +781,8 @@ public class SExprLoadingTest {
       @Test
       public void empty_struct_type() {
         module("""
-            MyStruct(
-            )
+            MyStruct{
+            }
             """)
             .loadsWithSuccess()
             .containsType(sStructType("MyStruct", nlist()));
@@ -791,9 +791,9 @@ public class SExprLoadingTest {
       @Test
       public void struct_type() {
         module("""
-            MyStruct(
+            MyStruct{
               String field
-            )
+            }
             """)
             .loadsWithSuccess()
             .containsType(sStructType("MyStruct", nlist(sSig(sStringType(), "field"))));

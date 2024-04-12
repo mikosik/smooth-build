@@ -9,7 +9,7 @@ module
    ;
 
 struct
-   : NAME '(' itemList ')'
+   : NAME '{' itemList '}'
    ;
 
 namedFunc

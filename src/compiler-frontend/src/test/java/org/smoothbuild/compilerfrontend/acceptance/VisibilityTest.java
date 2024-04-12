@@ -61,7 +61,7 @@ public class VisibilityTest {
       @Test
       public void constructor_declared_above_is_visible() {
         var code = """
-            MyStruct()
+            MyStruct {}
             result = MyStruct;
             """;
         module(code).loadsWithSuccess();
@@ -71,7 +71,7 @@ public class VisibilityTest {
       public void constructor_declared_below_is_visible() {
         var code = """
             result = MyStruct;
-            MyStruct()
+            MyStruct {}
             """;
         module(code).loadsWithSuccess();
       }
@@ -80,7 +80,7 @@ public class VisibilityTest {
       public void struct_declared_above_is_visible() {
         var code =
             """
-            MyStruct()
+            MyStruct {}
             @Native("impl.met")
             MyStruct myFunc();
             """;
@@ -93,7 +93,7 @@ public class VisibilityTest {
             """
             @Native("impl.met")
             MyStruct myFunc();
-            MyStruct()
+            MyStruct {}
             """;
         module(code).loadsWithSuccess();
       }
@@ -118,7 +118,7 @@ public class VisibilityTest {
       @Test
       public void constructor_is_visible() {
         var code = "myValue = OtherModuleStruct;";
-        var imported = "OtherModuleStruct()";
+        var imported = "OtherModuleStruct {}";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
@@ -129,7 +129,7 @@ public class VisibilityTest {
             @Native("impl.met")
             OtherModuleStruct myFunc();
             """;
-        var imported = "OtherModuleStruct()";
+        var imported = "OtherModuleStruct {}";
         module(code).withImported(imported).loadsWithSuccess();
       }
     }
@@ -337,9 +337,9 @@ public class VisibilityTest {
         public void as_type_of_struct_field() {
           var code =
               """
-              MyStruct(
+              MyStruct {
                 UndefinedType field
-              )
+              }
               """;
           module(code).loadsWithError(2, "`UndefinedType` type is undefined.");
         }
@@ -379,9 +379,9 @@ public class VisibilityTest {
       public void struct() {
         var code =
             """
-            MyStruct(
+            MyStruct {
               MyStruct myField
-            )
+            }
             """;
         var error =
             """
@@ -394,9 +394,9 @@ public class VisibilityTest {
       public void struct_through_array() {
         var code =
             """
-            MyStruct(
+            MyStruct {
               [MyStruct] myField
-            )
+            }
             """;
         var error =
             """
@@ -409,9 +409,9 @@ public class VisibilityTest {
       public void struct_through_func_result() {
         var code =
             """
-            MyStruct(
+            MyStruct {
               ()->MyStruct myField
-            )
+            }
             """;
         var error =
             """
@@ -424,9 +424,9 @@ public class VisibilityTest {
       public void struct_through_func_param() {
         var code =
             """
-            MyStruct(
+            MyStruct {
               (MyStruct)->Blob myField
-            )
+            }
             """;
         var error =
             """
@@ -500,12 +500,12 @@ public class VisibilityTest {
       public void struct_struct() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               MyStruct2 myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               MyStruct1 myField
-            )
+            }
             """;
         var error =
             """
@@ -519,12 +519,12 @@ public class VisibilityTest {
       public void struct_struct_through_array() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               MyStruct2 myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               [MyStruct1] myField
-            )
+            }
             """;
         var error =
             """
@@ -538,12 +538,12 @@ public class VisibilityTest {
       public void struct_struct_through_func_result() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               MyStruct2 myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               ()->MyStruct1 myField
-            )
+            }
             """;
         var error =
             """
@@ -557,12 +557,12 @@ public class VisibilityTest {
       public void struct_struct_through_func_param() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               MyStruct2 myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               (MyStruct1)->Blob myField
-            )
+            }
             """;
         var error =
             """
@@ -647,15 +647,15 @@ public class VisibilityTest {
       public void struct_struct_struct_through_array() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               MyStruct2 myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               MyStruct3 myField
-            )
-            MyStruct3(
+            }
+            MyStruct3 {
               [MyStruct1] myField
-            )
+            }
             """;
         var error =
             """
@@ -670,15 +670,15 @@ public class VisibilityTest {
       public void struct_struct_struct_through_func_result() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               [MyStruct2] myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               [MyStruct3] myField
-            )
-            MyStruct3(
+            }
+            MyStruct3 {
               ()->MyStruct1 myField
-            )
+            }
             """;
         var error =
             """
@@ -693,15 +693,15 @@ public class VisibilityTest {
       public void struct_struct_struct_through_func_param() {
         var code =
             """
-            MyStruct1(
+            MyStruct1 {
               [MyStruct2] myField
-            )
-            MyStruct2(
+            }
+            MyStruct2 {
               [MyStruct3] myField
-            )
-            MyStruct3(
+            }
+            MyStruct3 {
               (MyStruct1)->Blob myField
-            )
+            }
             """;
         var error =
             """
@@ -743,7 +743,7 @@ public class VisibilityTest {
         @Test
         public void constructor_succeeds() {
           var code = "otherModuleStruct = 7;";
-          var imported = "OtherModuleStruct()";
+          var imported = "OtherModuleStruct {}";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -802,7 +802,7 @@ public class VisibilityTest {
         @Test
         public void constructor_succeeds() {
           var code = "otherModuleStruct() = 7;";
-          var imported = "OtherModuleStruct()";
+          var imported = "OtherModuleStruct {}";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -866,7 +866,7 @@ public class VisibilityTest {
         @Test
         public void constructor_succeeds() {
           var code = "Int myFunc(String otherModuleStruct) = 7;";
-          var imported = "OtherModuleStruct()";
+          var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -897,7 +897,7 @@ public class VisibilityTest {
         public void constructor_succeeds() {
           var code =
               """
-              MyStruct()
+              MyStruct {}
               String myFunc(String myStruct) = "abc";
               """;
           module(code).loadsWithSuccess();
@@ -937,7 +937,7 @@ public class VisibilityTest {
         @Test
         public void constructor_succeeds() {
           var code = "myValue = (String otherModuleStruct) -> 7;";
-          var imported = "OtherModuleStruct()";
+          var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -968,7 +968,7 @@ public class VisibilityTest {
         public void constructor_succeeds() {
           var code =
               """
-              MyStruct()
+              MyStruct {}
               myValue = (String myStruct) -> 7;
               """;
           module(code).loadsWithSuccess();
@@ -982,14 +982,14 @@ public class VisibilityTest {
       class _imported {
         @Test
         public void base_type_succeeds() {
-          var code = "String()";
+          var code = "String {}";
           module(code).loadsWithSuccess().containsType(sStructType("String", nlist()));
         }
 
         @Test
         public void struct_succeeds() {
-          var code = "OtherModuleStruct()";
-          var imported = "OtherModuleStruct(Int int)";
+          var code = "OtherModuleStruct {}";
+          var imported = "OtherModuleStruct {Int int}";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -1003,8 +1003,8 @@ public class VisibilityTest {
         public void struct_fails() {
           var code =
               """
-              OtherModuleStruct()
-              OtherModuleStruct()
+              OtherModuleStruct {}
+              OtherModuleStruct {}
               """;
           module(code)
               .loadsWith(err(2, alreadyDefinedIn(userModuleFullPath(), "OtherModuleStruct")));
@@ -1018,10 +1018,10 @@ public class VisibilityTest {
       public void other_field_fails() {
         var code =
             """
-            MyStruct(
+            MyStruct {
               String field,
               String field
-            )
+            }
             """;
         module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "field"));
       }
@@ -1030,22 +1030,22 @@ public class VisibilityTest {
       class _imported {
         @Test
         public void value_succeeds() {
-          var code = "MyStruct(Int otherModuleValue)";
+          var code = "MyStruct {Int otherModuleValue}";
           var imported = "otherModuleValue = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void func_succeeds() {
-          var code = "MyStruct(String otherModuleFunc)";
+          var code = "MyStruct {String otherModuleFunc}";
           var imported = "otherModuleFunc() = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          var code = "MyStruct(String otherModuleStruct)";
-          var imported = "OtherModuleStruct()";
+          var code = "MyStruct {String otherModuleStruct}";
+          var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -1057,9 +1057,9 @@ public class VisibilityTest {
           var code =
               """
               myValue = "abc";
-              MyStruct(
+              MyStruct {
                 String myValue,
-              )
+              }
               """;
           module(code).loadsWithSuccess();
         }
@@ -1069,9 +1069,9 @@ public class VisibilityTest {
           var code =
               """
               myFunc() = "abc";
-              MyStruct(
+              MyStruct {
                 String myFunc,
-              )
+              }
               """;
           module(code).loadsWithSuccess();
         }
@@ -1080,10 +1080,10 @@ public class VisibilityTest {
         public void constructor_succeeds() {
           var code =
               """
-              MyStruct()
-              MyOtherStruct(
+              MyStruct {}
+              MyOtherStruct {
                  String myStruct,
-              )
+              }
               """;
           module(code).loadsWithSuccess();
         }
