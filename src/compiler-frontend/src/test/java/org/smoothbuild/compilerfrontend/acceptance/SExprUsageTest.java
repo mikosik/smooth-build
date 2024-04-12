@@ -269,9 +269,9 @@ public class SExprUsageTest {
     public void func_arg() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           myValue = MyStruct("abc");
           String myFunc(String s) = "abc";
           result = myFunc(myValue.field);
@@ -283,9 +283,9 @@ public class SExprUsageTest {
     public void func_body() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           myValue = MyStruct("abc");
           result() = myValue.field;
           """)
@@ -296,9 +296,9 @@ public class SExprUsageTest {
     public void value_body() {
       module(
               """
-          MyStruct(
+          MyStruct {
             String field,
-          )
+          }
           myValue = MyStruct("abc");
           result = myValue.field;
           """)
@@ -309,9 +309,9 @@ public class SExprUsageTest {
     public void array_elem() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           myValue = MyStruct("abc");
           result = [myValue.field];
           """)
@@ -322,9 +322,9 @@ public class SExprUsageTest {
     public void param_default_value() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           value = MyStruct("abc");
           String myFunc(String value = value.field) = "abc";
           """)
@@ -335,9 +335,9 @@ public class SExprUsageTest {
     public void func_in_call_expression() {
       module(
               """
-          MyStruct(
+          MyStruct{
             ()->String myFunc
-          )
+          }
           String justAbc() = "abc";
           result = MyStruct(justAbc).myFunc();
           """)
@@ -348,9 +348,9 @@ public class SExprUsageTest {
     public void func_in_call_expression_fails_when_field_type_is_not_a_func() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String myField
-          )
+          }
           result = MyStruct("abc").myField();
           """)
           .loadsWithError(4, "Illegal call.");
@@ -360,12 +360,12 @@ public class SExprUsageTest {
     public void struct_in_select_expression() {
       String code =
           """
-            S1(
+            S1{
               S2 f1,
-            )
-            S2(
+            }
+            S2{
               String f2,
-            )
+            }
             String result = S1(S2("abc")).f1.f2;
             """;
       module(code).loadsWithSuccess();
@@ -375,9 +375,9 @@ public class SExprUsageTest {
     public void struct_in_select_expression_fails_when_field_type_is_not_a_struct() {
       var code =
           """
-            MyStruct(
+            MyStruct{
               String myField,
-            )
+            }
             String result = MyStruct("abc").myField.otherField;
             """;
       module(code).loadsWithError(4, "Illegal field access.");
@@ -387,9 +387,9 @@ public class SExprUsageTest {
     public void parens_content() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           myValue = MyStruct("abc");
           result = (myValue.field);
           """)
@@ -478,16 +478,22 @@ public class SExprUsageTest {
                   """
                   mismatched input '>' expecting {'(', ')', ',', '.'}
                   String myFunc(String param = "abc" > myIdentity()) = "abc";
-                                                     ^"""));
+                                                     ^"""),
+              err(
+                  2,
+                  """
+                  extraneous input ')' expecting {'=', ';'}
+                  String myFunc(String param = "abc" > myIdentity()) = "abc";
+                                                                   ^"""));
     }
 
     @Test
     public void parens_content() {
       module(
               """
-          MyStruct(
+          MyStruct{
             String field,
-          )
+          }
           myValue = MyStruct("abc");
           result = (myValue.field);
           """)
@@ -562,9 +568,9 @@ public class SExprUsageTest {
     public void struct_in_select_expression() {
       var code =
           """
-            MyStruct(
+            MyStruct{
               String myField
-            )
+            }
             myFunc() = MyStruct("abc");
             result = myFunc().myField;
             """;
@@ -775,9 +781,9 @@ public class SExprUsageTest {
     public void struct_in_select_expression() {
       var code =
           """
-            MyStruct(
+            MyStruct{
               String myField
-            )
+            }
             myFunc(MyStruct param) = param.myField;
             """;
       module(code).loadsWithSuccess();
@@ -873,9 +879,9 @@ public class SExprUsageTest {
     public void struct_in_select_expression() {
       var code =
           """
-            MyStruct(
+            MyStruct {
               String myField
-            )
+            }
             myValue = MyStruct("abc");
             result = myValue.myField;
             """;
@@ -907,10 +913,10 @@ public class SExprUsageTest {
     public void field_type() {
       module(
               """
-          ReferencingStruct(
+          ReferencingStruct {
            MyStruct field
-          )
-          MyStruct()
+          }
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -919,11 +925,11 @@ public class SExprUsageTest {
     public void field_arrayed_type() {
       module(
               """
-          ReferencingStruct(
-           String firstField,
-           [MyStruct] field
-          )
-          MyStruct()
+          ReferencingStruct {
+            String firstField,
+            [MyStruct] field
+          }
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -935,7 +941,7 @@ public class SExprUsageTest {
           @Native("Impl.met")
           MyStruct myFunc();
           MyStruct myValue = myFunc();
-          MyStruct()
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -946,7 +952,7 @@ public class SExprUsageTest {
               """
           @Native("Impl.met")
           [MyStruct] myValue();
-          MyStruct()
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -956,7 +962,7 @@ public class SExprUsageTest {
       module(
               """
           String myFunc(MyStruct param) = "abc";
-          MyStruct()
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -966,7 +972,7 @@ public class SExprUsageTest {
       module(
               """
           String myFunc([MyStruct] param) = "abc";
-          MyStruct()
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -977,16 +983,17 @@ public class SExprUsageTest {
               """
           @Native("Impl.met")
           MyStruct myFunc(String param);
-          MyStruct()
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
 
     @Test
     public void func_arrayed_result_type() {
-      module("""
+      module(
+              """
           [MyStruct] myFunc(String param) = [];
-          MyStruct()
+          MyStruct {}
           """)
           .loadsWithSuccess();
     }
@@ -1113,9 +1120,9 @@ public class SExprUsageTest {
     public void struct_in_select_expression() {
       var code =
           """
-          MyStruct(
+          MyStruct{
             Int myField
-          )
+          }
           result = (MyStruct(7)).myField;
           """;
       module(code).loadsWithSuccess();

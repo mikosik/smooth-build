@@ -67,9 +67,9 @@ public class EvaluateTest extends EvaluatorTestCase {
       public void select() throws Exception {
         createUserModule(
             """
-            MyStruct(
+            MyStruct {
               String field,
-            )
+            }
             String result = MyStruct("abc").field;
             """);
         evaluate("result");
@@ -80,9 +80,9 @@ public class EvaluateTest extends EvaluatorTestCase {
       public void select_does_not_consume_piped_value() throws Exception {
         createUserModule(
             """
-            MyStruct(
+            MyStruct {
               (String)->Int field,
-            )
+            }
             Int return7(String s) = 7;
             aStruct = MyStruct(return7);
             Int result = "abc" > aStruct.field();

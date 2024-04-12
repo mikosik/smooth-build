@@ -122,10 +122,10 @@ public class EqualTest extends StandardLibraryTestCase {
     public void struct_is_equal_to_itself() throws Exception {
       var userModule =
           """
-          Person(
+          Person {
             String firstName,
             String secondName,
-          )
+          }
           result = equal(Person("aaa", "bbb"), Person("aaa", "bbb"));
           """;
       createUserModule(userModule);
@@ -138,10 +138,10 @@ public class EqualTest extends StandardLibraryTestCase {
         throws Exception {
       var userModule =
           """
-          Person(
+          Person {
             String firstName,
             String secondName,
-          )
+          }
           result = equal(Person("aaa", "bbb"), Person("aaa", "ccc"));
           """;
       createUserModule(userModule);

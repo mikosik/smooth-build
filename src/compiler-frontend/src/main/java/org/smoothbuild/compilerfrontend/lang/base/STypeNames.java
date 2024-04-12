@@ -43,11 +43,11 @@ public class STypeNames {
   }
 
   public static String tupleTypeName(List<? extends SType> elemTs) {
-    return "(" + commaSeparatedTypeNames(elemTs) + ")";
+    return "{" + commaSeparatedTypeNames(elemTs) + "}";
   }
 
   public static String interfaceTypeName(Map<String, SItemSig> fields) {
-    return listOfAll(fields.values()).toString("(", ",", ")");
+    return listOfAll(fields.values()).toString("{", ",", "}");
   }
 
   private static String commaSeparatedTypeNames(List<? extends SType> elemTs) {

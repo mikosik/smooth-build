@@ -1,8 +1,8 @@
 
-File(
+File {
   Blob content,
   String path,
-)
+}
 
 @Native("org.smoothbuild.stdlib.bool.NotFunc")
 Bool not(Bool value);
