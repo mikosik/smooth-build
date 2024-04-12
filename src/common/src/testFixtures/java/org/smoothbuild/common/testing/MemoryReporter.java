@@ -22,11 +22,20 @@ public class MemoryReporter implements Reporter {
     return reports.stream().anyMatch(r -> containsAnyFailure(r.logs()));
   }
 
+  public List<Report> reports() {
+    return listOfAll(reports);
+  }
+
   public List<Log> logs() {
     return listOfAll(streamOfAllLogs().toList());
   }
 
   private Stream<Log> streamOfAllLogs() {
     return reports.stream().flatMap(r -> r.logs().stream());
+  }
+
+  @Override
+  public String toString() {
+    return listOfAll(reports).map(Report::toPrettyString).toString("\n");
   }
 }

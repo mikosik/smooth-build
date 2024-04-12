@@ -1,9 +1,17 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE_PREFIX;
+
 import jakarta.inject.Inject;
 import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.Consumer0;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
@@ -13,13 +21,16 @@ public class TaskExecutor {
   private final SoftTerminationExecutor executor;
   private final Computer computer;
   private final TaskReporter taskReporter;
+  private final Reporter reporter;
 
   @Inject
-  public TaskExecutor(Computer computer, TaskReporter taskReporter) {
-    this(computer, taskReporter, Runtime.getRuntime().availableProcessors());
+  public TaskExecutor(Computer computer, TaskReporter taskReporter, Reporter reporter) {
+    this(computer, taskReporter, reporter, Runtime.getRuntime().availableProcessors());
   }
 
-  public TaskExecutor(Computer computer, TaskReporter taskReporter, int threadCount) {
+  public TaskExecutor(
+      Computer computer, TaskReporter taskReporter, Reporter reporter, int threadCount) {
+    this.reporter = reporter;
     this.executor = new SoftTerminationExecutor(threadCount);
     this.computer = computer;
     this.taskReporter = taskReporter;
@@ -39,7 +50,7 @@ public class TaskExecutor {
       try {
         consumer0.accept();
       } catch (Throwable e) {
-        taskReporter.reportEvaluationException(e);
+        reporter.report(report(label(EVALUATE_PREFIX), "", EXECUTION, list(fatal(e))));
         executor.terminate();
       }
     });
