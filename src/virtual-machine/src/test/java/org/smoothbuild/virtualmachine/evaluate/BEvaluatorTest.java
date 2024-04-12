@@ -19,6 +19,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
+import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
@@ -38,6 +39,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.report.Report;
+import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
@@ -55,14 +59,13 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
-import org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReport;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
-import org.smoothbuild.virtualmachine.testing.FakeTaskReporter;
+import org.smoothbuild.virtualmachine.testing.ForwardingTaskReporter;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BEvaluatorTest extends TestingVirtualMachine {
@@ -327,7 +330,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         public boolean isResultWithIndexOutOfBoundsError(TaskReport taskReport) {
-          return reportWith(taskReport, ERROR, "Index (4) out of bounds. Array size = 4.");
+          return taskReportWith(taskReport, ERROR, "Index (4) out of bounds. Array size = 4.");
         }
 
         @Test
@@ -339,7 +342,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         public boolean isResultWithNegativeIndexError(TaskReport taskReport) {
-          return reportWith(taskReport, ERROR, "Index (-1) out of bounds. Array size = 4.");
+          return taskReportWith(taskReport, ERROR, "Index (-1) out of bounds. Array size = 4.");
         }
       }
 
@@ -375,10 +378,13 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         public void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
-          var taskReporter = mock(TaskReporter.class);
-          evaluateWithFailure(bEvaluator(taskReporter), call);
-          verify(taskReporter)
-              .reportEvaluationException(any(ReferenceIndexOutOfBoundsException.class));
+          evaluateWithFailure(bEvaluator(), call);
+          var reports = reporter().reports();
+          assertReportsContains(
+              reports,
+              FATAL,
+              "org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException:"
+                  + " Reference index = 2 is out of bounds. Bound variables size = 1.");
         }
 
         @Test
@@ -387,10 +393,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
                 throws Exception {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
           var call = bCall(lambda, bBlob());
-          var taskReporter = mock(TaskReporter.class);
-          evaluateWithFailure(bEvaluator(taskReporter), call);
-          verify(taskReporter).reportEvaluationException(argThat(e -> e.getMessage()
-              .equals("environment(0) evaluationType is `Blob` but expected `Int`.")));
+          evaluateWithFailure(bEvaluator(), call);
+          assertReportsContains(
+              reporter().reports(),
+              FATAL,
+              "java.lang.RuntimeException: environment(0) evaluationType is `Blob` but expected `Int`.");
         }
       }
 
@@ -406,16 +413,16 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     class _errors {
       @Test
       public void task_throwing_runtime_exception_causes_fatal() throws Exception {
-        var taskReporter = mock(TaskReporter.class);
-        var scheduler = bScheduler(taskReporter, 4);
+        var reporter = mock(Reporter.class);
+        var scheduler = bScheduler(new ForwardingTaskReporter(reporter), 4);
         var expr = throwExceptionCall();
-        evaluateWithFailure(new BEvaluator(() -> scheduler, taskReporter), expr);
-        verify(taskReporter).report(argThat(this::taskReportWithFatalCausedByRuntimeException));
+        evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
+        verify(reporter).report(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
-      private boolean taskReportWithFatalCausedByRuntimeException(TaskReport result) {
+      private boolean reportWithFatalCausedByRuntimeException(Report report) {
         return reportWith(
-            result, FATAL, "Native code thrown exception:\njava.lang.ArithmeticException");
+            report, FATAL, "Native code thrown exception:\njava.lang.ArithmeticException");
       }
 
       private BCall throwExceptionCall() throws Exception {
@@ -432,7 +439,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
       @Test
       public void computer_that_throws_exception_is_detected() throws Exception {
-        var taskReporter = mock(TaskReporter.class);
+        var reporter = mock(Reporter.class);
         var expr = bString("abc");
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
@@ -441,16 +448,24 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             throw runtimeException;
           }
         };
-        var scheduler = bScheduler(computer, taskReporter, 4);
+        var scheduler = bScheduler(computer, new ForwardingTaskReporter(reporter), 4);
 
-        evaluateWithFailure(new BEvaluator(() -> scheduler, taskReporter), expr);
-        verify(taskReporter, times(1)).reportEvaluationException(runtimeException);
+        evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
+        assertThat(reporter().reports())
+            .contains(new Report(EVALUATE, "", EXECUTION, list(fatal(runtimeException))));
       }
     }
   }
 
-  private static boolean reportWith(TaskReport taskReport, Level level, String messageStart) {
+  private static boolean taskReportWith(TaskReport taskReport, Level level, String messageStart) {
     var logs = taskReport.logs();
+    return logs.size() == 1
+        && logs.get(0).level() == level
+        && logs.get(0).message().startsWith(messageStart);
+  }
+
+  private static boolean reportWith(Report report, Level level, String messageStart) {
+    var logs = report.logs();
     return logs.size() == 1
         && logs.get(0).level() == level
         && logs.get(0).message().startsWith(messageStart);
@@ -597,12 +612,12 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"));
 
-      var taskReporter = fakeTaskReporter();
-      var vm = new BEvaluator(() -> bScheduler(taskReporter, 4), taskReporter);
+      var taskReporter = taskReporter();
+      var vm = new BEvaluator(() -> bScheduler(taskReporter, 4), new MemoryReporter());
       assertThat(evaluate(vm, bExpr))
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
-      verifyConstTasksResultSource(4, DISK, taskReporter);
+      verifyConstTasksResultSource(4, DISK, reporter());
     }
 
     @Test
@@ -623,7 +638,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
           invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new BEvaluator(() -> bScheduler(2), fakeTaskReporter());
+      var vm = new BEvaluator(() -> bScheduler(2), new MemoryReporter());
       assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
     }
 
@@ -676,8 +691,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
   private BValue evaluate(BEvaluator bEvaluator, BExpr expr) {
     var maybeResult = bEvaluator.evaluate(list(expr));
-    assertWithMessage(
-            " ==== Console logs ==== \n" + fakeTaskReporter().toString() + "\n ==========\n")
+    assertWithMessage(" ==== Console logs ==== \n" + reporter() + "\n ==========\n")
         .that(maybeResult.isSome())
         .isTrue();
     var results = maybeResult.get();
@@ -695,11 +709,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   }
 
   private static void verifyConstTasksResultSource(
-      int size, ResultSource expectedSource, FakeTaskReporter fakeTaskReporter) {
-    var sources = fakeTaskReporter.getTaskReports().stream()
+      int size, ResultSource expectedSource, MemoryReporter reporter) {
+    var sources = reporter
+        .reports()
         .filter(r -> r.label().equals(EVALUATE.append(label("invoke"))))
-        .map(TaskReport::source)
-        .toList();
+        .map(Report::source);
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 
@@ -732,5 +746,12 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     public ConcurrentHashMap<Class<?>, AtomicInteger> counters() {
       return counters;
     }
+  }
+
+  private static void assertReportsContains(
+      List<Report> reports, Level level, String messagePrefix) {
+    var contains = reports.stream().anyMatch(r -> r.logs()
+        .anyMatches(l -> l.level() == level && l.message().startsWith(messagePrefix)));
+    assertWithMessage(reports.toString()).that(contains).isTrue();
   }
 }

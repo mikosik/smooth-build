@@ -27,4 +27,20 @@ public record Report(Label label, String details, ResultSource source, List<Log>
       throws T {
     return new Report(label, details, source, function1.apply(logs));
   }
+
+  public String toPrettyString() {
+    var builder = new StringBuilder();
+    builder.append("TaskReport [");
+    builder.append(this.label());
+    builder.append("] ");
+    builder.append(source);
+    builder.append("\n");
+    builder.append(details);
+    builder.append("\n");
+    for (var log : this.logs()) {
+      builder.append(log.toPrettyString());
+      builder.append("\n");
+    }
+    return builder.toString();
+  }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.testing;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
@@ -16,7 +17,10 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -64,10 +68,15 @@ public class TestingVirtualMachine extends TestingBytecode {
   private HashedDb hashedDb;
   private Bucket projectBucket;
   private Bucket hashedDbBucket;
-  private FakeTaskReporter fakeTaskReporter;
+  private final Function0<MemoryReporter, RuntimeException> reporter =
+      memoizer(MemoryReporter::new);
 
   public BEvaluator bEvaluator(TaskReporter taskReporter) {
     return bEvaluator(taskExecutor(taskReporter));
+  }
+
+  public BEvaluator bEvaluator(Reporter reporter) {
+    return bEvaluator(this::bScheduler, reporter);
   }
 
   public BEvaluator bEvaluator() {
@@ -75,11 +84,11 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BEvaluator bEvaluator(Provider<BScheduler> schedulerB) {
-    return bEvaluator(schedulerB, fakeTaskReporter());
+    return bEvaluator(schedulerB, reporter());
   }
 
-  public BEvaluator bEvaluator(Provider<BScheduler> schedulerB, TaskReporter taskReporter) {
-    return new BEvaluator(schedulerB, taskReporter);
+  public BEvaluator bEvaluator(Provider<BScheduler> schedulerB, Reporter reporter) {
+    return new BEvaluator(schedulerB, reporter);
   }
 
   public BEvaluator bEvaluator(NativeMethodLoader nativeMethodLoader) {
@@ -107,7 +116,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BScheduler bScheduler(int threadCount) {
-    return bScheduler(computer(), fakeTaskReporter(), threadCount);
+    return bScheduler(computer(), taskReporter(), threadCount);
   }
 
   public BScheduler bScheduler(TaskReporter reporter, int threadCount) {
@@ -123,11 +132,11 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public TaskExecutor taskExecutor() {
-    return taskExecutor(fakeTaskReporter());
+    return taskExecutor(taskReporter());
   }
 
   public TaskExecutor taskExecutor(NativeMethodLoader nativeMethodLoader) {
-    return taskExecutor(fakeTaskReporter(), nativeMethodLoader);
+    return taskExecutor(taskReporter(), nativeMethodLoader);
   }
 
   public TaskExecutor taskExecutor(TaskReporter taskReporter) {
@@ -136,11 +145,11 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   public TaskExecutor taskExecutor(
       TaskReporter taskReporter, NativeMethodLoader nativeMethodLoader) {
-    return new TaskExecutor(computer(nativeMethodLoader), taskReporter);
+    return new TaskExecutor(computer(nativeMethodLoader), taskReporter, reporter());
   }
 
   public TaskExecutor taskExecutor(Computer computer, TaskReporter taskReporter, int threadCount) {
-    return new TaskExecutor(computer, taskReporter, threadCount);
+    return new TaskExecutor(computer, taskReporter, reporter(), threadCount);
   }
 
   public FilePersister filePersister() {
@@ -163,11 +172,12 @@ public class TestingVirtualMachine extends TestingBytecode {
     return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
   }
 
-  public FakeTaskReporter fakeTaskReporter() {
-    if (fakeTaskReporter == null) {
-      fakeTaskReporter = new FakeTaskReporter();
-    }
-    return fakeTaskReporter;
+  public TaskReporter taskReporter() {
+    return new ForwardingTaskReporter(reporter());
+  }
+
+  public MemoryReporter reporter() {
+    return reporter.apply();
   }
 
   public Computer computer() {
