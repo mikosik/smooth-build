@@ -95,7 +95,7 @@ public class BScheduler {
       case BValue value -> scheduleConstTask(job, value);
       case BOrder order -> scheduleOperationTask(job, order, OrderTask::new);
       case BPick pick -> scheduleOperationTask(job, pick, PickTask::new);
-      case BReference reference -> scheduleVarB(job, reference);
+      case BReference reference -> scheduleReference(job, reference);
       case BSelect select -> scheduleOperationTask(job, select, SelectTask::new);
       case BInvoke bInvoke -> scheduleOperationTask(job, bInvoke, InvokeTask::newInvokeTask);
     }
@@ -209,7 +209,7 @@ public class BScheduler {
     scheduleJobTask(job, operationTask, subExprJobs);
   }
 
-  private void scheduleVarB(Job job, BReference reference) throws BytecodeException {
+  private void scheduleReference(Job job, BReference reference) throws BytecodeException {
     int index = reference.index().toJavaBigInteger().intValue();
     var referencedJob = job.environment().get(index);
     var jobEvaluationType = referencedJob.expr().evaluationType();
