@@ -1,22 +1,20 @@
 package org.smoothbuild.virtualmachine.testing;
 
+import static com.google.common.base.Suppliers.memoize;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
 import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
+import com.google.common.base.Supplier;
 import jakarta.inject.Provider;
-import java.io.IOException;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
@@ -61,14 +59,13 @@ import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TestingVirtualMachine extends TestingBytecode {
-  private BytecodeFactory bytecodeFactory;
-  private BExprDb exprDb;
-  private BKindDb kindDb;
-  private HashedDb hashedDb;
-  private Bucket projectBucket;
-  private Bucket hashedDbBucket;
-  private final Function0<MemoryReporter, RuntimeException> reporter =
-      memoizer(MemoryReporter::new);
+  private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
+  private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
+  private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);
+  private final Supplier<HashedDb> hashedDb = memoize(this::createHashDb);
+  private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
+  private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
+  private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
 
   public BEvaluator bEvaluator(TaskReporter taskReporter) {
     return bEvaluator(taskExecutor(taskReporter));
@@ -176,7 +173,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public MemoryReporter reporter() {
-    return reporter.apply();
+    return reporter.get();
   }
 
   public Computer computer() {
@@ -196,30 +193,33 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Container container(NativeMethodLoader nativeMethodLoader) {
-    return new Container(hashedDbBucket(), bytecodeF(), nativeMethodLoader);
+    return new Container(projectBucket(), bytecodeF(), nativeMethodLoader);
   }
 
   @Override
   public BytecodeFactory bytecodeF() {
-    if (bytecodeFactory == null) {
-      bytecodeFactory = new BytecodeFactory(exprDb(), kindDb());
-    }
-    return bytecodeFactory;
+    return bytecodeFactory.get();
+  }
+
+  private BytecodeFactory newBytecodeFactory() {
+    return new BytecodeFactory(exprDb(), kindDb());
   }
 
   @Override
   public BKindDb kindDb() {
-    if (kindDb == null) {
-      kindDb = new BKindDb(hashedDb());
-    }
-    return kindDb;
+    return kindDb.get();
+  }
+
+  private BKindDb newKindDb() {
+    return new BKindDb(hashedDb());
   }
 
   public BExprDb exprDb() {
-    if (exprDb == null) {
-      exprDb = new BExprDb(hashedDb(), kindDb());
-    }
-    return exprDb;
+    return exprDb.get();
+  }
+
+  private BExprDb newExprDb() {
+    return new BExprDb(hashedDb(), kindDb());
   }
 
   public ComputationCache computationCache() {
@@ -233,19 +233,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Bucket projectBucket() {
-    if (projectBucket == null) {
-      projectBucket = synchronizedMemoryBucket();
-    }
-    return projectBucket;
-  }
-
-  public static void initializeDir(Bucket bucket, Path dir) throws IOException {
-    switch (bucket.pathState(dir)) {
-      case DIR -> {}
-      case FILE -> throw new IOException(
-          "Cannot create directory at " + dir.q() + " because it is a file.");
-      case NOTHING -> bucket.createDir(dir);
-    }
+    return projectBucket.get();
   }
 
   public BExprDb exprDbOther() {
@@ -253,22 +241,21 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BKindDb kindDbOther() {
-    return new BKindDb(hashedDb());
+    return newKindDb();
   }
 
   public HashedDb hashedDb() {
-    if (hashedDb == null) {
-      hashedDb = new HashedDb(hashedDbBucket());
-      hashedDb.initialize().toMaybe().getOrThrow(RuntimeException::new);
-    }
+    return hashedDb.get();
+  }
+
+  private HashedDb createHashDb() {
+    var hashedDb = new HashedDb(hashedDbBucket());
+    hashedDb.initialize().toMaybe().getOrThrow(RuntimeException::new);
     return hashedDb;
   }
 
   public Bucket hashedDbBucket() {
-    if (hashedDbBucket == null) {
-      hashedDbBucket = projectBucket();
-    }
-    return hashedDbBucket;
+    return hashedDbBucket.get();
   }
 
   // Job related
@@ -299,11 +286,11 @@ public class TestingVirtualMachine extends TestingBytecode {
     return invokeTask(bInvoke(), bTrace());
   }
 
-  public InvokeTask invokeTask(BInvoke invoke) throws BytecodeException {
+  public InvokeTask invokeTask(BInvoke invoke) {
     return invokeTask(invoke, null);
   }
 
-  public InvokeTask invokeTask(BInvoke invoke, BTrace trace) throws BytecodeException {
+  public InvokeTask invokeTask(BInvoke invoke, BTrace trace) {
     return newInvokeTask(invoke, trace);
   }
 
@@ -362,10 +349,6 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   public static ComputationResult computationResult(Output output, ResultSource source) {
     return new ComputationResult(output, source);
-  }
-
-  public ComputationResult computationResultWithMessages(BArray messages) throws BytecodeException {
-    return computationResult(output(bInt(), messages), EXECUTION);
   }
 
   public Output output(BValue value) throws BytecodeException {
