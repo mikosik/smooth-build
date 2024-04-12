@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> of(T value, Collection<Log> logs) {
-    Maybe<T> maybe = containsAnyFailure(logs) ? Maybe.none() : some(value);
+    Maybe<T> maybe = containsFailure(logs) ? Maybe.none() : some(value);
     return new Try<>(maybe, logs);
   }
 
@@ -31,7 +31,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> success(T value, Collection<Log> logs) {
-    checkArgument(!containsAnyFailure(logs), "Logs must not contain failure.");
+    checkArgument(!containsFailure(logs), "Logs must not contain failure.");
     return new Try<>(some(value), logs);
   }
 
@@ -40,7 +40,7 @@ public class Try<V> {
   }
 
   public static <T> Try<T> failure(Collection<Log> logs) {
-    checkArgument(containsAnyFailure(logs), "Logs must contain failure.");
+    checkArgument(containsFailure(logs), "Logs must contain failure.");
     return new Try<>(none(), logs);
   }
 

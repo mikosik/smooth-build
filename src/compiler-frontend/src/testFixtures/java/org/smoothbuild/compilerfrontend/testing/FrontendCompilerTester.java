@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
@@ -95,7 +95,7 @@ public class FrontendCompilerTester {
   public void loadsWithProblems() {
     var module = loadModule();
     assertWithMessage(messageWithSourceCode())
-        .that(containsAnyFailure(module.logs()))
+        .that(containsFailure(module.logs()))
         .isTrue();
   }
 

@@ -12,7 +12,7 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.log.base.Log.containsAnyFailure;
+import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
@@ -160,7 +160,7 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   protected void assertLogsContainFailure() {
-    assertThat(containsAnyFailure(memoryReporter().logs())).isTrue();
+    assertThat(containsFailure(memoryReporter().logs())).isTrue();
   }
 
   private MemoryReporter memoryReporter() {
