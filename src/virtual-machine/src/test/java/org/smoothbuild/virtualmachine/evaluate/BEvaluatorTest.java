@@ -16,11 +16,13 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,15 +33,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
-import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.ResultSource;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -49,7 +48,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
@@ -59,9 +57,9 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
+import org.smoothbuild.virtualmachine.evaluate.execute.TaskReport;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.testing.FakeTaskReporter;
@@ -325,13 +323,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(bEvaluator(taskReporter), pick);
-          verify(taskReporter)
-              .report(any(Task.class), argThat(this::isResultWithIndexOutOfBoundsError));
+          verify(taskReporter).report(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
-        public boolean isResultWithIndexOutOfBoundsError(ComputationResult computationResult) {
-          return computationResultWith(
-              computationResult, ERROR, "Index (4) out of bounds. Array size = 4.");
+        public boolean isResultWithIndexOutOfBoundsError(TaskReport taskReport) {
+          return reportWith(taskReport, ERROR, "Index (4) out of bounds. Array size = 4.");
         }
 
         @Test
@@ -339,13 +335,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var taskReporter = mock(TaskReporter.class);
           evaluateWithFailure(bEvaluator(taskReporter), pick);
-          verify(taskReporter)
-              .report(any(Task.class), argThat(this::isResultWithNegativeIndexError));
+          verify(taskReporter).report(argThat(this::isResultWithNegativeIndexError));
         }
 
-        public boolean isResultWithNegativeIndexError(ComputationResult computationResult) {
-          return computationResultWith(
-              computationResult, ERROR, "Index (-1) out of bounds. Array size = 4.");
+        public boolean isResultWithNegativeIndexError(TaskReport taskReport) {
+          return reportWith(taskReport, ERROR, "Index (-1) out of bounds. Array size = 4.");
         }
       }
 
@@ -416,12 +410,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var scheduler = bScheduler(taskReporter, 4);
         var expr = throwExceptionCall();
         evaluateWithFailure(new BEvaluator(() -> scheduler, taskReporter), expr);
-        verify(taskReporter)
-            .report(any(), argThat(this::computationResultWithFatalCausedByRuntimeException));
+        verify(taskReporter).report(argThat(this::taskReportWithFatalCausedByRuntimeException));
       }
 
-      private boolean computationResultWithFatalCausedByRuntimeException(ComputationResult result) {
-        return computationResultWith(
+      private boolean taskReportWithFatalCausedByRuntimeException(TaskReport result) {
+        return reportWith(
             result, FATAL, "Native code thrown exception:\njava.lang.ArithmeticException");
       }
 
@@ -456,24 +449,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     }
   }
 
-  private static boolean computationResultWith(
-      ComputationResult result, Level level, String messageStart) {
-    BArray messages = result.output().storedLogs();
-    try {
-      return messages.size() == 1
-          && StoredLogStruct.level(messages.elements(BTuple.class).get(0)) == level
-          && StoredLogStruct.message(messages.elements(BTuple.class).get(0))
-              .startsWith(messageStart);
-    } catch (BytecodeException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static ArgumentMatcher<List<Log>> isLogListWithFatalMessageStartingWith(
-      String messageStart) {
-    return argument -> argument.size() == 1
-        && argument.get(0).level() == FATAL
-        && argument.get(0).message().startsWith(messageStart);
+  private static boolean reportWith(TaskReport taskReport, Level level, String messageStart) {
+    var logs = taskReport.logs();
+    return logs.size() == 1
+        && logs.get(0).level() == level
+        && logs.get(0).message().startsWith(messageStart);
   }
 
   @Nested
@@ -482,10 +462,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     class _empty_trace {
       @ParameterizedTest
       @MethodSource("report_const_task_cases")
-      public void report_value_as_const_task(BValue value) throws Exception {
+      public void report_value_as_const_task(BValue value) {
         var taskReporter = mock(TaskReporter.class);
         evaluate(bEvaluator(taskReporter), value);
-        verify(taskReporter).report(constTask(value, bTrace()), computationResult(value, NOOP));
+        verify(taskReporter)
+            .report(new TaskReport(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       public static List<BValue> report_const_task_cases() throws Exception {
@@ -503,8 +484,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void report_invoke_as_invoke_task() throws Exception {
         var invoke = bReturnAbcInvoke();
-        assertReport(
-            invoke, invokeTask(invoke, bTrace()), computationResult(bString("abc"), EXECUTION));
+        assertTaskReport(invoke, label("invoke"), bTrace(), EXECUTION);
       }
 
       @Test
@@ -515,8 +495,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var if_ = bIf(condition, then_, else_);
         var taskReporter = mock(TaskReporter.class);
         evaluate(bEvaluator(taskReporter), if_);
-        verify(taskReporter).report(constTask(condition), computationResult(condition, NOOP));
-        verify(taskReporter).report(constTask(then_), computationResult(then_, NOOP));
+        verify(taskReporter, times(2))
+            .report(new TaskReport(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       @Test
@@ -526,36 +506,32 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var if_ = bMap(array, mapper);
         var taskReporter = mock(TaskReporter.class);
         evaluate(bEvaluator(taskReporter), if_);
-        verify(taskReporter).report(constTask(array), computationResult(array, NOOP));
-        verify(taskReporter).report(constTask(mapper), computationResult(mapper, NOOP));
+        verify(taskReporter, times(3))
+            .report(new TaskReport(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       @Test
       public void report_combine_as_combine_task() throws Exception {
         var combine = bCombine(bInt(17));
-        assertReport(
-            combine,
-            combineTask(combine, bTrace()),
-            computationResult(bTuple(bInt(17)), EXECUTION));
+        assertTaskReport(combine, label("combine"), bTrace(), EXECUTION);
       }
 
       @Test
       public void report_order_as_order_task() throws Exception {
         var order = bOrder(bInt(17));
-        assertReport(
-            order, orderTask(order, bTrace()), computationResult(bArray(bInt(17)), EXECUTION));
+        assertTaskReport(order, label("order"), bTrace(), EXECUTION);
       }
 
       @Test
       public void report_pick_as_pick_task() throws Exception {
         var pick = bPick(bArray(bInt(17)), bInt(0));
-        assertReport(pick, pickTask(pick, bTrace()), computationResult(bInt(17), EXECUTION));
+        assertTaskReport(pick, label("pick"), bTrace(), EXECUTION);
       }
 
       @Test
       public void report_select_as_select_task() throws Exception {
         var select = bSelect(bTuple(bInt(17)), bInt(0));
-        assertReport(select, selectTask(select, bTrace()), computationResult(bInt(17), EXECUTION));
+        assertTaskReport(select, label("select"), bTrace(), EXECUTION);
       }
     }
 
@@ -567,10 +543,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var lambda = bLambda(order);
         var lambdaAsExpr = bCall(bLambda(lambda));
         var call = bCall(lambdaAsExpr);
-        assertReport(
-            call,
-            orderTask(order, bTrace(call, lambda)),
-            computationResult(bArray(bInt(17)), EXECUTION));
+        assertTaskReport(call, label("order"), bTrace(call, lambda), EXECUTION);
       }
 
       @Test
@@ -581,18 +554,17 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var call2 = bCall(lambda2);
         var lambda1 = bLambda(call2);
         var call1 = bCall(lambda1);
-        assertReport(
-            call1,
-            orderTask(order, bTrace(call2, lambda2, bTrace(call1, lambda1))),
-            computationResult(bArray(bInt(17)), EXECUTION));
+        assertTaskReport(
+            call1, label("order"), bTrace(call2, lambda2, bTrace(call1, lambda1)), EXECUTION);
       }
     }
 
-    private void assertReport(BExpr expr, Task task, ComputationResult result)
-        throws BytecodeException {
+    private void assertTaskReport(
+        BExpr expr, Label label, BTrace trace, ResultSource resultSource) {
       var taskReporter = mock(TaskReporter.class);
       evaluate(bEvaluator(taskReporter), expr);
-      verify(taskReporter).report(task, result);
+      var taskReport = new TaskReport(EVALUATE.append(label), trace, resultSource, list());
+      verify(taskReporter).report(taskReport);
     }
   }
 
@@ -724,9 +696,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
   private static void verifyConstTasksResultSource(
       int size, ResultSource expectedSource, FakeTaskReporter fakeTaskReporter) {
-    var sources = fakeTaskReporter.getReported().stream()
-        .filter(r -> r.task() instanceof InvokeTask)
-        .map(r -> r.result().source())
+    var sources = fakeTaskReporter.getTaskReports().stream()
+        .filter(r -> r.label().equals(EVALUATE.append(label("invoke"))))
+        .map(TaskReport::source)
         .toList();
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
