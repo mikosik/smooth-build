@@ -10,7 +10,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
-import static org.smoothbuild.evaluator.EvaluateConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
