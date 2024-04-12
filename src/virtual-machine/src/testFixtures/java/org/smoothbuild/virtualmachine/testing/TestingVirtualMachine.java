@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.function.Function0.memoizer;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
@@ -236,23 +235,8 @@ public class TestingVirtualMachine extends TestingBytecode {
   public Bucket projectBucket() {
     if (projectBucket == null) {
       projectBucket = synchronizedMemoryBucket();
-      try {
-        initializeDirs(projectBucket);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
     }
     return projectBucket;
-  }
-
-  // TODO This will not be needed once HashedDb, ComputationCache, ArtifactSaver have initialize()
-  // method that creates those directories
-  public static void initializeDirs(Bucket projectBucket) throws IOException {
-    var dirs =
-        list(path(".smooth/hashed"), path(".smooth/computations"), path(".smooth/artifacts"));
-    for (Path path : dirs) {
-      initializeDir(projectBucket, path);
-    }
   }
 
   public static void initializeDir(Bucket bucket, Path dir) throws IOException {
