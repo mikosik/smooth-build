@@ -30,7 +30,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
-import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
+import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
@@ -156,7 +156,7 @@ public class InjectDefaultArguments implements TryFunction2<PModule, SScope, PMo
         if (result.get(i) == null) {
           var param = params.get(i);
           if (param.hasDefaultValue()) {
-            var name = TypeNamesS.fullName(nameOfReferencedCallee(pCall), param.name());
+            var name = STypeNames.fullName(nameOfReferencedCallee(pCall), param.name());
             var location = pCall.location();
             var element = new PInstantiate(new PReference(name, location), location);
             result.set(i, element);

@@ -16,7 +16,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
+import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
 
 /**
@@ -51,7 +51,7 @@ public class FindSyntaxErrors implements TryFunction1<PModule, PModule> {
           logger.log(compileError(
               pReferenceable.location(),
               "`" + name + "` is illegal identifier name. `_` is reserved for future use."));
-        } else if (!TypeNamesS.startsWithLowerCase(name)) {
+        } else if (!STypeNames.startsWithLowerCase(name)) {
           logger.log(compileError(
               pReferenceable.location(),
               "`" + name
@@ -67,12 +67,12 @@ public class FindSyntaxErrors implements TryFunction1<PModule, PModule> {
           logger.log(compileError(
               pStruct.location(),
               "`" + name + "` is illegal struct name. " + "`_` is reserved for future use."));
-        } else if (TypeNamesS.isVarName(name)) {
+        } else if (STypeNames.isVarName(name)) {
           logger.log(compileError(
               pStruct.location(),
               "`" + name + "` is illegal struct name."
                   + " All-uppercase names are reserved for type variables in generic types."));
-        } else if (!TypeNamesS.startsWithUpperCase(name)) {
+        } else if (!STypeNames.startsWithUpperCase(name)) {
           logger.log(compileError(
               pStruct.location(),
               "`" + name + "` is illegal struct name."

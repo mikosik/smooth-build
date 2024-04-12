@@ -67,7 +67,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.TypeNamesS;
+import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
@@ -391,7 +391,7 @@ public class TranslateAp implements TryFunction2<ModuleContext, FullPath, PModul
     }
 
     private String createFullName(String shortName) {
-      return TypeNamesS.fullName(scopeName, shortName);
+      return STypeNames.fullName(scopeName, shortName);
     }
 
     private RuntimeException newRuntimeException(Class<?> clazz) {

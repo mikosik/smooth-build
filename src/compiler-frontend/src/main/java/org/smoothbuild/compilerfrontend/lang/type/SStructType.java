@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.base.TypeNamesS.interfaceTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.interfaceTypeName;
 
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.NList;
