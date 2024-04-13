@@ -33,7 +33,7 @@ public class CountingReporterTest {
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");
-    var trace = new Trace<>();
+    var trace = new Trace();
     countingReporter.report(report(label, trace, DISK, list(ERROR_LOG)));
 
     verify(stepReporter).report(report(label, trace, DISK, list(ERROR_LOG)));
@@ -47,7 +47,7 @@ public class CountingReporterTest {
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");
-    var trace = new Trace<>();
+    var trace = new Trace();
     countingReporter.report(report(label, trace, DISK, list(log)));
 
     verify(logCounters).increment(reportedLevel);

@@ -453,8 +453,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
         evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
         assertThat(reporter().reports())
-            .contains(
-                new Report(EVALUATE, new Trace<>(), EXECUTION, list(fatal(runtimeException))));
+            .contains(new Report(EVALUATE, new Trace(), EXECUTION, list(fatal(runtimeException))));
       }
     }
   }

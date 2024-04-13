@@ -4,12 +4,11 @@ import java.util.Objects;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.define.STrace.Line;
 
 /**
  * Smooth stack trace.
  */
-public final class STrace extends Trace<Line> {
+public final class STrace extends Trace {
   public STrace() {
     this(null);
   }
@@ -18,7 +17,7 @@ public final class STrace extends Trace<Line> {
     super(topLine);
   }
 
-  public record Line(String called, Location location, Line next) implements TraceLine<Line> {
+  public record Line(String called, Location location, Line next) implements TraceLine {
     public Line {
       Objects.requireNonNull(called);
       Objects.requireNonNull(location);

@@ -38,7 +38,7 @@ public class BEvaluator {
     try {
       scheduler.awaitTermination();
     } catch (InterruptedException e) {
-      var report = report(label(EVALUATE_PREFIX), new Trace<>(), EXECUTION, list(fatal(e)));
+      var report = report(label(EVALUATE_PREFIX), new Trace(), EXECUTION, list(fatal(e)));
       reporter.report(report);
       return none();
     }

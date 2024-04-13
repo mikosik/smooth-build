@@ -48,7 +48,7 @@ public class InitializingDagEvaluatorTest {
     var reporter = mock(Reporter.class);
 
     var result = runEvaluate(initializer, dagEvaluator, reporter);
-    verify(reporter).report(report(label("initialize"), new Trace<>(), EXECUTION, list(error)));
+    verify(reporter).report(report(label("initialize"), new Trace(), EXECUTION, list(error)));
     assertThat(result).isEqualTo(none());
     verifyNoInteractions(dagEvaluator);
   }
@@ -61,7 +61,7 @@ public class InitializingDagEvaluatorTest {
     var reporter = mock(Reporter.class);
 
     var result = runEvaluate(initializer, dagEvaluator, reporter);
-    verify(reporter).report(report(label("initialize"), new Trace<>(), EXECUTION, list(info)));
+    verify(reporter).report(report(label("initialize"), new Trace(), EXECUTION, list(info)));
     assertThat(result).isEqualTo(some(STRING));
   }
 

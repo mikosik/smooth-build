@@ -6,8 +6,8 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.ResultSource;
 
-public record Report(Label label, Trace<?> trace, ResultSource source, List<Log> logs) {
-  public static Report report(Label label, Trace<?> trace, ResultSource source, List<Log> logs) {
+public record Report(Label label, Trace trace, ResultSource source, List<Log> logs) {
+  public static Report report(Label label, Trace trace, ResultSource source, List<Log> logs) {
     return new Report(label, trace, source, logs);
   }
 
