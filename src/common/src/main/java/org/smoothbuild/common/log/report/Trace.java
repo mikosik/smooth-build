@@ -2,25 +2,24 @@ package org.smoothbuild.common.log.report;
 
 import java.util.Objects;
 
-public class Trace<T extends TraceLine<T>> {
-  private final T topLine;
+public class Trace {
+  private final TraceLine topLine;
 
   public Trace() {
     this(null);
   }
 
-  public Trace(T topLine) {
+  public Trace(TraceLine topLine) {
     this.topLine = topLine;
   }
 
-  public T topLine() {
+  public TraceLine topLine() {
     return topLine;
   }
 
   @Override
   public boolean equals(Object obj) {
-    return this == obj
-        || (obj instanceof Trace<?> that && Objects.equals(this.topLine, that.topLine));
+    return this == obj || (obj instanceof Trace that && Objects.equals(this.topLine, that.topLine));
   }
 
   @Override
@@ -41,6 +40,4 @@ public class Trace<T extends TraceLine<T>> {
     }
     return builder.toString();
   }
-
-  public record Node<T extends TraceLine<T>>(TraceLine<T> traceLine, Node<T> next) {}
 }

@@ -41,7 +41,7 @@ public class DagEvaluator {
     if (maybeFunction.isSome()) {
       TryFunction0<V> function = maybeFunction.get();
       Try<V> result = function.apply();
-      reporter.report(report(function.label(), new Trace<>(), EXECUTION, result.logs()));
+      reporter.report(report(function.label(), new Trace(), EXECUTION, result.logs()));
       return result.toMaybe();
     } else {
       return none();
@@ -54,7 +54,7 @@ public class DagEvaluator {
     if (maybeArgument.isSome() && mabyeFunction.isSome()) {
       var function = mabyeFunction.get();
       Try<V> result = function.apply(maybeArgument.get());
-      reporter.report(report(function.label(), new Trace<>(), EXECUTION, result.logs()));
+      reporter.report(report(function.label(), new Trace(), EXECUTION, result.logs()));
       return result.toMaybe();
     }
     return none();
@@ -67,7 +67,7 @@ public class DagEvaluator {
     if (maybeFunction.isSome() && maybeArgument1.isSome() && maybeArgument2.isSome()) {
       var function = maybeFunction.get();
       Try<V> result = function.apply(maybeArgument1.get(), maybeArgument2.get());
-      reporter.report(report(function.label(), new Trace<>(), EXECUTION, result.logs()));
+      reporter.report(report(function.label(), new Trace(), EXECUTION, result.logs()));
       return result.toMaybe();
     } else {
       return none();

@@ -44,15 +44,15 @@ public class TraceTest {
     }
   }
 
-  public static <T extends TraceLine<T>> Trace<T> trace(T topLine) {
-    return new Trace<>(topLine);
+  public static Trace trace(TraceLine topLine) {
+    return new Trace(topLine);
   }
 
   private static MyTraceLine line(String name, MyTraceLine next) {
     return new MyTraceLine(name, next);
   }
 
-  private record MyTraceLine(String name, MyTraceLine next) implements TraceLine<MyTraceLine> {
+  private record MyTraceLine(String name, MyTraceLine next) implements TraceLine {
     @Override
     public String toString() {
       return "[" + name + "]";

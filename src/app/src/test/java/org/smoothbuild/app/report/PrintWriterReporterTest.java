@@ -31,7 +31,7 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
   @Test
   void report_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);
-    var report = report(label("name"), new Trace<>(), DISK, logsWithAllLevels());
+    var report = report(label("name"), new Trace(), DISK, logsWithAllLevels());
     var reporter = new PrintWriterReporter(systemOut);
 
     reporter.report(report);
@@ -41,7 +41,7 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
 
   @Test
   void test_format_logs() {
-    var trace = new Trace<>(new MyTraceLine("trace-line"));
+    var trace = new Trace(new MyTraceLine("trace-line"));
     var report = report(label("label-name"), trace, EXECUTION, logsWithAllLevels());
     assertThat(formatReport(report) + "\n")
         .isEqualTo(
@@ -69,7 +69,7 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
         arguments(info("message"), "  [INFO] message"));
   }
 
-  private record MyTraceLine(String text) implements TraceLine<MyTraceLine> {
+  private record MyTraceLine(String text) implements TraceLine {
     @Override
     public MyTraceLine next() {
       return null;

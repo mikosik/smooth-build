@@ -51,7 +51,7 @@ public class TaskExecutor {
       try {
         consumer0.accept();
       } catch (Throwable e) {
-        reporter.report(report(label(EVALUATE_PREFIX), new Trace<>(), EXECUTION, list(fatal(e))));
+        reporter.report(report(label(EVALUATE_PREFIX), new Trace(), EXECUTION, list(fatal(e))));
         executor.terminate();
       }
     });
