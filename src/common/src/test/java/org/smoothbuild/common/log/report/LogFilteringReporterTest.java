@@ -10,6 +10,7 @@ import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Level.INFO;
 import static org.smoothbuild.common.log.base.Level.WARNING;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 import static org.smoothbuild.common.testing.TestingLog.FATAL_LOG;
 import static org.smoothbuild.common.testing.TestingLog.WARNING_LOG;
@@ -27,7 +28,7 @@ public class LogFilteringReporterTest {
   @MethodSource
   void logs_are_filtered(Level level, List<Log> logs, List<Log> expected) {
     var wrappedReporter = mock(Reporter.class);
-    var report = new Report(label("name"), new Trace(), DISK, logs);
+    var report = report(label("name"), new Trace(), DISK, logs);
     var reporter = new LogFilteringReporter(wrappedReporter, level);
 
     reporter.report(report);

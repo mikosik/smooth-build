@@ -11,7 +11,7 @@ import org.smoothbuild.common.dag.MaybeFunction;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
+import org.smoothbuild.virtualmachine.wire.TaskReporter;
 
 public class BEvaluatorFacade implements MaybeFunction<CompiledExprs, EvaluatedExprs> {
   private final Injector injector;
@@ -25,9 +25,10 @@ public class BEvaluatorFacade implements MaybeFunction<CompiledExprs, EvaluatedE
   public Maybe<EvaluatedExprs> apply(CompiledExprs compiledExprs) {
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Provides
-      public TaskReporter provideTaskReporter(Reporter reporter) {
+      @TaskReporter
+      public Reporter provideTaskReporter(Reporter reporter) {
         var bsTranslator = new BsTranslator(compiledExprs.bsMapping());
-        return new TaskReporterImpl(reporter, bsTranslator);
+        return new TranslatingReporter(reporter, bsTranslator);
       }
     });
     var bValues = childInjector.getInstance(BEvaluator.class).evaluate(compiledExprs.bExprs());

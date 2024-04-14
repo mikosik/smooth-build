@@ -47,7 +47,6 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
-import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
@@ -67,12 +66,8 @@ public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
 
-  public BEvaluator bEvaluator(TaskReporter taskReporter) {
-    return bEvaluator(taskExecutor(taskReporter));
-  }
-
   public BEvaluator bEvaluator(Reporter reporter) {
-    return bEvaluator(this::bScheduler, reporter);
+    return bEvaluator(() -> bScheduler(taskExecutor(reporter)), reporter);
   }
 
   public BEvaluator bEvaluator() {
@@ -112,14 +107,14 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BScheduler bScheduler(int threadCount) {
-    return bScheduler(computer(), taskReporter(), threadCount);
+    return bScheduler(computer(), reporter(), threadCount);
   }
 
-  public BScheduler bScheduler(TaskReporter reporter, int threadCount) {
+  public BScheduler bScheduler(Reporter reporter, int threadCount) {
     return bScheduler(computer(), reporter, threadCount);
   }
 
-  public BScheduler bScheduler(Computer computer, TaskReporter reporter, int threadCount) {
+  public BScheduler bScheduler(Computer computer, Reporter reporter, int threadCount) {
     return bScheduler(taskExecutor(computer, reporter, threadCount));
   }
 
@@ -128,24 +123,23 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public TaskExecutor taskExecutor() {
-    return taskExecutor(taskReporter());
+    return taskExecutor(reporter());
   }
 
   public TaskExecutor taskExecutor(NativeMethodLoader nativeMethodLoader) {
-    return taskExecutor(taskReporter(), nativeMethodLoader);
+    return taskExecutor(reporter(), nativeMethodLoader);
   }
 
-  public TaskExecutor taskExecutor(TaskReporter taskReporter) {
-    return taskExecutor(taskReporter, nativeMethodLoader());
+  public TaskExecutor taskExecutor(Reporter reporter) {
+    return taskExecutor(reporter, nativeMethodLoader());
   }
 
-  public TaskExecutor taskExecutor(
-      TaskReporter taskReporter, NativeMethodLoader nativeMethodLoader) {
-    return new TaskExecutor(computer(nativeMethodLoader), taskReporter, reporter());
+  public TaskExecutor taskExecutor(Reporter reporter, NativeMethodLoader nativeMethodLoader) {
+    return new TaskExecutor(computer(nativeMethodLoader), reporter);
   }
 
-  public TaskExecutor taskExecutor(Computer computer, TaskReporter taskReporter, int threadCount) {
-    return new TaskExecutor(computer, taskReporter, reporter(), threadCount);
+  public TaskExecutor taskExecutor(Computer computer, Reporter reporter, int threadCount) {
+    return new TaskExecutor(computer, reporter, threadCount);
   }
 
   public FilePersister filePersister() {
@@ -166,10 +160,6 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   private JarClassLoaderFactory jarClassLoaderFactory() {
     return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
-  }
-
-  public TaskReporter taskReporter() {
-    return new ForwardingTaskReporter(reporter());
   }
 
   public MemoryReporter reporter() {

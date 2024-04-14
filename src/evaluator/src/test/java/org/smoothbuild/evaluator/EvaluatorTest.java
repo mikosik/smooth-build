@@ -5,7 +5,6 @@ import static com.google.inject.Guice.createInjector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.backendcompile.testing.TestingBsMapping.bsMapping;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Either.right;
@@ -323,14 +322,12 @@ public class EvaluatorTest extends TestingVirtualMachine {
     var backendCompile = backendCompile(filePersister, bytecodeLoader);
     var bEvaluator = bEvaluator(nativeMethodLoader);
     var reporter = new MemoryReporter();
-    var taskReporter = new TaskReporterImpl(reporter, new BsTranslator(bsMapping()));
 
     var injector = createInjector(new AbstractModule() {
       @Override
       protected void configure() {
         bind(BEvaluator.class).toInstance(bEvaluator);
         bind(Reporter.class).toInstance(reporter);
-        bind(TaskReporterImpl.class).toInstance(taskReporter);
       }
     });
     var compilationResult = apply2(backendCompile, value(exprs), value(evaluables));
