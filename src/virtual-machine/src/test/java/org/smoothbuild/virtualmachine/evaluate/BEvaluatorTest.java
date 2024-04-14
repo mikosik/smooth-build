@@ -23,6 +23,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import java.util.ArrayList;
@@ -61,12 +62,9 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
-import org.smoothbuild.virtualmachine.evaluate.execute.TaskReport;
-import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
-import org.smoothbuild.virtualmachine.testing.ForwardingTaskReporter;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BEvaluatorTest extends TestingVirtualMachine {
@@ -325,25 +323,25 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         @Test
         public void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
-          var taskReporter = mock(TaskReporter.class);
-          evaluateWithFailure(bEvaluator(taskReporter), pick);
-          verify(taskReporter).report(argThat(this::isResultWithIndexOutOfBoundsError));
+          var reporter = mock(Reporter.class);
+          evaluateWithFailure(bEvaluator(reporter), pick);
+          verify(reporter).report(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
-        public boolean isResultWithIndexOutOfBoundsError(TaskReport taskReport) {
-          return taskReportWith(taskReport, ERROR, "Index (4) out of bounds. Array size = 4.");
+        public boolean isResultWithIndexOutOfBoundsError(Report report) {
+          return taskReportWith(report, ERROR, "Index (4) out of bounds. Array size = 4.");
         }
 
         @Test
         public void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
-          var taskReporter = mock(TaskReporter.class);
-          evaluateWithFailure(bEvaluator(taskReporter), pick);
-          verify(taskReporter).report(argThat(this::isResultWithNegativeIndexError));
+          var reporter = mock(Reporter.class);
+          evaluateWithFailure(bEvaluator(reporter), pick);
+          verify(reporter).report(argThat(this::isResultWithNegativeIndexError));
         }
 
-        public boolean isResultWithNegativeIndexError(TaskReport taskReport) {
-          return taskReportWith(taskReport, ERROR, "Index (-1) out of bounds. Array size = 4.");
+        public boolean isResultWithNegativeIndexError(Report report) {
+          return taskReportWith(report, ERROR, "Index (-1) out of bounds. Array size = 4.");
         }
       }
 
@@ -415,7 +413,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(Reporter.class);
-        var scheduler = bScheduler(new ForwardingTaskReporter(reporter), 4);
+        var scheduler = bScheduler(reporter, 4);
         var expr = throwExceptionCall();
         evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
         verify(reporter).report(argThat(this::reportWithFatalCausedByRuntimeException));
@@ -440,7 +438,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
       @Test
       public void computer_that_throws_exception_is_detected() throws Exception {
-        var reporter = mock(Reporter.class);
         var expr = bString("abc");
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
@@ -449,17 +446,17 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             throw runtimeException;
           }
         };
-        var scheduler = bScheduler(computer, new ForwardingTaskReporter(reporter), 4);
+        var scheduler = bScheduler(computer, reporter(), 4);
 
-        evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
+        evaluateWithFailure(bEvaluator(() -> scheduler), expr);
         assertThat(reporter().reports())
-            .contains(new Report(EVALUATE, new Trace(), EXECUTION, list(fatal(runtimeException))));
+            .contains(report(EVALUATE, new Trace(), EXECUTION, list(fatal(runtimeException))));
       }
     }
   }
 
-  private static boolean taskReportWith(TaskReport taskReport, Level level, String messageStart) {
-    var logs = taskReport.logs();
+  private static boolean taskReportWith(Report report, Level level, String messageStart) {
+    var logs = report.logs();
     return logs.size() == 1
         && logs.get(0).level() == level
         && logs.get(0).message().startsWith(messageStart);
@@ -479,10 +476,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @ParameterizedTest
       @MethodSource("report_const_task_cases")
       public void report_value_as_const_task(BValue value) {
-        var taskReporter = mock(TaskReporter.class);
-        evaluate(bEvaluator(taskReporter), value);
-        verify(taskReporter)
-            .report(new TaskReport(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+        var reporter = mock(Reporter.class);
+        evaluate(bEvaluator(reporter), value);
+        verify(reporter).report(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       public static List<BValue> report_const_task_cases() throws Exception {
@@ -509,10 +505,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var then_ = bInt(1);
         var else_ = bInt(2);
         var if_ = bIf(condition, then_, else_);
-        var taskReporter = mock(TaskReporter.class);
-        evaluate(bEvaluator(taskReporter), if_);
-        verify(taskReporter, times(2))
-            .report(new TaskReport(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+        var reporter = mock(Reporter.class);
+        evaluate(bEvaluator(reporter), if_);
+        verify(reporter, times(2))
+            .report(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       @Test
@@ -520,10 +516,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var array = bArray(bInt(3));
         var mapper = bIntIdLambda();
         var if_ = bMap(array, mapper);
-        var taskReporter = mock(TaskReporter.class);
-        evaluate(bEvaluator(taskReporter), if_);
-        verify(taskReporter, times(3))
-            .report(new TaskReport(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+        var reporter = mock(Reporter.class);
+        evaluate(bEvaluator(reporter), if_);
+        verify(reporter, times(3))
+            .report(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       @Test
@@ -577,10 +573,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
     private void assertTaskReport(
         BExpr expr, Label label, BTrace trace, ResultSource resultSource) {
-      var taskReporter = mock(TaskReporter.class);
-      evaluate(bEvaluator(taskReporter), expr);
-      var taskReport = new TaskReport(EVALUATE.append(label), trace, resultSource, list());
-      verify(taskReporter).report(taskReport);
+      var reporter = mock(Reporter.class);
+      evaluate(bEvaluator(reporter), expr);
+      var taskReport = report(EVALUATE.append(label), trace, resultSource, list());
+      verify(reporter).report(taskReport);
     }
   }
 
@@ -613,12 +609,12 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"));
 
-      var taskReporter = taskReporter();
-      var vm = new BEvaluator(() -> bScheduler(taskReporter, 4), new MemoryReporter());
+      var reporter = reporter();
+      var vm = new BEvaluator(() -> bScheduler(reporter, 4), new MemoryReporter());
       assertThat(evaluate(vm, bExpr))
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
-      verifyConstTasksResultSource(4, DISK, reporter());
+      verifyConstTasksResultSource(4, DISK, reporter);
     }
 
     @Test

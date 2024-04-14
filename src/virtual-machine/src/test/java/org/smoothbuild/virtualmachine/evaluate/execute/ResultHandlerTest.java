@@ -10,11 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
+import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ResultHandlerTest extends TestingVirtualMachine {
-  private TaskReporter reporter;
+  private Reporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<BValue> consumer;
   private BValue value;
@@ -22,7 +23,7 @@ public class ResultHandlerTest extends TestingVirtualMachine {
   @BeforeEach
   @SuppressWarnings("unchecked")
   public void beforeEach() throws Exception {
-    reporter = mock(TaskReporter.class);
+    reporter = mock(Reporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
     value = bString();
