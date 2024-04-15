@@ -1,5 +1,6 @@
 package org.smoothbuild.stdlib.file;
 
+import static org.smoothbuild.common.bucket.base.PathState.NOTHING;
 import static org.smoothbuild.common.bucket.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
@@ -15,26 +16,23 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FilesFunc {
-  public static BValue func(Container container, BTuple args)
-      throws IOException, BytecodeException {
+  public static BValue func(Container container, BTuple args) throws BytecodeException {
     BString dir = (BString) args.get(0);
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;
     }
     Bucket bucket = container.bucket();
-
-    return switch (bucket.pathState(path)) {
-      case DIR -> readFiles(container, bucket, path);
-      case FILE -> {
-        container.log().error("Dir " + path.q() + " doesn't exist. It is a file.");
-        yield null;
-      }
-      case NOTHING -> {
-        container.log().error("Dir " + path.q() + " doesn't exist.");
-        yield null;
-      }
-    };
+    if (bucket.pathState(path) == NOTHING) {
+      container.log().error("Dir " + path.q() + " doesn't exist.");
+      return null;
+    }
+    try {
+      return readFiles(container, bucket, path);
+    } catch (IOException e) {
+      container.log().error(e.getMessage());
+      return null;
+    }
   }
 
   private static BArray readFiles(Container container, Bucket bucket, Path dir)

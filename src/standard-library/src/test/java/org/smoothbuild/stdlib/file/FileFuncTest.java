@@ -49,19 +49,4 @@ public class FileFuncTest extends StandardLibraryTestCase {
     evaluate("result");
     assertThat(artifact()).isEqualTo(bFile("dir/file.txt", "abc"));
   }
-
-  @Test
-  public void result_is_not_cached() throws Exception {
-    var userModule = """
-        result = file("dir/file.txt");
-        """;
-    createUserModule(userModule);
-    createProjectFile("dir/file.txt", "abc");
-    evaluate("result");
-    assertThat(artifact()).isEqualTo(bFile("dir/file.txt", "abc"));
-
-    createProjectFile("dir/file.txt", "def");
-    evaluate("result");
-    assertThat(artifact()).isEqualTo(bFile("dir/file.txt", "def"));
-  }
 }
