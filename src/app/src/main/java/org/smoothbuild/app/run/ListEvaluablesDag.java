@@ -1,7 +1,7 @@
 package org.smoothbuild.app.run;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
+import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.common.dag.Dag.apply1;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Try.success;

@@ -1,8 +1,8 @@
 package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.bucket.base.Path.path;
-import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

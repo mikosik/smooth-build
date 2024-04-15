@@ -1,8 +1,8 @@
 package org.smoothbuild.app.layout;
 
-import static org.smoothbuild.app.layout.SmoothBucketId.INSTALL;
-import static org.smoothbuild.app.layout.SmoothBucketId.LIBRARY;
-import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
+import static org.smoothbuild.app.layout.BucketIds.INSTALL;
+import static org.smoothbuild.app.layout.BucketIds.LIBRARY;
+import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
