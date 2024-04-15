@@ -22,17 +22,17 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 public class FileContentReader {
   private final FileResolver fileResolver;
   private final BExprDb exprDb;
-  private final ConcurrentHashMap<FullPath, CachingReader> fileBlobCache;
+  private final ConcurrentHashMap<FullPath, CachingReader> cache;
 
   @Inject
   public FileContentReader(FileResolver fileResolver, BExprDb exprDb) {
     this.fileResolver = fileResolver;
     this.exprDb = exprDb;
-    this.fileBlobCache = new ConcurrentHashMap<>();
+    this.cache = new ConcurrentHashMap<>();
   }
 
   public BBlob read(FullPath fullPath) throws BytecodeException {
-    var cachingLoader = fileBlobCache.computeIfAbsent(fullPath, CachingReader::new);
+    var cachingLoader = cache.computeIfAbsent(fullPath, CachingReader::new);
     try {
       return cachingLoader.read();
     } catch (IOException e) {
