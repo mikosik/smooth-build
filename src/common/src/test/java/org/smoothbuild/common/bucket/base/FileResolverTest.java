@@ -3,13 +3,13 @@ package org.smoothbuild.common.bucket.base;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
+import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.PathState.DIR;
 import static org.smoothbuild.common.bucket.base.PathState.FILE;
 import static org.smoothbuild.common.bucket.base.PathState.NOTHING;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;

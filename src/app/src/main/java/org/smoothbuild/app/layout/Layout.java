@@ -1,8 +1,8 @@
 package org.smoothbuild.app.layout;
 
-import static org.smoothbuild.app.layout.SmoothBucketId.INSTALL;
-import static org.smoothbuild.app.layout.SmoothBucketId.LIBRARY;
-import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
+import static org.smoothbuild.app.layout.BucketIds.INSTALL;
+import static org.smoothbuild.app.layout.BucketIds.LIBRARY;
+import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;

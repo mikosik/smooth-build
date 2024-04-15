@@ -2,6 +2,9 @@ package org.smoothbuild.app.run.eval.report;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.app.layout.BucketIds.INSTALL;
+import static org.smoothbuild.app.layout.BucketIds.LIBRARY;
+import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.ALL;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.COMBINE;
 import static org.smoothbuild.app.run.eval.report.ReportMatchers.CONST;
@@ -30,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.app.layout.SmoothBucketId;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
@@ -59,7 +61,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
     var stringBuilder = new StringBuilder();
     var reportMatcher = MatcherCreator.createMatcher(expression);
     for (var label : taskLabels) {
-      for (var bucketId : SmoothBucketId.values()) {
+      for (var bucketId : list(PROJECT, LIBRARY, INSTALL)) {
         for (var level : Level.values()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = reportMatcher.matches(label, logs);

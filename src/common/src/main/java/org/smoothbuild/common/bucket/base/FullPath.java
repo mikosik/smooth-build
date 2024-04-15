@@ -19,6 +19,6 @@ public record FullPath(BucketId bucketId, Path path) {
 
   @Override
   public String toString() {
-    return "{" + bucketId().get() + "}/" + path;
+    return "{" + bucketId().id() + "}/" + path;
   }
 }

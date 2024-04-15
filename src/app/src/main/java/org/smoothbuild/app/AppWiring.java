@@ -1,8 +1,8 @@
 package org.smoothbuild.app;
 
+import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
-import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

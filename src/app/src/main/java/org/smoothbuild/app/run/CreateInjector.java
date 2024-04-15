@@ -1,11 +1,11 @@
 package org.smoothbuild.app.run;
 
 import static com.google.inject.Stage.PRODUCTION;
+import static org.smoothbuild.app.layout.BucketIds.INSTALL;
+import static org.smoothbuild.app.layout.BucketIds.LIBRARY;
+import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.app.layout.Layout.BIN_DIR_NAME;
 import static org.smoothbuild.app.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
-import static org.smoothbuild.app.layout.SmoothBucketId.INSTALL;
-import static org.smoothbuild.app.layout.SmoothBucketId.LIBRARY;
-import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
 

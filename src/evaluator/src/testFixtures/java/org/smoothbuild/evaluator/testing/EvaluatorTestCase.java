@@ -7,6 +7,7 @@ import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
@@ -17,7 +18,6 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.common.testing.TestingBucketId.bucketId;
 import static org.smoothbuild.evaluator.SmoothEvaluationDag.smoothEvaluationDag;
 
 import com.google.inject.AbstractModule;
