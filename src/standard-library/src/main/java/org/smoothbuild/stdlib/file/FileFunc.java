@@ -13,17 +13,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FileFunc {
-  private static final Path SMOOTH_DIR = path(".smooth");
-
   public static BValue func(Container container, BTuple args)
       throws IOException, BytecodeException {
     BString path = (BString) args.get(0);
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
-      return null;
-    }
-    if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {
-      container.log().error("Reading file from '.smooth' dir is not allowed.");
       return null;
     }
 

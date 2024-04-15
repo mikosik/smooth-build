@@ -5,30 +5,8 @@ import static org.smoothbuild.common.log.base.Log.error;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.stdlib.StandardLibraryTestCase;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public class FilesFuncTest extends StandardLibraryTestCase {
-  @Test
-  public void listing_files_from_smooth_dir_causes_error() throws Exception {
-    var userModule = """
-        result = files(".smooth");
-        """;
-    createUserModule(userModule);
-    evaluate("result");
-    assertThat(logs()).contains(error("Listing files from '.smooth' dir is not allowed."));
-  }
-
-  @Test
-  public void listing_files_from_smooth_dir_subdir_causes_error() throws Exception {
-    var userModule = """
-        result = files(".smooth/subdir/file.txt");
-        """;
-    createUserModule(userModule);
-    evaluate("result");
-    assertThat(logs()).contains(error("Listing files from '.smooth' dir is not allowed."));
-  }
-
   @Test
   public void illegal_path_causes_error() throws Exception {
     var userModule = """
@@ -72,20 +50,6 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     evaluate("result");
     assertThat(artifact())
         .isEqualTo(bArray(bFile("file.txt", "abc"), bFile("subdir/file.txt", "def")));
-  }
-
-  @Test
-  public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
-    var userModule = """
-        result = files(".");
-        """;
-    createUserModule(userModule);
-    createProjectFile("dir/file.txt", "abc");
-    createProjectFile(".smooth/hidden.txt", "abc");
-    evaluate("result");
-
-    var files = ((BArray) artifact()).elements(BValue.class);
-    assertThat(files).containsExactly(bFile("dir/file.txt", "abc"));
   }
 
   @Test
