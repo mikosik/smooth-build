@@ -33,7 +33,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
-import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
@@ -142,8 +142,8 @@ public class TestingVirtualMachine extends TestingBytecode {
     return new TaskExecutor(computer, reporter, threadCount);
   }
 
-  public FilePersister filePersister() {
-    return Mockito.mock(FilePersister.class);
+  public FileContentReader fileContentReader() {
+    return Mockito.mock(FileContentReader.class);
   }
 
   public BytecodeLoader bytecodeLoader() {

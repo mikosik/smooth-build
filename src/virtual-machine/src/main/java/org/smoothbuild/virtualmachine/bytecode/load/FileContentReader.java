@@ -19,43 +19,43 @@ import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
  * This class is thread-safe.
  */
 @Singleton
-public class FilePersister {
+public class FileContentReader {
   private final FileResolver fileResolver;
   private final BExprDb exprDb;
-  private final ConcurrentHashMap<FullPath, CachingLoader> fileBlobCache;
+  private final ConcurrentHashMap<FullPath, CachingReader> fileBlobCache;
 
   @Inject
-  public FilePersister(FileResolver fileResolver, BExprDb exprDb) {
+  public FileContentReader(FileResolver fileResolver, BExprDb exprDb) {
     this.fileResolver = fileResolver;
     this.exprDb = exprDb;
     this.fileBlobCache = new ConcurrentHashMap<>();
   }
 
-  public BBlob persist(FullPath fullPath) throws BytecodeException {
-    var cachingLoader = fileBlobCache.computeIfAbsent(fullPath, CachingLoader::new);
+  public BBlob read(FullPath fullPath) throws BytecodeException {
+    var cachingLoader = fileBlobCache.computeIfAbsent(fullPath, CachingReader::new);
     try {
-      return cachingLoader.persist();
+      return cachingLoader.read();
     } catch (IOException e) {
       throw new IoBytecodeException(e);
     }
   }
 
-  private class CachingLoader {
+  private class CachingReader {
     private final FullPath fullPath;
     private BBlob blob;
 
-    private CachingLoader(FullPath fullPath) {
+    private CachingReader(FullPath fullPath) {
       this.fullPath = fullPath;
     }
 
-    public synchronized BBlob persist() throws IOException, BytecodeException {
+    public synchronized BBlob read() throws IOException, BytecodeException {
       if (blob == null) {
-        blob = persistImpl();
+        blob = readImpl();
       }
       return blob;
     }
 
-    private BBlob persistImpl() throws BytecodeException, IOException {
+    private BBlob readImpl() throws BytecodeException, IOException {
       try (BBlobBuilder blobBuilder = exprDb.newBlobBuilder()) {
         try (var source = buffer(fileResolver.source(fullPath))) {
           source.readAll(blobBuilder);

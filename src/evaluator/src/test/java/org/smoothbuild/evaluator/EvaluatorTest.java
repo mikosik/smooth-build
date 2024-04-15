@@ -61,7 +61,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
-import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
@@ -69,7 +69,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 
 public class EvaluatorTest extends TestingVirtualMachine {
-  private final FilePersister filePersister = mock(FilePersister.class);
+  private final FileContentReader fileContentReader = mock(FileContentReader.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);
 
@@ -142,7 +142,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               sNativeAnnotation(1, sString("class binary name")), sIntType(), "f", nlist());
           var callS = sCall(sInstantiate(funcS));
           var jarB = bBlob(137);
-          when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
+          when(fileContentReader.read(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(
@@ -159,7 +159,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
               nlist(sItem(sIntType(), "p")));
           var callS = sCall(sInstantiate(funcS), sInt(77));
           var jarB = bBlob(137);
-          when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
+          when(fileContentReader.read(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(right(
@@ -245,7 +245,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
           var jar = bBlob(123);
           var className = ReturnIdFunc.class.getCanonicalName();
           var bMethod = bMethod(jar, className, BYTECODE_METHOD_NAME);
-          when(filePersister.persist(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
+          when(fileContentReader.read(fullPath(PROJECT_BUCKET_ID, path("build.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, BType>of("A", bIntType());
           var bFunc = ReturnIdFunc.bytecode(bytecodeF(), varMap);
@@ -319,7 +319,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
 
   private Maybe<EvaluatedExprs> evaluate(
       ImmutableBindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
-    var backendCompile = backendCompile(filePersister, bytecodeLoader);
+    var backendCompile = backendCompile(fileContentReader, bytecodeLoader);
     var bEvaluator = bEvaluator(nativeMethodLoader);
     var reporter = new MemoryReporter();
 
@@ -348,7 +348,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
   }
 
   private BackendCompile backendCompile(
-      FilePersister filePersister, BytecodeLoader bytecodeLoader) {
-    return new BackendCompile(bytecodeF(), filePersister, bytecodeLoader);
+      FileContentReader fileContentReader, BytecodeLoader bytecodeLoader) {
+    return new BackendCompile(bytecodeF(), fileContentReader, bytecodeLoader);
   }
 }
