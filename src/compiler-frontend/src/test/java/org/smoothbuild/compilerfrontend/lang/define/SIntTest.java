@@ -8,6 +8,6 @@ import org.junit.jupiter.api.Test;
 public class SIntTest {
   @Test
   public void to_string() {
-    assertThat(sInt(7, 16).toString()).isEqualTo("SInt(Int, 16, {prj}/build.smooth:7)");
+    assertThat(sInt(7, 16).toString()).isEqualTo("SInt(Int, 16, {project}/build.smooth:7)");
   }
 }

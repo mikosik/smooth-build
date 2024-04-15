@@ -17,7 +17,7 @@ public class SReferenceTest {
             SReference(
               schema = <>Int
               referencedName = referenced
-              location = {prj}/build.smooth:7
+              location = {project}/build.smooth:7
             )""");
   }
 }

@@ -29,13 +29,13 @@ public class SSelectTest {
                 polymorphicS = SReference(
                   schema = <>MyStruct
                   referencedName = structValue
-                  location = {prj}/build.smooth:12
+                  location = {project}/build.smooth:12
                 )
                 evaluationType = MyStruct{Int field}
-                location = {prj}/build.smooth:12
+                location = {project}/build.smooth:12
               )
               field = field
-              location = {prj}/build.smooth:3
+              location = {project}/build.smooth:3
             )""");
   }
 }

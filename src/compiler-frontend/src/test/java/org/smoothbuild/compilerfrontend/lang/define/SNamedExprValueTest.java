@@ -19,8 +19,8 @@ public class SNamedExprValueTest {
             SNamedExprValue(
               schema = <>String
               name = myVal
-              location = {prj}/build.smooth:7
-              body = SInt(Int, 9, {prj}/build.smooth:1)
+              location = {project}/build.smooth:7
+              body = SInt(Int, 9, {project}/build.smooth:1)
             )""");
   }
 }

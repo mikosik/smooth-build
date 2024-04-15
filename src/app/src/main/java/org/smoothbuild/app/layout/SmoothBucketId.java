@@ -3,9 +3,9 @@ package org.smoothbuild.app.layout;
 import org.smoothbuild.common.bucket.base.BucketId;
 
 public enum SmoothBucketId implements BucketId {
-  PROJECT("prj"),
-  STANDARD_LIBRARY("ssl"),
-  BINARY("bin"),
+  PROJECT("project"),
+  LIBRARY("library"),
+  INSTALL("install"),
   ;
 
   private final String id;

@@ -80,7 +80,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void declaring_mono_native_value_fails() throws Exception {
-          var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("project"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
           var nativeValueS =
@@ -97,7 +97,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("project"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeValueS =
@@ -166,7 +166,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
 
         @Test
         public void mono_native_function() throws Exception {
-          var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("project"), path("my/path"));
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -188,7 +188,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void poly_native_function() throws Exception {
           var a = varA();
-          var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("project"), path("my/path"));
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
           var annotationS = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -209,7 +209,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         @Test
         public void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var fullPath = fullPath(bucketId("prj"), path("my/path"));
+          var fullPath = fullPath(bucketId("project"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var annotationS = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
@@ -325,7 +325,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(sInstantiate(funcS)))
             .throwsException(
-                new SbTranslatorException("Cannot resolve `p2` at {prj}/build.smooth:1."));
+                new SbTranslatorException("Cannot resolve `p2` at {project}/build.smooth:1."));
       }
 
       @Test
@@ -536,7 +536,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Test
     public void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
-      var fullPath = fullPath(bucketId("prj"), path("my/path"));
+      var fullPath = fullPath(bucketId("project"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
       var bytecodeValueS = sAnnotatedValue(ann, sStringType(), "myFunc", location(fullPath, 2));
@@ -562,7 +562,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Test
     public void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
-      var fullPath = fullPath(bucketId("prj"), path("my/path"));
+      var fullPath = fullPath(bucketId("project"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
       var bytecodeFuncS =

@@ -28,11 +28,11 @@ public class SNamedExprFuncTest {
                   type = Int
                   name = myParam
                   defaultValue = None
-                  location = {prj}/build.smooth:1
+                  location = {project}/build.smooth:1
                 )
               ]
-              location = {prj}/build.smooth:1
-              body = SInt(Int, 17, {prj}/build.smooth:1)
+              location = {project}/build.smooth:1
+              body = SInt(Int, 17, {project}/build.smooth:1)
             )""");
   }
 }

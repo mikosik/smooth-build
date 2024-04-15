@@ -30,9 +30,9 @@ public class VersionCommandTest {
           installation HASH
             smooth.jar HASH
             standard libraries HASH
-              {ssl}/std_lib module HASH
-                {ssl}/std_lib.smooth HASH
-                {ssl}/std_lib.jar HASH
+              {library}/std_lib module HASH
+                {library}/std_lib.smooth HASH
+                {library}/std_lib.jar HASH
         """);
       assertSystemOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }

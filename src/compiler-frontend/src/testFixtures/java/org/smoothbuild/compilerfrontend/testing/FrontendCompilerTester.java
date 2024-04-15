@@ -10,8 +10,8 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.LIBRARY_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_MODULE_FILE_PATH;
 
 import com.google.inject.AbstractModule;
@@ -123,7 +123,7 @@ public class FrontendCompilerTester {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
     var slBucket = new SynchronizedBucket(new MemoryBucket());
     Map<BucketId, Bucket> buckets =
-        map(PROJECT_BUCKET_ID, projectBucket, STANDARD_LIBRARY_BUCKET_ID, slBucket);
+        map(PROJECT_BUCKET_ID, projectBucket, LIBRARY_BUCKET_ID, slBucket);
     var fileResolver = new FileResolver(buckets);
     var memoryReporter = new MemoryReporter();
 
@@ -163,6 +163,6 @@ public class FrontendCompilerTester {
   }
 
   public static Log err(int line, String message) {
-    return error("{prj}/build.smooth:" + line + ": " + message);
+    return error("{project}/build.smooth:" + line + ": " + message);
   }
 }
