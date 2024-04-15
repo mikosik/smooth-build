@@ -24,19 +24,19 @@ public class SCallTest {
                 polymorphicS = SReference(
                   schema = <A>(A)->A
                   referencedName = myId
-                  location = {prj}/build.smooth:4
+                  location = {project}/build.smooth:4
                 )
                 evaluationType = (Int)->Int
-                location = {prj}/build.smooth:4
+                location = {project}/build.smooth:4
               )
               args = SCombine(
                 evaluationType = {Int}
                 elements = [
-                  SInt(Int, 7, {prj}/build.smooth:3)
+                  SInt(Int, 7, {project}/build.smooth:3)
                 ]
-                location = {prj}/build.smooth:3
+                location = {project}/build.smooth:3
               )
-              location = {prj}/build.smooth:3
+              location = {project}/build.smooth:3
             )""");
   }
 }

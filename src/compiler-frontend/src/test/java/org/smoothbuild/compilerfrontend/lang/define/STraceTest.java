@@ -31,7 +31,7 @@ public class STraceTest {
     assertThat(trace.toString())
         .isEqualTo(
             """
-            @ {prj}/build.smooth:17 first-name
-            @ {ssl}/imported.smooth:19 second-name""");
+            @ {project}/build.smooth:17 first-name
+            @ {library}/imported.smooth:19 second-name""");
   }
 }

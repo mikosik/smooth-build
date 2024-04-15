@@ -1,8 +1,8 @@
 package org.smoothbuild.app.layout;
 
-import static org.smoothbuild.app.layout.SmoothBucketId.BINARY;
+import static org.smoothbuild.app.layout.SmoothBucketId.INSTALL;
+import static org.smoothbuild.app.layout.SmoothBucketId.LIBRARY;
 import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
-import static org.smoothbuild.app.layout.SmoothBucketId.STANDARD_LIBRARY;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -30,8 +30,8 @@ public class SmoothBucketWiring extends AbstractModule {
     if (withProjectBucket) {
       map.put(PROJECT, bucketFactory.create(PROJECT));
     }
-    map.put(STANDARD_LIBRARY, bucketFactory.create(STANDARD_LIBRARY));
-    map.put(BINARY, bucketFactory.create(BINARY));
+    map.put(LIBRARY, bucketFactory.create(LIBRARY));
+    map.put(INSTALL, bucketFactory.create(INSTALL));
     return Map.mapOfAll(map);
   }
 }

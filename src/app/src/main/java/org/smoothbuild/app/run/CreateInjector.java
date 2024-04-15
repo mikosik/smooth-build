@@ -3,9 +3,9 @@ package org.smoothbuild.app.run;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.app.layout.Layout.BIN_DIR_NAME;
 import static org.smoothbuild.app.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
-import static org.smoothbuild.app.layout.SmoothBucketId.BINARY;
+import static org.smoothbuild.app.layout.SmoothBucketId.INSTALL;
+import static org.smoothbuild.app.layout.SmoothBucketId.LIBRARY;
 import static org.smoothbuild.app.layout.SmoothBucketId.PROJECT;
-import static org.smoothbuild.app.layout.SmoothBucketId.STANDARD_LIBRARY;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
 
@@ -36,8 +36,8 @@ public class CreateInjector {
     var installationDir = installationDir();
     Map<BucketId, Path> bucketIdToPath = map(
         PROJECT, projectDir,
-        STANDARD_LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
-        BINARY, installationDir.resolve(BIN_DIR_NAME));
+        LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
+        INSTALL, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
         new AppWiring(),
@@ -50,8 +50,8 @@ public class CreateInjector {
   public static Injector createInjector(PrintWriter out) {
     var installationDir = installationDir();
     Map<BucketId, Path> bucketIdToPath = map(
-        STANDARD_LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
-        BINARY, installationDir.resolve(BIN_DIR_NAME));
+        LIBRARY, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
+        INSTALL, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
         new SmoothBucketWiring(false),

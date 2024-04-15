@@ -90,12 +90,12 @@ import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class TestingSExpression {
-  public static final BucketId STANDARD_LIBRARY_BUCKET_ID = bucketId("ssl");
-  public static final BucketId PROJECT_BUCKET_ID = bucketId("prj");
+  public static final BucketId LIBRARY_BUCKET_ID = bucketId("library");
+  public static final BucketId PROJECT_BUCKET_ID = bucketId("project");
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
   static final FullPath STANDARD_LIBRARY_MODULE_FILE_PATH =
-      fullPath(STANDARD_LIBRARY_BUCKET_ID, path("std_lib.smooth"));
+      fullPath(LIBRARY_BUCKET_ID, path("std_lib.smooth"));
   static final FullPath DEFAULT_MODULE_FILE_PATH =
       fullPath(PROJECT_BUCKET_ID, path("build.smooth"));
 
@@ -837,7 +837,7 @@ public class TestingSExpression {
   }
 
   public static FullPath importedBuildFullPath() {
-    return new FullPath(STANDARD_LIBRARY_BUCKET_ID, path(IMPORTED_FILE_PATH));
+    return new FullPath(LIBRARY_BUCKET_ID, path(IMPORTED_FILE_PATH));
   }
 
   public static FullPath projectPath(String path) {
