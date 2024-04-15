@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import java.io.IOException;
@@ -257,7 +258,11 @@ public abstract class TestingBytecode {
   }
 
   public BBlob bBlob() throws BytecodeException {
-    return bytecodeF().blob(sink -> sink.writeUtf8("blob data"));
+    return bBlob("blob data");
+  }
+
+  public BBlob bBlob(String string) throws BytecodeException {
+    return bBlob(byteString(string));
   }
 
   public BBlob bBlob(int data) throws BytecodeException {
