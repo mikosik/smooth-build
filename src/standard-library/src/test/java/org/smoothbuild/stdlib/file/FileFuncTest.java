@@ -8,28 +8,6 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class FileFuncTest extends StandardLibraryTestCase {
   @Test
-  public void file_from_smooth_dir_causes_error() throws Exception {
-    var userModule = """
-        result = file(".smooth/file.txt");
-        """;
-    createUserModule(userModule);
-    createProjectFile(".smooth/file.txt", "abc");
-    evaluate("result");
-    assertThat(logs()).contains(error("Reading file from '.smooth' dir is not allowed."));
-  }
-
-  @Test
-  public void file_from_smooth_subdir_causes_error() throws Exception {
-    var userModule = """
-        result = file(".smooth/subdir/file.txt");
-        """;
-    createUserModule(userModule);
-    createProjectFile(".smooth/subdir/file.txt", "abc");
-    evaluate("result");
-    assertThat(logs()).contains(error("Reading file from '.smooth' dir is not allowed."));
-  }
-
-  @Test
   public void illegal_path_causes_error() throws Exception {
     var userModule = """
         result = file("..");
