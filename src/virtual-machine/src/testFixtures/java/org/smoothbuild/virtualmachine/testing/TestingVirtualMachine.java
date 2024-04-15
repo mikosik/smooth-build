@@ -183,7 +183,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Container container(NativeMethodLoader nativeMethodLoader) {
-    return new Container(projectBucket(), bytecodeF(), nativeMethodLoader);
+    return new Container(projectBucket(), fileContentReader(), bytecodeF(), nativeMethodLoader);
   }
 
   @Override

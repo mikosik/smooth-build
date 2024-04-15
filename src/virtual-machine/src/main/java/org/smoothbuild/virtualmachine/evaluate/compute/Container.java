@@ -8,6 +8,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.wire.Project;
@@ -17,6 +18,7 @@ import org.smoothbuild.virtualmachine.wire.Project;
  */
 public class Container implements NativeApi {
   private final Bucket bucket;
+  private final FileContentReader fileContentReader;
   private final BytecodeFactory bytecodeFactory;
   private final ContainerMessageLoggerImpl messageLogger;
   private final NativeMethodLoader nativeMethodLoader;
@@ -24,9 +26,11 @@ public class Container implements NativeApi {
   @Inject
   public Container(
       @Project Bucket bucket,
+      FileContentReader fileContentReader,
       BytecodeFactory bytecodeFactory,
       NativeMethodLoader nativeMethodLoader) {
     this.bucket = bucket;
+    this.fileContentReader = fileContentReader;
     this.bytecodeFactory = bytecodeFactory;
     this.messageLogger = new ContainerMessageLoggerImpl(bytecodeFactory);
     this.nativeMethodLoader = nativeMethodLoader;
@@ -34,6 +38,10 @@ public class Container implements NativeApi {
 
   public Bucket bucket() {
     return bucket;
+  }
+
+  public FileContentReader fileContentReader() {
+    return fileContentReader;
   }
 
   @Override

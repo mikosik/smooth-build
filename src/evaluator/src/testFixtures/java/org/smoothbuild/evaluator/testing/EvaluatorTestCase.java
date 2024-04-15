@@ -198,7 +198,7 @@ public class EvaluatorTestCase extends TestingBytecode {
 
     @Provides
     public Map<BucketId, Bucket> provideBucketsMap() {
-      return map(MODULES_BUCKET_ID, modulesBucket);
+      return map(MODULES_BUCKET_ID, modulesBucket, bucketId("project"), projectBucket);
     }
 
     @Provides

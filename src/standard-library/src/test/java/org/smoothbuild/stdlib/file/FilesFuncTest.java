@@ -36,7 +36,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     createProjectFile("file.txt", "abc");
     evaluate("result");
-    assertThat(logs()).contains(error("Dir 'file.txt' doesn't exist. It is a file."));
+    assertThat(logs()).contains(error("Path 'file.txt' is not a dir but a file."));
   }
 
   @Test
@@ -50,20 +50,5 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     evaluate("result");
     assertThat(artifact())
         .isEqualTo(bArray(bFile("file.txt", "abc"), bFile("subdir/file.txt", "def")));
-  }
-
-  @Test
-  public void result_is_not_cached() throws Exception {
-    var userModule = """
-        result = files("dir");
-        """;
-    createUserModule(userModule);
-    createProjectFile("dir/file.txt", "abc");
-    evaluate("result");
-    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "abc")));
-
-    createProjectFile("dir/file.txt", "def");
-    evaluate("result");
-    assertThat(artifact()).isEqualTo(bArray(bFile("file.txt", "def")));
   }
 }

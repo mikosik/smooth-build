@@ -22,7 +22,7 @@ public class RecursivePathsIterator implements PathIterator {
   public static PathIterator recursivePathsIterator(Bucket bucket, Path dir) throws IOException {
     PathState state = bucket.pathState(dir);
     return switch (state) {
-      case FILE -> throw new IllegalArgumentException("Path " + dir + " is not a dir but a file.");
+      case FILE -> throw new IOException("Path " + dir.q() + " is not a dir but a file.");
       case DIR -> new RecursivePathsIterator(bucket, dir);
       case NOTHING -> new PathIterator() {
         @Override

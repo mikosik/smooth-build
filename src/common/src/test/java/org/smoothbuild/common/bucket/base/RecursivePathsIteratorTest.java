@@ -1,7 +1,6 @@
 package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.common.collect.List.list;
@@ -46,12 +45,8 @@ public class RecursivePathsIteratorTest {
   public void throws_exception_when_dir_is_a_file() throws Exception {
     Bucket bucket = new MemoryBucket();
     createFile(bucket, path("my/file"), "abc");
-    try {
-      recursivePathsIterator(bucket, path("my/file"));
-      fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+    assertCall(() -> recursivePathsIterator(bucket, path("my/file")))
+        .throwsException(new IOException("Path 'my/file' is not a dir but a file."));
   }
 
   @Test
