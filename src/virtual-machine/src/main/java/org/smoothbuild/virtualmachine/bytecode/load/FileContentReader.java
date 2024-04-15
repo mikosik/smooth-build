@@ -12,7 +12,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 
 /**
  * Stores disk file as BlobB in expression-db.
@@ -31,13 +30,9 @@ public class FileContentReader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public BBlob read(FullPath fullPath) throws BytecodeException {
+  public BBlob read(FullPath fullPath) throws BytecodeException, IOException {
     var cachingLoader = cache.computeIfAbsent(fullPath, CachingReader::new);
-    try {
-      return cachingLoader.read();
-    } catch (IOException e) {
-      throw new IoBytecodeException(e);
-    }
+    return cachingLoader.read();
   }
 
   private class CachingReader {

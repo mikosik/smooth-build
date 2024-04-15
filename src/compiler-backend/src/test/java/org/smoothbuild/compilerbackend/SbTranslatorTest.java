@@ -21,7 +21,6 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
@@ -686,8 +685,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     return sbTranslator(fileContentReader, evaluables);
   }
 
-  private FileContentReader fileContentReaderMock(FullPath fullPath, BBlob bBlob)
-      throws BytecodeException {
+  private FileContentReader fileContentReaderMock(FullPath fullPath, BBlob bBlob) throws Exception {
     FileContentReader mock = mock(FileContentReader.class);
     when(mock.read(fullPath)).thenReturn(bBlob);
     return mock;

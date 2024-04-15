@@ -14,6 +14,7 @@ import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import jakarta.inject.Inject;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import org.smoothbuild.common.base.Hash;
@@ -396,7 +397,7 @@ public class SbTranslator {
     var fullPath = fullPathOf(location).withExtension("jar");
     try {
       return fileContentReader.read(fullPath);
-    } catch (BytecodeException e) {
+    } catch (BytecodeException | IOException e) {
       var message = location + ": Error loading native jar %s.".formatted(fullPath.q());
       throw new SbTranslatorException(message, e);
     }
