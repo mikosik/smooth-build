@@ -69,12 +69,12 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
-import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 
 public class SbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
   private final TypeSbTranslator typeF;
-  private final FilePersister filePersister;
+  private final FileContentReader fileContentReader;
   private final BytecodeLoader bytecodeLoader;
   private final ImmutableBindings<SNamedEvaluable> evaluables;
   private final NList<SItem> lexicalEnvironment;
@@ -85,13 +85,13 @@ public class SbTranslator {
   @Inject
   public SbTranslator(
       BytecodeFactory bytecodeFactory,
-      FilePersister filePersister,
+      FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<SNamedEvaluable> evaluables) {
     this(
         new ChainingBytecodeFactory(bytecodeFactory),
         new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeFactory), map()),
-        filePersister,
+        fileContentReader,
         bytecodeLoader,
         evaluables,
         nlist(),
@@ -103,7 +103,7 @@ public class SbTranslator {
   private SbTranslator(
       ChainingBytecodeFactory bytecodeF,
       TypeSbTranslator typeF,
-      FilePersister filePersister,
+      FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<SNamedEvaluable> evaluables,
       NList<SItem> lexicalEnvironment,
@@ -112,7 +112,7 @@ public class SbTranslator {
       HashMap<Hash, Location> locationMapping) {
     this.bytecodeF = bytecodeF;
     this.typeF = typeF;
-    this.filePersister = filePersister;
+    this.fileContentReader = fileContentReader;
     this.bytecodeLoader = bytecodeLoader;
     this.evaluables = evaluables;
     this.lexicalEnvironment = lexicalEnvironment;
@@ -170,7 +170,7 @@ public class SbTranslator {
     var sbTranslator = new SbTranslator(
         bytecodeF,
         newTypeSbTranslator,
-        filePersister,
+        fileContentReader,
         bytecodeLoader,
         evaluables,
         lexicalEnvironment,
@@ -228,7 +228,7 @@ public class SbTranslator {
     return new SbTranslator(
         bytecodeF,
         typeF,
-        filePersister,
+        fileContentReader,
         bytecodeLoader,
         evaluables,
         newEnvironment,
@@ -263,7 +263,7 @@ public class SbTranslator {
 
   private BLambda translateNativeFunc(SAnnotatedFunc sNativeFunc) throws SbTranslatorException {
     var sAnnotation = sNativeFunc.annotation();
-    var bJar = persistNativeJar(sAnnotation.location());
+    var bJar = readNativeJar(sAnnotation.location());
     var bClassBinaryName = bytecodeF.string(sAnnotation.path().string());
     var bMethodName = bytecodeF.string(NATIVE_METHOD_NAME);
     var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName, bMethodName).tuple();
@@ -364,7 +364,7 @@ public class SbTranslator {
   private BExpr fetchBytecode(SAnnotation annotation, BType bType, String name)
       throws SbTranslatorException {
     var varNameToTypeMap = typeF.varMap().mapKeys(SVar::name);
-    var jar = persistNativeJar(annotation.location());
+    var jar = readNativeJar(annotation.location());
     var bytecode = loadBytecode(name, jar, annotation.path().string(), varNameToTypeMap);
     if (bytecode.isLeft()) {
       throw new SbTranslatorException(annotation.location() + ": " + bytecode.left());
@@ -392,12 +392,12 @@ public class SbTranslator {
     }
   }
 
-  private BBlob persistNativeJar(Location location) throws SbTranslatorException {
+  private BBlob readNativeJar(Location location) throws SbTranslatorException {
     var fullPath = fullPathOf(location).withExtension("jar");
     try {
-      return filePersister.persist(fullPath);
+      return fileContentReader.read(fullPath);
     } catch (BytecodeException e) {
-      var message = location + ": Error persisting native jar %s.".formatted(fullPath.q());
+      var message = location + ": Error loading native jar %s.".formatted(fullPath.q());
       throw new SbTranslatorException(message, e);
     }
   }

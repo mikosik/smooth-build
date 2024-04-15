@@ -16,19 +16,21 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
-import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 
 public class BackendCompile
     implements TryFunction2<List<SExpr>, ImmutableBindings<SNamedEvaluable>, CompiledExprs> {
   private final BytecodeFactory bytecodeFactory;
-  private final FilePersister filePersister;
+  private final FileContentReader fileContentReader;
   private final BytecodeLoader bytecodeLoader;
 
   @Inject
   public BackendCompile(
-      BytecodeFactory bytecodeFactory, FilePersister filePersister, BytecodeLoader bytecodeLoader) {
+      BytecodeFactory bytecodeFactory,
+      FileContentReader fileContentReader,
+      BytecodeLoader bytecodeLoader) {
     this.bytecodeFactory = bytecodeFactory;
-    this.filePersister = filePersister;
+    this.fileContentReader = fileContentReader;
     this.bytecodeLoader = bytecodeLoader;
   }
 
@@ -40,7 +42,8 @@ public class BackendCompile
   @Override
   public Try<CompiledExprs> apply(
       List<SExpr> sExprs, ImmutableBindings<SNamedEvaluable> evaluables) {
-    var sbTranslator = new SbTranslator(bytecodeFactory, filePersister, bytecodeLoader, evaluables);
+    var sbTranslator =
+        new SbTranslator(bytecodeFactory, fileContentReader, bytecodeLoader, evaluables);
     try {
       var exprBs = sExprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
