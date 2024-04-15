@@ -6,7 +6,6 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.NoSuchElementException;
 
 public class RecursivePathsIterator implements PathIterator {
   private final Bucket bucket;
@@ -24,17 +23,7 @@ public class RecursivePathsIterator implements PathIterator {
     return switch (state) {
       case FILE -> throw new IOException("Path " + dir.q() + " is not a dir but a file.");
       case DIR -> new RecursivePathsIterator(bucket, dir);
-      case NOTHING -> new PathIterator() {
-        @Override
-        public boolean hasNext() {
-          return false;
-        }
-
-        @Override
-        public Path next() {
-          throw new NoSuchElementException();
-        }
-      };
+      case NOTHING -> throw new IOException("Dir " + dir.q() + " doesn't exist.");
     };
   }
 

@@ -35,10 +35,11 @@ public class RecursivePathsIteratorTest {
   }
 
   @Test
-  public void is_empty_when_dir_doesnt_exist() throws Exception {
+  public void fails_when_dir_not_exists() {
     var bucket = new MemoryBucket();
     var path = path("my/file");
-    assertThat(recursivePathsIterator(bucket, path).hasNext()).isFalse();
+    assertCall(() -> recursivePathsIterator(bucket, path))
+        .throwsException(new IOException("Dir 'my/file' doesn't exist."));
   }
 
   @Test
