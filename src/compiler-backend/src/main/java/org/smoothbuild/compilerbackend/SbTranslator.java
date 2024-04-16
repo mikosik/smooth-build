@@ -13,6 +13,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_
 import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
+import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -88,7 +89,7 @@ public class SbTranslator {
       BytecodeFactory bytecodeFactory,
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      ImmutableBindings<SNamedEvaluable> evaluables) {
+      @Assisted ImmutableBindings<SNamedEvaluable> evaluables) {
     this(
         new ChainingBytecodeFactory(bytecodeFactory),
         new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeFactory), map()),

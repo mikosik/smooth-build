@@ -42,6 +42,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
+import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -168,7 +169,8 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   private Injector createInjector() {
-    return Guice.createInjector(PRODUCTION, new TestWiring(), new VirtualMachineWiring());
+    return Guice.createInjector(
+        PRODUCTION, new TestWiring(), new VirtualMachineWiring(), new CompilerBackendWiring());
   }
 
   @Override
