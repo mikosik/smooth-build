@@ -10,6 +10,7 @@ dependencies {
     implementation project(':src:common')
     implementation project(':src:antlr-report-matcher')
     implementation project(':src:compiler-frontend')
+    implementation project(':src:compiler-backend')
     implementation project(':src:virtual-machine')
     implementation project(':src:evaluator')
 

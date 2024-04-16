@@ -24,6 +24,7 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.virtualmachine.wire.VirtualMachineWiring;
 
 public class CreateInjector {
@@ -41,6 +42,7 @@ public class CreateInjector {
     return Guice.createInjector(
         PRODUCTION,
         new AppWiring(),
+        new CompilerBackendWiring(),
         new VirtualMachineWiring(),
         new SmoothBucketWiring(true),
         new DiskBucketWiring(bucketIdToPath),

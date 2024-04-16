@@ -52,6 +52,7 @@ import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
+import org.smoothbuild.compilerbackend.SbTranslator;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -349,6 +350,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
 
   private BackendCompile backendCompile(
       FileContentReader fileContentReader, BytecodeLoader bytecodeLoader) {
-    return new BackendCompile(bytecodeF(), fileContentReader, bytecodeLoader);
+    return new BackendCompile(
+        evaluables -> new SbTranslator(bytecodeF(), fileContentReader, bytecodeLoader, evaluables));
   }
 }
