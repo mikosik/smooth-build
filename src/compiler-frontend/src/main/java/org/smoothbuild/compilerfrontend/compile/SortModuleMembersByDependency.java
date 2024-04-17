@@ -48,7 +48,7 @@ public class SortModuleMembersByDependency implements TryFunction1<PModule, PMod
     }
     var sortedEvaluables = sortEvaluablesByDeps(pModule.evaluables());
     if (sortedEvaluables.sorted() == null) {
-      logger.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
+      logger.log(createCycleError("Reference graph", sortedEvaluables.cycle()));
       return Try.of(null, logger);
     }
     PModule result = new PModule(
