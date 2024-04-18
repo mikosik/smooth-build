@@ -30,7 +30,7 @@ subprojects { subproject ->
             'virtual-machine',
             'compiler-backend',
             'evaluator',
-            'app',
+            'cli',
             'standard-library',
             'system-test']) {
         apply plugin: 'java'

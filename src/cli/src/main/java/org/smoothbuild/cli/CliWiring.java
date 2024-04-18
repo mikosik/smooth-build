@@ -1,4 +1,4 @@
-package org.smoothbuild.app;
+package org.smoothbuild.cli;
 
 import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
@@ -13,13 +13,27 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.SubBucket;
+import org.smoothbuild.common.bucket.wiring.BucketFactory;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 
-public class AppWiring extends AbstractModule {
+public class CliWiring extends AbstractModule {
+  private final Set<BucketId> bucketIds;
+
+  public CliWiring(Set<BucketId> bucketIds) {
+    this.bucketIds = bucketIds;
+  }
+
+  @Provides
+  @Singleton
+  public Map<BucketId, Bucket> provideBucketIdToBucketMap(BucketFactory bucketFactory) {
+    return bucketIds.toMap(bucketFactory::create);
+  }
+
   @Provides
   @Singleton
   @Sandbox
