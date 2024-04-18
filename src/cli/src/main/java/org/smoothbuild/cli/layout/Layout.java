@@ -6,7 +6,6 @@ import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.List.listOfAll;
 
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
@@ -26,7 +25,7 @@ public class Layout {
   public static final List<FullPath> STANDARD_LIBRARY_MODULES =
       list(STANDARD_LIBRARY_MODULE_FILE_PATH);
   public static final List<FullPath> MODULES =
-      listOfAll(STANDARD_LIBRARY_MODULES).append(DEFAULT_MODULE_FILE_PATH);
+      STANDARD_LIBRARY_MODULES.append(DEFAULT_MODULE_FILE_PATH);
   public static final FullPath SMOOTH_JAR_FILE_PATH = fullPath(INSTALL, path("smooth.jar"));
   public static final String STANDARD_LIBRARY_DIR_NAME = "lib";
   public static final String BIN_DIR_NAME = "bin";
