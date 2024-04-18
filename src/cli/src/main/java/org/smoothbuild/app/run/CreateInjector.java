@@ -7,6 +7,7 @@ import static org.smoothbuild.app.layout.BucketIds.PROJECT;
 import static org.smoothbuild.app.layout.Layout.BIN_DIR_NAME;
 import static org.smoothbuild.app.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.collect.Set.setOfAll;
 import static org.smoothbuild.common.log.base.Level.INFO;
 
 import com.google.inject.Guice;
@@ -21,6 +22,7 @@ import org.smoothbuild.app.run.eval.report.ReportMatchers;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
@@ -44,7 +46,7 @@ public class CreateInjector {
         new AppWiring(),
         new CompilerBackendWiring(),
         new VirtualMachineWiring(),
-        new SmoothBucketWiring(true),
+        new SmoothBucketWiring(setOfAll(bucketIdToPath.keySet())),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, reportMatcher, logLevel));
   }
@@ -56,7 +58,7 @@ public class CreateInjector {
         INSTALL, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new SmoothBucketWiring(false),
+        new SmoothBucketWiring(setOfAll(bucketIdToPath.keySet())),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, ReportMatchers.ALL, INFO),
         new InitWiring());
