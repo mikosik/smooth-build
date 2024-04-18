@@ -20,8 +20,8 @@ public class CommandExecutor {
   }
 
   public Integer execute(Plan<Void> plan) {
-    Maybe<Void> message = planExecutorWrapper.evaluate(plan);
+    Maybe<Void> result = planExecutorWrapper.evaluate(plan);
     statusPrinter.printSummary();
-    return message.map(v -> EXIT_CODE_SUCCESS).getOr(EXIT_CODE_ERROR);
+    return result.map(v -> EXIT_CODE_SUCCESS).getOr(EXIT_CODE_ERROR);
   }
 }
