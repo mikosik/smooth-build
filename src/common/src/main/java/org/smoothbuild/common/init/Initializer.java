@@ -5,9 +5,9 @@ import static org.smoothbuild.common.log.base.Try.success;
 
 import jakarta.inject.Inject;
 import java.util.Set;
-import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction0;
 
 public class Initializer implements TryFunction0<Void> {
   private final Set<Initializable> initializables;

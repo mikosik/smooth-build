@@ -5,10 +5,10 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.UnescapeFailedException;
-import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;

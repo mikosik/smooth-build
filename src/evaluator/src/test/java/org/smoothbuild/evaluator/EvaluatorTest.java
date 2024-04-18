@@ -10,9 +10,9 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.dag.Dag.apply2;
-import static org.smoothbuild.common.dag.Dag.applyMaybeFunction;
-import static org.smoothbuild.common.dag.Dag.value;
+import static org.smoothbuild.common.plan.Plan.apply2;
+import static org.smoothbuild.common.plan.Plan.applyMaybeFunction;
+import static org.smoothbuild.common.plan.Plan.value;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
@@ -48,8 +48,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.plan.PlanExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.SbTranslator;
@@ -332,8 +332,8 @@ public class EvaluatorTest extends TestingVirtualMachine {
       }
     });
     var compilationResult = apply2(backendCompile, value(exprs), value(evaluables));
-    var evaluationDag = applyMaybeFunction(BEvaluatorFacade.class, compilationResult);
-    return new DagEvaluator(injector, reporter).evaluate(evaluationDag);
+    var evaluationPlan = applyMaybeFunction(BEvaluatorFacade.class, compilationResult);
+    return new PlanExecutor(injector, reporter).evaluate(evaluationPlan);
   }
 
   public static BInt returnInt(NativeApi nativeApi, BTuple args) throws BytecodeException {

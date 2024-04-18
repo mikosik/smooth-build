@@ -1,4 +1,4 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.plan;
 
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -13,18 +13,18 @@ import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 
-public class DagEvaluator {
+public class PlanExecutor {
   private final Injector injector;
   private final Reporter reporter;
 
   @Inject
-  public DagEvaluator(Injector injector, Reporter reporter) {
+  public PlanExecutor(Injector injector, Reporter reporter) {
     this.injector = injector;
     this.reporter = reporter;
   }
 
-  public <V> Maybe<V> evaluate(Dag<V> dag) {
-    return switch (dag) {
+  public <V> Maybe<V> evaluate(Plan<V> plan) {
+    return switch (plan) {
       case Application0<V> application -> evaluateApplication0(application);
       case Application1<?, V> application -> evaluateApplication1(application);
       case Application2<?, ?, V> application -> evaluateApplication2(application);
@@ -79,8 +79,8 @@ public class DagEvaluator {
   }
 
   private <V> Maybe<V> evaluateEvaluation(Evaluation<V> evaluation) {
-    Dag<Dag<V>> dag = evaluation.dag();
-    Maybe<Dag<V>> inflatedNode = evaluate(dag);
+    Plan<Plan<V>> plan = evaluation.plan();
+    Maybe<Plan<V>> inflatedNode = evaluate(plan);
     return inflatedNode.flatMap(n -> evaluate(n));
   }
 

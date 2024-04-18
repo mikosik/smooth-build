@@ -7,11 +7,11 @@ import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptySc
 
 import com.google.common.annotations.VisibleForTesting;
 import org.smoothbuild.common.bindings.MutableBindings;
-import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;

@@ -3,10 +3,10 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
-import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;

@@ -1,7 +1,7 @@
 package org.smoothbuild.app.cli.command;
 
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
-import static org.smoothbuild.common.dag.Dag.apply0;
+import static org.smoothbuild.common.plan.Plan.apply0;
 
 import java.util.concurrent.Callable;
 import org.smoothbuild.app.cli.base.CommandExecutor;

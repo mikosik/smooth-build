@@ -9,10 +9,10 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;

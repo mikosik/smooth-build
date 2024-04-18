@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.dag.TryFunction1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction1;
 
 public class ReadFileContent implements TryFunction1<FullPath, String> {
   private final FileResolver fileResolver;

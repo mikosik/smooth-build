@@ -9,9 +9,9 @@ import static org.smoothbuild.compilerbackend.CompiledExprs.compilationResult;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 
