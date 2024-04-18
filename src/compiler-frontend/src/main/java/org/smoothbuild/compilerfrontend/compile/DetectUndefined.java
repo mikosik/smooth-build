@@ -5,10 +5,10 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;

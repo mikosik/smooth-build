@@ -11,9 +11,9 @@ import org.smoothbuild.app.layout.BuildVersion;
 import org.smoothbuild.app.layout.HashNode;
 import org.smoothbuild.app.layout.InstallationHashes;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.dag.TryFunction0;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction0;
 
 public class Version implements TryFunction0<Void> {
   private final InstallationHashes installationHashes;

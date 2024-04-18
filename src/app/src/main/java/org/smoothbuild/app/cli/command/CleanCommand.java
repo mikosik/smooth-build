@@ -1,7 +1,7 @@
 package org.smoothbuild.app.cli.command;
 
 import static org.smoothbuild.app.run.CreateInjector.createInjector;
-import static org.smoothbuild.common.dag.Dag.apply0;
+import static org.smoothbuild.common.plan.Plan.apply0;
 
 import java.nio.file.Path;
 import org.smoothbuild.app.cli.base.CommandExecutor;
@@ -18,7 +18,7 @@ public class CleanCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel);
-    var dag = apply0(Clean.class);
-    return injector.getInstance(CommandExecutor.class).execute(dag);
+    var plan = apply0(Clean.class);
+    return injector.getInstance(CommandExecutor.class).execute(plan);
   }
 }

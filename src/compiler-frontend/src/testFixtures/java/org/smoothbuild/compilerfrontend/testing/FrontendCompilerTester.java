@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.compilerfrontend.ModuleFrontendCompilationDag.frontendCompilationDag;
+import static org.smoothbuild.compilerfrontend.FrontendCompilationPlan.frontendCompilationPlan;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.LIBRARY_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
@@ -25,10 +25,10 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.dag.DagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.plan.PlanExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -140,8 +140,8 @@ public class FrontendCompilerTester {
     });
     writeModuleFilesToBuckets(buckets);
     var moduleS =
-        frontendCompilationDag(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
-    var module = injector.getInstance(DagEvaluator.class).evaluate(moduleS);
+        frontendCompilationPlan(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
+    var module = injector.getInstance(PlanExecutor.class).evaluate(moduleS);
     return Try.of(module.getOr(null), memoryReporter.logs());
   }
 

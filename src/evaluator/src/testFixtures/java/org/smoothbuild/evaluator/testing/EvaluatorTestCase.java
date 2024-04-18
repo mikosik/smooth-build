@@ -18,7 +18,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.evaluator.SmoothEvaluationDag.smoothEvaluationDag;
+import static org.smoothbuild.evaluator.SmoothEvaluationPlan.smoothEvaluationPlan;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -37,10 +37,10 @@ import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.dag.InitializingDagEvaluator;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.plan.PlanExecutorWrapper;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -112,8 +112,8 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   protected void evaluate(String... names) {
-    var evaluated = smoothEvaluationDag(modules, listOfAll(asList(names)));
-    this.evaluatedExprs = injector.getInstance(InitializingDagEvaluator.class).evaluate(evaluated);
+    var evaluated = smoothEvaluationPlan(modules, listOfAll(asList(names)));
+    this.evaluatedExprs = injector.getInstance(PlanExecutorWrapper.class).evaluate(evaluated);
   }
 
   protected void restartSmoothWithSameBuckets() {

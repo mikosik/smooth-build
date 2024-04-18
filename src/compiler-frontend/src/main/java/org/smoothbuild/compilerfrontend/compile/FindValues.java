@@ -7,10 +7,10 @@ import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.comm
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;

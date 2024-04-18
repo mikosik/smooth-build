@@ -1,4 +1,4 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.plan;
 
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -11,25 +11,25 @@ import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 
-public class InitializingDagEvaluator {
+public class PlanExecutorWrapper {
   private final Initializer initializer;
-  private final DagEvaluator dagEvaluator;
+  private final PlanExecutor planExecutor;
   private final Reporter reporter;
 
   @Inject
-  public InitializingDagEvaluator(
-      Initializer initializer, DagEvaluator dagEvaluator, Reporter reporter) {
+  public PlanExecutorWrapper(
+      Initializer initializer, PlanExecutor planExecutor, Reporter reporter) {
     this.initializer = initializer;
-    this.dagEvaluator = dagEvaluator;
+    this.planExecutor = planExecutor;
     this.reporter = reporter;
   }
 
-  public <V> Maybe<V> evaluate(Dag<V> dag) {
+  public <V> Maybe<V> evaluate(Plan<V> plan) {
     var result = initializer.apply();
     reporter.report(report(label("initialize"), new Trace(), EXECUTION, result.logs()));
     if (result.toMaybe().isNone()) {
       return none();
     }
-    return dagEvaluator.evaluate(dag);
+    return planExecutor.evaluate(plan);
   }
 }

@@ -1,4 +1,4 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.plan;
 
 import org.smoothbuild.common.collect.Maybe;
 

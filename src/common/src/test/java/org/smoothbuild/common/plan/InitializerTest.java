@@ -1,4 +1,4 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.plan;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Set.set;

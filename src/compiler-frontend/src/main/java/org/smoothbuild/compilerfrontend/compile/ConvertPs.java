@@ -7,9 +7,9 @@ import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.dag.TryFunction2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;

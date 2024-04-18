@@ -1,11 +1,11 @@
-package org.smoothbuild.common.dag;
+package org.smoothbuild.common.plan;
 
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 
 @FunctionalInterface
-public interface TryFunction2<A, B, R> {
-  public Try<R> apply(A a, B b);
+public interface TryFunction1<T, R> {
+  public Try<R> apply(T t);
 
   public default Label label() {
     return Label.label();
