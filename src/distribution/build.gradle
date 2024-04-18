@@ -4,10 +4,10 @@ plugins {
 
 def zip = tasks.register('zip', Zip) {
     archiveBaseName = 'smooth'
-    dependsOn project(':src:app').tasks.fatJar
+    dependsOn project(':src:cli').tasks.fatJar
     dependsOn project(':src:standard-library').tasks.zip
 
-    from (project(':src:app').tasks.fatJar) {
+    from (project(':src:cli').tasks.fatJar) {
         into('bin')
     }
     from (layout.projectDirectory.dir('src/main/shell')) {

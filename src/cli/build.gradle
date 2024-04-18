@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClass = 'org.smoothbuild.app.cli.Main'
+    mainClass = 'org.smoothbuild.cli.Main'
 }
 
 dependencies {
