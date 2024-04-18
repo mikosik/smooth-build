@@ -15,14 +15,12 @@ import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import org.smoothbuild.app.AppWiring;
-import org.smoothbuild.app.layout.SmoothBucketWiring;
 import org.smoothbuild.app.report.ReportWiring;
 import org.smoothbuild.app.run.eval.report.ReportMatchers;
+import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
@@ -43,10 +41,9 @@ public class CreateInjector {
         INSTALL, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new AppWiring(),
+        new CliWiring(setOfAll(bucketIdToPath.keySet())),
         new CompilerBackendWiring(),
         new VirtualMachineWiring(),
-        new SmoothBucketWiring(setOfAll(bucketIdToPath.keySet())),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, reportMatcher, logLevel));
   }
@@ -58,7 +55,7 @@ public class CreateInjector {
         INSTALL, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new SmoothBucketWiring(setOfAll(bucketIdToPath.keySet())),
+        new CliWiring(setOfAll(bucketIdToPath.keySet())),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, ReportMatchers.ALL, INFO),
         new InitWiring());
