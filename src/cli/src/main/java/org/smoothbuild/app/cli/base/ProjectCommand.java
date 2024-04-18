@@ -1,9 +1,9 @@
 package org.smoothbuild.app.cli.base;
 
-import static org.smoothbuild.app.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.app.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.app.layout.Layout.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.app.report.PrintWriterReporter.printErrorToWriter;
+import static org.smoothbuild.cli.Main.EXIT_CODE_ERROR;
 import static org.smoothbuild.common.io.LockFile.lockFile;
 
 import java.io.IOException;

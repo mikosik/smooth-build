@@ -1,7 +1,7 @@
 package org.smoothbuild.app.cli.base;
 
-import static org.smoothbuild.app.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.app.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.cli.Main.EXIT_CODE_ERROR;
+import static org.smoothbuild.cli.Main.EXIT_CODE_SUCCESS;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.app.report.StatusPrinter;

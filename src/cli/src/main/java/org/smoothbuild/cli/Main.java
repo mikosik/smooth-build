@@ -12,6 +12,10 @@ import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.UnmatchedArgumentException;
 
 public class Main {
+  public static final int EXIT_CODE_SUCCESS = 0;
+  public static final int EXIT_CODE_JAVA_EXCEPTION = 1;
+  public static final int EXIT_CODE_ERROR = 2;
+
   public static void main(String[] args) {
     PrintWriter out = printWriter(System.out);
     PrintWriter err = printWriter(System.err);
