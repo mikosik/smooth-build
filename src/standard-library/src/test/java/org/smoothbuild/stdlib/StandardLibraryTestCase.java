@@ -11,14 +11,14 @@ public class StandardLibraryTestCase extends EvaluatorTestCase {
   @Override
   public void beforeEach() throws IOException {
     super.beforeEach();
-    createLibraryModule(findStandardLibrarySmooth(), findStandardLibraryJar());
+    createLibraryModule(standardLibraryPath(), standardLibraryJarPath());
   }
 
-  private static Path findStandardLibraryJar() {
+  private static Path standardLibraryJarPath() {
     return Paths.get("./build/libs/std_lib.jar").toAbsolutePath();
   }
 
-  private static Path findStandardLibrarySmooth() {
+  private static Path standardLibraryPath() {
     return Paths.get("./src/main/smooth/std_lib.smooth").toAbsolutePath();
   }
 }
