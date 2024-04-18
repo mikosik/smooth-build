@@ -3,10 +3,10 @@ package org.smoothbuild.systemtest;
 import static com.google.common.collect.ObjectArrays.concat;
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.app.cli.command.BuildCommand;
-import org.smoothbuild.app.cli.command.CleanCommand;
-import org.smoothbuild.app.cli.command.ListCommand;
-import org.smoothbuild.app.cli.command.VersionCommand;
+import org.smoothbuild.cli.command.BuildCommand;
+import org.smoothbuild.cli.command.CleanCommand;
+import org.smoothbuild.cli.command.ListCommand;
+import org.smoothbuild.cli.command.VersionCommand;
 
 public class CommandWithArgs {
   private final String command;

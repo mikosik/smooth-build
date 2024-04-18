@@ -1,10 +1,10 @@
 package org.smoothbuild.systemtest.cli.command;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.app.cli.command.BuildCommand;
-import org.smoothbuild.app.cli.command.CleanCommand;
-import org.smoothbuild.app.cli.command.ListCommand;
-import org.smoothbuild.app.cli.command.VersionCommand;
+import org.smoothbuild.cli.command.BuildCommand;
+import org.smoothbuild.cli.command.CleanCommand;
+import org.smoothbuild.cli.command.ListCommand;
+import org.smoothbuild.cli.command.VersionCommand;
 import org.smoothbuild.systemtest.SystemTestCase;
 
 public class HelpCommandTest extends SystemTestCase {

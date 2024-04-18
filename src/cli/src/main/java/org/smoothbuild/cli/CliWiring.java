@@ -1,14 +1,14 @@
 package org.smoothbuild.cli;
 
-import static org.smoothbuild.app.layout.BucketIds.PROJECT;
-import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
+import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
+import static org.smoothbuild.cli.layout.Layout.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.cli.layout.Layout.HASHED_DB_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import org.smoothbuild.app.layout.InstallationHashes;
+import org.smoothbuild.cli.layout.InstallationHashes;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
