@@ -12,7 +12,7 @@ tasks.test.dependsOn(installation)
 tasks.test.getInputs().dir('../../doc')
 
 dependencies {
-    implementation project(':src:app')
+    implementation project(':src:cli')
     implementation libs.guava
     implementation libs.okio
     implementation libs.zip4j

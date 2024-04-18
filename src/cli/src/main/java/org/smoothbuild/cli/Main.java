@@ -1,4 +1,4 @@
-package org.smoothbuild.app.cli;
+package org.smoothbuild.cli;
 
 import static org.smoothbuild.common.Constants.CHARSET;
 
