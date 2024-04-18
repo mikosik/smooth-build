@@ -5,7 +5,7 @@ import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.app.layout.BuildVersion;
+import org.smoothbuild.cli.layout.BuildVersion;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 

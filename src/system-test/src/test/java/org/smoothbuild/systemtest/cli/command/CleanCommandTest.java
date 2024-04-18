@@ -2,11 +2,11 @@ package org.smoothbuild.systemtest.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createDirectories;
-import static org.smoothbuild.app.layout.Layout.ARTIFACTS_PATH;
-import static org.smoothbuild.app.layout.Layout.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.app.layout.Layout.DEFAULT_MODULE_PATH;
-import static org.smoothbuild.app.layout.Layout.HASHED_DB_PATH;
-import static org.smoothbuild.app.layout.Layout.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
+import static org.smoothbuild.cli.layout.Layout.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.cli.layout.Layout.DEFAULT_MODULE_PATH;
+import static org.smoothbuild.cli.layout.Layout.HASHED_DB_PATH;
+import static org.smoothbuild.cli.layout.Layout.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
 import java.io.IOException;
