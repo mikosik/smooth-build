@@ -2,6 +2,7 @@ package org.smoothbuild.common.collect;
 
 import static com.google.common.collect.ImmutableSortedSet.toImmutableSortedSet;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.Map.zipToMap;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -73,6 +74,10 @@ public class Set<E> implements java.util.Set<E> {
 
   public List<E> toList() {
     return listOfAll(set);
+  }
+
+  public <V, T extends Throwable> Map<E, V> toMap(Function1<E, V, T> mapper) throws T {
+    return zipToMap(this, this.map(mapper));
   }
 
   // Methods from java.util.Set

@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
+import java.util.Locale;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -231,6 +232,39 @@ public class SetTest {
     void returns_instance_of_list() {
       var set = set("1", "2", "3");
       assertThat(set.toList()).isInstanceOf(List.class);
+    }
+  }
+
+  @Nested
+  class _toMap {
+    @Test
+    void on_empty_set_returns_empty_map() {
+      var set = set();
+      assertThat(set.toMap(x -> x)).isEmpty();
+    }
+
+    @Test
+    void on_non_empty_set_returns_map_with_values_calculated_by_mapper() {
+      var set = set("a", "b", "c");
+      assertThat(set.toMap(x -> x.toUpperCase(Locale.ROOT)))
+          .containsExactly("a", "A", "b", "B", "c", "C")
+          .inOrder();
+    }
+
+    @Test
+    void propagates_exception_from_mapper() {
+      var set = set("a", "b", "c");
+      var exception = new RuntimeException("message");
+      assertCall(() -> set.toMap(x -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+
+    @Test
+    void returns_instance_of_map() {
+      var set = set("1", "2", "3");
+      assertThat(set.toMap(x -> x)).isInstanceOf(Map.class);
     }
   }
 
