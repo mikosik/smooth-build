@@ -2,11 +2,14 @@ package org.smoothbuild.common.concurrent;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.base.Strings.unlines;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.Maybe;
 
 /**
  * This class is thread-safe.
@@ -15,22 +18,21 @@ import java.util.function.Function;
 public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   private final Object lock = new Object();
   private final List<Consumer<T>> consumers = new ArrayList<>();
-  private T value;
+  private Maybe<T> value;
 
   public PromisedValue() {
-    this(null);
+    this.value = none();
   }
 
   public PromisedValue(T value) {
-    this.value = value;
+    this.value = some(value);
   }
 
   @Override
   public void accept(T value) {
-    requireNonNull(value);
     synchronized (lock) {
       assertValueIsNotSetYet(value);
-      this.value = value;
+      this.value = some(value);
     }
     // From this point 'consumers' is effectively immutable as we don't change it
     // once 'value' is set so we can read its state outside of synchronized block to ensure
@@ -39,14 +41,21 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   }
 
   private void assertValueIsNotSetYet(T value) {
-    if (this.value != null) {
-      throw new IllegalStateException(
-          unlines("Cannot set 'value' to: " + value, "as it is already set to: " + this.value));
+    if (this.value.isSome()) {
+      throw new IllegalStateException(unlines(
+          "Cannot set 'value' to: " + value, "as it is already set to: " + this.value.get()));
     }
   }
 
   @Override
   public T get() {
+    synchronized (lock) {
+      return value.get();
+    }
+  }
+
+  @Override
+  public Maybe<T> toMaybe() {
     synchronized (lock) {
       return value;
     }
@@ -57,7 +66,7 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
     requireNonNull(consumer);
     boolean notify = false;
     synchronized (lock) {
-      if (value != null) {
+      if (value.isSome()) {
         notify = true;
       } else {
         consumers.add(consumer);
@@ -65,7 +74,7 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
     }
     if (notify) {
       // Once value!=null it becomes effectively immutable.
-      consumer.accept(value);
+      consumer.accept(value.get());
     }
   }
 

@@ -5,17 +5,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.base.Strings.unlines;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class PromisedValueTest {
   @Test
-  public void default_construct_set_values_to_null() {
+  public void default_construct_set_value_to_none() {
     var promisedValue = new PromisedValue<>();
-    assertThat(promisedValue.get()).isNull();
+    assertThat(promisedValue.toMaybe()).isEqualTo(none());
+    assertCall(promisedValue::get).throwsException(NoSuchElementException.class);
   }
 
   @Test
@@ -25,9 +29,10 @@ public class PromisedValueTest {
   }
 
   @Test
-  public void setting_value_to_null_causes_exception() {
+  public void setting_value_to_null_is_allowed() {
     var promisedValue = new PromisedValue<>();
-    assertCall(() -> promisedValue.accept(null)).throwsException(NullPointerException.class);
+    promisedValue.accept(null);
+    assertThat(promisedValue.get()).isNull();
   }
 
   @Test
@@ -37,17 +42,20 @@ public class PromisedValueTest {
   }
 
   @Test
-  public void value_returns_instance_passed_to_consume() {
+  public void get_returns_instance_passed_to_consume() {
     var promisedValue = new PromisedValue<>();
-    String value = "abc";
+    var value = "abc";
     promisedValue.accept(value);
     assertThat(promisedValue.get()).isSameInstanceAs(value);
+    assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
   }
 
   @Test
-  public void value_returns_instance_passed_to_initializing_constructor() {
-    var promisedValue = new PromisedValue<>("abc");
-    assertThat(promisedValue.get()).isSameInstanceAs("abc");
+  public void get_returns_instance_passed_to_initializing_constructor() {
+    var value = "abc";
+    var promisedValue = new PromisedValue<>(value);
+    assertThat(promisedValue.get()).isSameInstanceAs(value);
+    assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
   }
 
   @Test
@@ -120,10 +128,10 @@ public class PromisedValueTest {
   @Nested
   class chained {
     @Test
-    void value_is_initially_null() {
+    void value_is_initially_none() {
       var promisedValue = new PromisedValue<String>();
       Promise<Integer> chained = promisedValue.chain(String::length);
-      assertThat(chained.get()).isNull();
+      assertCall(chained::get).throwsException(NoSuchElementException.class);
     }
 
     @Test
@@ -134,7 +142,7 @@ public class PromisedValueTest {
     }
 
     @Test
-    void value_returns_converted_value() {
+    void get_returns_converted_value() {
       var promisedValue = new PromisedValue<String>();
       Promise<Integer> chained = promisedValue.chain(String::length);
       promisedValue.accept("12345");

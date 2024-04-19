@@ -2,7 +2,6 @@ package org.smoothbuild.virtualmachine.evaluate;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
-import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -15,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -42,7 +42,7 @@ public class BEvaluator {
       reporter.report(report);
       return none();
     }
-    List<Maybe<BValue>> map = evaluationResults.map(r -> maybe(r.get()));
+    List<Maybe<BValue>> map = evaluationResults.map(Promise::toMaybe);
     return pullUpMaybe(map);
   }
 }
