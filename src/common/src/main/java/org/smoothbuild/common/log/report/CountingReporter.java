@@ -12,10 +12,10 @@ public class CountingReporter implements Reporter {
   }
 
   @Override
-  public void report(Report report) {
+  public void submit(Report report) {
     for (Log log : report.logs()) {
       logCounters.increment(log.level());
     }
-    reporter.report(report);
+    reporter.submit(report);
   }
 }

@@ -288,10 +288,10 @@ class PlanExecutorTest {
       var inOrder = inOrder(reporter);
       inOrder
           .verify(reporter)
-          .report(report(label(), new Trace(), EXECUTION, list(info("factory"))));
+          .submit(report(label(), new Trace(), EXECUTION, list(info("factory"))));
       inOrder
           .verify(reporter)
-          .report(report(label(), new Trace(), EXECUTION, list(info("appender"))));
+          .submit(report(label(), new Trace(), EXECUTION, list(info("appender"))));
       verifyNoMoreInteractions(reporter);
     }
   }
@@ -363,7 +363,7 @@ class PlanExecutorTest {
   }
 
   private static void verifyReported(Label label, Reporter reporter, List<Log> logs) {
-    verify(reporter).report(report(label, new Trace(), EXECUTION, logs));
+    verify(reporter).submit(report(label, new Trace(), EXECUTION, logs));
     verifyNoMoreInteractions(reporter);
   }
 

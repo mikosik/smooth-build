@@ -48,7 +48,7 @@ public class PlanExecutorWrapperTest {
     var reporter = mock(Reporter.class);
 
     var result = runEvaluate(initializer, planExecutor, reporter);
-    verify(reporter).report(report(label("initialize"), new Trace(), EXECUTION, list(error)));
+    verify(reporter).submit(report(label("initialize"), new Trace(), EXECUTION, list(error)));
     assertThat(result).isEqualTo(none());
     verifyNoInteractions(planExecutor);
   }
@@ -61,7 +61,7 @@ public class PlanExecutorWrapperTest {
     var reporter = mock(Reporter.class);
 
     var result = runEvaluate(initializer, planExecutor, reporter);
-    verify(reporter).report(report(label("initialize"), new Trace(), EXECUTION, list(info)));
+    verify(reporter).submit(report(label("initialize"), new Trace(), EXECUTION, list(info)));
     assertThat(result).isEqualTo(some(STRING));
   }
 

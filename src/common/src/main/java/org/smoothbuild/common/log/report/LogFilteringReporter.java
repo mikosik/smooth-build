@@ -14,8 +14,8 @@ public class LogFilteringReporter implements Reporter {
   }
 
   @Override
-  public void report(Report report) {
-    reporter.report(report.mapLogs(this::filter));
+  public void submit(Report report) {
+    reporter.submit(report.mapLogs(this::filter));
   }
 
   private List<Log> filter(List<Log> logs) {

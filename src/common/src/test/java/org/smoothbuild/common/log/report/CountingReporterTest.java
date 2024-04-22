@@ -27,16 +27,16 @@ import org.smoothbuild.common.log.base.Log;
 
 public class CountingReporterTest {
   @Test
-  void report_call_is_forwarded_to_wrapped_reporter() {
+  void submit_call_is_forwarded_to_wrapped_reporter() {
     var logCounters = new LogCounters();
     var stepReporter = mock(Reporter.class);
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
     var label = label("name");
     var trace = new Trace();
-    countingReporter.report(report(label, trace, DISK, list(ERROR_LOG)));
+    countingReporter.submit(report(label, trace, DISK, list(ERROR_LOG)));
 
-    verify(stepReporter).report(report(label, trace, DISK, list(ERROR_LOG)));
+    verify(stepReporter).submit(report(label, trace, DISK, list(ERROR_LOG)));
   }
 
   @ParameterizedTest
@@ -48,7 +48,7 @@ public class CountingReporterTest {
 
     var label = label("name");
     var trace = new Trace();
-    countingReporter.report(report(label, trace, DISK, list(log)));
+    countingReporter.submit(report(label, trace, DISK, list(log)));
 
     verify(logCounters).increment(reportedLevel);
     verifyNoMoreInteractions(logCounters);

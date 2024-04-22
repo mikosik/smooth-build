@@ -26,7 +26,7 @@ public class PlanExecutorWrapper {
 
   public <V> Maybe<V> evaluate(Plan<V> plan) {
     var result = initializer.apply();
-    reporter.report(report(label("initialize"), new Trace(), EXECUTION, result.logs()));
+    reporter.submit(report(label("initialize"), new Trace(), EXECUTION, result.logs()));
     if (result.toMaybe().isNone()) {
       return none();
     }

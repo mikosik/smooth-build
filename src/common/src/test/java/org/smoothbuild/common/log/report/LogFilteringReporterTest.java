@@ -31,9 +31,9 @@ public class LogFilteringReporterTest {
     var report = report(label("name"), new Trace(), DISK, logs);
     var reporter = new LogFilteringReporter(wrappedReporter, level);
 
-    reporter.report(report);
+    reporter.submit(report);
 
-    verify(wrappedReporter).report(report.withLogs(expected));
+    verify(wrappedReporter).submit(report.withLogs(expected));
   }
 
   public static List<Arguments> logs_are_filtered() {

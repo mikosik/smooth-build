@@ -13,7 +13,7 @@ public class MemoryReporter implements Reporter {
   private final CopyOnWriteArrayList<Report> reports = new CopyOnWriteArrayList<>();
 
   @Override
-  public void report(Report report) {
+  public void submit(Report report) {
     reports.add(report);
   }
 

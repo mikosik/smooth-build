@@ -30,8 +30,8 @@ public class FilteringReporterTest {
     var report = report(reportLabel, trace, DISK, logs1);
     var reporter = new FilteringReporter(wrappedReporter, (label, logs) -> matches);
 
-    reporter.report(report);
+    reporter.submit(report);
 
-    verify(wrappedReporter, times(matches ? 1 : 0)).report(report);
+    verify(wrappedReporter, times(matches ? 1 : 0)).submit(report);
   }
 }

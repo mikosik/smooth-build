@@ -28,7 +28,7 @@ public class PrintWriterReporter implements Reporter {
   }
 
   @Override
-  public void report(Report report) {
+  public void submit(Report report) {
     printWriter.println(formatReport(report));
   }
 
