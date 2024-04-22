@@ -325,7 +325,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var reporter = mock(Reporter.class);
           evaluateWithFailure(bEvaluator(reporter), pick);
-          verify(reporter).report(argThat(this::isResultWithIndexOutOfBoundsError));
+          verify(reporter).submit(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
         public boolean isResultWithIndexOutOfBoundsError(Report report) {
@@ -337,7 +337,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var reporter = mock(Reporter.class);
           evaluateWithFailure(bEvaluator(reporter), pick);
-          verify(reporter).report(argThat(this::isResultWithNegativeIndexError));
+          verify(reporter).submit(argThat(this::isResultWithNegativeIndexError));
         }
 
         public boolean isResultWithNegativeIndexError(Report report) {
@@ -416,7 +416,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var scheduler = bScheduler(reporter, 4);
         var expr = throwExceptionCall();
         evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
-        verify(reporter).report(argThat(this::reportWithFatalCausedByRuntimeException));
+        verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
       private boolean reportWithFatalCausedByRuntimeException(Report report) {
@@ -478,7 +478,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void report_value_as_const_task(BValue value) {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), value);
-        verify(reporter).report(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+        verify(reporter).submit(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       public static List<BValue> report_const_task_cases() throws Exception {
@@ -508,7 +508,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(2))
-            .report(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+            .submit(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       @Test
@@ -519,7 +519,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(3))
-            .report(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+            .submit(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
       }
 
       @Test
@@ -576,7 +576,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       var reporter = mock(Reporter.class);
       evaluate(bEvaluator(reporter), expr);
       var taskReport = report(EVALUATE.append(label), trace, resultSource, list());
-      verify(reporter).report(taskReport);
+      verify(reporter).submit(taskReport);
     }
   }
 

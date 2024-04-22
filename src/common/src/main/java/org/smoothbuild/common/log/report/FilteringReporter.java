@@ -10,9 +10,9 @@ public class FilteringReporter implements Reporter {
   }
 
   @Override
-  public void report(Report report) {
+  public void submit(Report report) {
     if (reportMatcher.matches(report.label(), report.logs())) {
-      reporter.report(report);
+      reporter.submit(report);
     }
   }
 }

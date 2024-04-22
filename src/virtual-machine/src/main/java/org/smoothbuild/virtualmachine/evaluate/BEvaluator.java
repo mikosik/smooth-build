@@ -39,7 +39,7 @@ public class BEvaluator {
       scheduler.awaitTermination();
     } catch (InterruptedException e) {
       var report = report(label(EVALUATE_PREFIX), new Trace(), EXECUTION, list(fatal(e)));
-      reporter.report(report);
+      reporter.submit(report);
       return none();
     }
     List<Maybe<BValue>> map = evaluationResults.map(Promise::toMaybe);

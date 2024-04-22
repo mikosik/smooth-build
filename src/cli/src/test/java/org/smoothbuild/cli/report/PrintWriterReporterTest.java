@@ -29,12 +29,12 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class PrintWriterReporterTest extends TestingVirtualMachine {
   @Test
-  void report_single_log_prints_log_when_its_level_exceeds_threshold() {
+  void submit_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);
     var report = report(label("name"), new Trace(), DISK, logsWithAllLevels());
     var reporter = new PrintWriterReporter(systemOut);
 
-    reporter.report(report);
+    reporter.submit(report);
 
     verify(systemOut).println(formatReport(report));
   }

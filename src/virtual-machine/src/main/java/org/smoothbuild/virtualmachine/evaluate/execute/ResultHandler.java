@@ -27,7 +27,7 @@ public class ResultHandler implements Consumer1<ComputationResult, BytecodeExcep
 
   @Override
   public void accept(ComputationResult result) throws BytecodeException {
-    reporter.report(taskReport(task, result));
+    reporter.submit(taskReport(task, result));
     if (result.output().value() != null) {
       consumer.accept(result.output().value());
     } else {
