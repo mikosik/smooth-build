@@ -8,7 +8,6 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.virtualmachine.evaluate.execute.TaskReport.taskReport;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Label;
@@ -17,7 +16,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TaskReportTest extends TestingVirtualMachine {
+public class TaskReportFactoryTest extends TestingVirtualMachine {
   @Test
   public void combine_task_report() throws Exception {
     testReport(combineTask(), label("combine"));
@@ -75,6 +74,6 @@ public class TaskReportTest extends TestingVirtualMachine {
   private void testReport(Task task, ResultSource source, Label label) throws BytecodeException {
     var computationResult = computationResult(bInt(), source);
     var expected = report(label("evaluate").append(label), bTrace(), source, list());
-    assertThat(taskReport(task, computationResult)).isEqualTo(expected);
+    assertThat(TaskReportFactory.create(task, computationResult)).isEqualTo(expected);
   }
 }
