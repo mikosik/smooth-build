@@ -3,13 +3,12 @@ package org.smoothbuild.virtualmachine.evaluate;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Collections.nCopies;
+import static java.util.Collections.synchronizedList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,6 +22,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Scheduler.SCHEDULE_LABEL;
 import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
@@ -41,6 +40,7 @@ import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
@@ -59,9 +59,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
-import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
@@ -77,52 +75,56 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void learning_test() throws Exception {
         // This test makes sure that it is possible to detect Task creation using a mock.
-        var order = bOrder(bInt(7));
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var testName = "learning_test";
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
 
-        var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), order)).isEqualTo(bArray(bInt(7)));
+        evaluate(bEvaluator(nativeMethodLoader), invoke);
 
-        verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
+        assertThat(MEMOIZED).contains(testName);
       }
 
       @Test
       public void no_task_is_executed_for_lambda_arg_that_is_not_used() throws Exception {
-        var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
-        var call = bCall(lambda, bOrder(bBoolType()));
+        var testName = "unused_arg_is_not_evaluated";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
+        var lambda = bLambda(list(bStringType()), bInt(7));
+        var call = bCall(lambda, invoke);
 
-        var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bInt(7));
+        evaluate(bEvaluator(nativeMethodLoader), call);
 
-        verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
+        assertThat(MEMOIZED).doesNotContain(testName);
       }
 
       @Test
       public void no_task_is_executed_for_lambda_arg_that_is_passed_to_lambda_where_it_is_not_used()
           throws Exception {
-        var innerLambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
-        var outerLambda = bLambda(
-            list(bArrayType(bBoolType())),
-            bCall(innerLambda, bReference(bArrayType(bBoolType()), 0)));
-        var call = bCall(outerLambda, bOrder(bBoolType()));
+        var testName = "arg_passed_to_other_lambda_where_it_is_not_used_is_not_evaluated";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
+        var innerLambda = bLambda(list(bStringType()), bInt(7));
+        var outerLambda =
+            bLambda(list(bStringType()), bCall(innerLambda, bReference(bStringType(), 0)));
+        var call = bCall(outerLambda, invoke);
 
-        var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call)).isEqualTo(bInt(7));
+        evaluate(bEvaluator(nativeMethodLoader), call);
 
-        verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
+        assertThat(MEMOIZED).doesNotContain(testName);
       }
 
       @Test
       public void task_for_lambda_arg_that_is_used_twice_is_executed_only_once() throws Exception {
-        var arrayType = bArrayType(bIntType());
-        var lambda =
-            bLambda(list(arrayType), bCombine(bReference(arrayType, 0), bReference(arrayType, 0)));
-        var call = bCall(lambda, bOrder(bInt(7)));
+        var testName = "arg_used_twice_is_executed_only_once";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
+        var type = bStringType();
+        var lambda = bLambda(list(type), bCombine(bReference(type, 0), bReference(type, 0)));
+        var call = bCall(lambda, invoke);
 
-        var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(bEvaluator(spyingExecutor), call))
-            .isEqualTo(bTuple(bArray(bInt(7)), bArray(bInt(7))));
+        evaluate(bEvaluator(nativeMethodLoader), call);
 
-        verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
+        assertThat(MEMOIZED.stream().filter(x -> x.equals(testName)).toList()).hasSize(1);
       }
     }
 
@@ -448,7 +450,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
         evaluateWithFailure(bEvaluator(() -> scheduler), expr);
         assertThat(reporter().reports())
-            .contains(report(EVALUATE, new Trace(), EXECUTION, list(fatal(runtimeException))));
+            .contains(
+                report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(runtimeException))));
       }
     }
   }
@@ -682,6 +685,22 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     return (BInt) args.get(0);
   }
 
+  private static NativeMethodLoader nativeMethodLoaderThatAlwaysLoadsMemoizeString()
+      throws Exception {
+    var nativeMethodLoader = mock(NativeMethodLoader.class);
+    when(nativeMethodLoader.load(any()))
+        .thenReturn(
+            right(BEvaluatorTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
+    return nativeMethodLoader;
+  }
+
+  private static final java.util.List<String> MEMOIZED = synchronizedList(new ArrayList<>());
+
+  public static BValue memoizeString(NativeApi nativeApi, BTuple args) throws Exception {
+    MEMOIZED.add(((BString) args.get(0)).toJavaString());
+    return nativeApi.factory().string("result");
+  }
+
   private static void verifyConstTasksResultSource(
       int size, ResultSource expectedSource, MemoryReporter reporter) {
     var sources = reporter
@@ -698,17 +717,18 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   }
 
   private CountingSchedulerB countingSchedulerB() {
-    return new CountingSchedulerB(taskExecutor(), bytecodeF(), bReferenceInliner());
+    return new CountingSchedulerB(scheduler(), computer(), bytecodeF(), bReferenceInliner());
   }
 
   private static class CountingSchedulerB extends BScheduler {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingSchedulerB(
-        TaskExecutor taskExecutor,
+        Scheduler scheduler,
+        Computer computer,
         BytecodeFactory bytecodeFactory,
         BReferenceInliner bReferenceInliner) {
-      super(taskExecutor, bytecodeFactory, bReferenceInliner);
+      super(scheduler, computer, bytecodeFactory, bReferenceInliner);
     }
 
     @Override

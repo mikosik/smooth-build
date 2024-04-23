@@ -1,6 +1,5 @@
 package org.smoothbuild.common.schedule;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -9,9 +8,9 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
@@ -33,8 +32,9 @@ public class Scheduler {
   private final Executor executor;
   private final Reporter reporter;
 
-  public Scheduler(Reporter reporter) {
-    this(Guice.createInjector(), reporter, Runtime.getRuntime().availableProcessors());
+  @Inject
+  public Scheduler(Injector injector, Reporter reporter) {
+    this(injector, reporter, Runtime.getRuntime().availableProcessors());
   }
 
   public Scheduler(Injector injector, Reporter reporter, int threadCount) {

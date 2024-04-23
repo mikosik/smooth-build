@@ -8,6 +8,8 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchr
 import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
 import com.google.common.base.Supplier;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import jakarta.inject.Provider;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
@@ -15,8 +17,10 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -46,7 +50,6 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
-import org.smoothbuild.virtualmachine.evaluate.execute.TaskExecutor;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
 import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
@@ -65,9 +68,10 @@ public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
+  private final Supplier<Scheduler> scheduler = memoize(() -> scheduler(reporter()));
 
   public BEvaluator bEvaluator(Reporter reporter) {
-    return bEvaluator(() -> bScheduler(taskExecutor(reporter)), reporter);
+    return bEvaluator(() -> bScheduler(scheduler(reporter)), reporter);
   }
 
   public BEvaluator bEvaluator() {
@@ -86,20 +90,29 @@ public class TestingVirtualMachine extends TestingBytecode {
     return bEvaluator(() -> bScheduler(nativeMethodLoader));
   }
 
-  public BEvaluator bEvaluator(TaskExecutor taskExecutor) {
-    return bEvaluator(() -> bScheduler(taskExecutor));
-  }
-
   public BScheduler bScheduler() {
-    return bScheduler(taskExecutor());
+    return bScheduler(scheduler());
   }
 
   public BScheduler bScheduler(NativeMethodLoader nativeMethodLoader) {
-    return new BScheduler(taskExecutor(nativeMethodLoader), bytecodeF(), bReferenceInliner());
+    return new BScheduler(
+        scheduler(), computer(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public BScheduler bScheduler(TaskExecutor taskExecutor) {
-    return new BScheduler(taskExecutor, bytecodeF(), bReferenceInliner());
+  public BScheduler bScheduler(Scheduler scheduler) {
+    return new BScheduler(scheduler, computer(), bytecodeF(), bReferenceInliner());
+  }
+
+  public Scheduler scheduler(Reporter reporter) {
+    return scheduler(Guice.createInjector(), reporter);
+  }
+
+  private static Scheduler scheduler(Injector injector, Reporter reporter) {
+    return new Scheduler(injector, reporter);
+  }
+
+  public Scheduler scheduler() {
+    return scheduler.get();
   }
 
   public BReferenceInliner bReferenceInliner() {
@@ -115,31 +128,12 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BScheduler bScheduler(Computer computer, Reporter reporter, int threadCount) {
-    return bScheduler(taskExecutor(computer, reporter, threadCount));
+    var scheduler1 = new Scheduler(Guice.createInjector(), reporter, threadCount);
+    return new BScheduler(scheduler1, computer, bytecodeF(), bReferenceInliner());
   }
 
   public NativeMethodLoader nativeMethodLoader() {
     return new NativeMethodLoader(methodLoader());
-  }
-
-  public TaskExecutor taskExecutor() {
-    return taskExecutor(reporter());
-  }
-
-  public TaskExecutor taskExecutor(NativeMethodLoader nativeMethodLoader) {
-    return taskExecutor(reporter(), nativeMethodLoader);
-  }
-
-  public TaskExecutor taskExecutor(Reporter reporter) {
-    return taskExecutor(reporter, nativeMethodLoader());
-  }
-
-  public TaskExecutor taskExecutor(Reporter reporter, NativeMethodLoader nativeMethodLoader) {
-    return new TaskExecutor(computer(nativeMethodLoader), reporter);
-  }
-
-  public TaskExecutor taskExecutor(Computer computer, Reporter reporter, int threadCount) {
-    return new TaskExecutor(computer, reporter, threadCount);
   }
 
   public FileContentReader fileContentReader() {
@@ -255,15 +249,12 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public static Job job(BExpr expr, List<BExpr> list) {
-    return new Job(expr, list.map(TestingVirtualMachine::job), new BTrace());
-  }
-
-  public static Job job(BExpr expr, Job... environment) {
-    return new Job(expr, list(environment), new BTrace());
+    return new Job(
+        expr, list.map(TestingVirtualMachine::job), new BTrace(), (j) -> new PromisedValue<>());
   }
 
   public static Job job(BExpr expr) {
-    return new Job(expr, list(), new BTrace());
+    return job(expr, list());
   }
 
   // Task, Computation, Output

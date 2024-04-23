@@ -949,8 +949,7 @@ public class SchedulerTest {
   private static <R> void assertExecutionStoresResultInPromise(
       Function<Scheduler, Promise<R>> scheduleFunction, R expectedValue)
       throws InterruptedException {
-    var reporter = mock(Reporter.class);
-    var scheduler = new Scheduler(reporter);
+    var scheduler = newScheduler();
 
     var result = scheduleFunction.apply(scheduler);
     scheduler.waitUntilIdle();

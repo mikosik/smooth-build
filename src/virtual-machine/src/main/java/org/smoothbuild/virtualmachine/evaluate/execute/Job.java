@@ -1,25 +1,40 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
-import static org.smoothbuild.common.collect.List.list;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.concurrent.PromisedValue;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
-public record Job(
-    BExpr expr,
-    List<Job> environment,
-    BTrace trace,
-    AtomicBoolean started,
-    PromisedValue<BValue> promisedValue) {
+public final class Job {
+  private final BExpr expr;
+  private final List<Job> environment;
+  private final BTrace trace;
+  private final Supplier<Promise<BValue>> evaluator;
 
-  public Job(BExpr expr) {
-    this(expr, list(), new BTrace(), new AtomicBoolean(false), new PromisedValue<>());
+  public Job(
+      BExpr expr, List<Job> environment, BTrace trace, Function<Job, Promise<BValue>> evaluator) {
+    this.expr = expr;
+    this.environment = environment;
+    this.trace = trace;
+    this.evaluator = Suppliers.memoize(() -> evaluator.apply(this));
   }
 
-  public Job(BExpr expr, List<Job> environment, BTrace trace) {
-    this(expr, environment, trace, new AtomicBoolean(false), new PromisedValue<>());
+  public BExpr expr() {
+    return expr;
+  }
+
+  public List<Job> environment() {
+    return environment;
+  }
+
+  public BTrace trace() {
+    return trace;
+  }
+
+  public Promise<BValue> evaluate() {
+    return evaluator.get();
   }
 }
