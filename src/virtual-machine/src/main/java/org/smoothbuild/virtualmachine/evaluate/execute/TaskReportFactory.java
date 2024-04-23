@@ -20,8 +20,8 @@ import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
-public class TaskReport {
-  public static Report taskReport(Task task, ComputationResult result) throws BytecodeException {
+public class TaskReportFactory {
+  public static Report create(Task task, ComputationResult result) throws BytecodeException {
     var source = result.source();
     var trace = task.trace();
     var label = taskLabel(task);

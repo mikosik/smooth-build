@@ -1,7 +1,5 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
-import static org.smoothbuild.virtualmachine.evaluate.execute.TaskReport.taskReport;
-
 import java.util.function.Consumer;
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.Consumer1;
@@ -27,7 +25,7 @@ public class ResultHandler implements Consumer1<ComputationResult, BytecodeExcep
 
   @Override
   public void accept(ComputationResult result) throws BytecodeException {
-    reporter.submit(taskReport(task, result));
+    reporter.submit(TaskReportFactory.create(task, result));
     if (result.output().value() != null) {
       consumer.accept(result.output().value());
     } else {
