@@ -14,6 +14,7 @@ import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.schedule.Scheduler.SCHEDULE_LABEL;
 
 import com.google.inject.AbstractModule;
@@ -74,27 +75,27 @@ public class SchedulerTest {
     class _normal_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        Task0<Integer> task = () -> new Output<>(7, newReport());
+        Task0<Integer> task = () -> output(7, newReport());
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), 7);
       }
 
       @ParameterizedTest
       @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
-        Task0<Integer> task = () -> new Output<>(7, report);
+        Task0<Integer> task = () -> output(7, report);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        Task0<Object> task = () -> new Output<>(null, newReport());
+        Task0<Object> task = () -> output(null, newReport());
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
       }
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = new PromisedValue<String>();
-        Task0<String> task = () -> new Output<>("abc", newReport());
+        Task0<String> task = () -> output("abc", newReport());
 
         var scheduler = newScheduler();
         var result = scheduler.submit(task, list(predecessor));
@@ -107,7 +108,7 @@ public class SchedulerTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = new PromisedValue<String>();
-        Task0<String> task = () -> new Output<>("abc", newReport());
+        Task0<String> task = () -> output("abc", newReport());
 
         var scheduler = newScheduler();
         var result = scheduler.submit(task, list(predecessor));
@@ -145,7 +146,7 @@ public class SchedulerTest {
       private static class ReturnAbc implements Task0<String> {
         @Override
         public Output<String> execute() {
-          return new Output<>("abc", newReport());
+          return output("abc", newReport());
         }
       }
 
@@ -158,7 +159,7 @@ public class SchedulerTest {
       private static class ReturnNull implements Task0<String> {
         @Override
         public Output<String> execute() {
-          return new Output<>(null, newReport());
+          return output(null, newReport());
         }
       }
 
@@ -222,7 +223,7 @@ public class SchedulerTest {
     class _normal_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        Task1<String, Integer> task = (i) -> new Output<>(i.toString(), newReport());
+        Task1<String, Integer> task = (i) -> output(i.toString(), newReport());
         var arg1 = new PromisedValue<>(7);
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "7");
       }
@@ -230,14 +231,14 @@ public class SchedulerTest {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
-        Task1<String, Integer> task = (i) -> new Output<>(i.toString(), report);
+        Task1<String, Integer> task = (i) -> output(i.toString(), report);
         var arg1 = new PromisedValue<>(7);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        Task1<String, Integer> task = (i) -> new Output<>(null, newReport());
+        Task1<String, Integer> task = (i) -> output(null, newReport());
         var arg1 = new PromisedValue<>(7);
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
       }
@@ -246,7 +247,7 @@ public class SchedulerTest {
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = new PromisedValue<String>();
         var arg1 = new PromisedValue<String>();
-        Task1<String, String> task = (a1) -> new Output<>("abc", newReport());
+        Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var scheduler = newScheduler();
         var result = scheduler.submit(list(predecessor), task, arg1);
@@ -261,7 +262,7 @@ public class SchedulerTest {
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = new PromisedValue<String>();
         var arg1 = new PromisedValue<String>();
-        Task1<String, String> task = (a1) -> new Output<>("abc", newReport());
+        Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var scheduler = newScheduler();
         var result = scheduler.submit(list(predecessor), task, arg1);
@@ -285,11 +286,11 @@ public class SchedulerTest {
 
       @Test
       void task_is_not_executed_when_argument_task_failed_with_error() throws Exception {
-        Task0<Integer> argTask = () -> new Output<>(7, newReportWithError());
+        Task0<Integer> argTask = () -> output(7, newReportWithError());
         var executed = new AtomicBoolean(false);
         Task1<String, Integer> task = (i) -> {
           executed.set(true);
-          return new Output<>("", newReport());
+          return output("", newReport());
         };
 
         var scheduler = newScheduler();
@@ -321,7 +322,7 @@ public class SchedulerTest {
       private static class ReturnAbc implements Task1<String, String> {
         @Override
         public Output<String> execute(String arg1) {
-          return new Output<>("abc", newReport());
+          return output("abc", newReport());
         }
       }
 
@@ -335,7 +336,7 @@ public class SchedulerTest {
       private static class ReturnNull implements Task1<String, String> {
         @Override
         public Output<String> execute(String arg1) {
-          return new Output<>(null, newReport());
+          return output(null, newReport());
         }
       }
 
@@ -398,7 +399,7 @@ public class SchedulerTest {
 
       @Test
       void task_is_not_executed_when_argument_task_failed_with_error() throws Exception {
-        Task0<String> argTask = () -> new Output<>("", newReportWithError());
+        Task0<String> argTask = () -> output("", newReportWithError());
         var executed = new AtomicBoolean(false);
         var taskKey = Key.get(new TypeLiteral<Task1<String, String>>() {});
         var injector = Guice.createInjector(new AbstractModule() {
@@ -406,7 +407,7 @@ public class SchedulerTest {
           protected void configure() {
             bind(taskKey).toInstance((i) -> {
               executed.set(true);
-              return new Output<>("", newReport());
+              return output("", newReport());
             });
           }
         });
@@ -427,7 +428,7 @@ public class SchedulerTest {
     class _normal_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        Task2<Integer, Integer, Integer> task = (a1, a2) -> new Output<>(a1 + a2, newReport());
+        Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, newReport());
 
         var arg1 = new PromisedValue<>(7);
         var arg2 = new PromisedValue<>(5);
@@ -437,7 +438,7 @@ public class SchedulerTest {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
-        Task2<Integer, Integer, Integer> task = (a1, a2) -> new Output<>(a1 + a2, report);
+        Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
         var arg1 = new PromisedValue<>(7);
         var arg2 = new PromisedValue<>(7);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), report);
@@ -445,7 +446,7 @@ public class SchedulerTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        Task2<Object, Integer, Integer> task = (a1, a2) -> new Output<>(null, newReport());
+        Task2<Object, Integer, Integer> task = (a1, a2) -> output(null, newReport());
 
         var arg1 = new PromisedValue<>(7);
         var arg2 = new PromisedValue<>(5);
@@ -457,7 +458,7 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         var arg1 = new PromisedValue<String>();
         var arg2 = new PromisedValue<String>();
-        Task2<String, String, String> task = (a1, a2) -> new Output<>("abc", newReport());
+        Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var scheduler = newScheduler();
         var result = scheduler.submit(list(predecessor), task, arg1, arg2);
@@ -474,7 +475,7 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         var arg1 = new PromisedValue<String>();
         var arg2 = new PromisedValue<String>();
-        Task2<String, String, String> task = (a1, a2) -> new Output<>("abc", newReport());
+        Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var scheduler = newScheduler();
         var result = scheduler.submit(list(predecessor), task, arg1, arg2);
@@ -503,12 +504,12 @@ public class SchedulerTest {
         var executed = new AtomicBoolean(false);
         Task2<Integer, Integer, Integer> task2 = (a1, a2) -> {
           executed.set(true);
-          return new Output<>(0, newReport());
+          return output(0, newReport());
         };
 
         var scheduler = newScheduler();
-        var arg1Result = scheduler.submit(() -> new Output<>(7, newReportWithError()));
-        var arg2Result = scheduler.submit(() -> new Output<>(7, newReport()));
+        var arg1Result = scheduler.submit(() -> output(7, newReportWithError()));
+        var arg2Result = scheduler.submit(() -> output(7, newReport()));
         scheduler.submit(task2, arg1Result, arg2Result);
         scheduler.waitUntilIdle();
 
@@ -538,7 +539,7 @@ public class SchedulerTest {
       private static class ReturnAbc implements Task2<String, String, String> {
         @Override
         public Output<String> execute(String arg1, String arg2) {
-          return new Output<>("abc", newReport());
+          return output("abc", newReport());
         }
       }
 
@@ -553,7 +554,7 @@ public class SchedulerTest {
       private static class ReturnNull implements Task2<String, String, String> {
         @Override
         public Output<String> execute(String arg1, String arg2) {
-          return new Output<>(null, newReport());
+          return output(null, newReport());
         }
       }
 
@@ -621,8 +622,8 @@ public class SchedulerTest {
 
       @Test
       void task_is_not_executed_when_argument_task_failed_with_error() throws Exception {
-        Task0<String> arg1Task = () -> new Output<>("", newReportWithError());
-        Task0<String> arg2Task = () -> new Output<>("", newReport());
+        Task0<String> arg1Task = () -> output("", newReportWithError());
+        Task0<String> arg2Task = () -> output("", newReport());
         var executed = new AtomicBoolean(false);
         var taskKey = Key.get(new TypeLiteral<Task2<String, String, String>>() {});
         var injector = Guice.createInjector(new AbstractModule() {
@@ -630,7 +631,7 @@ public class SchedulerTest {
           protected void configure() {
             bind(taskKey).toInstance((a1, a2) -> {
               executed.set(true);
-              return new Output<>("", newReport());
+              return output("", newReport());
             });
           }
         });
@@ -859,7 +860,7 @@ public class SchedulerTest {
       var taskExecutor = newScheduler();
       taskExecutor.submit(() -> {
         thread.set(Thread.currentThread());
-        return new Output<>(7, newReport());
+        return output(7, newReport());
       });
       taskExecutor.waitUntilIdle();
 
@@ -874,12 +875,12 @@ public class SchedulerTest {
 
       var resultPromise = taskExecutor.submit(() -> {
         argThread.set(Thread.currentThread());
-        return new Output<>(7, newReport());
+        return output(7, newReport());
       });
       taskExecutor.submit(
           (i) -> {
             thread.set(Thread.currentThread());
-            return new Output<>(i + 1, newReport());
+            return output(i + 1, newReport());
           },
           resultPromise);
       taskExecutor.waitUntilIdle();
@@ -897,16 +898,16 @@ public class SchedulerTest {
 
       var arg1Result = taskExecutor.submit(() -> {
         arg1Thread.set(Thread.currentThread());
-        return new Output<>(7, newReport());
+        return output(7, newReport());
       });
       var arg2Result = taskExecutor.submit(() -> {
         arg1Thread.set(Thread.currentThread());
-        return new Output<>(3, newReport());
+        return output(3, newReport());
       });
       var result = taskExecutor.submit(
           (Integer a1, Integer a2) -> {
             thread.set(Thread.currentThread());
-            return new Output<>(a1 + a2, newReport());
+            return output(a1 + a2, newReport());
           },
           arg1Result,
           arg2Result);
@@ -940,7 +941,7 @@ public class SchedulerTest {
         } else {
           completed.set(true);
         }
-        return new Output<>("", newReport());
+        return output("", newReport());
       };
     }
   }
