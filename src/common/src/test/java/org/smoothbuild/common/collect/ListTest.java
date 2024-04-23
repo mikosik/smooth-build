@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -15,6 +17,7 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
@@ -23,6 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 
@@ -375,6 +379,23 @@ public class ListTest {
     void many_elements_to_many_element_list() {
       assertThat(list("a", "b", "c").append("d", "e", "f"))
           .isEqualTo(list("a", "b", "c", "d", "e", "f"));
+    }
+  }
+
+  @Nested
+  class _forEach {
+    @Test
+    void empty_list() throws Exception {
+      Consumer1<Object, Exception> consumer1 = mock();
+      list().withEach(consumer1::accept);
+      verifyNoInteractions(consumer1);
+    }
+
+    @Test
+    void consumes_elements_in_order() {
+      var collected = new ArrayList<Integer>();
+      list(1, 2, 3, 4).forEach(collected::add);
+      assertThat(collected).containsExactly(1, 2, 3, 4).inOrder();
     }
   }
 

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
+import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.function.Function2;
@@ -91,6 +92,12 @@ public final class List<E> extends AbstractList<E> {
     var appended = Arrays.copyOf(array, array.length + toAppend.length);
     System.arraycopy(toAppend, 0, appended, array.length, toAppend.length);
     return new List<>(appended);
+  }
+
+  public <T extends Throwable> void withEach(Consumer1<? super E, T> consumer1) throws T {
+    for (E e : array) {
+      consumer1.accept(e);
+    }
   }
 
   public List<E> reverse() {
