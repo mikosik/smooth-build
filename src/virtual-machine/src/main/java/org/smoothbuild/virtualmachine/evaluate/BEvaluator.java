@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.evaluate;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
@@ -34,7 +33,6 @@ public class BEvaluator {
   public Maybe<List<BValue>> evaluate(List<BExpr> exprs) {
     var scheduler = schedulerProvider.get();
     var evaluationResults = exprs.map(scheduler::scheduleExprEvaluation);
-    runWhenAllAvailable(evaluationResults, scheduler::terminate);
     try {
       scheduler.awaitTermination();
     } catch (InterruptedException e) {
