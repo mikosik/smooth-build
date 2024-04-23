@@ -103,7 +103,7 @@ public class BScheduler {
 
   // Call operation
 
-  public void scheduleCall(Job callJob, BCall call) throws BytecodeException {
+  private void scheduleCall(Job callJob, BCall call) throws BytecodeException {
     var lambdaJob = newJob(call.subExprs().lambda(), callJob);
     scheduleJobEvaluation(
         lambdaJob, lambda -> handleCallWithEvaluatedLambda((BLambda) lambda, callJob, call));
