@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
-import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.virtualmachine.evaluate.task.Purity.FAST;
@@ -73,7 +72,7 @@ public class Computer {
   private void computeFast(Task task, BTuple input, Consumer<ComputationResult> consumer)
       throws ComputeException {
     var output = runComputation(task, input);
-    consumer.accept(new ComputationResult(output, NOOP));
+    consumer.accept(new ComputationResult(output, EXECUTION));
   }
 
   private void computeWithCache(

@@ -96,7 +96,7 @@ public class BuildCommandTest {
           """;
       private static final String NATIVE_CALL_TASK_HEADER =
           """
-          :evaluate:invoke                                                           exec
+          :evaluate:invoke
           """;
 
       @Test
@@ -138,7 +138,7 @@ public class BuildCommandTest {
           """;
       private static final String COMBINE_TASK_HEADER =
           """
-          :evaluate:combine                                                          exec
+          :evaluate:combine
           """;
 
       @Test
@@ -229,9 +229,8 @@ public class BuildCommandTest {
           """
             result = elem([1, 2, 3], 0);
             """;
-      private static final String PICK_TASK_HEADER =
-          """
-          :evaluate:pick                                                             exec
+      private static final String PICK_TASK_HEADER = """
+          :evaluate:pick
           """;
 
       @Test
@@ -260,9 +259,8 @@ public class BuildCommandTest {
             456,
           ];
           """;
-      private static final String ORDER_TASK_HEADER =
-          """
-          :evaluate:order                                                            exec
+      private static final String ORDER_TASK_HEADER = """
+          :evaluate:order
           """;
 
       @Test
@@ -292,9 +290,8 @@ public class BuildCommandTest {
             aStruct = MyStruct("abc");
             result = aStruct.myField;
             """;
-      private static final String SELECT_TASK_HEADER =
-          """
-          :evaluate:select                                                           exec
+      private static final String SELECT_TASK_HEADER = """
+          :evaluate:select
           """;
 
       @Test
@@ -522,9 +519,8 @@ public class BuildCommandTest {
           ReturnAbc.class.getCanonicalName()));
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          :evaluate:invoke                                                           exec
+      assertSystemOutContains("""
+          :evaluate:invoke
           """);
     }
 
@@ -539,9 +535,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          :evaluate:select                                                           exec
+      assertSystemOutContains("""
+          :evaluate:select
           """);
     }
 
@@ -576,9 +571,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutContains(
-          """
-          :evaluate:order                                                            exec
+      assertSystemOutContains("""
+          :evaluate:order
           """);
     }
 

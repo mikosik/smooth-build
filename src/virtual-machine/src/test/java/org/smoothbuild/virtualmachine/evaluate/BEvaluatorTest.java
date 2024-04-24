@@ -22,7 +22,6 @@ import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
-import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
@@ -478,7 +477,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void report_value_as_const_task(BValue value) {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), value);
-        verify(reporter).submit(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+        var report = report(EVALUATE.append(label("const")), bTrace(), EXECUTION, list());
+        verify(reporter).submit(report);
       }
 
       public static List<BValue> report_const_task_cases() throws Exception {
@@ -508,7 +508,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(2))
-            .submit(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+            .submit(report(EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
       }
 
       @Test
@@ -519,7 +519,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(3))
-            .submit(report(EVALUATE.append(label("const")), bTrace(), NOOP, list()));
+            .submit(report(EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
       }
 
       @Test

@@ -46,7 +46,7 @@ public class PrintWriterReporterTest extends TestingVirtualMachine {
     assertThat(formatReport(report) + "\n")
         .isEqualTo(
             """
-            :label-name                                                                exec
+            :label-name
               MyTraceLine[text=trace-line]
               [FATAL] fatal message
               [ERROR] error message
