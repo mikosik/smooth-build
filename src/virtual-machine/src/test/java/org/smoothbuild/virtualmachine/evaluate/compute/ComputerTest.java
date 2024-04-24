@@ -1,16 +1,12 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
@@ -364,16 +360,13 @@ public class ComputerTest extends TestingVirtualMachine {
       var computationResult = computationResult(memoryValue, EXECUTION);
       memoryCache.put(computationHash, new PromisedValue<>(computationResult));
     }
-    return new Computer(sandboxHash, () -> container(), computationCache, memoryCache);
+    return new Computer(sandboxHash, this::container, computationCache, memoryCache);
   }
 
   private void assertComputationResult(
       Computer computer, Task task, BTuple input, ComputationResult expected) throws Exception {
-    var consumer = new MemoizingConsumer<ComputationResult>();
-
-    computer.compute(task, input, consumer);
-
-    assertThat(consumer.values()).isEqualTo(list(expected));
+    var result = computer.compute(task, input);
+    assertThat(result).isEqualTo(expected);
   }
 
   private void assertCachesState(
@@ -381,8 +374,8 @@ public class ComputerTest extends TestingVirtualMachine {
     var sandboxHash = Hash.of(123);
     var computationCache = computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
-    var computer = new Computer(sandboxHash, () -> container(), computationCache, memoryCache);
-    computer.compute(task, input, new MemoizingConsumer<>());
+    var computer = new Computer(sandboxHash, this::container, computationCache, memoryCache);
+    computer.compute(task, input);
 
     var taskHash = Computer.computationHash(sandboxHash, task, input);
 
@@ -395,17 +388,6 @@ public class ComputerTest extends TestingVirtualMachine {
       assertThat(computationCache.contains(taskHash)).isFalse();
     } else {
       assertThat(computationCache.read(taskHash, diskValue.type())).isEqualTo(output(diskValue));
-    }
-  }
-
-  public static record MemoizingConsumer<T>(List<T> values) implements Consumer<T> {
-    public MemoizingConsumer() {
-      this(new ArrayList<>());
-    }
-
-    @Override
-    public void accept(T value) {
-      values.add(value);
     }
   }
 }

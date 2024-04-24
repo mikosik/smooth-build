@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -441,7 +440,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
           @Override
-          public void compute(Task task, BTuple input, Consumer<ComputationResult> consumer) {
+          public ComputationResult compute(Task task, BTuple input) {
             throw runtimeException;
           }
         };
@@ -615,28 +614,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
-    }
-
-    @Test
-    public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
-        throws Exception {
-      var testName = "waiting_for_computation_with_same_hash_doesnt_block_executor_thread";
-      var counter1 = testName + "1";
-      var counter2 = testName + "2";
-      var countdown1 = testName + "1";
-      var countdown2 = testName + "2";
-
-      COUNTERS.put(counter1, new AtomicInteger());
-      COUNTERS.put(counter2, new AtomicInteger());
-      COUNTDOWNS.put(countdown1, new CountDownLatch(1));
-      COUNTDOWNS.put(countdown2, new CountDownLatch(1));
-      var expr = bOrder(
-          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
-          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
-          invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
-
-      var vm = new BEvaluator(() -> bScheduler(2), new MemoryReporter());
-      assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
