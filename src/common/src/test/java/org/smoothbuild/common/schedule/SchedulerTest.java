@@ -16,6 +16,7 @@ import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.schedule.Scheduler.SCHEDULE_LABEL;
+import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -935,7 +936,7 @@ public class SchedulerTest {
     private static Task0<String> cloningTask(
         int count, AtomicBoolean completed, Scheduler scheduler) {
       return () -> {
-        sleep(1);
+        sleepMillis(1);
         if (0 < count) {
           scheduler.submit(cloningTask(count - 1, completed, scheduler));
         } else {
@@ -943,14 +944,6 @@ public class SchedulerTest {
         }
         return output("", newReport());
       };
-    }
-  }
-
-  private static void sleep(int millis) {
-    try {
-      Thread.sleep(millis);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
     }
   }
 

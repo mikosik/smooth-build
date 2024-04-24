@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Collections.synchronizedSet;
 import static java.util.Comparator.naturalOrder;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.HashSet;
@@ -47,7 +48,7 @@ public class ExecutorTest {
     var runnablesCount = 100;
     var countDownLatch = new CountDownLatch(runnablesCount);
     Runnable runnable = () -> {
-      sleep(100);
+      sleepMillis(100);
       threads.add(Thread.currentThread());
       countDownLatch.countDown();
     };
@@ -72,7 +73,7 @@ public class ExecutorTest {
     Runnable runnable = () -> {
       var count = threadCount.incrementAndGet();
       threadCountHistory.add(count);
-      sleep(100);
+      sleepMillis(100);
       threadCount.decrementAndGet();
       countDownLatch.countDown();
       // throw exception to check that throw exceptions does not affect Executor
@@ -107,7 +108,7 @@ public class ExecutorTest {
   private static Runnable newCloningRunnable(
       Executor executor, int count, AtomicInteger familyCompletionCount) {
     return () -> {
-      sleep(1);
+      sleepMillis(1);
       var nextCount = count - 1;
       if (0 < nextCount) {
         executor.submit(newCloningRunnable(executor, nextCount, familyCompletionCount));
@@ -115,14 +116,6 @@ public class ExecutorTest {
         familyCompletionCount.incrementAndGet();
       }
     };
-  }
-
-  private static void sleep(int millis) {
-    try {
-      Thread.sleep(millis);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   private static <T extends Throwable> Runnable wrapExceptionRunnable(Consumer0<T> consumer) {
