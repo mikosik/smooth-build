@@ -40,7 +40,7 @@ public class TaskExecutor {
       var resultHandler = new ResultHandler(task, executor, reporter, consumer);
       // TODO bytecodeException thrown by compute() should be reported differently with more
       //  details
-      computer.compute(task, input, r -> enqueue(() -> resultHandler.accept(r)));
+      resultHandler.accept(computer.compute(task, input));
     });
   }
 

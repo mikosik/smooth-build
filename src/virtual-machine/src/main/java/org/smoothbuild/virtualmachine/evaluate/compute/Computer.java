@@ -13,7 +13,6 @@ import static org.smoothbuild.virtualmachine.evaluate.task.TaskHashes.taskHash;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -51,13 +50,13 @@ public class Computer {
     this.memoryCache = memoryCache;
   }
 
-  public void compute(Task task, BTuple input, Consumer<ComputationResult> consumer)
-      throws ComputeException {
+  public ComputationResult compute(Task task, BTuple input)
+      throws ComputeException, InterruptedException {
     var purity = purityOf(task, input);
     if (purity == FAST) {
-      computeFast(task, input, consumer);
+      return computeFast(task, input);
     } else {
-      computeWithCache(task, purity, input, consumer);
+      return computeWithCache(task, purity, input);
     }
   }
 
@@ -69,35 +68,36 @@ public class Computer {
     }
   }
 
-  private void computeFast(Task task, BTuple input, Consumer<ComputationResult> consumer)
-      throws ComputeException {
+  private ComputationResult computeFast(Task task, BTuple input) throws ComputeException {
     var output = runComputation(task, input);
-    consumer.accept(new ComputationResult(output, EXECUTION));
+    return new ComputationResult(output, EXECUTION);
   }
 
-  private void computeWithCache(
-      Task task, Purity purity, BTuple input, Consumer<ComputationResult> consumer)
-      throws ComputeException {
+  private ComputationResult computeWithCache(Task task, Purity purity, BTuple input)
+      throws ComputeException, InterruptedException {
     var hash = computationHash(task, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
     PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
-      prevPromised.chain(c -> computationResultFromPromise(c, purity)).addConsumer(consumer);
+      return computationResultFromPromise(prevPromised.getBlocking(), purity);
     } else {
-      newPromised.addConsumer(consumer);
       if (purity == PURE && diskCache.contains(hash)) {
         var output = diskCache.read(hash, task.outputType());
-        newPromised.accept(new ComputationResult(output, DISK));
+        var result = new ComputationResult(output, DISK);
+        newPromised.accept(result);
         memoryCache.remove(hash);
+        return result;
       } else {
         var output = runComputation(task, input);
+        var result = new ComputationResult(output, EXECUTION);
+        newPromised.accept(result);
         if (purity == PURE) {
           if (!outputContainsFatalMessage(output)) {
             diskCache.write(hash, output);
           }
           memoryCache.remove(hash);
         }
-        newPromised.accept(new ComputationResult(output, EXECUTION));
+        return result;
       }
     }
   }
