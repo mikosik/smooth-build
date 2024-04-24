@@ -36,7 +36,7 @@ public class PromisedValueTest {
   }
 
   @Test
-  public void adding_null_consumer_causes_exception() {
+  public void adding_null_consumer_fails() {
     var promisedValue = new PromisedValue<>();
     assertCall(() -> promisedValue.addConsumer(null)).throwsException(NullPointerException.class);
   }
@@ -59,13 +59,13 @@ public class PromisedValueTest {
   }
 
   @Test
-  public void setting_value_after_initializing_constructor_was_used_causes_exception() {
+  public void setting_value_after_initializing_constructor_was_used_fails() {
     var promisedValue = new PromisedValue<>("abc");
     assertCall(() -> promisedValue.accept("def")).throwsException(IllegalStateException.class);
   }
 
   @Test
-  public void setting_value_twice_causes_exception() {
+  public void setting_value_twice_fails() {
     var promisedValue = new PromisedValue<>();
     promisedValue.accept("abc");
     assertCall(() -> promisedValue.accept("def"))
@@ -135,7 +135,7 @@ public class PromisedValueTest {
     }
 
     @Test
-    public void adding_null_consumer_causes_exception() {
+    public void adding_null_consumer_fails() {
       var promisedValue = new PromisedValue<String>();
       Promise<Integer> chained = promisedValue.chain(String::length);
       assertCall(() -> chained.addConsumer(null)).throwsException(NullPointerException.class);
