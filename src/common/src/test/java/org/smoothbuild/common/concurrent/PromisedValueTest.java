@@ -1,12 +1,14 @@
 package org.smoothbuild.common.concurrent;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.Thread.startVirtualThread;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.NoSuchElementException;
@@ -41,21 +43,50 @@ public class PromisedValueTest {
     assertCall(() -> promisedValue.addConsumer(null)).throwsException(NullPointerException.class);
   }
 
-  @Test
-  public void get_returns_instance_passed_to_consume() {
-    var promisedValue = new PromisedValue<>();
-    var value = "abc";
-    promisedValue.accept(value);
-    assertThat(promisedValue.get()).isSameInstanceAs(value);
-    assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
+  @Nested
+  class _get {
+    @Test
+    public void returns_instance_passed_to_consume() {
+      var promisedValue = new PromisedValue<>();
+      var value = "abc";
+      promisedValue.accept(value);
+      assertThat(promisedValue.get()).isSameInstanceAs(value);
+      assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
+    }
+
+    @Test
+    public void returns_instance_passed_to_initializing_constructor() {
+      var value = "abc";
+      var promisedValue = new PromisedValue<>(value);
+      assertThat(promisedValue.get()).isSameInstanceAs(value);
+      assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
+    }
   }
 
-  @Test
-  public void get_returns_instance_passed_to_initializing_constructor() {
-    var value = "abc";
-    var promisedValue = new PromisedValue<>(value);
-    assertThat(promisedValue.get()).isSameInstanceAs(value);
-    assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
+  @Nested
+  class _getBlocking {
+    @Test
+    public void returns_instance_passed_to_consume() throws Exception {
+      var promisedValue = new PromisedValue<>();
+      promisedValue.accept("abc");
+      assertThat(promisedValue.getBlocking()).isSameInstanceAs("abc");
+    }
+
+    @Test
+    public void returns_instance_passed_to_initializing_constructor() throws Exception {
+      var promisedValue = new PromisedValue<>("abc");
+      assertThat(promisedValue.getBlocking()).isSameInstanceAs("abc");
+    }
+
+    @Test
+    public void waits_until_value_is_set() throws Exception {
+      var promisedValue = new PromisedValue<>();
+      startVirtualThread(() -> {
+        sleepMillis(100);
+        promisedValue.accept("abc");
+      });
+      assertThat(promisedValue.getBlocking()).isSameInstanceAs("abc");
+    }
   }
 
   @Test

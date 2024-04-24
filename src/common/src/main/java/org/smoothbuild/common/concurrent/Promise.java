@@ -7,6 +7,8 @@ import org.smoothbuild.common.collect.Maybe;
 public interface Promise<T> {
   public T get();
 
+  public T getBlocking() throws InterruptedException;
+
   public Maybe<T> toMaybe();
 
   public void addConsumer(Consumer<T> consumer);
