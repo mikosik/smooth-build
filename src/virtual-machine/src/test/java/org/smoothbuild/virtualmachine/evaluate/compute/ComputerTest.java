@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
-import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
 
 import java.util.ArrayList;
@@ -83,7 +82,8 @@ public class ComputerTest extends TestingVirtualMachine {
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(task, input, memory, disk, computationResult(output(value), NOOP));
+      assertComputationResult(
+          task, input, memory, disk, computationResult(output(value), EXECUTION));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var input = bTuple();
       var disk = bInt(2);
 
-      assertComputationResult(task, input, null, disk, computationResult(output(value), NOOP));
+      assertComputationResult(task, input, null, disk, computationResult(output(value), EXECUTION));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var task = new ConstTask(value, bTrace());
       var input = bTuple();
 
-      assertComputationResult(task, input, null, null, computationResult(output(value), NOOP));
+      assertComputationResult(task, input, null, null, computationResult(output(value), EXECUTION));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.common.schedule;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.ResultSource.NOOP;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 
@@ -19,6 +19,6 @@ public class ConstantTask<R> implements Task0<R> {
 
   @Override
   public Output<R> execute() {
-    return output(constant, report(label, new Trace(), NOOP, list()));
+    return output(constant, report(label, new Trace(), EXECUTION, list()));
   }
 }

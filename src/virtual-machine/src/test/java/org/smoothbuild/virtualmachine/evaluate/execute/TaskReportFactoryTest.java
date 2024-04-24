@@ -6,7 +6,6 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
-import static org.smoothbuild.common.log.base.ResultSource.NOOP;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import org.junit.jupiter.api.Test;
@@ -50,11 +49,6 @@ public class TaskReportFactoryTest extends TestingVirtualMachine {
   @Test
   public void header_with_execution_source() throws Exception {
     testReport(selectTask(), EXECUTION, label("select"));
-  }
-
-  @Test
-  public void header_with_noop_source() throws Exception {
-    testReport(selectTask(), NOOP, label("select"));
   }
 
   @Test
