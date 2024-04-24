@@ -110,7 +110,7 @@ public class Scheduler {
 
   public <R, A> Promise<R> submit(
       List<? extends Promise<?>> predecessors, TaskX<R, A> task, List<? extends Promise<A>> args) {
-    var execution = new Execution<>(() -> task.execute(args.map(Supplier::get)));
+    var execution = new Execution<>(() -> task.execute(args.map(Promise::get)));
     return submit(predecessors, execution, args);
   }
 
@@ -124,7 +124,7 @@ public class Scheduler {
       Key<? extends TaskX<R, A>> task,
       List<? extends Promise<A>> args) {
     var execution =
-        new Execution<>(() -> injector.getInstance(task).execute(args.map(Supplier::get)));
+        new Execution<>(() -> injector.getInstance(task).execute(args.map(Promise::get)));
     return submit(predecessors, execution, args);
   }
 
