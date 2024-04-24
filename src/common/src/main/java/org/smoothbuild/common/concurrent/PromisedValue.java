@@ -33,6 +33,7 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
     synchronized (lock) {
       assertValueIsNotSetYet(value);
       this.value = some(value);
+      lock.notifyAll();
     }
     // From this point 'consumers' is effectively immutable as we don't change it
     // once 'value' is set so we can read its state outside of synchronized block to ensure
@@ -50,6 +51,16 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   @Override
   public T get() {
     synchronized (lock) {
+      return value.get();
+    }
+  }
+
+  @Override
+  public T getBlocking() throws InterruptedException {
+    synchronized (lock) {
+      while (value.isNone()) {
+        lock.wait();
+      }
       return value.get();
     }
   }
