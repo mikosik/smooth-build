@@ -136,7 +136,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var lambda = bLambda(bOrder(bInt(7)));
         var call = bCall(lambda);
 
-        var countingScheduler = countingSchedulerB();
+        var countingScheduler = countingBScheduler();
         assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(bArray(bInt(7)));
 
         assertThat(countingScheduler.counters().get(BInt.class).intValue()).isEqualTo(1);
@@ -148,7 +148,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
         var call = bCall(lambda, bOrder(bBool()));
 
-        var countingScheduler = countingSchedulerB();
+        var countingScheduler = countingBScheduler();
         assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(bInt(7));
 
         assertThat(countingScheduler.counters().get(BBool.class)).isNull();
@@ -716,14 +716,14 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     return expected;
   }
 
-  private CountingSchedulerB countingSchedulerB() {
-    return new CountingSchedulerB(scheduler(), computer(), bytecodeF(), bReferenceInliner());
+  private CountingBScheduler countingBScheduler() {
+    return new CountingBScheduler(scheduler(), computer(), bytecodeF(), bReferenceInliner());
   }
 
-  private static class CountingSchedulerB extends BScheduler {
+  private static class CountingBScheduler extends BScheduler {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
-    public CountingSchedulerB(
+    public CountingBScheduler(
         Scheduler scheduler,
         Computer computer,
         BytecodeFactory bytecodeFactory,
