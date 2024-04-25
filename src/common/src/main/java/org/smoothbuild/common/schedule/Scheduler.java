@@ -24,7 +24,7 @@ import org.smoothbuild.common.log.report.Trace;
 
 @Singleton
 public class Scheduler {
-  static final Label SCHEDULE_LABEL = label("schedule");
+  public static final Label SCHEDULE_LABEL = label("schedule");
   private final Injector injector;
   private final Executor executor;
   private final Reporter reporter;
@@ -174,8 +174,7 @@ public class Scheduler {
           result.accept(taskResult.result());
         }
       } catch (Exception e) {
-        var message = "Handling task execution failed with exception:\n" + getStackTraceAsString(e);
-        reporter.submit(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(message))));
+        reporter.submit(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(e))));
       }
     }
 
