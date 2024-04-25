@@ -90,8 +90,8 @@ public class BScheduler {
     return switch (job.expr()) {
       case BCall call -> scheduleCall(job, call);
       case BCombine combine -> scheduleOperation(job, combine, CombineTask::new);
-      case BIf if_ -> scheduleIfOperation(job, if_);
-      case BMap map -> scheduleMapOperation(job, map);
+      case BIf if_ -> scheduleIf(job, if_);
+      case BMap map -> scheduleMap(job, map);
       case BLambda lambda -> scheduleConst(job, (BValue) bReferenceInliner.inline(job));
       case BValue value -> scheduleConst(job, value);
       case BOrder order -> scheduleOperation(job, order, OrderTask::new);
@@ -185,7 +185,7 @@ public class BScheduler {
     return submitVmTask(constTask, list());
   }
 
-  private Promise<BValue> scheduleIfOperation(Job ifJob, BIf if_) throws BytecodeException {
+  private Promise<BValue> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
     var subExprs = if_.subExprs();
     Task1<Promise<BValue>, BValue> schedulingTask = (conditionValue) -> {
       try {
@@ -200,7 +200,7 @@ public class BScheduler {
     return scheduledTaskResult(scheduler.submit(schedulingTask, conditionPromise));
   }
 
-  private Promise<BValue> scheduleMapOperation(Job mapJob, BMap map) throws BytecodeException {
+  private Promise<BValue> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
     var subExprs = map.subExprs();
     var arrayArg = subExprs.array();
     Task1<Promise<BValue>, BValue> schedulingTask = (arrayValue) -> {
