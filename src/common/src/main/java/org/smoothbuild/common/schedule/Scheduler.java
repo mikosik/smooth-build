@@ -12,6 +12,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Executor;
@@ -21,6 +22,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 
+@Singleton
 public class Scheduler {
   static final Label SCHEDULE_LABEL = label("schedule");
   private final Injector injector;
@@ -28,7 +30,7 @@ public class Scheduler {
   private final Reporter reporter;
 
   public Scheduler(Reporter reporter) {
-    this(Guice.createInjector(), reporter, 4);
+    this(Guice.createInjector(), reporter, Runtime.getRuntime().availableProcessors());
   }
 
   public Scheduler(Injector injector, Reporter reporter, int threadCount) {
