@@ -1,6 +1,5 @@
 package org.smoothbuild.common.schedule;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
@@ -993,9 +992,7 @@ public class SchedulerTest {
   }
 
   private static Report reportAboutExceptionThrownByTask(RuntimeException exception) {
-    var message =
-        "Handling task execution failed with exception:\n" + getStackTraceAsString(exception);
-    return report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(message)));
+    return report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(exception)));
   }
 
   private static Report newReport() {
