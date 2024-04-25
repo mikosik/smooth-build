@@ -22,6 +22,10 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 
+/**
+ * Executes submitted task asynchronously providing result via returned Promise.
+ * This class is thread-safe.
+ */
 @Singleton
 public class Scheduler {
   public static final Label SCHEDULE_LABEL = label("schedule");
