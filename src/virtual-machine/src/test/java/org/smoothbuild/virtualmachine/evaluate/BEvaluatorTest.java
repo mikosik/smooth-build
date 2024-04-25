@@ -280,7 +280,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
       @Test
       public void invoke() throws Exception {
-        var methodTuple = bMethodTuple(bBlob(77), "classBinaryName", "methodName");
+        var methodTuple = bMethodTuple();
         var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
