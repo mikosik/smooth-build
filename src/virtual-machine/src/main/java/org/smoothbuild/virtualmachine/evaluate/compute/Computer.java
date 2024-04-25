@@ -12,6 +12,7 @@ import static org.smoothbuild.virtualmachine.evaluate.task.TaskHashes.taskHash;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
@@ -25,6 +26,7 @@ import org.smoothbuild.virtualmachine.wire.Sandbox;
 /**
  * This class is thread-safe.
  */
+@Singleton
 public class Computer {
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
