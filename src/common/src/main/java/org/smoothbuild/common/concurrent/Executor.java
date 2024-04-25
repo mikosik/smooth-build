@@ -7,8 +7,10 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * Executes submitted Runnables in virtual threads (one new thread per Runnable).
- * Number of threads running in parallel is limited to maxThreads passed to constructor.
+ * Executes submitted Runnables in separate thread. New virtual thread is created for each
+ * submitted Runnable. Number of threads running in parallel at any given time is limited
+ * to maxThreads passed to constructor.
+ * This class is thread-safe.
  */
 public class Executor {
   private final int maxThreads;
