@@ -14,7 +14,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task1;
@@ -79,9 +78,9 @@ public class BScheduler {
   private Promise<BValue> evaluate(Job job) {
     return scheduledTaskResult(scheduler.submit(() -> {
       try {
-        return schedulingSuccess(job, scheduleJob(job));
+        return successOutput(job, scheduleJob(job));
       } catch (BytecodeException e) {
-        return schedulingFailure(job, e);
+        return failedOutput(job, e);
       }
     }));
   }
@@ -125,9 +124,9 @@ public class BScheduler {
         var bodyEnvironmentJobs = argJobs.appendAll(callJob.environment());
         var bodyTrace = bTrace(call.hash(), bValue.hash(), callJob.trace());
         var bodyJob = newJob(((BLambda) bValue).body(), bodyEnvironmentJobs, bodyTrace);
-        return schedulingSuccess(callJob, scheduleJob(bodyJob));
+        return successOutput(callJob, scheduleJob(bodyJob));
       } catch (BytecodeException e) {
-        return schedulingFailure(callJob, e);
+        return failedOutput(callJob, e);
       }
     };
     return scheduledTaskResult(scheduler.submit(schedulingTask, scheduleNewJob(bLambda, callJob)));
@@ -139,9 +138,9 @@ public class BScheduler {
       try {
         var result = scheduleCallBodyWithTupleArguments(
             callJob, bCall, lambdaExpr, tuple, (BLambda) lambdaValue);
-        return schedulingSuccess(callJob, result);
+        return successOutput(callJob, result);
       } catch (BytecodeException e) {
-        return schedulingFailure(callJob, e);
+        return failedOutput(callJob, e);
       }
     };
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
@@ -154,11 +153,11 @@ public class BScheduler {
       try {
         var bLambda = (BLambda) lambdaValue;
         var argsTuple = (BTuple) argsValue;
-        return schedulingSuccess(
+        return successOutput(
             callJob,
             scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, argsTuple, bLambda));
       } catch (BytecodeException e) {
-        return schedulingFailure(callJob, e);
+        return failedOutput(callJob, e);
       }
     };
     /*
@@ -182,7 +181,7 @@ public class BScheduler {
 
   private Promise<BValue> scheduleConst(Job job, BValue value) {
     var constTask = new ConstTask(value, job.trace());
-    return submitVmTask(constTask, list());
+    return submitVmTask(job, constTask, list());
   }
 
   private Promise<BValue> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
@@ -190,10 +189,10 @@ public class BScheduler {
     Task1<Promise<BValue>, BValue> schedulingTask = (conditionValue) -> {
       try {
         var condition = ((BBool) conditionValue).toJavaBoolean();
-        return schedulingSuccess(
+        return successOutput(
             ifJob, scheduleNewJob(condition ? subExprs.then_() : subExprs.else_(), ifJob));
       } catch (BytecodeException e) {
-        return schedulingFailure(ifJob, e);
+        return failedOutput(ifJob, e);
       }
     };
     var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
@@ -211,9 +210,9 @@ public class BScheduler {
         var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
         var arrayType = bytecodeFactory.arrayType(mappingLambdaResultType);
         var order = bytecodeFactory.order(arrayType, calls);
-        return schedulingSuccess(mapJob, scheduleNewJob(order, mapJob));
+        return successOutput(mapJob, scheduleNewJob(order, mapJob));
       } catch (BytecodeException e) {
-        return schedulingFailure(mapJob, e);
+        return failedOutput(mapJob, e);
       }
     };
     var arrayPromise = scheduleNewJob(arrayArg, mapJob);
@@ -234,7 +233,7 @@ public class BScheduler {
     var operationTask = taskCreator.apply(operation, job.trace());
     List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
     var subExprResults = subExprJobs.map(this::scheduleJob);
-    return submitVmTask(operationTask, subExprResults);
+    return submitVmTask(job, operationTask, subExprResults);
   }
 
   private Promise<BValue> scheduleReference(Job job, BReference reference)
@@ -252,7 +251,7 @@ public class BScheduler {
 
   // helpers
 
-  private Promise<BValue> submitVmTask(Task task, List<Promise<BValue>> subExprResults) {
+  private Promise<BValue> submitVmTask(Job job, Task task, List<Promise<BValue>> subExprResults) {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
         var result = computer.compute(task, toInput(subExprResults));
@@ -260,7 +259,7 @@ public class BScheduler {
         var report = TaskReportFactory.create(task, result);
         return output(bValue, report);
       } catch (ComputeException | BytecodeException | InterruptedException e) {
-        return output(null, report(VM_SCHEDULER_LABEL, new Trace(), EXECUTION, list(fatal(e))));
+        return failedOutput(job, e, "Vm Task execution failed with exception:");
       }
     };
     return scheduler.submit(taskX, subExprResults);
@@ -274,12 +273,17 @@ public class BScheduler {
     return scheduleJob(newJob(bExpr, parentJob));
   }
 
-  private static <T> Output<T> schedulingSuccess(Job job, T result) {
+  private static <T> Output<T> successOutput(Job job, T result) {
     return output(result, report(VM_SCHEDULER_LABEL, job.trace(), EXECUTION, list()));
   }
 
-  private static <T> Output<T> schedulingFailure(Job job, BytecodeException e) {
-    return output(null, report(VM_SCHEDULER_LABEL, job.trace(), EXECUTION, list(fatal(e))));
+  private static <T> Output<T> failedOutput(Job job, Exception e) {
+    return failedOutput(job, e, "Scheduling task failed with exception:");
+  }
+
+  private static <T> Output<T> failedOutput(Job job, Exception e, String message) {
+    var logs = list(fatal(message, e));
+    return output(null, report(VM_SCHEDULER_LABEL, job.trace(), EXECUTION, logs));
   }
 
   private static <T> PromisedValue<T> scheduledTaskResult(

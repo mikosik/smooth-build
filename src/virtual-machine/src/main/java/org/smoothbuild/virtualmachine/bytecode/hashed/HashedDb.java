@@ -54,7 +54,7 @@ public class HashedDb implements Initializable {
       bucket.createDir(TEMP_DIR_PATH);
       return success(null);
     } catch (IOException e) {
-      return failure(fatal(e));
+      return failure(fatal("Initializing HashedDb failed with exception:", e));
     }
   }
 

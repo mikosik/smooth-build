@@ -991,7 +991,8 @@ public class SchedulerTest {
   }
 
   private static Report reportAboutExceptionThrownByTask(RuntimeException exception) {
-    return report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(exception)));
+    var fatal = fatal("Task execution failed with exception:", exception);
+    return report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal));
   }
 
   private static Report newReport() {
