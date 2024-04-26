@@ -20,7 +20,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.schedule.TaskExecutor;
+import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;

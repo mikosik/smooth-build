@@ -1,4 +1,4 @@
-package org.smoothbuild.common.schedule;
+package org.smoothbuild.common.task;
 
 import org.smoothbuild.common.log.report.Report;
 

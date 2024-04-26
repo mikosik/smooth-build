@@ -1,4 +1,4 @@
-package org.smoothbuild.common.schedule;
+package org.smoothbuild.common.task;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -13,8 +13,8 @@ import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.schedule.Output.output;
-import static org.smoothbuild.common.schedule.TaskExecutor.EXECUTE_LABEL;
+import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.task.TaskExecutor.EXECUTE_LABEL;
 import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 
 import com.google.inject.AbstractModule;
@@ -80,7 +80,7 @@ public class TaskExecutorTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task0<Integer> task = () -> output(7, report);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
@@ -229,7 +229,7 @@ public class TaskExecutorTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), report);
         var arg1 = new PromisedValue<>(7);
@@ -439,7 +439,7 @@ public class TaskExecutorTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
         var arg1 = new PromisedValue<>(7);
@@ -666,7 +666,7 @@ public class TaskExecutorTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), report);
         var args = list(new PromisedValue<>(7));
