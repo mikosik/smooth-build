@@ -1,4 +1,4 @@
-package org.smoothbuild.common.schedule;
+package org.smoothbuild.common.task;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
