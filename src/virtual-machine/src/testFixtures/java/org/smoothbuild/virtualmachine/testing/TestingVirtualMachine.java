@@ -5,7 +5,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
-import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
+import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Guice;
@@ -51,14 +51,14 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
-import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.Output;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
-import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
+import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
+import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
+import org.smoothbuild.virtualmachine.evaluate.step.Output;
+import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
+import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
@@ -259,64 +259,64 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   // Task, Computation, Output
 
-  public Task task() throws BytecodeException {
+  public Step task() throws BytecodeException {
     return orderTask();
   }
 
-  public InvokeTask invokeTask() throws BytecodeException {
+  public InvokeStep invokeTask() throws BytecodeException {
     return invokeTask(bInvoke(), bTrace());
   }
 
-  public InvokeTask invokeTask(BInvoke invoke) {
+  public InvokeStep invokeTask(BInvoke invoke) {
     return invokeTask(invoke, null);
   }
 
-  public InvokeTask invokeTask(BInvoke invoke, BTrace trace) {
-    return newInvokeTask(invoke, trace);
+  public InvokeStep invokeTask(BInvoke invoke, BTrace trace) {
+    return newInvokeStep(invoke, trace);
   }
 
-  public CombineTask combineTask() throws BytecodeException {
+  public CombineStep combineTask() throws BytecodeException {
     return combineTask(bCombine(), bTrace());
   }
 
-  public CombineTask combineTask(BCombine combine, BTrace trace) {
-    return new CombineTask(combine, trace);
+  public CombineStep combineTask(BCombine combine, BTrace trace) {
+    return new CombineStep(combine, trace);
   }
 
-  public SelectTask selectTask() throws BytecodeException {
+  public SelectStep selectTask() throws BytecodeException {
     return selectTask(bSelect(), bTrace());
   }
 
-  public SelectTask selectTask(BSelect select, BTrace trace) {
-    return new SelectTask(select, trace);
+  public SelectStep selectTask(BSelect select, BTrace trace) {
+    return new SelectStep(select, trace);
   }
 
-  public PickTask pickTask() throws BytecodeException {
+  public PickStep pickTask() throws BytecodeException {
     return pickTask(bPick(), bTrace());
   }
 
-  public PickTask pickTask(BPick pick, BTrace trace) {
-    return new PickTask(pick, trace);
+  public PickStep pickTask(BPick pick, BTrace trace) {
+    return new PickStep(pick, trace);
   }
 
-  public OrderTask orderTask() throws BytecodeException {
+  public OrderStep orderTask() throws BytecodeException {
     return orderTask(bOrder(), bTrace());
   }
 
-  public OrderTask orderTask(BOrder order, BTrace trace) {
-    return new OrderTask(order, trace);
+  public OrderStep orderTask(BOrder order, BTrace trace) {
+    return new OrderStep(order, trace);
   }
 
-  public ConstTask constTask() throws BytecodeException {
+  public ConstStep constTask() throws BytecodeException {
     return constTask(bInt(7));
   }
 
-  public static ConstTask constTask(BValue value) {
+  public static ConstStep constTask(BValue value) {
     return constTask(value, bTrace());
   }
 
-  public static ConstTask constTask(BValue value, BTrace trace) {
-    return new ConstTask(value, trace);
+  public static ConstStep constTask(BValue value, BTrace trace) {
+    return new ConstStep(value, trace);
   }
 
   public ComputationResult computationResult(BValue value) throws BytecodeException {

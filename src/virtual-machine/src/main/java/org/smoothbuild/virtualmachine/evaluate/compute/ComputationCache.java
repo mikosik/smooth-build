@@ -28,7 +28,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
-import org.smoothbuild.virtualmachine.evaluate.task.Output;
+import org.smoothbuild.virtualmachine.evaluate.step.Output;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 /**

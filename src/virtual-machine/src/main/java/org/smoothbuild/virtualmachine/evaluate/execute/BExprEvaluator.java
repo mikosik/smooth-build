@@ -40,13 +40,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputeException;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
-import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
-import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
-import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
+import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
+import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
+import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
+import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 /**
  * Executes submitted BExpr asynchronously providing result via returned Promise.
@@ -92,16 +92,16 @@ public class BExprEvaluator {
   private Promise<BValue> scheduleJob(Job job) throws BytecodeException {
     return switch (job.expr()) {
       case BCall call -> scheduleCall(job, call);
-      case BCombine combine -> scheduleOperation(job, combine, CombineTask::new);
+      case BCombine combine -> scheduleOperation(job, combine, CombineStep::new);
       case BIf if_ -> scheduleIf(job, if_);
       case BMap map -> scheduleMap(job, map);
       case BLambda lambda -> scheduleConst(job, (BValue) bReferenceInliner.inline(job));
       case BValue value -> scheduleConst(job, value);
-      case BOrder order -> scheduleOperation(job, order, OrderTask::new);
-      case BPick pick -> scheduleOperation(job, pick, PickTask::new);
+      case BOrder order -> scheduleOperation(job, order, OrderStep::new);
+      case BPick pick -> scheduleOperation(job, pick, PickStep::new);
       case BReference reference -> scheduleReference(job, reference);
-      case BSelect select -> scheduleOperation(job, select, SelectTask::new);
-      case BInvoke bInvoke -> scheduleOperation(job, bInvoke, InvokeTask::newInvokeTask);
+      case BSelect select -> scheduleOperation(job, select, SelectStep::new);
+      case BInvoke bInvoke -> scheduleOperation(job, bInvoke, InvokeStep::newInvokeStep);
     };
   }
 
@@ -185,8 +185,8 @@ public class BExprEvaluator {
   }
 
   private Promise<BValue> scheduleConst(Job job, BValue value) {
-    var constTask = new ConstTask(value, job.trace());
-    return submitVmTask(job, constTask, list());
+    var constTask = new ConstStep(value, job.trace());
+    return submitStepTask(job, constTask, list());
   }
 
   private Promise<BValue> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
@@ -233,12 +233,12 @@ public class BExprEvaluator {
   }
 
   private <T extends BOperation> Promise<BValue> scheduleOperation(
-      Job job, T operation, Function2<T, BTrace, Task, BytecodeException> taskCreator)
+      Job job, T operation, Function2<T, BTrace, Step, BytecodeException> taskCreator)
       throws BytecodeException {
     var operationTask = taskCreator.apply(operation, job.trace());
     List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
     var subExprResults = subExprJobs.map(this::scheduleJob);
-    return submitVmTask(job, operationTask, subExprResults);
+    return submitStepTask(job, operationTask, subExprResults);
   }
 
   private Promise<BValue> scheduleReference(Job job, BReference reference)
@@ -256,12 +256,12 @@ public class BExprEvaluator {
 
   // helpers
 
-  private Promise<BValue> submitVmTask(Job job, Task task, List<Promise<BValue>> subExprResults) {
+  private Promise<BValue> submitStepTask(Job job, Step step, List<Promise<BValue>> subExprResults) {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
-        var result = computer.compute(task, toInput(subExprResults));
+        var result = computer.compute(step, toInput(subExprResults));
         var bValue = result.output().value();
-        var report = TaskReportFactory.create(task, result);
+        var report = StepReportFactory.create(step, result);
         return output(bValue, report);
       } catch (ComputeException | BytecodeException | InterruptedException e) {
         return failedOutput(job, e, "Vm Task execution failed with exception:");

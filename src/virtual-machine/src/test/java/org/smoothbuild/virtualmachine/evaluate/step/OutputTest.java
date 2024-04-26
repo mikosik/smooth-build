@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.task;
+package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;

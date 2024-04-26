@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.task;
+package org.smoothbuild.virtualmachine.evaluate.step;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -8,8 +8,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
-public final class OrderTask extends Task {
-  public OrderTask(BOrder order, BTrace trace) {
+public final class OrderStep extends Step {
+  public OrderStep(BOrder order, BTrace trace) {
     super(order, trace);
   }
 

@@ -12,19 +12,19 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
-import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
-import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
-import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
+import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
+import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
+import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
+import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
-public class TaskReportFactory {
-  public static Report create(Task task, ComputationResult result) throws BytecodeException {
+public class StepReportFactory {
+  public static Report create(Step step, ComputationResult result) throws BytecodeException {
     var source = result.source();
-    var trace = task.trace();
-    var label = taskLabel(task);
+    var trace = step.trace();
+    var label = taskLabel(step);
     var logs = logsFrom(result);
     return report(label, trace, source, logs);
   }
@@ -37,14 +37,14 @@ public class TaskReportFactory {
         .map(message -> new Log(level(message), message(message)));
   }
 
-  private static Label taskLabel(Task task) {
-    return switch (task) {
-      case CombineTask combineTask -> newLabel("combine");
-      case ConstTask constTask -> newLabel("const");
-      case InvokeTask invokeTask -> newLabel("invoke");
-      case OrderTask orderTask -> newLabel("order");
-      case PickTask pickTask -> newLabel("pick");
-      case SelectTask selectTask -> newLabel("select");
+  private static Label taskLabel(Step step) {
+    return switch (step) {
+      case CombineStep combineStep -> newLabel("combine");
+      case ConstStep constStep -> newLabel("const");
+      case InvokeStep invokeStep -> newLabel("invoke");
+      case OrderStep orderStep -> newLabel("order");
+      case PickStep pickStep -> newLabel("pick");
+      case SelectStep selectStep -> newLabel("select");
     };
   }
 

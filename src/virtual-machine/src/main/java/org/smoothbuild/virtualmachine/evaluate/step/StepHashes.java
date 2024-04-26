@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.task;
+package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static java.util.Arrays.asList;
 
@@ -6,15 +6,15 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
-public class TaskHashes {
-  public static Hash taskHash(Task task) {
-    return switch (task) {
-      case CombineTask combineTask -> combineHash();
-      case ConstTask constTask -> constHash(constTask.value());
-      case InvokeTask invokeTask -> invokeHash();
-      case OrderTask orderTask -> orderHash(orderTask.outputType());
-      case PickTask pickTask -> pickHash();
-      case SelectTask selectTask -> selectHash();
+public class StepHashes {
+  public static Hash stepHash(Step step) {
+    return switch (step) {
+      case CombineStep combineStep -> combineHash();
+      case ConstStep constStep -> constHash(constStep.value());
+      case InvokeStep invokeStep -> invokeHash();
+      case OrderStep orderStep -> orderHash(orderStep.outputType());
+      case PickStep pickStep -> pickHash();
+      case SelectStep selectStep -> selectHash();
     };
   }
 

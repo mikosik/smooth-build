@@ -1,6 +1,6 @@
-package org.smoothbuild.virtualmachine.evaluate.task;
+package org.smoothbuild.virtualmachine.evaluate.step;
 
-import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import java.util.Objects;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -10,12 +10,12 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
-public abstract sealed class Task
-    permits CombineTask, ConstTask, InvokeTask, OrderTask, PickTask, SelectTask {
+public abstract sealed class Step
+    permits CombineStep, ConstStep, InvokeStep, OrderStep, PickStep, SelectStep {
   private final BExpr expr;
   private final BTrace trace;
 
-  public Task(BExpr expr, BTrace trace) {
+  public Step(BExpr expr, BTrace trace) {
     this.expr = expr;
     this.trace = trace;
   }
@@ -45,7 +45,7 @@ public abstract sealed class Task
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof Task that
+    return object instanceof Step that
         && Objects.equals(this.getClass(), that.getClass())
         && Objects.equals(this.expr, that.expr())
         && Objects.equals(this.trace, that.trace);
