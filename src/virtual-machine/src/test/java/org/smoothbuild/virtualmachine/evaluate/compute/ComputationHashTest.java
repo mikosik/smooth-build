@@ -2,22 +2,22 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.virtualmachine.evaluate.compute.Computer.computationHash;
-import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
+import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
-import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
-import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
+import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
+import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
+import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
+import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ComputationHashTest extends TestingVirtualMachine {
   @Test
   public void hashes_of_computations_with_same_task_runtime_and_input_are_equal() throws Exception {
-    var task = new ConstTask(bInt(7), bTrace());
+    var task = new ConstStep(bInt(7), bTrace());
     var input = bTuple(bString("input"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(computationHash(Hash.of(13), task, input));
@@ -26,8 +26,8 @@ public class ComputationHashTest extends TestingVirtualMachine {
   @Test
   public void hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal()
       throws Exception {
-    var task1 = new ConstTask(bInt(7), bTrace());
-    var task2 = new ConstTask(bInt(9), bTrace());
+    var task1 = new ConstStep(bInt(7), bTrace());
+    var task2 = new ConstStep(bInt(9), bTrace());
     var input = bTuple(bString("input"));
     assertThat(computationHash(Hash.of(13), task1, input))
         .isNotEqualTo(computationHash(Hash.of(13), task2, input));
@@ -36,7 +36,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   @Test
   public void hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal()
       throws Exception {
-    var task = new ConstTask(bInt(7), bTrace());
+    var task = new ConstStep(bInt(7), bTrace());
     var input = bTuple(bString("input"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isNotEqualTo(computationHash(Hash.of(14), task, input));
@@ -45,7 +45,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   @Test
   public void hashes_of_computations_with_same_task_runtime_but_different_input_are_not_equal()
       throws Exception {
-    var task = new ConstTask(bInt(7), bTrace());
+    var task = new ConstStep(bInt(7), bTrace());
     var input1 = bTuple(bString("input"));
     var input2 = bTuple(bString("input2"));
     assertThat(computationHash(Hash.of(13), task, input1))
@@ -56,7 +56,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   class _computation_hash_is_stable_for {
     @Test
     public void combine_task_and_empty_input() throws Exception {
-      var task = new CombineTask(bCombine(), bTrace());
+      var task = new CombineStep(bCombine(), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -65,7 +65,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void const_task() throws Exception {
-      var task = new ConstTask(bInt(37), bTrace());
+      var task = new ConstStep(bInt(37), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -74,7 +74,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void combine_task_and_one_element_input() throws Exception {
-      var task = new CombineTask(bCombine(), bTrace());
+      var task = new CombineStep(bCombine(), bTrace());
       var input = bTuple(bString("abc"));
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -83,7 +83,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void combine_task_and_two_elements_input() throws Exception {
-      var task = new CombineTask(bCombine(), bTrace());
+      var task = new CombineStep(bCombine(), bTrace());
       var input = bTuple(bString("abc"), bString("def"));
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -93,7 +93,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     @Test
     public void invoke_task_and_empty_input() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
-      var task = newInvokeTask(invoke, bTrace());
+      var task = newInvokeStep(invoke, bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -102,7 +102,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void order_task_and_empty_input() throws Exception {
-      var task = new OrderTask(bOrder(bStringType()), bTrace());
+      var task = new OrderStep(bOrder(bStringType()), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -111,7 +111,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void pick_task() throws Exception {
-      var task = new PickTask(bPick(bArray(bInt(37)), bInt(0)), bTrace());
+      var task = new PickStep(bPick(bArray(bInt(37)), bInt(0)), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -120,7 +120,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void order_task_and_non_empty_input() throws Exception {
-      var task = new OrderTask(bOrder(bStringType()), bTrace());
+      var task = new OrderStep(bOrder(bStringType()), bTrace());
       var input = bTuple(bString("abc"), bString("def"));
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(
@@ -129,7 +129,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
 
     @Test
     public void select_task_and_one_element_input() throws Exception {
-      var task = new SelectTask(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bString("abc"));
       assertThat(computationHash(Hash.of(13), task, input))
           .isEqualTo(

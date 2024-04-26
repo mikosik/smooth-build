@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate.task;
+package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -11,8 +11,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
-public final class SelectTask extends Task {
-  public SelectTask(BSelect select, BTrace trace) {
+public final class SelectStep extends Step {
+  public SelectStep(BSelect select, BTrace trace) {
     super(select, trace);
   }
 

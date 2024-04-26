@@ -1,10 +1,10 @@
-package org.smoothbuild.virtualmachine.evaluate.task;
+package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.ARGUMENTS_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.METHOD_INDEX;
-import static org.smoothbuild.virtualmachine.evaluate.task.Purity.IMPURE;
-import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.step.Purity.IMPURE;
+import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,13 +17,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
-public final class InvokeTask extends Task {
-  public InvokeTask(BInvoke invoke, BTrace trace) {
+public final class InvokeStep extends Step {
+  public InvokeStep(BInvoke invoke, BTrace trace) {
     super(invoke, trace);
   }
 
-  public static InvokeTask newInvokeTask(BInvoke invoke, BTrace trace) {
-    return new InvokeTask(invoke, trace);
+  public static InvokeStep newInvokeStep(BInvoke invoke, BTrace trace) {
+    return new InvokeStep(invoke, trace);
   }
 
   public BInvoke invoke() {

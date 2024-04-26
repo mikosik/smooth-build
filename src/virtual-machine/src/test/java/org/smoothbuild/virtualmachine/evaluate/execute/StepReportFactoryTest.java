@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class TaskReportFactoryTest extends TestingVirtualMachine {
+public class StepReportFactoryTest extends TestingVirtualMachine {
   @Test
   public void combine_task_report() throws Exception {
     testReport(combineTask(), label("combine"));
@@ -61,13 +61,13 @@ public class TaskReportFactoryTest extends TestingVirtualMachine {
     testReport(selectTask(), MEMORY, label("select"));
   }
 
-  private void testReport(Task task, Label label) throws BytecodeException {
-    testReport(task, EXECUTION, label);
+  private void testReport(Step step, Label label) throws BytecodeException {
+    testReport(step, EXECUTION, label);
   }
 
-  private void testReport(Task task, ResultSource source, Label label) throws BytecodeException {
+  private void testReport(Step step, ResultSource source, Label label) throws BytecodeException {
     var computationResult = computationResult(bInt(), source);
     var expected = report(label("evaluate").append(label), bTrace(), source, list());
-    assertThat(TaskReportFactory.create(task, computationResult)).isEqualTo(expected);
+    assertThat(StepReportFactory.create(step, computationResult)).isEqualTo(expected);
   }
 }

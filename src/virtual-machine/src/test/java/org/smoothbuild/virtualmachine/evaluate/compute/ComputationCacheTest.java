@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.evaluate.task.Output;
+import org.smoothbuild.virtualmachine.evaluate.step.Output;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ComputationCacheTest extends TestingVirtualMachine {

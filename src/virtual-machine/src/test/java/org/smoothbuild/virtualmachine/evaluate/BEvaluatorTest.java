@@ -60,7 +60,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BEvaluatorTest extends TestingVirtualMachine {
@@ -444,7 +444,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
           @Override
-          public ComputationResult compute(Task task, BTuple input) {
+          public ComputationResult compute(Step task, BTuple input) {
             throw runtimeException;
           }
         };

@@ -6,9 +6,9 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
-import static org.smoothbuild.virtualmachine.evaluate.task.Purity.FAST;
-import static org.smoothbuild.virtualmachine.evaluate.task.Purity.PURE;
-import static org.smoothbuild.virtualmachine.evaluate.task.TaskHashes.taskHash;
+import static org.smoothbuild.virtualmachine.evaluate.step.Purity.FAST;
+import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
+import static org.smoothbuild.virtualmachine.evaluate.step.StepHashes.stepHash;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -18,9 +18,9 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.evaluate.task.Output;
-import org.smoothbuild.virtualmachine.evaluate.task.Purity;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.Output;
+import org.smoothbuild.virtualmachine.evaluate.step.Purity;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 
 /**
@@ -52,45 +52,45 @@ public class Computer {
     this.memoryCache = memoryCache;
   }
 
-  public ComputationResult compute(Task task, BTuple input)
+  public ComputationResult compute(Step step, BTuple input)
       throws ComputeException, InterruptedException {
-    var purity = purityOf(task, input);
+    var purity = purityOf(step, input);
     if (purity == FAST) {
-      return computeFast(task, input);
+      return computeFast(step, input);
     } else {
-      return computeWithCache(task, purity, input);
+      return computeWithCache(step, purity, input);
     }
   }
 
-  private static Purity purityOf(Task task, BTuple input) throws ComputeException {
+  private static Purity purityOf(Step step, BTuple input) throws ComputeException {
     try {
-      return task.purity(input);
+      return step.purity(input);
     } catch (BytecodeException e) {
       throw computeException(e);
     }
   }
 
-  private ComputationResult computeFast(Task task, BTuple input) throws ComputeException {
-    var output = runComputation(task, input);
+  private ComputationResult computeFast(Step step, BTuple input) throws ComputeException {
+    var output = runComputation(step, input);
     return new ComputationResult(output, EXECUTION);
   }
 
-  private ComputationResult computeWithCache(Task task, Purity purity, BTuple input)
+  private ComputationResult computeWithCache(Step step, Purity purity, BTuple input)
       throws ComputeException, InterruptedException {
-    var hash = computationHash(task, input);
+    var hash = computationHash(step, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
     PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       return computationResultFromPromise(prevPromised.getBlocking(), purity);
     } else {
       if (purity == PURE && diskCache.contains(hash)) {
-        var output = diskCache.read(hash, task.outputType());
+        var output = diskCache.read(hash, step.outputType());
         var result = new ComputationResult(output, DISK);
         newPromised.accept(result);
         memoryCache.remove(hash);
         return result;
       } else {
-        var output = runComputation(task, input);
+        var output = runComputation(step, input);
         var result = new ComputationResult(output, EXECUTION);
         newPromised.accept(result);
         if (purity == PURE) {
@@ -123,20 +123,20 @@ public class Computer {
     return new ComputationResult(computationResult.output(), resultSource);
   }
 
-  private Output runComputation(Task task, BTuple input) throws ComputeException {
+  private Output runComputation(Step step, BTuple input) throws ComputeException {
     var container = containerProvider.get();
     try {
-      return task.run(input, container);
+      return step.run(input, container);
     } catch (BytecodeException e) {
       throw computeException(e);
     }
   }
 
-  private Hash computationHash(Task task, BTuple args) {
-    return computationHash(sandboxHash, task, args);
+  private Hash computationHash(Step step, BTuple args) {
+    return computationHash(sandboxHash, step, args);
   }
 
-  public static Hash computationHash(Hash sandboxHash, Task task, BTuple input) {
-    return Hash.of(asList(sandboxHash, taskHash(task), input.hash()));
+  public static Hash computationHash(Hash sandboxHash, Step step, BTuple input) {
+    return Hash.of(asList(sandboxHash, stepHash(step), input.hash()));
   }
 }

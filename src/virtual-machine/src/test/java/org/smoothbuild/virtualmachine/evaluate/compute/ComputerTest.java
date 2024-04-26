@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
-import static org.smoothbuild.virtualmachine.evaluate.task.InvokeTask.newInvokeTask;
+import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Nested;
@@ -15,144 +15,144 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
-import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
-import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
-import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
-import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
-import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
+import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
+import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
+import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
+import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ComputerTest extends TestingVirtualMachine {
   @Nested
-  class _combine_task {
+  class _combine_step {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
 
-      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
       var expected = computationResult(output(disk), DISK);
-      assertComputationResult(task, input, null, disk, expected);
+      assertComputationResult(step, input, null, disk, expected);
     }
 
     @Test
     public void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
 
       var expected = computationResult(output(bTuple(value)), EXECUTION);
-      assertComputationResult(task, input, null, null, expected);
+      assertComputationResult(step, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new CombineTask(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
 
-      assertCachesState(task, input, null, bTuple(value));
+      assertCachesState(step, input, null, bTuple(value));
     }
   }
 
   @Nested
-  class _const_task {
+  class _const_step {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new ConstTask(value, bTrace());
+      var step = new ConstStep(value, bTrace());
       var input = bTuple();
       var memory = bInt(1);
       var disk = bInt(2);
 
       assertComputationResult(
-          task, input, memory, disk, computationResult(output(value), EXECUTION));
+          step, input, memory, disk, computationResult(output(value), EXECUTION));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new ConstTask(value, bTrace());
+      var step = new ConstStep(value, bTrace());
       var input = bTuple();
       var disk = bInt(2);
 
-      assertComputationResult(task, input, null, disk, computationResult(output(value), EXECUTION));
+      assertComputationResult(step, input, null, disk, computationResult(output(value), EXECUTION));
     }
 
     @Test
     public void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new ConstTask(value, bTrace());
+      var step = new ConstStep(value, bTrace());
       var input = bTuple();
 
-      assertComputationResult(task, input, null, null, computationResult(output(value), EXECUTION));
+      assertComputationResult(step, input, null, null, computationResult(output(value), EXECUTION));
     }
 
     @Test
     public void executed_computation_is_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new ConstTask(value, bTrace());
+      var step = new ConstStep(value, bTrace());
       var input = bTuple();
 
-      assertCachesState(task, input, null, null);
+      assertCachesState(step, input, null, null);
     }
   }
 
   @Nested
-  class _invoke_task {
+  class _invoke_step {
     @Nested
     class _with_pure_invoke {
       @Test
       public void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+        assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
       }
 
       @Test
       public void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
-        assertComputationResult(task, input, null, disk, computationResult(output(disk), DISK));
+        assertComputationResult(step, input, null, disk, computationResult(output(disk), DISK));
       }
 
       @Test
       public void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
 
         var expected = computationResult(output(bString("abc")), EXECUTION);
-        assertComputationResult(task, input, null, null, expected);
+        assertComputationResult(step, input, null, null, expected);
       }
 
       @Test
       public void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
 
-        assertCachesState(task, input, null, bString("abc"));
+        assertCachesState(step, input, null, bString("abc"));
       }
     }
 
@@ -161,47 +161,47 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       public void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
 
         assertComputationResult(
-            task, input, memory, disk, computationResult(output(memory), MEMORY));
+            step, input, memory, disk, computationResult(output(memory), MEMORY));
       }
 
       @Test
       public void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
         var computationResult = computationResult(output(bString("abc")), EXECUTION);
-        assertComputationResult(task, input, null, disk, computationResult);
+        assertComputationResult(step, input, null, disk, computationResult);
       }
 
       @Test
       public void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
 
         var expected = computationResult(output(bString("abc")), EXECUTION);
-        assertComputationResult(task, input, null, null, expected);
+        assertComputationResult(step, input, null, null, expected);
       }
 
       @Test
       public void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var task = newInvokeTask(invoke, bTrace());
-        var input = argumentsForInvokeTask(invoke);
+        var step = newInvokeStep(invoke, bTrace());
+        var input = argumentsForInvokeStep(invoke);
 
-        assertCachesState(task, input, computationResult(bString("abc"), EXECUTION), null);
+        assertCachesState(step, input, computationResult(bString("abc"), EXECUTION), null);
       }
     }
 
-    private BTuple argumentsForInvokeTask(BInvoke invoke) throws BytecodeException {
+    private BTuple argumentsForInvokeStep(BInvoke invoke) throws BytecodeException {
       var subExprs = invoke.subExprs();
       return bTuple(
           (BValue) subExprs.method(), (BValue) subExprs.isPure(), (BValue) subExprs.arguments());
@@ -209,87 +209,87 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _order_task {
+  class _order_step {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
 
-      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
       var expected = computationResult(output(disk), DISK);
-      assertComputationResult(task, input, null, disk, expected);
+      assertComputationResult(step, input, null, disk, expected);
     }
 
     @Test
     public void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
 
       var expected = computationResult(output(bArray(value)), EXECUTION);
-      assertComputationResult(task, input, null, null, expected);
+      assertComputationResult(step, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new OrderTask(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
 
-      assertCachesState(task, input, null, bArray(value));
+      assertCachesState(step, input, null, bArray(value));
     }
   }
 
   @Nested
-  class _pick_task {
+  class _pick_step {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new PickTask(bPick(), bTrace());
+      var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new PickTask(bPick(), bTrace());
+      var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
       var disk = bInt(2);
 
       var expected = computationResult(output(disk), DISK);
-      assertComputationResult(task, input, null, disk, expected);
+      assertComputationResult(step, input, null, disk, expected);
     }
 
     @Test
     public void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new PickTask(bPick(), bTrace());
+      var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
 
       var expected = computationResult(output(value), EXECUTION);
-      assertComputationResult(task, input, null, null, expected);
+      assertComputationResult(step, input, null, null, expected);
     }
 
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new PickTask(bPick(), bTrace());
+      var task = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
 
       assertCachesState(task, input, null, value);
@@ -297,11 +297,11 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   @Nested
-  class _select_task {
+  class _select_step {
     @Test
     public void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectTask(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
@@ -312,7 +312,7 @@ public class ComputerTest extends TestingVirtualMachine {
     @Test
     public void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectTask(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
       var disk = bInt(2);
 
@@ -323,7 +323,7 @@ public class ComputerTest extends TestingVirtualMachine {
     @Test
     public void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new SelectTask(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
 
       var expected = computationResult(output(value), EXECUTION);
@@ -333,7 +333,7 @@ public class ComputerTest extends TestingVirtualMachine {
     @Test
     public void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectTask(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
 
       assertCachesState(task, input, null, value);
@@ -341,17 +341,17 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   private void assertComputationResult(
-      Task task, BTuple input, BValue memoryValue, BValue diskValue, ComputationResult expected)
+      Step step, BTuple input, BValue memoryValue, BValue diskValue, ComputationResult expected)
       throws Exception {
-    var computer = computerWithCaches(task, input, memoryValue, diskValue);
-    assertComputationResult(computer, task, input, expected);
+    var computer = computerWithCaches(step, input, memoryValue, diskValue);
+    assertComputationResult(computer, step, input, expected);
   }
 
-  private Computer computerWithCaches(Task task, BTuple input, BValue memoryValue, BValue diskValue)
+  private Computer computerWithCaches(Step step, BTuple input, BValue memoryValue, BValue diskValue)
       throws Exception {
     var computationCache = computationCache();
     var sandboxHash = Hash.of(123);
-    var computationHash = Computer.computationHash(sandboxHash, task, input);
+    var computationHash = Computer.computationHash(sandboxHash, step, input);
     if (diskValue != null) {
       computationCache.write(computationHash, output(diskValue));
     }
@@ -364,20 +364,20 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   private void assertComputationResult(
-      Computer computer, Task task, BTuple input, ComputationResult expected) throws Exception {
-    var result = computer.compute(task, input);
+      Computer computer, Step step, BTuple input, ComputationResult expected) throws Exception {
+    var result = computer.compute(step, input);
     assertThat(result).isEqualTo(expected);
   }
 
   private void assertCachesState(
-      Task task, BTuple input, ComputationResult memoryValue, BValue diskValue) throws Exception {
+      Step step, BTuple input, ComputationResult memoryValue, BValue diskValue) throws Exception {
     var sandboxHash = Hash.of(123);
     var computationCache = computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
     var computer = new Computer(sandboxHash, this::container, computationCache, memoryCache);
-    computer.compute(task, input);
+    computer.compute(step, input);
 
-    var taskHash = Computer.computationHash(sandboxHash, task, input);
+    var taskHash = Computer.computationHash(sandboxHash, step, input);
 
     if (memoryValue == null) {
       assertThat(memoryCache.containsKey(taskHash)).isFalse();
