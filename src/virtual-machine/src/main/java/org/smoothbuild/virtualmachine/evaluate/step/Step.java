@@ -10,6 +10,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
+/**
+ * Single step of BExpr evaluation inside VM.
+ */
 public abstract sealed class Step
     permits CombineStep, ConstStep, InvokeStep, OrderStep, PickStep, SelectStep {
   private final BExpr expr;
