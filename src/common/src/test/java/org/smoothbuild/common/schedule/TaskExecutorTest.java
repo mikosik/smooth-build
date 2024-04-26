@@ -14,7 +14,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
-import static org.smoothbuild.common.schedule.Scheduler.SCHEDULE_LABEL;
+import static org.smoothbuild.common.schedule.TaskExecutor.EXECUTE_LABEL;
 import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 
 import com.google.inject.AbstractModule;
@@ -38,7 +38,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 
-public class SchedulerTest {
+public class TaskExecutorTest {
   @Nested
   class _task0 {
     @Nested
@@ -49,7 +49,7 @@ public class SchedulerTest {
         var label = label("my-label");
         var task = new ConstantTask<>(constant, label);
 
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), constant);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), constant);
       }
 
       @Test
@@ -59,7 +59,7 @@ public class SchedulerTest {
         var task = new ConstantTask<>(constant, label);
 
         var report = report(label, new Trace(), EXECUTION, list());
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
       }
 
       @Test
@@ -67,7 +67,7 @@ public class SchedulerTest {
         var label = label("my-label");
         var task = new ConstantTask<>(null, label);
 
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), null);
       }
     }
 
@@ -76,20 +76,20 @@ public class SchedulerTest {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
         Task0<Integer> task = () -> output(7, newReport());
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), 7);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), 7);
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task0<Integer> task = () -> output(7, report);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         Task0<Object> task = () -> output(null, newReport());
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), null);
       }
 
       @Test
@@ -97,10 +97,10 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         Task0<String> task = () -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(task, list(predecessor));
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(task, list(predecessor));
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -110,9 +110,9 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         Task0<String> task = () -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(task, list(predecessor));
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(task, list(predecessor));
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -125,7 +125,7 @@ public class SchedulerTest {
         };
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
       }
     }
 
@@ -134,13 +134,13 @@ public class SchedulerTest {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
         var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), "abc");
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), "abc");
       }
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
         var task = Key.get(ReturnAbc.class);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), newReport());
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), newReport());
       }
 
       private static class ReturnAbc implements Task0<String> {
@@ -153,7 +153,7 @@ public class SchedulerTest {
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), null);
       }
 
       private static class ReturnNull implements Task0<String> {
@@ -167,10 +167,10 @@ public class SchedulerTest {
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = new PromisedValue<String>();
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class));
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class));
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -179,9 +179,9 @@ public class SchedulerTest {
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = new PromisedValue<String>();
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class));
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class));
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -198,7 +198,7 @@ public class SchedulerTest {
 
         var task = Key.get(ThrowException.class);
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task), report);
+        assertExecutionSubmitsReport(injector, taskExecutor -> taskExecutor.submit(task), report);
       }
 
       private static class ThrowException implements Task0<String> {
@@ -225,22 +225,22 @@ public class SchedulerTest {
       void successful_task_execution_sets_result_in_promise() throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), newReport());
         var arg1 = new PromisedValue<>(7);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "7");
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), "7");
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), report);
         var arg1 = new PromisedValue<>(7);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         Task1<String, Integer> task = (i) -> output(null, newReport());
         var arg1 = new PromisedValue<>(7);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
       }
 
       @Test
@@ -249,11 +249,11 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<String>();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), task, arg1);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), task, arg1);
         arg1.accept("");
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -264,10 +264,10 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<String>();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), task, arg1);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), task, arg1);
         arg1.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -281,7 +281,7 @@ public class SchedulerTest {
         Promise<Integer> arg1 = new PromisedValue<>(1);
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
       }
 
       @Test
@@ -293,10 +293,10 @@ public class SchedulerTest {
           return output("", newReport());
         };
 
-        var scheduler = newScheduler();
-        var argResult = scheduler.submit(argTask);
-        scheduler.submit(task, argResult);
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor();
+        var argResult = taskExecutor.submit(argTask);
+        taskExecutor.submit(task, argResult);
+        taskExecutor.waitUntilIdle();
 
         assertThat(executed.get()).isFalse();
       }
@@ -308,7 +308,8 @@ public class SchedulerTest {
       void successful_task_execution_sets_result_in_promise() throws Exception {
         var arg1 = new PromisedValue<>("");
         var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "abc");
+        assertExecutionStoresResultInPromise(
+            taskExecutor -> taskExecutor.submit(task, arg1), "abc");
       }
 
       @Test
@@ -316,7 +317,7 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<>("");
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
       }
 
       private static class ReturnAbc implements Task1<String, String> {
@@ -330,7 +331,7 @@ public class SchedulerTest {
       void successful_task_execution_can_return_null() throws Exception {
         var arg1 = new PromisedValue<>("");
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
       }
 
       private static class ReturnNull implements Task1<String, String> {
@@ -345,11 +346,11 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         var arg1 = new PromisedValue<String>();
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
         arg1.accept("");
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -359,10 +360,10 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         var arg1 = new PromisedValue<String>();
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
         arg1.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -380,7 +381,8 @@ public class SchedulerTest {
 
         var task = Key.get(ThrowException.class);
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task, arg1), report);
+        assertExecutionSubmitsReport(
+            injector, taskExecutor -> taskExecutor.submit(task, arg1), report);
       }
 
       private static class ThrowException implements Task1<String, String> {
@@ -412,10 +414,10 @@ public class SchedulerTest {
           }
         });
 
-        var scheduler = newScheduler(injector);
-        var argResult = scheduler.submit(argTask);
-        scheduler.submit(taskKey, argResult);
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor(injector);
+        var argResult = taskExecutor.submit(argTask);
+        taskExecutor.submit(taskKey, argResult);
+        taskExecutor.waitUntilIdle();
 
         assertThat(executed.get()).isFalse();
       }
@@ -432,16 +434,17 @@ public class SchedulerTest {
 
         var arg1 = new PromisedValue<>(7);
         var arg2 = new PromisedValue<>(5);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), 12);
+        assertExecutionStoresResultInPromise(
+            taskExecutor -> taskExecutor.submit(task, arg1, arg2), 12);
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
         var arg1 = new PromisedValue<>(7);
         var arg2 = new PromisedValue<>(7);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
       }
 
       @Test
@@ -450,7 +453,8 @@ public class SchedulerTest {
 
         var arg1 = new PromisedValue<>(7);
         var arg2 = new PromisedValue<>(5);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), null);
+        assertExecutionStoresResultInPromise(
+            taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
       }
 
       @Test
@@ -460,12 +464,12 @@ public class SchedulerTest {
         var arg2 = new PromisedValue<String>();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), task, arg1, arg2);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
         arg1.accept("");
         arg2.accept("");
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -477,11 +481,11 @@ public class SchedulerTest {
         var arg2 = new PromisedValue<String>();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), task, arg1, arg2);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
         arg1.accept("");
         arg2.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -496,7 +500,7 @@ public class SchedulerTest {
         Promise<Integer> arg2 = new PromisedValue<>(2);
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
       }
 
       @Test
@@ -507,11 +511,11 @@ public class SchedulerTest {
           return output(0, newReport());
         };
 
-        var scheduler = newScheduler();
-        var arg1Result = scheduler.submit(() -> output(7, newReportWithError()));
-        var arg2Result = scheduler.submit(() -> output(7, newReport()));
-        scheduler.submit(task2, arg1Result, arg2Result);
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor();
+        var arg1Result = taskExecutor.submit(() -> output(7, newReportWithError()));
+        var arg2Result = taskExecutor.submit(() -> output(7, newReport()));
+        taskExecutor.submit(task2, arg1Result, arg2Result);
+        taskExecutor.waitUntilIdle();
 
         assertThat(executed.get()).isFalse();
       }
@@ -525,7 +529,7 @@ public class SchedulerTest {
         var arg2 = new PromisedValue<>("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
-            scheduler -> scheduler.submit(task, arg1, arg2), "abc");
+            taskExecutor -> taskExecutor.submit(task, arg1, arg2), "abc");
       }
 
       @Test
@@ -533,7 +537,8 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<>("");
         var arg2 = new PromisedValue<>("");
         var task = Key.get(ReturnAbc.class);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), newReport());
+        assertExecutionSubmitsReport(
+            taskExecutor -> taskExecutor.submit(task, arg1, arg2), newReport());
       }
 
       private static class ReturnAbc implements Task2<String, String, String> {
@@ -548,7 +553,8 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<>("");
         var arg2 = new PromisedValue<>("");
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), null);
+        assertExecutionStoresResultInPromise(
+            taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
       }
 
       private static class ReturnNull implements Task2<String, String, String> {
@@ -564,12 +570,12 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<String>();
         var arg2 = new PromisedValue<String>();
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
         arg1.accept("");
         arg2.accept("");
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -580,11 +586,11 @@ public class SchedulerTest {
         var arg1 = new PromisedValue<String>();
         var arg2 = new PromisedValue<String>();
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
         arg1.accept("");
         arg2.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -636,11 +642,11 @@ public class SchedulerTest {
           }
         });
 
-        var scheduler = newScheduler(injector);
-        var argResult1 = scheduler.submit(arg1Task);
-        var argResult2 = scheduler.submit(arg2Task);
-        scheduler.submit(taskKey, argResult1, argResult2);
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor(injector);
+        var argResult1 = taskExecutor.submit(arg1Task);
+        var argResult2 = taskExecutor.submit(arg2Task);
+        taskExecutor.submit(taskKey, argResult1, argResult2);
+        taskExecutor.waitUntilIdle();
 
         assertThat(executed.get()).isFalse();
       }
@@ -655,22 +661,23 @@ public class SchedulerTest {
       void successful_task_execution_sets_result_in_promise() throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), newReport());
         var args = list(new PromisedValue<>(7));
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), "[7]");
+        assertExecutionStoresResultInPromise(
+            taskExecutor -> taskExecutor.submit(task, args), "[7]");
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), report);
         var args = list(new PromisedValue<>(7));
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         TaskX<String, Integer> task = (i) -> output(null, newReport());
         var args = list(new PromisedValue<>(7));
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
       }
 
       @Test
@@ -679,11 +686,11 @@ public class SchedulerTest {
         var args = list(new PromisedValue<String>());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), task, args);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), task, args);
         args.get(0).accept("");
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -694,10 +701,10 @@ public class SchedulerTest {
         var args = list(new PromisedValue<String>());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), task, args);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), task, args);
         args.get(0).accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -711,7 +718,7 @@ public class SchedulerTest {
         var args = list(new PromisedValue<>(1));
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
       }
 
       @Test
@@ -723,10 +730,10 @@ public class SchedulerTest {
           return output("", newReport());
         };
 
-        var scheduler = newScheduler();
-        var argResult = scheduler.submit(argTask);
-        scheduler.submit(task, list(argResult));
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor();
+        var argResult = taskExecutor.submit(argTask);
+        taskExecutor.submit(task, list(argResult));
+        taskExecutor.waitUntilIdle();
 
         assertThat(executed.get()).isFalse();
       }
@@ -738,7 +745,8 @@ public class SchedulerTest {
       void successful_task_execution_sets_result_in_promise() throws Exception {
         var list = list(new PromisedValue<>(""));
         var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, list), "abc");
+        assertExecutionStoresResultInPromise(
+            taskExecutor -> taskExecutor.submit(task, list), "abc");
       }
 
       @Test
@@ -746,7 +754,7 @@ public class SchedulerTest {
         var args = list(new PromisedValue<>(""));
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
+        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
       }
 
       private static class ReturnAbc implements TaskX<String, String> {
@@ -760,7 +768,7 @@ public class SchedulerTest {
       void successful_task_execution_can_return_null() throws Exception {
         var args = list(new PromisedValue<>(""));
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
+        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
       }
 
       private static class ReturnNull implements TaskX<String, String> {
@@ -775,11 +783,11 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         var args = list(new PromisedValue<String>());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class), args);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);
         args.get(0).accept("");
         predecessor.accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.get()).isEqualTo("abc");
       }
@@ -789,10 +797,10 @@ public class SchedulerTest {
         var predecessor = new PromisedValue<String>();
         var args = list(new PromisedValue<String>());
 
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), Key.get(ReturnAbc.class), args);
+        var taskExecutor = newTaskExecutor();
+        var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);
         args.get(0).accept("");
-        scheduler.waitUntilIdle();
+        taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
       }
@@ -810,7 +818,8 @@ public class SchedulerTest {
 
         var task = Key.get(ThrowException.class);
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task, args), report);
+        assertExecutionSubmitsReport(
+            injector, taskExecutor -> taskExecutor.submit(task, args), report);
       }
 
       private static class ThrowException implements TaskX<String, String> {
@@ -842,10 +851,10 @@ public class SchedulerTest {
           }
         });
 
-        var scheduler = newScheduler(injector);
-        var argResult = scheduler.submit(argTask);
-        scheduler.submit(taskKey, list(argResult));
-        scheduler.waitUntilIdle();
+        var taskExecutor = newTaskExecutor(injector);
+        var argResult = taskExecutor.submit(argTask);
+        taskExecutor.submit(taskKey, list(argResult));
+        taskExecutor.waitUntilIdle();
 
         assertThat(executed.get()).isFalse();
       }
@@ -857,7 +866,7 @@ public class SchedulerTest {
     @Test
     void task0_is_executed_in_thread_different_from_one_that_submitted_task() throws Exception {
       var thread = new AtomicReference<Thread>();
-      var taskExecutor = newScheduler();
+      var taskExecutor = newTaskExecutor();
       taskExecutor.submit(() -> {
         thread.set(Thread.currentThread());
         return output(7, newReport());
@@ -871,7 +880,7 @@ public class SchedulerTest {
     void task1_is_executed_in_thread_different_from_one_that_executed_arg_task() throws Exception {
       var argThread = new AtomicReference<Thread>();
       var thread = new AtomicReference<Thread>();
-      var taskExecutor = newScheduler();
+      var taskExecutor = newTaskExecutor();
 
       var resultPromise = taskExecutor.submit(() -> {
         argThread.set(Thread.currentThread());
@@ -894,7 +903,7 @@ public class SchedulerTest {
       var arg1Thread = new AtomicReference<Thread>();
       var arg2Thread = new AtomicReference<Thread>();
       var thread = new AtomicReference<Thread>();
-      var taskExecutor = newScheduler();
+      var taskExecutor = newTaskExecutor();
 
       var arg1Result = taskExecutor.submit(() -> {
         arg1Thread.set(Thread.currentThread());
@@ -924,20 +933,20 @@ public class SchedulerTest {
     @Test
     void wait_until_idle_waits_for_all_task_to_complete() throws Exception {
       var completed = new AtomicBoolean(false);
-      var scheduler = newScheduler();
+      var taskExecutor = newTaskExecutor();
 
-      scheduler.submit(cloningTask(100, completed, scheduler));
-      scheduler.waitUntilIdle();
+      taskExecutor.submit(cloningTask(100, completed, taskExecutor));
+      taskExecutor.waitUntilIdle();
 
       assertThat(completed.get()).isTrue();
     }
 
     private static Task0<String> cloningTask(
-        int count, AtomicBoolean completed, Scheduler scheduler) {
+        int count, AtomicBoolean completed, TaskExecutor taskExecutor) {
       return () -> {
         sleepMillis(1);
         if (0 < count) {
-          scheduler.submit(cloningTask(count - 1, completed, scheduler));
+          taskExecutor.submit(cloningTask(count - 1, completed, taskExecutor));
         } else {
           completed.set(true);
         }
@@ -947,39 +956,40 @@ public class SchedulerTest {
   }
 
   private static <R> void assertExecutionStoresResultInPromise(
-      Function<Scheduler, Promise<R>> scheduleFunction, R expectedValue)
+      Function<TaskExecutor, Promise<R>> scheduleFunction, R expectedValue)
       throws InterruptedException {
-    var scheduler = newScheduler();
+    var taskExecutor = newTaskExecutor();
 
-    var result = scheduleFunction.apply(scheduler);
-    scheduler.waitUntilIdle();
+    var result = scheduleFunction.apply(taskExecutor);
+    taskExecutor.waitUntilIdle();
 
     assertThat(result.get()).isEqualTo(expectedValue);
   }
 
   private static <R> void assertExecutionSubmitsReport(
-      Function<Scheduler, Promise<R>> scheduleFunction, Report report) throws InterruptedException {
+      Function<TaskExecutor, Promise<R>> scheduleFunction, Report report)
+      throws InterruptedException {
     assertExecutionSubmitsReport(Guice.createInjector(), scheduleFunction, report);
   }
 
   private static <R> void assertExecutionSubmitsReport(
-      Injector injector, Function<Scheduler, Promise<R>> scheduleFunction, Report report)
+      Injector injector, Function<TaskExecutor, Promise<R>> scheduleFunction, Report report)
       throws InterruptedException {
     var reporter = mock(Reporter.class);
-    var scheduler = new Scheduler(injector, reporter, 4);
+    var taskExecutor = new TaskExecutor(injector, reporter, 4);
 
-    scheduleFunction.apply(scheduler);
-    scheduler.waitUntilIdle();
+    scheduleFunction.apply(taskExecutor);
+    taskExecutor.waitUntilIdle();
 
     verify(reporter).submit(report);
   }
 
-  private static Scheduler newScheduler() {
-    return newScheduler(Guice.createInjector());
+  private static TaskExecutor newTaskExecutor() {
+    return newTaskExecutor(Guice.createInjector());
   }
 
-  private static Scheduler newScheduler(Injector injector) {
-    return new Scheduler(injector, mock(Reporter.class), 4);
+  private static TaskExecutor newTaskExecutor(Injector injector) {
+    return new TaskExecutor(injector, mock(Reporter.class), 4);
   }
 
   public static List<Arguments> executionReports() {
@@ -992,7 +1002,7 @@ public class SchedulerTest {
 
   private static Report reportAboutExceptionThrownByTask(RuntimeException exception) {
     var fatal = fatal("Task execution failed with exception:", exception);
-    return report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal));
+    return report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal));
   }
 
   private static Report newReport() {
