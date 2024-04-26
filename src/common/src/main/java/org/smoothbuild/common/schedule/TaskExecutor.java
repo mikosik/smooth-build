@@ -26,18 +26,18 @@ import org.smoothbuild.common.log.report.Trace;
  * This class is thread-safe.
  */
 @Singleton
-public class Scheduler {
-  public static final Label SCHEDULE_LABEL = label("schedule");
+public class TaskExecutor {
+  public static final Label EXECUTE_LABEL = label("execute");
   private final Injector injector;
   private final Executor executor;
   private final Reporter reporter;
 
   @Inject
-  public Scheduler(Injector injector, Reporter reporter) {
+  public TaskExecutor(Injector injector, Reporter reporter) {
     this(injector, reporter, Runtime.getRuntime().availableProcessors());
   }
 
-  public Scheduler(Injector injector, Reporter reporter, int threadCount) {
+  public TaskExecutor(Injector injector, Reporter reporter, int threadCount) {
     this.injector = injector;
     this.reporter = reporter;
     this.executor = new Executor(threadCount);
@@ -179,7 +179,7 @@ public class Scheduler {
         }
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
-        reporter.submit(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal)));
+        reporter.submit(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
       }
     }
 

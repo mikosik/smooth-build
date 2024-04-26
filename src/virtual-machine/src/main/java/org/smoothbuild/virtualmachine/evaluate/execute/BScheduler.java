@@ -15,9 +15,9 @@ import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.schedule.Output;
-import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.common.schedule.TaskExecutor;
 import org.smoothbuild.common.schedule.TaskX;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -50,25 +50,25 @@ import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class BScheduler {
   public static final Label VM_SCHEDULER_LABEL = label("vm", "schedule");
-  private final Scheduler scheduler;
+  private final TaskExecutor taskExecutor;
   private final Computer computer;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
   public BScheduler(
-      Scheduler scheduler,
+      TaskExecutor taskExecutor,
       Computer computer,
       BytecodeFactory bytecodeFactory,
       BReferenceInliner bReferenceInliner) {
-    this.scheduler = scheduler;
+    this.taskExecutor = taskExecutor;
     this.computer = computer;
     this.bytecodeFactory = bytecodeFactory;
     this.bReferenceInliner = bReferenceInliner;
   }
 
   public void awaitTermination() throws InterruptedException {
-    scheduler.waitUntilIdle();
+    taskExecutor.waitUntilIdle();
   }
 
   public Promise<BValue> scheduleExprEvaluation(BExpr expr) {
@@ -76,7 +76,7 @@ public class BScheduler {
   }
 
   private Promise<BValue> evaluate(Job job) {
-    return scheduledTaskResult(scheduler.submit(() -> {
+    return scheduledTaskResult(taskExecutor.submit(() -> {
       try {
         return successOutput(job, scheduleJob(job));
       } catch (BytecodeException e) {
@@ -129,7 +129,8 @@ public class BScheduler {
         return failedOutput(callJob, e);
       }
     };
-    return scheduledTaskResult(scheduler.submit(schedulingTask, scheduleNewJob(bLambda, callJob)));
+    return scheduledTaskResult(
+        taskExecutor.submit(schedulingTask, scheduleNewJob(bLambda, callJob)));
   }
 
   private Promise<BValue> scheduleCallWithTupleArgs(
@@ -144,7 +145,7 @@ public class BScheduler {
       }
     };
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-    return scheduledTaskResult(scheduler.submit(schedulingTask, lambdaPromise));
+    return scheduledTaskResult(taskExecutor.submit(schedulingTask, lambdaPromise));
   }
 
   private Promise<BValue> scheduleCallWithExprArgs(
@@ -166,7 +167,7 @@ public class BScheduler {
      */
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
     var argsPromise = scheduleNewJob(lambdaArgs, callJob);
-    return scheduledTaskResult(scheduler.submit(schedulingTask, lambdaPromise, argsPromise));
+    return scheduledTaskResult(taskExecutor.submit(schedulingTask, lambdaPromise, argsPromise));
   }
 
   private Promise<BValue> scheduleCallBodyWithTupleArguments(
@@ -196,7 +197,7 @@ public class BScheduler {
       }
     };
     var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
-    return scheduledTaskResult(scheduler.submit(schedulingTask, conditionPromise));
+    return scheduledTaskResult(taskExecutor.submit(schedulingTask, conditionPromise));
   }
 
   private Promise<BValue> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
@@ -216,7 +217,7 @@ public class BScheduler {
       }
     };
     var arrayPromise = scheduleNewJob(arrayArg, mapJob);
-    return scheduledTaskResult(scheduler.submit(schedulingTask, arrayPromise));
+    return scheduledTaskResult(taskExecutor.submit(schedulingTask, arrayPromise));
   }
 
   private BExpr newCallB(BExpr lambdaExpr, BValue value) throws BytecodeException {
@@ -262,7 +263,7 @@ public class BScheduler {
         return failedOutput(job, e, "Vm Task execution failed with exception:");
       }
     };
-    return scheduler.submit(taskX, subExprResults);
+    return taskExecutor.submit(taskX, subExprResults);
   }
 
   private BTuple toInput(List<? extends Promise<BValue>> depResults) throws BytecodeException {

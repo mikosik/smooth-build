@@ -22,7 +22,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.schedule.Scheduler.SCHEDULE_LABEL;
+import static org.smoothbuild.common.schedule.TaskExecutor.EXECUTE_LABEL;
 import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
-import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
@@ -453,7 +453,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         evaluateWithFailure(bEvaluator(() -> scheduler), expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
-            .contains(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal)));
+            .contains(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
       }
     }
   }
@@ -726,11 +726,11 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingBScheduler(
-        Scheduler scheduler,
+        TaskExecutor taskExecutor,
         Computer computer,
         BytecodeFactory bytecodeFactory,
         BReferenceInliner bReferenceInliner) {
-      super(scheduler, computer, bytecodeFactory, bReferenceInliner);
+      super(taskExecutor, computer, bytecodeFactory, bReferenceInliner);
     }
 
     @Override

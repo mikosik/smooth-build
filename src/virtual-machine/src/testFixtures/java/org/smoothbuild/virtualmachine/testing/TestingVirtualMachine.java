@@ -20,7 +20,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -68,7 +68,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
-  private final Supplier<Scheduler> scheduler = memoize(() -> scheduler(reporter()));
+  private final Supplier<TaskExecutor> scheduler = memoize(() -> scheduler(reporter()));
 
   public BEvaluator bEvaluator(Reporter reporter) {
     return bEvaluator(() -> bScheduler(scheduler(reporter)), reporter);
@@ -99,19 +99,19 @@ public class TestingVirtualMachine extends TestingBytecode {
         scheduler(), computer(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public BScheduler bScheduler(Scheduler scheduler) {
-    return new BScheduler(scheduler, computer(), bytecodeF(), bReferenceInliner());
+  public BScheduler bScheduler(TaskExecutor taskExecutor) {
+    return new BScheduler(taskExecutor, computer(), bytecodeF(), bReferenceInliner());
   }
 
-  public Scheduler scheduler(Reporter reporter) {
+  public TaskExecutor scheduler(Reporter reporter) {
     return scheduler(Guice.createInjector(), reporter);
   }
 
-  private static Scheduler scheduler(Injector injector, Reporter reporter) {
-    return new Scheduler(injector, reporter);
+  private static TaskExecutor scheduler(Injector injector, Reporter reporter) {
+    return new TaskExecutor(injector, reporter);
   }
 
-  public Scheduler scheduler() {
+  public TaskExecutor scheduler() {
     return scheduler.get();
   }
 
@@ -128,7 +128,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public BScheduler bScheduler(Computer computer, Reporter reporter, int threadCount) {
-    var scheduler1 = new Scheduler(Guice.createInjector(), reporter, threadCount);
+    var scheduler1 = new TaskExecutor(Guice.createInjector(), reporter, threadCount);
     return new BScheduler(scheduler1, computer, bytecodeF(), bReferenceInliner());
   }
 
