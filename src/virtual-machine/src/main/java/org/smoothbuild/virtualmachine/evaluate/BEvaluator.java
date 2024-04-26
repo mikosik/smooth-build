@@ -18,23 +18,23 @@ import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
+import org.smoothbuild.virtualmachine.evaluate.execute.BExprEvaluator;
 
 public class BEvaluator {
-  private final Provider<BScheduler> schedulerProvider;
+  private final Provider<BExprEvaluator> evaluatorProvider;
   private final Reporter reporter;
 
   @Inject
-  public BEvaluator(Provider<BScheduler> schedulerProvider, Reporter reporter) {
-    this.schedulerProvider = schedulerProvider;
+  public BEvaluator(Provider<BExprEvaluator> evaluatorProvider, Reporter reporter) {
+    this.evaluatorProvider = evaluatorProvider;
     this.reporter = reporter;
   }
 
   public Maybe<List<BValue>> evaluate(List<BExpr> exprs) {
-    var scheduler = schedulerProvider.get();
-    var evaluationResults = exprs.map(scheduler::scheduleExprEvaluation);
+    var evaluator = evaluatorProvider.get();
+    var evaluationResults = exprs.map(evaluator::evaluate);
     try {
-      scheduler.awaitTermination();
+      evaluator.awaitTermination();
     } catch (InterruptedException e) {
       var fatal = fatal("Waiting for evaluation has been interrupted:", e);
       var report = report(label(EVALUATE_PREFIX), new Trace(), EXECUTION, list(fatal));

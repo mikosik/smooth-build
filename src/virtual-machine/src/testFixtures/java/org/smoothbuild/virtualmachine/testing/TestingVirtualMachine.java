@@ -46,8 +46,8 @@ import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.evaluate.execute.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
-import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
@@ -68,68 +68,68 @@ public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
-  private final Supplier<TaskExecutor> scheduler = memoize(() -> scheduler(reporter()));
+  private final Supplier<TaskExecutor> taskExecutor = memoize(() -> taskExecutor(reporter()));
 
   public BEvaluator bEvaluator(Reporter reporter) {
-    return bEvaluator(() -> bScheduler(scheduler(reporter)), reporter);
+    return bEvaluator(() -> bExprEvaluator(taskExecutor(reporter)), reporter);
   }
 
   public BEvaluator bEvaluator() {
-    return bEvaluator(() -> bScheduler());
+    return bEvaluator(() -> bExprEvaluator());
   }
 
-  public BEvaluator bEvaluator(Provider<BScheduler> schedulerB) {
-    return bEvaluator(schedulerB, reporter());
+  public BEvaluator bEvaluator(Provider<BExprEvaluator> bExprEvaluatorProvider) {
+    return bEvaluator(bExprEvaluatorProvider, reporter());
   }
 
-  public BEvaluator bEvaluator(Provider<BScheduler> schedulerB, Reporter reporter) {
-    return new BEvaluator(schedulerB, reporter);
+  public BEvaluator bEvaluator(Provider<BExprEvaluator> bExprEvaluatorProvider, Reporter reporter) {
+    return new BEvaluator(bExprEvaluatorProvider, reporter);
   }
 
   public BEvaluator bEvaluator(NativeMethodLoader nativeMethodLoader) {
-    return bEvaluator(() -> bScheduler(nativeMethodLoader));
+    return bEvaluator(() -> bExprEvaluator(nativeMethodLoader));
   }
 
-  public BScheduler bScheduler() {
-    return bScheduler(scheduler());
+  public BExprEvaluator bExprEvaluator() {
+    return bExprEvaluator(taskExecutor());
   }
 
-  public BScheduler bScheduler(NativeMethodLoader nativeMethodLoader) {
-    return new BScheduler(
-        scheduler(), computer(nativeMethodLoader), bytecodeF(), bReferenceInliner());
+  public BExprEvaluator bExprEvaluator(NativeMethodLoader nativeMethodLoader) {
+    return new BExprEvaluator(
+        taskExecutor(), computer(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public BScheduler bScheduler(TaskExecutor taskExecutor) {
-    return new BScheduler(taskExecutor, computer(), bytecodeF(), bReferenceInliner());
+  public BExprEvaluator bExprEvaluator(TaskExecutor taskExecutor) {
+    return new BExprEvaluator(taskExecutor, computer(), bytecodeF(), bReferenceInliner());
   }
 
-  public TaskExecutor scheduler(Reporter reporter) {
-    return scheduler(Guice.createInjector(), reporter);
+  public TaskExecutor taskExecutor(Reporter reporter) {
+    return taskExecutor(Guice.createInjector(), reporter);
   }
 
-  private static TaskExecutor scheduler(Injector injector, Reporter reporter) {
+  private static TaskExecutor taskExecutor(Injector injector, Reporter reporter) {
     return new TaskExecutor(injector, reporter);
   }
 
-  public TaskExecutor scheduler() {
-    return scheduler.get();
+  public TaskExecutor taskExecutor() {
+    return taskExecutor.get();
   }
 
   public BReferenceInliner bReferenceInliner() {
     return new BReferenceInliner(bytecodeF());
   }
 
-  public BScheduler bScheduler(int threadCount) {
-    return bScheduler(computer(), reporter(), threadCount);
+  public BExprEvaluator bExprEvaluator(int threadCount) {
+    return bExprEvaluator(computer(), reporter(), threadCount);
   }
 
-  public BScheduler bScheduler(Reporter reporter, int threadCount) {
-    return bScheduler(computer(), reporter, threadCount);
+  public BExprEvaluator bExprEvaluator(Reporter reporter, int threadCount) {
+    return bExprEvaluator(computer(), reporter, threadCount);
   }
 
-  public BScheduler bScheduler(Computer computer, Reporter reporter, int threadCount) {
-    var scheduler1 = new TaskExecutor(Guice.createInjector(), reporter, threadCount);
-    return new BScheduler(scheduler1, computer, bytecodeF(), bReferenceInliner());
+  public BExprEvaluator bExprEvaluator(Computer computer, Reporter reporter, int threadCount) {
+    var taskExecutor = new TaskExecutor(Guice.createInjector(), reporter, threadCount);
+    return new BExprEvaluator(taskExecutor, computer, bytecodeF(), bReferenceInliner());
   }
 
   public NativeMethodLoader nativeMethodLoader() {

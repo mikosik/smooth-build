@@ -55,8 +55,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
+import org.smoothbuild.virtualmachine.evaluate.execute.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
-import org.smoothbuild.virtualmachine.evaluate.execute.BScheduler;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
@@ -415,9 +415,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       public void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(Reporter.class);
-        var scheduler = bScheduler(reporter, 4);
+        var bExprEvaluator = bExprEvaluator(reporter, 4);
         var expr = throwExceptionCall();
-        evaluateWithFailure(new BEvaluator(() -> scheduler, reporter), expr);
+        evaluateWithFailure(new BEvaluator(() -> bExprEvaluator, reporter), expr);
         verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
@@ -448,9 +448,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             throw runtimeException;
           }
         };
-        var scheduler = bScheduler(computer, reporter(), 4);
+        var bExprEvaluator = bExprEvaluator(computer, reporter(), 4);
 
-        evaluateWithFailure(bEvaluator(() -> scheduler), expr);
+        evaluateWithFailure(bEvaluator(() -> bExprEvaluator), expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
             .contains(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
@@ -614,7 +614,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           invokeExecuteCommands(testName, "INC1"));
 
       var reporter = reporter();
-      var vm = new BEvaluator(() -> bScheduler(reporter, 4), new MemoryReporter());
+      var vm = new BEvaluator(() -> bExprEvaluator(reporter, 4), new MemoryReporter());
       assertThat(evaluate(vm, bExpr))
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
@@ -719,10 +719,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   }
 
   private CountingBScheduler countingBScheduler() {
-    return new CountingBScheduler(scheduler(), computer(), bytecodeF(), bReferenceInliner());
+    return new CountingBScheduler(taskExecutor(), computer(), bytecodeF(), bReferenceInliner());
   }
 
-  private static class CountingBScheduler extends BScheduler {
+  private static class CountingBScheduler extends BExprEvaluator {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingBScheduler(
