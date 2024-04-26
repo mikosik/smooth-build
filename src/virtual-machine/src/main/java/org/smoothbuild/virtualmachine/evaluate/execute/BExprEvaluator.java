@@ -298,11 +298,11 @@ public class BExprEvaluator {
     return result;
   }
 
-  public Job newJob(BExpr expr) {
+  private Job newJob(BExpr expr) {
     return newJob(expr, list(), new BTrace());
   }
 
-  public Job newJob(BExpr expr, Job parentJob) {
+  private Job newJob(BExpr expr, Job parentJob) {
     return newJob(expr, parentJob.environment(), parentJob.trace());
   }
 
