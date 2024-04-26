@@ -382,7 +382,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           assertReportsContains(
               reports,
               FATAL,
-              "org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException:"
+              "Task execution failed with exception:\n"
+                  + "org.smoothbuild.virtualmachine.evaluate.execute.ReferenceIndexOutOfBoundsException:"
                   + " Reference index = 2 is out of bounds. Bound variables size = 1.");
         }
 
@@ -396,7 +397,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           assertReportsContains(
               reporter().reports(),
               FATAL,
-              "java.lang.RuntimeException: environment(0) evaluationType is `Blob` but expected `Int`.");
+              "Task execution failed with exception:\n"
+                  + "java.lang.RuntimeException: environment(0) evaluationType is `Blob` but expected `Int`.");
         }
       }
 
@@ -449,9 +451,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var scheduler = bScheduler(computer, reporter(), 4);
 
         evaluateWithFailure(bEvaluator(() -> scheduler), expr);
+        var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
-            .contains(
-                report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(runtimeException))));
+            .contains(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal)));
       }
     }
   }

@@ -178,7 +178,8 @@ public class Scheduler {
           result.accept(taskResult.result());
         }
       } catch (Exception e) {
-        reporter.submit(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal(e))));
+        var fatal = fatal("Task execution failed with exception:", e);
+        reporter.submit(report(SCHEDULE_LABEL, new Trace(), EXECUTION, list(fatal)));
       }
     }
 

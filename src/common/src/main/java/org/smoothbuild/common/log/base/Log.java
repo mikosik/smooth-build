@@ -15,8 +15,8 @@ public record Log(Level level, String message) {
     this.message = requireNonNull(message);
   }
 
-  public static Log fatal(Throwable throwable) {
-    return fatal(getStackTraceAsString(throwable).stripTrailing());
+  public static Log fatal(String message, Throwable throwable) {
+    return fatal(message + "\n" + getStackTraceAsString(throwable).stripTrailing());
   }
 
   public static Log fatal(String log) {

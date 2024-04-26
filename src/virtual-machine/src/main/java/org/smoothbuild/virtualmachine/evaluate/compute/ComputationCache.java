@@ -54,7 +54,7 @@ public class ComputationCache implements Initializable {
       bucket.createDir(Path.root());
       return success(null);
     } catch (IOException e) {
-      return failure(fatal(e));
+      return failure(fatal("Initializing ComputationCache failed with exception:", e));
     }
   }
 
