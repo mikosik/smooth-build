@@ -9,6 +9,7 @@ dependencies {
     implementation project(':src:virtual-machine')
     implementation libs.guava
     implementation libs.guice
+    implementation libs.guice.assisted.inject
     implementation libs.okio
 
     testFixturesApi project(':src:common')
