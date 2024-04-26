@@ -48,7 +48,11 @@ import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
 import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
 import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
-public class BScheduler {
+/**
+ * Executes submitted BExpr asynchronously providing result via returned Promise.
+ * This class is thread-safe.
+ */
+public class BExprEvaluator {
   public static final Label VM_SCHEDULER_LABEL = label("vm", "schedule");
   private final TaskExecutor taskExecutor;
   private final Computer computer;
@@ -56,7 +60,7 @@ public class BScheduler {
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
-  public BScheduler(
+  public BExprEvaluator(
       TaskExecutor taskExecutor,
       Computer computer,
       BytecodeFactory bytecodeFactory,
@@ -71,7 +75,7 @@ public class BScheduler {
     taskExecutor.waitUntilIdle();
   }
 
-  public Promise<BValue> scheduleExprEvaluation(BExpr expr) {
+  public Promise<BValue> evaluate(BExpr expr) {
     return newJob(expr).evaluate();
   }
 
@@ -304,6 +308,6 @@ public class BScheduler {
 
   // Visible for testing
   protected Job newJob(BExpr expr, List<Job> environment, BTrace trace) {
-    return new Job(expr, environment, trace, BScheduler.this::evaluate);
+    return new Job(expr, environment, trace, BExprEvaluator.this::evaluate);
   }
 }
