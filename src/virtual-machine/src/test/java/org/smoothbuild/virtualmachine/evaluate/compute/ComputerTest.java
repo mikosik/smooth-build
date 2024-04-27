@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -359,7 +359,7 @@ public class ComputerTest extends TestingVirtualMachine {
     var memoryCache = new ConcurrentHashMap<Hash, Promise<ComputationResult>>();
     if (memoryValue != null) {
       var computationResult = computationResult(memoryValue, EXECUTION);
-      memoryCache.put(computationHash, new PromisedValue<>(computationResult));
+      memoryCache.put(computationHash, promise(computationResult));
     }
     return new Computer(sandboxHash, this::container, computationCache, memoryCache);
   }

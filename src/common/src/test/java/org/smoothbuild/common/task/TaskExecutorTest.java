@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -224,7 +225,7 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), newReport());
-        var arg1 = new PromisedValue<>(7);
+        var arg1 = promise(7);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), "7");
       }
 
@@ -232,14 +233,14 @@ public class TaskExecutorTest {
       @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), report);
-        var arg1 = new PromisedValue<>(7);
+        var arg1 = promise(7);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         Task1<String, Integer> task = (i) -> output(null, newReport());
-        var arg1 = new PromisedValue<>(7);
+        var arg1 = promise(7);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
       }
 
@@ -278,7 +279,7 @@ public class TaskExecutorTest {
         Task1<Integer, Integer> task = (a1) -> {
           throw exception;
         };
-        Promise<Integer> arg1 = new PromisedValue<>(1);
+        Promise<Integer> arg1 = promise(1);
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
@@ -306,7 +307,7 @@ public class TaskExecutorTest {
     class _injected_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        var arg1 = new PromisedValue<>("");
+        var arg1 = promise("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1), "abc");
@@ -314,7 +315,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
-        var arg1 = new PromisedValue<>("");
+        var arg1 = promise("");
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
@@ -329,7 +330,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        var arg1 = new PromisedValue<>("");
+        var arg1 = promise("");
         var task = Key.get(ReturnNull.class);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
       }
@@ -370,7 +371,7 @@ public class TaskExecutorTest {
 
       @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() throws Exception {
-        var arg1 = new PromisedValue<>("");
+        var arg1 = promise("");
         var exception = new RuntimeException();
         var injector = Guice.createInjector(new AbstractModule() {
           @Override
@@ -432,8 +433,8 @@ public class TaskExecutorTest {
       void successful_task_execution_sets_result_in_promise() throws Exception {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, newReport());
 
-        var arg1 = new PromisedValue<>(7);
-        var arg2 = new PromisedValue<>(5);
+        var arg1 = promise(7);
+        var arg2 = promise(5);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), 12);
       }
@@ -442,8 +443,8 @@ public class TaskExecutorTest {
       @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
-        var arg1 = new PromisedValue<>(7);
-        var arg2 = new PromisedValue<>(7);
+        var arg1 = promise(7);
+        var arg2 = promise(7);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
       }
 
@@ -451,8 +452,8 @@ public class TaskExecutorTest {
       void successful_task_execution_can_return_null() throws Exception {
         Task2<Object, Integer, Integer> task = (a1, a2) -> output(null, newReport());
 
-        var arg1 = new PromisedValue<>(7);
-        var arg2 = new PromisedValue<>(5);
+        var arg1 = promise(7);
+        var arg2 = promise(5);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
       }
@@ -496,8 +497,8 @@ public class TaskExecutorTest {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> {
           throw exception;
         };
-        Promise<Integer> arg1 = new PromisedValue<>(1);
-        Promise<Integer> arg2 = new PromisedValue<>(2);
+        Promise<Integer> arg1 = promise(1);
+        Promise<Integer> arg2 = promise(2);
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
@@ -525,8 +526,8 @@ public class TaskExecutorTest {
     class _injected_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        var arg1 = new PromisedValue<>("");
-        var arg2 = new PromisedValue<>("");
+        var arg1 = promise("");
+        var arg2 = promise("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), "abc");
@@ -534,8 +535,8 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
-        var arg1 = new PromisedValue<>("");
-        var arg2 = new PromisedValue<>("");
+        var arg1 = promise("");
+        var arg2 = promise("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionSubmitsReport(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), newReport());
@@ -550,8 +551,8 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        var arg1 = new PromisedValue<>("");
-        var arg2 = new PromisedValue<>("");
+        var arg1 = promise("");
+        var arg2 = promise("");
         var task = Key.get(ReturnNull.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
@@ -597,8 +598,8 @@ public class TaskExecutorTest {
 
       @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() throws Exception {
-        var arg1 = new PromisedValue<>("");
-        var arg2 = new PromisedValue<>("");
+        var arg1 = promise("");
+        var arg2 = promise("");
         var exception = new RuntimeException();
         var injector = Guice.createInjector(new AbstractModule() {
           @Override
@@ -660,7 +661,7 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), newReport());
-        var args = list(new PromisedValue<>(7));
+        var args = list(promise(7));
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, args), "[7]");
       }
@@ -669,14 +670,14 @@ public class TaskExecutorTest {
       @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), report);
-        var args = list(new PromisedValue<>(7));
+        var args = list(promise(7));
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         TaskX<String, Integer> task = (i) -> output(null, newReport());
-        var args = list(new PromisedValue<>(7));
+        var args = list(promise(7));
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
       }
 
@@ -715,7 +716,7 @@ public class TaskExecutorTest {
         TaskX<Integer, Integer> task = (a1) -> {
           throw exception;
         };
-        var args = list(new PromisedValue<>(1));
+        var args = list(promise(1));
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
@@ -743,7 +744,7 @@ public class TaskExecutorTest {
     class _injected_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        var list = list(new PromisedValue<>(""));
+        var list = list(promise(""));
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, list), "abc");
@@ -751,7 +752,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
-        var args = list(new PromisedValue<>(""));
+        var args = list(promise(""));
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
@@ -766,7 +767,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        var args = list(new PromisedValue<>(""));
+        var args = list(promise(""));
         var task = Key.get(ReturnNull.class);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
       }
@@ -807,7 +808,7 @@ public class TaskExecutorTest {
 
       @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() throws Exception {
-        var args = list(new PromisedValue<>(""));
+        var args = list(promise(""));
         var exception = new RuntimeException();
         var injector = Guice.createInjector(new AbstractModule() {
           @Override

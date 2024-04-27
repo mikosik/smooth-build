@@ -23,10 +23,6 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
     this.value = none();
   }
 
-  public PromisedValue(T value) {
-    this.value = some(value);
-  }
-
   @Override
   public void accept(T value) {
     synchronized (lock) {

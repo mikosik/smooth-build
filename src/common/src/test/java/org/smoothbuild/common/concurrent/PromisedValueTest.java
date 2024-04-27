@@ -25,12 +25,6 @@ public class PromisedValueTest {
   }
 
   @Test
-  public void initializing_constructor_set_value_to_constructor_arg() {
-    var promisedValue = new PromisedValue<>("abc");
-    assertThat(promisedValue.get()).isEqualTo("abc");
-  }
-
-  @Test
   public void setting_value_to_null_is_allowed() {
     var promisedValue = new PromisedValue<>();
     promisedValue.accept(null);
@@ -43,38 +37,21 @@ public class PromisedValueTest {
     assertCall(() -> promisedValue.addConsumer(null)).throwsException(NullPointerException.class);
   }
 
-  @Nested
-  class _get {
-    @Test
-    public void returns_instance_passed_to_consume() {
-      var promisedValue = new PromisedValue<>();
-      var value = "abc";
-      promisedValue.accept(value);
-      assertThat(promisedValue.get()).isSameInstanceAs(value);
-      assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
-    }
-
-    @Test
-    public void returns_instance_passed_to_initializing_constructor() {
-      var value = "abc";
-      var promisedValue = new PromisedValue<>(value);
-      assertThat(promisedValue.get()).isSameInstanceAs(value);
-      assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
-    }
+  @Test
+  public void get_returns_instance_passed_to_consume() {
+    var promisedValue = new PromisedValue<>();
+    var value = "abc";
+    promisedValue.accept(value);
+    assertThat(promisedValue.get()).isSameInstanceAs(value);
+    assertThat(promisedValue.toMaybe()).isEqualTo(some(value));
   }
 
   @Nested
   class _getBlocking {
     @Test
-    public void returns_instance_passed_to_consume() throws Exception {
+    public void returns_instance_passed_to_accept() throws Exception {
       var promisedValue = new PromisedValue<>();
       promisedValue.accept("abc");
-      assertThat(promisedValue.getBlocking()).isSameInstanceAs("abc");
-    }
-
-    @Test
-    public void returns_instance_passed_to_initializing_constructor() throws Exception {
-      var promisedValue = new PromisedValue<>("abc");
       assertThat(promisedValue.getBlocking()).isSameInstanceAs("abc");
     }
 
@@ -87,12 +64,6 @@ public class PromisedValueTest {
       });
       assertThat(promisedValue.getBlocking()).isSameInstanceAs("abc");
     }
-  }
-
-  @Test
-  public void setting_value_after_initializing_constructor_was_used_fails() {
-    var promisedValue = new PromisedValue<>("abc");
-    assertCall(() -> promisedValue.accept("def")).throwsException(IllegalStateException.class);
   }
 
   @Test
@@ -120,14 +91,6 @@ public class PromisedValueTest {
     Consumer<String> consumer = stringConsumer();
     promisedValue.addConsumer(consumer);
     verify(consumer).accept(value);
-  }
-
-  @Test
-  public void consumer_is_called_during_adding_when_value_was_set_in_initializing_constructor() {
-    var promisedValue = new PromisedValue<>("abc");
-    Consumer<String> consumer = stringConsumer();
-    promisedValue.addConsumer(consumer);
-    verify(consumer).accept("abc");
   }
 
   @Test
