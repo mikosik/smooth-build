@@ -95,7 +95,7 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
+        var predecessor = promise();
         Task0<String> task = () -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -108,7 +108,7 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
+        var predecessor = promise();
         Task0<String> task = () -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -166,7 +166,7 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
+        var predecessor = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class));
@@ -178,7 +178,7 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
+        var predecessor = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class));
@@ -246,8 +246,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -261,8 +261,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -344,8 +344,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
@@ -358,8 +358,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
@@ -460,9 +460,9 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
-        var arg2 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
+        PromisedValue<String> arg2 = promise();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -477,9 +477,9 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
-        var arg2 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
+        PromisedValue<String> arg2 = promise();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -567,9 +567,9 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
-        var arg2 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
+        PromisedValue<String> arg2 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
@@ -583,9 +583,9 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var arg1 = new PromisedValue<String>();
-        var arg2 = new PromisedValue<String>();
+        var predecessor = promise();
+        PromisedValue<String> arg1 = promise();
+        PromisedValue<String> arg2 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
@@ -683,8 +683,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var args = list(new PromisedValue<String>());
+        var predecessor = promise();
+        List<PromisedValue<String>> args = list(promise());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -698,8 +698,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var args = list(new PromisedValue<String>());
+        var predecessor = promise();
+        List<PromisedValue<String>> args = list(promise());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -781,8 +781,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var args = list(new PromisedValue<String>());
+        var predecessor = promise();
+        List<PromisedValue<String>> args = list(promise());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);
@@ -795,8 +795,8 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = new PromisedValue<String>();
-        var args = list(new PromisedValue<String>());
+        var predecessor = promise();
+        List<PromisedValue<String>> args = list(promise());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);

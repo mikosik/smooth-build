@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
@@ -79,7 +80,7 @@ public class Computer {
   private ComputationResult computeWithCache(Step step, Purity purity, BTuple input)
       throws ComputeException, InterruptedException {
     var hash = computationHash(step, input);
-    PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
+    PromisedValue<ComputationResult> newPromised = promise();
     Promise<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       return computationResultFromPromise(prevPromised.getBlocking(), purity);
