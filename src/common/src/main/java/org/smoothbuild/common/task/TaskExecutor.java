@@ -24,6 +24,8 @@ import org.smoothbuild.common.log.report.Trace;
 
 /**
  * Executes submitted task asynchronously providing result via returned Promise.
+ * If submitted task during its execution submits other task then order in which Reports of those
+ * tasks are submitted to Reporter is not deterministic.
  * This class is thread-safe.
  */
 @Singleton
