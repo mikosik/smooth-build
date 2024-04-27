@@ -8,7 +8,6 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 
 /**
@@ -92,12 +91,5 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   // visible for testing
   boolean isCurrentThreadHoldingALock() {
     return Thread.holdsLock(lock);
-  }
-
-  @Override
-  public <U> Promise<U> chain(Function<T, U> func) {
-    PromisedValue<U> chained = new PromisedValue<>();
-    addConsumer(v -> chained.accept(func.apply(v)));
-    return chained;
   }
 }
