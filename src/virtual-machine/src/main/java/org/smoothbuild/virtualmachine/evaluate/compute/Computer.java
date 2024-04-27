@@ -15,6 +15,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -31,7 +32,7 @@ public class Computer {
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
   private final ComputationCache diskCache;
-  private final ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache;
+  private final ConcurrentHashMap<Hash, Promise<ComputationResult>> memoryCache;
 
   @Inject
   public Computer(
@@ -45,7 +46,7 @@ public class Computer {
       @Sandbox Hash sandboxHash,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
-      ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache) {
+      ConcurrentHashMap<Hash, Promise<ComputationResult>> memoryCache) {
     this.diskCache = diskCache;
     this.sandboxHash = sandboxHash;
     this.containerProvider = containerProvider;
@@ -79,7 +80,7 @@ public class Computer {
       throws ComputeException, InterruptedException {
     var hash = computationHash(step, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
-    PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
+    Promise<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       return computationResultFromPromise(prevPromised.getBlocking(), purity);
     } else {

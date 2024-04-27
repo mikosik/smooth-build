@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -355,7 +356,7 @@ public class ComputerTest extends TestingVirtualMachine {
     if (diskValue != null) {
       computationCache.write(computationHash, output(diskValue));
     }
-    var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
+    var memoryCache = new ConcurrentHashMap<Hash, Promise<ComputationResult>>();
     if (memoryValue != null) {
       var computationResult = computationResult(memoryValue, EXECUTION);
       memoryCache.put(computationHash, new PromisedValue<>(computationResult));
@@ -373,7 +374,7 @@ public class ComputerTest extends TestingVirtualMachine {
       Step step, BTuple input, ComputationResult memoryValue, BValue diskValue) throws Exception {
     var sandboxHash = Hash.of(123);
     var computationCache = computationCache();
-    var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
+    var memoryCache = new ConcurrentHashMap<Hash, Promise<ComputationResult>>();
     var computer = new Computer(sandboxHash, this::container, computationCache, memoryCache);
     computer.compute(step, input);
 
