@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.testing;
 import static com.google.common.base.Suppliers.memoize;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
 import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
@@ -17,7 +18,6 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.TaskExecutor;
@@ -249,8 +249,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public static Job job(BExpr expr, List<BExpr> list) {
-    return new Job(
-        expr, list.map(TestingVirtualMachine::job), new BTrace(), (j) -> new PromisedValue<>());
+    return new Job(expr, list.map(TestingVirtualMachine::job), new BTrace(), (j) -> promise());
   }
 
   public static Job job(BExpr expr) {

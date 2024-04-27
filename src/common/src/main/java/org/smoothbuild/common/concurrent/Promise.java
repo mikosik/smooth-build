@@ -8,6 +8,10 @@ public interface Promise<T> {
     return new ImmutablePromise<>(value);
   }
 
+  public static <T> PromisedValue<T> promise() {
+    return new PromisedValue<>();
+  }
+
   public T get();
 
   public T getBlocking() throws InterruptedException;

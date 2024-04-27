@@ -19,7 +19,7 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   private final List<Consumer<T>> consumers = new ArrayList<>();
   private Maybe<T> value;
 
-  public PromisedValue() {
+  PromisedValue() {
     this.value = none();
   }
 

@@ -293,7 +293,7 @@ public class BExprEvaluator {
 
   private static <T> PromisedValue<T> scheduledTaskResult(
       Promise<Promise<T>> schedulingTaskResult) {
-    var result = new PromisedValue<T>();
+    var result = Promise.<T>promise();
     schedulingTaskResult.addConsumer(p -> p.addConsumer(result));
     return result;
   }
