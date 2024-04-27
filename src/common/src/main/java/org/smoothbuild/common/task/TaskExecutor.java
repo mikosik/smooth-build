@@ -16,8 +16,8 @@ import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Executor;
+import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
@@ -161,7 +161,7 @@ public class TaskExecutor {
   }
 
   private class Execution<R> implements Runnable {
-    private final PromisedValue<R> result;
+    private final MutablePromise<R> result;
     private final Supplier<Output<R>> taskResultSupplier;
 
     private Execution(Supplier<Output<R>> taskResultSupplier) {

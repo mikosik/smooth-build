@@ -33,8 +33,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
@@ -247,7 +247,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
+        MutablePromise<String> arg1 = promise();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -262,7 +262,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
+        MutablePromise<String> arg1 = promise();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -345,7 +345,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
+        MutablePromise<String> arg1 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
@@ -359,7 +359,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
+        MutablePromise<String> arg1 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
@@ -461,8 +461,8 @@ public class TaskExecutorTest {
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
-        PromisedValue<String> arg2 = promise();
+        MutablePromise<String> arg1 = promise();
+        MutablePromise<String> arg2 = promise();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -478,8 +478,8 @@ public class TaskExecutorTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
-        PromisedValue<String> arg2 = promise();
+        MutablePromise<String> arg1 = promise();
+        MutablePromise<String> arg2 = promise();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -568,8 +568,8 @@ public class TaskExecutorTest {
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
-        PromisedValue<String> arg2 = promise();
+        MutablePromise<String> arg1 = promise();
+        MutablePromise<String> arg2 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
@@ -584,8 +584,8 @@ public class TaskExecutorTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = promise();
-        PromisedValue<String> arg1 = promise();
-        PromisedValue<String> arg2 = promise();
+        MutablePromise<String> arg1 = promise();
+        MutablePromise<String> arg2 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
@@ -684,7 +684,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = promise();
-        List<PromisedValue<String>> args = list(promise());
+        List<MutablePromise<String>> args = list(promise());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -699,7 +699,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = promise();
-        List<PromisedValue<String>> args = list(promise());
+        List<MutablePromise<String>> args = list(promise());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
@@ -782,7 +782,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
         var predecessor = promise();
-        List<PromisedValue<String>> args = list(promise());
+        List<MutablePromise<String>> args = list(promise());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);
@@ -796,7 +796,7 @@ public class TaskExecutorTest {
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
         var predecessor = promise();
-        List<PromisedValue<String>> args = list(promise());
+        List<MutablePromise<String>> args = list(promise());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);

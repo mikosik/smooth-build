@@ -8,8 +8,8 @@ public interface Promise<T> {
     return new ImmutablePromise<>(value);
   }
 
-  public static <T> PromisedValue<T> promise() {
-    return new PromisedValue<>();
+  public static <T> MutablePromise<T> promise() {
+    return new MutablePromise<>();
   }
 
   public T get();

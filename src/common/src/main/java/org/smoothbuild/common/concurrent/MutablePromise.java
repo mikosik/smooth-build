@@ -11,15 +11,17 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.collect.Maybe;
 
 /**
+ * Mutable implementation of {@link Promise}.
+ * Value can be set at most once via {@link #accept(Object)}.
  * This class is thread-safe.
  * Consumers registered with {@link #addConsumer(Consumer)} are called without any lock held.
  */
-public class PromisedValue<T> implements Consumer<T>, Promise<T> {
+public class MutablePromise<T> implements Consumer<T>, Promise<T> {
   private final Object lock = new Object();
   private final List<Consumer<T>> consumers = new ArrayList<>();
   private Maybe<T> value;
 
-  PromisedValue() {
+  MutablePromise() {
     this.value = none();
   }
 
