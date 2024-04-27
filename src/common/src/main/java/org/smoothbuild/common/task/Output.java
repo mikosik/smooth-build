@@ -9,4 +9,8 @@ public record Output<V>(Promise<V> result, Report report) {
   public static <V> Output<V> output(V result, Report report) {
     return new Output<>(promise(result), report);
   }
+
+  public static <V> Output<V> schedulingOutput(Promise<V> resultPromise, Report report) {
+    return new Output<>(resultPromise, report);
+  }
 }
