@@ -28,6 +28,12 @@ import org.smoothbuild.common.log.report.Trace;
  */
 @Singleton
 public class TaskExecutor {
+  /*
+   * Design decisions: Output returned by Task*.execute() contains `Promise<T> result` field
+   * instead of `T result` so scheduling tasks (tasks that starts other tasks (scheduled tasks)
+   * to calculate result for them) can simply return `Promise` that they received when submitting
+   * scheduled task to TaskExecutor.
+   */
   public static final Label EXECUTE_LABEL = label("execute");
   private final Injector injector;
   private final Executor executor;
@@ -176,7 +182,7 @@ public class TaskExecutor {
         var report = taskResult.report();
         reporter.submit(report);
         if (!containsFailure(report.logs())) {
-          result.accept(taskResult.result());
+          taskResult.result().addConsumer(result);
         }
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
