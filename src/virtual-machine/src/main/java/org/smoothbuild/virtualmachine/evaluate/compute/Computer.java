@@ -16,8 +16,8 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.step.Output;
@@ -80,7 +80,7 @@ public class Computer {
   private ComputationResult computeWithCache(Step step, Purity purity, BTuple input)
       throws ComputeException, InterruptedException {
     var hash = computationHash(step, input);
-    PromisedValue<ComputationResult> newPromised = promise();
+    MutablePromise<ComputationResult> newPromised = promise();
     Promise<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       return computationResultFromPromise(prevPromised.getBlocking(), purity);

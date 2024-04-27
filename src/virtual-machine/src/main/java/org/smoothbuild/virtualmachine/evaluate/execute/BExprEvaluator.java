@@ -10,8 +10,8 @@ import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.task.Output;
@@ -120,7 +120,7 @@ public class BExprEvaluator {
     }
   }
 
-  private PromisedValue<BValue> scheduleCallWithCombineArgs(
+  private MutablePromise<BValue> scheduleCallWithCombineArgs(
       Job callJob, BCall call, BExpr bLambda, BCombine combine) throws BytecodeException {
     Task1<Promise<BValue>, BValue> schedulingTask = (bValue) -> {
       try {
@@ -291,7 +291,7 @@ public class BExprEvaluator {
     return output(null, report(VM_SCHEDULER_LABEL, job.trace(), EXECUTION, logs));
   }
 
-  private static <T> PromisedValue<T> scheduledTaskResult(
+  private static <T> MutablePromise<T> scheduledTaskResult(
       Promise<Promise<T>> schedulingTaskResult) {
     var result = Promise.<T>promise();
     schedulingTaskResult.addConsumer(p -> p.addConsumer(result));
