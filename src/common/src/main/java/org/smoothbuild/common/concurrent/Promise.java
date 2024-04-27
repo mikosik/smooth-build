@@ -4,6 +4,10 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.collect.Maybe;
 
 public interface Promise<T> {
+  public static <T> Promise<T> promise(T value) {
+    return new ImmutablePromise<>(value);
+  }
+
   public T get();
 
   public T getBlocking() throws InterruptedException;

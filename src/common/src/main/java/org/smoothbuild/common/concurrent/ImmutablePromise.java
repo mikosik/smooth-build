@@ -12,7 +12,7 @@ import org.smoothbuild.common.collect.Maybe;
 public class ImmutablePromise<T> implements Promise<T> {
   private final T value;
 
-  public ImmutablePromise(T value) {
+  ImmutablePromise(T value) {
     this.value = value;
   }
 
