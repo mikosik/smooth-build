@@ -7,6 +7,7 @@ import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Label;
@@ -67,7 +68,7 @@ public class StepReportFactoryTest extends TestingVirtualMachine {
 
   private void testReport(Step step, ResultSource source, Label label) throws BytecodeException {
     var computationResult = computationResult(bInt(), source);
-    var expected = report(label("evaluate").append(label), bTrace(), source, list());
+    var expected = report(VM_EVALUATE.append(label), bTrace(), source, list());
     assertThat(StepReportFactory.create(step, computationResult)).isEqualTo(expected);
   }
 }

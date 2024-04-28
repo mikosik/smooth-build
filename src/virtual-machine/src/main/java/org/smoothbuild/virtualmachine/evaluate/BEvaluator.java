@@ -3,11 +3,10 @@ package org.smoothbuild.virtualmachine.evaluate;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE_PREFIX;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_SCHEDULE;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -37,7 +36,7 @@ public class BEvaluator {
       evaluator.awaitTermination();
     } catch (InterruptedException e) {
       var fatal = fatal("Waiting for evaluation has been interrupted:", e);
-      var report = report(label(EVALUATE_PREFIX), new Trace(), EXECUTION, list(fatal));
+      var report = report(VM_SCHEDULE, new Trace(), EXECUTION, list(fatal));
       reporter.submit(report);
       return none();
     }

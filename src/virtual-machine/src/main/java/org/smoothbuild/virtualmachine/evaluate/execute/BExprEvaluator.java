@@ -1,19 +1,18 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_SCHEDULE;
 import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.function.Function2;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Output;
@@ -55,7 +54,6 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  * This class is thread-safe.
  */
 public class BExprEvaluator {
-  public static final Label VM_SCHEDULER_LABEL = label("vm", "schedule");
   private final TaskExecutor taskExecutor;
   private final Computer computer;
   private final BytecodeFactory bytecodeFactory;
@@ -292,7 +290,7 @@ public class BExprEvaluator {
   }
 
   static Report newReport(Job job, List<Log> logs) {
-    return report(VM_SCHEDULER_LABEL, job.trace(), EXECUTION, logs);
+    return report(VM_SCHEDULE, job.trace(), EXECUTION, logs);
   }
 
   private Job newJob(BExpr expr) {

@@ -23,7 +23,7 @@ import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.TaskExecutor.EXECUTE_LABEL;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -480,7 +480,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       public void report_value_as_const_task(BValue value) {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), value);
-        var report = report(EVALUATE.append(label("const")), bTrace(), EXECUTION, list());
+        var report = report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list());
         verify(reporter).submit(report);
       }
 
@@ -511,7 +511,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(2))
-            .submit(report(EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
+            .submit(report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
       }
 
       @Test
@@ -522,7 +522,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(3))
-            .submit(report(EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
+            .submit(report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
       }
 
       @Test
@@ -577,7 +577,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         BExpr expr, Label label, BTrace trace, ResultSource resultSource) {
       var reporter = mock(Reporter.class);
       evaluate(bEvaluator(reporter), expr);
-      var taskReport = report(EVALUATE.append(label), trace, resultSource, list());
+      var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
       verify(reporter).submit(taskReport);
     }
   }
@@ -705,7 +705,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       int size, ResultSource expectedSource, MemoryReporter reporter) {
     var sources = reporter
         .reports()
-        .filter(r -> r.label().equals(EVALUATE.append(label("invoke"))))
+        .filter(r -> r.label().equals(VM_EVALUATE.append(label("invoke"))))
         .map(Report::source);
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
