@@ -260,7 +260,7 @@ public class BExprEvaluator {
   private Promise<BValue> submitStepTask(Job job, Step step, List<Promise<BValue>> subExprResults) {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
-        var result = computer.compute(step, toInput(subExprResults));
+        var result = computer.compute(step, toInput(bValues));
         var bValue = result.output().value();
         var report = StepReportFactory.create(step, result);
         return output(bValue, report);
@@ -271,8 +271,8 @@ public class BExprEvaluator {
     return taskExecutor.submit(taskX, subExprResults);
   }
 
-  private BTuple toInput(List<? extends Promise<BValue>> depResults) throws BytecodeException {
-    return bytecodeFactory.tuple(depResults.map(Promise::get));
+  private BTuple toInput(List<BValue> depResults) throws BytecodeException {
+    return bytecodeFactory.tuple(depResults);
   }
 
   private Promise<BValue> scheduleNewJob(BExpr bExpr, Job parentJob) throws BytecodeException {
