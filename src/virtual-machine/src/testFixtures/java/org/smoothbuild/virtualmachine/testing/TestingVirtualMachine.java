@@ -43,6 +43,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
+import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -161,11 +162,16 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Computer computer() {
-    return new Computer(Hash.of(123), this::container, computationCache());
+    return new Computer(computationHashFactory(), this::container, computationCache());
   }
 
   public Computer computer(NativeMethodLoader nativeMethodLoader) {
-    return new Computer(Hash.of(123), () -> container(nativeMethodLoader), computationCache());
+    return new Computer(
+        computationHashFactory(), () -> container(nativeMethodLoader), computationCache());
+  }
+
+  public ComputationHashFactory computationHashFactory() {
+    return new ComputationHashFactory(Hash.of(123));
   }
 
   public NativeApi nativeApi() {

@@ -1,6 +1,5 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
@@ -9,7 +8,6 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.con
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.FAST;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
-import static org.smoothbuild.virtualmachine.evaluate.step.StepHashes.stepHash;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -23,33 +21,32 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.step.Output;
 import org.smoothbuild.virtualmachine.evaluate.step.Purity;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.wire.Sandbox;
 
 /**
  * This class is thread-safe.
  */
 @Singleton
 public class Computer {
-  private final Hash sandboxHash;
+  private final ComputationHashFactory computationHashFactory;
   private final Provider<Container> containerProvider;
   private final ComputationCache diskCache;
   private final ConcurrentHashMap<Hash, Promise<ComputationResult>> memoryCache;
 
   @Inject
   public Computer(
-      @Sandbox Hash sandboxHash,
+      ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache) {
-    this(sandboxHash, containerProvider, diskCache, new ConcurrentHashMap<>());
+    this(computationHashFactory, containerProvider, diskCache, new ConcurrentHashMap<>());
   }
 
   public Computer(
-      @Sandbox Hash sandboxHash,
+      ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
       ConcurrentHashMap<Hash, Promise<ComputationResult>> memoryCache) {
+    this.computationHashFactory = computationHashFactory;
     this.diskCache = diskCache;
-    this.sandboxHash = sandboxHash;
     this.containerProvider = containerProvider;
     this.memoryCache = memoryCache;
   }
@@ -79,7 +76,7 @@ public class Computer {
 
   private ComputationResult computeWithCache(Step step, Purity purity, BTuple input)
       throws ComputeException, InterruptedException {
-    var hash = computationHash(step, input);
+    var hash = computationHashFactory.create(step, input);
     MutablePromise<ComputationResult> newPromised = promise();
     Promise<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
@@ -132,13 +129,5 @@ public class Computer {
     } catch (BytecodeException e) {
       throw computeException(e);
     }
-  }
-
-  private Hash computationHash(Step step, BTuple args) {
-    return computationHash(sandboxHash, step, args);
-  }
-
-  public static Hash computationHash(Hash sandboxHash, Step step, BTuple input) {
-    return Hash.of(asList(sandboxHash, stepHash(step), input.hash()));
   }
 }
