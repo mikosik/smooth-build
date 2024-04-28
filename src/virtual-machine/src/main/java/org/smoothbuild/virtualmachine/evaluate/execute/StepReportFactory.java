@@ -1,7 +1,8 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE_PREFIX;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
 
@@ -49,6 +50,6 @@ public class StepReportFactory {
   }
 
   private static Label newLabel(String stepName) {
-    return Label.label(EVALUATE_PREFIX, stepName);
+    return VM_EVALUATE.append(label(stepName));
   }
 }

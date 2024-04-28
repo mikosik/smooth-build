@@ -25,7 +25,7 @@ import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -48,10 +48,10 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
       String expression, ReportMatcher expectedMatcher) {
 
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
-        .map(s -> EVALUATE.append(label(s)))
+        .map(s -> VM_EVALUATE.append(label(s)))
         .append(label("not-evaluate"));
 
-    var expectedUpdated = or(expectedMatcher, not(labelPrefixMatcher(EVALUATE)));
+    var expectedUpdated = or(expectedMatcher, not(labelPrefixMatcher(VM_EVALUATE)));
     verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
         expression, expectedUpdated, taskLabels);
   }

@@ -10,7 +10,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -57,18 +57,18 @@ public class ReportMatchersTest extends TestingVirtualMachine {
         arguments(or(matcher("all"), matcher("none")), null, null, true),
         arguments(or(matcher("none"), matcher("all")), null, null, true),
         arguments(or(matcher("none"), matcher("none")), null, null, false),
-        arguments(matcher("invoke"), EVALUATE.append(label("invoke")), null, true),
-        arguments(matcher("invoke"), EVALUATE.append(label("order")), null, false),
-        arguments(matcher("combine"), EVALUATE.append(label("combine")), null, true),
-        arguments(matcher("combine"), EVALUATE.append(label("order")), null, false),
-        arguments(matcher("const"), EVALUATE.append(label("const")), null, true),
-        arguments(matcher("const"), EVALUATE.append(label("order")), null, false),
-        arguments(matcher("order"), EVALUATE.append(label("order")), null, true),
-        arguments(matcher("order"), EVALUATE.append(label("invoke")), null, false),
-        arguments(matcher("pick"), EVALUATE.append(label("pick")), null, true),
-        arguments(matcher("pick"), EVALUATE.append(label("order")), null, false),
-        arguments(matcher("select"), EVALUATE.append(label("select")), null, true),
-        arguments(matcher("select"), EVALUATE.append(label("order")), null, false));
+        arguments(matcher("invoke"), VM_EVALUATE.append(label("invoke")), null, true),
+        arguments(matcher("invoke"), VM_EVALUATE.append(label("order")), null, false),
+        arguments(matcher("combine"), VM_EVALUATE.append(label("combine")), null, true),
+        arguments(matcher("combine"), VM_EVALUATE.append(label("order")), null, false),
+        arguments(matcher("const"), VM_EVALUATE.append(label("const")), null, true),
+        arguments(matcher("const"), VM_EVALUATE.append(label("order")), null, false),
+        arguments(matcher("order"), VM_EVALUATE.append(label("order")), null, true),
+        arguments(matcher("order"), VM_EVALUATE.append(label("invoke")), null, false),
+        arguments(matcher("pick"), VM_EVALUATE.append(label("pick")), null, true),
+        arguments(matcher("pick"), VM_EVALUATE.append(label("order")), null, false),
+        arguments(matcher("select"), VM_EVALUATE.append(label("select")), null, true),
+        arguments(matcher("select"), VM_EVALUATE.append(label("order")), null, false));
   }
 
   private static ReportMatcher matcher(String name) {

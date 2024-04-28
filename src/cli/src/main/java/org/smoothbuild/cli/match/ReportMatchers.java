@@ -2,7 +2,7 @@ package org.smoothbuild.cli.match;
 
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.log.base.Label.label;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.EVALUATE;
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 
 import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.Maybe;
@@ -19,12 +19,12 @@ public class ReportMatchers {
   static final ReportMatcher WARNING = logLevelMatcher(Level.WARNING);
   static final ReportMatcher INFO = logLevelMatcher(Level.INFO);
 
-  static final ReportMatcher INVOKE = labelPrefixMatcher(EVALUATE.append(label("invoke")));
-  static final ReportMatcher COMBINE = labelPrefixMatcher(EVALUATE.append(label("combine")));
-  static final ReportMatcher CONST = labelPrefixMatcher(EVALUATE.append(label("const")));
-  static final ReportMatcher ORDER = labelPrefixMatcher(EVALUATE.append(label("order")));
-  static final ReportMatcher PICK = labelPrefixMatcher(EVALUATE.append(label("pick")));
-  static final ReportMatcher SELECT = labelPrefixMatcher(EVALUATE.append(label("select")));
+  static final ReportMatcher INVOKE = labelPrefixMatcher(VM_EVALUATE.append(label("invoke")));
+  static final ReportMatcher COMBINE = labelPrefixMatcher(VM_EVALUATE.append(label("combine")));
+  static final ReportMatcher CONST = labelPrefixMatcher(VM_EVALUATE.append(label("const")));
+  static final ReportMatcher ORDER = labelPrefixMatcher(VM_EVALUATE.append(label("order")));
+  static final ReportMatcher PICK = labelPrefixMatcher(VM_EVALUATE.append(label("pick")));
+  static final ReportMatcher SELECT = labelPrefixMatcher(VM_EVALUATE.append(label("select")));
 
   static final ReportMatcher DEFAULT = or(INFO, INVOKE);
 

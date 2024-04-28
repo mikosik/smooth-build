@@ -5,6 +5,6 @@ import static org.smoothbuild.common.log.base.Label.label;
 import org.smoothbuild.common.log.base.Label;
 
 public class VirtualMachineConstants {
-  public static final String EVALUATE_PREFIX = "evaluate";
-  public static final Label EVALUATE = label(EVALUATE_PREFIX);
+  public static final Label VM_EVALUATE = label("vm", "evaluate");
+  public static final Label VM_SCHEDULE = label("vm", "schedule");
 }
