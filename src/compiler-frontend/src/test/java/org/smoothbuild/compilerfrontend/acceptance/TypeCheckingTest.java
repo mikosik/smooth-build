@@ -9,7 +9,7 @@ public class TypeCheckingTest {
   @Nested
   class _named_value_type_and_its_body_type {
     @Test
-    public void mono_to_mono_success() {
+    void mono_to_mono_success() {
       var sourceCode = """
           Int result = 7;
           """;
@@ -17,7 +17,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void mono_to_mono_error() {
+    void mono_to_mono_error() {
       var sourceCode = """
           Blob result = "abc";
           """;
@@ -25,7 +25,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void mono_to_poly_error() {
+    void mono_to_poly_error() {
       var sourceCode = """
           A result = 7;
           """;
@@ -33,7 +33,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void poly_to_mono_success() {
+    void poly_to_mono_success() {
       var sourceCode = """
           [Int] result = [];
           """;
@@ -41,7 +41,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void poly_to_mono_error() {
+    void poly_to_mono_error() {
       var sourceCode = """
           [Int] result = [[]];
           """;
@@ -49,7 +49,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void poly_to_poly_success() {
+    void poly_to_poly_success() {
       var sourceCode = """
           [A] result = [];
           """;
@@ -57,7 +57,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void poly_to_poly_error() {
+    void poly_to_poly_error() {
       var sourceCode = """
           [A] result = [[]];
           """;
@@ -84,7 +84,7 @@ public class TypeCheckingTest {
     @Nested
     class _res_type_and_its_body_type {
       @Test
-      public void mono_to_mono_success() {
+      void mono_to_mono_success() {
         var sourceCode = """
           Int myFunc() = 7;
           """;
@@ -92,7 +92,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_mono_error() {
+      void mono_to_mono_error() {
         var sourceCode = """
           Blob myFunc() = "abc";
           """;
@@ -100,7 +100,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_poly_error() {
+      void mono_to_poly_error() {
         var sourceCode = """
           A myFunc() = 7;
           """;
@@ -108,7 +108,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_success() {
+      void poly_to_mono_success() {
         var sourceCode = """
           [Int] myFunc() = [];
           """;
@@ -116,7 +116,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_error() {
+      void poly_to_mono_error() {
         var sourceCode = """
           [Int] myFunc() = [[]];
           """;
@@ -124,7 +124,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_poly_success() {
+      void poly_to_poly_success() {
         var sourceCode = """
           [A] myFunc() = [];
           """;
@@ -132,7 +132,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_poly_error() {
+      void poly_to_poly_error() {
         var sourceCode = """
           [A] myFunc() = [[]];
           """;
@@ -155,7 +155,7 @@ public class TypeCheckingTest {
     @Nested
     class _named_param_type_and_arg_type {
       @Test
-      public void mono_to_mono_success() {
+      void mono_to_mono_success() {
         var sourceCode =
             """
           String myFunc(Int int) = "abc";
@@ -165,7 +165,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_mono_error() {
+      void mono_to_mono_error() {
         var sourceCode =
             """
           String myFunc(Blob blob) = "abc";
@@ -175,7 +175,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_poly_success() {
+      void mono_to_poly_success() {
         var sourceCode =
             """
           String myFunc(A a) = "abc";
@@ -185,7 +185,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_poly_error() {
+      void mono_to_poly_error() {
         var sourceCode =
             """
           String myFunc([A] a) = "abc";
@@ -195,7 +195,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_success() {
+      void poly_to_mono_success() {
         var sourceCode =
             """
           String myFunc([Int] param) = "abc";
@@ -205,7 +205,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_error() {
+      void poly_to_mono_error() {
         var sourceCode =
             """
           String myFunc([Int] param) = "abc";
@@ -215,7 +215,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_poly_success() {
+      void poly_to_poly_success() {
         var sourceCode =
             """
           String myFunc([A] param) = "abc";
@@ -225,7 +225,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_poly_error() {
+      void poly_to_poly_error() {
         var sourceCode =
             """
           String myFunc((A)->A param) = "abc";
@@ -238,7 +238,7 @@ public class TypeCheckingTest {
     @Nested
     class _param_type_and_param_default_value_type {
       @Test
-      public void mono_to_mono_success() {
+      void mono_to_mono_success() {
         var sourceCode = """
             Int myFunc(Int int = 7) = int;
             """;
@@ -246,7 +246,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_mono_error() {
+      void mono_to_mono_error() {
         var sourceCode =
             """
             String myFunc([Blob] blobArray = [1, 2, 3]) = "abc";
@@ -259,7 +259,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_poly_success() {
+      void mono_to_poly_success() {
         var sourceCode = """
             A myFunc(A a = 7) = a;
             """;
@@ -267,8 +267,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void
-          mono_to_poly_with_different_instantiation_of_same_var_in_different_param_success() {
+      void mono_to_poly_with_different_instantiation_of_same_var_in_different_param_success() {
         var sourceCode = """
             A myFunc(A a = 7, A b = "abc") = a;
             """;
@@ -276,7 +275,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void mono_to_poly_error() {
+      void mono_to_poly_error() {
         var sourceCode =
             """
             Int twoParamFunc(String s, Blob b) = 7;
@@ -290,7 +289,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_success1() {
+      void poly_to_mono_success1() {
         var sourceCode =
             """
             A myIdentity (A a) = a;
@@ -300,7 +299,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_success2() {
+      void poly_to_mono_success2() {
         var sourceCode =
             """
             String myFunc([[Int]] blobArray = []) = "abc";
@@ -309,7 +308,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_mono_error() {
+      void poly_to_mono_error() {
         var sourceCode =
             """
             A myIdentity (A a) = a;
@@ -323,7 +322,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_poly_success() {
+      void poly_to_poly_success() {
         var sourceCode =
             """
             A myIdentity (A a) = a;
@@ -333,7 +332,7 @@ public class TypeCheckingTest {
       }
 
       @Test
-      public void poly_to_poly_error() {
+      void poly_to_poly_error() {
         var sourceCode =
             """
             A myIdentity (A a) = a;
@@ -352,49 +351,49 @@ public class TypeCheckingTest {
     public abstract String buildSourceCode(String params, String argument);
 
     @Test
-    public void mono_to_mono_success() {
+    void mono_to_mono_success() {
       var code = buildSourceCode("Int int", "7");
       module(code).loadsWithSuccess();
     }
 
     @Test
-    public void mono_to_mono_error() {
+    void mono_to_mono_error() {
       var code = buildSourceCode("Blob blob", "7");
       module(code).loadsWithError(1, "Illegal call.");
     }
 
     @Test
-    public void mono_to_poly_success() {
+    void mono_to_poly_success() {
       var code = buildSourceCode("A a", "7");
       module(code).loadsWithSuccess();
     }
 
     @Test
-    public void mono_to_poly_error() {
+    void mono_to_poly_error() {
       var code = buildSourceCode("[A] a", "7");
       module(code).loadsWithError(1, "Illegal call.");
     }
 
     @Test
-    public void poly_to_mono_success() {
+    void poly_to_mono_success() {
       var code = buildSourceCode("[Int] param", "[]");
       module(code).loadsWithSuccess();
     }
 
     @Test
-    public void poly_to_mono_error() {
+    void poly_to_mono_error() {
       var code = buildSourceCode("[Int] param", "[[]]");
       module(code).loadsWithError(1, "Illegal call.");
     }
 
     @Test
-    public void poly_to_poly_success() {
+    void poly_to_poly_success() {
       var code = buildSourceCode("[A] param", "[]");
       module(code).loadsWithSuccess();
     }
 
     @Test
-    public void poly_to_poly_error() {
+    void poly_to_poly_error() {
       var code = buildSourceCode("(A)->A param", "[]");
       module(code).loadsWithError(1, "Illegal call.");
     }
@@ -403,7 +402,7 @@ public class TypeCheckingTest {
   @Nested
   class _array_element_types {
     @Test
-    public void fails_when_types_have_no_common_super_type() {
+    void fails_when_types_have_no_common_super_type() {
       var sourceCode = """
           result = [1, "abc"];
           """;
@@ -413,7 +412,7 @@ public class TypeCheckingTest {
     }
 
     @Test
-    public void succeeds_when_types_have_common_super_type() {
+    void succeeds_when_types_have_common_super_type() {
       var sourceCode = """
           result = [[[1, 2, 3]], []];
           """;
@@ -424,7 +423,7 @@ public class TypeCheckingTest {
   @Nested
   class _rankness {
     @Test
-    public void of_higher_order_is_not_possible() {
+    void of_higher_order_is_not_possible() {
       var code = """
             f(String s, (A)->A id) = id(s);
             """;
@@ -433,8 +432,7 @@ public class TypeCheckingTest {
   }
 
   @Test
-  public void
-      regression_test_type_error_in_param_default_value_should_fail_gracefully_with_error() {
+  void regression_test_type_error_in_param_default_value_should_fail_gracefully_with_error() {
     var code = """
             f([String] param = [7, "abc"]) = 3;
             """;

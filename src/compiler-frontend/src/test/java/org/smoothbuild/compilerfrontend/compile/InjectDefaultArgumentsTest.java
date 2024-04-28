@@ -24,7 +24,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 public class InjectDefaultArgumentsTest {
   @Test
-  public void missing_call_argument_is_filled_with_reference_to_default_argument() {
+  void missing_call_argument_is_filled_with_reference_to_default_argument() {
     var myFuncS = sFunc("myFunc", nlist(sItem("param", sInt(7))), sParamRef(sIntType(), "param"));
     var importedS = new SScope(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
@@ -38,7 +38,7 @@ public class InjectDefaultArgumentsTest {
   }
 
   @Test
-  public void
+  void
       missing_call_argument_in_call_within_default_body_is_filled_with_reference_to_default_argument() {
     var myFuncS = sFunc("myFunc", nlist(sItem("param", sInt(7))), sParamRef(sIntType(), "param"));
     var importedS = new SScope(immutableBindings(), bindings(myFuncS));

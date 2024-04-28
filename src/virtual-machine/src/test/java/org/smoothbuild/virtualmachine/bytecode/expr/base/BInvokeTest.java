@@ -88,7 +88,7 @@ public class BInvokeTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void invoke_can_be_read_back_by_hash() throws Exception {
+  void invoke_can_be_read_back_by_hash() throws Exception {
     var jar = bBlob();
     var classBinaryName = bString();
     var isPure = bBool(true);
@@ -99,7 +99,7 @@ public class BInvokeTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void invoke_read_back_by_hash_has_same_data() throws Exception {
+  void invoke_read_back_by_hash_has_same_data() throws Exception {
     var jar = bBlob();
     var classBinaryName = bString();
     var method = bMethodTuple(jar, classBinaryName);
@@ -112,7 +112,7 @@ public class BInvokeTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var jar = bBlob();
     var classBinaryName = bString();
     var isPure = bBool(true);

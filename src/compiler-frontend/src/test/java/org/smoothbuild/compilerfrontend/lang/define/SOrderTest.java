@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class SOrderTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var orderS = sOrder(3, sInt(4, 44), sInt(5, 55));
     assertThat(orderS.toString())
         .isEqualTo(

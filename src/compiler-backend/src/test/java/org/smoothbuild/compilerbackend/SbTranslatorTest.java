@@ -39,13 +39,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Nested
       class _named_value {
         @Test
-        public void mono_expression_value() throws Exception {
+        void mono_expression_value() throws Exception {
           var valueS = sValue("myValue", sInt(7));
           assertTranslation(valueS, bInt(7));
         }
 
         @Test
-        public void poly_expression_value() throws Exception {
+        void poly_expression_value() throws Exception {
           var emptyArrayValue = emptySArrayValue();
           var instantiateS = sInstantiate(list(sIntType()), emptyArrayValue);
           var orderB = bOrder(bIntType());
@@ -53,16 +53,15 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void mono_expression_value_referencing_other_expression_value() throws Exception {
+        void mono_expression_value_referencing_other_expression_value() throws Exception {
           var otherValue = sValue("otherValue", sInt(7));
           var myValue = sValue("myValue", sInstantiate(otherValue));
           assertTranslation(bindings(otherValue, myValue), sInstantiate(myValue), bInt(7));
         }
 
         @Test
-        public void
-            poly_expression_value_instantiated_with_type_param_of_enclosing_value_type_param()
-                throws Exception {
+        void poly_expression_value_instantiated_with_type_param_of_enclosing_value_type_param()
+            throws Exception {
           var a = varA();
           var b = varB();
 
@@ -78,7 +77,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void declaring_mono_native_value_fails() throws Exception {
+        void declaring_mono_native_value_fails() throws Exception {
           var fullPath = fullPath(bucketId("project"), path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -94,7 +93,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void mono_bytecode_value() throws Exception {
+        void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
           var fullPath = fullPath(bucketId("project"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
@@ -112,7 +111,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void poly_bytecode_value() throws Exception {
+        void poly_bytecode_value() throws Exception {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = sFuncType(a, a);
@@ -132,13 +131,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Nested
       class _named_func {
         @Test
-        public void mono_expression_function() throws Exception {
+        void mono_expression_function() throws Exception {
           var funcS = sFunc("myFunc", nlist(), sInt(7));
           assertTranslation(funcS, bLambda(bInt(7)));
         }
 
         @Test
-        public void poly_expression_function() throws Exception {
+        void poly_expression_function() throws Exception {
           var funcS = idSFunc();
           var instantiateS = sInstantiate(list(sIntType()), funcS);
           var lambdaB = bLambda(bLambdaType(bIntType(), bIntType()), bReference(bIntType(), 0));
@@ -146,7 +145,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void poly_expression_func_instantiated_with_type_param_of_enclosing_func_type_param()
+        void poly_expression_func_instantiated_with_type_param_of_enclosing_func_type_param()
             throws Exception {
           var b = varB();
 
@@ -164,7 +163,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void mono_native_function() throws Exception {
+        void mono_native_function() throws Exception {
           var fullPath = fullPath(bucketId("project"), path("my/path"));
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
@@ -185,7 +184,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void poly_native_function() throws Exception {
+        void poly_native_function() throws Exception {
           var a = varA();
           var fullPath = fullPath(bucketId("project"), path("my/path"));
           var jar = bBlob(37);
@@ -206,7 +205,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void mono_bytecode_function() throws Exception {
+        void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
           var fullPath = fullPath(bucketId("project"), path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
@@ -224,7 +223,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void poly_bytecode_function() throws Exception {
+        void poly_bytecode_function() throws Exception {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = sFuncType(a, a);
@@ -246,32 +245,32 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Nested
     class _expr {
       @Test
-      public void blob() throws Exception {
+      void blob() throws Exception {
         var blobS = sBlob(37);
         assertTranslation(blobS, bBlob(37));
       }
 
       @Test
-      public void int_() throws Exception {
+      void int_() throws Exception {
         var intS = sInt(1);
         assertTranslation(intS, bInt(1));
       }
 
       @Test
-      public void string() throws Exception {
+      void string() throws Exception {
         var stringS = sString("abc");
         assertTranslation(stringS, bString("abc"));
       }
 
       @Test
-      public void lambda() throws Exception {
+      void lambda() throws Exception {
         var lambda = sLambda(varSetS(varA()), nlist(sItem(varA(), "p")), sParamRef(varA(), "p"));
         var monoLambdaS = sInstantiate(list(sIntType()), lambda);
         assertTranslation(monoLambdaS, bLambda(list(bIntType()), bReference(bIntType(), 0)));
       }
 
       @Test
-      public void lambda_referencing_param_of_enclosing_function() throws Exception {
+      void lambda_referencing_param_of_enclosing_function() throws Exception {
         var monoLambdaS = sInstantiate(sLambda(sParamRef(sIntType(), "p")));
         var monoFuncS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), monoLambdaS);
 
@@ -282,7 +281,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void lambda_with_param_and_referencing_param_of_enclosing_function() throws Exception {
+      void lambda_with_param_and_referencing_param_of_enclosing_function() throws Exception {
         // myFunc(Int i) = (Blob b) -> i;
         var monoLambdaS =
             sInstantiate(sLambda(nlist(sItem(sBlobType(), "b")), sParamRef(sIntType(), "i")));
@@ -295,32 +294,32 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void call() throws Exception {
+      void call() throws Exception {
         var funcS = sFunc("myFunc", nlist(), sString("abc"));
         var callS = sCall(sInstantiate(funcS));
         assertTranslation(bindings(funcS), callS, bCall(bLambda(bString("abc"))));
       }
 
       @Test
-      public void combine() throws Exception {
+      void combine() throws Exception {
         var combineS = sCombine(sInt(3), sString("abc"));
         assertTranslation(combineS, bCombine(bInt(3), bString("abc")));
       }
 
       @Test
-      public void order() throws Exception {
+      void order() throws Exception {
         var orderS = sOrder(sIntType(), sInt(3), sInt(7));
         assertTranslation(orderS, bOrder(bInt(3), bInt(7)));
       }
 
       @Test
-      public void param_ref() throws Exception {
+      void param_ref() throws Exception {
         var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
         assertTranslation(funcS, bIntIdLambda());
       }
 
       @Test
-      public void param_ref_to_unknown_param_causes_exception() {
+      void param_ref_to_unknown_param_causes_exception() {
         var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(sInstantiate(funcS)))
             .throwsException(
@@ -328,7 +327,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void select() throws Exception {
+      void select() throws Exception {
         var sStructType = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
         var sConstructor = sConstructor(sStructType);
         var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
@@ -340,7 +339,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var()
+      void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var()
           throws Exception {
         // regression test
         var monoLambdaS = sInstantiate(sLambda(varSetS(), sParamRef(varA(), "a")));
@@ -362,7 +361,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Nested
       class _named_value {
         @Test
-        public void expression_value() throws Exception {
+        void expression_value() throws Exception {
           var valueS = sValue(3, "myValue", sInt(7, 37));
           ImmutableBindings<SNamedEvaluable> evaluables = bindings(valueS);
           SExpr sExpr = sInstantiate(9, valueS);
@@ -370,7 +369,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void expression_value_referencing_other_expression_value() throws Exception {
+        void expression_value_referencing_other_expression_value() throws Exception {
           var otherValueS = sValue(6, "otherValue", sInt(7, 37));
           var valueS = sValue(5, "myValue", sInstantiate(otherValueS));
           ImmutableBindings<SNamedEvaluable> evaluables = bindings(otherValueS, valueS);
@@ -379,7 +378,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void bytecode_value() throws Exception {
+        void bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
           var fullPath = userModuleFullPath();
           var classBinaryName = clazz.getCanonicalName();
@@ -398,13 +397,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Nested
       class _named_func {
         @Test
-        public void expression_function() throws Exception {
+        void expression_function() throws Exception {
           var funcS = sFunc(7, "myFunc", nlist(), sInt(37));
           assertNalMapping(bindings(funcS), sInstantiate(3, funcS), "myFunc", location(7));
         }
 
         @Test
-        public void expression_inside_expression_function_body() throws Exception {
+        void expression_inside_expression_function_body() throws Exception {
           var funcS = sFunc(7, "myFunc", nlist(), sInt(8, 37));
           var sbTranslator = newTranslator(bindings(funcS));
           var funcB = (BLambda) sbTranslator.translateExpr(sInstantiate(funcS));
@@ -413,7 +412,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void native_func() throws Exception {
+        void native_func() throws Exception {
           var fullPath = userModuleFullPath();
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -426,7 +425,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void bytecode_func() throws Exception {
+        void bytecode_func() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
           var fullPath = userModuleFullPath();
           var classBinaryName = clazz.getCanonicalName();
@@ -445,25 +444,25 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     @Nested
     class _expr {
       @Test
-      public void blob() throws Exception {
+      void blob() throws Exception {
         var blobS = sBlob(7, 0x37);
         assertNalMapping(blobS, null, location(7));
       }
 
       @Test
-      public void int_() throws Exception {
+      void int_() throws Exception {
         var intS = sInt(7, 37);
         assertNalMapping(intS, null, location(7));
       }
 
       @Test
-      public void string() throws Exception {
+      void string() throws Exception {
         var stringS = sString(7, "abc");
         assertNalMapping(stringS, null, location(7));
       }
 
       @Test
-      public void lambda() throws Exception {
+      void lambda() throws Exception {
         var monoLambdaS = sInstantiate(sLambda(7, nlist(), sString("abc")));
 
         var sbTranslator = newTranslator();
@@ -475,20 +474,20 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void call() throws Exception {
+      void call() throws Exception {
         var funcS = sFunc(7, "myFunc", nlist(), sString("abc"));
         var call = sCall(8, sInstantiate(funcS));
         assertNalMapping(bindings(funcS), call, null, location(8));
       }
 
       @Test
-      public void order() throws Exception {
+      void order() throws Exception {
         var order = sOrder(3, sIntType(), sInt(6), sInt(7));
         assertNalMapping(order, null, location(3));
       }
 
       @Test
-      public void param_ref() throws Exception {
+      void param_ref() throws Exception {
         var funcS =
             sFunc(4, "myFunc", nlist(sItem(sIntType(), "p")), sParamRef(5, sIntType(), "p"));
         var sbTranslator = newTranslator(bindings(funcS));
@@ -497,7 +496,7 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void select() throws Exception {
+      void select() throws Exception {
         var structTS = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
         var constructorS = sConstructor(structTS);
         var callS = sCall(sInstantiate(constructorS), sString("abc"));
@@ -508,14 +507,14 @@ public class SbTranslatorTest extends TestingVirtualMachine {
       @Nested
       class _instantiate {
         @Test
-        public void expression_value() throws Exception {
+        void expression_value() throws Exception {
           var sValue = sValue(7, "emptyArray", sOrder(varA()));
           var sInstantiate = sInstantiate(4, list(sIntType()), sValue);
           assertNalMapping(bindings(sValue), sInstantiate, "emptyArray", location(7));
         }
 
         @Test
-        public void expression_function() throws Exception {
+        void expression_function() throws Exception {
           var identity = idSFunc();
           var instantiateS = sInstantiate(list(sIntType()), identity);
           assertNalMapping(bindings(idSFunc()), instantiateS, "myId", location(1));
@@ -527,13 +526,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
   @Nested
   class _caching {
     @Test
-    public void expression_value_translation_result() throws Exception {
+    void expression_value_translation_result() throws Exception {
       var valueS = sValue("myVal", sString("abcdefghi"));
       assertTranslationIsCached(valueS);
     }
 
     @Test
-    public void bytecode_value_translation_result() throws Exception {
+    void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
       var fullPath = fullPath(bucketId("project"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
@@ -547,19 +546,19 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void expression_function_translation_result() throws Exception {
+    void expression_function_translation_result() throws Exception {
       var funcS = sFunc("myFunc", nlist(), sString("abcdefghi"));
       assertTranslationIsCached(funcS);
     }
 
     @Test
-    public void native_function_translation_result() throws Exception {
+    void native_function_translation_result() throws Exception {
       var sNativeFunc = sNativeFunc(sStringType(), "myFunc", nlist());
       assertTranslationIsCached(sNativeFunc);
     }
 
     @Test
-    public void bytecode_function_translation_result() throws Exception {
+    void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
       var fullPath = fullPath(bucketId("project"), path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
@@ -574,13 +573,13 @@ public class SbTranslatorTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void constructor_translation_result() throws Exception {
+    void constructor_translation_result() throws Exception {
       var myStruct = sStructType("MyStruct", nlist(sSig(sStringType(), "name")));
       assertTranslationIsCached(sConstructor(myStruct));
     }
 
     @Test
-    public void instantiated_poly_function_translation_result() throws Exception {
+    void instantiated_poly_function_translation_result() throws Exception {
       var funcS = idSFunc();
       var instantiateS = sInstantiate(list(sIntType()), funcS);
       assertTranslationIsCached(bindings(funcS), instantiateS);

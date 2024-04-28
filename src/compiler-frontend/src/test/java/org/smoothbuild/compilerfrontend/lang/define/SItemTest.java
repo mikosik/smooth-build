@@ -13,31 +13,31 @@ public class SItemTest {
   private SItem param;
 
   @Test
-  public void null_type_is_forbidden() {
+  void null_type_is_forbidden() {
     assertCall(() -> new SItem(null, name, none(), location()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void null_name_is_forbidden() {
+  void null_name_is_forbidden() {
     assertCall(() -> new SItem(sStringType(), null, none(), location()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void type_getter() {
+  void type_getter() {
     param = new SItem(sStringType(), name, none(), location());
     assertThat(param.type()).isEqualTo(sStringType());
   }
 
   @Test
-  public void name_getter() {
+  void name_getter() {
     param = new SItem(sStringType(), name, none(), location());
     assertThat(param.name()).isEqualTo(name);
   }
 
   @Test
-  public void to_string() {
+  void to_string() {
     param = new SItem(sStringType(), name, none(), location());
     assertThat(param.toString())
         .isEqualTo(

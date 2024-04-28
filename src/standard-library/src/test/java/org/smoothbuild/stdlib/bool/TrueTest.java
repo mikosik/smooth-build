@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class TrueTest extends StandardLibraryTestCase {
   @Test
-  public void true_value() throws Exception {
+  void true_value() throws Exception {
     var userModule = """
         result = true;
         """;

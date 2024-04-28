@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class FullPathTest {
   @Test
-  public void equals_and_hash_code() {
+  void equals_and_hash_code() {
     String file = "abc.smooth";
 
     EqualsTester tester = new EqualsTester();
@@ -39,7 +39,7 @@ public class FullPathTest {
   }
 
   @Test
-  public void to_string() {
+  void to_string() {
     var fullPath = new FullPath(bucketId("project"), path("abc"));
     assertThat(fullPath.toString()).isEqualTo("{project}/abc");
   }

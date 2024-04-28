@@ -8,7 +8,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class ToBlobTest extends StandardLibraryTestCase {
   @Test
-  public void to_blob_func() throws Exception {
+  void to_blob_func() throws Exception {
     var userModule = """
         result = toBlob("abc");
         """;

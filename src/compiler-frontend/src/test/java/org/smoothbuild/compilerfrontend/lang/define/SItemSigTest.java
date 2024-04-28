@@ -13,29 +13,29 @@ public class SItemSigTest {
   private SItemSig item;
 
   @Test
-  public void null_type_is_forbidden() {
+  void null_type_is_forbidden() {
     assertCall(() -> new SItemSig(null, name)).throwsException(NullPointerException.class);
   }
 
   @Test
-  public void null_name_is_forbidden() {
+  void null_name_is_forbidden() {
     assertCall(() -> new SItemSig(sStringType(), null)).throwsException(NullPointerException.class);
   }
 
   @Test
-  public void type_getter() {
+  void type_getter() {
     item = new SItemSig(sStringType(), name);
     assertThat(item.type()).isEqualTo(sStringType());
   }
 
   @Test
-  public void name_getter() {
+  void name_getter() {
     item = new SItemSig(sStringType(), name);
     assertThat(item.name()).isEqualTo(name);
   }
 
   @Test
-  public void equals_and_hash_code() {
+  void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(new SItemSig(sStringType(), "name"));
     tester.addEqualityGroup(new SItemSig(sStringType(), "name2"));
@@ -44,19 +44,19 @@ public class SItemSigTest {
   }
 
   @Test
-  public void to_padded_string() {
+  void to_padded_string() {
     item = new SItemSig(sStringType(), "myName");
     assertThat(item.toPaddedString(10, 13)).isEqualTo("String    : myName       ");
   }
 
   @Test
-  public void to_padded_string_for_short_limits() {
+  void to_padded_string_for_short_limits() {
     item = new SItemSig(sStringType(), "myName");
     assertThat(item.toPaddedString(1, 1)).isEqualTo("String: myName");
   }
 
   @Test
-  public void to_string() {
+  void to_string() {
     item = new SItemSig(sStringType(), "myName");
     assertThat(item.toString()).isEqualTo("String myName");
   }

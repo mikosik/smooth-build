@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class DecodeExprNodeExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message() throws Exception {
+  void message() throws Exception {
     var exception =
         new DecodeExprNodeException(Hash.of(13), bIntType(), "node-path", "Detailed message.");
     assertThat(exception.getMessage())

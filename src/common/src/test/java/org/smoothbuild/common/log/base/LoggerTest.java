@@ -61,56 +61,56 @@ public class LoggerTest {
   @Nested
   class _containsFailure {
     @Test
-    public void when_nothing_has_been_logged_returns_false() {
+    void when_nothing_has_been_logged_returns_false() {
       assertThat(logger.containsFailure()).isFalse();
     }
 
     @Test
-    public void after_logging_fatal_returns_true() {
+    void after_logging_fatal_returns_true() {
       logger.log(fatal("message"));
       assertThat(logger.containsFailure()).isTrue();
     }
 
     @Test
-    public void after_logging_error_returns_true() {
+    void after_logging_error_returns_true() {
       logger.log(error("message"));
       assertThat(logger.containsFailure()).isTrue();
     }
 
     @Test
-    public void after_logging_warning_returns_false() {
+    void after_logging_warning_returns_false() {
       logger.log(warning("message"));
       assertThat(logger.containsFailure()).isFalse();
     }
 
     @Test
-    public void after_logging_info_returns_false() {
+    void after_logging_info_returns_false() {
       logger.log(info("message"));
       assertThat(logger.containsFailure()).isFalse();
     }
 
     @Test
-    public void after_adding_logs_that_contains_at_least_error_returns_true() {
+    void after_adding_logs_that_contains_at_least_error_returns_true() {
       logger.logAll(list(error("message")));
       assertThat(logger.containsFailure()).isTrue();
     }
 
     @Test
-    public void after_logging_fatal_and_adding_logs_that_contains_at_least_error_returns_true() {
+    void after_logging_fatal_and_adding_logs_that_contains_at_least_error_returns_true() {
       logger.log(fatal("message"));
       logger.logAll(list(info("message")));
       assertThat(logger.containsFailure()).isTrue();
     }
 
     @Test
-    public void after_logging_error_and_adding_logs_without_problems_returns_true() {
+    void after_logging_error_and_adding_logs_without_problems_returns_true() {
       logger.log(error("message"));
       logger.logAll(list(info("message")));
       assertThat(logger.containsFailure()).isTrue();
     }
 
     @Test
-    public void after_logging_warning_and_adding_logs_with_error_returns_true() {
+    void after_logging_warning_and_adding_logs_with_error_returns_true() {
       logger.log(warning("message"));
       logger.logAll(list(error("message")));
       assertThat(logger.containsFailure()).isTrue();
@@ -118,7 +118,7 @@ public class LoggerTest {
   }
 
   @Test
-  public void logs_contains_all_logs() {
+  void logs_contains_all_logs() {
     Log fatal = fatal("fatal");
     Log error = error("error");
     Log warning = warning("warning");

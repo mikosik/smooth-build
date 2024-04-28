@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class HexTest {
   @Test
-  public void empty_string_is_decoded() throws DecodeHexException {
+  void empty_string_is_decoded() throws DecodeHexException {
     assertThat(Hex.decode("")).isEqualTo(ByteString.of());
   }
 
@@ -42,7 +42,7 @@ public class HexTest {
   }
 
   @Test
-  public void two_bytes_value_is_decoded() throws DecodeHexException {
+  void two_bytes_value_is_decoded() throws DecodeHexException {
     assertThat(Hex.decode("0102")).isEqualTo(ByteString.of((byte) 1, (byte) 2));
   }
 
@@ -54,7 +54,7 @@ public class HexTest {
   }
 
   @Test
-  public void invalid_hex_digit_causes_error() {
+  void invalid_hex_digit_causes_error() {
     assertCall(() -> Hex.decode("1M")).throwsException(DecodeHexException.invalidHexDigits("M"));
   }
 }

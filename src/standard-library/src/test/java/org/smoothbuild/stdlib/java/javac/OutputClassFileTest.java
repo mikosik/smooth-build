@@ -16,7 +16,7 @@ public class OutputClassFileTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test
-  public void open_output_stream() throws Exception {
+  void open_output_stream() throws Exception {
     var nativeApi = nativeApi();
     var factory = nativeApi.factory();
     var fileArrayBuilder = exprDb().newArrayBuilder(factory.arrayType(factory.fileType()));
@@ -28,7 +28,7 @@ public class OutputClassFileTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void get_name_returns_file_path() throws Exception {
+  void get_name_returns_file_path() throws Exception {
     var arrayTH = bArrayType(bFileType());
     var outputClassFile = new OutputClassFile(exprDb().newArrayBuilder(arrayTH), path, nativeApi());
     assertThat(outputClassFile.getName()).isEqualTo("/" + path);

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class SAnnotationTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var annS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     assertThat(annS.toString())
         .isEqualTo(

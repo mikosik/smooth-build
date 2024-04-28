@@ -12,12 +12,12 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BReferenceTest extends TestingVirtualMachine {
   @Test
-  public void type_of_var_expr_is_var_type() throws Exception {
+  void type_of_var_expr_is_var_type() throws Exception {
     assertThat(bReference(bIntType(), 123).kind()).isEqualTo(bReferenceKind(bIntType()));
   }
 
   @Test
-  public void value_returns_stored_value() throws Exception {
+  void value_returns_stored_value() throws Exception {
     assertThat(bReference(123).index()).isEqualTo(bInt(123));
   }
 
@@ -36,19 +36,19 @@ public class BReferenceTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void reference_can_be_read_back_by_hash() throws Exception {
+  void reference_can_be_read_back_by_hash() throws Exception {
     var reference = bReference(bIntType(), 123);
     assertThat(exprDbOther().get(reference.hash())).isEqualTo(reference);
   }
 
   @Test
-  public void const_read_back_by_hash_has_same_value() throws Exception {
+  void const_read_back_by_hash_has_same_value() throws Exception {
     var reference = bReference(bIntType(), 123);
     assertThat(((BReference) exprDbOther().get(reference.hash())).index()).isEqualTo(bInt(123));
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var reference = bReference(bIntType(), 123);
     assertThat(reference.toString()).isEqualTo("REFERENCE:Int(123)@" + reference.hash());
   }

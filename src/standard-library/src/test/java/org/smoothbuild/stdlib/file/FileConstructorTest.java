@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class FileConstructorTest extends StandardLibraryTestCase {
   @Test
-  public void file_constructor() throws Exception {
+  void file_constructor() throws Exception {
     var userModule = """
         result = File(0x41, "name.txt");
         """;

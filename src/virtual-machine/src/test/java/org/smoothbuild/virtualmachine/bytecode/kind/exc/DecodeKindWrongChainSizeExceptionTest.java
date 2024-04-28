@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class DecodeKindWrongChainSizeExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message() {
+  void message() {
     var exception = new DecodeKindWrongChainSizeException(Hash.of(123), INT, "node-path", 7, 2);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode kind INT at "

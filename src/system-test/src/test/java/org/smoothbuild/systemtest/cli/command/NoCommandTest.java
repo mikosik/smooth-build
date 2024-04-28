@@ -8,7 +8,7 @@ import org.smoothbuild.systemtest.SystemTestCase;
 
 public class NoCommandTest extends SystemTestCase {
   @Test
-  public void calling_smooth_without_command_defaults_to_help_command() {
+  void calling_smooth_without_command_defaults_to_help_command() {
     runSmoothHelp();
     String helpOutput = systemOut();
     runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));

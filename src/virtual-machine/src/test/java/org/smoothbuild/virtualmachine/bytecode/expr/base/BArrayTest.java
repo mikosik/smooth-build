@@ -19,13 +19,13 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BArrayTest extends TestingVirtualMachine {
   @Test
-  public void empty_int_array_can_be_iterated_as_int() throws Exception {
+  void empty_int_array_can_be_iterated_as_int() throws Exception {
     var array = exprDb().newArrayBuilder(bArrayType(bIntType())).build();
     assertThat(array.elements(BInt.class)).isEmpty();
   }
 
   @Test
-  public void string_array_cannot_be_iterated_as_tuple() throws Exception {
+  void string_array_cannot_be_iterated_as_tuple() throws Exception {
     var array =
         exprDb().newArrayBuilder(bArrayType(bStringType())).add(bString("abc")).build();
     assertCall(() -> array.elements(BTuple.class))
@@ -34,32 +34,32 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void empty_array_is_empty() throws Exception {
+  void empty_array_is_empty() throws Exception {
     var array = exprDb().newArrayBuilder(bArrayType()).build();
     assertThat(array.elements(BString.class)).isEmpty();
   }
 
   @Test
-  public void adding_null_is_forbidden() throws Exception {
+  void adding_null_is_forbidden() throws Exception {
     var arrayBuilder = exprDb().newArrayBuilder(bArrayType());
     assertCall(() -> arrayBuilder.add(null)).throwsException(NullPointerException.class);
   }
 
   @Test
-  public void adding_elem_with_wrong_type_is_forbidden() throws Exception {
+  void adding_elem_with_wrong_type_is_forbidden() throws Exception {
     var arrayBuilder = exprDb().newArrayBuilder(bArrayType());
     assertCall(() -> arrayBuilder.add(bBlob(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void array_contains_added_elem() throws Exception {
+  void array_contains_added_elem() throws Exception {
     var array = exprDb().newArrayBuilder(bArrayType()).add(bString("abc")).build();
     assertThat(array.elements(BString.class)).containsExactly(bString("abc"));
   }
 
   @Test
-  public void array_contains_added_elem_via_add_all_method() throws Exception {
+  void array_contains_added_elem_via_add_all_method() throws Exception {
     var string = bString("abc");
     var string2 = bString("def");
     var array =
@@ -68,7 +68,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void array_contains_added_elements_in_order() throws Exception {
+  void array_contains_added_elements_in_order() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
     var string3 = bString("ghi");
@@ -84,7 +84,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void adding_same_elem_twice_builds_array_with_two_elements() throws Exception {
+  void adding_same_elem_twice_builds_array_with_two_elements() throws Exception {
     var string = bString("abc");
     var array = exprDb().newArrayBuilder(bArrayType()).add(string).add(string).build();
     assertThat(array.elements(BString.class)).containsExactly(string, string);
@@ -109,7 +109,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void array_can_be_read_by_hash() throws Exception {
+  void array_can_be_read_by_hash() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
     var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
@@ -117,7 +117,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void array_read_by_hash_contains_same_elements() throws Exception {
+  void array_read_by_hash_contains_same_elements() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
     var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
@@ -127,7 +127,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void array_read_by_hash_has_same_hash() throws Exception {
+  void array_read_by_hash_has_same_hash() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
     var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
@@ -147,7 +147,7 @@ public class BArrayTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
     var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();

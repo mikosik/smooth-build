@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class NodeHasWrongTypeExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message_with_types() throws Exception {
+  void message_with_types() throws Exception {
     var exception = new NodeHasWrongTypeException(
         Hash.of(123), bIntType(), "node-path", bBoolType(), bStringType());
     assertThat(exception.getMessage())
@@ -19,7 +19,7 @@ public class NodeHasWrongTypeExceptionTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void message_with_index_and_types() throws Exception {
+  void message_with_index_and_types() throws Exception {
     var exception = new NodeHasWrongTypeException(
         Hash.of(123), bIntType(), "node-path", 7, bBoolType(), bStringType());
     assertThat(exception.getMessage())

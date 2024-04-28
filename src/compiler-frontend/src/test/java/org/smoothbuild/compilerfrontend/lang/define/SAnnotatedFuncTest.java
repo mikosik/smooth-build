@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class SAnnotatedFuncTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
     var funcTS = sFuncSchema(params, sStringType());
     var func = new SAnnotatedFunc(sNativeAnnotation(), funcTS, "myFunc", params, location(1));

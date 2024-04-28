@@ -13,7 +13,7 @@ import org.smoothbuild.common.log.report.LogCounters;
 
 public class StatusPrinterTest {
   @Test
-  public void when_all_levels_are_reported() {
+  void when_all_levels_are_reported() {
     var systemOut = mock(PrintWriter.class);
     var logCounters = new LogCounters();
     logCounters.increment(FATAL);
@@ -34,7 +34,7 @@ public class StatusPrinterTest {
   }
 
   @Test
-  public void when_no_failed_level_is_reported() {
+  void when_no_failed_level_is_reported() {
     var systemOut = mock(PrintWriter.class);
     var logCounters = new LogCounters();
     logCounters.increment(WARNING);
@@ -48,7 +48,7 @@ public class StatusPrinterTest {
   }
 
   @Test
-  public void skips_levels_with_zero_logs() {
+  void skips_levels_with_zero_logs() {
     var systemOut = mock(PrintWriter.class);
     var logCounters = new LogCounters();
     logCounters.increment(FATAL);

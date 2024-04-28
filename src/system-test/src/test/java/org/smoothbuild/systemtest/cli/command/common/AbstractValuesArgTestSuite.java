@@ -6,7 +6,7 @@ import org.smoothbuild.systemtest.SystemTestCase;
 
 public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   @Test
-  public void missing_value_arg_causes_error() throws Exception {
+  void missing_value_arg_causes_error() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -16,7 +16,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void nonexistent_value_arg_prints_error() throws Exception {
+  void nonexistent_value_arg_prints_error() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -31,7 +31,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void value_specified_twice_is_ok() throws Exception {
+  void value_specified_twice_is_ok() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -40,7 +40,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void illegal_value_name_causes_error() throws Exception {
+  void illegal_value_name_causes_error() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -50,7 +50,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void illegal_value_names_causes_error_for_each_one() throws Exception {
+  void illegal_value_names_causes_error_for_each_one() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -61,7 +61,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void func_that_requires_args_prints_error() throws Exception {
+  void func_that_requires_args_prints_error() throws Exception {
     createUserModule(
         """
             String testStringIdentity(String value) = value;
@@ -77,7 +77,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   }
 
   @Test
-  public void func_which_all_params_are_optional_prints_error() throws Exception {
+  void func_which_all_params_are_optional_prints_error() throws Exception {
     createUserModule(
         """
             String testStringIdentity(String value = "default") = value;

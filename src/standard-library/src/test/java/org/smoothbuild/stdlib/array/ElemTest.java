@@ -8,7 +8,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class ElemTest extends StandardLibraryTestCase {
   @Test
-  public void first_element() throws Exception {
+  void first_element() throws Exception {
     var userModule = """
         result = elem(["first", "second", "third"], 0);
         """;
@@ -18,7 +18,7 @@ public class ElemTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void last_element() throws Exception {
+  void last_element() throws Exception {
     var userModule = """
         result = elem(["first", "second", "third"], 2);
         """;
@@ -28,7 +28,7 @@ public class ElemTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void index_out_of_bounds_causes_exception() throws Exception {
+  void index_out_of_bounds_causes_exception() throws Exception {
     var userModule = """
         result = elem(["first", "second", "third"], 3);
         """;
@@ -38,7 +38,7 @@ public class ElemTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void negative_index_causes_exception() throws Exception {
+  void negative_index_causes_exception() throws Exception {
     createUserModule(
         """
             result = elem(["first", "second", "third"], -1);

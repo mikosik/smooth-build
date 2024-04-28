@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class SStringTest {
   @Test
-  public void to_string() {
+  void to_string() {
     assertThat(sString(7, "abc").toString())
         .isEqualTo("SString(String, \"abc\", {project}/build.smooth:7)");
   }

@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BKindCollisionsTest extends TestingVirtualMachine {
   @Test
-  public void collisions() {
+  void collisions() {
     HashMap<Hash, BKind> map = new HashMap<>();
     for (var kindB : TestingBKind.ALL_KINDS_TO_TEST) {
       var hash = kindB.hash();

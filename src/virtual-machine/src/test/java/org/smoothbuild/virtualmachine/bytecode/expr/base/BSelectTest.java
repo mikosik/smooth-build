@@ -14,28 +14,28 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BSelectTest extends TestingVirtualMachine {
   @Test
-  public void creating_select_with_non_tuple_expr_causes_exception() {
+  void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> bSelect(bInt(3), bInt(2)))
         .throwsException(new IllegalArgumentException(
             "`selectable.evaluationType()` should be `BTupleType` but is `BIntType`."));
   }
 
   @Test
-  public void creating_select_with_too_great_index_causes_exception() throws Exception {
+  void creating_select_with_too_great_index_causes_exception() throws Exception {
     var tuple = bAnimal("rabbit", 7);
     assertCall(() -> bSelect(tuple, bInt(2)).kind())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
-  public void creating_select_with_index_lower_than_zero_causes_exception() throws Exception {
+  void creating_select_with_index_lower_than_zero_causes_exception() throws Exception {
     var tuple = bAnimal("rabbit", 7);
     assertCall(() -> bSelect(tuple, bInt(-1)).kind())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 
   @Test
-  public void sub_expressions_contains_tuple_and_index() throws Exception {
+  void sub_expressions_contains_tuple_and_index() throws Exception {
     var selectable = bTuple(bInt(7));
     var index = bInt(0);
     assertThat(bSelect(selectable, index).subExprs()).isEqualTo(new BSubExprs(selectable, index));
@@ -63,14 +63,14 @@ public class BSelectTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void select_can_be_read_back_by_hash() throws Exception {
+  void select_can_be_read_back_by_hash() throws Exception {
     var tuple = bAnimal("rabbit", 7);
     var select = bSelect(tuple, bInt(0));
     assertThat(exprDbOther().get(select.hash())).isEqualTo(select);
   }
 
   @Test
-  public void select_read_back_by_hash_has_same_sub_expressions() throws Exception {
+  void select_read_back_by_hash_has_same_sub_expressions() throws Exception {
     var selectable = bAnimal();
     var index = bInt(0);
     var select = bSelect(selectable, index);
@@ -79,7 +79,7 @@ public class BSelectTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var select = bSelect(bAnimal(), bInt(0));
     assertThat(select.toString()).isEqualTo("SELECT:String(???)@" + select.hash());
   }

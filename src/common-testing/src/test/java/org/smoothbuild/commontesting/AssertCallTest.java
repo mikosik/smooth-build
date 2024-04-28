@@ -11,7 +11,7 @@ public class AssertCallTest {
   @Nested
   class expected_exception_by_class {
     @Test
-    public void when_nothing_is_thrown() {
+    void when_nothing_is_thrown() {
       try {
         assertCall(() -> {}).throwsException(IllegalStateException.class);
       } catch (AssertionError e) {
@@ -26,7 +26,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_different_type() {
+    void when_thrown_exception_with_different_type() {
       try {
         assertCall(() -> {
               throw new RuntimeException();
@@ -44,7 +44,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_same_type() {
+    void when_thrown_exception_with_same_type() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("message");
@@ -59,7 +59,7 @@ public class AssertCallTest {
   @Nested
   class expected_exception_by_instance {
     @Test
-    public void when_nothing_is_thrown() {
+    void when_nothing_is_thrown() {
       try {
         assertCall(() -> {}).throwsException(new IllegalStateException("desired message"));
       } catch (AssertionError e) {
@@ -74,7 +74,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_different_type() {
+    void when_thrown_exception_with_different_type() {
       try {
         assertCall(() -> {
               throw new RuntimeException();
@@ -92,7 +92,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_same_type_but_different_message() {
+    void when_thrown_exception_with_same_type_but_different_message() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("real message");
@@ -111,7 +111,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_same_exception_with_same_message() {
+    void when_thrown_same_exception_with_same_message() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("message");
@@ -126,7 +126,7 @@ public class AssertCallTest {
   @Nested
   class expected_exception_by_class_with_cause_by_class {
     @Test
-    public void when_thrown_same_exception_but_without_cause() {
+    void when_thrown_same_exception_but_without_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("main message");
@@ -146,7 +146,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_same_exception_but_with_different_cause() {
+    void when_thrown_same_exception_but_with_different_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -167,7 +167,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_same_type_and_cause_with_same_type() {
+    void when_thrown_exception_with_same_type_and_cause_with_same_type() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -184,7 +184,7 @@ public class AssertCallTest {
   @Nested
   class expected_exception_by_instance_with_cause_by_class {
     @Test
-    public void when_thrown_same_exception_but_without_cause() {
+    void when_thrown_same_exception_but_without_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("main message");
@@ -205,7 +205,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_same_exception_but_with_different_cause() {
+    void when_thrown_same_exception_but_with_different_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -227,7 +227,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_same_exception_and_cause_with_same_type() {
+    void when_thrown_same_exception_and_cause_with_same_type() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -244,7 +244,7 @@ public class AssertCallTest {
   @Nested
   class expected_exception_by_class_with_cause_by_instance {
     @Test
-    public void when_thrown_exception_with_same_type_but_without_cause() {
+    void when_thrown_exception_with_same_type_but_without_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("main message");
@@ -264,7 +264,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_same_type_but_cause_with_different_type() {
+    void when_thrown_exception_with_same_type_but_cause_with_different_type() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -285,8 +285,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void
-        when_thrown_exception_with_same_type_and_cause_with_same_type_but_different_message() {
+    void when_thrown_exception_with_same_type_and_cause_with_same_type_but_different_message() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -308,7 +307,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_same_type_and_same_cause() {
+    void when_thrown_exception_with_same_type_and_same_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -325,7 +324,7 @@ public class AssertCallTest {
   @Nested
   class expected_exception_by_instance_with_cause_by_instance {
     @Test
-    public void when_thrown_exception_without_cause() {
+    void when_thrown_exception_without_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException("main message");
@@ -346,7 +345,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_cause_with_different_type() {
+    void when_thrown_exception_with_cause_with_different_type() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -368,7 +367,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_exception_with_cause_with_same_type_but_different_message() {
+    void when_thrown_exception_with_cause_with_same_type_but_different_message() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(
@@ -391,7 +390,7 @@ public class AssertCallTest {
     }
 
     @Test
-    public void when_thrown_same_exception_with_same_cause() {
+    void when_thrown_same_exception_with_same_cause() {
       try {
         assertCall(() -> {
               throw new IllegalStateException(

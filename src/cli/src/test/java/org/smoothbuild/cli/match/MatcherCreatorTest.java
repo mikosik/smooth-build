@@ -127,27 +127,27 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
   @Nested
   class create_matcher_fails_for {
     @Test
-    public void empty_string() {
+    void empty_string() {
       assertCall(() -> MatcherCreator.createMatcher(""))
           .throwsException(TypeConversionException.class);
     }
 
     @Test
-    public void missing_closing_bracket() {
+    void missing_closing_bracket() {
       assertCall(() -> MatcherCreator.createMatcher("(user"))
           .throwsException(
               new TypeConversionException(unlines("missing ')' at '<EOF>'", "(user", "     ^")));
     }
 
     @Test
-    public void additional_closing_bracket() {
+    void additional_closing_bracket() {
       assertCall(() -> MatcherCreator.createMatcher("(user))"))
           .throwsException(new TypeConversionException(
               unlines("extraneous input ')' expecting <EOF>", "(user))", "      ^")));
     }
 
     @Test
-    public void missing_operator() {
+    void missing_operator() {
       assertCall(() -> MatcherCreator.createMatcher("user warning"))
           .throwsException(new TypeConversionException(unlines(
               "extraneous input 'warning' expecting <EOF>", "user warning", "     ^^^^^^^")));

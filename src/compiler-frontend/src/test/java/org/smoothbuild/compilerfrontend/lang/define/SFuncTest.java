@@ -18,19 +18,19 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class SFuncTest {
   @Test
-  public void func_without_params_can_be_called_without_args() {
+  void func_without_params_can_be_called_without_args() {
     SFunc func = myFunc(sIntType(), list());
     assertThat(func.canBeCalledArgless()).isTrue();
   }
 
   @Test
-  public void func_with_all_params_with_default_values_can_be_called_without_args() {
+  void func_with_all_params_with_default_values_can_be_called_without_args() {
     SFunc func = myFunc(sIntType(), list(paramWithDefault("a"), paramWithDefault("b")));
     assertThat(func.canBeCalledArgless()).isTrue();
   }
 
   @Test
-  public void func_with_one_param_without_default_value_cannot_be_called_without_args() {
+  void func_with_one_param_without_default_value_cannot_be_called_without_args() {
     SFunc func = myFunc(sIntType(), list(paramWithDefault("a"), paramWithoutDefault("b")));
     assertThat(func.canBeCalledArgless()).isFalse();
   }

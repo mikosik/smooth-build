@@ -16,7 +16,7 @@ public class BBlobTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test
-  public void creating_blob_without_content_creates_empty_blob() throws Exception {
+  void creating_blob_without_content_creates_empty_blob() throws Exception {
     try (var builder = bBlobBuilder()) {
       var blob = builder.build();
       try (var source = buffer(blob.source())) {
@@ -26,12 +26,12 @@ public class BBlobTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void type_of_blob_is_blob_type() throws Exception {
+  void type_of_blob_is_blob_type() throws Exception {
     assertThat(bBlob(bytes).kind()).isEqualTo(bBlobType());
   }
 
   @Test
-  public void blob_has_content_passed_to_builder() throws Exception {
+  void blob_has_content_passed_to_builder() throws Exception {
     var blob = bBlob(bytes);
     try (var source = buffer(blob.source())) {
       assertThat(source.readByteString()).isEqualTo(bytes);
@@ -55,14 +55,14 @@ public class BBlobTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void blob_can_be_read_by_hash() throws Exception {
+  void blob_can_be_read_by_hash() throws Exception {
     var blob = bBlob(bytes);
     var hash = blob.hash();
     assertThat(exprDbOther().get(hash)).isEqualTo(blob);
   }
 
   @Test
-  public void blob_read_by_hash_has_same_content() throws Exception {
+  void blob_read_by_hash_has_same_content() throws Exception {
     var blob = bBlob(bytes);
     var hash = blob.hash();
     try (var source = buffer(blob.source())) {
@@ -73,7 +73,7 @@ public class BBlobTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var blob = bBlob(bytes);
     assertThat(blob.toString()).isEqualTo("0x??@" + blob.hash());
   }

@@ -18,19 +18,19 @@ public class LockFileTest {
   @Nested
   class file_can_be_locked {
     @Test
-    public void when_it_exists(@TempDir Path tempDir) throws IOException {
+    void when_it_exists(@TempDir Path tempDir) throws IOException {
       Path lockFile = tempDir.resolve("lockFile");
       createFile(lockFile);
       assertThat(lockFile(writer, lockFile)).isNotNull();
     }
 
     @Test
-    public void when_it_doesnt_exist(@TempDir Path tempDir) {
+    void when_it_doesnt_exist(@TempDir Path tempDir) {
       assertThat(lockFile(writer, tempDir.resolve("lockFile"))).isNotNull();
     }
 
     @Test
-    public void when_parent_directory_doesnt_exist(@TempDir Path tempDir) {
+    void when_parent_directory_doesnt_exist(@TempDir Path tempDir) {
       assertThat(lockFile(writer, tempDir.resolve("subdir/lockFile"))).isNotNull();
     }
   }
@@ -38,7 +38,7 @@ public class LockFileTest {
   @Nested
   class file_cannot_be_locked {
     @Test
-    public void when_it_is_already_acquired_by_our_jvm(@TempDir Path tempDir) {
+    void when_it_is_already_acquired_by_our_jvm(@TempDir Path tempDir) {
       Path lockFile = tempDir.resolve("lockFile");
       assertThat(lockFile(writer, lockFile)).isNotNull();
       assertThat(lockFile(writer, lockFile)).isNull();

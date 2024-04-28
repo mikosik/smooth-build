@@ -73,7 +73,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     @Nested
     class _task_execution {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         // This test makes sure that it is possible to detect Task creation using a mock.
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var testName = "learning_test";
@@ -85,7 +85,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void no_task_is_executed_for_lambda_arg_that_is_not_used() throws Exception {
+      void no_task_is_executed_for_lambda_arg_that_is_not_used() throws Exception {
         var testName = "unused_arg_is_not_evaluated";
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
@@ -98,7 +98,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void no_task_is_executed_for_lambda_arg_that_is_passed_to_lambda_where_it_is_not_used()
+      void no_task_is_executed_for_lambda_arg_that_is_passed_to_lambda_where_it_is_not_used()
           throws Exception {
         var testName = "arg_passed_to_other_lambda_where_it_is_not_used_is_not_evaluated";
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
@@ -114,7 +114,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void task_for_lambda_arg_that_is_used_twice_is_executed_only_once() throws Exception {
+      void task_for_lambda_arg_that_is_used_twice_is_executed_only_once() throws Exception {
         var testName = "arg_used_twice_is_executed_only_once";
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
@@ -131,7 +131,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     @Nested
     class _job_creation {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         // Learning test verifies that job creation is counted also inside lambda body.
         var lambda = bLambda(bOrder(bInt(7)));
         var call = bCall(lambda);
@@ -143,7 +143,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void job_for_unused_lambda_arg_is_created_but_not_jobs_for_its_dependencies()
+      void job_for_unused_lambda_arg_is_created_but_not_jobs_for_its_dependencies()
           throws Exception {
         var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
         var call = bCall(lambda, bOrder(bBool()));
@@ -161,32 +161,32 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     @Nested
     class _values {
       @Test
-      public void array() throws Exception {
+      void array() throws Exception {
         assertThat(evaluate(bArray(bInt(7)))).isEqualTo(bArray(bInt(7)));
       }
 
       @Test
-      public void blob() throws Exception {
+      void blob() throws Exception {
         assertThat(evaluate(bBlob(7))).isEqualTo(bBlob(7));
       }
 
       @Test
-      public void bool() throws Exception {
+      void bool() throws Exception {
         assertThat(evaluate(bBool(true))).isEqualTo(bBool(true));
       }
 
       @Test
-      public void int_() throws Exception {
+      void int_() throws Exception {
         assertThat(evaluate(bInt(8))).isEqualTo(bInt(8));
       }
 
       @Test
-      public void string() throws Exception {
+      void string() throws Exception {
         assertThat(evaluate(bString("abc"))).isEqualTo(bString("abc"));
       }
 
       @Test
-      public void tuple() throws Exception {
+      void tuple() throws Exception {
         assertThat(evaluate(bTuple(bInt(7)))).isEqualTo(bTuple(bInt(7)));
       }
     }
@@ -196,28 +196,28 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _call {
         @Test
-        public void lambda_without_arguments() throws Exception {
+        void lambda_without_arguments() throws Exception {
           var lambda = bLambda(bInt(7));
           var call = bCall(lambda);
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
-        public void lambda_with_single_argument_passed_inside_combine() throws Exception {
+        void lambda_with_single_argument_passed_inside_combine() throws Exception {
           var lambda = bIntIdLambda();
           var call = bCallWithArguments(lambda, bTuple(bInt(7)));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
-        public void lambda_with_single_argument_passed_inside_tuple() throws Exception {
+        void lambda_with_single_argument_passed_inside_tuple() throws Exception {
           var lambda = bIntIdLambda();
           var call = bCallWithArguments(lambda, bCombine(bInt(7)));
           assertThat(evaluate(call)).isEqualTo(bInt(7));
         }
 
         @Test
-        public void lambda_with_single_argument_passed_as_expression_that_evaluates_to_tuple()
+        void lambda_with_single_argument_passed_as_expression_that_evaluates_to_tuple()
             throws Exception {
           var lambda = bIntIdLambda();
           var call = bCallWithArguments(lambda, bPick(bOrder(bTuple(bInt(7))), 0));
@@ -225,7 +225,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void lambda_passed_as_argument() throws Exception {
+        void lambda_passed_as_argument() throws Exception {
           var paramLambda = bLambda(bInt(7));
           var paramLambdaType = paramLambda.evaluationType();
           var outerLambda = bLambda(list(paramLambdaType), bCall(bReference(paramLambdaType, 0)));
@@ -234,7 +234,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void lambda_returned_from_call() throws Exception {
+        void lambda_returned_from_call() throws Exception {
           var innerLambda = bLambda(bInt(7));
           var outerLambda = bLambda(innerLambda);
           var call = bCall(bCall(outerLambda));
@@ -242,7 +242,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void lambda_returning_param_of_enclosing_lambda() throws Exception {
+        void lambda_returning_param_of_enclosing_lambda() throws Exception {
           var innerLambda = bLambda(bReference(bIntType(), 0));
           var outerLambda = bLambda(list(bIntType()), innerLambda);
           var callToOuter = bCall(outerLambda, bInt(17));
@@ -251,7 +251,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void lambda_returning_value_from_environment_that_references_another_environment()
+        void lambda_returning_value_from_environment_that_references_another_environment()
             throws Exception {
           var innerLambda = bLambda(bReference(bIntType(), 0));
           var middleLambda = bLambda(list(bIntType()), innerLambda);
@@ -263,25 +263,25 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void combine() throws Exception {
+      void combine() throws Exception {
         var combine = bCombine(bInt(7));
         assertThat(evaluate(combine)).isEqualTo(bTuple(bInt(7)));
       }
 
       @Test
-      public void if_with_true_condition() throws Exception {
+      void if_with_true_condition() throws Exception {
         var if_ = bIf(bBool(true), bInt(1), bInt(2));
         assertThat(evaluate(if_)).isEqualTo(bInt(1));
       }
 
       @Test
-      public void if_with_false_condition() throws Exception {
+      void if_with_false_condition() throws Exception {
         var if_ = bIf(bBool(false), bInt(1), bInt(2));
         assertThat(evaluate(if_)).isEqualTo(bInt(2));
       }
 
       @Test
-      public void invoke() throws Exception {
+      void invoke() throws Exception {
         var methodTuple = bMethodTuple();
         var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
@@ -292,7 +292,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void map() throws Exception {
+      void map() throws Exception {
         var array = bArray(bInt(1), bInt(4));
         var mapper = bLambda(list(bIntType()), bCombine(bReference(bIntType(), 0)));
         var map = bMap(array, mapper);
@@ -300,13 +300,13 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void map_with_empty_array() throws Exception {
+      void map_with_empty_array() throws Exception {
         var map = bMap(bArray(bIntType()), bIntIdLambda());
         assertThat(evaluate(map)).isEqualTo(bArray(bIntType()));
       }
 
       @Test
-      public void order() throws Exception {
+      void order() throws Exception {
         var order = bOrder(bInt(7), bInt(8));
         assertThat(evaluate(order)).isEqualTo(bArray(bInt(7), bInt(8)));
       }
@@ -314,14 +314,14 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _pick {
         @Test
-        public void pick() throws Exception {
+        void pick() throws Exception {
           var tuple = bArray(bInt(10), bInt(11), bInt(12), bInt(13));
           var pick = bPick(tuple, bInt(2));
           assertThat(evaluate(pick)).isEqualTo(bInt(12));
         }
 
         @Test
-        public void pick_with_index_outside_of_bounds() throws Exception {
+        void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var reporter = mock(Reporter.class);
           evaluateWithFailure(bEvaluator(reporter), pick);
@@ -333,7 +333,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void pick_with_index_negative() throws Exception {
+        void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var reporter = mock(Reporter.class);
           evaluateWithFailure(bEvaluator(reporter), pick);
@@ -348,14 +348,14 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _reference {
         @Test
-        public void var_referencing_lambda_param() throws Exception {
+        void var_referencing_lambda_param() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 0));
           var callB = bCall(lambda, bInt(7));
           assertThat(evaluate(callB)).isEqualTo(bInt(7));
         }
 
         @Test
-        public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
+        void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda()
             throws Exception {
           var innerLambda = bLambda(list(), bReference(bIntType(), 0));
           var outerLambda = bLambda(list(bIntType()), bCall(innerLambda));
@@ -363,8 +363,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda()
-            throws Exception {
+        void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() throws Exception {
           var innerLambda = bLambda(list(bIntType()), bReference(bIntType(), 1));
           var outerLambda = bLambda(list(bIntType()), innerLambda);
           var callOuter = bCall(outerLambda, bInt(7));
@@ -374,7 +373,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
+        void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
           evaluateWithFailure(bEvaluator(), call);
@@ -388,7 +387,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void
+        void
             reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
                 throws Exception {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
@@ -403,7 +402,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void select() throws Exception {
+      void select() throws Exception {
         var tuple = bTuple(bInt(7));
         var select = bSelect(tuple, bInt(0));
         assertThat(evaluate(select)).isEqualTo(bInt(7));
@@ -413,7 +412,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     @Nested
     class _errors {
       @Test
-      public void task_throwing_runtime_exception_causes_fatal() throws Exception {
+      void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(Reporter.class);
         var bExprEvaluator = bExprEvaluator(reporter, 4);
         var expr = throwExceptionCall();
@@ -439,7 +438,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void computer_that_throws_exception_is_detected() throws Exception {
+      void computer_that_throws_exception_is_detected() throws Exception {
         var expr = bString("abc");
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
@@ -498,13 +497,13 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void report_invoke_as_invoke_task() throws Exception {
+      void report_invoke_as_invoke_task() throws Exception {
         var invoke = bReturnAbcInvoke();
         assertTaskReport(invoke, label("invoke"), bTrace(), EXECUTION);
       }
 
       @Test
-      public void report_if_as_if_task() throws Exception {
+      void report_if_as_if_task() throws Exception {
         var condition = bBool(true);
         var then_ = bInt(1);
         var else_ = bInt(2);
@@ -516,7 +515,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void report_map_as_map_task() throws Exception {
+      void report_map_as_map_task() throws Exception {
         var array = bArray(bInt(3));
         var mapper = bIntIdLambda();
         var if_ = bMap(array, mapper);
@@ -527,25 +526,25 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void report_combine_as_combine_task() throws Exception {
+      void report_combine_as_combine_task() throws Exception {
         var combine = bCombine(bInt(17));
         assertTaskReport(combine, label("combine"), bTrace(), EXECUTION);
       }
 
       @Test
-      public void report_order_as_order_task() throws Exception {
+      void report_order_as_order_task() throws Exception {
         var order = bOrder(bInt(17));
         assertTaskReport(order, label("order"), bTrace(), EXECUTION);
       }
 
       @Test
-      public void report_pick_as_pick_task() throws Exception {
+      void report_pick_as_pick_task() throws Exception {
         var pick = bPick(bArray(bInt(17)), bInt(0));
         assertTaskReport(pick, label("pick"), bTrace(), EXECUTION);
       }
 
       @Test
-      public void report_select_as_select_task() throws Exception {
+      void report_select_as_select_task() throws Exception {
         var select = bSelect(bTuple(bInt(17)), bInt(0));
         assertTaskReport(select, label("select"), bTrace(), EXECUTION);
       }
@@ -554,7 +553,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     @Nested
     class _with_traces {
       @Test
-      public void order_inside_lambda_body() throws Exception {
+      void order_inside_lambda_body() throws Exception {
         var order = bOrder(bInt(17));
         var lambda = bLambda(order);
         var lambdaAsExpr = bCall(bLambda(lambda));
@@ -563,8 +562,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void order_inside_lambda_body_that_is_called_from_other_lambda_body()
-          throws Exception {
+      void order_inside_lambda_body_that_is_called_from_other_lambda_body() throws Exception {
         var order = bOrder(bInt(17));
         var lambda2 = bLambda(order);
         var call2 = bCall(lambda2);
@@ -587,7 +585,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   @Nested
   class _parallelism {
     @Test
-    public void tasks_are_executed_in_parallel() throws Exception {
+    void tasks_are_executed_in_parallel() throws Exception {
       String testName = "tasks_are_executed_in_parallel";
       var counterA = testName + "1";
       var counterB = testName + "2";
@@ -602,7 +600,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void execution_waits_and_reuses_computation_with_equal_hash_that_is_being_executed()
+    void execution_waits_and_reuses_computation_with_equal_hash_that_is_being_executed()
         throws Exception {
       var testName = "execution_waits_and_reuses_computation_with_equal_hash";
       var counterName = testName + "1";

@@ -49,7 +49,7 @@ public class SExprLoadingTest {
   @Nested
   class _literal {
     @Test
-    public void blob_literal() {
+    void blob_literal() {
       module("""
           result =
             0x07;
@@ -59,7 +59,7 @@ public class SExprLoadingTest {
     }
 
     @Test
-    public void int_literal() {
+    void int_literal() {
       module("""
           result =
             123;
@@ -69,7 +69,7 @@ public class SExprLoadingTest {
     }
 
     @Test
-    public void string_literal() {
+    void string_literal() {
       module("""
           result =
             "abc";
@@ -84,7 +84,7 @@ public class SExprLoadingTest {
     @Nested
     class _lambda {
       @Test
-      public void mono_lambda() {
+      void mono_lambda() {
         var code =
             """
             result =
@@ -98,7 +98,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_lambda_using_generic_type_of_enclosing_function() {
+      void mono_lambda_using_generic_type_of_enclosing_function() {
         var code =
             """
             (A)->A myFunc(A outerA) =
@@ -113,7 +113,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_lambda_using_generic_type_of_enclosing_func_two_level_deep() {
+      void mono_lambda_using_generic_type_of_enclosing_func_two_level_deep() {
         var code =
             """
             () -> (A)->A myFunc(A outerA) =
@@ -131,7 +131,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_lambda() {
+      void poly_lambda() {
         var code =
             """
             result =
@@ -150,7 +150,7 @@ public class SExprLoadingTest {
       @Nested
       class _with_default_arg {
         @Test
-        public void with_reference_to_poly_val() {
+        void with_reference_to_poly_val() {
           var polyVal = sBytecodeValue(4, varA(), "polyVal");
           var instantiateS = sInstantiate(1, list(varA()), polyVal);
           var arg = sInstantiate(2, list(sIntType()), sValue(1, "myFunc:b", instantiateS));
@@ -158,7 +158,7 @@ public class SExprLoadingTest {
         }
 
         @Test
-        public void with_reference_to_poly_func() {
+        void with_reference_to_poly_func() {
           var polyFunc = sBytecodeFunc(6, varA(), "polyFunc", nlist());
           var instantiateS = sInstantiate(1, list(varA()), polyFunc);
           var paramDefaultValue = sValue("myFunc:b", sCall(1, instantiateS));
@@ -167,7 +167,7 @@ public class SExprLoadingTest {
         }
 
         @Test
-        public void with_reference_to_int() {
+        void with_reference_to_int() {
           var paramDefaultValue = sValue("myFunc:b", sInt(1, 7));
           test_default_arg("7", sInstantiate(2, paramDefaultValue));
         }
@@ -198,7 +198,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_mono_func_reference() {
+      void with_mono_func_reference() {
         var code =
             """
             Int myReturnInt() = 3;
@@ -210,7 +210,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_mono_func_reference_and_arg() {
+      void with_mono_func_reference_and_arg() {
         var code =
             """
             Int myIntId(Int i) = i;
@@ -223,7 +223,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_mono_func_reference_and_named_arg() {
+      void with_mono_func_reference_and_named_arg() {
         var code =
             """
             Int myIntId(Int i) = i;
@@ -237,7 +237,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_mono_func_reference_and_piped_arg() {
+      void with_mono_func_reference_and_piped_arg() {
         var code =
             """
             Int myIntId(Int i) = i;
@@ -251,7 +251,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_poly_func_reference_and_arg() {
+      void with_poly_func_reference_and_arg() {
         module("""
             A myId(A a) = a;
             result = myId(7);
@@ -265,7 +265,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_value_reference() {
+      void with_value_reference() {
         var code =
             """
             Int myReturnInt() = 3;
@@ -279,7 +279,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_value_reference_and_arg() {
+      void with_value_reference_and_arg() {
         var code =
             """
             Int myIntId(Int i) = i;
@@ -296,7 +296,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_constructor_reference() {
+      void with_constructor_reference() {
         var struct = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
         var constructor = sConstructor(1, struct, "MyStruct");
         module("""
@@ -309,7 +309,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_constructor_reference_and_argument() {
+      void with_constructor_reference_and_argument() {
         var code =
             """
             MyStruct {
@@ -326,7 +326,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_ref() {
+      void with_ref() {
         module("""
             result(()->String f) = f();
             """)
@@ -340,7 +340,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void with_ref_and_arg() {
+      void with_ref_and_arg() {
         module("""
             result((Blob)->String f) = f(0x09);
             """)
@@ -357,7 +357,7 @@ public class SExprLoadingTest {
     @Nested
     class _poly_ref {
       @Test
-      public void to_mono_value() {
+      void to_mono_value() {
         var code =
             """
             String myValue = "abc";
@@ -370,7 +370,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void to_poly_value() {
+      void to_poly_value() {
         module(
                 """
             [A] myValue = [];
@@ -389,7 +389,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void to_mono_func() {
+      void to_mono_func() {
         var code =
             """
             String myFunc() = "abc";
@@ -402,7 +402,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void to_poly_func() {
+      void to_poly_func() {
         var code =
             """
             A myId(A a) = a;
@@ -416,7 +416,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void to_constructor() {
+      void to_constructor() {
         var code =
             """
             MyStruct{}
@@ -433,7 +433,7 @@ public class SExprLoadingTest {
     @Nested
     class _order {
       @Test
-      public void order() {
+      void order() {
         module(
                 """
             result =
@@ -451,7 +451,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void order_with_piped_value() {
+      void order_with_piped_value() {
         module(
                 """
             result = 0x07 >
@@ -468,7 +468,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void order_of_funcs() {
+      void order_of_funcs() {
         var code =
             """
           Int returnInt() = 7;
@@ -485,7 +485,7 @@ public class SExprLoadingTest {
     }
 
     @Test
-    public void param_ref() {
+    void param_ref() {
       var code = """
           Blob myFunc(Blob param1)
             = param1;
@@ -496,7 +496,7 @@ public class SExprLoadingTest {
     }
 
     @Test
-    public void select() {
+    void select() {
       var code =
           """
           @Native("impl")
@@ -520,7 +520,7 @@ public class SExprLoadingTest {
     @Nested
     class _value {
       @Test
-      public void mono_expression_value() {
+      void mono_expression_value() {
         var code = """
           Blob myValue =
             0x07;
@@ -531,7 +531,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_expression_value() {
+      void poly_expression_value() {
         var code = """
           [A] myValue =
             [];
@@ -542,7 +542,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_bytecode_value() {
+      void mono_bytecode_value() {
         var code = """
           @Bytecode("impl")
           Blob myValue;
@@ -553,7 +553,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_bytecode_value() {
+      void poly_bytecode_value() {
         var code = """
           @Bytecode("impl")
           A myValue;
@@ -565,7 +565,7 @@ public class SExprLoadingTest {
     @Nested
     class _func {
       @Test
-      public void mono_expression_function() {
+      void mono_expression_function() {
         module("""
             Blob myFunc() =
               0x07;
@@ -575,7 +575,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_expression_function() {
+      void poly_expression_function() {
         module("""
             [A] myFunc() =
               [];
@@ -585,7 +585,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_expression_function_with_param() {
+      void mono_expression_function_with_param() {
         module(
                 """
             String myFunc(
@@ -602,7 +602,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_expression_function_with_param() {
+      void poly_expression_function_with_param() {
         module("""
             A myFunc(
               A a)
@@ -614,7 +614,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_expression_function_with_param_with_default_value() {
+      void mono_expression_function_with_param_with_default_value() {
         var code =
             """
             String myFunc(
@@ -629,7 +629,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_expression_function_with_param_with_default_value() {
+      void poly_expression_function_with_param_with_default_value() {
         var code =
             """
             A myFunc(
@@ -643,7 +643,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_native_impure_function() {
+      void mono_native_impure_function() {
         module(
                 """
             @NativeImpure("Impl.met")
@@ -659,7 +659,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_native_impure_function() {
+      void poly_native_impure_function() {
         module("""
             @NativeImpure("Impl.met")
             A myFunc();
@@ -670,7 +670,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_native_pure_function() {
+      void mono_native_pure_function() {
         module("""
             @Native("Impl.met")
             String myFunc();
@@ -685,7 +685,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_native_pure_function() {
+      void poly_native_pure_function() {
         module("""
             @Native("Impl.met")
             A myFunc();
@@ -696,7 +696,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_native_pure_function_with_param_with_default_value() {
+      void mono_native_pure_function_with_param_with_default_value() {
         var code =
             """
             @Native("Impl.met")
@@ -711,7 +711,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_native_pure_function_with_param_with_default_value() {
+      void poly_native_pure_function_with_param_with_default_value() {
         var code =
             """
             @Native("Impl.met")
@@ -726,7 +726,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_bytecode_function() {
+      void mono_bytecode_function() {
         module("""
             @Bytecode("impl")
             String myFunc();
@@ -736,7 +736,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_bytecode_function() {
+      void poly_bytecode_function() {
         module("""
             @Bytecode("impl")
             A myFunc();
@@ -746,7 +746,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void mono_bytecode_function_with_param_with_default_value() {
+      void mono_bytecode_function_with_param_with_default_value() {
         var code =
             """
             @Bytecode("Impl.met")
@@ -761,7 +761,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void poly_bytecode_function_with_param_with_default_value() {
+      void poly_bytecode_function_with_param_with_default_value() {
         var code =
             """
             @Bytecode("Impl.met")
@@ -779,7 +779,7 @@ public class SExprLoadingTest {
     @Nested
     class _struct {
       @Test
-      public void empty_struct_type() {
+      void empty_struct_type() {
         module("""
             MyStruct{
             }
@@ -789,7 +789,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void struct_type() {
+      void struct_type() {
         module("""
             MyStruct{
               String field
@@ -803,7 +803,7 @@ public class SExprLoadingTest {
     @Nested
     class _param_default_value {
       @Test
-      public void default_val_referencing_poly_value() {
+      void default_val_referencing_poly_value() {
         var code =
             """
             Int myFunc(
@@ -820,7 +820,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void default_val_for_generic_param_referencing_poly_value() {
+      void default_val_for_generic_param_referencing_poly_value() {
         var code =
             """
             Int myFunc(
@@ -837,7 +837,7 @@ public class SExprLoadingTest {
       }
 
       @Test
-      public void default_value_using_literal() {
+      void default_value_using_literal() {
         var code =
             """
             Int myFunc(
@@ -856,7 +856,7 @@ public class SExprLoadingTest {
   @Nested
   class _parens {
     @Test
-    public void with_literal() {
+    void with_literal() {
       module("""
           result =
             (0x07);
@@ -866,7 +866,7 @@ public class SExprLoadingTest {
     }
 
     @Test
-    public void with_operator() {
+    void with_operator() {
       module(
               """
           result =

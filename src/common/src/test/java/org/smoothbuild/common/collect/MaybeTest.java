@@ -267,35 +267,35 @@ public class MaybeTest {
   @Nested
   class _map_pair {
     @Test
-    public void none_and_none() {
+    void none_and_none() {
       Maybe<Boolean> bool = none();
       Maybe<Integer> int_ = none();
       assertThat(bool.mapWith(int_, concatBoolAndInt)).isEqualTo(none());
     }
 
     @Test
-    public void none_and_some() {
+    void none_and_some() {
       Maybe<Boolean> bool = none();
       Maybe<Integer> int_ = some(1);
       assertThat(bool.mapWith(int_, concatBoolAndInt)).isEqualTo(none());
     }
 
     @Test
-    public void some_and_none() {
+    void some_and_none() {
       Maybe<Boolean> bool = some(true);
       Maybe<Integer> int_ = none();
       assertThat(bool.mapWith(int_, concatBoolAndInt)).isEqualTo(none());
     }
 
     @Test
-    public void some_and_some() {
+    void some_and_some() {
       Maybe<Boolean> bool = some(true);
       Maybe<Integer> int_ = some(7);
       assertThat(bool.mapWith(int_, concatBoolAndInt)).isEqualTo(some("true7"));
     }
 
     @Test
-    public void exception_from_function_is_propagated() {
+    void exception_from_function_is_propagated() {
       Maybe<Boolean> bool = some(true);
       Maybe<Integer> int_ = some(7);
       var exception = new Exception("message");
@@ -310,35 +310,35 @@ public class MaybeTest {
   @Nested
   class _flat_map_pair {
     @Test
-    public void none_and_none() {
+    void none_and_none() {
       Maybe<Boolean> bool = none();
       Maybe<Integer> int_ = none();
       assertThat(bool.flatMapWith(int_, concatBoolAndIntOpt)).isEqualTo(none());
     }
 
     @Test
-    public void none_and_some() {
+    void none_and_some() {
       Maybe<Boolean> bool = none();
       Maybe<Integer> int_ = some(1);
       assertThat(bool.flatMapWith(int_, concatBoolAndIntOpt)).isEqualTo(none());
     }
 
     @Test
-    public void some_and_none() {
+    void some_and_none() {
       Maybe<Boolean> bool = some(true);
       Maybe<Integer> int_ = none();
       assertThat(bool.flatMapWith(int_, concatBoolAndIntOpt)).isEqualTo(none());
     }
 
     @Test
-    public void some_and_some() {
+    void some_and_some() {
       Maybe<Boolean> bool = some(true);
       Maybe<Integer> int_ = some(7);
       assertThat(bool.flatMapWith(int_, concatBoolAndIntOpt)).isEqualTo(some("true7"));
     }
 
     @Test
-    public void exception_from_function_is_propagated() {
+    void exception_from_function_is_propagated() {
       Maybe<Boolean> bool = some(true);
       Maybe<Integer> int_ = some(7);
       var exception = new Exception("message");

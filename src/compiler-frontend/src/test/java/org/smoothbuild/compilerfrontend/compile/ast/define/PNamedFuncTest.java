@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class PNamedFuncTest {
   @Test
-  public void equals_and_hash_code() {
+  void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(func("equal", 11), func("equal", 11));

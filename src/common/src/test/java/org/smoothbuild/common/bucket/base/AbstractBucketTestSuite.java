@@ -26,27 +26,26 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _path_state {
     @Test
-    public void of_nonexistent_path_is_nothing() {
+    void of_nonexistent_path_is_nothing() {
       assertThat(bucket.pathState(path("abc"))).isEqualTo(NOTHING);
     }
 
     @Test
-    public void of_file_path_is_file() throws Exception {
+    void of_file_path_is_file() throws Exception {
       var path = path("myFile");
       createFile(path);
       assertThat(bucket.pathState(path)).isEqualTo(FILE);
     }
 
     @Test
-    public void of_directory_path_is_dir() throws Exception {
+    void of_directory_path_is_dir() throws Exception {
       var dir = path("my/dir");
       createDir(dir);
       assertThat(bucket.pathState(dir)).isEqualTo(DIR);
     }
 
     @Test
-    public void of_nonexistent_path_state_is_nothing_even_when_its_first_part_is_a_dir()
-        throws Exception {
+    void of_nonexistent_path_state_is_nothing_even_when_its_first_part_is_a_dir() throws Exception {
       var file = path("some/dir/myFile");
       createDir(file.parent());
       assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
@@ -56,14 +55,14 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _files {
     @Test
-    public void fails_when_path_does_not_exist() {
+    void fails_when_path_does_not_exist() {
       var path = path("abc");
       assertCall(() -> bucket.files(path))
           .throwsException(new IOException("Dir " + resolve(path) + " doesn't exist."));
     }
 
     @Test
-    public void fails_when_path_is_a_file() throws Exception {
+    void fails_when_path_is_a_file() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
       assertCall(() -> bucket.files(file))
@@ -72,7 +71,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void returns_all_children() throws Exception {
+    void returns_all_children() throws Exception {
       createFile(path("abc/dir1/file1.txt"));
       createFile(path("abc/dir2/file2.txt"));
       createFile(path("abc/text.txt"));
@@ -84,21 +83,21 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _size {
     @Test
-    public void returns_zero_for_empty_file() throws Exception {
+    void returns_zero_for_empty_file() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
       assertThat(bucket.size(file)).isEqualTo(0);
     }
 
     @Test
-    public void returns_file_size() throws Exception {
+    void returns_file_size() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file, byteString());
       assertThat(bucket.size(file)).isEqualTo(3);
     }
 
     @Test
-    public void reading_size_of_dir_causes_exception() throws Exception {
+    void reading_size_of_dir_causes_exception() throws Exception {
       var dir = path("my/dir");
       createDir(dir);
       assertCall(() -> bucket.size(dir))
@@ -107,13 +106,13 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_for_nonexistent_path() {
+    void fails_for_nonexistent_path() {
       var dir = path("myFile");
       assertCall(() -> bucket.size(dir)).throwsException(IOException.class);
     }
 
     @Test
-    public void returns_size_of_target_file_for_link() throws IOException {
+    void returns_size_of_target_file_for_link() throws IOException {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file, byteString());
@@ -124,7 +123,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void reading_size_of_link_that_targets_dir_causes_exception() throws IOException {
+    void reading_size_of_link_that_targets_dir_causes_exception() throws IOException {
       var dir = path("my/dir");
       var link = path("myLink");
       createDir(dir);
@@ -140,14 +139,14 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _source {
     @Test
-    public void provides_content_of_file() throws Exception {
+    void provides_content_of_file() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file, byteString());
       assertThat(readFile(file)).isEqualTo(byteString());
     }
 
     @Test
-    public void provides_content_of_target_file_for_a_link() throws Exception {
+    void provides_content_of_target_file_for_a_link() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file, byteString());
@@ -158,7 +157,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void provides_file_content_of_file_when_one_part_of_path_is_link_to_directory()
+    void provides_file_content_of_file_when_one_part_of_path_is_link_to_directory()
         throws Exception {
       var file = path("some/dir/myFile");
       var link = path("link");
@@ -170,13 +169,13 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_when_file_does_not_exist() {
+    void fails_when_file_does_not_exist() {
       var file = path("myFile");
       assertCall(() -> readFile(file)).throwsException(IOException.class);
     }
 
     @Test
-    public void fails_when_path_is_dir() throws Exception {
+    void fails_when_path_is_dir() throws Exception {
       var dir = path("some/dir");
       createDir(dir);
       assertCall(() -> readFile(dir)).throwsException(IOException.class);
@@ -186,7 +185,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _sink {
     @Test
-    public void data_written_by_sink_can_be_read_by_source() throws Exception {
+    void data_written_by_sink_can_be_read_by_source() throws Exception {
       var file = path("myFile");
       try (BufferedSink sink = buffer(bucket.sink(file))) {
         sink.write(byteString());
@@ -195,7 +194,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void data_written_to_sink_overwrites_existing_file() throws Exception {
+    void data_written_to_sink_overwrites_existing_file() throws Exception {
       var file = path("myFile");
       try (BufferedSink sink = buffer(bucket.sink(file))) {
         sink.write(byteString("abc"));
@@ -207,19 +206,19 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_when_parent_directory_not_exists() {
+    void fails_when_parent_directory_not_exists() {
       assertCall(() -> writeFile(path("dir/file"))).throwsException(NoSuchFileException.class);
     }
 
     @Test
-    public void fails_when_path_is_a_directory() throws Exception {
+    void fails_when_path_is_a_directory() throws Exception {
       var dir = path("myDir");
       createDir(dir);
       assertCall(() -> writeFile(dir)).throwsException(IOException.class);
     }
 
     @Test
-    public void fails_when_parent_is_link_targeting_file() throws Exception {
+    void fails_when_parent_is_link_targeting_file() throws Exception {
       var file = path("myFile");
       var link = path("link");
       createFile(file);
@@ -229,7 +228,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void succeeds_when_parent_is_link_targeting_directory() throws Exception {
+    void succeeds_when_parent_is_link_targeting_directory() throws Exception {
       var dir = path("myFile");
       var link = path("link");
       createDir(dir);
@@ -243,7 +242,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_when_parent_exists_and_is_a_file() throws Exception {
+    void fails_when_parent_exists_and_is_a_file() throws Exception {
       var file = path("myDir/myFile");
       createFile(file);
       var path = file.append(path("otherFile"));
@@ -254,7 +253,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _move {
     @Test
-    public void of_nonexistent_file_fails() {
+    void of_nonexistent_file_fails() {
       var source = path("source");
       var target = path("target");
       assertCall(() -> bucket.move(source, target))
@@ -263,7 +262,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void of_directory_fails() throws Exception {
+    void of_directory_fails() throws Exception {
       var dir = path("dir");
       var source = dir.appendPart("file");
       var target = path("target");
@@ -273,7 +272,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void that_targets_directory_fails() throws Exception {
+    void that_targets_directory_fails() throws Exception {
       var source = path("source");
       var dir = path("dir");
       createFile(source);
@@ -284,7 +283,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void deletes_source_file() throws Exception {
+    void deletes_source_file() throws Exception {
       var source = path("source");
       var target = path("target");
       createFile(source);
@@ -295,7 +294,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void copies_file_content_to_target() throws Exception {
+    void copies_file_content_to_target() throws Exception {
       var source = path("source");
       var target = path("target");
       createFile(source, byteString());
@@ -307,7 +306,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void overwrites_target_file() throws Exception {
+    void overwrites_target_file() throws Exception {
       var source = path("source");
       var target = path("target");
       createFile(source, byteString());
@@ -323,7 +322,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _delete {
     @Test
-    public void directory_removes_it_and_its_files_recursively() throws Exception {
+    void directory_removes_it_and_its_files_recursively() throws Exception {
       var dir = path("some/dir");
       var file1 = dir.append(path("myFile"));
       var file2 = dir.append(path("dir2/myFile"));
@@ -337,7 +336,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void file_removes_it() throws Exception {
+    void file_removes_it() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
 
@@ -347,7 +346,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void not_fails_for_nonexistent_path() throws Exception {
+    void not_fails_for_nonexistent_path() throws Exception {
       var path = path("some/dir/myFile");
 
       bucket.delete(path);
@@ -356,7 +355,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void root_path_removes_all_files() throws Exception {
+    void root_path_removes_all_files() throws Exception {
       var file = path("some/dir/myFile");
       var file2 = path("other/dir/otherFile");
       createFile(file);
@@ -369,7 +368,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void link_removes_it() throws Exception {
+    void link_removes_it() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file, byteString());
@@ -381,7 +380,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void link_not_removes_target_file() throws Exception {
+    void link_not_removes_target_file() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file, byteString());
@@ -393,8 +392,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void link_to_directory_not_removes_target_directory_nor_file_it_contains()
-        throws Exception {
+    void link_to_directory_not_removes_target_directory_nor_file_it_contains() throws Exception {
       var dir = path("my/dir");
       var file = dir.appendPart("myFile");
       var link = path("myLink");
@@ -412,7 +410,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _link {
     @Test
-    public void fails_when_link_parent_directory_not_exists() throws Exception {
+    void fails_when_link_parent_directory_not_exists() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("missing_directory/myLink");
       createFile(file);
@@ -421,7 +419,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_when_link_path_is_taken_by_file() throws Exception {
+    void fails_when_link_path_is_taken_by_file() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file);
@@ -433,7 +431,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_when_link_path_is_taken_by_dir() throws Exception {
+    void fails_when_link_path_is_taken_by_dir() throws Exception {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file);
@@ -448,14 +446,14 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _create_dir {
     @Test
-    public void creates_directory() throws Exception {
+    void creates_directory() throws Exception {
       var file = path("some/dir/myFile");
       bucket.createDir(file);
       assertThat(bucket.pathState(file)).isEqualTo(DIR);
     }
 
     @Test
-    public void not_fails_when_directory_exists() throws Exception {
+    void not_fails_when_directory_exists() throws Exception {
       var file = path("some/dir/myFile");
       bucket.createDir(file);
       bucket.createDir(file);
@@ -463,7 +461,7 @@ public abstract class AbstractBucketTestSuite {
     }
 
     @Test
-    public void fails_when_file_at_given_path_exists() throws Exception {
+    void fails_when_file_at_given_path_exists() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
       assertCall(() -> bucket.createDir(file)).throwsException(FileAlreadyExistsException.class);

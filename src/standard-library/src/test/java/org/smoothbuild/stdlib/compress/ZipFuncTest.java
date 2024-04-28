@@ -8,8 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ZipFuncTest extends TestingVirtualMachine {
   @Test
-  public void zip_produces_bit_level_equal_file_independent_of_its_creation_time()
-      throws Exception {
+  void zip_produces_bit_level_equal_file_independent_of_its_creation_time() throws Exception {
     var fileArray = bTuple(bArray(bFile("filename", "context")));
     var zip1 = ZipFunc.func(nativeApi(), fileArray);
     sleepMillis(2000);

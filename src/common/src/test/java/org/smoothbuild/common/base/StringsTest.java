@@ -26,57 +26,57 @@ public class StringsTest {
   @Nested
   class _indent {
     @Test
-    public void empty_string() {
+    void empty_string() {
       assertThat(indent("")).isEqualTo("");
     }
 
     @Test
-    public void string_with_one_separator() {
+    void string_with_one_separator() {
       assertThat(indent("\n")).isEqualTo("\n");
     }
 
     @Test
-    public void string_with_separators_only() {
+    void string_with_separators_only() {
       assertThat(indent("\n\n")).isEqualTo("\n\n");
     }
 
     @Test
-    public void string_with_one_line() {
+    void string_with_one_line() {
       assertThat(indent("abc")).isEqualTo("  abc");
     }
 
     @Test
-    public void many_orphaned_separators_at_the_beginning() {
+    void many_orphaned_separators_at_the_beginning() {
       assertThat(indent("\n\n\nabc")).isEqualTo("\n\n\n  abc");
     }
 
     @Test
-    public void many_orphaned_separators_at_the_end() {
+    void many_orphaned_separators_at_the_end() {
       assertThat(indent("abc\n\n\n")).isEqualTo("  abc\n\n\n");
     }
 
     @Test
-    public void many_orphaned_separators_in_the_middle() {
+    void many_orphaned_separators_in_the_middle() {
       assertThat(indent("abc\n\n\ndef")).isEqualTo("  abc\n\n\n  def");
     }
 
     @Test
-    public void blank_string() {
+    void blank_string() {
       assertThat(indent(" ")).isEqualTo("   ");
     }
 
     @Test
-    public void blank_strings_separated() {
+    void blank_strings_separated() {
       assertThat(indent(" \n ")).isEqualTo("   \n   ");
     }
 
     @Test
-    public void string_with_two_lines() {
+    void string_with_two_lines() {
       assertThat(indent("abc\ndef")).isEqualTo("  abc\n  def");
     }
 
     @Test
-    public void string_with_three_lines() {
+    void string_with_three_lines() {
       assertThat(indent("abc\ndef\nghi")).isEqualTo("  abc\n  def\n  ghi");
     }
   }
@@ -84,22 +84,22 @@ public class StringsTest {
   @Nested
   class _unline {
     @Test
-    public void zero_lines_gives_empty_string() {
+    void zero_lines_gives_empty_string() {
       assertThat(unlines()).isEqualTo("");
     }
 
     @Test
-    public void one_line_gives_unchanged_line() {
+    void one_line_gives_unchanged_line() {
       assertThat(unlines("abc")).isEqualTo("abc");
     }
 
     @Test
-    public void more_lines() {
+    void more_lines() {
       assertThat(unlines("abc", "def", "ghi")).isEqualTo("abc\ndef\nghi");
     }
 
     @Test
-    public void does_not_change_new_lines() {
+    void does_not_change_new_lines() {
       assertThat(unlines("abc\n123")).isEqualTo("abc\n123");
     }
   }
@@ -107,12 +107,12 @@ public class StringsTest {
   @Nested
   class _limited_with_ellipsis {
     @Test
-    public void does_not_change_string_which_length_is_below_limit() {
+    void does_not_change_string_which_length_is_below_limit() {
       assertThat(limitedWithEllipsis("1234567890", 10)).isEqualTo("1234567890");
     }
 
     @Test
-    public void adds_ellipsis_when_quoted_string_exceeds_limit() {
+    void adds_ellipsis_when_quoted_string_exceeds_limit() {
       assertThat(limitedWithEllipsis("12345678901", 10)).isEqualTo("1234567...");
     }
   }
@@ -159,7 +159,7 @@ public class StringsTest {
     }
 
     @Test
-    public void exception_points_to_illegal_escape_code() {
+    void exception_points_to_illegal_escape_code() {
       assertCall(() -> unescaped("abc\\x")).throwsException(illegalEscapeSeqException(4));
     }
   }

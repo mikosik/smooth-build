@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestingStringTest {
   @Test
-  public void illegal_string_cannot_be_decoded() {
+  void illegal_string_cannot_be_decoded() {
     CharsetDecoder charsetDecoder = CHARSET.newDecoder();
     charsetDecoder.onMalformedInput(REPORT);
     assertCall(() -> charsetDecoder.decode(wrap(illegalString().toByteArray())))

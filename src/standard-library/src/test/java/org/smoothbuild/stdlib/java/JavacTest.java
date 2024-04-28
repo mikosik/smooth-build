@@ -19,7 +19,7 @@ import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 
 public class JavacTest extends StandardLibraryTestCase {
   @Test
-  public void error_is_logged_when_compilation_error_occurs() throws Exception {
+  void error_is_logged_when_compilation_error_occurs() throws Exception {
     var userModule =
         """
         result = [File(toBlob("public private class MyClass {}"), "MyClass.java")]
@@ -31,7 +31,7 @@ public class JavacTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void zero_files_can_be_compiled() throws Exception {
+  void zero_files_can_be_compiled() throws Exception {
     var userModule = """
         result = [] > javac();
         """;
@@ -41,7 +41,7 @@ public class JavacTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void one_file_can_be_compiled() throws Exception {
+  void one_file_can_be_compiled() throws Exception {
     var userModule =
         """
         javaSource = "public class MyClass { public static String myMethod() {return \\"test-string\\";}}";
@@ -56,7 +56,7 @@ public class JavacTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void one_file_with_library_dependency_can_be_compiled() throws Exception {
+  void one_file_with_library_dependency_can_be_compiled() throws Exception {
     var userModule =
         """
         libraryJar = files("srclib") > javac() > jar() > File("library.jar");
@@ -92,7 +92,7 @@ public class JavacTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void duplicate_java_files_cause_error() throws Exception {
+  void duplicate_java_files_cause_error() throws Exception {
     var userModule =
         """
         classFile = File(toBlob("public class MyClass {}"), "MyClass.java");

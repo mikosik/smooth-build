@@ -15,7 +15,7 @@ import org.smoothbuild.common.bucket.mem.MemoryBucket;
 
 public class RecursivePathsIteratorTest {
   @Test
-  public void test() throws IOException {
+  void test() throws IOException {
     doTestIterable("abc", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
     doTestIterable(
         "abc/xyz", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
@@ -28,14 +28,14 @@ public class RecursivePathsIteratorTest {
   }
 
   @Test
-  public void iterates_subdirectory() throws Exception {
+  void iterates_subdirectory() throws Exception {
     doTestIterable(
         "abc", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"),
         "abc/def", list("4.txt", "5.txt"));
   }
 
   @Test
-  public void fails_when_dir_not_exists() {
+  void fails_when_dir_not_exists() {
     var bucket = new MemoryBucket();
     var path = path("my/file");
     assertCall(() -> recursivePathsIterator(bucket, path))
@@ -43,7 +43,7 @@ public class RecursivePathsIteratorTest {
   }
 
   @Test
-  public void throws_exception_when_dir_is_a_file() throws Exception {
+  void throws_exception_when_dir_is_a_file() throws Exception {
     Bucket bucket = new MemoryBucket();
     createFile(bucket, path("my/file"), "abc");
     assertCall(() -> recursivePathsIterator(bucket, path("my/file")))
@@ -51,7 +51,7 @@ public class RecursivePathsIteratorTest {
   }
 
   @Test
-  public void throws_exception_when_dir_disappears_during_iteration() throws Exception {
+  void throws_exception_when_dir_disappears_during_iteration() throws Exception {
     var bucket = new MemoryBucket();
     createFiles(bucket, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 

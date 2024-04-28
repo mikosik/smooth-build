@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class NodeChainSizeIsWrongExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message() throws Exception {
+  void message() throws Exception {
     var exception = new NodeChainSizeIsWrongException(Hash.of(123), bIntType(), "node-path", 7, 2);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` expression at "

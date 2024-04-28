@@ -7,7 +7,7 @@ import org.smoothbuild.common.base.Hash;
 
 public class DecodeKindExceptionTest {
   @Test
-  public void message() {
+  void message() {
     var exception = new DecodeKindException(Hash.of(123), new RuntimeException());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode kind at "

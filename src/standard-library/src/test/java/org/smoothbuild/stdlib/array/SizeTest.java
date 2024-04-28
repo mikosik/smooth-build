@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class SizeTest extends StandardLibraryTestCase {
   @Test
-  public void empty_array_has_size_0() throws Exception {
+  void empty_array_has_size_0() throws Exception {
     createUserModule("""
         result = size([]);
         """);
@@ -16,7 +16,7 @@ public class SizeTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void one_element_array_has_size_1() throws Exception {
+  void one_element_array_has_size_1() throws Exception {
     createUserModule("""
         result = size([1]);
         """);
@@ -25,7 +25,7 @@ public class SizeTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void two_elements_array_has_size_2() throws Exception {
+  void two_elements_array_has_size_2() throws Exception {
     createUserModule("""
         result = size([1, 2]);
         """);
@@ -34,7 +34,7 @@ public class SizeTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void three_elements_array_has_size_3() throws Exception {
+  void three_elements_array_has_size_3() throws Exception {
     createUserModule("""
         result = size([1, 2, 3]);
         """);

@@ -36,7 +36,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 
 public class STypeTest {
   @Test
-  public void verify_all_base_types_are_tested() {
+  void verify_all_base_types_are_tested() {
     assertThat(STypes.baseTypes()).hasSize(4);
   }
 
@@ -260,12 +260,12 @@ public class STypeTest {
   @Nested
   class _struct {
     @Test
-    public void without_fields_can_be_created() {
+    void without_fields_can_be_created() {
       sStructType("MyStruct", nlist());
     }
 
     @Test
-    public void struct_name() {
+    void struct_name() {
       var struct = sStructType("MyStruct", nlist());
       assertThat(struct.name()).isEqualTo("MyStruct");
     }
@@ -297,7 +297,7 @@ public class STypeTest {
   }
 
   @Test
-  public void equality() {
+  void equality() {
     EqualsTester equalsTester = new EqualsTester();
     List<SType> types = list(
         sBlobType(),
@@ -344,22 +344,22 @@ public class STypeTest {
   @Nested
   class _temp_var {
     @Test
-    public void is_older_than_1_1() {
+    void is_older_than_1_1() {
       assertThat(new STempVar("1").isOlderThan(new STempVar("1"))).isFalse();
     }
 
     @Test
-    public void is_older_than_1_2() {
+    void is_older_than_1_2() {
       assertThat(new STempVar("1").isOlderThan(new STempVar("2"))).isTrue();
     }
 
     @Test
-    public void is_older_than_1_10() {
+    void is_older_than_1_10() {
       assertThat(new STempVar("1").isOlderThan(new STempVar("10"))).isTrue();
     }
 
     @Test
-    public void is_older_than_2_1() {
+    void is_older_than_2_1() {
       assertThat(new STempVar("2").isOlderThan(new STempVar("1"))).isFalse();
     }
   }

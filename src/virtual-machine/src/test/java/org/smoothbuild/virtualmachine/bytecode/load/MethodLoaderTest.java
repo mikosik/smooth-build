@@ -21,7 +21,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 
 public class MethodLoaderTest extends TestingVirtualMachine {
   @Test
-  public void class_not_found_in_jar_error() throws Exception {
+  void class_not_found_in_jar_error() throws Exception {
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var bBlob = blobBJarWithJavaByteCode();
     var bMethod = bMethod(bBlob, "com.missing.Class", "methodName");
@@ -29,7 +29,7 @@ public class MethodLoaderTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void overloaded_method_causes_error() throws Exception {
+  void overloaded_method_causes_error() throws Exception {
     var clazz = OverloadedMethod.class;
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var bMethod = bMethod(clazz);
@@ -38,7 +38,7 @@ public class MethodLoaderTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void missing_method_causes_error() throws Exception {
+  void missing_method_causes_error() throws Exception {
     var clazz = MissingMethod.class;
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var bMethod = bMethod(clazz);
@@ -57,12 +57,12 @@ public class MethodLoaderTest extends TestingVirtualMachine {
   @Nested
   class _caching {
     @Test
-    public void method_is_cached() throws Exception {
+    void method_is_cached() throws Exception {
       testCaching(ReturnAbc.class);
     }
 
     @Test
-    public void loading_method_error_is_cached() throws Exception {
+    void loading_method_error_is_cached() throws Exception {
       testCaching(NonPublicMethod.class);
     }
 

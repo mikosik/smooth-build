@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class CombineHasWrongElementsSizeExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message() throws Exception {
+  void message() throws Exception {
     var exception = new CombineHasWrongElementsSizeException(
         Hash.of(13), bCombineKind(bIntType(), bStringType()), 3);
     assertThat(exception.getMessage())

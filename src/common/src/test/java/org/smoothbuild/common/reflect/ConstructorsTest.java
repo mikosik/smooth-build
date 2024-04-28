@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class ConstructorsTest {
   @Test
-  public void private_ctor() throws NoSuchMethodException {
+  void private_ctor() throws NoSuchMethodException {
     assertThat(isPublic(MyPrivateCtorClass.class.getDeclaredConstructor())).isFalse();
   }
 
@@ -16,7 +16,7 @@ public class ConstructorsTest {
   }
 
   @Test
-  public void protected_ctor() throws NoSuchMethodException {
+  void protected_ctor() throws NoSuchMethodException {
     assertThat(isPublic(MyProtectedCtorClass.class.getDeclaredConstructor())).isFalse();
   }
 
@@ -25,7 +25,7 @@ public class ConstructorsTest {
   }
 
   @Test
-  public void package_private_ctor() throws NoSuchMethodException {
+  void package_private_ctor() throws NoSuchMethodException {
     assertThat(isPublic(MyPackageCtorClass.class.getDeclaredConstructor())).isFalse();
   }
 
@@ -34,7 +34,7 @@ public class ConstructorsTest {
   }
 
   @Test
-  public void public_ctor() throws NoSuchMethodException {
+  void public_ctor() throws NoSuchMethodException {
     assertThat(isPublic(MyPublicCtorClass.class.getDeclaredConstructor())).isTrue();
   }
 

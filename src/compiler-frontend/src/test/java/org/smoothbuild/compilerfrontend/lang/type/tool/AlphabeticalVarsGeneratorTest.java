@@ -10,24 +10,24 @@ public class AlphabeticalVarsGeneratorTest {
   private static final int RADIX = DIGITS.length();
 
   @Test
-  public void one_digit_cases() {
+  void one_digit_cases() {
     for (int i = 0; i < DIGITS.length(); i++) {
       checkNameAtIndex(i, Character.toString(DIGITS.charAt(i)));
     }
   }
 
   @Test
-  public void aa() {
+  void aa() {
     checkNameAtIndex(RADIX, "AA");
   }
 
   @Test
-  public void zz() {
+  void zz() {
     checkNameAtIndex(RADIX * RADIX + RADIX - 1, "ZZ");
   }
 
   @Test
-  public void aaa() {
+  void aaa() {
     checkNameAtIndex(RADIX * RADIX + RADIX, "AAA");
   }
 

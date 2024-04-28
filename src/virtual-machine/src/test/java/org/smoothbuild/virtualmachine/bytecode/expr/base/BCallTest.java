@@ -13,26 +13,26 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BCallTest extends TestingVirtualMachine {
   @Test
-  public void creating_call_with_lambda_type_not_being_lambda_causes_exception() {
+  void creating_call_with_lambda_type_not_being_lambda_causes_exception() {
     assertCall(() -> bCall(bInt()))
         .throwsException(new IllegalArgumentException(
             "`lambda.evaluationType()` should be `BLambdaType` but is `BIntType`."));
   }
 
   @Test
-  public void creating_call_with_too_few_args_causes_exception() {
+  void creating_call_with_too_few_args_causes_exception() {
     assertCall(() -> bCall(bLambda(list(bStringType()), bInt())))
         .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
-  public void creating_call_with_too_many_args_causes_exception() {
+  void creating_call_with_too_many_args_causes_exception() {
     assertCall(() -> bCall(bLambda(list(bStringType()), bInt()), bInt(), bInt()))
         .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test
-  public void creating_call_with_arg_not_matching_param_type_causes_exception() {
+  void creating_call_with_arg_not_matching_param_type_causes_exception() {
     assertCall(() -> bCall(bLambda(list(bStringType()), bInt()), bInt(3)))
         .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
@@ -44,7 +44,7 @@ public class BCallTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void sub_exprs_returns_sub_exprs() throws Exception {
+  void sub_exprs_returns_sub_exprs() throws Exception {
     var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
     assertThat(bCall(lambda, argument).subExprs())
@@ -70,13 +70,13 @@ public class BCallTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void call_can_be_read_back_by_hash() throws Exception {
+  void call_can_be_read_back_by_hash() throws Exception {
     var call = bCall(bLambda(list(bStringType()), bInt()), bString());
     assertThat(exprDbOther().get(call.hash())).isEqualTo(call);
   }
 
   @Test
-  public void call_read_back_by_hash_has_same_data() throws Exception {
+  void call_read_back_by_hash_has_same_data() throws Exception {
     var lambda = bLambda(list(bStringType()), bInt());
     var argument = bString();
     var call = bCall(lambda, argument);
@@ -85,7 +85,7 @@ public class BCallTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var lambda = bLambda(list(bStringType()), bInt());
     var call = bCall(lambda, bString());
     assertThat(call.toString()).isEqualTo("CALL:Int(???)@" + call.hash());

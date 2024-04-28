@@ -18,7 +18,7 @@ public class JunitTest extends StandardLibraryTestCase {
   private static final String SUCCESSFUL_TEST_CLASS = "MyClassTest";
 
   @Test
-  public void junit_fails_when_deps_doesnt_contain_junit_jar() throws Exception {
+  void junit_fails_when_deps_doesnt_contain_junit_jar() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule(
@@ -33,7 +33,7 @@ public class JunitTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void junit_func_succeeds_when_all_junit_tests_succeed() throws Exception {
+  void junit_func_succeeds_when_all_junit_tests_succeed() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule(
@@ -47,7 +47,7 @@ public class JunitTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void junit_func_fails_when_junit_test_fails() throws Exception {
+  void junit_func_fails_when_junit_test_fails() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     createUserModule(
@@ -63,7 +63,7 @@ public class JunitTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void warning_is_logged_when_no_test_is_found() throws Exception {
+  void warning_is_logged_when_no_test_is_found() throws Exception {
     createJunitLibs();
     createProjectFile("src/empty", "");
     createUserModule(
@@ -77,7 +77,7 @@ public class JunitTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void only_test_matching_pattern_are_executed() throws Exception {
+  void only_test_matching_pattern_are_executed() throws Exception {
     createJunitLibs();
     createProjectFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createProjectFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());

@@ -57,8 +57,7 @@ public class AssertStructuresAreEqualTest {
   }
 
   @Test
-  public void
-      type_have_not_equal_structure_when_two_different_temp_vars_are_replaced_with_single_one() {
+  void type_have_not_equal_structure_when_two_different_temp_vars_are_replaced_with_single_one() {
     var type1 = sTupleType(sTempVar("1"), sTempVar("1"));
     var type2 = sTupleType(sTempVar("2"), sTempVar("3"));
     structuresAreEqualReturnsFalse(type1, type2);

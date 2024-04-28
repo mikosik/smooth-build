@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BExprCollisionTest extends TestingVirtualMachine {
   @Test
-  public void collisions() throws Exception {
+  void collisions() throws Exception {
     HashMap<Hash, BExpr> map = new HashMap<>();
     for (var expr : exprBs()) {
       var hash = expr.hash();

@@ -8,7 +8,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 public class NotTest extends StandardLibraryTestCase {
 
   @Test
-  public void not_false_returns_true() throws Exception {
+  void not_false_returns_true() throws Exception {
     var userModule = """
         result = not(false);
         """;
@@ -18,7 +18,7 @@ public class NotTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void not_true_returns_false() throws Exception {
+  void not_true_returns_false() throws Exception {
     var userModule = """
         result = not(true);
         """;

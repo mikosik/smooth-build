@@ -9,7 +9,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class UnusedVarsGeneratorTest {
   @Test
-  public void test() {
+  void test() {
     var generator = new UnusedVarsGenerator(varSetS(new SVar("B"), new SVar("C")));
     assertThat(List.of(generator.next(), generator.next(), generator.next()))
         .isEqualTo(List.of(new SVar("A"), new SVar("D"), new SVar("E")));

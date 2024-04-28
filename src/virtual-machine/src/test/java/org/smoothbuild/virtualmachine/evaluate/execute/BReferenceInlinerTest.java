@@ -21,81 +21,81 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     // operations
 
     @Test
-    public void call() throws Exception {
+    void call() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(
           r -> bCall(bLambda(list(bIntType()), bInt()), bInt()));
     }
 
     @Test
-    public void combine() throws Exception {
+    void combine() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bCombine(bInt()));
     }
 
     @Test
-    public void order() throws Exception {
+    void order() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bOrder(bInt()));
     }
 
     @Test
-    public void pick() throws Exception {
+    void pick() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bPick(bOrder(bInt(1), bInt(2)), bInt(0)));
     }
 
     @Test
-    public void select() throws Exception {
+    void select() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bSelect(bCombine(bInt()), bInt(0)));
     }
 
     // values
 
     @Test
-    public void array() throws Exception {
+    void array() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bArray(bInt()));
     }
 
     @Test
-    public void blob() throws Exception {
+    void blob() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bBlob());
     }
 
     @Test
-    public void bool() throws Exception {
+    void bool() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bBool());
     }
 
     @Test
-    public void if_() throws Exception {
+    void if_() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bIf(bBool(), bInt(), bInt()));
     }
 
     @Test
-    public void int_() throws Exception {
+    void int_() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bInt());
     }
 
     @Test
-    public void invoke() throws Exception {
+    void invoke() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(
           r -> bInvoke(bIntType(), bMethodTuple(), bBool(), bTuple()));
     }
 
     @Test
-    public void lambda_without_references() throws Exception {
+    void lambda_without_references() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bLambda(bInt()));
     }
 
     @Test
-    public void map() throws Exception {
+    void map() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bMap(bArray(bInt()), bIntIdLambda()));
     }
 
     @Test
-    public void string() throws Exception {
+    void string() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bString());
     }
 
     @Test
-    public void tuple() throws Exception {
+    void tuple() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bTuple(bInt()));
     }
   }
@@ -103,22 +103,22 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
   @Nested
   class _with_references_inside {
     @Test
-    public void inlining_pure_reference() throws Exception {
+    void inlining_pure_reference() throws Exception {
       assertReferenceInliningReplacesReference(r -> r);
     }
 
     @Test
-    public void lambda_body_with_var_referencing_param_of_this_lambda() throws Exception {
+    void lambda_body_with_var_referencing_param_of_this_lambda() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(0, r -> bLambda(list(bIntType()), r));
     }
 
     @Test
-    public void lambda_body_with_var_referencing_param_of_enclosing_lambda() throws Exception {
+    void lambda_body_with_var_referencing_param_of_enclosing_lambda() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(1, r -> lambdaInsideLambda(r));
     }
 
     @Test
-    public void lambda_body_with_var_referencing_unbound_param() throws Exception {
+    void lambda_body_with_var_referencing_unbound_param() throws Exception {
       assertReferenceInliningReplacesReference(2, bInt(1), r -> lambdaInsideLambda(r));
     }
 
@@ -128,38 +128,38 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void call_argument() throws Exception {
+    void call_argument() throws Exception {
       assertReferenceInliningReplacesReference(r -> bCall(bIntIdLambda(), r));
     }
 
     @Test
-    public void call_lambda() throws Exception {
+    void call_lambda() throws Exception {
       assertReferenceInliningReplacesReference(r -> bCall(bLambda(r)));
     }
 
     @Test
-    public void combine() throws Exception {
+    void combine() throws Exception {
       assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bCombine);
     }
 
     @Test
-    public void if_condition() throws Exception {
+    void if_condition() throws Exception {
       assertReferenceInliningReplacesReference(
           2, bBool(false), list(bInt(1), bInt(2), bBool(false)), r -> bIf(r, bInt(7), bInt(8)));
     }
 
     @Test
-    public void if_then() throws Exception {
+    void if_then() throws Exception {
       assertReferenceInliningReplacesReference(r -> bIf(bBool(), r, bInt(33)));
     }
 
     @Test
-    public void if_else() throws Exception {
+    void if_else() throws Exception {
       assertReferenceInliningReplacesReference(r -> bIf(bBool(), bInt(33), r));
     }
 
     @Test
-    public void invoke_method() throws Exception {
+    void invoke_method() throws Exception {
       assertReferenceInliningReplacesReference(
           2,
           bMethodTuple("2"),
@@ -168,7 +168,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void invoke_is_pure() throws Exception {
+    void invoke_is_pure() throws Exception {
       assertReferenceInliningReplacesReference(
           2,
           bBool(true),
@@ -177,7 +177,7 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void invoke_arguments() throws Exception {
+    void invoke_arguments() throws Exception {
       assertReferenceInliningReplacesReference(
           2,
           bTuple(bInt(2)),
@@ -186,46 +186,46 @@ public class BReferenceInlinerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void map_array() throws Exception {
+    void map_array() throws Exception {
       assertReferenceInliningReplacesReference(r -> bMap(bOrder(r), bIntIdLambda()));
     }
 
     @Test
-    public void map_mapper() throws Exception {
+    void map_mapper() throws Exception {
       assertReferenceInliningReplacesReference(
           2, bInt(2), r -> bMap(bArray(bInt()), bLambda(list(bIntType()), r)));
     }
 
     @Test
-    public void order() throws Exception {
+    void order() throws Exception {
       assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bOrder);
     }
 
     @Test
-    public void pick_pickable() throws Exception {
+    void pick_pickable() throws Exception {
       assertReferenceInliningReplacesReference(r -> bPick(bOrder(r), bInt()));
     }
 
     @Test
-    public void pick_index() throws Exception {
+    void pick_index() throws Exception {
       assertReferenceInliningReplacesReference(r -> bPick(bOrder(), r));
     }
 
     @Test
-    public void select_selectable() throws Exception {
+    void select_selectable() throws Exception {
       assertReferenceInliningReplacesReference(r -> bSelect(bCombine(r), bInt(0)));
     }
   }
 
   @Test
-  public void reference_with_index_equal_to_environment_size_causes_exception() throws Exception {
+  void reference_with_index_equal_to_environment_size_causes_exception() throws Exception {
     var job = job(bReference(bStringType(), 3), bInt(), bInt(), bInt(17));
     assertCall(() -> bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(3, 3));
   }
 
   @Test
-  public void reference_with_negative_index_causes_exception() throws Exception {
+  void reference_with_negative_index_causes_exception() throws Exception {
     var job = job(bReference(bStringType(), -1), bInt(), bInt(), bInt(17));
     assertCall(() -> bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(-1, 3));

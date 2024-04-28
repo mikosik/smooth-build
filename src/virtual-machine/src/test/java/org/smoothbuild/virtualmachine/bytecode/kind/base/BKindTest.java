@@ -155,7 +155,7 @@ public class BKindTest extends TestingVirtualMachine {
   @Nested
   class _tuple {
     @Test
-    public void _without_items_can_be_created() throws Exception {
+    void _without_items_can_be_created() throws Exception {
       bTupleType();
     }
 
@@ -289,7 +289,7 @@ public class BKindTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void equals_and_hashcode() throws Exception {
+  void equals_and_hashcode() throws Exception {
     var tester = new EqualsTester();
     tester.addEqualityGroup(bBlobType(), bBlobType());
     tester.addEqualityGroup(bBoolType(), bBoolType());

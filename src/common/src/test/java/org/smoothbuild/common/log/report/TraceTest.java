@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class TraceTest {
   @Test
-  public void equals_and_hashCode() {
+  void equals_and_hashCode() {
     var tester = new EqualsTester();
     tester.addEqualityGroup(trace(null), trace(null));
     tester.addEqualityGroup(trace(line("a", null)), trace(line("a", null)));

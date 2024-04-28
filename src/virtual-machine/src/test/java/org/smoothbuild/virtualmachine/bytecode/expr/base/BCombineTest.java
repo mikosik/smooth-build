@@ -11,13 +11,13 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BCombineTest extends TestingVirtualMachine {
   @Test
-  public void kind_returns_kind() throws Exception {
+  void kind_returns_kind() throws Exception {
     var combine = bCombine(bInt(3));
     assertThat(combine.kind()).isEqualTo(bCombineKind(bIntType()));
   }
 
   @Test
-  public void items_returns_items() throws Exception {
+  void items_returns_items() throws Exception {
     assertThat(bCombine(bInt(1), bString("abc")).items()).isEqualTo(list(bInt(1), bString("abc")));
   }
 
@@ -39,20 +39,20 @@ public class BCombineTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void combine_can_be_read_back_by_hash() throws Exception {
+  void combine_can_be_read_back_by_hash() throws Exception {
     var combine = bCombine(bInt(1));
     assertThat(exprDbOther().get(combine.hash())).isEqualTo(combine);
   }
 
   @Test
-  public void combine_read_back_by_hash_has_same_items() throws Exception {
+  void combine_read_back_by_hash_has_same_items() throws Exception {
     var combine = bCombine(bInt(), bString());
     assertThat(((BCombine) exprDbOther().get(combine.hash())).items())
         .isEqualTo(list(bInt(), bString()));
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var combine = bCombine(bInt(1));
     assertThat(combine.toString()).isEqualTo("COMBINE:{Int}(???)@" + combine.hash());
   }

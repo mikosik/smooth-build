@@ -9,13 +9,13 @@ public class InstallationHashesTest {
   private Properties properties;
 
   @Test
-  public void java_platforms_with_same_properties_have_same_hash() {
+  void java_platforms_with_same_properties_have_same_hash() {
     assertThat(InstallationHashes.calculateJavaPlatformHash(properties()))
         .isEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
-  public void java_platforms_with_different_java_vendor_have_different_hashes() {
+  void java_platforms_with_different_java_vendor_have_different_hashes() {
     properties = properties();
     properties.setProperty("java.vendor", "different");
 
@@ -24,7 +24,7 @@ public class InstallationHashesTest {
   }
 
   @Test
-  public void java_platforms_with_different_java_version_have_different_hashes() {
+  void java_platforms_with_different_java_version_have_different_hashes() {
     properties = properties();
     properties.setProperty("java.version", "different");
 
@@ -33,7 +33,7 @@ public class InstallationHashesTest {
   }
 
   @Test
-  public void java_platforms_with_different_java_runtime_name_have_different_hashes() {
+  void java_platforms_with_different_java_runtime_name_have_different_hashes() {
     properties = properties();
     properties.setProperty("java.runtime.name", "different");
 
@@ -42,7 +42,7 @@ public class InstallationHashesTest {
   }
 
   @Test
-  public void java_platforms_with_different_java_runtime_version_have_different_hashes() {
+  void java_platforms_with_different_java_runtime_version_have_different_hashes() {
     properties = properties();
     properties.setProperty("java.runtime.version", "different");
 
@@ -51,7 +51,7 @@ public class InstallationHashesTest {
   }
 
   @Test
-  public void java_platforms_with_different_java_vm_name_have_different_hashes() {
+  void java_platforms_with_different_java_vm_name_have_different_hashes() {
     properties = properties();
     properties.setProperty("java.vm.name", "different");
 
@@ -60,7 +60,7 @@ public class InstallationHashesTest {
   }
 
   @Test
-  public void java_platforms_with_different_java_vm_version_have_different_hashes() {
+  void java_platforms_with_different_java_vm_version_have_different_hashes() {
     properties = properties();
     properties.setProperty("java.vm.version", "different");
 
@@ -69,7 +69,7 @@ public class InstallationHashesTest {
   }
 
   @Test
-  public void regression_collisions_are_not_possible() {
+  void regression_collisions_are_not_possible() {
     properties = properties();
     properties.setProperty("java.vendor", "A");
     properties.setProperty("java.version", "");

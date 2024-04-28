@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 public class SConstructorTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
     var constructorS = sConstructor(17, structTS, "constructorName");
     assertThat(constructorS.toString())

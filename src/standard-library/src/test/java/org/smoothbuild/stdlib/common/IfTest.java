@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 
 public class IfTest extends StandardLibraryTestCase {
   @Test
-  public void if_returns_first_value_when_condition_is_true() throws Exception {
+  void if_returns_first_value_when_condition_is_true() throws Exception {
     var userModule = """
         result = if(true, "then clause", "else clause");
         """;
@@ -20,7 +20,7 @@ public class IfTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void if_returns_second_value_when_condition_is_false() throws Exception {
+  void if_returns_second_value_when_condition_is_false() throws Exception {
     createUserModule(
         """
             result = if(false, "then clause", "else clause");
@@ -30,7 +30,7 @@ public class IfTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
+  void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
     var userModule = format(
         """
             @Native("%s")
@@ -44,7 +44,7 @@ public class IfTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
+  void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
     var userModule = format(
         """
             @Native("%s")
@@ -60,7 +60,7 @@ public class IfTest extends StandardLibraryTestCase {
   @Nested
   class in_if_nested_inside_other_if {
     @Test
-    public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
+    void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
       var userModule = format(
           """
               @Native("%s")
@@ -74,7 +74,7 @@ public class IfTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
+    void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
       var userModule = format(
           """
               @Native("%s")

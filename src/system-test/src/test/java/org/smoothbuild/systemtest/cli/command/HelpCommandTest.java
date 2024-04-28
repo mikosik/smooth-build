@@ -9,7 +9,7 @@ import org.smoothbuild.systemtest.SystemTestCase;
 
 public class HelpCommandTest extends SystemTestCase {
   @Test
-  public void help_command_prints_general_help() {
+  void help_command_prints_general_help() {
     runSmoothHelp();
     assertFinishedWithSuccess();
     assertSystemOutContains(
@@ -36,7 +36,7 @@ public class HelpCommandTest extends SystemTestCase {
   }
 
   @Test
-  public void help_build() {
+  void help_build() {
     runSmoothHelp(BuildCommand.NAME);
     assertFinishedWithSuccess();
     assertSystemOutContains(
@@ -102,7 +102,7 @@ public class HelpCommandTest extends SystemTestCase {
   }
 
   @Test
-  public void help_clean() {
+  void help_clean() {
     runSmoothHelp(CleanCommand.NAME);
     assertFinishedWithSuccess();
     assertSystemOutContains(
@@ -126,7 +126,7 @@ public class HelpCommandTest extends SystemTestCase {
   }
 
   @Test
-  public void help_list() {
+  void help_list() {
     runSmoothHelp(ListCommand.NAME);
     assertFinishedWithSuccess();
     assertSystemOutContains(
@@ -150,7 +150,7 @@ public class HelpCommandTest extends SystemTestCase {
   }
 
   @Test
-  public void help_version() {
+  void help_version() {
     runSmoothHelp(VersionCommand.NAME);
     assertFinishedWithSuccess();
     assertSystemOutContains(

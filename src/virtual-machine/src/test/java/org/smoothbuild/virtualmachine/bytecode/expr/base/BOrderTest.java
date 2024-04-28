@@ -12,25 +12,25 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BOrderTest extends TestingVirtualMachine {
   @Test
-  public void kind_returns_kind() throws Exception {
+  void kind_returns_kind() throws Exception {
     var order = bOrder(bIntType());
     assertThat(order.kind()).isEqualTo(bOrderKind(bIntType()));
   }
 
   @Test
-  public void creating_order_with_elemT_different_than_required_causes_exception() {
+  void creating_order_with_elemT_different_than_required_causes_exception() {
     assertCall(() -> bOrder(bIntType(), bString("abc")).kind())
         .throwsException(new IllegalArgumentException(
             "`element0.evaluationType()` should be `Int` but is `String`."));
   }
 
   @Test
-  public void elemT_can_be_equal_elementT_specified_in_kind() throws Exception {
+  void elemT_can_be_equal_elementT_specified_in_kind() throws Exception {
     bOrder(bArrayType(bIntType()), bArray(bInt(3)));
   }
 
   @Test
-  public void elements_returns_elements() throws Exception {
+  void elements_returns_elements() throws Exception {
     assertThat(bOrder(bInt(2)).elements()).isEqualTo(list(bInt(2)));
   }
 
@@ -54,19 +54,19 @@ public class BOrderTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void array_can_be_read_back_by_hash() throws Exception {
+  void array_can_be_read_back_by_hash() throws Exception {
     var order = bOrder(bInt(1));
     assertThat(exprDbOther().get(order.hash())).isEqualTo(order);
   }
 
   @Test
-  public void array_read_back_by_hash_has_same_elementss() throws Exception {
+  void array_read_back_by_hash_has_same_elementss() throws Exception {
     var order = bOrder(bInt(1));
     assertThat(((BOrder) exprDbOther().get(order.hash())).elements()).isEqualTo(list(bInt(1)));
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var order = bOrder(bInt(1));
     assertThat(order.toString()).isEqualTo("ORDER:[Int](???)@" + order.hash());
   }

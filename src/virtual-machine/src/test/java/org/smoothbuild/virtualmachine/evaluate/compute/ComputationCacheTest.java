@@ -23,19 +23,19 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test
-  public void cache_does_not_contain_not_written_result() throws Exception {
+  void cache_does_not_contain_not_written_result() throws Exception {
     assertThat(computationCache().contains(hash)).isFalse();
   }
 
   @Test
-  public void cache_contains_written_result() throws Exception {
+  void cache_contains_written_result() throws Exception {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(bString("result"), bLogArrayEmpty()));
     assertThat(computationCache.contains(hash)).isTrue();
   }
 
   @Test
-  public void cache_is_corrupted_when_task_hash_points_to_directory() throws Exception {
+  void cache_is_corrupted_when_task_hash_points_to_directory() throws Exception {
     var path = computationCache().toPath(hash);
     computationCacheBucket().createDir(path);
     var computationCache = computationCache();
@@ -44,13 +44,13 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void reading_not_written_value_fails() {
+  void reading_not_written_value_fails() {
     assertCall(() -> computationCache().read(hash, bStringType()))
         .throwsException(ComputeException.class);
   }
 
   @Test
-  public void written_messages_can_be_read_back() throws Exception {
+  void written_messages_can_be_read_back() throws Exception {
     var strV = bString("abc");
     var message = bErrorLog("error message");
     var messages = bArray(message);
@@ -61,7 +61,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_file_array_can_be_read_back() throws Exception {
+  void written_file_array_can_be_read_back() throws Exception {
     var file = bFile(path("file/path"), bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(bArray(file), bLogArrayEmpty()));
@@ -72,7 +72,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_blob_array_can_be_read_back() throws Exception {
+  void written_blob_array_can_be_read_back() throws Exception {
     var blob = bBlob(bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(bArray(blob), bLogArrayEmpty()));
@@ -83,7 +83,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_bool_array_can_be_read_back() throws Exception {
+  void written_bool_array_can_be_read_back() throws Exception {
     var bool = bBool(true);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(bArray(bool), bLogArrayEmpty()));
@@ -94,7 +94,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_int_array_can_be_read_back() throws Exception {
+  void written_int_array_can_be_read_back() throws Exception {
     var int_ = bInt(123);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(bArray(int_), bLogArrayEmpty()));
@@ -105,7 +105,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_string_array_can_be_read_back() throws Exception {
+  void written_string_array_can_be_read_back() throws Exception {
     var string = bString("some string");
     var array = bArray(string);
     var computationCache = computationCache();
@@ -117,7 +117,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_file_can_be_read_back() throws Exception {
+  void written_file_can_be_read_back() throws Exception {
     var file = bFile(path("file/path"), bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(file, bLogArrayEmpty()));
@@ -126,7 +126,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_blob_can_be_read_back() throws Exception {
+  void written_blob_can_be_read_back() throws Exception {
     var blob = bBlob(bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(blob, bLogArrayEmpty()));
@@ -135,7 +135,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_bool_can_be_read_back() throws Exception {
+  void written_bool_can_be_read_back() throws Exception {
     var bool = bBool(true);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(bool, bLogArrayEmpty()));
@@ -145,7 +145,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_int_can_be_read_back() throws Exception {
+  void written_int_can_be_read_back() throws Exception {
     var int_ = bInt(123);
     var computationCache = computationCache();
     computationCache.write(hash, new Output(int_, bLogArrayEmpty()));
@@ -155,7 +155,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void written_string_can_be_read_back() throws Exception {
+  void written_string_can_be_read_back() throws Exception {
     var string = "some string";
     var bString = bString(string);
     var computationCache = computationCache();

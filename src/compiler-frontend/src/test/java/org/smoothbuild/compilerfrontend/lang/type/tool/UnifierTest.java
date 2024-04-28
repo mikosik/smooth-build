@@ -44,7 +44,7 @@ public class UnifierTest {
   @Nested
   class _structure_of {
     @Test
-    public void array() {
+    void array() {
       var a = unifier.newTempVar();
       var arrayTS = sArrayType(a);
       var a2 = new STempVar("1");
@@ -52,7 +52,7 @@ public class UnifierTest {
     }
 
     @Test
-    public void function() {
+    void function() {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var funcTS = sFuncType(list(a, b), a);
@@ -62,7 +62,7 @@ public class UnifierTest {
     }
 
     @Test
-    public void tuple() {
+    void tuple() {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var tupleTS = sTupleType(a, b, a);
@@ -72,7 +72,7 @@ public class UnifierTest {
     }
 
     @Test
-    public void interface_() {
+    void interface_() {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var interfaceTS = sInterfaceType(a, b, a);
@@ -82,7 +82,7 @@ public class UnifierTest {
     }
 
     @Test
-    public void struct() {
+    void struct() {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var structTS = sStructType(a, b, a);
@@ -97,14 +97,14 @@ public class UnifierTest {
     @Nested
     class _temp_vs_temp {
       @Test
-      public void temp_vs_itself() throws UnifierException {
+      void temp_vs_itself() throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         assertUnifyInfers(unifier, a, a, a, a);
       }
 
       @Test
-      public void temp_vs_other_temp() throws UnifierException {
+      void temp_vs_other_temp() throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
@@ -113,7 +113,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void temp_vs_other_temp_vs_yet_another_temp() throws UnifierException {
+      void temp_vs_other_temp_vs_yet_another_temp() throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
@@ -191,7 +191,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void base_vs_different_base_fails() throws UnifierException {
+      void base_vs_different_base_fails() throws UnifierException {
         assertUnifyFails(sIntType(), sBlobType());
       }
 
@@ -228,42 +228,42 @@ public class UnifierTest {
       }
 
       @Test
-      public void var_vs_itself_succeeds() throws UnifierException {
+      void var_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(varA(), varA()));
       }
 
       @Test
-      public void var_vs_array_fails() throws UnifierException {
+      void var_vs_array_fails() throws UnifierException {
         assertUnifyFails(varA(), sArrayType(varA()));
       }
 
       @Test
-      public void var_vs_tuple_fails() throws UnifierException {
+      void var_vs_tuple_fails() throws UnifierException {
         assertUnifyFails(varA(), sTupleType(varA()));
       }
 
       @Test
-      public void var_vs_function_fails() throws UnifierException {
+      void var_vs_function_fails() throws UnifierException {
         assertUnifyFails(varA(), sFuncType(varA()));
       }
 
       @Test
-      public void var_vs_struct_fails() throws UnifierException {
+      void var_vs_struct_fails() throws UnifierException {
         assertUnifyFails(varA(), sStructType("MyStruct", varA()));
       }
 
       @Test
-      public void var_vs_interface_fails() throws UnifierException {
+      void var_vs_interface_fails() throws UnifierException {
         assertUnifyFails(varA(), sInterfaceType(varA()));
       }
 
       @Test
-      public void array_vs_itself_succeeds() throws UnifierException {
+      void array_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(sArrayType(sIntType()), sArrayType(sIntType())));
       }
 
       @Test
-      public void array_with_interface_vs_array_with_compatible_interface_succeeds()
+      void array_with_interface_vs_array_with_compatible_interface_succeeds()
           throws UnifierException {
         unifier.add(new EqualityConstraint(
             sArrayType(sInterfaceType(sSig(sIntType(), "myField"))),
@@ -271,44 +271,44 @@ public class UnifierTest {
       }
 
       @Test
-      public void array2_vs_itself_succeeds() throws UnifierException {
+      void array2_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sArrayType(sArrayType(sIntType())), sArrayType(sArrayType(sIntType()))));
       }
 
       @Test
-      public void array_vs_array_with_different_element_fails() throws UnifierException {
+      void array_vs_array_with_different_element_fails() throws UnifierException {
         assertUnifyFails(sArrayType(sIntType()), sArrayType(sBlobType()));
       }
 
       @Test
-      public void array_vs_tuple_fails() throws UnifierException {
+      void array_vs_tuple_fails() throws UnifierException {
         assertUnifyFails(sArrayType(sIntType()), sTupleType(sIntType()));
       }
 
       @Test
-      public void array_vs_function_fails() throws UnifierException {
+      void array_vs_function_fails() throws UnifierException {
         assertUnifyFails(sArrayType(sIntType()), sFuncType(sIntType()));
       }
 
       @Test
-      public void array_vs_struct_fails() throws UnifierException {
+      void array_vs_struct_fails() throws UnifierException {
         assertUnifyFails(sArrayType(sIntType()), sStructType("MyStruct", sIntType()));
       }
 
       @Test
-      public void array_vs_interface_fails() throws UnifierException {
+      void array_vs_interface_fails() throws UnifierException {
         assertUnifyFails(sArrayType(sIntType()), sInterfaceType(sIntType()));
       }
 
       @Test
-      public void tuple_vs_itself_succeeds() throws UnifierException {
+      void tuple_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sTupleType(sIntType(), sBlobType()), sTupleType(sIntType(), sBlobType())));
       }
 
       @Test
-      public void tuple_with_interface_vs_tuple_with_compatible_interface_succeeds()
+      void tuple_with_interface_vs_tuple_with_compatible_interface_succeeds()
           throws UnifierException {
         unifier.add(new EqualityConstraint(
             sTupleType(sInterfaceType(sSig(sIntType(), "myField"))),
@@ -316,46 +316,46 @@ public class UnifierTest {
       }
 
       @Test
-      public void tuple2_vs_itself_succeeds() throws UnifierException {
+      void tuple2_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sTupleType(sTupleType(sIntType(), sBlobType())),
             sTupleType(sTupleType(sIntType(), sBlobType()))));
       }
 
       @Test
-      public void tuple_vs_tuple_with_different_elements_fails() throws UnifierException {
+      void tuple_vs_tuple_with_different_elements_fails() throws UnifierException {
         assertUnifyFails(
             sTupleType(sIntType(), sBlobType()), sTupleType(sIntType(), sStringType()));
       }
 
       @Test
-      public void tuple_vs_tuple_with_one_element_missing_fails() throws UnifierException {
+      void tuple_vs_tuple_with_one_element_missing_fails() throws UnifierException {
         assertUnifyFails(sTupleType(sIntType(), sBlobType()), sTupleType(sIntType()));
       }
 
       @Test
-      public void tuple_vs_function_fails() throws UnifierException {
+      void tuple_vs_function_fails() throws UnifierException {
         assertUnifyFails(sTupleType(sIntType()), sFuncType(sIntType()));
       }
 
       @Test
-      public void tuple_vs_struct_fails() throws UnifierException {
+      void tuple_vs_struct_fails() throws UnifierException {
         assertUnifyFails(sTupleType(sIntType()), sStructType("MyStruct", sIntType()));
       }
 
       @Test
-      public void tuple_vs_interface_fails() throws UnifierException {
+      void tuple_vs_interface_fails() throws UnifierException {
         assertUnifyFails(sTupleType(sIntType()), sInterfaceType(sIntType()));
       }
 
       @Test
-      public void function_vs_itself_succeeds() throws UnifierException {
+      void function_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sFuncType(sBlobType(), sIntType()), sFuncType(sBlobType(), sIntType())));
       }
 
       @Test
-      public void function_with_interface_vs_function_with_compatible_interface_succeeds()
+      void function_with_interface_vs_function_with_compatible_interface_succeeds()
           throws UnifierException {
         unifier.add(new EqualityConstraint(
             sFuncType(sInterfaceType(sSig(sIntType(), "myField"))),
@@ -363,53 +363,52 @@ public class UnifierTest {
       }
 
       @Test
-      public void function_with_result_being_function_vs_itself_succeeds() throws UnifierException {
+      void function_with_result_being_function_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sFuncType(sFuncType(sIntType())), sFuncType(sFuncType(sIntType()))));
       }
 
       @Test
-      public void function_with_parameter_being_function_vs_itself_succeeds()
-          throws UnifierException {
+      void function_with_parameter_being_function_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sFuncType(sFuncType(sIntType()), sBlobType()),
             sFuncType(sFuncType(sIntType()), sBlobType())));
       }
 
       @Test
-      public void function_vs_function_with_different_result_type_fails() throws UnifierException {
+      void function_vs_function_with_different_result_type_fails() throws UnifierException {
         assertUnifyFails(sFuncType(sIntType()), sFuncType(sBlobType()));
       }
 
       @Test
-      public void function_vs_function_with_different_parameter_fails() throws UnifierException {
+      void function_vs_function_with_different_parameter_fails() throws UnifierException {
         assertUnifyFails(sFuncType(sBlobType(), sIntType()), sFuncType(sStringType(), sIntType()));
       }
 
       @Test
-      public void function_vs_function_with_one_parameter_missing_fails() throws UnifierException {
+      void function_vs_function_with_one_parameter_missing_fails() throws UnifierException {
         assertUnifyFails(sFuncType(sBlobType(), sIntType()), sFuncType(sIntType()));
       }
 
       @Test
-      public void function_vs_struct_fails() throws UnifierException {
+      void function_vs_struct_fails() throws UnifierException {
         assertUnifyFails(sFuncType(sIntType()), sStructType("MyStruct", sIntType()));
       }
 
       @Test
-      public void function_vs_interface_fails() throws UnifierException {
+      void function_vs_interface_fails() throws UnifierException {
         assertUnifyFails(sFuncType(sIntType()), sInterfaceType(sIntType()));
       }
 
       @Test
-      public void struct_vs_itself_succeeds() throws UnifierException {
+      void struct_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sStructType("MyStruct", sIntType(), sBlobType()),
             sStructType("MyStruct", sIntType(), sBlobType())));
       }
 
       @Test
-      public void struct_with_interface_vs_struct_with_compatible_interface_succeeds()
+      void struct_with_interface_vs_struct_with_compatible_interface_succeeds()
           throws UnifierException {
         unifier.add(new EqualityConstraint(
             sStructType(sInterfaceType(sSig(sIntType(), "myField"))),
@@ -417,7 +416,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void struct_vs_itself_with_fields_reordered_fails() throws UnifierException {
+      void struct_vs_itself_with_fields_reordered_fails() throws UnifierException {
         assertUnifyFails(
             sStructType(
                 "MyStruct", sSig(sIntType(), "myIntField"), sSig(sBlobType(), "myBlobField")),
@@ -426,65 +425,62 @@ public class UnifierTest {
       }
 
       @Test
-      public void struct_vs_struct_with_different_name_fails() throws UnifierException {
+      void struct_vs_struct_with_different_name_fails() throws UnifierException {
         assertUnifyFails(
             sStructType("MyStruct", sIntType(), sBlobType()),
             sStructType("MyStruct2", sIntType(), sBlobType()));
       }
 
       @Test
-      public void struct_vs_struct_with_different_field_type_fails() throws UnifierException {
+      void struct_vs_struct_with_different_field_type_fails() throws UnifierException {
         assertUnifyFails(
             sStructType("MyStruct", sIntType(), sBlobType()),
             sStructType("MyStruct", sIntType(), sStringType()));
       }
 
       @Test
-      public void struct_vs_struct_with_different_field_name_fails() throws UnifierException {
+      void struct_vs_struct_with_different_field_name_fails() throws UnifierException {
         assertUnifyFails(
             sStructType("MyStruct", sSig(sIntType(), "myField")),
             sStructType("MyStruct", sSig(sIntType(), "otherField")));
       }
 
       @Test
-      public void struct_vs_matching_interface_succeeds() throws UnifierException {
+      void struct_vs_matching_interface_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sStructType("MyStruct", sSig(sIntType(), "myField")),
             sInterfaceType(sSig(sIntType(), "myField"))));
       }
 
       @Test
-      public void struct_vs_matching_interface_with_changed_field_type_fails()
-          throws UnifierException {
+      void struct_vs_matching_interface_with_changed_field_type_fails() throws UnifierException {
         assertUnifyFails(
             sStructType("MyStruct", sSig(sIntType(), "myField")),
             sInterfaceType(sSig(sBlobType(), "myField")));
       }
 
       @Test
-      public void struct_vs_matching_interface_with_changed_field_name_fails()
-          throws UnifierException {
+      void struct_vs_matching_interface_with_changed_field_name_fails() throws UnifierException {
         assertUnifyFails(
             sStructType("MyStruct", sSig(sIntType(), "myField")),
             sInterfaceType(sSig(sIntType(), "otherField")));
       }
 
       @Test
-      public void interface_vs_itself_succeeds() throws UnifierException {
+      void interface_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             sInterfaceType(sIntType(), sBlobType()), sInterfaceType(sIntType(), sBlobType())));
       }
 
       @Test
-      public void interface_vs_interface_with_different_field_type_fails() throws UnifierException {
+      void interface_vs_interface_with_different_field_type_fails() throws UnifierException {
         assertUnifyFails(
             sInterfaceType(sSig(sIntType(), "myField")),
             sInterfaceType(sSig(sBlobType(), "myField")));
       }
 
       @Test
-      public void interface_vs_interface_with_different_field_name_succeeds()
-          throws UnifierException {
+      void interface_vs_interface_with_different_field_name_succeeds() throws UnifierException {
         SType type1 = sInterfaceType(sSig(sIntType(), "myField"));
         SType type2 = sInterfaceType(sSig(sIntType(), "otherField"));
         assertUnifyThroughTempImpl(
@@ -702,7 +698,7 @@ public class UnifierTest {
     }
 
     @Test
-    public void regression_test() throws UnifierException {
+    void regression_test() throws UnifierException {
       // Cycle detection algorithm had a bug which is detected by this test.
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
@@ -718,7 +714,7 @@ public class UnifierTest {
     @Nested
     class _transitive_cases {
       @Test
-      public void unify_a_vs_b_vs_concrete_type() throws UnifierException {
+      void unify_a_vs_b_vs_concrete_type() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(new EqualityConstraint(a, b), new EqualityConstraint(b, sIntType()));
@@ -726,7 +722,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void unify_a_vs_array_b_vs_c() throws UnifierException {
+      void unify_a_vs_array_b_vs_c() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
@@ -736,7 +732,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void unify_array_a_vs_b_vs_array_c() throws UnifierException {
+      void unify_array_a_vs_b_vs_array_c() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
@@ -794,7 +790,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void join_func_vs_func_with_different_param_count_fails() throws UnifierException {
+      void join_func_vs_func_with_different_param_count_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
@@ -805,7 +801,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void join_array_vs_tuple_fails() throws UnifierException {
+      void join_array_vs_tuple_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.add(new EqualityConstraint(a, sArrayType(sIntType())));
@@ -815,7 +811,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void join_array_vs_func_fails() throws UnifierException {
+      void join_array_vs_func_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.add(new EqualityConstraint(a, sArrayType(sIntType())));
@@ -825,7 +821,7 @@ public class UnifierTest {
       }
 
       @Test
-      public void join_tuple_vs_func_fails() throws UnifierException {
+      void join_tuple_vs_func_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.add(new EqualityConstraint(a, sTupleType(sIntType())));
@@ -839,13 +835,13 @@ public class UnifierTest {
   @Nested
   class _temporary_vars {
     @Test
-    public void resolve_unknown_temp_var_causes_exception() {
+    void resolve_unknown_temp_var_causes_exception() {
       assertCall(() -> unifier.resolve(sTempVarA()))
           .throwsException(new IllegalStateException("Unknown temp var `1`."));
     }
 
     @Test
-    public void non_temporary_var_has_priority_over_temporary() throws UnifierException {
+    void non_temporary_var_has_priority_over_temporary() throws UnifierException {
       SVar a = unifier.newTempVar();
       SVar b = unifier.newTempVar();
       SVar x = varX();
@@ -856,7 +852,7 @@ public class UnifierTest {
     }
 
     @Test
-    public void resolve_returns_temporary_var_when_no_normal_var_is_unified() {
+    void resolve_returns_temporary_var_when_no_normal_var_is_unified() {
       var a = unifier.newTempVar();
       assertThat(unifier.resolve(a)).isEqualTo(a);
     }
@@ -865,7 +861,7 @@ public class UnifierTest {
   @Nested
   class _resolve {
     @Test
-    public void unknown_temp_var_cannot_be_resolved() {
+    void unknown_temp_var_cannot_be_resolved() {
       assertCall(() -> unifier.resolve(sTempVarA()))
           .throwsException(new IllegalStateException("Unknown temp var `1`."));
     }

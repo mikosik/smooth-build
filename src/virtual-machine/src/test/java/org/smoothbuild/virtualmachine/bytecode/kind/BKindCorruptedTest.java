@@ -54,13 +54,13 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
   @Nested
   class _illegal_type_marker {
     @Test
-    public void causes_exception() throws Exception {
+    void causes_exception() throws Exception {
       var hash = hash(hash((byte) 99));
       assertThatGet(hash).throwsException(illegalTypeMarkerException(hash, 99));
     }
 
     @Test
-    public void with_additional_child() throws Exception {
+    void with_additional_child() throws Exception {
       var hash = hash(hash((byte) 99), hash("corrupted"));
       assertThatGet(hash).throwsException(illegalTypeMarkerException(hash, 99));
     }
@@ -69,7 +69,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
   @Nested
   class _base {
     @Test
-    public void learning_test() throws Exception {
+    void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
        * to save base type in HashedDb.
@@ -79,22 +79,22 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void blob_with_additional_child() throws Exception {
+    void blob_with_additional_child() throws Exception {
       test_base_type_with_additional_child(BLOB);
     }
 
     @Test
-    public void bool_with_additional_child() throws Exception {
+    void bool_with_additional_child() throws Exception {
       test_base_type_with_additional_child(BOOL);
     }
 
     @Test
-    public void int_with_additional_child() throws Exception {
+    void int_with_additional_child() throws Exception {
       test_base_type_with_additional_child(INT);
     }
 
     @Test
-    public void string_with_additional_child() throws Exception {
+    void string_with_additional_child() throws Exception {
       test_base_type_with_additional_child(STRING);
     }
 
@@ -109,7 +109,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _array {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save array type in HashedDb.
@@ -119,27 +119,27 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void without_data() throws Exception {
+      void without_data() throws Exception {
         assert_reading_kind_without_data_causes_exc(ARRAY);
       }
 
       @Test
-      public void with_additional_data() throws Exception {
+      void with_additional_data() throws Exception {
         assert_reading_kind_with_additional_data_causes_exc(ARRAY);
       }
 
       @Test
-      public void with_data_hash_pointing_nowhere() throws Exception {
+      void with_data_hash_pointing_nowhere() throws Exception {
         assert_reading_kind_with_data_pointing_nowhere_causes_exc(ARRAY);
       }
 
       @Test
-      public void with_corrupted_type_as_data() throws Exception {
+      void with_corrupted_type_as_data() throws Exception {
         assert_reading_kind_with_corrupted_type_as_data_causes_exc(ARRAY);
       }
 
       @Test
-      public void with_type_being_operation_type() throws Exception {
+      void with_type_being_operation_type() throws Exception {
         var hash = hash(hash(ARRAY.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -150,7 +150,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _lambda {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save lambda type in HashedDb.
@@ -163,29 +163,29 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void without_data() throws Exception {
+      void without_data() throws Exception {
         assert_reading_kind_without_data_causes_exc(LAMBDA);
       }
 
       @Test
-      public void with_additional_data() throws Exception {
+      void with_additional_data() throws Exception {
         assert_reading_kind_with_additional_data_causes_exc(LAMBDA);
       }
 
       @Test
-      public void with_data_hash_pointing_nowhere() throws Exception {
+      void with_data_hash_pointing_nowhere() throws Exception {
         assert_reading_kind_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(LAMBDA);
       }
 
       @Test
-      public void with_data_not_being_hash_chain() throws Exception {
+      void with_data_not_being_hash_chain() throws Exception {
         var notHashOfChain = hash("abc");
         var hash = hash(hash(LAMBDA.byteMarker()), notHashOfChain);
         assertThatGet(hash).throwsException(new DecodeKindNodeException(hash, LAMBDA, DATA_PATH));
       }
 
       @Test
-      public void with_data_having_three_elements() throws Exception {
+      void with_data_having_three_elements() throws Exception {
         var paramTs = bTupleType(bStringType(), bBoolType());
         var resultT = bIntType();
         var hash =
@@ -195,7 +195,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_data_having_one_elements() throws Exception {
+      void with_data_having_one_elements() throws Exception {
         var paramTs = bTupleType(bStringType(), bBoolType());
         var hash = hash(hash(LAMBDA.byteMarker()), hash(hash(paramTs)));
         assertThatGet(hash)
@@ -215,7 +215,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_result_pointing_nowhere() throws Exception {
+      void with_result_pointing_nowhere() throws Exception {
         var paramTypes = bTupleType(bStringType(), bBoolType());
         var nowhere = Hash.of(33);
         var typeHash = hash(hash(LAMBDA.byteMarker()), hash(hash(paramTypes), nowhere));
@@ -225,7 +225,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_result_being_operation_type() throws Exception {
+      void with_result_being_operation_type() throws Exception {
         var paramType = bTupleType(bStringType(), bBoolType());
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
@@ -235,7 +235,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_result_type_corrupted() throws Exception {
+      void with_result_type_corrupted() throws Exception {
         var paramTypes = bTupleType(bStringType(), bBoolType());
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(hash(paramTypes), corruptedArrayTHash()));
@@ -245,7 +245,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_params_pointing_nowhere() throws Exception {
+      void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
         var typeHash = hash(hash(LAMBDA.byteMarker()), hash(nowhere, hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
@@ -254,7 +254,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_params_not_being_tuple() throws Exception {
+      void with_params_not_being_tuple() throws Exception {
         var typeHash = hash(hash(LAMBDA.byteMarker()), hash(hash(bStringType()), hash(bIntType())));
         assertThatGet(typeHash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -262,7 +262,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_params_being_operation_type() throws Exception {
+      void with_params_being_operation_type() throws Exception {
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
@@ -271,7 +271,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_params_type_corrupted() throws Exception {
+      void with_params_type_corrupted() throws Exception {
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(corruptedArrayTHash(), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
@@ -283,7 +283,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _tuple {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save Tuple type in HashedDb.
@@ -293,29 +293,29 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void without_data() throws Exception {
+      void without_data() throws Exception {
         assert_reading_kind_without_data_causes_exc(TUPLE);
       }
 
       @Test
-      public void with_additional_data() throws Exception {
+      void with_additional_data() throws Exception {
         assert_reading_kind_with_additional_data_causes_exc(TUPLE);
       }
 
       @Test
-      public void with_data_hash_pointing_nowhere() throws Exception {
+      void with_data_hash_pointing_nowhere() throws Exception {
         assert_reading_kind_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(TUPLE);
       }
 
       @Test
-      public void with_elements_not_being_hash_chain() throws Exception {
+      void with_elements_not_being_hash_chain() throws Exception {
         var notHashOfChain = hash("abc");
         var hash = hash(hash(TUPLE.byteMarker()), notHashOfChain);
         assertThatGet(hash).throwsException(new DecodeKindNodeException(hash, TUPLE, DATA_PATH));
       }
 
       @Test
-      public void with_elements_being_array_of_non_type() throws Exception {
+      void with_elements_being_array_of_non_type() throws Exception {
         var stringHash = hash(bString("abc"));
         var hash = hash(hash(TUPLE.byteMarker()), hash(stringHash));
         assertThatGet(hash)
@@ -324,7 +324,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_elements_being_chain_of_operation_types() throws Exception {
+      void with_elements_being_chain_of_operation_types() throws Exception {
         var hash = hash(hash(TUPLE.byteMarker()), hash(hash(bReferenceKind())));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -332,7 +332,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_corrupted_element_type() throws Exception {
+      void with_corrupted_element_type() throws Exception {
         var hash = hash(hash(TUPLE.byteMarker()), hash(corruptedArrayTHash(), hash(bStringType())));
         assertThatGet(hash)
             .throwsException(new DecodeKindNodeException(hash, TUPLE, "data[0]"))
@@ -426,7 +426,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _call {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save CALL kind in HashedDb.
@@ -446,7 +446,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _combine {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save COMBINE kind in HashedDb.
@@ -463,7 +463,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_evaluation_type_not_being_tuple_type() throws Exception {
+      void with_evaluation_type_not_being_tuple_type() throws Exception {
         var hash = hash(hash(COMBINE.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -474,7 +474,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _if {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save IF kind in HashedDb.
@@ -494,7 +494,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _invoke {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save INVOKE kind in HashedDb.
@@ -514,7 +514,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _map {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save MAP kind in HashedDb.
@@ -531,7 +531,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_evaluation_type_not_being_array_type() throws Exception {
+      void with_evaluation_type_not_being_array_type() throws Exception {
         var hash = hash(hash(MAP.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -542,7 +542,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _order {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save ORDER kind in HashedDb.
@@ -559,7 +559,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void with_evaluation_type_not_being_array_type() throws Exception {
+      void with_evaluation_type_not_being_array_type() throws Exception {
         var hash = hash(hash(ORDER.byteMarker()), hash(bIntType()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
@@ -570,7 +570,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _pick {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save PICK kind in HashedDb.
@@ -590,7 +590,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _reference {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save REFERENCE kind in HashedDb.
@@ -610,7 +610,7 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
     @Nested
     class _select {
       @Test
-      public void learning_test() throws Exception {
+      void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save SELECT kind in HashedDb.
@@ -641,27 +641,27 @@ public class BKindCorruptedTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void without_data() throws Exception {
+      void without_data() throws Exception {
         assert_reading_kind_without_data_causes_exc(kindId);
       }
 
       @Test
-      public void with_additional_data() throws Exception {
+      void with_additional_data() throws Exception {
         assert_reading_kind_with_additional_data_causes_exc(kindId);
       }
 
       @Test
-      public void with_data_hash_pointing_nowhere() throws Exception {
+      void with_data_hash_pointing_nowhere() throws Exception {
         assert_reading_kind_with_data_pointing_nowhere_causes_exc(kindId);
       }
 
       @Test
-      public void with_corrupted_type_as_data() throws Exception {
+      void with_corrupted_type_as_data() throws Exception {
         assert_reading_kind_with_corrupted_type_as_data_causes_exc(kindId);
       }
 
       @Test
-      public void with_evaluation_type_being_operation_kind() throws Exception {
+      void with_evaluation_type_being_operation_kind() throws Exception {
         var hash = hash(hash(kindId.byteMarker()), hash(bReferenceKind()));
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(

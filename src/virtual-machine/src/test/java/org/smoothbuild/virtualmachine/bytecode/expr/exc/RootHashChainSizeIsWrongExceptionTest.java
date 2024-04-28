@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class RootHashChainSizeIsWrongExceptionTest extends TestingVirtualMachine {
   @Test
-  public void cannot_read_root_exception() {
+  void cannot_read_root_exception() {
     var exception = cannotReadRootException(Hash.of(123), new RuntimeException());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode expression at "
@@ -19,7 +19,7 @@ public class RootHashChainSizeIsWrongExceptionTest extends TestingVirtualMachine
   }
 
   @Test
-  public void wrong_size_of_root_exception() {
+  void wrong_size_of_root_exception() {
     var exception = wrongSizeOfRootChainException(Hash.of(123), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode expression at "

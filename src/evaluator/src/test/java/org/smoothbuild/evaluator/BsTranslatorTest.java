@@ -23,21 +23,21 @@ public class BsTranslatorTest extends TestingVirtualMachine {
   private static final Hash UNKNOWN_HASH = Hash.of(17);
 
   @Test
-  public void empty_trace() {
+  void empty_trace() {
     var bsMapping = new BsMapping();
     var bsTraceTranslator = new BsTranslator(bsMapping);
     assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(sTrace());
   }
 
   @Test
-  public void one_elem_trace() {
+  void one_elem_trace() {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH1, HASH2);
     assertThat(bsTraceTranslator.translate(trace)).isEqualTo(sTrace("name2", location(1)));
   }
 
   @Test
-  public void two_elem_trace() {
+  void two_elem_trace() {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
@@ -45,7 +45,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void trace_with_unknown_name() {
+  void trace_with_unknown_name() {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
@@ -53,7 +53,7 @@ public class BsTranslatorTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void trace_with_unknown_loc() {
+  void trace_with_unknown_loc() {
     var bsTraceTranslator = new BsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))

@@ -97,7 +97,7 @@ public class BindingsTest {
   }
 
   @Test
-  public void equals_and_hashcode() {
+  void equals_and_hashcode() {
     var elem1 = elements("1", 1);
     var elem2 = elements("2", 2);
 
@@ -136,50 +136,50 @@ public class BindingsTest {
 
   public abstract static class AbstractBindingsTestSuite {
     @Test
-    public void getting_element() {
+    void getting_element() {
       var bindings = newBindings(elements("name", 7));
       assertThat(bindings.get("name")).isEqualTo(elements("name", 7));
     }
 
     @Test
-    public void getting_missing_element_throws_exception() {
+    void getting_missing_element_throws_exception() {
       var bindings = newBindings();
       assertCall(() -> bindings.get("name")).throwsException(new NoSuchElementException("name"));
     }
 
     @Test
-    public void getMaybe_element() {
+    void getMaybe_element() {
       var bindings = newBindings(elements("name", 7));
       assertThat(bindings.getMaybe("name")).isEqualTo(some(elements("name", 7)));
     }
 
     @Test
-    public void getMaybe_missing_element_returns_empty() {
+    void getMaybe_missing_element_returns_empty() {
       var bindings = newBindings();
       assertThat(bindings.getMaybe("name")).isEqualTo(none());
     }
 
     @Test
-    public void contains_present_element() {
+    void contains_present_element() {
       var bindings = newBindings(elements("name", 7));
       assertThat(bindings.contains("name")).isTrue();
     }
 
     @Test
-    public void contains_missing_element_returns_false() {
+    void contains_missing_element_returns_false() {
       var bindings = newBindings();
       assertThat(bindings.contains("name")).isFalse();
     }
 
     @Test
-    public void map() {
+    void map() {
       var bindings = newBindings(elements("name", 7), elements("other", 5));
       var mapped = bindings.map(element -> element.value);
       assertThat(mapped.get("name")).isEqualTo(7);
     }
 
     @Test
-    public void asMap() {
+    void asMap() {
       var first = elements("name", 7);
       var second = elements("other", 5);
       var bindings = newBindings(first, second);
@@ -193,13 +193,13 @@ public class BindingsTest {
     public abstract MutableBindings<Integer> newBindings();
 
     @Test
-    public void add_return_null_if_binding_is_not_already_present() {
+    void add_return_null_if_binding_is_not_already_present() {
       var mutableBindings = newBindings();
       assertThat(mutableBindings.add("one", 1)).isEqualTo(null);
     }
 
     @Test
-    public void add_overwrites_previous_binding_if_present() {
+    void add_overwrites_previous_binding_if_present() {
       var mutableBindings = newBindings();
       mutableBindings.add("name", 1);
       mutableBindings.add("name", 2);
@@ -207,7 +207,7 @@ public class BindingsTest {
     }
 
     @Test
-    public void add_return_previous_binding_if_present() {
+    void add_return_previous_binding_if_present() {
       var mutableBindings = newBindings();
       mutableBindings.add("name", 1);
       assertThat(mutableBindings.add("name", 2)).isEqualTo(1);
@@ -241,14 +241,14 @@ public class BindingsTest {
     @Nested
     class _to_map {
       @Test
-      public void contains_elements_from_outer_and_inner_scope() {
+      void contains_elements_from_outer_and_inner_scope() {
         var outer = immutableBindings(mapOfElems(elements("1", 1)));
         var bindings = newBindings(outer, elements("2", 2));
         assertThat(bindings.toMap()).isEqualTo(mapOfElems(elements("1", 1), elements("2", 2)));
       }
 
       @Test
-      public void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
+      void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
         var outer = immutableBindings(mapOfElems(elements("1", 1)));
         var bindings = newBindings(outer, elements("1", 11));
         assertThat(bindings.toMap()).isEqualTo(mapOfElems(elements("1", 11)));
@@ -256,7 +256,7 @@ public class BindingsTest {
     }
 
     @Test
-    public void element_in_inner_bounds_shadows_element_from_outer_bounds() {
+    void element_in_inner_bounds_shadows_element_from_outer_bounds() {
       var outer = immutableBindings(mapOfElems(elements("value-a", 7)));
       var shadowing = elements("value-a", 9);
       var inner = newBindings(outer, shadowing);
@@ -264,7 +264,7 @@ public class BindingsTest {
     }
 
     @Test
-    public void to_string() {
+    void to_string() {
       var outer = immutableBindings(mapOfElems(elements("value-a", 7), elements("value-b", 8)));
       var inner = newBindings(outer, elements("value-c", 9));
       assertThat(inner.toString())

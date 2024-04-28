@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class SSelectTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
     var structValue = sAnnotatedValue(11, annotationS, structTS, "structValue");

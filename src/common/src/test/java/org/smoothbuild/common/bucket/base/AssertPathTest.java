@@ -14,80 +14,80 @@ public class AssertPathTest {
   private final Path path = Path.path("some/path");
 
   @Test
-  public void assert_path_is_dir_returns_normally_for_dir_path() throws Exception {
+  void assert_path_is_dir_returns_normally_for_dir_path() throws Exception {
     Bucket bucket = bucketWith(path, DIR);
     AssertPath.assertPathIsDir(bucket, path);
   }
 
   @Test
-  public void assert_path_is_dir_throws_exception_for_file_path() {
+  void assert_path_is_dir_throws_exception_for_file_path() {
     Bucket bucket = bucketWith(path, FILE);
     assertCall(() -> AssertPath.assertPathIsDir(bucket, path))
         .throwsException(new IOException("Dir " + path.q() + " doesn't exist. It is a file."));
   }
 
   @Test
-  public void assert_path_is_dir_throws_exception_when_path_does_not_exist() {
+  void assert_path_is_dir_throws_exception_when_path_does_not_exist() {
     Bucket bucket = bucketWith(path, NOTHING);
     assertCall(() -> AssertPath.assertPathIsDir(bucket, path))
         .throwsException(new IOException("Dir " + path.q() + " doesn't exist."));
   }
 
   @Test
-  public void assert_path_is_file_returns_normally_for_file_path() throws Exception {
+  void assert_path_is_file_returns_normally_for_file_path() throws Exception {
     Bucket bucket = bucketWith(path, FILE);
     AssertPath.assertPathIsFile(bucket, path);
   }
 
   @Test
-  public void assert_path_is_file_throws_exception_for_dir_path() {
+  void assert_path_is_file_throws_exception_for_dir_path() {
     Bucket bucket = bucketWith(path, DIR);
     assertCall(() -> AssertPath.assertPathIsFile(bucket, path))
         .throwsException(new IOException("File " + path.q() + " doesn't exist. It is a dir."));
   }
 
   @Test
-  public void assert_path_is_file_throws_exception_when_path_does_not_exist() {
+  void assert_path_is_file_throws_exception_when_path_does_not_exist() {
     Bucket bucket = bucketWith(path, NOTHING);
     assertCall(() -> AssertPath.assertPathIsFile(bucket, path))
         .throwsException(new IOException("File " + path.q() + " doesn't exist."));
   }
 
   @Test
-  public void assert_path_exists_returns_normally_for_file_path() throws Exception {
+  void assert_path_exists_returns_normally_for_file_path() throws Exception {
     Bucket bucket = bucketWith(path, FILE);
     AssertPath.assertPathExists(bucket, path);
   }
 
   @Test
-  public void assert_path_exists_returns_normally_for_dir_path() throws Exception {
+  void assert_path_exists_returns_normally_for_dir_path() throws Exception {
     Bucket bucket = bucketWith(path, DIR);
     AssertPath.assertPathExists(bucket, path);
   }
 
   @Test
-  public void assert_path_exists_throws_exception_when_path_does_not_exist() {
+  void assert_path_exists_throws_exception_when_path_does_not_exist() {
     Bucket bucket = bucketWith(path, NOTHING);
     assertCall(() -> AssertPath.assertPathExists(bucket, path))
         .throwsException(new IOException("Path " + path.q() + " doesn't exist."));
   }
 
   @Test
-  public void assert_path_is_unused_throws_exception_for_file_path() {
+  void assert_path_is_unused_throws_exception_for_file_path() {
     Bucket bucket = bucketWith(path, FILE);
     assertCall(() -> AssertPath.assertPathIsUnused(bucket, path))
         .throwsException(new IOException("Cannot use " + path.q() + " path. It is already taken."));
   }
 
   @Test
-  public void assert_path_is_unused_throws_exception_for_dir_path() {
+  void assert_path_is_unused_throws_exception_for_dir_path() {
     Bucket bucket = bucketWith(path, DIR);
     assertCall(() -> AssertPath.assertPathIsUnused(bucket, path))
         .throwsException(new IOException("Cannot use " + path.q() + " path. It is already taken."));
   }
 
   @Test
-  public void assert_path_is_unused_returns_normally_when_path_does_not_exist() throws Exception {
+  void assert_path_is_unused_returns_normally_when_path_does_not_exist() throws Exception {
     Bucket bucket = bucketWith(path, NOTHING);
     AssertPath.assertPathIsUnused(bucket, path);
   }

@@ -19,7 +19,7 @@ public class VisibilityTest {
     @Nested
     class _local {
       @Test
-      public void value_declared_above_is_visible() {
+      void value_declared_above_is_visible() {
         var code =
             """
             String myValue = "abc";
@@ -29,7 +29,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void value_declared_below_is_visible() {
+      void value_declared_below_is_visible() {
         var code =
             """
             result = myValue;
@@ -39,7 +39,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func_declared_above_is_visible() {
+      void func_declared_above_is_visible() {
         var code =
             """
             String myFunc() = "abc";
@@ -49,7 +49,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func_declared_below_is_visible() {
+      void func_declared_below_is_visible() {
         var code =
             """
             result = myFunc;
@@ -59,7 +59,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void constructor_declared_above_is_visible() {
+      void constructor_declared_above_is_visible() {
         var code = """
             MyStruct {}
             result = MyStruct;
@@ -68,7 +68,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void constructor_declared_below_is_visible() {
+      void constructor_declared_below_is_visible() {
         var code = """
             result = MyStruct;
             MyStruct {}
@@ -77,7 +77,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_declared_above_is_visible() {
+      void struct_declared_above_is_visible() {
         var code =
             """
             MyStruct {}
@@ -88,7 +88,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_declared_below_is_visible() {
+      void struct_declared_below_is_visible() {
         var code =
             """
             @Native("impl.met")
@@ -102,28 +102,28 @@ public class VisibilityTest {
     @Nested
     class _imported {
       @Test
-      public void value_is_visible() {
+      void value_is_visible() {
         var code = "myValue = otherModuleValue;";
         var imported = "Int otherModuleValue = 7;";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
-      public void func_is_visible() {
+      void func_is_visible() {
         var code = "myValue = otherModuleFunc;";
         var imported = "Int otherModuleFunc() = 7;";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
-      public void constructor_is_visible() {
+      void constructor_is_visible() {
         var code = "myValue = OtherModuleStruct;";
         var imported = "OtherModuleStruct {}";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
-      public void struct_is_visible() {
+      void struct_is_visible() {
         var code =
             """
             @Native("impl.met")
@@ -139,7 +139,7 @@ public class VisibilityTest {
       @Nested
       class default_value {
         @Test
-        public void is_not_visible_outside_function_body_via_function_name_prefixed_reference() {
+        void is_not_visible_outside_function_body_via_function_name_prefixed_reference() {
           // Despite internally CallsPreprocessor creates references to parameter default values
           // that are further in processing handled correctly, for now it is not available
           // in the language to simplify it.
@@ -155,7 +155,7 @@ public class VisibilityTest {
       @Nested
       class _of_named_function {
         @Test
-        public void is_visible_in_its_body() {
+        void is_visible_in_its_body() {
           var code = """
               myFunc(String param) = param;
               """;
@@ -163,7 +163,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void is_not_visible_outside_its_body() {
+        void is_not_visible_outside_its_body() {
           var code =
               """
               myFunc(String param) = "abc";
@@ -173,13 +173,13 @@ public class VisibilityTest {
         }
 
         @Test
-        public void is_not_visible_in_its_default_value() {
+        void is_not_visible_in_its_default_value() {
           var code = "func(String withDefault = withDefault) = withDefault;";
           module(code).loadsWithError(1, "`withDefault` is undefined.");
         }
 
         @Test
-        public void is_not_visible_in_default_value_of_other_param() {
+        void is_not_visible_in_default_value_of_other_param() {
           var code = "func(String param, String withDefault = param) = param;";
           module(code).loadsWithError(1, "`param` is undefined.");
         }
@@ -188,7 +188,7 @@ public class VisibilityTest {
       @Nested
       class _of_lambda {
         @Test
-        public void is_visible_in_its_body() {
+        void is_visible_in_its_body() {
           var code = """
               myValue = (String param) -> param;
               """;
@@ -196,7 +196,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void is_not_visible_outside_its_body() {
+        void is_not_visible_outside_its_body() {
           var code =
               """
               myValue = (String param) -> "abc";
@@ -212,7 +212,7 @@ public class VisibilityTest {
       @Nested
       class _eval_cannot_be_used_as {
         @Test
-        public void lambda_argument() {
+        void lambda_argument() {
           var code = """
               myValue = ((Int int) -> int)(undefined);
               """;
@@ -220,7 +220,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void lambda_body() {
+        void lambda_body() {
           var code = """
               myValue = () -> undefined;
               """;
@@ -228,7 +228,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void expression_function_argument() {
+        void expression_function_argument() {
           var code =
               """
               String myFunc(Blob b) = "abc";
@@ -238,7 +238,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void expression_function_body() {
+        void expression_function_body() {
           var code = """
               result() = undefined;
               """;
@@ -246,7 +246,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void expression_function_in_call_expression() {
+        void expression_function_in_call_expression() {
           var code = """
               result = undefined();
               """;
@@ -254,7 +254,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void value_body() {
+        void value_body() {
           var code = """
               result = undefined;
               """;
@@ -262,7 +262,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void array_elem() {
+        void array_elem() {
           var code = """
               result = [undefined];
               """;
@@ -270,7 +270,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void param_default_value() {
+        void param_default_value() {
           var code = """
               String myFunc(Blob b = undefined) = "abc";
               """;
@@ -281,7 +281,7 @@ public class VisibilityTest {
       @Nested
       class _type_cannot_be_used {
         @Test
-        public void as_type_of_named_value() {
+        void as_type_of_named_value() {
           var code =
               """
               @Bytecode("Impl.met")
@@ -291,7 +291,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void as_type_of_native_function_result() {
+        void as_type_of_native_function_result() {
           var code =
               """
               @Native("Impl.met")
@@ -301,7 +301,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void as_type_of_named_function_result() {
+        void as_type_of_named_function_result() {
           var code = """
               [Undefined] myFunc() = [];
               """;
@@ -309,7 +309,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void as_type_of_named_function_parameter() {
+        void as_type_of_named_function_parameter() {
           var code = """
               String myFunc(Undefined param) = "abc";
               """;
@@ -317,7 +317,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void inside_param_default_value() {
+        void inside_param_default_value() {
           var code =
               """
               Int myFunc((A)->Int param = (Undefined x) -> 7) = 7;
@@ -326,7 +326,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void as_type_of_lambda_parameter() {
+        void as_type_of_lambda_parameter() {
           var code = """
               myValue = (Undefined param) -> 7;
               """;
@@ -334,7 +334,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void as_type_of_struct_field() {
+        void as_type_of_struct_field() {
           var code =
               """
               MyStruct {
@@ -352,7 +352,7 @@ public class VisibilityTest {
     @Nested
     class one_elem_cycle {
       @Test
-      public void value() {
+      void value() {
         var code = """
             myValue = myValue;
             """;
@@ -364,7 +364,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func() {
+      void func() {
         var code = """
             myFunc1() = myFunc1();
             """;
@@ -376,7 +376,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct() {
+      void struct() {
         var code =
             """
             MyStruct {
@@ -391,7 +391,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_through_array() {
+      void struct_through_array() {
         var code =
             """
             MyStruct {
@@ -406,7 +406,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_through_func_result() {
+      void struct_through_func_result() {
         var code =
             """
             MyStruct {
@@ -421,7 +421,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_through_func_param() {
+      void struct_through_func_param() {
         var code =
             """
             MyStruct {
@@ -439,7 +439,7 @@ public class VisibilityTest {
     @Nested
     class two_elements_cycle {
       @Test
-      public void value_value() {
+      void value_value() {
         var code =
             """
             myValue1 = myValue2;
@@ -454,7 +454,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func_func() {
+      void func_func() {
         var code =
             """
             myFunc1() = myFunc2();
@@ -469,7 +469,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func_func_through_arg() {
+      void func_func_through_arg() {
         var code =
             """
             String myFunc() = myIdentity(myFunc());
@@ -483,7 +483,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void value_value_through_arg() {
+      void value_value_through_arg() {
         var code =
             """
             String myIdentity(String s) = s;
@@ -497,7 +497,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct() {
+      void struct_struct() {
         var code =
             """
             MyStruct1 {
@@ -516,7 +516,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct_through_array() {
+      void struct_struct_through_array() {
         var code =
             """
             MyStruct1 {
@@ -535,7 +535,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct_through_func_result() {
+      void struct_struct_through_func_result() {
         var code =
             """
             MyStruct1 {
@@ -554,7 +554,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct_through_func_param() {
+      void struct_struct_through_func_param() {
         var code =
             """
             MyStruct1 {
@@ -576,7 +576,7 @@ public class VisibilityTest {
     @Nested
     class three_elem_cycle {
       @Test
-      public void value_value_value() {
+      void value_value_value() {
         var code =
             """
             myValue1 = myValue2;
@@ -593,7 +593,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func_func_func() {
+      void func_func_func() {
         var code =
             """
             myFunc1() = myFunc2();
@@ -610,7 +610,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void value_func_value() {
+      void value_func_value() {
         var code =
             """
             myValue1 = myFunc();
@@ -627,7 +627,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void func_value_func() {
+      void func_value_func() {
         var code =
             """
             myFunc1() = myValue;
@@ -644,7 +644,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct_struct_through_array() {
+      void struct_struct_struct_through_array() {
         var code =
             """
             MyStruct1 {
@@ -667,7 +667,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct_struct_through_func_result() {
+      void struct_struct_struct_through_func_result() {
         var code =
             """
             MyStruct1 {
@@ -690,7 +690,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void struct_struct_struct_through_func_param() {
+      void struct_struct_struct_through_func_param() {
         var code =
             """
             MyStruct1 {
@@ -721,7 +721,7 @@ public class VisibilityTest {
       @Nested
       class _imported {
         @Test
-        public void value_succeeds() {
+        void value_succeeds() {
           var code = "otherModuleValue = 8;";
           var imported = "otherModuleValue = 7;";
           module(code)
@@ -731,7 +731,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void func_succeeds() {
+        void func_succeeds() {
           var code = "otherModuleFunc = 7;";
           var imported = "otherModuleFunc() = 8;";
           module(code)
@@ -741,7 +741,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code = "otherModuleStruct = 7;";
           var imported = "OtherModuleStruct {}";
           module(code)
@@ -754,7 +754,7 @@ public class VisibilityTest {
       @Nested
       class _local {
         @Test
-        public void value_fails() {
+        void value_fails() {
           var code =
               """
               myValue = "abc";
@@ -764,7 +764,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void func_fails() {
+        void func_fails() {
           var code =
               """
               myFunc() = "abc";
@@ -780,7 +780,7 @@ public class VisibilityTest {
       @Nested
       class _imported {
         @Test
-        public void value_succeeds() {
+        void value_succeeds() {
           var code = "otherModuleValue() = 8;";
           var imported = "otherModuleValue = 7;";
           module(code)
@@ -790,7 +790,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void function_succeeds() {
+        void function_succeeds() {
           var code = "otherModuleFunc() = 8;";
           var imported = "otherModuleFunc() = 7;";
           module(code)
@@ -800,7 +800,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code = "otherModuleStruct() = 7;";
           var imported = "OtherModuleStruct {}";
           module(code)
@@ -813,7 +813,7 @@ public class VisibilityTest {
       @Nested
       class _local {
         @Test
-        public void named_value_fails() {
+        void named_value_fails() {
           var code =
               """
               myValue = "abc";
@@ -823,7 +823,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void named_function_fails() {
+        void named_function_fails() {
           var code =
               """
               myFunc() = "abc";
@@ -837,7 +837,7 @@ public class VisibilityTest {
     @Nested
     class _named_function_param_shadowing {
       @Test
-      public void other_param_fails() {
+      void other_param_fails() {
         var code =
             """
             String myFunc(
@@ -850,21 +850,21 @@ public class VisibilityTest {
       @Nested
       class _imported {
         @Test
-        public void named_value_succeeds() {
+        void named_value_succeeds() {
           var code = "Int myFunc(String otherModuleValue) = 8;";
           var imported = "otherModuleValue = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void named_function_succeeds() {
+        void named_function_succeeds() {
           var code = "Int myFunc(String otherModuleFunc) = 8;";
           var imported = "otherModuleFunc() = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code = "Int myFunc(String otherModuleStruct) = 7;";
           var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
@@ -874,7 +874,7 @@ public class VisibilityTest {
       @Nested
       class _local {
         @Test
-        public void named_value_succeeds() {
+        void named_value_succeeds() {
           var code =
               """
               myValue = "abc";
@@ -884,7 +884,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void named_function_succeeds() {
+        void named_function_succeeds() {
           var code =
               """
               myFunc() = "abc";
@@ -894,7 +894,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code =
               """
               MyStruct {}
@@ -908,7 +908,7 @@ public class VisibilityTest {
     @Nested
     class _lambda_param_shadowing {
       @Test
-      public void other_param_fails() {
+      void other_param_fails() {
         var code =
             """
             myValue = (
@@ -921,21 +921,21 @@ public class VisibilityTest {
       @Nested
       class _imported {
         @Test
-        public void named_value_succeeds() {
+        void named_value_succeeds() {
           var code = "myValue = (String otherModuleValue) -> 7;";
           var imported = "otherModuleValue = 8;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void named_function_succeeds() {
+        void named_function_succeeds() {
           var code = "myValue = (String otherModuleFunc) -> 7;";
           var imported = "otherModuleFunc() = 8;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code = "myValue = (String otherModuleStruct) -> 7;";
           var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
@@ -945,7 +945,7 @@ public class VisibilityTest {
       @Nested
       class _local {
         @Test
-        public void named_value_succeeds() {
+        void named_value_succeeds() {
           var code =
               """
               myValue = "abc";
@@ -955,7 +955,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void named_function_succeeds() {
+        void named_function_succeeds() {
           var code =
               """
               myFunc() = "abc";
@@ -965,7 +965,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code =
               """
               MyStruct {}
@@ -981,13 +981,13 @@ public class VisibilityTest {
       @Nested
       class _imported {
         @Test
-        public void base_type_succeeds() {
+        void base_type_succeeds() {
           var code = "String {}";
           module(code).loadsWithSuccess().containsType(sStructType("String", nlist()));
         }
 
         @Test
-        public void struct_succeeds() {
+        void struct_succeeds() {
           var code = "OtherModuleStruct {}";
           var imported = "OtherModuleStruct {Int int}";
           module(code)
@@ -1000,7 +1000,7 @@ public class VisibilityTest {
       @Nested
       class _local {
         @Test
-        public void struct_fails() {
+        void struct_fails() {
           var code =
               """
               OtherModuleStruct {}
@@ -1015,7 +1015,7 @@ public class VisibilityTest {
     @Nested
     class _field_shadowing {
       @Test
-      public void other_field_fails() {
+      void other_field_fails() {
         var code =
             """
             MyStruct {
@@ -1029,21 +1029,21 @@ public class VisibilityTest {
       @Nested
       class _imported {
         @Test
-        public void value_succeeds() {
+        void value_succeeds() {
           var code = "MyStruct {Int otherModuleValue}";
           var imported = "otherModuleValue = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void func_succeeds() {
+        void func_succeeds() {
           var code = "MyStruct {String otherModuleFunc}";
           var imported = "otherModuleFunc() = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code = "MyStruct {String otherModuleStruct}";
           var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
@@ -1053,7 +1053,7 @@ public class VisibilityTest {
       @Nested
       class _local {
         @Test
-        public void value_succeeds() {
+        void value_succeeds() {
           var code =
               """
               myValue = "abc";
@@ -1065,7 +1065,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void func_succeeds() {
+        void func_succeeds() {
           var code =
               """
               myFunc() = "abc";
@@ -1077,7 +1077,7 @@ public class VisibilityTest {
         }
 
         @Test
-        public void constructor_succeeds() {
+        void constructor_succeeds() {
           var code =
               """
               MyStruct {}

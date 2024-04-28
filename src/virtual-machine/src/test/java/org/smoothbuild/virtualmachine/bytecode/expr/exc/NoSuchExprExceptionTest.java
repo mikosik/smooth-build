@@ -7,7 +7,7 @@ import org.smoothbuild.common.base.Hash;
 
 public class NoSuchExprExceptionTest {
   @Test
-  public void message() {
+  void message() {
     var exception = new NoSuchExprException(Hash.of(123));
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode expression at "

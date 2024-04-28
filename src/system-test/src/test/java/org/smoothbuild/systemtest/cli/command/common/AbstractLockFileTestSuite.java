@@ -14,8 +14,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.Sleep3s;
 
 public abstract class AbstractLockFileTestSuite extends SystemTestCase {
   @Test
-  public void command_fails_when_lock_file_is_already_acquired()
-      throws IOException, InterruptedException {
+  void command_fails_when_lock_file_is_already_acquired() throws IOException, InterruptedException {
     createNativeJar(Sleep3s.class);
     createUserModule(format(
         """

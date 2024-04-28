@@ -22,25 +22,25 @@ public class SortTopologicallyTest {
   @Nested
   class sort {
     @Test
-    public void empty() {
+    void empty() {
       assertSortTopologically(list(), list(list()));
     }
 
     @Test
-    public void single_node() {
+    void single_node() {
       var n1 = node(1);
       assertSortTopologically(list(n1), list(list(n1)));
     }
 
     @Test
-    public void two_single_nodes() {
+    void two_single_nodes() {
       var n1 = node(1);
       var n2 = node(2);
       assertSortTopologically(list(n1, n2), list(list(n1)));
     }
 
     @Test
-    public void three_single_nodes() {
+    void three_single_nodes() {
       var n1 = node(1);
       var n2 = node(2);
       var n3 = node(3);
@@ -48,7 +48,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void single_line() {
+    void single_line() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(3));
       var n3 = node(3);
@@ -56,7 +56,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void single_line_with_island() {
+    void single_line_with_island() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(3));
       var n3 = node(3);
@@ -65,7 +65,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void two_lines() {
+    void two_lines() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(3));
       var n3 = node(3);
@@ -77,7 +77,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void two_lines_with_island() {
+    void two_lines_with_island() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(3));
       var n3 = node(3);
@@ -90,7 +90,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void simple_tree() {
+    void simple_tree() {
       var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
@@ -98,7 +98,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void two_simple_trees() {
+    void two_simple_trees() {
       var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
@@ -111,7 +111,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void simple_tree_with_island() {
+    void simple_tree_with_island() {
       var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
@@ -120,7 +120,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void two_roots() {
+    void two_roots() {
       var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
@@ -130,14 +130,14 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void parallel_edges() {
+    void parallel_edges() {
       var n1 = node(1, list(2, 2));
       var n2 = node(2);
       assertSortTopologically(list(n1, n2), list(list(n1, n2)));
     }
 
     @Test
-    public void parallel_path_between_nodes() {
+    void parallel_path_between_nodes() {
       var n1 = node(1, list(2, 3));
       var n2 = node(2, list(4));
       var n3 = node(3, list(4));
@@ -149,13 +149,13 @@ public class SortTopologicallyTest {
   @Nested
   class detects_cycle {
     @Test
-    public void to_itself() {
+    void to_itself() {
       var n1 = node(1, list(1));
       assertCycleDetected(list(n1), list(n1));
     }
 
     @Test
-    public void to_itself_when_it_has_also_dangling_node() {
+    void to_itself_when_it_has_also_dangling_node() {
       var n1 = node(1);
       var n2 = node(2, list(1, 2));
 
@@ -163,14 +163,14 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void between_two_nodes_when_no_root_exists() {
+    void between_two_nodes_when_no_root_exists() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(1));
       assertCycleDetected(list(n1, n2), list(n1, n2));
     }
 
     @Test
-    public void between_two_nodes_when_island_exists() {
+    void between_two_nodes_when_island_exists() {
       var n1 = node(1);
       var n2 = node(2, list(3));
       var n3 = node(3, list(2));
@@ -178,7 +178,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void between_two_nodes_when_root_exists() {
+    void between_two_nodes_when_root_exists() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(3));
       var n3 = node(3, list(2));
@@ -225,7 +225,7 @@ public class SortTopologicallyTest {
   @Nested
   class fails {
     @Test
-    public void when_edge_points_to_nonexistent_node() {
+    void when_edge_points_to_nonexistent_node() {
       var n1 = node(1, list(2));
       var nodes = list(n1);
 
@@ -235,7 +235,7 @@ public class SortTopologicallyTest {
     }
 
     @Test
-    public void when_two_nodes_has_same_key() {
+    void when_two_nodes_has_same_key() {
       var n1 = node(1);
       var n1b = node(1);
       var nodes = list(n1, n1b);
@@ -245,7 +245,7 @@ public class SortTopologicallyTest {
   }
 
   @Test
-  public void sorting_algorithm_has_linear_complexity() {
+  void sorting_algorithm_has_linear_complexity() {
     AtomicInteger key = new AtomicInteger();
     var topLayer = createLayer(key, list());
     var nodes = new ArrayList<>(topLayer);

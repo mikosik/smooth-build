@@ -46,13 +46,13 @@ public class BIfTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void if_can_be_read_back_by_hash() throws Exception {
+  void if_can_be_read_back_by_hash() throws Exception {
     var ifB = bIf(bBool(true), bInt(1), bInt(2));
     assertThat(exprDbOther().get(ifB.hash())).isEqualTo(ifB);
   }
 
   @Test
-  public void if_read_back_by_hash_has_same_sub_expressions() throws Exception {
+  void if_read_back_by_hash_has_same_sub_expressions() throws Exception {
     var condition = bBool(true);
     var then_ = bInt(1);
     var else_ = bInt(2);
@@ -62,7 +62,7 @@ public class BIfTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var ifB = bIf(bBool(true), bInt(1), bInt(2));
     assertThat(ifB.toString()).isEqualTo("IF:Int(???)@" + ifB.hash());
   }

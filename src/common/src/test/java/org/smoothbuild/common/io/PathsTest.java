@@ -10,13 +10,13 @@ public class PathsTest {
   @Nested
   class change_extension {
     @Test
-    public void to_different_one() {
+    void to_different_one() {
       assertThat((Object) Paths.changeExtension(newPath("abc/def.txt"), "md"))
           .isEqualTo(newPath("abc/def.md"));
     }
 
     @Test
-    public void on_path_that_does_not_have_one() {
+    void on_path_that_does_not_have_one() {
       assertThat((Object) Paths.changeExtension(newPath("abc/def"), "md"))
           .isEqualTo(newPath("abc/def.md"));
     }
@@ -25,12 +25,12 @@ public class PathsTest {
   @Nested
   class remove_extension {
     @Test
-    public void from_path_with_extension() {
+    void from_path_with_extension() {
       assertThat((Object) Paths.removeExtension("abc/def.txt")).isEqualTo("abc/def");
     }
 
     @Test
-    public void from_path_without_extension() {
+    void from_path_without_extension() {
       assertThat((Object) Paths.removeExtension("abc/def")).isEqualTo("abc/def");
     }
   }

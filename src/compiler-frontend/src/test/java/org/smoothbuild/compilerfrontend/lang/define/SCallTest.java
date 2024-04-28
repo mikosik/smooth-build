@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class SCallTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var funcS = sInstantiate(4, list(sIntType()), idSFunc());
     var callS = sCall(3, funcS, sInt(3, 7));
     assertThat(callS.toString())
