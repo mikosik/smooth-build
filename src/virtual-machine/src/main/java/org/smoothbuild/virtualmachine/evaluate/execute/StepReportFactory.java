@@ -48,7 +48,7 @@ public class StepReportFactory {
     };
   }
 
-  private static Label newLabel(String combine) {
-    return Label.label(EVALUATE_PREFIX, combine);
+  private static Label newLabel(String stepName) {
+    return Label.label(EVALUATE_PREFIX, stepName);
   }
 }
