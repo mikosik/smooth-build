@@ -351,8 +351,8 @@ public class ComputerTest extends TestingVirtualMachine {
   private Computer computerWithCaches(Step step, BTuple input, BValue memoryValue, BValue diskValue)
       throws Exception {
     var computationCache = computationCache();
-    var sandboxHash = Hash.of(123);
-    var computationHash = Computer.computationHash(sandboxHash, step, input);
+    var computationHashFactory = computationHashFactory();
+    var computationHash = computationHashFactory.create(step, input);
     if (diskValue != null) {
       computationCache.write(computationHash, output(diskValue));
     }
@@ -361,7 +361,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var computationResult = computationResult(memoryValue, EXECUTION);
       memoryCache.put(computationHash, promise(computationResult));
     }
-    return new Computer(sandboxHash, this::container, computationCache, memoryCache);
+    return new Computer(computationHashFactory, this::container, computationCache, memoryCache);
   }
 
   private void assertComputationResult(
@@ -372,23 +372,24 @@ public class ComputerTest extends TestingVirtualMachine {
 
   private void assertCachesState(
       Step step, BTuple input, ComputationResult memoryValue, BValue diskValue) throws Exception {
-    var sandboxHash = Hash.of(123);
     var computationCache = computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, Promise<ComputationResult>>();
-    var computer = new Computer(sandboxHash, this::container, computationCache, memoryCache);
+    var computationHashFactory = computationHashFactory();
+    var computer =
+        new Computer(computationHashFactory, this::container, computationCache, memoryCache);
     computer.compute(step, input);
 
-    var taskHash = Computer.computationHash(sandboxHash, step, input);
+    var stepHash = computationHashFactory.create(step, input);
 
     if (memoryValue == null) {
-      assertThat(memoryCache.containsKey(taskHash)).isFalse();
+      assertThat(memoryCache.containsKey(stepHash)).isFalse();
     } else {
-      assertThat(memoryCache.get(taskHash).get()).isEqualTo(memoryValue);
+      assertThat(memoryCache.get(stepHash).get()).isEqualTo(memoryValue);
     }
     if (diskValue == null) {
-      assertThat(computationCache.contains(taskHash)).isFalse();
+      assertThat(computationCache.contains(stepHash)).isFalse();
     } else {
-      assertThat(computationCache.read(taskHash, diskValue.type())).isEqualTo(output(diskValue));
+      assertThat(computationCache.read(stepHash, diskValue.type())).isEqualTo(output(diskValue));
     }
   }
 }
