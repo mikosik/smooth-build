@@ -12,7 +12,7 @@ public class CachingTest extends EvaluatorTestCase {
   @Nested
   class _result_from_eval_which_is_ {
     @Test
-    public void pure_func_result_is_cached_on_disk() throws Exception {
+    void pure_func_result_is_cached_on_disk() throws Exception {
       var userModule = format(
           """
               @Native("%s")
@@ -31,7 +31,7 @@ public class CachingTest extends EvaluatorTestCase {
     }
 
     @Test
-    public void impure_func_result_is_cached_in_single_build() throws Exception {
+    void impure_func_result_is_cached_in_single_build() throws Exception {
       var userModule = format(
           """
               @NativeImpure("%s")
@@ -46,7 +46,7 @@ public class CachingTest extends EvaluatorTestCase {
     }
 
     @Test
-    public void impure_func_result_is_not_cached_on_disk() throws Exception {
+    void impure_func_result_is_not_cached_on_disk() throws Exception {
       var userModule = format(
           """
               @NativeImpure("%s")
@@ -66,7 +66,7 @@ public class CachingTest extends EvaluatorTestCase {
   }
 
   @Test
-  public void native_func_with_same_pure_native_share_cache_results() throws Exception {
+  void native_func_with_same_pure_native_share_cache_results() throws Exception {
     var userModule = format(
         """
             @Native("%s")
@@ -86,7 +86,7 @@ public class CachingTest extends EvaluatorTestCase {
   }
 
   @Test
-  public void native_func_with_same_impure_native_share_cache_results() throws Exception {
+  void native_func_with_same_impure_native_share_cache_results() throws Exception {
     var userModule = format(
         """
             @NativeImpure("%s")
@@ -106,7 +106,7 @@ public class CachingTest extends EvaluatorTestCase {
   }
 
   @Test
-  public void native_func_with_same_native_but_different_pureness_dont_share_cache_results()
+  void native_func_with_same_native_but_different_pureness_dont_share_cache_results()
       throws Exception {
     var userModule = format(
         """

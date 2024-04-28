@@ -29,13 +29,13 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   @Nested
   class _caching {
     @Test
-    public void method_is_cached() throws Exception {
+    void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
       testCaching(right(method), right(method));
     }
 
     @Test
-    public void error_when_loading_method_is_cached() throws Exception {
+    void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
       testCaching(left("error message"), left("error message"));
     }
@@ -59,17 +59,17 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void loading_non_public_method_causes_error() throws Exception {
+  void loading_non_public_method_causes_error() throws Exception {
     assertLoadingCausesError(NonPublicMethod.class, "Providing method is not public.");
   }
 
   @Test
-  public void loading_non_static_method_causes_error() throws Exception {
+  void loading_non_static_method_causes_error() throws Exception {
     assertLoadingCausesError(NonStaticMethod.class, "Providing method is not static.");
   }
 
   @Test
-  public void loading_method_without_native_api_param_causes_error() throws Exception {
+  void loading_method_without_native_api_param_causes_error() throws Exception {
     assertLoadingCausesError(
         WithoutBytecodeF.class,
         "Providing method parameter is not of type " + BytecodeFactory.class.getCanonicalName()
@@ -77,13 +77,13 @@ public class BytecodeMethodLoaderTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void loading_method_with_three_params_causes_error() throws Exception {
+  void loading_method_with_three_params_causes_error() throws Exception {
     assertLoadingCausesError(
         WithThreeParams.class, "Providing method parameter count is different than 2.");
   }
 
   @Test
-  public void loading_method_with_non_val_result_causes_error() throws Exception {
+  void loading_method_with_non_val_result_causes_error() throws Exception {
     assertLoadingCausesError(
         WithNonValueResult.class,
         "Providing method result type is not " + BValue.class.getCanonicalName() + ".");

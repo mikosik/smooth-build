@@ -35,21 +35,21 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_non_existent_file_fails() {
+  void deleting_non_existent_file_fails() {
     File dir = createDir(root, "dir");
     File file = new File(dir, "file");
     AssertCall.assertCall(() -> RecursiveDeleter.deleteRecursively(file.toPath()));
   }
 
   @Test
-  public void deleting_single_file() throws Exception {
+  void deleting_single_file() throws Exception {
     File file = createEmptyFile(root, "file");
     RecursiveDeleter.deleteRecursively(file.toPath());
     assertThat(file.exists()).isFalse();
   }
 
   @Test
-  public void deleting_single_file_does_not_delete_its_dir() throws Exception {
+  void deleting_single_file_does_not_delete_its_dir() throws Exception {
     File dir = createDir(root, "dir");
     File file = createEmptyFile(dir, "file");
 
@@ -59,7 +59,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_symbolic_link_to_file() throws Exception {
+  void deleting_symbolic_link_to_file() throws Exception {
     File file = createEmptyFile(root, "file");
     File link = new File(root, "link");
     Files.createSymbolicLink(link.toPath(), file.toPath());
@@ -71,7 +71,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_symbolic_link_to_dir() throws Exception {
+  void deleting_symbolic_link_to_dir() throws Exception {
     File dir = createDir(root, "dir");
     File file = createEmptyFile(dir, "file");
     File link = new File(root, "link");
@@ -85,7 +85,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_recursively_dir() throws Exception {
+  void deleting_recursively_dir() throws Exception {
     // given
     File fileOutside = createEmptyFile(root, "fileOutsideMain");
 
@@ -118,8 +118,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_recursively_dir_with_symbolic_link_does_not_delete_link_target()
-      throws Exception {
+  void deleting_recursively_dir_with_symbolic_link_does_not_delete_link_target() throws Exception {
     File file = createEmptyFile(root, "file");
     File dir = createDir(root, "dir");
     File link = new File(dir, "link");

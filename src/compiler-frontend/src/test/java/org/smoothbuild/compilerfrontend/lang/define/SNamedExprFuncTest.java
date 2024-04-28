@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class SNamedExprFuncTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
     var schema = sFuncSchema(params, sStringType());
     var func = new SNamedExprFunc(schema, "myFunc", params, sInt(17), location(1));

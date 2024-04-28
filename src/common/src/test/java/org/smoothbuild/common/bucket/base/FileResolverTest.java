@@ -42,21 +42,21 @@ public class FileResolverTest {
   @Nested
   class _path_state {
     @Test
-    public void of_file() throws IOException {
+    void of_file() throws IOException {
       var path = path("file.txt");
       createFile(path, "some string");
       assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(FILE);
     }
 
     @Test
-    public void of_directory() throws IOException {
+    void of_directory() throws IOException {
       var path = path("directory");
       bucket.createDir(path);
       assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(DIR);
     }
 
     @Test
-    public void of_nothing() {
+    void of_nothing() {
       var path = path("file.txt");
       assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(NOTHING);
     }

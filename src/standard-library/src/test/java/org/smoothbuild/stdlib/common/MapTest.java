@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class MapTest extends StandardLibraryTestCase {
   @Test
-  public void mapping_bools() throws Exception {
+  void mapping_bools() throws Exception {
     var code = """
         result = map([false, true], not);
         """;
@@ -17,7 +17,7 @@ public class MapTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void mapping_files_to_path() throws Exception {
+  void mapping_files_to_path() throws Exception {
     var code =
         """
         files = [File(0x01, "test01.txt"), File(0x02, "test02.txt")];

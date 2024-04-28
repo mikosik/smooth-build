@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class ToStringTest extends StandardLibraryTestCase {
   @Test
-  public void to_string_func() throws Exception {
+  void to_string_func() throws Exception {
     var userModule = """
         result = toString(0x41);
         """;

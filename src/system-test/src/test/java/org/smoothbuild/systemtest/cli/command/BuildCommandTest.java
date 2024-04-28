@@ -25,7 +25,7 @@ public class BuildCommandTest {
   @Nested
   class _basic extends SystemTestCase {
     @Test
-    public void build_command_clears_artifacts_dir() throws Exception {
+    void build_command_clears_artifacts_dir() throws Exception {
       String path = ARTIFACTS_PATH.appendPart("file.txt").toString();
       createFile(path, "content");
       createUserModule("""
@@ -74,7 +74,7 @@ public class BuildCommandTest {
     @Nested
     class _basic extends SystemTestCase {
       @Test
-      public void illegal_value_causes_error() throws IOException {
+      void illegal_value_causes_error() throws IOException {
         createUserModule("""
                 result = "abc";
                 """);
@@ -100,12 +100,12 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_call_to_native_func_when_enabled() throws IOException {
+      void shows_call_to_native_func_when_enabled() throws IOException {
         testThatTaskHeaderShownWhenInvokeIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
       @Test
-      public void hides_call_to_native_func_when_not_enabled() throws IOException {
+      void hides_call_to_native_func_when_not_enabled() throws IOException {
         testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
             NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
@@ -142,7 +142,7 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_when_enabled() throws IOException {
+      void shows_when_enabled() throws IOException {
         createUserModule(COMBINE);
         runSmooth(buildCommand("--show-tasks=combine", "result"));
         assertFinishedWithSuccess();
@@ -150,7 +150,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_when_not_enabled() throws IOException {
+      void hides_when_not_enabled() throws IOException {
         createUserModule(COMBINE);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -177,32 +177,32 @@ public class BuildCommandTest {
           :evaluate:const""";
 
       @Test
-      public void shows_blob_when_consts_enabled() throws IOException {
+      void shows_blob_when_consts_enabled() throws IOException {
         testThatTaskHeaderShownWhenConstAreEnabled(BLOB_CONST, BLOB_CONST_TASK_HEADER);
       }
 
       @Test
-      public void hides_blob_when_const_not_enabled() throws IOException {
+      void hides_blob_when_const_not_enabled() throws IOException {
         testThatTaskHeaderIsNotShownWhenConstAreDisabled(BLOB_CONST, BLOB_CONST_TASK_HEADER);
       }
 
       @Test
-      public void shows_int_when_consts_enabled() throws IOException {
+      void shows_int_when_consts_enabled() throws IOException {
         testThatTaskHeaderShownWhenConstAreEnabled(INT_CONST, INT_CONST_TASK_HEADER);
       }
 
       @Test
-      public void hides_int_when_const_not_enabled() throws IOException {
+      void hides_int_when_const_not_enabled() throws IOException {
         testThatTaskHeaderIsNotShownWhenConstAreDisabled(INT_CONST, INT_CONST_TASK_HEADER);
       }
 
       @Test
-      public void shows_string_when_const_enabled() throws IOException {
+      void shows_string_when_const_enabled() throws IOException {
         testThatTaskHeaderShownWhenConstAreEnabled(STRING_CONST, STRING_CONST_TASK_HEADER);
       }
 
       @Test
-      public void hides_string_when_consts_not_enabled() throws IOException {
+      void hides_string_when_consts_not_enabled() throws IOException {
         testThatTaskHeaderIsNotShownWhenConstAreDisabled(STRING_CONST, STRING_CONST_TASK_HEADER);
       }
 
@@ -234,7 +234,7 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_when_enabled() throws IOException {
+      void shows_when_enabled() throws IOException {
         createUserModule(PICK);
         runSmooth(buildCommand("--show-tasks=pick", "result"));
         assertFinishedWithSuccess();
@@ -242,7 +242,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_when_not_enabled() throws IOException {
+      void hides_when_not_enabled() throws IOException {
         createUserModule(PICK);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -264,7 +264,7 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_when_enabled() throws IOException {
+      void shows_when_enabled() throws IOException {
         createUserModule(ORDER);
         runSmooth(buildCommand("--show-tasks=order", "result"));
         assertFinishedWithSuccess();
@@ -272,7 +272,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_when_not_enabled() throws IOException {
+      void hides_when_not_enabled() throws IOException {
         createUserModule(ORDER);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -295,7 +295,7 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_when_enabled() throws IOException {
+      void shows_when_enabled() throws IOException {
         createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=select", "result"));
         assertFinishedWithSuccess();
@@ -303,7 +303,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_when_not_enabled() throws IOException {
+      void hides_when_not_enabled() throws IOException {
         createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -317,7 +317,7 @@ public class BuildCommandTest {
     @Nested
     class is_fatal extends SystemTestCase {
       @Test
-      public void then_error_log_is_not_shown() throws IOException {
+      void then_error_log_is_not_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(
             """
@@ -330,7 +330,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_warning_log_is_not_shown() throws IOException {
+      void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format(
             """
@@ -345,7 +345,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_info_log_is_not_shown() throws IOException {
+      void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format(
             """
@@ -363,7 +363,7 @@ public class BuildCommandTest {
     @Nested
     class is_error extends SystemTestCase {
       @Test
-      public void then_error_log_is_shown() throws IOException {
+      void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(format(
             """
@@ -378,7 +378,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_warning_log_is_not_shown() throws IOException {
+      void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format(
             """
@@ -393,7 +393,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_info_log_is_not_shown() throws IOException {
+      void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format(
             """
@@ -411,7 +411,7 @@ public class BuildCommandTest {
     @Nested
     class is_warning extends SystemTestCase {
       @Test
-      public void then_error_log_is_shown() throws IOException {
+      void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(format(
             """
@@ -426,7 +426,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_warning_log_is_shown() throws IOException {
+      void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format(
             """
@@ -441,7 +441,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_info_log_is_not_shown() throws IOException {
+      void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format(
             """
@@ -459,7 +459,7 @@ public class BuildCommandTest {
     @Nested
     class is_info extends SystemTestCase {
       @Test
-      public void then_error_log_is_shown() throws IOException {
+      void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(format(
             """
@@ -474,7 +474,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_warning_log_is_shown() throws IOException {
+      void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format(
             """
@@ -489,7 +489,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void then_info_log_is_shown() throws IOException {
+      void then_info_log_is_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format(
             """
@@ -508,7 +508,7 @@ public class BuildCommandTest {
   @Nested
   class _reported_task_header_for extends SystemTestCase {
     @Test
-    public void native_call() throws IOException {
+    void native_call() throws IOException {
       createNativeJar(ReturnAbc.class);
       createUserModule(format(
           """
@@ -525,7 +525,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void select() throws IOException {
+    void select() throws IOException {
       createUserModule(
           """
           MyStruct {
@@ -541,7 +541,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void func_reference() throws IOException {
+    void func_reference() throws IOException {
       createUserModule("""
           myFunc() = 7;
           result = myFunc;
@@ -553,7 +553,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void value_reference() throws IOException {
+    void value_reference() throws IOException {
       createUserModule("""
           myValue = "abc";
           result = myValue;
@@ -565,7 +565,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void literal_array() throws IOException {
+    void literal_array() throws IOException {
       createUserModule("""
           result = ["abc"];
           """);
@@ -577,7 +577,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void literal_blob() throws IOException {
+    void literal_blob() throws IOException {
       createUserModule("""
           result = 0x0102;
           """);
@@ -588,7 +588,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void literal_string() throws IOException {
+    void literal_string() throws IOException {
       createUserModule("""
           result = "abc";
           """);
@@ -599,7 +599,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void literal_int() throws IOException {
+    void literal_int() throws IOException {
       createUserModule("""
           result = 17;
           """);

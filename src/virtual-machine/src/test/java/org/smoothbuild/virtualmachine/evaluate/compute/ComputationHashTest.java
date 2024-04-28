@@ -16,7 +16,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ComputationHashTest extends TestingVirtualMachine {
   @Test
-  public void hashes_of_computations_with_same_task_runtime_and_input_are_equal() throws Exception {
+  void hashes_of_computations_with_same_task_runtime_and_input_are_equal() throws Exception {
     var task = new ConstStep(bInt(7), bTrace());
     var input = bTuple(bString("input"));
     assertThat(computationHash(Hash.of(13), task, input))
@@ -24,7 +24,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal()
+  void hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal()
       throws Exception {
     var task1 = new ConstStep(bInt(7), bTrace());
     var task2 = new ConstStep(bInt(9), bTrace());
@@ -34,7 +34,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal()
+  void hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal()
       throws Exception {
     var task = new ConstStep(bInt(7), bTrace());
     var input = bTuple(bString("input"));
@@ -43,7 +43,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void hashes_of_computations_with_same_task_runtime_but_different_input_are_not_equal()
+  void hashes_of_computations_with_same_task_runtime_but_different_input_are_not_equal()
       throws Exception {
     var task = new ConstStep(bInt(7), bTrace());
     var input1 = bTuple(bString("input"));
@@ -55,7 +55,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
   @Nested
   class _computation_hash_is_stable_for {
     @Test
-    public void combine_task_and_empty_input() throws Exception {
+    void combine_task_and_empty_input() throws Exception {
       var task = new CombineStep(bCombine(), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
@@ -64,7 +64,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void const_task() throws Exception {
+    void const_task() throws Exception {
       var task = new ConstStep(bInt(37), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
@@ -73,7 +73,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void combine_task_and_one_element_input() throws Exception {
+    void combine_task_and_one_element_input() throws Exception {
       var task = new CombineStep(bCombine(), bTrace());
       var input = bTuple(bString("abc"));
       assertThat(computationHash(Hash.of(13), task, input))
@@ -82,7 +82,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void combine_task_and_two_elements_input() throws Exception {
+    void combine_task_and_two_elements_input() throws Exception {
       var task = new CombineStep(bCombine(), bTrace());
       var input = bTuple(bString("abc"), bString("def"));
       assertThat(computationHash(Hash.of(13), task, input))
@@ -91,7 +91,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void invoke_task_and_empty_input() throws Exception {
+    void invoke_task_and_empty_input() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
       var task = newInvokeStep(invoke, bTrace());
       var input = bTuple();
@@ -101,7 +101,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void order_task_and_empty_input() throws Exception {
+    void order_task_and_empty_input() throws Exception {
       var task = new OrderStep(bOrder(bStringType()), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
@@ -110,7 +110,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void pick_task() throws Exception {
+    void pick_task() throws Exception {
       var task = new PickStep(bPick(bArray(bInt(37)), bInt(0)), bTrace());
       var input = bTuple();
       assertThat(computationHash(Hash.of(13), task, input))
@@ -119,7 +119,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void order_task_and_non_empty_input() throws Exception {
+    void order_task_and_non_empty_input() throws Exception {
       var task = new OrderStep(bOrder(bStringType()), bTrace());
       var input = bTuple(bString("abc"), bString("def"));
       assertThat(computationHash(Hash.of(13), task, input))
@@ -128,7 +128,7 @@ public class ComputationHashTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void select_task_and_one_element_input() throws Exception {
+    void select_task_and_one_element_input() throws Exception {
       var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bString("abc"));
       assertThat(computationHash(Hash.of(13), task, input))

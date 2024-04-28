@@ -79,17 +79,17 @@ public class EvaluatorTest extends TestingVirtualMachine {
     @Nested
     class _constant {
       @Test
-      public void blob() throws BytecodeException {
+      void blob() throws BytecodeException {
         assertEvaluation(sBlob(7), bBlob(7));
       }
 
       @Test
-      public void int_() throws BytecodeException {
+      void int_() throws BytecodeException {
         assertEvaluation(sInt(8), bInt(8));
       }
 
       @Test
-      public void string() throws BytecodeException {
+      void string() throws BytecodeException {
         assertEvaluation(sString("abc"), bString("abc"));
       }
     }
@@ -99,14 +99,14 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _call {
         @Test
-        public void call_lambda() throws BytecodeException {
+        void call_lambda() throws BytecodeException {
           var LambdaS = sLambda(nlist(), sInt(7));
           var callS = sCall(sInstantiate(LambdaS));
           assertEvaluation(callS, bInt(7));
         }
 
         @Test
-        public void call_lambda_returning_enclosing_func_param() throws BytecodeException {
+        void call_lambda_returning_enclosing_func_param() throws BytecodeException {
           var lambdaS = sInstantiate(sLambda(nlist(), sParamRef(sIntType(), "p")));
           var funcS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sCall(lambdaS));
           var callS = sCall(sInstantiate(funcS), sInt(7));
@@ -114,14 +114,14 @@ public class EvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void call_expression_function() throws BytecodeException {
+        void call_expression_function() throws BytecodeException {
           var funcS = sFunc("n", nlist(), sInt(7));
           var callS = sCall(sInstantiate(funcS));
           assertEvaluation(bindings(funcS), callS, bInt(7));
         }
 
         @Test
-        public void call_poly_expression_function() throws BytecodeException {
+        void call_poly_expression_function() throws BytecodeException {
           var a = varA();
           var orderS = sOrder(a, sParamRef(a, "e"));
           var funcS = sFunc(sArrayType(a), "n", nlist(sItem(a, "e")), orderS);
@@ -130,7 +130,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void call_constructor() throws BytecodeException {
+        void call_constructor() throws BytecodeException {
           var constructorS =
               sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))));
           var callS = sCall(sInstantiate(constructorS), sInt(7));
@@ -138,7 +138,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void call_native_argless_func() throws Exception {
+        void call_native_argless_func() throws Exception {
           var funcS = sAnnotatedFunc(
               sNativeAnnotation(1, sString("class binary name")), sIntType(), "f", nlist());
           var callS = sCall(sInstantiate(funcS));
@@ -152,7 +152,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void call_native_func_with_param() throws Exception {
+        void call_native_func_with_param() throws Exception {
           var funcS = sAnnotatedFunc(
               sNativeAnnotation(1, sString("class binary name")),
               sIntType(),
@@ -172,7 +172,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _combine {
         @Test
-        public void combine() throws BytecodeException {
+        void combine() throws BytecodeException {
           assertEvaluation(sCombine(sInt(7), sString("abc")), bTuple(bInt(7), bString("abc")));
         }
       }
@@ -180,7 +180,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _order {
         @Test
-        public void order() throws BytecodeException {
+        void order() throws BytecodeException {
           assertEvaluation(
               sOrder(sIntType(), sInt(7), sInt(8)), bArray(bIntType(), bInt(7), bInt(8)));
         }
@@ -189,7 +189,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _param_ref {
         @Test
-        public void param_ref() throws BytecodeException {
+        void param_ref() throws BytecodeException {
           var funcS = sFunc("n", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
           var callS = sCall(sInstantiate(funcS), sInt(7));
           assertEvaluation(bindings(funcS), callS, bInt(7));
@@ -199,7 +199,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _select {
         @Test
-        public void select() throws BytecodeException {
+        void select() throws BytecodeException {
           var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "f")));
           var constructorS = sConstructor(structTS);
           var callS = sCall(sInstantiate(constructorS), sInt(7));
@@ -213,12 +213,12 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _lambda {
         @Test
-        public void mono_lambda() throws BytecodeException {
+        void mono_lambda() throws BytecodeException {
           assertEvaluation(sInstantiate(sLambda(sInt(7))), bLambda(bInt(7)));
         }
 
         @Test
-        public void poly_lambda() throws BytecodeException {
+        void poly_lambda() throws BytecodeException {
           var a = varA();
           var polyLambdaS = sLambda(nlist(sItem(a, "a")), sParamRef(a, "a"));
           var monoLambdaS = sInstantiate(list(sIntType()), polyLambdaS);
@@ -229,12 +229,12 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _named_func {
         @Test
-        public void mono_expression_func() throws BytecodeException {
+        void mono_expression_func() throws BytecodeException {
           assertEvaluation(intIdSFunc(), bIntIdLambda());
         }
 
         @Test
-        public void poly_expression_function() throws BytecodeException {
+        void poly_expression_function() throws BytecodeException {
           var a = varA();
           var funcS = sFunc("n", nlist(sItem(a, "e")), sParamRef(a, "e"));
           var instantiateS = sInstantiate(list(sIntType()), funcS);
@@ -242,7 +242,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void ann_func() throws Exception {
+        void ann_func() throws Exception {
           var jar = bBlob(123);
           var className = ReturnIdFunc.class.getCanonicalName();
           var bMethod = bMethod(jar, className, BYTECODE_METHOD_NAME);
@@ -259,7 +259,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
         }
 
         @Test
-        public void constructor() throws BytecodeException {
+        void constructor() throws BytecodeException {
           var constructorS =
               sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "myField"))));
           assertEvaluation(
@@ -270,13 +270,13 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _named_value {
         @Test
-        public void mono_expression_value() throws BytecodeException {
+        void mono_expression_value() throws BytecodeException {
           var valueS = sValue(1, sIntType(), "name", sInt(7));
           assertEvaluation(bindings(valueS), sInstantiate(valueS), bInt(7));
         }
 
         @Test
-        public void poly_value() throws BytecodeException {
+        void poly_value() throws BytecodeException {
           var a = varA();
           var polyValue = sValue(1, sArrayType(a), "name", sOrder(a));
           var instantiatedValue = sInstantiate(list(sIntType()), polyValue);
@@ -287,7 +287,7 @@ public class EvaluatorTest extends TestingVirtualMachine {
       @Nested
       class _constructor {
         @Test
-        public void constructor() throws BytecodeException {
+        void constructor() throws BytecodeException {
           assertEvaluation(
               sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field")))),
               bLambda(

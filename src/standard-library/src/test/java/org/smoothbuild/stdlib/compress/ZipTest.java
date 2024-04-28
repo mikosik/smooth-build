@@ -9,7 +9,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class ZipTest extends StandardLibraryTestCase {
   @Test
-  public void zip_unzip() throws Exception {
+  void zip_unzip() throws Exception {
     var userModule =
         """
         result = [file("dir/file1.txt"), file("file2.txt")] > zip() > unzip();
@@ -25,7 +25,7 @@ public class ZipTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void corrupted_archive_causes_error() throws IOException {
+  void corrupted_archive_causes_error() throws IOException {
     var userModule =
         """
         randomJunk = 0x123456;

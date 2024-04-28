@@ -29,7 +29,7 @@ public class ExecuteOsProcessTest {
   }
 
   @Test
-  public void running_unknown_binary_throws_IOException() throws Exception {
+  void running_unknown_binary_throws_IOException() throws Exception {
     try {
       executeOsProcess(Path.of("."), new String[] {"binary_file_that_does_not_exist"});
       fail("exception should be thrown");
@@ -39,7 +39,7 @@ public class ExecuteOsProcessTest {
   }
 
   @Test
-  public void failure_exit_code_is_returned() throws Exception {
+  void failure_exit_code_is_returned() throws Exception {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
     String[] command = new String[] {"test", "-z", "abc"};
@@ -47,7 +47,7 @@ public class ExecuteOsProcessTest {
   }
 
   @Test
-  public void success_exit_code_is_returned() throws Exception {
+  void success_exit_code_is_returned() throws Exception {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
     String[] command = new String[] {"test", "-n", "abc"};

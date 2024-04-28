@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class UnzipTest {
   @Test
-  public void files_are_unzipped() throws Exception {
+  void files_are_unzipped() throws Exception {
     var files = Map.of("file1", "content1", "file2", "content2");
     Buffer buffer = jarFiles(files);
     assertThat(unzipIntoMap(buffer)).isEqualTo(files);

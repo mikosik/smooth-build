@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 public class FilteringReporterTest {
   @Test
-  public void when_task_matcher_matches_then_report_is_forwarded() {
+  void when_task_matcher_matches_then_report_is_forwarded() {
     testVisibility(true);
   }
 
   @Test
-  public void when_task_matcher_not_matches_then_report_is_suppressed() {
+  void when_task_matcher_not_matches_then_report_is_suppressed() {
     testVisibility(false);
   }
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class MethodsTest {
   @Test
-  public void is_public() throws Exception {
+  void is_public() throws Exception {
     Class<?> klass = MyClass.class;
 
     assertThat(isPublic(klass.getDeclaredMethod("publicMethod"))).isTrue();
@@ -26,7 +26,7 @@ public class MethodsTest {
   }
 
   @Test
-  public void is_static() throws Exception {
+  void is_static() throws Exception {
     Class<MyClass> klass = MyClass.class;
     assertThat(isStatic(klass.getDeclaredMethod("publicMethod"))).isFalse();
     assertThat(isStatic(klass.getDeclaredMethod("publicStaticMethod"))).isTrue();
@@ -62,19 +62,19 @@ public class MethodsTest {
   }
 
   @Test
-  public void canonical_name_of_non_static_method() throws Exception {
+  void canonical_name_of_non_static_method() throws Exception {
     assertThat(canonicalName(Object.class.getMethod("toString")))
         .isEqualTo("java.lang.Object.toString");
   }
 
   @Test
-  public void canonical_name_of_static_method() throws Exception {
+  void canonical_name_of_static_method() throws Exception {
     assertThat(canonicalName(System.class.getMethod("currentTimeMillis")))
         .isEqualTo("java.lang.System.currentTimeMillis");
   }
 
   @Test
-  public void canonical_name_of_static_method_inside_inner_class() throws Exception {
+  void canonical_name_of_static_method_inside_inner_class() throws Exception {
     assertThat(canonicalName(InnerClass.class.getMethod("method")))
         .isEqualTo("org.smoothbuild.common.reflect.MethodsTest.InnerClass.method");
   }

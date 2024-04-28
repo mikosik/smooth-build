@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class SAnnotatedValueTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     var annotatedValueS =
         new SAnnotatedValue(annotationS, sSchema(sStringType()), "myVal", location(7));

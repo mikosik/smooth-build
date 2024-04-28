@@ -35,7 +35,7 @@ public class NativeTest extends EvaluatorTestCase {
     @Nested
     class _value {
       @Test
-      public void without_body_is_not_legal() throws Exception {
+      void without_body_is_not_legal() throws Exception {
         var userModule = format(
             """
                 @Native("%s")
@@ -48,7 +48,7 @@ public class NativeTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void with_body_is_not_legal() throws Exception {
+      void with_body_is_not_legal() throws Exception {
         var userModule = format(
             """
                 @Native("%s")
@@ -64,7 +64,7 @@ public class NativeTest extends EvaluatorTestCase {
     @Nested
     class _func {
       @Test
-      public void can_return_passed_arg() throws Exception {
+      void can_return_passed_arg() throws Exception {
         var userModule = format(
             """
                 @Native("%s")
@@ -78,7 +78,7 @@ public class NativeTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void without_native_jar_file_causes_fatal() throws Exception {
+      void without_native_jar_file_causes_fatal() throws Exception {
         createUserModule(
             """
             @Native("MissingClass")
@@ -91,7 +91,7 @@ public class NativeTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void exception_from_native_is_reported_as_fatal() throws Exception {
+      void exception_from_native_is_reported_as_fatal() throws Exception {
         var userModule = format(
             """
                 @Native("%s")
@@ -110,7 +110,7 @@ public class NativeTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void fatal_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
+      void fatal_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
         var userModule = format(
             """
                 @Native("%s")
@@ -133,7 +133,7 @@ public class NativeTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void error_reported_is_logged() throws Exception {
+      void error_reported_is_logged() throws Exception {
         var userModule = format(
             """
                 @Native("%s")
@@ -147,7 +147,7 @@ public class NativeTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void func_with_illegal_impl_causes_error() throws Exception {
+      void func_with_illegal_impl_causes_error() throws Exception {
         String className = MissingMethod.class.getCanonicalName();
         var userModule = format(
             """
@@ -166,7 +166,7 @@ public class NativeTest extends EvaluatorTestCase {
       @Nested
       class _fatal_is_reported_when_java_method_returns {
         @Test
-        public void null_without_logging_error() throws Exception {
+        void null_without_logging_error() throws Exception {
           String className = ReturnNull.class.getCanonicalName();
           var userModule = format(
               """
@@ -181,7 +181,7 @@ public class NativeTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void null_and_logs_only_warning() throws Exception {
+        void null_and_logs_only_warning() throws Exception {
           var userModule = format(
               """
                   @Native("%s")
@@ -195,7 +195,7 @@ public class NativeTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void non_null_and_logs_error() throws Exception {
+        void non_null_and_logs_error() throws Exception {
           var userModule = format(
               """
                   @Native("%s")
@@ -209,7 +209,7 @@ public class NativeTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void object_of_wrong_type() throws Exception {
+        void object_of_wrong_type() throws Exception {
           var userModule = format(
               """
                   @Native("%s")
@@ -223,7 +223,7 @@ public class NativeTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void struct_of_wrong_type() throws Exception {
+        void struct_of_wrong_type() throws Exception {
           var userModule = format(
               """
                   Person {
@@ -242,7 +242,7 @@ public class NativeTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void array_of_wrong_type() throws Exception {
+        void array_of_wrong_type() throws Exception {
           var userModule = format(
               """
                   @Native("%s")
@@ -256,7 +256,7 @@ public class NativeTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void array_with_added_elem_of_wrong_type() throws Exception {
+        void array_with_added_elem_of_wrong_type() throws Exception {
           var userModule = format(
               """
                   @Native("%s")
@@ -280,7 +280,7 @@ public class NativeTest extends EvaluatorTestCase {
   @Nested
   class _bytecode {
     @Test
-    public void func_call_can_be_evaluated() throws Exception {
+    void func_call_can_be_evaluated() throws Exception {
       var userModule = format(
           """
               @Bytecode("%s")
@@ -294,7 +294,7 @@ public class NativeTest extends EvaluatorTestCase {
     }
 
     @Test
-    public void func_with_illegal_impl_causes_fatal() throws Exception {
+    void func_with_illegal_impl_causes_fatal() throws Exception {
       var userModule = format(
           """
               @Bytecode("%s")
@@ -313,7 +313,7 @@ public class NativeTest extends EvaluatorTestCase {
     }
 
     @Test
-    public void value_can_be_evaluated() throws Exception {
+    void value_can_be_evaluated() throws Exception {
       var userModule = format(
           """
               @Bytecode("%s")
@@ -326,7 +326,7 @@ public class NativeTest extends EvaluatorTestCase {
     }
 
     @Test
-    public void value_with_illegal_impl_causes_fatal() throws Exception {
+    void value_with_illegal_impl_causes_fatal() throws Exception {
       var userModule = format(
           """
               @Bytecode("%s")

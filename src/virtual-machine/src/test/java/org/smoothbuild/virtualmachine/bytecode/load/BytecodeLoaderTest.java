@@ -22,18 +22,18 @@ import org.smoothbuild.virtualmachine.testing.func.bytecode.ThrowException;
 
 public class BytecodeLoaderTest extends TestingVirtualMachine {
   @Test
-  public void loading_bytecode() throws Exception {
+  void loading_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(right(bString("abc")));
   }
 
   @Test
-  public void loading_monomorphised_bytecode() throws Exception {
+  void loading_monomorphised_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnIdFunc.class, map("A", bIntType())))
         .isEqualTo(right(bIntIdLambda()));
   }
 
   @Test
-  public void loading_bytecode_exception_is_returned_as_error() throws Exception {
+  void loading_bytecode_exception_is_returned_as_error() throws Exception {
     assertThat(loadBytecode(ThrowException.class, map()))
         .isEqualTo(loadingError("Providing method thrown exception: java.lang"
             + ".UnsupportedOperationException: detailed message"));

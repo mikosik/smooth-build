@@ -14,21 +14,21 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BPickTest extends TestingVirtualMachine {
   @Test
-  public void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
+  void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
     assertCall(() -> bPick(bInt(3), bInt(2)))
         .throwsException(new IllegalArgumentException(
             "`pickable.evaluationType()` should be `BArrayType` but is `BIntType`."));
   }
 
   @Test
-  public void creating_pick_with_non_int_expr_as_index_causes_exception() {
+  void creating_pick_with_non_int_expr_as_index_causes_exception() {
     assertCall(() -> bPick(bArray(bBoolType()), bString()))
         .throwsException(new IllegalArgumentException(
             "`index.evaluationType()` should be `BIntType` but is `BStringType`."));
   }
 
   @Test
-  public void data_returns_array_and_index() throws Exception {
+  void data_returns_array_and_index() throws Exception {
     var pickable = bArray(bInt(7));
     var index = bInt(0);
     assertThat(bPick(pickable, index).subExprs()).isEqualTo(new BSubExprs(pickable, index));
@@ -55,13 +55,13 @@ public class BPickTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void pick_can_be_read_back_by_hash() throws Exception {
+  void pick_can_be_read_back_by_hash() throws Exception {
     var pick = bPick(bArray(bInt(7)), bInt(0));
     assertThat(exprDbOther().get(pick.hash())).isEqualTo(pick);
   }
 
   @Test
-  public void pick_read_back_by_hash_has_same_sub_expressions() throws Exception {
+  void pick_read_back_by_hash_has_same_sub_expressions() throws Exception {
     var array = bArray(bInt(17), bInt(18));
     var index = bInt(0);
     var pick = bPick(array, index);
@@ -70,7 +70,7 @@ public class BPickTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var pick = bPick(bArray(bInt(17)), bInt(0));
     assertThat(pick.toString()).isEqualTo("PICK:Int(???)@" + pick.hash());
   }

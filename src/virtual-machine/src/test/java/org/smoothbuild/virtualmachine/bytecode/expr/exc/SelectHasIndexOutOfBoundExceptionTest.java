@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class SelectHasIndexOutOfBoundExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message() throws Exception {
+  void message() throws Exception {
     var exception =
         new SelectHasIndexOutOfBoundException(Hash.of(13), bSelectKind(bIntType()), 13, 10);
     assertThat(exception.getMessage())

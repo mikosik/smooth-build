@@ -34,17 +34,17 @@ public class PathTest {
   }
 
   @Test
-  public void single_dot_string_path_is_root() {
+  void single_dot_string_path_is_root() {
     Truth.assertThat(Path.path(".").isRoot()).isTrue();
   }
 
   @Test
-  public void simple_path_is_not_root() {
+  void simple_path_is_not_root() {
     Truth.assertThat(Path.path("file.txt").isRoot()).isFalse();
   }
 
   @Test
-  public void parent_of_root_dir_throws_exception() {
+  void parent_of_root_dir_throws_exception() {
     assertCall(() -> Path.root().parent()).throwsException(IllegalArgumentException.class);
   }
 
@@ -230,7 +230,7 @@ public class PathTest {
   }
 
   @Test
-  public void last_part_of_root_dir_throws_exception() {
+  void last_part_of_root_dir_throws_exception() {
     assertCall(() -> Path.root().lastPart()).throwsException(IllegalArgumentException.class);
   }
 
@@ -250,7 +250,7 @@ public class PathTest {
   }
 
   @Test
-  public void first_part_of_root_dir_throws_exception() {
+  void first_part_of_root_dir_throws_exception() {
     assertCall(() -> Path.root().firstPart()).throwsException(IllegalArgumentException.class);
   }
 
@@ -292,7 +292,7 @@ public class PathTest {
   }
 
   @Test
-  public void test_equals_and_hash_code() {
+  void test_equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(Path.path("."));

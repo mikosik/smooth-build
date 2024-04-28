@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class SelectHasWrongEvaluationTypeExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message() throws Exception {
+  void message() throws Exception {
     var exception = new SelectHasWrongEvaluationTypeException(
         Hash.of(13), bSelectKind(bIntType()), bStringType());
     assertThat(exception.getMessage())

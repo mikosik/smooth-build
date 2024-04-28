@@ -24,7 +24,7 @@ public class CleanCommandTest {
   @Nested
   class clean_command extends SystemTestCase {
     @Test
-    public void deletes_content_of_smooth_dir_except_lock_file() throws IOException {
+    void deletes_content_of_smooth_dir_except_lock_file() throws IOException {
       createUserModule("""
               result = "abc";
               """);
@@ -43,8 +43,7 @@ public class CleanCommandTest {
     }
 
     @Test
-    public void reports_error_when_user_module_is_missing_and_smooth_dir_exists()
-        throws IOException {
+    void reports_error_when_user_module_is_missing_and_smooth_dir_exists() throws IOException {
       createDirectories(smoothDirAbsolutePath());
       runSmoothClean();
       assertFinishedWithError();
@@ -53,7 +52,7 @@ public class CleanCommandTest {
     }
 
     @Test
-    public void with_args_prints_error() throws Exception {
+    void with_args_prints_error() throws Exception {
       createUserModule("""
               result = "abc";
               """);

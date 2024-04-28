@@ -16,32 +16,32 @@ public class LocationTest {
   @Nested
   class _source_location {
     @Test
-    public void line_returns_value_passed_during_construction() {
+    void line_returns_value_passed_during_construction() {
       var location = fileLocation(projectPath("abc"), 13);
       assertThat(location.line()).isEqualTo(13);
     }
 
     @Test
-    public void zero_line_is_forbidden() {
+    void zero_line_is_forbidden() {
       assertCall(() -> fileLocation(projectPath("abc"), 0))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
-    public void negative_line_is_forbidden() {
+    void negative_line_is_forbidden() {
       assertCall(() -> fileLocation(projectPath("abc"), -1))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
-    public void to_string() {
+    void to_string() {
       var location = fileLocation(projectPath("abc"), 2);
       assertThat(location.toString()).isEqualTo("{project}/abc:2");
     }
   }
 
   @Test
-  public void equals_and_hash_code() {
+  void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(unknownLocation(), unknownLocation());
     tester.addEqualityGroup(internalLocation(), internalLocation());
@@ -58,7 +58,7 @@ public class LocationTest {
   @Nested
   class command_line {
     @Test
-    public void to_string() {
+    void to_string() {
       assertThat(commandLineLocation().toString()).isEqualTo("command line");
     }
   }
@@ -66,7 +66,7 @@ public class LocationTest {
   @Nested
   class internal_location {
     @Test
-    public void to_string() {
+    void to_string() {
       var location = internalLocation();
       assertThat(location.toString()).isEqualTo("internal");
     }
@@ -75,7 +75,7 @@ public class LocationTest {
   @Nested
   class _unknown_location {
     @Test
-    public void to_string() {
+    void to_string() {
       var location = unknownLocation();
       assertThat(location.toString()).isEqualTo("???");
     }

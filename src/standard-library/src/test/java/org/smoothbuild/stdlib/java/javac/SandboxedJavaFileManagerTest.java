@@ -12,8 +12,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class SandboxedJavaFileManagerTest extends TestingVirtualMachine {
   @Test
-  public void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output()
-      throws Exception {
+  void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output() throws Exception {
     Iterable<InputClassFile> objects = new ArrayList<>();
     StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
     SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, nativeApi(), objects);

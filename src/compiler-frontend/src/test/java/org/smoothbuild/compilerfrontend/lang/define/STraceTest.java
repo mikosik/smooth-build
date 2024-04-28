@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 public class STraceTest {
   @Test
-  public void equals_and_hashCode() {
+  void equals_and_hashCode() {
     var tester = new EqualsTester();
     tester.addEqualityGroup(new STrace(), new STrace());
     tester.addEqualityGroup(sTrace("name1", location(1), "name1", location(1)));
@@ -22,7 +22,7 @@ public class STraceTest {
   }
 
   @Test
-  public void to_string() {
+  void to_string() {
     var trace = sTrace(
         "first-name",
         location(userModuleFullPath(), 17),

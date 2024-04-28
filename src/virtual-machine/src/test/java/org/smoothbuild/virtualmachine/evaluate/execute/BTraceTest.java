@@ -8,7 +8,7 @@ import org.smoothbuild.common.base.Hash;
 
 public class BTraceTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var trace = bTrace(Hash.of(7), Hash.of(9), bTrace(Hash.of(17), Hash.of(19)));
     assertThat(trace.toString())
         .isEqualTo(

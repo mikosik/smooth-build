@@ -22,7 +22,7 @@ public class InitializeScopesTest {
   @Nested
   class _module {
     @Test
-    public void module_scope_has_its_member_function_in_referenceables() {
+    void module_scope_has_its_member_function_in_referenceables() {
       var namedFuncP = pNamedFunc("myFunc");
       var moduleP = pModule(list(), list(namedFuncP));
 
@@ -32,7 +32,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void module_scope_has_its_member_value_in_referenceables() {
+    void module_scope_has_its_member_value_in_referenceables() {
       var namedValueP = pNamedValue("myValue");
       var moduleP = pModule(list(), list(namedValueP));
 
@@ -42,7 +42,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void module_scope_has_its_member_function_param_default_value_in_referenceables() {
+    void module_scope_has_its_member_function_param_default_value_in_referenceables() {
       var defaultValue = pNamedValue("myFunc:param");
       var param = pItem("param", defaultValue);
       var namedFuncP = pNamedFunc("myFunc", nlist(param));
@@ -59,7 +59,7 @@ public class InitializeScopesTest {
     @Nested
     class _parameter_default_value {
       @Test
-      public void parameter_default_value_scope_referenceables_does_not_contain_that_parameter() {
+      void parameter_default_value_scope_referenceables_does_not_contain_that_parameter() {
         var defaultValue = pNamedValue("myFunc:param");
         var param = pItem("param", defaultValue);
         var namedFuncP = pNamedFunc("myFunc", nlist(param));
@@ -71,7 +71,7 @@ public class InitializeScopesTest {
       }
 
       @Test
-      public void parameter_default_value_scope_referenceables_does_not_contain_other_parameter() {
+      void parameter_default_value_scope_referenceables_does_not_contain_other_parameter() {
         var param1DefaultValue = pNamedValue("myFunc:param");
         var param1 = pItem("param1", param1DefaultValue);
         var param2 = pItem("param2");
@@ -85,12 +85,12 @@ public class InitializeScopesTest {
       }
 
       @Test
-      public void parameter_default_value_scope_referenceables_contains_function_from_module() {
+      void parameter_default_value_scope_referenceables_contains_function_from_module() {
         testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(pNamedFunc("myFunc"));
       }
 
       @Test
-      public void parameter_default_value_scope_referenceables_contains_value_from_module() {
+      void parameter_default_value_scope_referenceables_contains_value_from_module() {
         testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(pNamedValue("myValue"));
       }
 
@@ -108,7 +108,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void named_function_scope_has_its_parameter() {
+    void named_function_scope_has_its_parameter() {
       var param = pItem("param");
       var namedFuncP = pNamedFunc("myFunc", nlist(param));
       var moduleP = pModule(list(), list(namedFuncP));
@@ -119,7 +119,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void named_function_scope_has_its_sibling_named_value() {
+    void named_function_scope_has_its_sibling_named_value() {
       var namedValueP = pNamedValue("myValue");
       var param = pItem("param");
       var namedFuncP = pNamedFunc("myFunc", nlist(param));
@@ -131,7 +131,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void named_function_scope_has_its_sibling_named_function() {
+    void named_function_scope_has_its_sibling_named_function() {
       var otherFunc = pNamedFunc("otherFunc");
       var param = pItem("param");
       var namedFuncP = pNamedFunc("myFunc", nlist(param));
@@ -146,7 +146,7 @@ public class InitializeScopesTest {
   @Nested
   class _lambda {
     @Test
-    public void lambda_scope_has_value_that_encloses_it() {
+    void lambda_scope_has_value_that_encloses_it() {
       var param = pItem("param");
       var lambdaP = pLambda(nlist(param), pInt());
       var namedValueP = pNamedValue("myValue", lambdaP);
@@ -159,7 +159,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void lambda_scope_has_function_that_encloses_it() {
+    void lambda_scope_has_function_that_encloses_it() {
       var param = pItem("param");
       var lambdaP = pLambda(nlist(param), pInt());
       var namedValueP = pNamedFunc("myFunc", lambdaP);
@@ -172,7 +172,7 @@ public class InitializeScopesTest {
     }
 
     @Test
-    public void lambda_scope_has_its_parameter() {
+    void lambda_scope_has_its_parameter() {
       var param = pItem("param");
       var lambdaP = pLambda(nlist(param), pInt());
       var moduleP = pModule(list(), list(pNamedValue(lambdaP)));

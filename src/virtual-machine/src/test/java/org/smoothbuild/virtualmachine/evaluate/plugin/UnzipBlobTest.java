@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class UnzipBlobTest extends TestingVirtualMachine {
   @Test
-  public void unzip_blob() throws Exception {
+  void unzip_blob() throws Exception {
     BTuple file1 = bFile("file1.txt", "abc");
     BTuple file2 = bFile("file2.txt", "def");
     assertThat(unzipBlob(bytecodeF(), jar(file1, file2), f -> true))

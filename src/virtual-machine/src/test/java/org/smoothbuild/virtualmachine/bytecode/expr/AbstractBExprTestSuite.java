@@ -16,12 +16,12 @@ public abstract class AbstractBExprTestSuite<T extends BExpr> extends TestingVir
   protected abstract List<T> nonEqualExprs() throws BytecodeException;
 
   @Test
-  public void test_equals_and_hashcode_of_equal_exprs() throws Exception {
+  void test_equals_and_hashcode_of_equal_exprs() throws Exception {
     new EqualsTester().addEqualityGroup(equalExprs().toArray()).testEquals();
   }
 
   @Test
-  public void test_equals_and_hashcode_of_inequal_exprs() throws Exception {
+  void test_equals_and_hashcode_of_inequal_exprs() throws Exception {
     var equalsTester = new EqualsTester();
     for (T value : nonEqualExprs()) {
       equalsTester.addEqualityGroup(value);
@@ -30,13 +30,13 @@ public abstract class AbstractBExprTestSuite<T extends BExpr> extends TestingVir
   }
 
   @Test
-  public void test_hash_of_equal_exprs() throws Exception {
+  void test_hash_of_equal_exprs() throws Exception {
     var values = equalExprs();
     assertThat(values.get(0).hash()).isEqualTo(values.get(1).hash());
   }
 
   @Test
-  public void test_hash_of_inequal_exprs() throws Exception {
+  void test_hash_of_inequal_exprs() throws Exception {
     var values = nonEqualExprs();
     for (int i = 0; i < values.size(); i++) {
       for (int j = i + 1; j < values.size(); j++) {

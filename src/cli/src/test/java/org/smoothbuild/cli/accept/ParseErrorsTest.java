@@ -7,7 +7,7 @@ import org.smoothbuild.evaluator.testing.EvaluatorTestCase;
 
 public class ParseErrorsTest extends EvaluatorTestCase {
   @Test
-  public void syntax_error_is_reported() throws Exception {
+  void syntax_error_is_reported() throws Exception {
     createUserModule("result =");
     evaluate("result");
     assertThat(logs())
@@ -21,7 +21,7 @@ public class ParseErrorsTest extends EvaluatorTestCase {
   }
 
   @Test
-  public void syntax_error_contains_code_with_problematic_part_marked() throws Exception {
+  void syntax_error_contains_code_with_problematic_part_marked() throws Exception {
     createUserModule("result =");
     evaluate("result");
     assertThat(logs())
@@ -35,7 +35,7 @@ public class ParseErrorsTest extends EvaluatorTestCase {
   }
 
   @Test
-  public void lexer_error_contains_code_with_problematic_part_marked() throws Exception {
+  void lexer_error_contains_code_with_problematic_part_marked() throws Exception {
     createUserModule("""
             func* = "abc";
             result = "abc";

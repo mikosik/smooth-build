@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BLambdaTest extends TestingVirtualMachine {
   @Test
-  public void creating_lambda_with_body_evaluation_type_not_equal_result_type_causes_exception()
+  void creating_lambda_with_body_evaluation_type_not_equal_result_type_causes_exception()
       throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     assertCall(() -> bLambda(lambdaType, bBool(true)))
@@ -21,19 +21,19 @@ public class BLambdaTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void setting_body_to_null_throws_exception() throws Exception {
+  void setting_body_to_null_throws_exception() throws Exception {
     var lambdaType = bLambdaType(bBoolType(), bIntType());
     assertCall(() -> bLambda(lambdaType, null)).throwsException(NullPointerException.class);
   }
 
   @Test
-  public void type_of_lambda_is_lambda_type() throws Exception {
+  void type_of_lambda_is_lambda_type() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     assertThat(bLambda(lambdaType, bInt()).evaluationType()).isEqualTo(lambdaType);
   }
 
   @Test
-  public void body_contains_object_passed_during_construction() throws Exception {
+  void body_contains_object_passed_during_construction() throws Exception {
     var lambdaType = bLambdaType(bBoolType(), bIntType());
     var body = bInt(33);
     var lambda = bLambda(lambdaType, body);
@@ -60,14 +60,14 @@ public class BLambdaTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void lambda_can_be_read_by_hash() throws Exception {
+  void lambda_can_be_read_by_hash() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     var lambda = bLambda(lambdaType, bInt());
     assertThat(exprDbOther().get(lambda.hash())).isEqualTo(lambda);
   }
 
   @Test
-  public void lambda_read_by_hash_have_equal_bodies() throws Exception {
+  void lambda_read_by_hash_have_equal_bodies() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     var lambda = bLambda(lambdaType, bInt());
     var lambdaRead = (BLambda) exprDbOther().get(lambda.hash());
@@ -75,7 +75,7 @@ public class BLambdaTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     var lambda = bLambda(lambdaType, bInt());
     assertThat(lambda.toString()).isEqualTo("Lambda((String)->Int)@" + lambda.hash());

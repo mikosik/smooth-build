@@ -8,7 +8,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class JarTest extends StandardLibraryTestCase {
   @Test
-  public void jar_unjar() throws Exception {
+  void jar_unjar() throws Exception {
     var userModule =
         """
         result = [File(0x41, "dir/file1.txt"), File(0x42, "file2.txt")]
@@ -20,7 +20,7 @@ public class JarTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void corrupted_archive_causes_error() throws Exception {
+  void corrupted_archive_causes_error() throws Exception {
     var userModule =
         """
         randomJunk = 0x123456;

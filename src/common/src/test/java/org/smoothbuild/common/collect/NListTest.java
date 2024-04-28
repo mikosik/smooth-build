@@ -19,22 +19,22 @@ public class NListTest {
   @Nested
   class _constructing {
     @Test
-    public void no_args() {
+    void no_args() {
       assertThat(nlist()).isEmpty();
     }
 
     @Test
-    public void varargs() {
+    void varargs() {
       assertThat(nlist(n0, n1, n2)).containsExactly(n0, n1, n2).inOrder();
     }
 
     @Test
-    public void from_list() {
+    void from_list() {
       assertThat(nlist(list(n0, n1, n2))).containsExactly(n0, n1, n2).inOrder();
     }
 
     @Test
-    public void from_map() {
+    void from_map() {
       assertThat(nlist(list(n0, n1, n2).toMap(Named::name, v -> v)))
           .containsExactly(n0, n1, n2)
           .inOrder();
@@ -43,14 +43,14 @@ public class NListTest {
     @Nested
     class _from_list_with_shadowing {
       @Test
-      public void using_non_unique_names_factory_method() {
+      void using_non_unique_names_factory_method() {
         assertThat(nlistWithShadowing(list(n0, n1, n2, named(n0.name()))))
             .containsExactly(n0, n1, n2, named(n0.name()))
             .inOrder();
       }
 
       @Test
-      public void using_normal_factory_method_fails() {
+      void using_normal_factory_method_fails() {
         assertCall(() -> nlist(list(n0, n1, n2, named(n0.name()))))
             .throwsException(new IllegalArgumentException(
                 "List contains two elements with same name = \"zero\"."));
@@ -61,12 +61,12 @@ public class NListTest {
   @Nested
   class _constructing_lazily {
     @Test
-    public void suppliers_are_not_called_by_constructor() {
+    void suppliers_are_not_called_by_constructor() {
       new NList<>(this::throwException, this::throwException, this::throwException);
     }
 
     @Test
-    public void list_related_methods_dont_call_map_and_indexMap_suppliers() {
+    void list_related_methods_dont_call_map_and_indexMap_suppliers() {
       var nlist = new NList<>(() -> list(n0, n1, n2), this::throwException, this::throwException);
       nlist.map(e -> e);
       nlist.equals(nlist);
@@ -83,14 +83,14 @@ public class NListTest {
     }
 
     @Test
-    public void map_related_methods_dont_call_list_and_indexMap_suppliers() {
+    void map_related_methods_dont_call_list_and_indexMap_suppliers() {
       var nlist = new NList<>(this::throwException, () -> map(n1.name(), n1), this::throwException);
       nlist.containsName("name");
       nlist.get("name");
     }
 
     @Test
-    public void index_of_method_doesnt_call_list_and_map_suppliers() {
+    void index_of_method_doesnt_call_list_and_map_suppliers() {
       var nlist = new NList<>(this::throwException, this::throwException, () -> map("name", 1));
       nlist.indexOf("name");
     }
@@ -104,21 +104,21 @@ public class NListTest {
   @SuppressWarnings("deprecation")
   class _mutable_methods_throw_exception {
     @Test
-    public void removeIf() {
+    void removeIf() {
       var nlist = list(n0, n1, n2);
       assertCall(() -> nlist.removeIf(n -> true))
           .throwsException(UnsupportedOperationException.class);
     }
 
     @Test
-    public void replaceAll() {
+    void replaceAll() {
       var nlist = list(n0, n1, n2);
       assertCall(() -> nlist.replaceAll(n -> n))
           .throwsException(UnsupportedOperationException.class);
     }
 
     @Test
-    public void sort() {
+    void sort() {
       var nlist = list(n0, n1, n2);
       assertCall(() -> nlist.sort((a, b) -> 0))
           .throwsException(UnsupportedOperationException.class);
@@ -128,7 +128,7 @@ public class NListTest {
   @Nested
   class _map {
     @Test
-    public void maps_elements() {
+    void maps_elements() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.map(v -> named(v.name().concat("!"))))
           .containsExactly(named("zero!"), named("one!"), named("two!"))
@@ -139,19 +139,19 @@ public class NListTest {
   @Nested
   class _get_name {
     @Test
-    public void returns_element_with_given_name() {
+    void returns_element_with_given_name() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.get(n0.name())).isEqualTo(n0);
     }
 
     @Test
-    public void returns_null_when_element_with_given_name_doesnt_exist() {
+    void returns_null_when_element_with_given_name_doesnt_exist() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.get("seven")).isNull();
     }
 
     @Test
-    public void returns_first_occurrence_when_more_than_one_element_has_given_name() {
+    void returns_first_occurrence_when_more_than_one_element_has_given_name() {
       var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
       assertThat(nlist.get(n0.name())).isSameInstanceAs(n0);
     }
@@ -160,13 +160,13 @@ public class NListTest {
   @Nested
   class _contains_name {
     @Test
-    public void returns_true_when_element_with_given_name_exists() {
+    void returns_true_when_element_with_given_name_exists() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.containsName(n0.name())).isTrue();
     }
 
     @Test
-    public void returns_false_when_element_with_given_name_doesnt_exist() {
+    void returns_false_when_element_with_given_name_doesnt_exist() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.containsName("seven")).isFalse();
     }
@@ -175,7 +175,7 @@ public class NListTest {
   @Nested
   class _to_string {
     @Test
-    public void to_string() {
+    void to_string() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.toString()).isEqualTo("NList(zero,one,two)");
     }
@@ -184,7 +184,7 @@ public class NListTest {
   @Nested
   class _values_to_string {
     @Test
-    public void values_to_string() {
+    void values_to_string() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.valuesToString()).isEqualTo("zero,one,two");
     }
@@ -193,7 +193,7 @@ public class NListTest {
   @Nested
   class _values_to_pretty_string {
     @Test
-    public void values_to_string() {
+    void values_to_string() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.valuesToPrettyString())
           .isEqualTo("""
@@ -206,13 +206,13 @@ public class NListTest {
   @Nested
   class _get_index {
     @Test
-    public void returns_element_at_given_index() {
+    void returns_element_at_given_index() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.get(1)).isEqualTo(n1);
     }
 
     @Test
-    public void throws_exception_when_index_out_of_bounds() {
+    void throws_exception_when_index_out_of_bounds() {
       var nlist = nlist(n0, n1, n2);
       assertCall(() -> nlist.get(3)).throwsException(ArrayIndexOutOfBoundsException.class);
     }
@@ -221,13 +221,13 @@ public class NListTest {
   @Nested
   class _index_of {
     @Test
-    public void unique_names() {
+    void unique_names() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.indexOf(n0.name())).isEqualTo(0);
     }
 
     @Test
-    public void non_unique_names() {
+    void non_unique_names() {
       var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
       assertThat(nlist.indexOf(n0.name())).isEqualTo(0);
     }

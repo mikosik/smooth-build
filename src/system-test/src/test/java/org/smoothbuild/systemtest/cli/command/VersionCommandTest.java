@@ -13,14 +13,14 @@ public class VersionCommandTest {
   @Nested
   class basic extends SystemTestCase {
     @Test
-    public void version_command_prints_tool_version() {
+    void version_command_prints_tool_version() {
       runSmoothVersion();
       assertFinishedWithSuccess();
       assertSystemOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }
 
     @Test
-    public void version_command_prints_file_hashes() {
+    void version_command_prints_file_hashes() {
       runSmoothVersion();
       assertFinishedWithSuccess();
       var systemOutWithReplacedHashes = systemOut().replaceAll("[0-9a-f]{64}", "HASH");

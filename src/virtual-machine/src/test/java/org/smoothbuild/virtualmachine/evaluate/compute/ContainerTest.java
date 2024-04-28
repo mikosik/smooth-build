@@ -10,12 +10,12 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class ContainerTest extends TestingVirtualMachine {
   @Test
-  public void file_system() {
+  void file_system() {
     assertThat(container().bucket()).isSameInstanceAs(projectBucket());
   }
 
   @Test
-  public void messages_are_logged() throws Exception {
+  void messages_are_logged() throws Exception {
     var container = container();
     container.log().error("message");
     Iterable<BTuple> iterable = container.messages().elements(BTuple.class);

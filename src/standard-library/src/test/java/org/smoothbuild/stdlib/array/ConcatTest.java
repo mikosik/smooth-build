@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class ConcatTest extends StandardLibraryTestCase {
   @Test
-  public void concat_empty_array() throws Exception {
+  void concat_empty_array() throws Exception {
     var userModule = """
         [Int] result = concat([[]]);
         """;
@@ -17,7 +17,7 @@ public class ConcatTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void concat_array_with_one_elem() throws Exception {
+  void concat_array_with_one_elem() throws Exception {
     var userModule = """
         result = concat([["a", "b", "c"]]);
         """;
@@ -27,7 +27,7 @@ public class ConcatTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void concat_array_with_two_elements() throws Exception {
+  void concat_array_with_two_elements() throws Exception {
     var userModule = """
         result = concat([["a", "b", "c"], ["d", "e", "f"]]);
         """;

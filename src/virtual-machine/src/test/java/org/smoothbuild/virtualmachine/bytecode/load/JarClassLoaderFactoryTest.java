@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 
 public class JarClassLoaderFactoryTest extends TestingVirtualMachine {
   @Test
-  public void provided_classloader_can_load_class_and_its_method() throws Exception {
+  void provided_classloader_can_load_class_and_its_method() throws Exception {
     var jar = blobBJarWithJavaByteCode(MyClass.class);
     var classLoaderFactory = new JarClassLoaderFactory(bytecodeF(), getPlatformClassLoader());
     var classLoaderTry = classLoaderFactory.classLoaderFor(jar);
@@ -25,7 +25,7 @@ public class JarClassLoaderFactoryTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void classloader_is_cached() throws Exception {
+  void classloader_is_cached() throws Exception {
     var jar = blobBJarWithJavaByteCode(ReturnAbc.class);
     var classLoaderFactory = new JarClassLoaderFactory(bytecodeF(), getPlatformClassLoader());
     var classLoader1 = classLoaderFactory.classLoaderFor(jar);

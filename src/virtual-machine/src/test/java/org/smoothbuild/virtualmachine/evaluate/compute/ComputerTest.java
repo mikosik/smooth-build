@@ -28,7 +28,7 @@ public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _combine_step {
     @Test
-    public void when_cached_in_memory_and_disk() throws Exception {
+    void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
       var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
@@ -39,7 +39,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_cached_on_disk() throws Exception {
+    void when_cached_on_disk() throws Exception {
       var value = bInt(17);
       var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
@@ -50,7 +50,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_not_cached() throws Exception {
+    void when_not_cached() throws Exception {
       var value = bInt(17);
       var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
@@ -60,7 +60,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws Exception {
+    void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
       var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
@@ -72,7 +72,7 @@ public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _const_step {
     @Test
-    public void when_cached_in_memory_and_disk() throws Exception {
+    void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
       var step = new ConstStep(value, bTrace());
       var input = bTuple();
@@ -84,7 +84,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_cached_on_disk() throws Exception {
+    void when_cached_on_disk() throws Exception {
       var value = bInt(17);
       var step = new ConstStep(value, bTrace());
       var input = bTuple();
@@ -94,7 +94,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_not_cached() throws Exception {
+    void when_not_cached() throws Exception {
       var value = bInt(17);
       var step = new ConstStep(value, bTrace());
       var input = bTuple();
@@ -103,7 +103,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void executed_computation_is_not_cached() throws Exception {
+    void executed_computation_is_not_cached() throws Exception {
       var value = bInt(17);
       var step = new ConstStep(value, bTrace());
       var input = bTuple();
@@ -117,7 +117,7 @@ public class ComputerTest extends TestingVirtualMachine {
     @Nested
     class _with_pure_invoke {
       @Test
-      public void when_cached_in_memory_and_disk() throws Exception {
+      void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -128,7 +128,7 @@ public class ComputerTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void when_cached_on_disk() throws Exception {
+      void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -138,7 +138,7 @@ public class ComputerTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void when_not_cached() throws Exception {
+      void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -148,7 +148,7 @@ public class ComputerTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void executed_computation_is_cached_on_disk() throws Exception {
+      void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -160,7 +160,7 @@ public class ComputerTest extends TestingVirtualMachine {
     @Nested
     class _with_impure_invoke {
       @Test
-      public void when_cached_in_memory_and_disk() throws Exception {
+      void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -172,7 +172,7 @@ public class ComputerTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void when_cached_on_disk() throws Exception {
+      void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -183,7 +183,7 @@ public class ComputerTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void when_not_cached() throws Exception {
+      void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -193,7 +193,7 @@ public class ComputerTest extends TestingVirtualMachine {
       }
 
       @Test
-      public void executed_computation_is_cached_on_disk() throws Exception {
+      void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
         var step = newInvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
@@ -212,7 +212,7 @@ public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _order_step {
     @Test
-    public void when_cached_in_memory_and_disk() throws Exception {
+    void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
       var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
@@ -223,7 +223,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_cached_on_disk() throws Exception {
+    void when_cached_on_disk() throws Exception {
       var value = bInt(17);
       var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
@@ -234,7 +234,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_not_cached() throws Exception {
+    void when_not_cached() throws Exception {
       var value = bInt(17);
       var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
@@ -244,7 +244,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws Exception {
+    void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
       var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
@@ -256,7 +256,7 @@ public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _pick_step {
     @Test
-    public void when_cached_in_memory_and_disk() throws Exception {
+    void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
       var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
@@ -267,7 +267,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_cached_on_disk() throws Exception {
+    void when_cached_on_disk() throws Exception {
       var value = bInt(17);
       var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
@@ -278,7 +278,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_not_cached() throws Exception {
+    void when_not_cached() throws Exception {
       var value = bInt(17);
       var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
@@ -288,7 +288,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws Exception {
+    void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
       var task = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
@@ -300,7 +300,7 @@ public class ComputerTest extends TestingVirtualMachine {
   @Nested
   class _select_step {
     @Test
-    public void when_cached_in_memory_and_disk() throws Exception {
+    void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
       var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
@@ -311,7 +311,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_cached_on_disk() throws Exception {
+    void when_cached_on_disk() throws Exception {
       var value = bInt(17);
       var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
@@ -322,7 +322,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void when_not_cached() throws Exception {
+    void when_not_cached() throws Exception {
       var value = bInt(17);
       var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
@@ -332,7 +332,7 @@ public class ComputerTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws Exception {
+    void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
       var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));

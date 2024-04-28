@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class StepHashesCollisionTest extends TestingVirtualMachine {
   @Test
-  public void each_task_has_different_hash() throws Exception {
+  void each_task_has_different_hash() throws Exception {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 

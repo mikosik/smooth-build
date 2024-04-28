@@ -8,7 +8,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class FilesFuncTest extends StandardLibraryTestCase {
   @Test
-  public void illegal_path_causes_error() throws Exception {
+  void illegal_path_causes_error() throws Exception {
     var userModule = """
         result = files("..");
         """;
@@ -19,7 +19,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void nonexistent_path_causes_error() throws Exception {
+  void nonexistent_path_causes_error() throws Exception {
     var userModule = """
         result = files("nonexistent/path.txt");
         """;
@@ -29,7 +29,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void non_dir_path_causes_error() throws Exception {
+  void non_dir_path_causes_error() throws Exception {
     var userModule = """
         result = files("file.txt");
         """;
@@ -40,7 +40,7 @@ public class FilesFuncTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void files_from_dir_are_returned() throws Exception {
+  void files_from_dir_are_returned() throws Exception {
     var userModule = """
         result = files("dir");
         """;

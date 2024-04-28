@@ -35,20 +35,20 @@ public class LoggingDiagnosticListenerTest {
   }
 
   @Test
-  public void diagnostic_is_reported_as_error() throws Exception {
+  void diagnostic_is_reported_as_error() throws Exception {
     LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
     listener.report(diagnostic);
     verify(messageLogger).error(anyString());
   }
 
   @Test
-  public void initially_no_error_is_reported() {
+  void initially_no_error_is_reported() {
     LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
     assertThat(listener.errorReported()).isFalse();
   }
 
   @Test
-  public void error_reported_returns_true_when_diagnostic_has_been_reported() {
+  void error_reported_returns_true_when_diagnostic_has_been_reported() {
     LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
     listener.report(diagnostic);
     assertThat(listener.errorReported()).isTrue();

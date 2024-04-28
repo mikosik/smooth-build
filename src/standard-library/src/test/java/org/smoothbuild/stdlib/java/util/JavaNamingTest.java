@@ -9,48 +9,48 @@ import org.junit.jupiter.api.Test;
 
 public class JavaNamingTest {
   @Test
-  public void binary_name_of_class_in_default_package_is_class_name() {
+  void binary_name_of_class_in_default_package_is_class_name() {
     assertThat(toBinaryName("MyClass.class")).isEqualTo("MyClass");
   }
 
   @Test
-  public void binary_name_of_class_in_package_is_package_plus_class_name() {
+  void binary_name_of_class_in_package_is_package_plus_class_name() {
     assertThat(toBinaryName("my/package/MyClass.class")).isEqualTo("my.package.MyClass");
   }
 
   @Test
-  public void binary_name_of_inner_class_is_package_plus_outer_class_name_plus_inner_class_name() {
+  void binary_name_of_inner_class_is_package_plus_outer_class_name_plus_inner_class_name() {
     assertThat(toBinaryName("my/package/MyClass$Inner.class"))
         .isEqualTo("my.package.MyClass$Inner");
   }
 
   @Test
-  public void package_of_class_in_default_package_is_empty() {
+  void package_of_class_in_default_package_is_empty() {
     assertThat(binaryNameToPackage("MyClass")).isEqualTo("");
   }
 
   @Test
-  public void package_of_class() {
+  void package_of_class() {
     assertThat(binaryNameToPackage("my.package.MyClass")).isEqualTo("my.package");
   }
 
   @Test
-  public void package_of_inner_class_is_equal_to_package_of_outer_class() {
+  void package_of_inner_class_is_equal_to_package_of_outer_class() {
     assertThat(binaryNameToPackage("my.package.Outer$Inner")).isEqualTo("my.package");
   }
 
   @Test
-  public void file_without_extension_is_not_class_file() {
+  void file_without_extension_is_not_class_file() {
     assertThat(isClassFilePredicate().test("file")).isFalse();
   }
 
   @Test
-  public void file_with_java_extension_is_not_class_file() {
+  void file_with_java_extension_is_not_class_file() {
     assertThat(isClassFilePredicate().test("file.java")).isFalse();
   }
 
   @Test
-  public void file_with_class_extension_is_class_file() {
+  void file_with_class_extension_is_class_file() {
     assertThat(isClassFilePredicate().test("file.class")).isTrue();
   }
 }

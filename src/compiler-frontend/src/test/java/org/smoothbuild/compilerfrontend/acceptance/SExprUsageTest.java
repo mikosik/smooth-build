@@ -10,7 +10,7 @@ public class SExprUsageTest {
   @Nested
   class _blob_literal_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           String myFunc(Blob b) = "abc";
@@ -20,42 +20,42 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module("""
           result() = 0x01;
           """).loadsWithSuccess();
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module("""
           result = 0x01;
           """).loadsWithSuccess();
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           result = [0x01];
           """).loadsWithSuccess();
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module("""
           String myFunc(Blob b = 0x01) = "abc";
           """).loadsWithSuccess();
     }
 
     @Test
-    public void func_in_call_expression_fails() {
+    void func_in_call_expression_fails() {
       module("""
           result = 0x01("abc");
           """).loadsWithError(1, "Illegal call.");
     }
 
     @Test
-    public void struct_in_select_expression_fails() {
+    void struct_in_select_expression_fails() {
       module("""
           result = 0x01.accessedField;
           """)
@@ -63,7 +63,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           result = (0x01);
           """).loadsWithSuccess();
@@ -73,7 +73,7 @@ public class SExprUsageTest {
   @Nested
   class _int_literal_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           String myFunc(Int i) = "abc";
@@ -83,42 +83,42 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module("""
           result() = 123;
           """).loadsWithSuccess();
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module("""
           result = 123;
           """).loadsWithSuccess();
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           result = [123];
           """).loadsWithSuccess();
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module("""
           String myFunc(Int i = 123) = "abc";
           """).loadsWithSuccess();
     }
 
     @Test
-    public void func_in_call_expression_fails() {
+    void func_in_call_expression_fails() {
       module("""
           result = 123("abc");
           """).loadsWithError(1, "Illegal call.");
     }
 
     @Test
-    public void struct_in_select_expression_fails() {
+    void struct_in_select_expression_fails() {
       module("""
           result = 123.accessedField;
           """)
@@ -126,7 +126,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           result = (17);
           """).loadsWithSuccess();
@@ -136,7 +136,7 @@ public class SExprUsageTest {
   @Nested
   class _string_literal_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           String myFunc(String param) = "abc";
@@ -146,28 +146,28 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module("""
           result() = "abc";
           """).loadsWithSuccess();
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module("""
           result = "abc";
           """).loadsWithSuccess();
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           result = ["abc"];
           """).loadsWithSuccess();
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module("""
           String myFunc(String s = "abc") = "abc";
           """)
@@ -175,7 +175,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression_fails() {
+    void func_in_call_expression_fails() {
       module("""
           result = "text"("abc");
           """)
@@ -183,7 +183,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails() {
+    void struct_in_select_expression_fails() {
       module("""
           result = "abc".accessedField;
           """)
@@ -191,7 +191,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           result = ("abc");
           """).loadsWithSuccess();
@@ -201,7 +201,7 @@ public class SExprUsageTest {
   @Nested
   class _array_literal_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           myFunc([String] param) = "abc";
@@ -211,28 +211,28 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module("""
           result() = ["abc"];
           """).loadsWithSuccess();
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module("""
           result = ["abc"];
           """).loadsWithSuccess();
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           result = [["abc"]];
           """).loadsWithSuccess();
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module("""
           String myFunc([String] s = ["abc"]) = "abc";
           """)
@@ -240,7 +240,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression_fails() {
+    void func_in_call_expression_fails() {
       module("""
           result = ["text"]("abc");
           """)
@@ -248,7 +248,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails() {
+    void struct_in_select_expression_fails() {
       module("""
           result = ["abc"].accessedField;
           """)
@@ -256,7 +256,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           result = ([1, 2, 3]);
           """).loadsWithSuccess();
@@ -266,7 +266,7 @@ public class SExprUsageTest {
   @Nested
   class _select_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           MyStruct{
@@ -280,7 +280,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module(
               """
           MyStruct{
@@ -293,7 +293,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module(
               """
           MyStruct {
@@ -306,7 +306,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module(
               """
           MyStruct{
@@ -319,7 +319,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module(
               """
           MyStruct{
@@ -332,7 +332,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       module(
               """
           MyStruct{
@@ -345,7 +345,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression_fails_when_field_type_is_not_a_func() {
+    void func_in_call_expression_fails_when_field_type_is_not_a_func() {
       module(
               """
           MyStruct{
@@ -357,7 +357,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression() {
+    void struct_in_select_expression() {
       String code =
           """
             S1{
@@ -372,7 +372,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails_when_field_type_is_not_a_struct() {
+    void struct_in_select_expression_fails_when_field_type_is_not_a_struct() {
       var code =
           """
             MyStruct{
@@ -384,7 +384,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module(
               """
           MyStruct{
@@ -400,7 +400,7 @@ public class SExprUsageTest {
   @Nested
   class _pipe_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           A myIdentity(A a) = a;
@@ -423,7 +423,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module(
               """
           A myIdentity(A a) = a;
@@ -434,7 +434,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module(
               """
           A myIdentity(A a) = a;
@@ -444,7 +444,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module(
               """
           String myIdentity(String string) = string;
@@ -466,7 +466,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module(
               """
           A myIdentity(A a) = a;
@@ -488,7 +488,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module(
               """
           MyStruct{
@@ -504,7 +504,7 @@ public class SExprUsageTest {
   @Nested
   class _call_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           String otherFunc() = "abc";
@@ -515,7 +515,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module(
               """
           String otherFunc() = "abc";
@@ -525,7 +525,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module(
               """
           String otherFunc() = "abc";
@@ -535,7 +535,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           String myFunc() = "abc";
           result = [myFunc()];
@@ -544,7 +544,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module(
               """
           String myFunc() = "abc";
@@ -554,7 +554,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       module(
               """
           String justAbc() = "abc";
@@ -565,7 +565,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression() {
+    void struct_in_select_expression() {
       var code =
           """
             MyStruct{
@@ -578,7 +578,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           myFunc() = 7;
           result = (myFunc());
@@ -590,7 +590,7 @@ public class SExprUsageTest {
   @Nested
   class _lambda_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       var code =
           """
           Int myFunc(()->Int param) = param();
@@ -600,7 +600,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       var code = """
           ()->Int myFunc() = () -> 7;
           """;
@@ -608,7 +608,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       var code = """
           ()->Int myValue = () -> 7;
           """;
@@ -616,7 +616,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       var code = """
           result = [() -> 7];
           """;
@@ -624,7 +624,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_val() {
+    void param_default_val() {
       var code = """
           Int myFunc(()->Int value = () -> 7) = 17;
           """;
@@ -632,7 +632,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       var code = """
           result = ((Int int) -> int)(7);
           """;
@@ -640,7 +640,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails() {
+    void struct_in_select_expression_fails() {
       var code = """
           result = (() -> 7).myField;
           """;
@@ -648,7 +648,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       var code = """
           result = (() -> 7);
           """;
@@ -659,7 +659,7 @@ public class SExprUsageTest {
   @Nested
   class _func_reference_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           String otherFunc() = "abc";
@@ -670,7 +670,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module(
               """
           String otherFunc() = "abc";
@@ -680,7 +680,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module("""
           String otherFunc() = "abc";
           result = otherFunc;
@@ -689,7 +689,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           String myFunc() = "abc";
           result = [myFunc];
@@ -698,7 +698,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module(
               """
           String myFunc() = "abc";
@@ -708,7 +708,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       module("""
           String justAbc() = "abc";
           result = justAbc();
@@ -717,7 +717,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails() {
+    void struct_in_select_expression_fails() {
       var code =
           """
             myFunc() = "abc";
@@ -727,7 +727,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           myFunc() = 7;
           result = (myFunc);
@@ -739,7 +739,7 @@ public class SExprUsageTest {
   @Nested
   class _func_param_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           myIdentity(String string) = string;
@@ -749,28 +749,28 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module("""
           myFunc(String string) = string;
           """).loadsWithSuccess();
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           myFunc(String string) = [string];
            """).loadsWithSuccess();
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       module("""
           myFunc(()->String param) = param();
           """).loadsWithSuccess();
     }
 
     @Test
-    public void func_in_call_expression_fails_when_param_type_is_not_a_func() {
+    void func_in_call_expression_fails_when_param_type_is_not_a_func() {
       module("""
           myFunc(String param) = param();
           """)
@@ -778,7 +778,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression() {
+    void struct_in_select_expression() {
       var code =
           """
             MyStruct{
@@ -790,7 +790,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails_when_param_type_is_not_a_struct() {
+    void struct_in_select_expression_fails_when_param_type_is_not_a_struct() {
       String code = """
             myFunc(String param) = param.myField;
             """;
@@ -798,7 +798,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           myFunc(String string) = (string);
           """).loadsWithSuccess();
@@ -808,7 +808,7 @@ public class SExprUsageTest {
   @Nested
   class _value_reference_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       module(
               """
           String myValue = "abc";
@@ -819,7 +819,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       module("""
           String myValue = "abc";
           result() = myValue;
@@ -828,7 +828,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       module("""
           String myValue = "abc";
           result = myValue;
@@ -837,7 +837,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       module("""
           String myValue = "abc";
           result = [myValue];
@@ -846,7 +846,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       module(
               """
           String myValue = "abc";
@@ -856,7 +856,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       module(
               """
           String justAbc() = "abc";
@@ -867,7 +867,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression_fails_when_value_type_is_not_a_func() {
+    void func_in_call_expression_fails_when_value_type_is_not_a_func() {
       module("""
           myValue = "abc";
           result = myValue();
@@ -876,7 +876,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression() {
+    void struct_in_select_expression() {
       var code =
           """
             MyStruct {
@@ -889,7 +889,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression_fails_when_its_type_is_not_struct() {
+    void struct_in_select_expression_fails_when_its_type_is_not_struct() {
       module("""
           myValue = "abc";
           result = myValue.someField;
@@ -898,7 +898,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           myValue = 7;
           result = (myValue);
@@ -910,7 +910,7 @@ public class SExprUsageTest {
   @Nested
   class _struct_type_used_as {
     @Test
-    public void field_type() {
+    void field_type() {
       module(
               """
           ReferencingStruct {
@@ -922,7 +922,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void field_arrayed_type() {
+    void field_arrayed_type() {
       module(
               """
           ReferencingStruct {
@@ -935,7 +935,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_type() {
+    void value_type() {
       module(
               """
           @Native("Impl.met")
@@ -947,7 +947,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_arrayed_type() {
+    void value_arrayed_type() {
       module(
               """
           @Native("Impl.met")
@@ -958,7 +958,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_param_type() {
+    void func_param_type() {
       module(
               """
           String myFunc(MyStruct param) = "abc";
@@ -968,7 +968,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_arrayed_type() {
+    void func_arrayed_type() {
       module(
               """
           String myFunc([MyStruct] param) = "abc";
@@ -978,7 +978,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_result_type() {
+    void func_result_type() {
       module(
               """
           @Native("Impl.met")
@@ -989,7 +989,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_arrayed_result_type() {
+    void func_arrayed_result_type() {
       module(
               """
           [MyStruct] myFunc(String param) = [];
@@ -1002,7 +1002,7 @@ public class SExprUsageTest {
   @Nested
   class _type_var_used_as {
     @Test
-    public void func_arg_fails() {
+    void func_arg_fails() {
       module(
               """
           String myFunc(String param) = "abc";
@@ -1012,28 +1012,28 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body_fails() {
+    void func_body_fails() {
       module("""
           result() = A;
           """).loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
-    public void value_body_fails() {
+    void value_body_fails() {
       module("""
           result = A;
           """).loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
-    public void array_elem_fails() {
+    void array_elem_fails() {
       module("""
           result = [A];
           """).loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
-    public void param_default_value_fails() {
+    void param_default_value_fails() {
       module("""
           String myFunc(String value = A) = "abc";
           """)
@@ -1041,14 +1041,14 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression_fails() {
+    void func_in_call_expression_fails() {
       module("""
           result = A();
           """).loadsWith(err(1, "`A` is undefined."));
     }
 
     @Test
-    public void struct_in_select_expression() {
+    void struct_in_select_expression() {
       String code = """
             result = A.myField;
             """;
@@ -1056,7 +1056,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       module("""
           result = (A);
           """).loadsWithError(1, "`A` is undefined.");
@@ -1066,7 +1066,7 @@ public class SExprUsageTest {
   @Nested
   class _parens_used_as {
     @Test
-    public void func_arg() {
+    void func_arg() {
       var code =
           """
           Int myFunc(Int int) = int;
@@ -1076,7 +1076,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_body() {
+    void func_body() {
       var code = """
           result() = (7);
           """;
@@ -1084,7 +1084,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void value_body() {
+    void value_body() {
       var code = """
           result = (7);
           """;
@@ -1092,7 +1092,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void array_elem() {
+    void array_elem() {
       var code = """
           result = [(7)];
           """;
@@ -1100,7 +1100,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void param_default_value() {
+    void param_default_value() {
       var code = """
           Int myFunc(Int int = (7)) = int;
           """;
@@ -1108,7 +1108,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void func_in_call_expression() {
+    void func_in_call_expression() {
       var code = """
           Int myFunc() = 7;
           result = (myFunc)();
@@ -1117,7 +1117,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void struct_in_select_expression() {
+    void struct_in_select_expression() {
       var code =
           """
           MyStruct{
@@ -1129,7 +1129,7 @@ public class SExprUsageTest {
     }
 
     @Test
-    public void parens_content() {
+    void parens_content() {
       var code = """
           result = ((7));
           """;

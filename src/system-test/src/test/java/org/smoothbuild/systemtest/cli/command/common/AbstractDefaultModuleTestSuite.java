@@ -9,7 +9,7 @@ import org.smoothbuild.systemtest.SystemTestCase;
 
 public abstract class AbstractDefaultModuleTestSuite extends SystemTestCase {
   @Test
-  public void missing_default_module_causes_error_without_creating_smooth_dir() {
+  void missing_default_module_causes_error_without_creating_smooth_dir() {
     runSmooth(commandNameWithArg());
     assertFinishedWithError();
     assertSystemOutContains("smooth: error: Current directory doesn't have 'build.smooth'. "

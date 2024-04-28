@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 
 public class OrTest extends StandardLibraryTestCase {
   @Test
-  public void false_or_false_returns_false() throws Exception {
+  void false_or_false_returns_false() throws Exception {
     var userModule = """
         result = or(false, false);
         """;
@@ -19,7 +19,7 @@ public class OrTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void false_or_true_returns_true() throws Exception {
+  void false_or_true_returns_true() throws Exception {
     var userModule = """
         result = or(false, true);
         """;
@@ -29,7 +29,7 @@ public class OrTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void true_or_false_returns_true() throws Exception {
+  void true_or_false_returns_true() throws Exception {
     var userModule = """
         result = or(true, false);
         """;
@@ -39,7 +39,7 @@ public class OrTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void true_or_true_returns_true() throws Exception {
+  void true_or_true_returns_true() throws Exception {
     var userModule = """
         result = or(true, true);
         """;
@@ -49,7 +49,7 @@ public class OrTest extends StandardLibraryTestCase {
   }
 
   @Test
-  public void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
+  void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
     var userModule = format(
         """
             @Native("%s")

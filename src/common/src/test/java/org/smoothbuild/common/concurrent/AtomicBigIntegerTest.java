@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 public class AtomicBigIntegerTest {
   @Test
-  public void incrementAndGet_returns_consecutive_integers() {
+  void incrementAndGet_returns_consecutive_integers() {
     var atomicBigInteger = new AtomicBigInteger();
     assertThat(atomicBigInteger.incrementAndGet()).isEqualTo(BigInteger.valueOf(1));
     assertThat(atomicBigInteger.incrementAndGet()).isEqualTo(BigInteger.valueOf(2));
@@ -25,7 +25,7 @@ public class AtomicBigIntegerTest {
   }
 
   @Test
-  public void concurrent_calls_to_incrementAndGet_returns_mutually_different_values() {
+  void concurrent_calls_to_incrementAndGet_returns_mutually_different_values() {
     int numbersPerThread = 5000;
     int threadsCount = 4;
 

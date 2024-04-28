@@ -29,32 +29,32 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.WrongReturnType;
 
 public class NativeMethodLoaderTest extends TestingVirtualMachine {
   @Test
-  public void non_public_method_causes_error() throws Exception {
+  void non_public_method_causes_error() throws Exception {
     assertLoadingCausesError(NonPublicMethod.class, "Providing method is not public.");
   }
 
   @Test
-  public void non_static_method_causes_error() throws Exception {
+  void non_static_method_causes_error() throws Exception {
     assertLoadingCausesError(NonStaticMethod.class, "Providing method is not static.");
   }
 
   @Test
-  public void wrong_return_type_in_method_causes_error() throws Exception {
+  void wrong_return_type_in_method_causes_error() throws Exception {
     assertLoadingCausesError(WrongReturnType.class, wrongReturnTypeErrorMessage());
   }
 
   @Test
-  public void too_few_parameters_in_method_causes_error() throws Exception {
+  void too_few_parameters_in_method_causes_error() throws Exception {
     assertLoadingCausesError(TooFewParameters.class, wrongParametersErrorMessage());
   }
 
   @Test
-  public void too_many_parameters_in_method_causes_error() throws Exception {
+  void too_many_parameters_in_method_causes_error() throws Exception {
     assertLoadingCausesError(TooManyParameters.class, wrongParametersErrorMessage());
   }
 
   @Test
-  public void wrong_parameter_type_in_method_causes_error() throws Exception {
+  void wrong_parameter_type_in_method_causes_error() throws Exception {
     assertLoadingCausesError(WrongParameterType.class, wrongParametersErrorMessage());
   }
 
@@ -86,14 +86,14 @@ public class NativeMethodLoaderTest extends TestingVirtualMachine {
   @Nested
   class _caching {
     @Test
-    public void method_is_cached() throws Exception {
+    void method_is_cached() throws Exception {
       var method = ReturnAbc.class.getDeclaredMethod(
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, BTuple.class);
       testCaching(method, right(method), right(method));
     }
 
     @Test
-    public void error_when_loading_method_is_cached() throws Exception {
+    void error_when_loading_method_is_cached() throws Exception {
       var method = NonPublicMethod.class.getDeclaredMethod(
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, BTuple.class);
       testCaching(

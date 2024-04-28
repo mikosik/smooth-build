@@ -7,7 +7,7 @@ import org.smoothbuild.stdlib.StandardLibraryTestCase;
 
 public class JarFileTest extends StandardLibraryTestCase {
   @Test
-  public void jar_unjar() throws Exception {
+  void jar_unjar() throws Exception {
     var userModule =
         """
         aFile =

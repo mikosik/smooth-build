@@ -16,35 +16,35 @@ public class BytecodeFactoryTest extends TestingVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test
-  public void blob_data_can_be_read_back() throws Exception {
+  void blob_data_can_be_read_back() throws Exception {
     try (var source = buffer(bytecodeF().blob(sink -> sink.write(bytes)).source())) {
       assertThat(source.readByteString()).isEqualTo(bytes);
     }
   }
 
   @Test
-  public void fatal_severity_is_fatal() throws Exception {
+  void fatal_severity_is_fatal() throws Exception {
     assertThat(StoredLogStruct.levelAsString(bytecodeF().fatalLog("text"))).isEqualTo(FATAL.name());
   }
 
   @Test
-  public void error_severity_is_error() throws Exception {
+  void error_severity_is_error() throws Exception {
     assertThat(StoredLogStruct.levelAsString(bytecodeF().errorLog("text"))).isEqualTo(ERROR.name());
   }
 
   @Test
-  public void warning_severity_is_warning() throws Exception {
+  void warning_severity_is_warning() throws Exception {
     assertThat(StoredLogStruct.levelAsString(bytecodeF().warningLog("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
-  public void info_severity_is_info() throws Exception {
+  void info_severity_is_info() throws Exception {
     assertThat(StoredLogStruct.levelAsString(bytecodeF().infoLog("text"))).isEqualTo(INFO.name());
   }
 
   @Test
-  public void text_returns_text() throws Exception {
+  void text_returns_text() throws Exception {
     assertThat(StoredLogStruct.message(bytecodeF().errorLog("text"))).isEqualTo("text");
   }
 }

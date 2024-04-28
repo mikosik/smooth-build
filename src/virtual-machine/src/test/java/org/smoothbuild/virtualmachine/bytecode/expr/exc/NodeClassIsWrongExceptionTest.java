@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class NodeClassIsWrongExceptionTest extends TestingVirtualMachine {
   @Test
-  public void message_without_index() throws Exception {
+  void message_without_index() throws Exception {
     var exception = new NodeClassIsWrongException(
         Hash.of(123), bIntType(), "node-path", Integer.class, Double.class);
     assertThat(exception.getMessage())
@@ -20,7 +20,7 @@ public class NodeClassIsWrongExceptionTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void message_with_index() throws Exception {
+  void message_with_index() throws Exception {
     var exception = new NodeClassIsWrongException(
         Hash.of(123), bIntType(), "node-path", 7, Integer.class, Double.class);
     assertThat(exception.getMessage())

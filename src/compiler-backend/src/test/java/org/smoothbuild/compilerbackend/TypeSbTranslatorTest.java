@@ -27,42 +27,42 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
   @Nested
   class _mono {
     @Test
-    public void blob_type() throws Exception {
+    void blob_type() throws Exception {
       assertTranslation(sBlobType(), bBlobType());
     }
 
     @Test
-    public void bool_type() throws Exception {
+    void bool_type() throws Exception {
       assertTranslation(sBoolType(), bBoolType());
     }
 
     @Test
-    public void int_type() throws Exception {
+    void int_type() throws Exception {
       assertTranslation(sIntType(), bIntType());
     }
 
     @Test
-    public void string_type() throws Exception {
+    void string_type() throws Exception {
       assertTranslation(sStringType(), bStringType());
     }
 
     @Test
-    public void int_array_type() throws Exception {
+    void int_array_type() throws Exception {
       assertTranslation(sArrayType(sIntType()), bArrayType(bIntType()));
     }
 
     @Test
-    public void tuple_type() throws Exception {
+    void tuple_type() throws Exception {
       assertTranslation(sTupleType(sIntType(), sBlobType()), bTupleType(bIntType(), bBlobType()));
     }
 
     @Test
-    public void struct_type() throws Exception {
+    void struct_type() throws Exception {
       assertTranslation(sStructType(sIntType(), sBlobType()), bTupleType(bIntType(), bBlobType()));
     }
 
     @Test
-    public void func_type() throws Exception {
+    void func_type() throws Exception {
       assertTranslation(
           sFuncType(sBlobType(), sStringType(), sIntType()),
           bLambdaType(bBlobType(), bStringType(), bIntType()));
@@ -72,12 +72,12 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
   @Nested
   class _poly {
     @Test
-    public void array_type() throws Exception {
+    void array_type() throws Exception {
       assertTranslation(map(varA(), bIntType()), sArrayType(varA()), bArrayType(bIntType()));
     }
 
     @Test
-    public void tuple_type() throws Exception {
+    void tuple_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType()),
           sTupleType(varA(), varB()),
@@ -85,7 +85,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void struct_type() throws Exception {
+    void struct_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType()),
           sStructType(varA(), varB()),
@@ -93,7 +93,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void func_type() throws Exception {
+    void func_type() throws Exception {
       assertTranslation(
           map(varA(), bIntType(), varB(), bBlobType(), varC(), bStringType()),
           sFuncType(varB(), varC(), varA()),
@@ -101,7 +101,7 @@ public class TypeSbTranslatorTest extends TestingVirtualMachine {
     }
 
     @Test
-    public void missing_mapping_for_variable_causes_exception() {
+    void missing_mapping_for_variable_causes_exception() {
       assertCall(() -> assertTranslation(sArrayType(varA()), bArrayType(bIntType())))
           .throwsException(new IllegalStateException("Unknown variable `A`."));
     }

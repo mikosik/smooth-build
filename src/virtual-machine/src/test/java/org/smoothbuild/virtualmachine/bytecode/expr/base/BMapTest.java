@@ -59,13 +59,13 @@ public class BMapTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void map_can_be_read_back_by_hash() throws Exception {
+  void map_can_be_read_back_by_hash() throws Exception {
     var map = bMap(bArray(bInt()), bIntIdLambda());
     assertThat(exprDbOther().get(map.hash())).isEqualTo(map);
   }
 
   @Test
-  public void map_read_back_by_hash_has_same_sub_expressions() throws Exception {
+  void map_read_back_by_hash_has_same_sub_expressions() throws Exception {
     var array = bArray(bInt());
     var mapper = bIntIdLambda();
     var map = bMap(array, mapper);
@@ -74,7 +74,7 @@ public class BMapTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void to_string() throws Exception {
+  void to_string() throws Exception {
     var map = bMap(bArray(bInt()), bIntIdLambda());
     assertThat(map.toString()).isEqualTo("MAP:[Int](???)@" + map.hash());
   }

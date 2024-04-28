@@ -37,7 +37,7 @@ public class InferenceTest {
     @Nested
     class _mono_type {
       @Test
-      public void string_literal() {
+      void string_literal() {
         var code = """
           myValue = "abc";
           """;
@@ -47,7 +47,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void blob_literal() {
+      void blob_literal() {
         var code = """
           myValue = 0x07;
           """;
@@ -57,7 +57,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void int_literal() {
+      void int_literal() {
         var code = """
           myValue = 123;
           """;
@@ -65,7 +65,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void array_literal() {
+      void array_literal() {
         var code = """
           myValue = ["abc"];
           """;
@@ -75,7 +75,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void mono_value_ref() {
+      void mono_value_ref() {
         var code =
             """
           String stringValue = "abc";
@@ -87,7 +87,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void mono_func_ref() {
+      void mono_func_ref() {
         var code =
             """
           String myFunc(Blob param) = "abc";
@@ -99,7 +99,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void mono_func_ref_call() {
+      void mono_func_ref_call() {
         var code =
             """
           String myFunc() = "abc";
@@ -111,7 +111,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void poly_func_ref_call() {
+      void poly_func_ref_call() {
         var code = """
           A myId(A a) = a;
           myValue = myId(7);
@@ -123,7 +123,7 @@ public class InferenceTest {
     @Nested
     class _poly_type {
       @Test
-      public void poly_literal() {
+      void poly_literal() {
         var code = """
           myValue = [];
           """;
@@ -133,7 +133,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void poly_value_ref() {
+      void poly_value_ref() {
         var code = """
           [A] emptyArray = [];
           myValue = emptyArray;
@@ -144,7 +144,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void poly_func_ref() {
+      void poly_func_ref() {
         var code = """
           A myId(A a) = a;
           myValue = myId;
@@ -197,17 +197,17 @@ public class InferenceTest {
       @Nested
       class _literal {
         @Test
-        public void string_literal() {
+        void string_literal() {
           assertInferredFunctionType("", "\"abc\"", sFuncSchema(sStringType()));
         }
 
         @Test
-        public void blob_literal() {
+        void blob_literal() {
           assertInferredFunctionType("", "0x07", sFuncSchema(sBlobType()));
         }
 
         @Test
-        public void int_literal() {
+        void int_literal() {
           assertInferredFunctionType("", "123", sFuncSchema(sIntType()));
         }
       }
@@ -215,29 +215,29 @@ public class InferenceTest {
       @Nested
       class _array {
         @Test
-        public void mono_array() {
+        void mono_array() {
           assertInferredFunctionType("", "[17]", sFuncSchema(sArrayType(sIntType())));
         }
       }
 
       @Test
-      public void value_ref() {
+      void value_ref() {
         assertInferredFunctionType("Int intValue = 7;", "", "intValue", sFuncSchema(sIntType()));
       }
 
       @Test
-      public void ref() {
+      void ref() {
         assertInferredFunctionType("Int int", "int", sFuncSchema(sIntType(), sIntType()));
       }
 
       @Test
-      public void param_function_call() {
+      void param_function_call() {
         assertInferredFunctionType(
             "()->Int f", "f()", sFuncSchema(sFuncType(sIntType()), sIntType()));
       }
 
       @Test
-      public void mono_function_ref() {
+      void mono_function_ref() {
         assertInferredFunctionType(
             "Int otherFunc(Blob param) = 7;",
             "",
@@ -246,18 +246,18 @@ public class InferenceTest {
       }
 
       @Test
-      public void mono_function_call() {
+      void mono_function_call() {
         assertInferredFunctionType(
             "Int otherFunc() = 7;", "", "otherFunc()", sFuncSchema(sIntType()));
       }
 
       @Test
-      public void poly_function_call() {
+      void poly_function_call() {
         assertInferredFunctionType("A myId(A a) = a;", "", "myId(7)", sFuncSchema(sIntType()));
       }
 
       @Test
-      public void function_mono_param() {
+      void function_mono_param() {
         assertInferredFunctionType("Int param", "param", sFuncSchema(sIntType(), sIntType()));
       }
     }
@@ -267,17 +267,17 @@ public class InferenceTest {
       @Nested
       class _literal {
         @Test
-        public void string_literal() {
+        void string_literal() {
           assertInferredFunctionType("A a", "\"abc\"", sFuncSchema(varA(), sStringType()));
         }
 
         @Test
-        public void blob_literal() {
+        void blob_literal() {
           assertInferredFunctionType("A a", "0x07", sFuncSchema(varA(), sBlobType()));
         }
 
         @Test
-        public void int_literal() {
+        void int_literal() {
           assertInferredFunctionType("A a", "7", sFuncSchema(varA(), sIntType()));
         }
       }
@@ -285,17 +285,17 @@ public class InferenceTest {
       @Nested
       class _array {
         @Test
-        public void mono_array() {
+        void mono_array() {
           assertInferredFunctionType("A a", "[7]", sFuncSchema(varA(), sArrayType(sIntType())));
         }
 
         @Test
-        public void poly_array() {
+        void poly_array() {
           assertInferredFunctionType("", "[]", sFuncSchema(sArrayType(varA())));
         }
 
         @Test
-        public void poly_array_when_param_list_already_uses_A_as_var_name() {
+        void poly_array_when_param_list_already_uses_A_as_var_name() {
           assertInferredFunctionType("A a", "[]", sFuncSchema(varA(), sArrayType(varB())));
         }
       }
@@ -303,18 +303,18 @@ public class InferenceTest {
       @Nested
       class _value {
         @Test
-        public void mono_value_ref() {
+        void mono_value_ref() {
           assertInferredFunctionType("Int intValue = 7;", "", "intValue", sFuncSchema(sIntType()));
         }
 
         @Test
-        public void poly_value_ref() {
+        void poly_value_ref() {
           assertInferredFunctionType(
               "[A] emptyArray = [];", "", "emptyArray", sFuncSchema(sArrayType(varA())));
         }
 
         @Test
-        public void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
+        void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
           assertInferredFunctionType(
               "[A] emptyArray = [];", "A a", "emptyArray", sFuncSchema(varA(), sArrayType(varB())));
         }
@@ -323,23 +323,23 @@ public class InferenceTest {
       @Nested
       class _param_ref {
         @Test
-        public void ref_with_base_type() {
+        void ref_with_base_type() {
           assertInferredFunctionType("Int int", "int", sFuncSchema(sIntType(), sIntType()));
         }
 
         @Test
-        public void ref_with_poly_type() {
+        void ref_with_poly_type() {
           assertInferredFunctionType("A param", "param", sFuncSchema(varA(), varA()));
         }
 
         @Test
-        public void ref_with_mono_function_type() {
+        void ref_with_mono_function_type() {
           var funcT = sFuncType(sBoolType(), sIntType());
           assertInferredFunctionType("(Bool)->Int func", "func", sFuncSchema(funcT, funcT));
         }
 
         @Test
-        public void ref_with_poly_function_type() {
+        void ref_with_poly_function_type() {
           assertInferredFunctionType(
               "(A)->A param",
               "param",
@@ -350,30 +350,30 @@ public class InferenceTest {
       @Nested
       class _call {
         @Test
-        public void call_to_mono_param() {
+        void call_to_mono_param() {
           assertInferredFunctionType(
               "()->Int f", "f()", sFuncSchema(sFuncType(sIntType()), sIntType()));
         }
 
         @Test
-        public void call_to_poly_param() {
+        void call_to_poly_param() {
           assertInferredFunctionType("()->A f", "f()", sFuncSchema(sFuncType(varA()), varA()));
         }
 
         @Test
-        public void call_to_mono_function() {
+        void call_to_mono_function() {
           assertInferredFunctionType(
               "Int otherFunc() = 7;", "", "otherFunc()", sFuncSchema(sIntType()));
         }
 
         @Test
-        public void call_to_poly_function() {
+        void call_to_poly_function() {
           assertInferredFunctionType(
               "A myIdentity(A a) = a;", "", "myIdentity(7)", sFuncSchema(sIntType()));
         }
 
         @Test
-        public void call_to_poly_function_when_argument_type_is_our_type_param() {
+        void call_to_poly_function_when_argument_type_is_our_type_param() {
           assertInferredFunctionType(
               "A myIdentity(A a) = a;", "B b", "myIdentity(b)", sFuncSchema(varB(), varB()));
         }
@@ -382,7 +382,7 @@ public class InferenceTest {
       @Nested
       class _func_ref {
         @Test
-        public void mono_function_ref() {
+        void mono_function_ref() {
           assertInferredFunctionType(
               "Int otherFunc(Blob param) = 7;",
               "",
@@ -391,14 +391,13 @@ public class InferenceTest {
         }
 
         @Test
-        public void poly_function_ref() {
+        void poly_function_ref() {
           assertInferredFunctionType(
               "A myId(A a) = a;", "", "myId", sFuncSchema(sFuncType(varA(), varA())));
         }
 
         @Test
-        public void
-            poly_function_ref_when_function_type_param_shadows_referenced_function_res_type() {
+        void poly_function_ref_when_function_type_param_shadows_referenced_function_res_type() {
           assertInferredFunctionType(
               "A myId(A a) = a;", "A a", "myId", sFuncSchema(varA(), sFuncType(varB(), varB())));
         }
@@ -411,7 +410,7 @@ public class InferenceTest {
     @Nested
     class _when_order_has_zero_elements {
       @Test
-      public void zero_elements_order() {
+      void zero_elements_order() {
         var code = """
           result = [];
           """;
@@ -424,7 +423,7 @@ public class InferenceTest {
     @Nested
     class _when_order_has_one_elem {
       @Test
-      public void with_string_type() {
+      void with_string_type() {
         var code = """
           result = ["abc"];
           """;
@@ -434,7 +433,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_int_type() {
+      void with_int_type() {
         var code = """
           result = [7];
           """;
@@ -444,7 +443,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_blob_type() {
+      void with_blob_type() {
         var code = """
           result = [0xAB];
           """;
@@ -454,7 +453,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_array_type() {
+      void with_array_type() {
         var code = """
           result = [[7]];
           """;
@@ -464,7 +463,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_value_ref() {
+      void with_value_ref() {
         var code = """
           Int myValue = 7;
           result = [myValue];
@@ -475,7 +474,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_mono_function_ref() {
+      void with_mono_function_ref() {
         var code =
             """
           Int myIntId(Int i) = i;
@@ -488,7 +487,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_poly_function_ref() {
+      void with_poly_function_ref() {
         var code = """
           A myId(A a) = a;
           result = [myId];
@@ -502,7 +501,7 @@ public class InferenceTest {
     @Nested
     class _when_order_has_two_elements {
       @Test
-      public void with_same_base_type() {
+      void with_same_base_type() {
         var code = """
           result = ["abc", "def"];
           """;
@@ -512,7 +511,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_different_base_types_fails() {
+      void with_different_base_types_fails() {
         var code =
             """
           result = [
@@ -526,7 +525,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_same_mono_function_types() {
+      void with_same_mono_function_types() {
         var code =
             """
           Int firstFunc() = 7;
@@ -542,7 +541,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_different_mono_function_types_fails() {
+      void with_different_mono_function_types_fails() {
         var code =
             """
           String firstFunc() = "abc";
@@ -558,7 +557,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_same_poly_function_types() {
+      void with_same_poly_function_types() {
         var code =
             """
           A myId(A a) = a;
@@ -572,7 +571,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void with_different_poly_function_types_fails() {
+      void with_different_poly_function_types_fails() {
         var code =
             """
           A myId(A a) = a;
@@ -585,7 +584,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void one_with_mono_type_one_with_poly_type_convertible_to_mono_one() {
+      void one_with_mono_type_one_with_poly_type_convertible_to_mono_one() {
         var code =
             """
           Int myIntId(Int i) = i;
@@ -599,7 +598,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void one_with_mono_type_one_with_poly_type_not_convertible_to_mono_one_fails() {
+      void one_with_mono_type_one_with_poly_type_not_convertible_to_mono_one_fails() {
         var code =
             """
           Int myIntId(Int i) = i;
@@ -618,7 +617,7 @@ public class InferenceTest {
     @Nested
     class _fails_when_var_unifies_two_incompatible_types {
       @Test
-      public void base_types() {
+      void base_types() {
         var code =
             """
             String myEqual(A p1, A p2) = "true";
@@ -628,7 +627,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void base_type_and_array_of_that_base_type() {
+      void base_type_and_array_of_that_base_type() {
         var code =
             """
             String myEqual(A p1, A p2) = "true";
@@ -638,7 +637,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void arrays() {
+      void arrays() {
         var code =
             """
             String myEqual(A p1, A p2) = "true";
@@ -648,7 +647,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void structs_with_the_same_object_db_representation() {
+      void structs_with_the_same_object_db_representation() {
         var code =
             """
             MyStruct1{
@@ -669,7 +668,7 @@ public class InferenceTest {
     @Nested
     class _identity_function_applied_to {
       @Test
-      public void arg_of_base_type() {
+      void arg_of_base_type() {
         var code =
             """
             A myIdentity(A a) = a;
@@ -681,7 +680,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void array() {
+      void array() {
         var code =
             """
             A myIdentity(A a) = a;
@@ -693,7 +692,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void func() {
+      void func() {
         var code =
             """
             A myIdentity(A a) = a;
@@ -709,7 +708,7 @@ public class InferenceTest {
     @Nested
     class _first_elem_function_applied_to {
       @Test
-      public void array() {
+      void array() {
         var code =
             """
             @Native("impl.met")
@@ -722,7 +721,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void array2() {
+      void array2() {
         var code =
             """
             @Native("impl.met")
@@ -738,7 +737,7 @@ public class InferenceTest {
     @Nested
     class _single_elem_array_function_applied_to {
       @Test
-      public void arg_of_base_type() {
+      void arg_of_base_type() {
         var code =
             """
             [A] singleElement(A a) = [a];
@@ -750,7 +749,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void array() {
+      void array() {
         var code =
             """
             [A] singleElement(A a) = [a];
@@ -762,7 +761,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void function() {
+      void function() {
         var code =
             """
             [A] singleElement(A a) = [a];
@@ -779,7 +778,7 @@ public class InferenceTest {
     @Nested
     class _from_default_arg {
       @Test
-      public void generic_param_with_default_value_with_concrete_type() {
+      void generic_param_with_default_value_with_concrete_type() {
         var code =
             """
               A myFunc(A a = 7) = a;
@@ -789,7 +788,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void generic_param_with_default_value_with_polymorphic_type() {
+      void generic_param_with_default_value_with_polymorphic_type() {
         var code =
             """
               A myId(A a) = a;
@@ -802,7 +801,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void generic_param_with_default_value_with_concrete_type_error_case() {
+      void generic_param_with_default_value_with_concrete_type_error_case() {
         var code =
             """
               A myFunc(A a, A other = 7) = a;
@@ -812,7 +811,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void
+      void
           two_differently_instantitaed_calls_to_poly_function_with_poly_default_value_within_one_expr() {
         var code =
             """
@@ -824,7 +823,7 @@ public class InferenceTest {
       }
 
       @Test
-      public void two_param_default_values_with_different_vars_referencing_same_poly_function() {
+      void two_param_default_values_with_different_vars_referencing_same_poly_function() {
         var code =
             """
           A myId(A a) = a;
@@ -836,7 +835,7 @@ public class InferenceTest {
     }
 
     @Test
-    public void converter_applier() {
+    void converter_applier() {
       var code =
           """
           B converterApplier(A item, (A)->B convert) = convert(item);
@@ -852,7 +851,7 @@ public class InferenceTest {
   @Nested
   class _infer_unit_type {
     @Test
-    public void expression_function() {
+    void expression_function() {
       var code =
           """
               Int myFunc(A a) = 7;
@@ -865,7 +864,7 @@ public class InferenceTest {
     }
 
     @Test
-    public void lambda() {
+    void lambda() {
       var code = """
               result = ((A a) -> 7)([]);
               """;
@@ -883,7 +882,7 @@ public class InferenceTest {
   @Nested
   class _regression {
     @Test
-    public void select_with_selectable_with_infer_type_error() {
+    void select_with_selectable_with_infer_type_error() {
       var code =
           """
           @Native("impl")
@@ -895,7 +894,7 @@ public class InferenceTest {
     }
 
     @Test
-    public void order_with_element_with_infer_type_error() {
+    void order_with_element_with_infer_type_error() {
       var code =
           """
           @Native("impl")
@@ -907,7 +906,7 @@ public class InferenceTest {
     }
 
     @Test
-    public void call_with_callee_with_infer_type_error() {
+    void call_with_callee_with_infer_type_error() {
       var code =
           """
           @Native("impl")
@@ -919,7 +918,7 @@ public class InferenceTest {
     }
 
     @Test
-    public void mono_func_call_with_illegal_params() {
+    void mono_func_call_with_illegal_params() {
       var code =
           """
           @Native("impl")
@@ -930,7 +929,7 @@ public class InferenceTest {
     }
 
     @Test
-    public void poly_function_call_with_illegal_params() {
+    void poly_function_call_with_illegal_params() {
       var code =
           """
           @Native("impl")

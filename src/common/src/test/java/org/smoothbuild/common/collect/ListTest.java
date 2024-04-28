@@ -34,22 +34,22 @@ public class ListTest {
   @Nested
   class _list {
     @Test
-    public void with_no_elements() {
+    void with_no_elements() {
       assertThat(list()).isEmpty();
     }
 
     @Test
-    public void with_one_element() {
+    void with_one_element() {
       assertThat(list("abc")).containsExactly("abc").inOrder();
     }
 
     @Test
-    public void with_two_elements() {
+    void with_two_elements() {
       assertThat(list("abc", "def")).containsExactly("abc", "def").inOrder();
     }
 
     @Test
-    public void with_three_elements() {
+    void with_three_elements() {
       assertThat(list("abc", "def", "ghi")).containsExactly("abc", "def", "ghi").inOrder();
     }
   }
@@ -57,23 +57,23 @@ public class ListTest {
   @Nested
   class _generateList_function0 {
     @Test
-    public void with_no_elements() {
+    void with_no_elements() {
       assertThat(generateList(0, () -> "a")).isEmpty();
     }
 
     @Test
-    public void with_one_element() {
+    void with_one_element() {
       assertThat(generateList(1, () -> "a")).isEqualTo(list("a"));
     }
 
     @Test
-    public void with_many_elements() {
+    void with_many_elements() {
       var index = new AtomicInteger(0);
       assertThat(generateList(5, index::getAndIncrement)).isEqualTo(list(0, 1, 2, 3, 4));
     }
 
     @Test
-    public void exception_from_supplier_is_propagated() {
+    void exception_from_supplier_is_propagated() {
       var exception = new Exception("message");
       Function0<String, Exception> supplier = () -> {
         throw exception;
@@ -85,22 +85,22 @@ public class ListTest {
   @Nested
   class _generateList_function1 {
     @Test
-    public void with_no_elements() {
+    void with_no_elements() {
       assertThat(generateList(0, (i) -> "a")).isEmpty();
     }
 
     @Test
-    public void with_one_element() {
+    void with_one_element() {
       assertThat(generateList(1, Object::toString)).isEqualTo(list("0"));
     }
 
     @Test
-    public void with_many_elements() {
+    void with_many_elements() {
       assertThat(generateList(5, Object::toString)).isEqualTo(list("0", "1", "2", "3", "4"));
     }
 
     @Test
-    public void exception_from_supplier_is_propagated() {
+    void exception_from_supplier_is_propagated() {
       var exception = new Exception("message");
       Function1<Integer, String, Exception> supplier = (i) -> {
         throw exception;
@@ -112,17 +112,17 @@ public class ListTest {
   @Nested
   class _nCopiesList {
     @Test
-    public void with_no_elements() {
+    void with_no_elements() {
       assertThat(nCopiesList(0, "a")).isEmpty();
     }
 
     @Test
-    public void with_one_element() {
+    void with_one_element() {
       assertThat(nCopiesList(1, "a")).isEqualTo(list("a"));
     }
 
     @Test
-    public void with_many_elements() {
+    void with_many_elements() {
       assertThat(nCopiesList(5, "a")).isEqualTo(list("a", "a", "a", "a", "a"));
     }
   }
@@ -402,22 +402,22 @@ public class ListTest {
   @Nested
   class _sort_using {
     @Test
-    public void empty_list() {
+    void empty_list() {
       assertThat(list().sortUsing(comparing(Object::toString))).isEqualTo(list());
     }
 
     @Test
-    public void single_element_list() {
+    void single_element_list() {
       assertThat(list("a").sortUsing(comparing(Object::toString))).isEqualTo(list("a"));
     }
 
     @Test
-    public void two_elements_list() {
+    void two_elements_list() {
       assertThat(list("b", "a").sortUsing(comparing(Object::toString))).isEqualTo(list("a", "b"));
     }
 
     @Test
-    public void many_elements_list() {
+    void many_elements_list() {
       assertThat(list("b", "a", "e", "f", "c", "d", "g").sortUsing(comparing(Object::toString)))
           .isEqualTo(list("a", "b", "c", "d", "e", "f", "g"));
     }
@@ -426,24 +426,24 @@ public class ListTest {
   @Nested
   class _map {
     @Test
-    public void returns_empty_list_for_empty_arg() {
+    void returns_empty_list_for_empty_arg() {
       assertThat(List.<String>list().map(String::toUpperCase)).isEmpty();
     }
 
     @Test
-    public void returns_mapped_one_element() {
+    void returns_mapped_one_element() {
       assertThat(list("abc").map(String::toUpperCase)).containsExactly("ABC").inOrder();
     }
 
     @Test
-    public void mapping_with_two_element() {
+    void mapping_with_two_element() {
       assertThat(list("abc", "def").map(String::toUpperCase))
           .containsExactly("ABC", "DEF")
           .inOrder();
     }
 
     @Test
-    public void exception_from_mapper_is_propagated() {
+    void exception_from_mapper_is_propagated() {
       assertCall(() -> list("abc").map(this::throwRuntimeException))
           .throwsException(RuntimeException.class);
     }
@@ -456,26 +456,26 @@ public class ListTest {
   @Nested
   class _flatMap {
     @Test
-    public void returns_empty_list_for_empty_arg() {
+    void returns_empty_list_for_empty_arg() {
       assertThat(List.<String>list().flatMap(s -> list(s, s))).isEmpty();
     }
 
     @Test
-    public void returns_doubled_element() {
+    void returns_doubled_element() {
       assertThat(list("abc").flatMap(s -> list(s, s)))
           .containsExactly("abc", "abc")
           .inOrder();
     }
 
     @Test
-    public void returns_doubled_elements() {
+    void returns_doubled_elements() {
       assertThat(list("abc", "def").flatMap(s -> list(s, s)))
           .containsExactly("abc", "abc", "def", "def")
           .inOrder();
     }
 
     @Test
-    public void exception_from_mapper_is_propagated() {
+    void exception_from_mapper_is_propagated() {
       assertCall(() -> list("abc").flatMap(this::throwRuntimeException))
           .throwsException(RuntimeException.class);
     }
@@ -488,31 +488,31 @@ public class ListTest {
   @Nested
   class _filter {
     @Test
-    public void returns_empty_for_empty_list() {
+    void returns_empty_for_empty_list() {
       assertThat(list().filter(x -> true)).isEmpty();
     }
 
     @Test
-    public void returns_unmodified_list_when_predicate_is_always_true() {
+    void returns_unmodified_list_when_predicate_is_always_true() {
       assertThat(list("first", "second", "third").filter(x -> true))
           .containsExactly("first", "second", "third")
           .inOrder();
     }
 
     @Test
-    public void returns_empty_list_when_predicate_is_always_false() {
+    void returns_empty_list_when_predicate_is_always_false() {
       assertThat(list("first", "second", "third").filter(x -> false)).isEmpty();
     }
 
     @Test
-    public void leaves_only_elements_matching_predicate() {
+    void leaves_only_elements_matching_predicate() {
       assertThat(list("first", "second", "third").filter(s -> s.startsWith("s")))
           .containsExactly("second")
           .inOrder();
     }
 
     @Test
-    public void propagates_exception_thrown_from_function() {
+    void propagates_exception_thrown_from_function() {
       var exception = new Exception("message");
       var list = list("first", "second", "third");
       assertCall(() -> list.filter(s -> {
@@ -826,17 +826,17 @@ public class ListTest {
   @Nested
   class _pull_up_maybe {
     @Test
-    public void with_zero_elements() {
+    void with_zero_elements() {
       assertThat(pullUpMaybe(list())).isEqualTo(some(list()));
     }
 
     @Test
-    public void with_none() {
+    void with_none() {
       assertThat(pullUpMaybe(list(some("abc"), none()))).isEqualTo(none());
     }
 
     @Test
-    public void with_all_elements_present() {
+    void with_all_elements_present() {
       assertThat(pullUpMaybe(list(some("abc"), some("def")))).isEqualTo(some(list("abc", "def")));
     }
   }

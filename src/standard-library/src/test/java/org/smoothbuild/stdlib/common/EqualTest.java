@@ -10,7 +10,7 @@ public class EqualTest extends StandardLibraryTestCase {
   @Nested
   class _int {
     @Test
-    public void int_is_equal_to_itself() throws Exception {
+    void int_is_equal_to_itself() throws Exception {
       var userModule = """
           result = equal(7, 7);
           """;
@@ -20,7 +20,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void int_is_not_equal_to_different_int() throws Exception {
+    void int_is_not_equal_to_different_int() throws Exception {
       var userModule = """
           result = equal(7, 17);
           """;
@@ -33,7 +33,7 @@ public class EqualTest extends StandardLibraryTestCase {
   @Nested
   class _string {
     @Test
-    public void string_is_equal_to_itself() throws Exception {
+    void string_is_equal_to_itself() throws Exception {
       var userModule = """
           result = equal("aaa", "aaa");
           """;
@@ -43,7 +43,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void string_is_not_equal_to_different_string() throws Exception {
+    void string_is_not_equal_to_different_string() throws Exception {
       var userModule = """
           result = equal("aaa", "bbb");
           """;
@@ -53,7 +53,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void empty_string_is_equal_to_itself() throws Exception {
+    void empty_string_is_equal_to_itself() throws Exception {
       var userModule = """
           result = equal("", "");
           """;
@@ -63,7 +63,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void empty_string_is_not_equal_to_non_empty_string() throws Exception {
+    void empty_string_is_not_equal_to_non_empty_string() throws Exception {
       var userModule = """
           result = equal("aaa", "");
           """;
@@ -76,7 +76,7 @@ public class EqualTest extends StandardLibraryTestCase {
   @Nested
   class _bool {
     @Test
-    public void true_is_equal_to_true() throws Exception {
+    void true_is_equal_to_true() throws Exception {
       var userModule = """
           result = equal(true, true);
           """;
@@ -86,7 +86,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void false_is_equal_to_false() throws Exception {
+    void false_is_equal_to_false() throws Exception {
       var userModule = """
           result = equal(false, false);
           """;
@@ -96,7 +96,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void true_is_not_equal_to_false() throws Exception {
+    void true_is_not_equal_to_false() throws Exception {
       var userModule = """
           result = equal(true, false);
           """;
@@ -106,7 +106,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void false_is_not_equal_to_true() throws Exception {
+    void false_is_not_equal_to_true() throws Exception {
       var userModule = """
           result = equal(false, true);
           """;
@@ -119,7 +119,7 @@ public class EqualTest extends StandardLibraryTestCase {
   @Nested
   class _struct {
     @Test
-    public void struct_is_equal_to_itself() throws Exception {
+    void struct_is_equal_to_itself() throws Exception {
       var userModule =
           """
           Person {
@@ -134,8 +134,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void struct_is_not_equal_to_the_same_struct_with_different_field_value()
-        throws Exception {
+    void struct_is_not_equal_to_the_same_struct_with_different_field_value() throws Exception {
       var userModule =
           """
           Person {
@@ -153,7 +152,7 @@ public class EqualTest extends StandardLibraryTestCase {
   @Nested
   class _array {
     @Test
-    public void empty_arrays_are_equal() throws Exception {
+    void empty_arrays_are_equal() throws Exception {
       var userModule = """
           result = equal([], []);
           """;
@@ -163,7 +162,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void int_array_is_equal_to_itself() throws Exception {
+    void int_array_is_equal_to_itself() throws Exception {
       var userModule = """
           result = equal([7, 17], [7, 17]);
           """;
@@ -173,7 +172,7 @@ public class EqualTest extends StandardLibraryTestCase {
     }
 
     @Test
-    public void string_array_is_equal_to_itself() throws Exception {
+    void string_array_is_equal_to_itself() throws Exception {
       var userModule = """
           result = equal(["aaa", "bbb"], ["aaa", "bbb"]);
           """;

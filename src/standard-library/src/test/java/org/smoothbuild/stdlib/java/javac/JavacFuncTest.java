@@ -11,7 +11,7 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class JavacFuncTest extends TestingVirtualMachine {
   @Test
-  public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
+  void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
     BTuple file1 = bFile(path("my/package/MyKlass.class"));
     BTuple file2 = bFile(path("my/package/MyKlass2.class"));
     BTuple jar = bFile("myFile.jar", bBlob(jarByteString(file1, file2)));
@@ -20,7 +20,7 @@ public class JavacFuncTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void duplicate_class_file_exception() throws Exception {
+  void duplicate_class_file_exception() throws Exception {
     String name = "my/package/MyKlass.class";
     BTuple file1 = bFile(path(name));
     BTuple jar = bFile("myFile.jar", bBlob(jarByteString(file1)));

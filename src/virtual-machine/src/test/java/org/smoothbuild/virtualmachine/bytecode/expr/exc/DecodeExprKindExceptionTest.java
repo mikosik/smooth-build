@@ -7,7 +7,7 @@ import org.smoothbuild.common.base.Hash;
 
 public class DecodeExprKindExceptionTest {
   @Test
-  public void message() {
+  void message() {
     var exception = new DecodeExprKindException(Hash.of(123), new RuntimeException());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode expression at "

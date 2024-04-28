@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class SNamedExprValueTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var namedExprValueS =
         new SNamedExprValue(sSchema(sStringType()), "myVal", sInt(9), location(7));
     assertThat(namedExprValueS.toString())

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class SReferenceTest {
   @Test
-  public void to_string() {
+  void to_string() {
     var refS = new SReference(sSchema(sIntType()), "referenced", location(7));
     assertThat(refS.toString())
         .isEqualTo(

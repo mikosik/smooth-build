@@ -13,12 +13,12 @@ import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
 public class BIntTest extends TestingVirtualMachine {
   @Test
-  public void type_of_int_is_int_type() throws Exception {
+  void type_of_int_is_int_type() throws Exception {
     assertThat(bInt(123).kind()).isEqualTo(bIntType());
   }
 
   @Test
-  public void to_j_returns_java_big_integer() throws Exception {
+  void to_j_returns_java_big_integer() throws Exception {
     assertThat(bInt(123).toJavaBigInteger()).isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -36,20 +36,20 @@ public class BIntTest extends TestingVirtualMachine {
   }
 
   @Test
-  public void int_can_be_read_back_by_hash() throws Exception {
+  void int_can_be_read_back_by_hash() throws Exception {
     var i = bInt(123);
     assertThat(exprDbOther().get(i.hash())).isEqualTo(i);
   }
 
   @Test
-  public void int_read_back_by_hash_has_same_to_J() throws Exception {
+  void int_read_back_by_hash_has_same_to_J() throws Exception {
     var i = bInt(123);
     assertThat(((BInt) exprDbOther().get(i.hash())).toJavaBigInteger())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test
-  public void to_string_contains_int_value() throws Exception {
+  void to_string_contains_int_value() throws Exception {
     var i = bInt(123);
     assertThat(i.toString()).isEqualTo("123@" + i.hash());
   }

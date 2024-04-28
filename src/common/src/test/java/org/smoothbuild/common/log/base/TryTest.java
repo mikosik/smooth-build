@@ -59,25 +59,25 @@ public class TryTest {
     @Nested
     class _with_null_value {
       @Test
-      public void has_value() {
+      void has_value() {
         var success = success(null);
         assertThat(success.get()).isNull();
       }
 
       @Test
-      public void toMaybe_returns_some_with_null() {
+      void toMaybe_returns_some_with_null() {
         var success = success(null);
         assertThat(success.toMaybe()).isEqualTo(some(null));
       }
 
       @Test
-      public void creation_with_non_problem_log_is_allowed() {
+      void creation_with_non_problem_log_is_allowed() {
         var success = success(null, warning("warning message"));
         assertThat(success.get()).isNull();
       }
 
       @Test
-      public void creation_with_problem_fails() {
+      void creation_with_problem_fails() {
         assertCall(() -> success(null, error("error message")))
             .throwsException(IllegalArgumentException.class);
       }
@@ -86,25 +86,25 @@ public class TryTest {
     @Nested
     class _with_non_null_value {
       @Test
-      public void has_value() {
+      void has_value() {
         var success = success("abc");
         assertThat(success.get()).isEqualTo("abc");
       }
 
       @Test
-      public void toMaybe_returns_some_with_value() {
+      void toMaybe_returns_some_with_value() {
         var success = success("abc");
         assertThat(success.toMaybe()).isEqualTo(some("abc"));
       }
 
       @Test
-      public void creation_with_non_problem_log_is_allowed() {
+      void creation_with_non_problem_log_is_allowed() {
         var success = success("abc", warning("warning message"));
         assertThat(success.get()).isEqualTo("abc");
       }
 
       @Test
-      public void creation_with_problem_fails() {
+      void creation_with_problem_fails() {
         assertCall(() -> success("abc", error("error message")))
             .throwsException(IllegalArgumentException.class);
       }
@@ -114,26 +114,26 @@ public class TryTest {
   @Nested
   class _failure {
     @Test
-    public void creation_with_no_failure_fails() {
+    void creation_with_no_failure_fails() {
       var logs = list(info("info message"));
       assertCall(() -> failure(logs)).throwsException(IllegalArgumentException.class);
     }
 
     @Test
-    public void has_no_value() {
+    void has_no_value() {
       var failure = failure(error("error message"));
       assertCall(failure::get).throwsException(IllegalStateException.class);
     }
 
     @Test
-    public void toMaybe_returns_none() {
+    void toMaybe_returns_none() {
       var failure = failure(error("error message"));
       assertThat(failure.toMaybe()).isEqualTo(none());
     }
   }
 
   @Test
-  public void test_equals_and_hashcode() {
+  void test_equals_and_hashcode() {
     new EqualsTester()
         .addEqualityGroup(success("abc"), success("abc"))
         .addEqualityGroup(success("def"), success("def"))
@@ -151,7 +151,7 @@ public class TryTest {
   }
 
   @Test
-  public void to_string() {
+  void to_string() {
     var success = success("abc", info("message"));
     assertThat(success.toString()).isEqualTo("Try{Some(abc), [Log{INFO, 'message'}]}");
   }

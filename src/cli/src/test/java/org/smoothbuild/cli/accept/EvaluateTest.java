@@ -64,7 +64,7 @@ public class EvaluateTest extends EvaluatorTestCase {
     @Nested
     class _select {
       @Test
-      public void select() throws Exception {
+      void select() throws Exception {
         createUserModule(
             """
             MyStruct {
@@ -77,7 +77,7 @@ public class EvaluateTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void select_does_not_consume_piped_value() throws Exception {
+      void select_does_not_consume_piped_value() throws Exception {
         createUserModule(
             """
             MyStruct {
@@ -95,7 +95,7 @@ public class EvaluateTest extends EvaluatorTestCase {
     @Nested
     class _order {
       @Test
-      public void order() throws Exception {
+      void order() throws Exception {
         createUserModule("""
             [Int] result = [1, 2, 3];
             """);
@@ -104,7 +104,7 @@ public class EvaluateTest extends EvaluatorTestCase {
       }
 
       @Test
-      public void order_consumes_piped_value() throws Exception {
+      void order_consumes_piped_value() throws Exception {
         createUserModule("""
             [Int] result = 1 > [2, 3];
             """);
@@ -118,7 +118,7 @@ public class EvaluateTest extends EvaluatorTestCase {
       @Nested
       class _lambda {
         @Test
-        public void const_func() throws Exception {
+        void const_func() throws Exception {
           createUserModule(
               """
             myFunc() = 7;
@@ -129,7 +129,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_returning_its_param() throws Exception {
+        void func_returning_its_param() throws Exception {
           createUserModule("""
             result = ((Int int) -> int)(7);
             """);
@@ -138,8 +138,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
-            throws Exception {
+        void func_that_does_not_use_its_param_will_not_evaluate_matching_arg() throws Exception {
           var userModule =
               """
               @Native("impl")
@@ -152,7 +151,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_passed_as_argument() throws Exception {
+        void func_passed_as_argument() throws Exception {
           var userModule =
               """
               A invokeProducer(()->A producer) = producer();
@@ -164,7 +163,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_returned_by_other_func() throws Exception {
+        void func_returned_by_other_func() throws Exception {
           var userModule =
               """
               ()->String createProducer() = () -> "abc";
@@ -176,7 +175,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void call_consumes_piped_value() throws Exception {
+        void call_consumes_piped_value() throws Exception {
           createUserModule(
               """
             myFunc(Int int) = int;
@@ -190,7 +189,7 @@ public class EvaluateTest extends EvaluatorTestCase {
       @Nested
       class _expression_function {
         @Test
-        public void const_func() throws Exception {
+        void const_func() throws Exception {
           createUserModule(
               """
             myFunc() = 7;
@@ -201,7 +200,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_returning_its_param() throws Exception {
+        void func_returning_its_param() throws Exception {
           createUserModule(
               """
             myFunc(Int int) = int;
@@ -212,8 +211,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
-            throws Exception {
+        void func_that_does_not_use_its_param_will_not_evaluate_matching_arg() throws Exception {
           var userModule =
               """
               @Native("impl")
@@ -227,7 +225,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_passed_as_argument() throws Exception {
+        void func_passed_as_argument() throws Exception {
           var userModule =
               """
               String returnAbc() = "abc";
@@ -240,7 +238,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void func_returned_by_other_func() throws Exception {
+        void func_returned_by_other_func() throws Exception {
           var userModule =
               """
               String returnAbc() = "abc";
@@ -253,7 +251,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         }
 
         @Test
-        public void call_consumes_piped_value() throws Exception {
+        void call_consumes_piped_value() throws Exception {
           createUserModule(
               """
             myFunc(Int int) = int;
@@ -272,7 +270,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         @Nested
         class _in_def_func {
           @Test
-          public void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
+          void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
             createUserModule(
                 """
           func(String withDefault = "abc") = withDefault;
@@ -283,7 +281,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           }
 
           @Test
-          public void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
+          void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
             createUserModule(
                 """
               func(String withDefault = "abc") = withDefault;
@@ -294,7 +292,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           }
 
           @Test
-          public void is_not_evaluated_when_not_needed() throws Exception {
+          void is_not_evaluated_when_not_needed() throws Exception {
             var userModule = format(
                 """
                     @Native("%s")
@@ -312,7 +310,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         @Nested
         class _in_native_func {
           @Test
-          public void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
+          void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
             var userModule = format(
                 """
                     @Native("%s")
@@ -326,7 +324,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           }
 
           @Test
-          public void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
+          void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
             var userModule = format(
                 """
                     @Native("%s")
@@ -340,7 +338,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           }
 
           @Test
-          public void is_not_evaluated_when_not_needed() throws Exception {
+          void is_not_evaluated_when_not_needed() throws Exception {
             var userModule = format(
                 """
                     @Native("%s")
@@ -362,7 +360,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         @Nested
         class _imported {
           @Test
-          public void value_makes_it_inaccessible() throws Exception {
+          void value_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               String myFunc(String true) = true;
@@ -373,7 +371,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           }
 
           @Test
-          public void func_makes_it_inaccessible() throws Exception {
+          void func_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               String myFunc(String and) = and;
@@ -387,7 +385,7 @@ public class EvaluateTest extends EvaluatorTestCase {
         @Nested
         class _local {
           @Test
-          public void value_makes_it_inaccessible() throws Exception {
+          void value_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               localValue = 7;
@@ -399,7 +397,7 @@ public class EvaluateTest extends EvaluatorTestCase {
           }
 
           @Test
-          public void func_makes_it_inaccessible() throws Exception {
+          void func_makes_it_inaccessible() throws Exception {
             createUserModule(
                 """
               localFunc() = 7;
