@@ -24,8 +24,8 @@ public final class ConstStep extends Step {
   }
 
   @Override
-  public Output run(BTuple input, Container container) throws BytecodeException {
+  public BOutput run(BTuple input, Container container) throws BytecodeException {
     checkArgument(input.elements().isEmpty());
-    return new Output(value(), container.messages());
+    return new BOutput(value(), container.messages());
   }
 }

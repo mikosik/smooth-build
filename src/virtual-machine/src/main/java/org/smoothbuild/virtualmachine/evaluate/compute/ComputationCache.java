@@ -28,7 +28,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
-import org.smoothbuild.virtualmachine.evaluate.step.Output;
+import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 /**
@@ -58,11 +58,11 @@ public class ComputationCache implements Initializable {
     }
   }
 
-  public synchronized void write(Hash hash, Output output) throws ComputeException {
+  public synchronized void write(Hash hash, BOutput bOutput) throws ComputeException {
     try (BufferedSink sink = buffer(bucket.sink(toPath(hash)))) {
-      var storedLogs = output.storedLogs();
+      var storedLogs = bOutput.storedLogs();
       sink.write(storedLogs.hash().toByteString());
-      var value = output.value();
+      var value = bOutput.value();
       if (value != null) {
         sink.write(value.hash().toByteString());
       }
@@ -80,7 +80,7 @@ public class ComputationCache implements Initializable {
     };
   }
 
-  public synchronized Output read(Hash hash, BType type) throws ComputeException {
+  public synchronized BOutput read(Hash hash, BType type) throws ComputeException {
     try (var source = buffer(bucket.source(toPath(hash)))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
@@ -101,7 +101,7 @@ public class ComputationCache implements Initializable {
         }
       }
       if (containsErrorOrAbove(storedLogArray)) {
-        return new Output(null, storedLogArray);
+        return new BOutput(null, storedLogArray);
       } else {
         var valueHash = Hash.read(source);
         var value = exprDb.get(valueHash);
@@ -111,7 +111,7 @@ public class ComputationCache implements Initializable {
               "Expected value of type " + type.q() + " as second child of its Merkle root, but got "
                   + value.evaluationType().q());
         } else {
-          return new Output((BValue) value, storedLogArray);
+          return new BOutput((BValue) value, storedLogArray);
         }
       }
     } catch (IOException e) {

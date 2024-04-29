@@ -14,12 +14,12 @@ public final class OrderStep extends Step {
   }
 
   @Override
-  public Output run(BTuple input, Container container) throws BytecodeException {
+  public BOutput run(BTuple input, Container container) throws BytecodeException {
     BArray array = container
         .factory()
         .arrayBuilder((BArrayType) outputType())
         .addAll(input.elements())
         .build();
-    return new Output(array, container.messages());
+    return new BOutput(array, container.messages());
   }
 }

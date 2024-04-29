@@ -18,7 +18,7 @@ import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.evaluate.step.Output;
+import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.Purity;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
@@ -103,9 +103,9 @@ public class Computer {
     }
   }
 
-  private static boolean outputContainsFatalMessage(Output output) throws ComputeException {
+  private static boolean outputContainsFatalMessage(BOutput bOutput) throws ComputeException {
     try {
-      return containsFatal(output.storedLogs());
+      return containsFatal(bOutput.storedLogs());
     } catch (BytecodeException e) {
       throw computeException(e);
     }
@@ -119,10 +119,10 @@ public class Computer {
           case IMPURE -> MEMORY;
           case FAST -> throw new RuntimeException("shouldn't happen");
         };
-    return new ComputationResult(computationResult.output(), resultSource);
+    return new ComputationResult(computationResult.bOutput(), resultSource);
   }
 
-  private Output runComputation(Step step, BTuple input) throws ComputeException {
+  private BOutput runComputation(Step step, BTuple input) throws ComputeException {
     var container = containerProvider.get();
     try {
       return step.run(input, container);

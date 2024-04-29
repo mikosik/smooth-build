@@ -18,7 +18,7 @@ public final class PickStep extends Step {
   }
 
   @Override
-  public Output run(BTuple input, Container container) throws BytecodeException {
+  public BOutput run(BTuple input, Container container) throws BytecodeException {
     var components = input.elements();
     checkArgument(components.size() == 2);
     int index = index(components).toJavaBigInteger().intValue();
@@ -27,9 +27,9 @@ public final class PickStep extends Step {
       container
           .log()
           .error("Index (" + index + ") out of bounds. Array size = " + elements.size() + ".");
-      return new Output(null, container.messages());
+      return new BOutput(null, container.messages());
     } else {
-      return new Output(elements.get(index), container.messages());
+      return new BOutput(elements.get(index), container.messages());
     }
   }
 
