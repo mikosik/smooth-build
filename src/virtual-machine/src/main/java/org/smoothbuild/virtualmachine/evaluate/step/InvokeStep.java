@@ -23,14 +23,6 @@ public final class InvokeStep extends Step {
     super(invoke, trace);
   }
 
-  public static InvokeStep newInvokeStep(BInvoke invoke, BTrace trace) {
-    return new InvokeStep(invoke, trace);
-  }
-
-  public BInvoke invoke() {
-    return ((BInvoke) expr());
-  }
-
   @Override
   public Purity purity(BTuple input) throws BytecodeException {
     var isPure = ((BBool) input.get(BInvoke.IS_PURE_IDX)).toJavaBoolean();

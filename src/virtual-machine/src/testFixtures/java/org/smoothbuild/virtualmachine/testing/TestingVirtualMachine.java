@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
-import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Guice;
@@ -277,7 +276,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public InvokeStep invokeTask(BInvoke invoke, BTrace trace) {
-    return newInvokeStep(invoke, trace);
+    return new InvokeStep(invoke, trace);
   }
 
   public CombineStep combineTask() throws BytecodeException {
