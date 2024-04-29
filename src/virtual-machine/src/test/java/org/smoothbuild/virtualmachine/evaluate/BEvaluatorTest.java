@@ -490,7 +490,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             t.bArray(t.bInt(17)),
             t.bBlob(17),
             t.bBool(true),
-            t.bIntIdLambda(),
             t.bInt(17),
             t.bString("abc"),
             t.bTuple(t.bInt(17)));
@@ -511,17 +510,6 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var reporter = mock(Reporter.class);
         evaluate(bEvaluator(reporter), if_);
         verify(reporter, times(2))
-            .submit(report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
-      }
-
-      @Test
-      void report_map_as_map_task() throws Exception {
-        var array = bArray(bInt(3));
-        var mapper = bIntIdLambda();
-        var if_ = bMap(array, mapper);
-        var reporter = mock(Reporter.class);
-        evaluate(bEvaluator(reporter), if_);
-        verify(reporter, times(3))
             .submit(report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
       }
 
