@@ -525,6 +525,18 @@ public class BuildCommandTest {
     }
 
     @Test
+    void func_call() throws IOException {
+      createUserModule("""
+          myFunc() = 7;
+          result = myFunc();
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSystemOutContains("""
+          :vm:inline""");
+    }
+
+    @Test
     void select() throws IOException {
       createUserModule(
           """
@@ -538,18 +550,6 @@ public class BuildCommandTest {
       assertSystemOutContains("""
           :evaluate:select
           """);
-    }
-
-    @Test
-    void func_reference() throws IOException {
-      createUserModule("""
-          myFunc() = 7;
-          result = myFunc;
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
-          :evaluate:const""");
     }
 
     @Test
