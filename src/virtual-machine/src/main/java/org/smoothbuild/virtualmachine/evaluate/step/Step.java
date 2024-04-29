@@ -16,8 +16,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
  * Evaluation of sub-expressions are separate steps.
  * This class is thread-safe.
  */
-public abstract sealed class Step
-    permits CombineStep, ConstStep, InvokeStep, OrderStep, PickStep, SelectStep {
+public abstract sealed class Step permits CombineStep, InvokeStep, OrderStep, PickStep, SelectStep {
   private final Hash hash;
   private final BType evaluationType;
   private final BTrace trace;

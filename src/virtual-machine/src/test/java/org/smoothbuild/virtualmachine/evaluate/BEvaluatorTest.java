@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
@@ -31,8 +30,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
@@ -439,7 +436,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
       @Test
       void computer_that_throws_exception_is_detected() throws Exception {
-        var expr = bString("abc");
+        var expr = bOrder();
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
           @Override
@@ -475,42 +472,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   class _reporting {
     @Nested
     class _empty_trace {
-      @ParameterizedTest
-      @MethodSource("report_const_task_cases")
-      public void report_value_as_const_task(BValue value) {
-        var reporter = mock(Reporter.class);
-        evaluate(bEvaluator(reporter), value);
-        var report = report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list());
-        verify(reporter).submit(report);
-      }
-
-      public static List<BValue> report_const_task_cases() throws Exception {
-        var t = new TestingVirtualMachine();
-        return list(
-            t.bArray(t.bInt(17)),
-            t.bBlob(17),
-            t.bBool(true),
-            t.bInt(17),
-            t.bString("abc"),
-            t.bTuple(t.bInt(17)));
-      }
-
       @Test
       void report_invoke_as_invoke_task() throws Exception {
         var invoke = bReturnAbcInvoke();
         assertTaskReport(invoke, label("invoke"), bTrace(), EXECUTION);
-      }
-
-      @Test
-      void report_if_as_if_task() throws Exception {
-        var condition = bBool(true);
-        var then_ = bInt(1);
-        var else_ = bInt(2);
-        var if_ = bIf(condition, then_, else_);
-        var reporter = mock(Reporter.class);
-        evaluate(bEvaluator(reporter), if_);
-        verify(reporter, times(2))
-            .submit(report(VM_EVALUATE.append(label("const")), bTrace(), EXECUTION, list()));
       }
 
       @Test

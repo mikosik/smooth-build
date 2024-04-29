@@ -21,7 +21,6 @@ public class ReportMatchers {
 
   static final ReportMatcher INVOKE = labelPrefixMatcher(VM_EVALUATE.append(label("invoke")));
   static final ReportMatcher COMBINE = labelPrefixMatcher(VM_EVALUATE.append(label("combine")));
-  static final ReportMatcher CONST = labelPrefixMatcher(VM_EVALUATE.append(label("const")));
   static final ReportMatcher ORDER = labelPrefixMatcher(VM_EVALUATE.append(label("order")));
   static final ReportMatcher PICK = labelPrefixMatcher(VM_EVALUATE.append(label("pick")));
   static final ReportMatcher SELECT = labelPrefixMatcher(VM_EVALUATE.append(label("select")));
@@ -46,7 +45,6 @@ public class ReportMatchers {
           .put("li", INFO)
           .put("invoke", INVOKE)
           .put("combine", COMBINE)
-          .put("const", CONST)
           .put("order", ORDER)
           .put("pick", PICK)
           .put("select", SELECT)

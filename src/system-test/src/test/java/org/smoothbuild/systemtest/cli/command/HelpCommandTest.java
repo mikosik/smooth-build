@@ -90,8 +90,6 @@ public class HelpCommandTest extends SystemTestCase {
                                       li, info           - contains any log
 
                                       combine            - evaluates tuple creation
-                                      const              - evaluates compile time
-                                      constant
                                       invoke             - evaluates native function
                                       call
                                       order              - evaluates array creation

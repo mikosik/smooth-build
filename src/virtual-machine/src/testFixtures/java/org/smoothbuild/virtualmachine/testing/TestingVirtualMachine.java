@@ -53,7 +53,6 @@ import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
-import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
@@ -311,18 +310,6 @@ public class TestingVirtualMachine extends TestingBytecode {
 
   public OrderStep orderTask(BOrder order, BTrace trace) {
     return new OrderStep(order, trace);
-  }
-
-  public ConstStep constTask() throws BytecodeException {
-    return constTask(bInt(7));
-  }
-
-  public static ConstStep constTask(BValue value) {
-    return constTask(value, bTrace());
-  }
-
-  public static ConstStep constTask(BValue value, BTrace trace) {
-    return new ConstStep(value, trace);
   }
 
   public ComputationResult computationResult(BValue value) throws BytecodeException {

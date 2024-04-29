@@ -6,7 +6,6 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
-import static org.smoothbuild.virtualmachine.evaluate.step.Purity.FAST;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import jakarta.inject.Inject;
@@ -54,28 +53,6 @@ public class Computer {
   public ComputationResult compute(Step step, BTuple input)
       throws ComputeException, InterruptedException {
     var purity = purityOf(step, input);
-    if (purity == FAST) {
-      return computeFast(step, input);
-    } else {
-      return computeWithCache(step, purity, input);
-    }
-  }
-
-  private static Purity purityOf(Step step, BTuple input) throws ComputeException {
-    try {
-      return step.purity(input);
-    } catch (BytecodeException e) {
-      throw computeException(e);
-    }
-  }
-
-  private ComputationResult computeFast(Step step, BTuple input) throws ComputeException {
-    var output = runComputation(step, input);
-    return new ComputationResult(output, EXECUTION);
-  }
-
-  private ComputationResult computeWithCache(Step step, Purity purity, BTuple input)
-      throws ComputeException, InterruptedException {
     var hash = computationHashFactory.create(step, input);
     MutablePromise<ComputationResult> newPromised = promise();
     Promise<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
@@ -103,6 +80,14 @@ public class Computer {
     }
   }
 
+  private static Purity purityOf(Step step, BTuple input) throws ComputeException {
+    try {
+      return step.purity(input);
+    } catch (BytecodeException e) {
+      throw computeException(e);
+    }
+  }
+
   private static boolean outputContainsFatalMessage(BOutput bOutput) throws ComputeException {
     try {
       return containsFatal(bOutput.storedLogs());
@@ -117,7 +102,6 @@ public class Computer {
         switch (purity) {
           case PURE -> DISK;
           case IMPURE -> MEMORY;
-          case FAST -> throw new RuntimeException("shouldn't happen");
         };
     return new ComputationResult(computationResult.bOutput(), resultSource);
   }
