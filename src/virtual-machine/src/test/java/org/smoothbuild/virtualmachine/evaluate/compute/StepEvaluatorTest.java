@@ -1,21 +1,25 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
+import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
@@ -24,7 +28,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
 
-public class ComputerTest extends TestingVirtualMachine {
+public class StepEvaluatorTest extends TestingVirtualMachine {
   @Nested
   class _combine_step {
     @Test
@@ -35,7 +39,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
 
-      assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(step, input, memory, disk, output(memory), DISK);
     }
 
     @Test
@@ -45,8 +49,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
-      var expected = computationResult(output(disk), DISK);
-      assertComputationResult(step, input, null, disk, expected);
+      assertComputationResult(step, input, null, disk, output(disk), DISK);
     }
 
     @Test
@@ -55,8 +58,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var step = new CombineStep(bCombine(bInt()), bTrace());
       var input = bTuple(value);
 
-      var expected = computationResult(output(bTuple(value)), EXECUTION);
-      assertComputationResult(step, input, null, null, expected);
+      assertComputationResult(step, input, null, null, output(bTuple(value)), EXECUTION);
     }
 
     @Test
@@ -76,42 +78,37 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
+        assertComputationResult(step, input, memory, disk, output(memory), DISK);
       }
 
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
-        assertComputationResult(step, input, null, disk, computationResult(output(disk), DISK));
+        assertComputationResult(step, input, null, disk, output(disk), DISK);
       }
 
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
 
-        var expected = computationResult(output(bString("abc")), EXECUTION);
-        assertComputationResult(step, input, null, null, expected);
+        assertComputationResult(step, input, null, null, output(bString("abc")), EXECUTION);
       }
 
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
 
         assertCachesState(step, input, null, bString("abc"));
@@ -123,47 +120,40 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
 
-        assertComputationResult(
-            step, input, memory, disk, computationResult(output(memory), MEMORY));
+        assertComputationResult(step, input, memory, disk, output(memory), MEMORY);
       }
 
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
-        var computationResult = computationResult(output(bString("abc")), EXECUTION);
-        assertComputationResult(step, input, null, disk, computationResult);
+        assertComputationResult(step, input, null, disk, output(bString("abc")), EXECUTION);
       }
 
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
 
-        var expected = computationResult(output(bString("abc")), EXECUTION);
-        assertComputationResult(step, input, null, null, expected);
+        assertComputationResult(step, input, null, null, output(bString("abc")), EXECUTION);
       }
 
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        BTrace trace = bTrace();
-        var step = new InvokeStep(invoke, trace);
+        var step = new InvokeStep(invoke, bTrace());
         var input = argumentsForInvokeStep(invoke);
 
-        assertCachesState(step, input, computationResult(bString("abc"), EXECUTION), null);
+        assertCachesState(step, input, bOutput(bString("abc"), bLogArrayEmpty()), null);
       }
     }
 
@@ -184,7 +174,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
 
-      assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(step, input, memory, disk, output(memory), DISK);
     }
 
     @Test
@@ -194,8 +184,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
-      var expected = computationResult(output(disk), DISK);
-      assertComputationResult(step, input, null, disk, expected);
+      assertComputationResult(step, input, null, disk, output(disk), DISK);
     }
 
     @Test
@@ -204,8 +193,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var step = new OrderStep(bOrder(bIntType()), bTrace());
       var input = bTuple(value);
 
-      var expected = computationResult(output(bArray(value)), EXECUTION);
-      assertComputationResult(step, input, null, null, expected);
+      assertComputationResult(step, input, null, null, output(bArray(value)), EXECUTION);
     }
 
     @Test
@@ -228,7 +216,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(step, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(step, input, memory, disk, output(memory), DISK);
     }
 
     @Test
@@ -238,8 +226,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var input = bTuple(bArray(value), bInt(0));
       var disk = bInt(2);
 
-      var expected = computationResult(output(disk), DISK);
-      assertComputationResult(step, input, null, disk, expected);
+      assertComputationResult(step, input, null, disk, output(disk), DISK);
     }
 
     @Test
@@ -248,8 +235,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var step = new PickStep(bPick(), bTrace());
       var input = bTuple(bArray(value), bInt(0));
 
-      var expected = computationResult(output(value), EXECUTION);
-      assertComputationResult(step, input, null, null, expected);
+      assertComputationResult(step, input, null, null, output(value), EXECUTION);
     }
 
     @Test
@@ -272,7 +258,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var memory = bInt(1);
       var disk = bInt(2);
 
-      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
+      assertComputationResult(task, input, memory, disk, output(memory), DISK);
     }
 
     @Test
@@ -282,8 +268,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var input = bTuple(bTuple(value), bInt(0));
       var disk = bInt(2);
 
-      var expected = computationResult(output(disk), DISK);
-      assertComputationResult(task, input, null, disk, expected);
+      assertComputationResult(task, input, null, disk, output(disk), DISK);
     }
 
     @Test
@@ -292,8 +277,7 @@ public class ComputerTest extends TestingVirtualMachine {
       var task = new SelectStep(bSelect(), bTrace());
       var input = bTuple(bTuple(value), bInt(0));
 
-      var expected = computationResult(output(value), EXECUTION);
-      assertComputationResult(task, input, null, null, expected);
+      assertComputationResult(task, input, null, null, output(value), EXECUTION);
     }
 
     @Test
@@ -307,42 +291,68 @@ public class ComputerTest extends TestingVirtualMachine {
   }
 
   private void assertComputationResult(
-      Step step, BTuple input, BValue memoryValue, BValue diskValue, ComputationResult expected)
+      Step step,
+      BTuple input,
+      BValue memoryValue,
+      BValue diskValue,
+      BOutput expectedOutput,
+      ResultSource expectedResultSource)
       throws Exception {
-    var computer = computerWithCaches(step, input, memoryValue, diskValue);
-    assertComputationResult(computer, step, input, expected);
+    var stepEvaluator = stepEvaluatorWithCaches(step, input, memoryValue, diskValue);
+    assertComputationResult(stepEvaluator, step, input, expectedOutput, expectedResultSource);
   }
 
-  private Computer computerWithCaches(Step step, BTuple input, BValue memoryValue, BValue diskValue)
-      throws Exception {
+  private StepEvaluator stepEvaluatorWithCaches(
+      Step step, BTuple input, BValue memoryValue, BValue diskValue) throws Exception {
     var computationCache = computationCache();
     var computationHashFactory = computationHashFactory();
     var computationHash = computationHashFactory.create(step, input);
     if (diskValue != null) {
       computationCache.write(computationHash, output(diskValue));
     }
-    var memoryCache = new ConcurrentHashMap<Hash, Promise<ComputationResult>>();
+    var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     if (memoryValue != null) {
-      var computationResult = computationResult(memoryValue, EXECUTION);
-      memoryCache.put(computationHash, promise(computationResult));
+      memoryCache.put(computationHash, promise(bOutput(memoryValue, bLogArrayEmpty())));
     }
-    return new Computer(computationHashFactory, this::container, computationCache, memoryCache);
+    return new StepEvaluator(
+        computationHashFactory,
+        this::container,
+        computationCache,
+        taskExecutor(),
+        bytecodeF(),
+        memoryCache);
   }
 
   private void assertComputationResult(
-      Computer computer, Step step, BTuple input, ComputationResult expected) throws Exception {
-    var result = computer.compute(step, input);
-    assertThat(result).isEqualTo(expected);
+      StepEvaluator stepEvaluator,
+      Step step,
+      BTuple input,
+      BOutput expectedOutput,
+      ResultSource expectedResultSource)
+      throws Exception {
+    var argPromises = input.elements().map(Promise::promise);
+    var resultPromise = stepEvaluator.evaluate(step, argPromises);
+    taskExecutor().waitUntilIdle();
+    assertThat(resultPromise.get()).isEqualTo(expectedOutput.value());
+    var report = report(step.label(), step.trace(), expectedResultSource, list());
+    assertThat(reporter().reports()).contains(report);
   }
 
-  private void assertCachesState(
-      Step step, BTuple input, ComputationResult memoryValue, BValue diskValue) throws Exception {
+  private void assertCachesState(Step step, BTuple input, BOutput memoryValue, BValue diskValue)
+      throws Exception {
     var computationCache = computationCache();
-    var memoryCache = new ConcurrentHashMap<Hash, Promise<ComputationResult>>();
+    var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     var computationHashFactory = computationHashFactory();
-    var computer =
-        new Computer(computationHashFactory, this::container, computationCache, memoryCache);
-    computer.compute(step, input);
+    var taskExecutor = taskExecutor();
+    var stepEvaluator = new StepEvaluator(
+        computationHashFactory,
+        this::container,
+        computationCache,
+        taskExecutor,
+        bytecodeF(),
+        memoryCache);
+    stepEvaluator.evaluate(step, input.elements().map(Promise::promise));
+    taskExecutor.waitUntilIdle();
 
     var stepHash = computationHashFactory.create(step, input);
 

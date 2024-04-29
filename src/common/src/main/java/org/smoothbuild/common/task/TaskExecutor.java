@@ -12,6 +12,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Executor;
@@ -27,6 +28,7 @@ import org.smoothbuild.common.log.report.Trace;
  * tasks are submitted to Reporter is not deterministic.
  * This class is thread-safe.
  */
+@Singleton
 public class TaskExecutor {
   /*
    * Design decisions: Output returned by Task*.execute() contains `Promise<T> result` field

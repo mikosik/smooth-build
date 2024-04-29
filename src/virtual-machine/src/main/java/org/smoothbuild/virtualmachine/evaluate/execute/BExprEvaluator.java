@@ -7,7 +7,6 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_INLINE;
 import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_SCHEDULE;
 import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
@@ -24,7 +23,6 @@ import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.common.task.TaskExecutor;
-import org.smoothbuild.common.task.TaskX;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -44,8 +42,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputeException;
-import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
+import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
@@ -59,18 +56,18 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  */
 public class BExprEvaluator {
   private final TaskExecutor taskExecutor;
-  private final Computer computer;
+  private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
   public BExprEvaluator(
       TaskExecutor taskExecutor,
-      Computer computer,
+      StepEvaluator stepEvaluator,
       BytecodeFactory bytecodeFactory,
       BReferenceInliner bReferenceInliner) {
     this.taskExecutor = taskExecutor;
-    this.computer = computer;
+    this.stepEvaluator = stepEvaluator;
     this.bytecodeFactory = bytecodeFactory;
     this.bReferenceInliner = bReferenceInliner;
   }
@@ -236,7 +233,7 @@ public class BExprEvaluator {
     var step = stepFactory.apply(operation, job.trace());
     List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
     var subExprResults = subExprJobs.map(this::scheduleJob);
-    return submitStepTask(job, step, subExprResults);
+    return stepEvaluator.evaluate(step, subExprResults);
   }
 
   private Promise<BValue> scheduleReference(Job job, BReference reference)
@@ -266,24 +263,6 @@ public class BExprEvaluator {
 
   // helpers
 
-  private Promise<BValue> submitStepTask(Job job, Step step, List<Promise<BValue>> subExprResults) {
-    TaskX<BValue, BValue> taskX = (bValues) -> {
-      try {
-        var result = computer.compute(step, toInput(bValues));
-        var bValue = result.bOutput().value();
-        var report = StepReportFactory.create(step, result);
-        return output(bValue, report);
-      } catch (ComputeException | BytecodeException | InterruptedException e) {
-        return failedEvaluationTaskOutput(job, e);
-      }
-    };
-    return taskExecutor.submit(taskX, subExprResults);
-  }
-
-  private BTuple toInput(List<BValue> depResults) throws BytecodeException {
-    return bytecodeFactory.tuple(depResults);
-  }
-
   private Promise<BValue> scheduleNewJob(BExpr bExpr, Job parentJob) throws BytecodeException {
     return scheduleJob(newJob(bExpr, parentJob));
   }
@@ -294,10 +273,6 @@ public class BExprEvaluator {
 
   private static <T> Output<T> failedSchedulingOutput(Job job, Throwable e) {
     return failedOutput(VM_SCHEDULE, job, "Scheduling task failed with exception:", e);
-  }
-
-  private static Output<BValue> failedEvaluationTaskOutput(Job job, Throwable e) {
-    return failedOutput(VM_EVALUATE, job, "Vm evaluation Task failed with exception:", e);
   }
 
   private static Output<BValue> failedInlineTaskOutput(Job job, Throwable e) {

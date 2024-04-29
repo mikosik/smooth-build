@@ -8,8 +8,8 @@ import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.corruptedValueException;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.computeException;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.corruptedValueException;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -59,7 +59,7 @@ public class ComputationCache implements Initializable {
     }
   }
 
-  public synchronized void write(Hash hash, BOutput bOutput) throws ComputeException {
+  public synchronized void write(Hash hash, BOutput bOutput) throws ComputeCacheException {
     try (BufferedSink sink = buffer(bucket.sink(toPath(hash)))) {
       var storedLogs = bOutput.storedLogs();
       sink.write(storedLogs.hash().toByteString());
@@ -72,7 +72,7 @@ public class ComputationCache implements Initializable {
     }
   }
 
-  public synchronized boolean contains(Hash hash) throws ComputeException {
+  public synchronized boolean contains(Hash hash) throws ComputeCacheException {
     var path = toPath(hash);
     return switch (bucket.pathState(path)) {
       case FILE -> true;
@@ -81,7 +81,7 @@ public class ComputationCache implements Initializable {
     };
   }
 
-  public synchronized BOutput read(Hash hash, BType type) throws ComputeException {
+  public synchronized BOutput read(Hash hash, BType type) throws ComputeCacheException {
     try (var source = buffer(bucket.source(toPath(hash)))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
