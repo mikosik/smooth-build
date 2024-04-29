@@ -3,14 +3,12 @@ package org.smoothbuild.virtualmachine.evaluate.step;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class StepHashes {
   public static Hash stepHash(Step step) {
     return switch (step) {
       case CombineStep combineStep -> combineHash();
-      case ConstStep constStep -> constHash(constStep.value());
       case InvokeStep invokeStep -> invokeHash();
       case OrderStep orderStep -> orderHash(orderStep.evaluationType());
       case PickStep pickStep -> pickHash();
@@ -36,10 +34,6 @@ public class StepHashes {
 
   private static Hash selectHash() {
     return hash(4);
-  }
-
-  private static Hash constHash(BValue value) {
-    return hash(5, value.hash());
   }
 
   private static Hash hash(int id, Hash hash) {

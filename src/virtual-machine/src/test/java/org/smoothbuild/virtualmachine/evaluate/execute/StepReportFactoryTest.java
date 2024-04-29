@@ -23,11 +23,6 @@ public class StepReportFactoryTest extends TestingVirtualMachine {
   }
 
   @Test
-  void const_task_report() throws Exception {
-    testReport(constTask(bInt()), label("const"));
-  }
-
-  @Test
   void invoke_task_report() throws Exception {
     testReport(invokeTask(), label("invoke"));
   }

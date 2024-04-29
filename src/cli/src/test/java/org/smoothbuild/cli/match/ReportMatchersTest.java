@@ -61,8 +61,6 @@ public class ReportMatchersTest extends TestingVirtualMachine {
         arguments(matcher("invoke"), VM_EVALUATE.append(label("order")), null, false),
         arguments(matcher("combine"), VM_EVALUATE.append(label("combine")), null, true),
         arguments(matcher("combine"), VM_EVALUATE.append(label("order")), null, false),
-        arguments(matcher("const"), VM_EVALUATE.append(label("const")), null, true),
-        arguments(matcher("const"), VM_EVALUATE.append(label("order")), null, false),
         arguments(matcher("order"), VM_EVALUATE.append(label("order")), null, true),
         arguments(matcher("order"), VM_EVALUATE.append(label("invoke")), null, false),
         arguments(matcher("pick"), VM_EVALUATE.append(label("pick")), null, true),

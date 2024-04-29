@@ -7,7 +7,6 @@ import static org.smoothbuild.cli.layout.BucketIds.LIBRARY;
 import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
 import static org.smoothbuild.cli.match.ReportMatchers.ALL;
 import static org.smoothbuild.cli.match.ReportMatchers.COMBINE;
-import static org.smoothbuild.cli.match.ReportMatchers.CONST;
 import static org.smoothbuild.cli.match.ReportMatchers.ERROR;
 import static org.smoothbuild.cli.match.ReportMatchers.FATAL;
 import static org.smoothbuild.cli.match.ReportMatchers.INFO;
@@ -107,7 +106,6 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
         arguments("li", INFO),
         arguments("invoke", INVOKE),
         arguments("combine", COMBINE),
-        arguments("const", CONST),
         arguments("order", ORDER),
         arguments("pick", PICK),
         arguments("select", SELECT),

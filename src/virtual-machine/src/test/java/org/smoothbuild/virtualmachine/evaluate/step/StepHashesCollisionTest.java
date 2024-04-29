@@ -19,8 +19,6 @@ public class StepHashesCollisionTest extends TestingVirtualMachine {
     Set<Hash> set = new HashSet<>();
 
     addHash(list, set, new CombineStep(bCombine(), bTrace()));
-    addHash(list, set, new ConstStep(bInt(7), bTrace()));
-    addHash(list, set, new ConstStep(bInt(9), bTrace()));
     BInvoke invoke =
         bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
     BTrace trace = bTrace();

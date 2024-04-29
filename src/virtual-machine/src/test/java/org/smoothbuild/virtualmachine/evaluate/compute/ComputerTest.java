@@ -17,7 +17,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
-import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
@@ -67,49 +66,6 @@ public class ComputerTest extends TestingVirtualMachine {
       var input = bTuple(value);
 
       assertCachesState(step, input, null, bTuple(value));
-    }
-  }
-
-  @Nested
-  class _const_step {
-    @Test
-    void when_cached_in_memory_and_disk() throws Exception {
-      var value = bInt(17);
-      var step = new ConstStep(value, bTrace());
-      var input = bTuple();
-      var memory = bInt(1);
-      var disk = bInt(2);
-
-      assertComputationResult(
-          step, input, memory, disk, computationResult(output(value), EXECUTION));
-    }
-
-    @Test
-    void when_cached_on_disk() throws Exception {
-      var value = bInt(17);
-      var step = new ConstStep(value, bTrace());
-      var input = bTuple();
-      var disk = bInt(2);
-
-      assertComputationResult(step, input, null, disk, computationResult(output(value), EXECUTION));
-    }
-
-    @Test
-    void when_not_cached() throws Exception {
-      var value = bInt(17);
-      var step = new ConstStep(value, bTrace());
-      var input = bTuple();
-
-      assertComputationResult(step, input, null, null, computationResult(output(value), EXECUTION));
-    }
-
-    @Test
-    void executed_computation_is_not_cached() throws Exception {
-      var value = bInt(17);
-      var step = new ConstStep(value, bTrace());
-      var input = bTuple();
-
-      assertCachesState(step, input, null, null);
     }
   }
 

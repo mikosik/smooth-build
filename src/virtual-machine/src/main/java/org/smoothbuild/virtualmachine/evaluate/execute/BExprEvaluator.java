@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
@@ -46,7 +47,6 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputeException;
 import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
-import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
@@ -100,7 +100,7 @@ public class BExprEvaluator {
       case BIf if_ -> scheduleIf(job, if_);
       case BMap map -> scheduleMap(job, map);
       case BLambda lambda -> scheduleInlineTask(job);
-      case BValue value -> scheduleConst(job, value);
+      case BValue value -> promise(value);
       case BOrder order -> scheduleOperation(job, order, OrderStep::new);
       case BPick pick -> scheduleOperation(job, pick, PickStep::new);
       case BReference reference -> scheduleReference(job, reference);
@@ -185,11 +185,6 @@ public class BExprEvaluator {
     var bodyTrace = bTrace(bCall.hash(), lambdaExpr.hash(), callJob.trace());
     var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
     return scheduleJob(bodyJob);
-  }
-
-  private Promise<BValue> scheduleConst(Job job, BValue value) {
-    var constTask = new ConstStep(value, job.trace());
-    return submitStepTask(job, constTask, list());
   }
 
   private Promise<BValue> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {

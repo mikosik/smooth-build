@@ -14,7 +14,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
-import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
@@ -41,7 +40,6 @@ public class StepReportFactory {
   private static Label taskLabel(Step step) {
     return switch (step) {
       case CombineStep combineStep -> newLabel("combine");
-      case ConstStep constStep -> newLabel("const");
       case InvokeStep invokeStep -> newLabel("invoke");
       case OrderStep orderStep -> newLabel("order");
       case PickStep pickStep -> newLabel("pick");

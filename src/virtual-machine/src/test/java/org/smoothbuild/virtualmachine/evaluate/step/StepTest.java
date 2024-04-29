@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.evaluate.step.Purity.FAST;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.IMPURE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
@@ -17,12 +16,6 @@ public class StepTest extends TestingVirtualMachine {
     void combine_task_is_pure() throws BytecodeException {
       var combineTask = new CombineStep(bCombine(bInt()), bTrace());
       assertThat(combineTask.purity(null)).isEqualTo(PURE);
-    }
-
-    @Test
-    void const_task_is_fast() throws BytecodeException {
-      var constTask = new ConstStep(bInt(), bTrace());
-      assertThat(constTask.purity(null)).isEqualTo(FAST);
     }
 
     @Test

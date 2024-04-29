@@ -159,71 +159,6 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _const_matcher extends SystemTestCase {
-      private static final String BLOB_CONST = """
-          result = 0xABCD;
-          """;
-      private static final String BLOB_CONST_TASK_HEADER = """
-          :evaluate:const""";
-      private static final String INT_CONST = """
-          result = 123;
-          """;
-      private static final String INT_CONST_TASK_HEADER = """
-          :evaluate:const""";
-      private static final String STRING_CONST = """
-          result = "myLiteral";
-          """;
-      private static final String STRING_CONST_TASK_HEADER = """
-          :evaluate:const""";
-
-      @Test
-      void shows_blob_when_consts_enabled() throws IOException {
-        testThatTaskHeaderShownWhenConstAreEnabled(BLOB_CONST, BLOB_CONST_TASK_HEADER);
-      }
-
-      @Test
-      void hides_blob_when_const_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenConstAreDisabled(BLOB_CONST, BLOB_CONST_TASK_HEADER);
-      }
-
-      @Test
-      void shows_int_when_consts_enabled() throws IOException {
-        testThatTaskHeaderShownWhenConstAreEnabled(INT_CONST, INT_CONST_TASK_HEADER);
-      }
-
-      @Test
-      void hides_int_when_const_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenConstAreDisabled(INT_CONST, INT_CONST_TASK_HEADER);
-      }
-
-      @Test
-      void shows_string_when_const_enabled() throws IOException {
-        testThatTaskHeaderShownWhenConstAreEnabled(STRING_CONST, STRING_CONST_TASK_HEADER);
-      }
-
-      @Test
-      void hides_string_when_consts_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenConstAreDisabled(STRING_CONST, STRING_CONST_TASK_HEADER);
-      }
-
-      private void testThatTaskHeaderShownWhenConstAreEnabled(
-          String constDeclaration, String expectedTaskHeader) throws IOException {
-        createUserModule(constDeclaration);
-        runSmooth(buildCommand("--show-tasks=const", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains(expectedTaskHeader);
-      }
-
-      private void testThatTaskHeaderIsNotShownWhenConstAreDisabled(
-          String constDeclaration, String headerThatShouldNotBeShown) throws IOException {
-        createUserModule(constDeclaration);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain(headerThatShouldNotBeShown);
-      }
-    }
-
-    @Nested
     class _pick_matcher extends SystemTestCase {
       private static final String PICK =
           """
@@ -550,63 +485,6 @@ public class BuildCommandTest {
       assertSystemOutContains("""
           :evaluate:select
           """);
-    }
-
-    @Test
-    void value_reference() throws IOException {
-      createUserModule("""
-          myValue = "abc";
-          result = myValue;
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
-          :evaluate:const""");
-    }
-
-    @Test
-    void literal_array() throws IOException {
-      createUserModule("""
-          result = ["abc"];
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
-          :evaluate:order
-          """);
-    }
-
-    @Test
-    void literal_blob() throws IOException {
-      createUserModule("""
-          result = 0x0102;
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
-          :evaluate:const""");
-    }
-
-    @Test
-    void literal_string() throws IOException {
-      createUserModule("""
-          result = "abc";
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
-          :evaluate:const""");
-    }
-
-    @Test
-    void literal_int() throws IOException {
-      createUserModule("""
-          result = 17;
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains("""
-          :evaluate:const""");
     }
   }
 }
