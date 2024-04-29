@@ -1,5 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
+
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -13,6 +15,6 @@ public final class CombineStep extends Step {
 
   @Override
   public BOutput run(BTuple input, Container container) throws BytecodeException {
-    return new BOutput(input, container.messages());
+    return bOutput(input, container.messages());
   }
 }
