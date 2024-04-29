@@ -83,7 +83,7 @@ public class Computer {
       return computationResultFromPromise(prevPromised.getBlocking(), purity);
     } else {
       if (purity == PURE && diskCache.contains(hash)) {
-        var output = diskCache.read(hash, step.outputType());
+        var output = diskCache.read(hash, step.evaluationType());
         var result = new ComputationResult(output, DISK);
         newPromised.accept(result);
         memoryCache.remove(hash);
