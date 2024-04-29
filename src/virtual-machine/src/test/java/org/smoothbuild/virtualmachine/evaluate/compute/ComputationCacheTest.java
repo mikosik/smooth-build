@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.corruptedValueException;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.corruptedValueException;
 
 import java.math.BigInteger;
 import okio.ByteString;
@@ -46,7 +46,7 @@ public class ComputationCacheTest extends TestingVirtualMachine {
   @Test
   void reading_not_written_value_fails() {
     assertCall(() -> computationCache().read(hash, bStringType()))
-        .throwsException(ComputeException.class);
+        .throwsException(ComputeCacheException.class);
   }
 
   @Test

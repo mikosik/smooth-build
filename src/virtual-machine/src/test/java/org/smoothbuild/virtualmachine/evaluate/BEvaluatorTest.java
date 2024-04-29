@@ -37,6 +37,7 @@ import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -50,8 +51,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
-import org.smoothbuild.virtualmachine.evaluate.compute.Computer;
+import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
@@ -435,16 +435,17 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       }
 
       @Test
-      void computer_that_throws_exception_is_detected() throws Exception {
+      void step_evaluator_that_throws_exception_is_detected() throws Exception {
         var expr = bOrder();
         var runtimeException = new RuntimeException();
-        var computer = new Computer(null, null, null) {
+        var taskExecutor = taskExecutor();
+        var stepEvaluator = new StepEvaluator(null, null, null, taskExecutor, bytecodeF()) {
           @Override
-          public ComputationResult compute(Step task, BTuple input) {
+          public Output<BValue> evaluateStep(Step task, BTuple input) {
             throw runtimeException;
           }
         };
-        var bExprEvaluator = bExprEvaluator(computer, reporter(), 4);
+        var bExprEvaluator = bExprEvaluator(stepEvaluator);
 
         evaluateWithFailure(bEvaluator(() -> bExprEvaluator), expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
@@ -572,6 +573,28 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       verifyConstTasksResultSource(4, DISK, reporter);
     }
 
+    @Test
+    public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
+        throws Exception {
+      var testName = "waiting_for_computation_with_same_hash_doesnt_block_executor_thread";
+      var counter1 = testName + "1";
+      var counter2 = testName + "2";
+      var countdown1 = testName + "1";
+      var countdown2 = testName + "2";
+
+      COUNTERS.put(counter1, new AtomicInteger());
+      COUNTERS.put(counter2, new AtomicInteger());
+      COUNTDOWNS.put(countdown1, new CountDownLatch(1));
+      COUNTDOWNS.put(countdown2, new CountDownLatch(1));
+      var expr = bOrder(
+          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
+          invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
+          invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
+
+      var vm = new BEvaluator(() -> bExprEvaluator(reporter(), 2), new MemoryReporter());
+      assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
+    }
+
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
       return invokeExecuteCommands(testName, commands, true);
     }
@@ -670,7 +693,8 @@ public class BEvaluatorTest extends TestingVirtualMachine {
   }
 
   private CountingBScheduler countingBScheduler() {
-    return new CountingBScheduler(taskExecutor(), computer(), bytecodeF(), bReferenceInliner());
+    return new CountingBScheduler(
+        taskExecutor(), stepEvaluator(), bytecodeF(), bReferenceInliner());
   }
 
   private static class CountingBScheduler extends BExprEvaluator {
@@ -678,10 +702,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
 
     public CountingBScheduler(
         TaskExecutor taskExecutor,
-        Computer computer,
+        StepEvaluator stepEvaluator,
         BytecodeFactory bytecodeFactory,
         BReferenceInliner bReferenceInliner) {
-      super(taskExecutor, computer, bytecodeFactory, bReferenceInliner);
+      super(taskExecutor, stepEvaluator, bytecodeFactory, bReferenceInliner);
     }
 
     @Override
