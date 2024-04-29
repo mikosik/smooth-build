@@ -69,6 +69,8 @@ public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
   private final Supplier<TaskExecutor> taskExecutor = memoize(() -> taskExecutor(reporter()));
+  private final Supplier<Computer> computer =
+      memoize(() -> new Computer(computationHashFactory(), this::container, computationCache()));
 
   public BEvaluator bEvaluator(Reporter reporter) {
     return bEvaluator(() -> bExprEvaluator(taskExecutor(reporter)), reporter);
@@ -161,7 +163,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public Computer computer() {
-    return new Computer(computationHashFactory(), this::container, computationCache());
+    return computer.get();
   }
 
   public Computer computer(NativeMethodLoader nativeMethodLoader) {
