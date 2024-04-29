@@ -232,12 +232,12 @@ public class BExprEvaluator {
   }
 
   private <T extends BOperation> Promise<BValue> scheduleOperation(
-      Job job, T operation, Function2<T, BTrace, Step, BytecodeException> taskCreator)
+      Job job, T operation, Function2<T, BTrace, Step, BytecodeException> stepFactory)
       throws BytecodeException {
-    var operationTask = taskCreator.apply(operation, job.trace());
+    var step = stepFactory.apply(operation, job.trace());
     List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
     var subExprResults = subExprJobs.map(this::scheduleJob);
-    return submitStepTask(job, operationTask, subExprResults);
+    return submitStepTask(job, step, subExprResults);
   }
 
   private Promise<BValue> scheduleReference(Job job, BReference reference)
