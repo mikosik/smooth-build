@@ -259,7 +259,7 @@ public class BExprEvaluator {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
         var result = computer.compute(step, toInput(bValues));
-        var bValue = result.output().value();
+        var bValue = result.bOutput().value();
         var report = StepReportFactory.create(step, result);
         return output(bValue, report);
       } catch (ComputeException | BytecodeException | InterruptedException e) {

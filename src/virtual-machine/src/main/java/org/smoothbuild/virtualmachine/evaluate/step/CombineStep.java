@@ -12,7 +12,7 @@ public final class CombineStep extends Step {
   }
 
   @Override
-  public Output run(BTuple input, Container container) throws BytecodeException {
-    return new Output(input, container.messages());
+  public BOutput run(BTuple input, Container container) throws BytecodeException {
+    return new BOutput(input, container.messages());
   }
 }

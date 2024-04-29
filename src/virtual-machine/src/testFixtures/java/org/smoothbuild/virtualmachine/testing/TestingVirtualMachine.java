@@ -52,11 +52,11 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
-import org.smoothbuild.virtualmachine.evaluate.step.Output;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
@@ -333,15 +333,15 @@ public class TestingVirtualMachine extends TestingBytecode {
     return computationResult(output(value), source);
   }
 
-  public static ComputationResult computationResult(Output output, ResultSource source) {
-    return new ComputationResult(output, source);
+  public static ComputationResult computationResult(BOutput bOutput, ResultSource source) {
+    return new ComputationResult(bOutput, source);
   }
 
-  public Output output(BValue value) throws BytecodeException {
+  public BOutput output(BValue value) throws BytecodeException {
     return output(value, bLogArrayEmpty());
   }
 
-  public Output output(BValue value, BArray messages) {
-    return new Output(value, messages);
+  public BOutput output(BValue value, BArray messages) {
+    return new BOutput(value, messages);
   }
 }

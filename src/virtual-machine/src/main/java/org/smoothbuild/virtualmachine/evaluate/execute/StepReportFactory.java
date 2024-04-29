@@ -32,7 +32,7 @@ public class StepReportFactory {
 
   private static List<Log> logsFrom(ComputationResult result) throws BytecodeException {
     return result
-        .output()
+        .bOutput()
         .storedLogs()
         .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));

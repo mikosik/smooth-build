@@ -41,7 +41,7 @@ public abstract sealed class Step
     return PURE;
   }
 
-  public abstract Output run(BTuple input, Container container) throws BytecodeException;
+  public abstract BOutput run(BTuple input, Container container) throws BytecodeException;
 
   @Override
   public int hashCode() {

@@ -17,12 +17,12 @@ public final class SelectStep extends Step {
   }
 
   @Override
-  public Output run(BTuple input, Container container) throws BytecodeException {
+  public BOutput run(BTuple input, Container container) throws BytecodeException {
     var components = input.elements();
     checkArgument(components.size() == 2);
     var tuple = selectable(components);
     var index = index(components);
-    return new Output(tuple.get(index.toJavaBigInteger().intValue()), container.messages());
+    return new BOutput(tuple.get(index.toJavaBigInteger().intValue()), container.messages());
   }
 
   private BTuple selectable(List<BValue> components) {
