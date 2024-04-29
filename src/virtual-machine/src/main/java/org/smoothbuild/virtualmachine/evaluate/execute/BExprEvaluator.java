@@ -101,7 +101,7 @@ public class BExprEvaluator {
       case BPick pick -> scheduleOperation(job, pick, PickStep::new);
       case BReference reference -> scheduleReference(job, reference);
       case BSelect select -> scheduleOperation(job, select, SelectStep::new);
-      case BInvoke bInvoke -> scheduleOperation(job, bInvoke, InvokeStep::newInvokeStep);
+      case BInvoke bInvoke -> scheduleOperation(job, bInvoke, InvokeStep::new);
     };
   }
 

@@ -5,7 +5,6 @@ import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
-import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Nested;
@@ -16,8 +15,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
@@ -119,7 +120,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
@@ -130,7 +132,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
@@ -140,7 +143,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
 
         var expected = computationResult(output(bString("abc")), EXECUTION);
@@ -150,7 +154,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
 
         assertCachesState(step, input, null, bString("abc"));
@@ -162,7 +167,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
@@ -174,7 +180,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
@@ -185,7 +192,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
 
         var expected = computationResult(output(bString("abc")), EXECUTION);
@@ -195,7 +203,8 @@ public class ComputerTest extends TestingVirtualMachine {
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = newInvokeStep(invoke, bTrace());
+        BTrace trace = bTrace();
+        var step = new InvokeStep(invoke, trace);
         var input = argumentsForInvokeStep(invoke);
 
         assertCachesState(step, input, computationResult(bString("abc"), EXECUTION), null);

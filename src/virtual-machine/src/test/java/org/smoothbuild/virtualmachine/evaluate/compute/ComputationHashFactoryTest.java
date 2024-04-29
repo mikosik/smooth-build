@@ -1,14 +1,15 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.evaluate.step.InvokeStep.newInvokeStep;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.ConstStep;
+import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
@@ -90,7 +91,8 @@ public class ComputationHashFactoryTest extends TestingVirtualMachine {
     @Test
     void invoke_task_and_empty_input() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
-      var step = newInvokeStep(invoke, bTrace());
+      BTrace trace = bTrace();
+      var step = new InvokeStep(invoke, trace);
       var input = bTuple();
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
