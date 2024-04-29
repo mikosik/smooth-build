@@ -67,10 +67,10 @@ public final class InvokeStep extends Step {
       }
       return bOutput(null, container.messages());
     }
-    if (!outputType().equals(result.evaluationType())) {
+    if (!evaluationType().equals(result.evaluationType())) {
       logFaultyImplementation(
           container,
-          "Its declared result type == " + outputType().q()
+          "Its declared result type == " + evaluationType().q()
               + " but it returned expression with type == " + result.kind().q() + ".");
       return bOutput(null, container.messages());
     }

@@ -11,12 +11,15 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class ConstStep extends Step {
+  private final BValue value;
+
   public ConstStep(BValue value, BTrace trace) {
     super(value, trace);
+    this.value = value;
   }
 
   public BValue value() {
-    return (BValue) expr();
+    return value;
   }
 
   @Override
@@ -27,6 +30,6 @@ public final class ConstStep extends Step {
   @Override
   public BOutput run(BTuple input, Container container) throws BytecodeException {
     checkArgument(input.elements().isEmpty());
-    return bOutput(value(), container.messages());
+    return bOutput(value, container.messages());
   }
 }

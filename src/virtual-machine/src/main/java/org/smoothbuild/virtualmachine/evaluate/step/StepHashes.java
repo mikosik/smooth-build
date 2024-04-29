@@ -12,7 +12,7 @@ public class StepHashes {
       case CombineStep combineStep -> combineHash();
       case ConstStep constStep -> constHash(constStep.value());
       case InvokeStep invokeStep -> invokeHash();
-      case OrderStep orderStep -> orderHash(orderStep.outputType());
+      case OrderStep orderStep -> orderHash(orderStep.evaluationType());
       case PickStep pickStep -> pickHash();
       case SelectStep selectStep -> selectHash();
     };

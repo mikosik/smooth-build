@@ -19,7 +19,7 @@ public final class OrderStep extends Step {
   public BOutput run(BTuple input, Container container) throws BytecodeException {
     BArray array = container
         .factory()
-        .arrayBuilder((BArrayType) outputType())
+        .arrayBuilder((BArrayType) evaluationType())
         .addAll(input.elements())
         .build();
     return bOutput(array, container.messages());
