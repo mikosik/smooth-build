@@ -10,6 +10,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isV
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.computeException;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeException.corruptedValueException;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
@@ -101,7 +102,7 @@ public class ComputationCache implements Initializable {
         }
       }
       if (containsErrorOrAbove(storedLogArray)) {
-        return new BOutput(null, storedLogArray);
+        return bOutput(null, storedLogArray);
       } else {
         var valueHash = Hash.read(source);
         var value = exprDb.get(valueHash);
@@ -111,7 +112,7 @@ public class ComputationCache implements Initializable {
               "Expected value of type " + type.q() + " as second child of its Merkle root, but got "
                   + value.evaluationType().q());
         } else {
-          return new BOutput((BValue) value, storedLogArray);
+          return bOutput((BValue) value, storedLogArray);
         }
       }
     } catch (IOException e) {

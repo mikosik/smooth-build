@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.FAST;
 
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -26,6 +27,6 @@ public final class ConstStep extends Step {
   @Override
   public BOutput run(BTuple input, Container container) throws BytecodeException {
     checkArgument(input.elements().isEmpty());
-    return new BOutput(value(), container.messages());
+    return bOutput(value(), container.messages());
   }
 }

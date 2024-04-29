@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -27,9 +28,9 @@ public final class PickStep extends Step {
       container
           .log()
           .error("Index (" + index + ") out of bounds. Array size = " + elements.size() + ".");
-      return new BOutput(null, container.messages());
+      return bOutput(null, container.messages());
     } else {
-      return new BOutput(elements.get(index), container.messages());
+      return bOutput(elements.get(index), container.messages());
     }
   }
 

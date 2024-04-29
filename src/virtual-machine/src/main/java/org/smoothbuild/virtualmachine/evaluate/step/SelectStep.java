@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -22,7 +23,7 @@ public final class SelectStep extends Step {
     checkArgument(components.size() == 2);
     var tuple = selectable(components);
     var index = index(components);
-    return new BOutput(tuple.get(index.toJavaBigInteger().intValue()), container.messages());
+    return bOutput(tuple.get(index.toJavaBigInteger().intValue()), container.messages());
   }
 
   private BTuple selectable(List<BValue> components) {

@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.step;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.ARGUMENTS_INDEX;
 import static org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.METHOD_INDEX;
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.IMPURE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
@@ -43,7 +44,7 @@ public final class InvokeStep extends Step {
         .load(new BMethod((BTuple) input.get(METHOD_INDEX)))
         .mapRight(m -> invokeMethod(m, input.get(ARGUMENTS_INDEX), container))
         .ifLeft(left -> container.log().fatal(left))
-        .rightOrGet(() -> new BOutput(null, container.messages()));
+        .rightOrGet(() -> bOutput(null, container.messages()));
   }
 
   private BOutput invokeMethod(Method method, BValue arguments, Container container)
@@ -72,20 +73,20 @@ public final class InvokeStep extends Step {
       if (!hasErrors) {
         logFaultyImplementation(container, "It returned `null` but logged no error.");
       }
-      return new BOutput(null, container.messages());
+      return bOutput(null, container.messages());
     }
     if (!outputType().equals(result.evaluationType())) {
       logFaultyImplementation(
           container,
           "Its declared result type == " + outputType().q()
               + " but it returned expression with type == " + result.kind().q() + ".");
-      return new BOutput(null, container.messages());
+      return bOutput(null, container.messages());
     }
     if (hasErrors) {
       logFaultyImplementation(container, "It returned non-null value but logged error.");
-      return new BOutput(null, container.messages());
+      return bOutput(null, container.messages());
     }
-    return new BOutput(result, container.messages());
+    return bOutput(result, container.messages());
   }
 
   private void logFaultyImplementation(Container container, String message)

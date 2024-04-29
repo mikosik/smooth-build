@@ -9,4 +9,8 @@ public record BOutput(BValue value, BArray storedLogs) {
   public BOutput {
     requireNonNull(storedLogs);
   }
+
+  public static BOutput bOutput(BValue value, BArray storedLogs) {
+    return new BOutput(value, storedLogs);
+  }
 }

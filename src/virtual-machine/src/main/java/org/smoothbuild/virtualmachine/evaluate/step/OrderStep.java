@@ -1,5 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
+import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
+
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
@@ -20,6 +22,6 @@ public final class OrderStep extends Step {
         .arrayBuilder((BArrayType) outputType())
         .addAll(input.elements())
         .build();
-    return new BOutput(array, container.messages());
+    return bOutput(array, container.messages());
   }
 }
