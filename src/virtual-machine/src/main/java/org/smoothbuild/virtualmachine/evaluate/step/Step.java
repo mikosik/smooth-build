@@ -11,7 +11,9 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 /**
- * Single step of BExpr evaluation inside VM.
+ * Evaluation of single Bytecode expression (BExpr).
+ * Evaluation of sub-expressions are separate steps.
+ * This class is thread-safe.
  */
 public abstract sealed class Step
     permits CombineStep, ConstStep, InvokeStep, OrderStep, PickStep, SelectStep {
