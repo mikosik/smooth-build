@@ -10,7 +10,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class CombineStep extends Step {
   public CombineStep(BCombine combine, BTrace trace) {
-    super(combine, trace);
+    super("combine", combine.hash(), combine.evaluationType(), trace);
   }
 
   @Override

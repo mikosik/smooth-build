@@ -1,11 +1,12 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
+import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -17,14 +18,20 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
  * This class is thread-safe.
  */
 public abstract sealed class Step permits CombineStep, InvokeStep, OrderStep, PickStep, SelectStep {
+  private final String name;
   private final Hash hash;
   private final BType evaluationType;
   private final BTrace trace;
 
-  public Step(BExpr expr, BTrace trace) {
-    this.hash = expr.hash();
-    this.evaluationType = expr.evaluationType();
+  public Step(String name, Hash hash, BType evaluationType, BTrace trace) {
+    this.name = name;
+    this.hash = hash;
+    this.evaluationType = evaluationType;
     this.trace = trace;
+  }
+
+  public Label label() {
+    return VM_EVALUATE.append(Label.label(name));
   }
 
   public BTrace trace() {

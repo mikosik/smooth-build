@@ -20,7 +20,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class InvokeStep extends Step {
   public InvokeStep(BInvoke invoke, BTrace trace) {
-    super(invoke, trace);
+    super("invoke", invoke.hash(), invoke.evaluationType(), trace);
   }
 
   @Override
