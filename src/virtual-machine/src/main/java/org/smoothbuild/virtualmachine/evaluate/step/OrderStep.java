@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class OrderStep extends Step {
   public OrderStep(BOrder order, BTrace trace) {
-    super(order, trace);
+    super("order", order.hash(), order.evaluationType(), trace);
   }
 
   @Override

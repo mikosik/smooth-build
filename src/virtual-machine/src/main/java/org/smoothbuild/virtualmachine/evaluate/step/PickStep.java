@@ -15,7 +15,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class PickStep extends Step {
   public PickStep(BPick pick, BTrace trace) {
-    super(pick, trace);
+    super("pick", pick.hash(), pick.evaluationType(), trace);
   }
 
   @Override

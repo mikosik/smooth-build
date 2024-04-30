@@ -14,7 +14,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class SelectStep extends Step {
   public SelectStep(BSelect select, BTrace trace) {
-    super(select, trace);
+    super("select", select.hash(), select.evaluationType(), trace);
   }
 
   @Override
