@@ -10,9 +10,9 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BKindCachingTest extends TestingVirtualMachine {
+public class BKindCachingTest extends TestingVm {
   @ParameterizedTest
   @MethodSource("factories")
   public void created_type_is_cached(Function1<BKindDb, BKind, BytecodeException> factory)

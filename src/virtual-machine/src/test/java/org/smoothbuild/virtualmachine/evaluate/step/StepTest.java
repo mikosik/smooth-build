@@ -7,9 +7,9 @@ import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class StepTest extends TestingVirtualMachine {
+public class StepTest extends TestingVm {
   @Nested
   class _purity {
     @Test

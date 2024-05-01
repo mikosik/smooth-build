@@ -7,8 +7,8 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_INLINE;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_SCHEDULE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_INLINE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_SCHEDULE;
 import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
 
 import jakarta.inject.Inject;
@@ -51,17 +51,18 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 /**
+ * Virtual machine.
  * Executes submitted BExpr asynchronously providing result via returned Promise.
  * This class is thread-safe.
  */
-public class BExprEvaluator {
+public class Vm {
   private final TaskExecutor taskExecutor;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
-  public BExprEvaluator(
+  public Vm(
       TaskExecutor taskExecutor,
       StepEvaluator stepEvaluator,
       BytecodeFactory bytecodeFactory,
@@ -72,12 +73,12 @@ public class BExprEvaluator {
     this.bReferenceInliner = bReferenceInliner;
   }
 
-  public void awaitTermination() throws InterruptedException {
-    taskExecutor.waitUntilIdle();
-  }
-
   public Promise<BValue> evaluate(BExpr expr) {
     return newJob(expr).evaluate();
+  }
+
+  public void awaitTermination() throws InterruptedException {
+    taskExecutor.waitUntilIdle();
   }
 
   private Promise<BValue> evaluate(Job job) {
@@ -297,6 +298,6 @@ public class BExprEvaluator {
 
   // Visible for testing
   protected Job newJob(BExpr expr, List<Job> environment, BTrace trace) {
-    return new Job(expr, environment, trace, BExprEvaluator.this::evaluate);
+    return new Job(expr, environment, trace, Vm.this::evaluate);
   }
 }

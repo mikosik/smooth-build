@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import java.util.Objects;

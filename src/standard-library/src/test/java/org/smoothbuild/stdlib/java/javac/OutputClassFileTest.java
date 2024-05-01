@@ -9,9 +9,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class OutputClassFileTest extends TestingVirtualMachine {
+public class OutputClassFileTest extends TestingVm {
   private final Path path = Path.path("my/path");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 

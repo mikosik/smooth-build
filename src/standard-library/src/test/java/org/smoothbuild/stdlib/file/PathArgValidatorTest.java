@@ -11,9 +11,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class PathArgValidatorTest extends TestingVirtualMachine {
+public class PathArgValidatorTest extends TestingVm {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) throws Exception {

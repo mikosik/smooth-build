@@ -21,7 +21,7 @@ import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.TaskExecutor.EXECUTE_LABEL;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,15 +50,15 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
+import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BEvaluatorTest extends TestingVirtualMachine {
+public class BEvaluatorTest extends TestingVm {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS =
       new ConcurrentHashMap<>();
@@ -131,10 +131,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var lambda = bLambda(bOrder(bInt(7)));
         var call = bCall(lambda);
 
-        var countingScheduler = countingBScheduler();
-        assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(bArray(bInt(7)));
+        var countingVm = countingVm();
+        assertThat(evaluate(bEvaluator(() -> countingVm), call)).isEqualTo(bArray(bInt(7)));
 
-        assertThat(countingScheduler.counters().get(BInt.class).intValue()).isEqualTo(1);
+        assertThat(countingVm.counters().get(BInt.class).intValue()).isEqualTo(1);
       }
 
       @Test
@@ -143,10 +143,10 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
         var call = bCall(lambda, bOrder(bBool()));
 
-        var countingScheduler = countingBScheduler();
-        assertThat(evaluate(bEvaluator(() -> countingScheduler), call)).isEqualTo(bInt(7));
+        var countingVm = countingVm();
+        assertThat(evaluate(bEvaluator(() -> countingVm), call)).isEqualTo(bInt(7));
 
-        assertThat(countingScheduler.counters().get(BBool.class)).isNull();
+        assertThat(countingVm.counters().get(BBool.class)).isNull();
       }
     }
   }
@@ -409,9 +409,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(Reporter.class);
-        var bExprEvaluator = bExprEvaluator(reporter, 4);
+        var vm = vm(reporter, 4);
         var expr = throwExceptionCall();
-        evaluateWithFailure(new BEvaluator(() -> bExprEvaluator, reporter), expr);
+        evaluateWithFailure(new BEvaluator(() -> vm, reporter), expr);
         verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
@@ -443,9 +443,9 @@ public class BEvaluatorTest extends TestingVirtualMachine {
             throw runtimeException;
           }
         };
-        var bExprEvaluator = bExprEvaluator(stepEvaluator);
+        var vm = vm(stepEvaluator);
 
-        evaluateWithFailure(bEvaluator(() -> bExprEvaluator), expr);
+        evaluateWithFailure(bEvaluator(() -> vm), expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
             .contains(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
@@ -563,7 +563,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           invokeExecuteCommands(testName, "INC1"));
 
       var reporter = reporter();
-      var vm = new BEvaluator(() -> bExprEvaluator(reporter, 4), new MemoryReporter());
+      var vm = new BEvaluator(() -> vm(reporter, 4), new MemoryReporter());
       assertThat(evaluate(vm, bExpr))
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
@@ -588,7 +588,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
           invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
           invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new BEvaluator(() -> bExprEvaluator(reporter(), 2), new MemoryReporter());
+      var vm = new BEvaluator(() -> vm(reporter(), 2), new MemoryReporter());
       assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
     }
 
@@ -689,15 +689,14 @@ public class BEvaluatorTest extends TestingVirtualMachine {
     return expected;
   }
 
-  private CountingBScheduler countingBScheduler() {
-    return new CountingBScheduler(
-        taskExecutor(), stepEvaluator(), bytecodeF(), bReferenceInliner());
+  private CountingVm countingVm() {
+    return new CountingVm(taskExecutor(), stepEvaluator(), bytecodeF(), bReferenceInliner());
   }
 
-  private static class CountingBScheduler extends BExprEvaluator {
+  private static class CountingVm extends Vm {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
-    public CountingBScheduler(
+    public CountingVm(
         TaskExecutor taskExecutor,
         StepEvaluator stepEvaluator,
         BytecodeFactory bytecodeFactory,

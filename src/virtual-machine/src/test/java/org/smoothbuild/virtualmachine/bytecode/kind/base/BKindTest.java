@@ -33,9 +33,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BKindTest extends TestingVirtualMachine {
+public class BKindTest extends TestingVm {
   @ParameterizedTest
   @MethodSource("names")
   public void name(Function1<BKindDb, BKind, BytecodeException> factoryCall, String name)
@@ -183,7 +183,7 @@ public class BKindTest extends TestingVirtualMachine {
   }
 
   public static java.util.List<Arguments> typeJ_test_data() throws BytecodeException {
-    TestingVirtualMachine test = new TestingVirtualMachine();
+    TestingVm test = new TestingVm();
     return list(
         arguments(test.bBlobType(), BBlob.class),
         arguments(test.bBoolType(), BBool.class),
@@ -233,7 +233,7 @@ public class BKindTest extends TestingVirtualMachine {
     }
 
     public static java.util.List<Arguments> combine_cases() throws BytecodeException {
-      TestingVirtualMachine test = new TestingVirtualMachine();
+      TestingVm test = new TestingVm();
       BKindDb db = test.kindDb();
       return list(
           arguments(db.combine(db.tuple()), db.tuple()),

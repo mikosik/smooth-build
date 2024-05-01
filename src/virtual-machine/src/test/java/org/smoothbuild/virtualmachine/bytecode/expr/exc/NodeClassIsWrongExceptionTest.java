@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class NodeClassIsWrongExceptionTest extends TestingVirtualMachine {
+public class NodeClassIsWrongExceptionTest extends TestingVm {
   @Test
   void message_without_index() throws Exception {
     var exception = new NodeClassIsWrongException(

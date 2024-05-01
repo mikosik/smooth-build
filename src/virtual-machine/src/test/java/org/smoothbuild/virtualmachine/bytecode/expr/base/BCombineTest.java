@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BCombineTest extends TestingVirtualMachine {
+public class BCombineTest extends TestingVm {
   @Test
   void kind_returns_kind() throws Exception {
     var combine = bCombine(bInt(3));

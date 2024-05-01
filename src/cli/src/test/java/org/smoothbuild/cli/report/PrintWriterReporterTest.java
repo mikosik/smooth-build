@@ -25,9 +25,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.log.report.TraceLine;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class PrintWriterReporterTest extends TestingVirtualMachine {
+public class PrintWriterReporterTest extends TestingVm {
   @Test
   void submit_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);

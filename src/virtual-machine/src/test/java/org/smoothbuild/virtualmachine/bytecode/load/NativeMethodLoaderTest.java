@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonStaticMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
@@ -27,7 +27,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.virtualmachine.testing.func.nativ.WrongParameterType;
 import org.smoothbuild.virtualmachine.testing.func.nativ.WrongReturnType;
 
-public class NativeMethodLoaderTest extends TestingVirtualMachine {
+public class NativeMethodLoaderTest extends TestingVm {
   @Test
   void non_public_method_causes_error() throws Exception {
     assertLoadingCausesError(NonPublicMethod.class, "Providing method is not public.");

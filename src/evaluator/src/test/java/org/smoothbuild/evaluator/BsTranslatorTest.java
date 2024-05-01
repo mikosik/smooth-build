@@ -12,9 +12,9 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BsTranslatorTest extends TestingVirtualMachine {
+public class BsTranslatorTest extends TestingVm {
   private static final Hash HASH1 = Hash.of(1);
   private static final Hash HASH2 = Hash.of(2);
   private static final Hash HASH3 = Hash.of(3);

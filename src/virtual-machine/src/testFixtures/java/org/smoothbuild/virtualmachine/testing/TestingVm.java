@@ -43,10 +43,10 @@ import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.BExprEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
+import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
@@ -56,7 +56,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
-public class TestingVirtualMachine extends TestingBytecode {
+public class TestingVm extends TestingBytecode {
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
   private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);
@@ -69,37 +69,36 @@ public class TestingVirtualMachine extends TestingBytecode {
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
 
   public BEvaluator bEvaluator(Reporter reporter) {
-    return bEvaluator(() -> bExprEvaluator(taskExecutor(reporter)), reporter);
+    return bEvaluator(() -> vm(taskExecutor(reporter)), reporter);
   }
 
   public BEvaluator bEvaluator() {
-    return bEvaluator(() -> bExprEvaluator());
+    return bEvaluator(() -> vm());
   }
 
-  public BEvaluator bEvaluator(Provider<BExprEvaluator> bExprEvaluatorProvider) {
-    return bEvaluator(bExprEvaluatorProvider, reporter());
+  public BEvaluator bEvaluator(Provider<Vm> vmProvider) {
+    return bEvaluator(vmProvider, reporter());
   }
 
-  public BEvaluator bEvaluator(Provider<BExprEvaluator> bExprEvaluatorProvider, Reporter reporter) {
-    return new BEvaluator(bExprEvaluatorProvider, reporter);
+  public BEvaluator bEvaluator(Provider<Vm> vmProvider, Reporter reporter) {
+    return new BEvaluator(vmProvider, reporter);
   }
 
   public BEvaluator bEvaluator(NativeMethodLoader nativeMethodLoader) {
-    return bEvaluator(() -> bExprEvaluator(nativeMethodLoader));
+    return bEvaluator(() -> vm(nativeMethodLoader));
   }
 
-  public BExprEvaluator bExprEvaluator() {
-    return bExprEvaluator(taskExecutor());
+  public Vm vm() {
+    return vm(taskExecutor());
   }
 
-  public BExprEvaluator bExprEvaluator(NativeMethodLoader nativeMethodLoader) {
-    return new BExprEvaluator(
+  public Vm vm(NativeMethodLoader nativeMethodLoader) {
+    return new Vm(
         taskExecutor(), stepEvaluator(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public BExprEvaluator bExprEvaluator(TaskExecutor taskExecutor) {
-    return new BExprEvaluator(
-        taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
+  public Vm vm(TaskExecutor taskExecutor) {
+    return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
   }
 
   public TaskExecutor taskExecutor(Reporter reporter) {
@@ -122,18 +121,17 @@ public class TestingVirtualMachine extends TestingBytecode {
     return new BReferenceInliner(bytecodeF());
   }
 
-  public BExprEvaluator bExprEvaluator(int threadCount) {
-    return bExprEvaluator(threadCount);
+  public Vm vm(int threadCount) {
+    return vm(threadCount);
   }
 
-  public BExprEvaluator bExprEvaluator(Reporter reporter, int threadCount) {
+  public Vm vm(Reporter reporter, int threadCount) {
     var taskExecutor = new TaskExecutor(Guice.createInjector(), reporter, threadCount);
-    return new BExprEvaluator(
-        taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
+    return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
   }
 
-  public BExprEvaluator bExprEvaluator(StepEvaluator stepEvaluator) {
-    return new BExprEvaluator(taskExecutor(), stepEvaluator, bytecodeF(), bReferenceInliner());
+  public Vm vm(StepEvaluator stepEvaluator) {
+    return new Vm(taskExecutor(), stepEvaluator, bytecodeF(), bReferenceInliner());
   }
 
   public NativeMethodLoader nativeMethodLoader() {
@@ -272,7 +270,7 @@ public class TestingVirtualMachine extends TestingBytecode {
   }
 
   public static Job job(BExpr expr, List<BExpr> list) {
-    return new Job(expr, list.map(TestingVirtualMachine::job), new BTrace(), (j) -> promise());
+    return new Job(expr, list.map(TestingVm::job), new BTrace(), (j) -> promise());
   }
 
   public static Job job(BExpr expr) {
