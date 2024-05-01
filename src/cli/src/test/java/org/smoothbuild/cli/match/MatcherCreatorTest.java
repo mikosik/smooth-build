@@ -47,7 +47,7 @@ public class MatcherCreatorTest extends TestingVirtualMachine {
       String expression, ReportMatcher expectedMatcher) {
 
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
-        .map(s -> VM_EVALUATE.append(label(s)))
+        .map(VM_EVALUATE::append)
         .append(label("not-evaluate"));
 
     var expectedUpdated = or(expectedMatcher, not(labelPrefixMatcher(VM_EVALUATE)));
