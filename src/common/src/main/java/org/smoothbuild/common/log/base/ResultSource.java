@@ -1,9 +1,9 @@
 package org.smoothbuild.common.log.base;
 
 public enum ResultSource {
-  DISK("cache"),
+  DISK("d-cache"),
   EXECUTION(""),
-  MEMORY("mem"),
+  MEMORY("m-cache"),
   ;
   private final String name;
 
