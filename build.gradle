@@ -43,7 +43,7 @@ subprojects { subproject ->
         spotless {
             java {
                 removeUnusedImports()
-                palantirJavaFormat('2.41.0').style("GOOGLE")
+                palantirJavaFormat('2.44.0').style("GOOGLE")
             }
         }
     }
