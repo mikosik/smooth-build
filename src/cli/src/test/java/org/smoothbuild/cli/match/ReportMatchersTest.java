@@ -5,7 +5,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.cli.match.ReportMatchers.and;
 import static org.smoothbuild.cli.match.ReportMatchers.or;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;

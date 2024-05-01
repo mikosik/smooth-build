@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
