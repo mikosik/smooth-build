@@ -28,7 +28,7 @@ public class ReportTest {
   @Test
   void map_label() {
     var report = report(label("name"), new Trace(), DISK, list(error("error")));
-    assertThat(report.mapLabel(label -> label.append(label("suffix"))))
+    assertThat(report.mapLabel(label -> label.append("suffix")))
         .isEqualTo(report(label("name", "suffix"), new Trace(), DISK, list(error("error"))));
   }
 

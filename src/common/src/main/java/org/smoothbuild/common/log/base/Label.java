@@ -18,8 +18,8 @@ public record Label(List<String> parts) {
     }
   }
 
-  public Label append(Label suffix) {
-    return new Label(parts.appendAll(suffix.parts));
+  public Label append(String part) {
+    return new Label(parts.append(part));
   }
 
   public boolean startsWith(Label prefix) {

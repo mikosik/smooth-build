@@ -15,28 +15,41 @@ import org.smoothbuild.common.collect.List;
 
 public class LabelTest {
   @ParameterizedTest
-  @MethodSource
-  void colon_is_forbidden_inside_part_string(String... parts) {
-    assertCall(() -> label(parts))
+  @MethodSource("illegal_parts")
+  void colon_is_forbidden_inside_part_string(String part) {
+    assertCall(() -> label(part))
         .throwsException(new IllegalArgumentException("Label part cannot contain `:`."));
   }
 
-  public static List<Arguments> colon_is_forbidden_inside_part_string() {
-    return list(
-        arguments((Object) arrayOf(":")),
-        arguments((Object) arrayOf(":part")),
-        arguments((Object) arrayOf("part:")),
-        arguments((Object) arrayOf(":part:")),
-        arguments((Object) arrayOf("part:part")),
-        arguments((Object) arrayOf("::")),
-        arguments((Object) arrayOf("::part")),
-        arguments((Object) arrayOf("part::")),
-        arguments((Object) arrayOf("::part::")),
-        arguments((Object) arrayOf("part::part")));
+  @Nested
+  class _append {
+    @Test
+    void concatenates_part() {
+      var label = label("name");
+      assertThat(label.append("other")).isEqualTo(label("name", "other"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("org.smoothbuild.common.log.base.LabelTest#illegal_parts")
+    void fails_when_part_contains_colon(String part) {
+      var label = label("name");
+      assertCall(() -> label.append(part))
+          .throwsException(new IllegalArgumentException("Label part cannot contain `:`."));
+    }
   }
 
-  private static String[] arrayOf(String... strings) {
-    return strings;
+  public static List<Arguments> illegal_parts() {
+    return list(
+        arguments(":"),
+        arguments(":part"),
+        arguments("part:"),
+        arguments(":part:"),
+        arguments("part:part"),
+        arguments("::"),
+        arguments("::part"),
+        arguments("part::"),
+        arguments("::part::"),
+        arguments("part::part"));
   }
 
   @ParameterizedTest
@@ -77,7 +90,7 @@ public class LabelTest {
 
     @Test
     void with_two_parts() {
-      var label = label("name").append(label("second"));
+      var label = label("name").append("second");
       assertThat(label.toString()).isEqualTo(":name:second");
     }
   }

@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -31,7 +30,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
@@ -476,31 +474,31 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       @Test
       void report_invoke_as_invoke_task() throws Exception {
         var invoke = bReturnAbcInvoke();
-        assertTaskReport(invoke, label("invoke"), bTrace(), EXECUTION);
+        assertTaskReport(invoke, "invoke", bTrace(), EXECUTION);
       }
 
       @Test
       void report_combine_as_combine_task() throws Exception {
         var combine = bCombine(bInt(17));
-        assertTaskReport(combine, label("combine"), bTrace(), EXECUTION);
+        assertTaskReport(combine, "combine", bTrace(), EXECUTION);
       }
 
       @Test
       void report_order_as_order_task() throws Exception {
         var order = bOrder(bInt(17));
-        assertTaskReport(order, label("order"), bTrace(), EXECUTION);
+        assertTaskReport(order, "order", bTrace(), EXECUTION);
       }
 
       @Test
       void report_pick_as_pick_task() throws Exception {
         var pick = bPick(bArray(bInt(17)), bInt(0));
-        assertTaskReport(pick, label("pick"), bTrace(), EXECUTION);
+        assertTaskReport(pick, "pick", bTrace(), EXECUTION);
       }
 
       @Test
       void report_select_as_select_task() throws Exception {
         var select = bSelect(bTuple(bInt(17)), bInt(0));
-        assertTaskReport(select, label("select"), bTrace(), EXECUTION);
+        assertTaskReport(select, "select", bTrace(), EXECUTION);
       }
     }
 
@@ -512,7 +510,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var lambda = bLambda(order);
         var lambdaAsExpr = bCall(bLambda(lambda));
         var call = bCall(lambdaAsExpr);
-        assertTaskReport(call, label("order"), bTrace(call, lambda), EXECUTION);
+        assertTaskReport(call, "order", bTrace(call, lambda), EXECUTION);
       }
 
       @Test
@@ -522,13 +520,12 @@ public class BEvaluatorTest extends TestingVirtualMachine {
         var call2 = bCall(lambda2);
         var lambda1 = bLambda(call2);
         var call1 = bCall(lambda1);
-        assertTaskReport(
-            call1, label("order"), bTrace(call2, lambda2, bTrace(call1, lambda1)), EXECUTION);
+        assertTaskReport(call1, "order", bTrace(call2, lambda2, bTrace(call1, lambda1)), EXECUTION);
       }
     }
 
     private void assertTaskReport(
-        BExpr expr, Label label, BTrace trace, ResultSource resultSource) {
+        BExpr expr, String label, BTrace trace, ResultSource resultSource) {
       var reporter = mock(Reporter.class);
       evaluate(bEvaluator(reporter), expr);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
@@ -681,7 +678,7 @@ public class BEvaluatorTest extends TestingVirtualMachine {
       int size, ResultSource expectedSource, MemoryReporter reporter) {
     var sources = reporter
         .reports()
-        .filter(r -> r.label().equals(VM_EVALUATE.append(label("invoke"))))
+        .filter(r -> r.label().equals(VM_EVALUATE.append("invoke")))
         .map(Report::source);
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
