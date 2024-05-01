@@ -4,7 +4,14 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.*;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sVar;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
