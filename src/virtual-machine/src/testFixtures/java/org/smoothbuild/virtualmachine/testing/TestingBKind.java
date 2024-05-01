@@ -12,7 +12,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 public class TestingBKind {
-  public static final TestingVirtualMachine CONTEXT = new TestingVirtualMachine();
+  public static final TestingVm CONTEXT = new TestingVm();
 
   public static final List<BType> BASE_KINDS_TO_TEST = wrapException(() -> list(
       CONTEXT.bBlobType(),

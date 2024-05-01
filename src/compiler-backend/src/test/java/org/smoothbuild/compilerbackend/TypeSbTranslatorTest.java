@@ -21,9 +21,9 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class TypeSbTranslatorTest extends TestingVirtualMachine {
+public class TypeSbTranslatorTest extends TestingVm {
   @Nested
   class _mono {
     @Test

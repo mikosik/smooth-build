@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BInvokeTest extends TestingVirtualMachine {
+public class BInvokeTest extends TestingVm {
   @Test
   void creating_fails_when_method_evaluation_type_is_not_tuple() {
     assertCall(() -> bInvoke(bIntType(), bInt(), bBool(), bTuple()))

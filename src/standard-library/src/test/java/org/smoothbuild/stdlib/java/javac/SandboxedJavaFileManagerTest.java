@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class SandboxedJavaFileManagerTest extends TestingVirtualMachine {
+public class SandboxedJavaFileManagerTest extends TestingVm {
   @Test
   void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output() throws Exception {
     Iterable<InputClassFile> objects = new ArrayList<>();

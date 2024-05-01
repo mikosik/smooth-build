@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 
-public class VirtualMachineWiring extends AbstractModule {
+public class VmWiring extends AbstractModule {
   @Override
   protected void configure() {
     Multibinder<Initializable> uriBinder = newSetBinder(binder(), Initializable.class);

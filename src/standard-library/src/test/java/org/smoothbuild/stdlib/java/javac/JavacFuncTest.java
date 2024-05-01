@@ -7,9 +7,9 @@ import static org.smoothbuild.virtualmachine.testing.JarTester.jarByteString;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class JavacFuncTest extends TestingVirtualMachine {
+public class JavacFuncTest extends TestingVm {
   @Test
   void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
     BTuple file1 = bFile(path("my/package/MyKlass.class"));

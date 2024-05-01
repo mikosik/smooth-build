@@ -5,9 +5,9 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.con
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class StoredLogStructTest extends TestingVirtualMachine {
+public class StoredLogStructTest extends TestingVm {
   private BArray messages;
 
   @Test

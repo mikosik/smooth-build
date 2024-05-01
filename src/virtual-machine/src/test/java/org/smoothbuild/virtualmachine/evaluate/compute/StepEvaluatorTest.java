@@ -26,9 +26,9 @@ import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class StepEvaluatorTest extends TestingVirtualMachine {
+public class StepEvaluatorTest extends TestingVm {
   @Nested
   class _combine_step {
     @Test

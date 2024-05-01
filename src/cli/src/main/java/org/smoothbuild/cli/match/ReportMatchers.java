@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.match;
 
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.Maybe;

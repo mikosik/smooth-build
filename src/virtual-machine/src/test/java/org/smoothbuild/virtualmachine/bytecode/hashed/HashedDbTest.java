@@ -30,9 +30,9 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class HashedDbTest extends TestingVirtualMachine {
+public class HashedDbTest extends TestingVm {
   private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
   private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
 

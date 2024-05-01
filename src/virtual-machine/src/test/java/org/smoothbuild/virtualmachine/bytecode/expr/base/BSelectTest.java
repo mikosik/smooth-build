@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BSelectTest extends TestingVirtualMachine {
+public class BSelectTest extends TestingVm {
   @Test
   void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> bSelect(bInt(3), bInt(2)))

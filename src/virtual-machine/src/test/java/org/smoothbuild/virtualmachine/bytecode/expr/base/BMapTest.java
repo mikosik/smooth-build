@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMap.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BMapTest extends TestingVirtualMachine {
+public class BMapTest extends TestingVm {
   @Test
   void creating_map_with_non_array_fails() {
     assertCall(() -> bMap(bInt(), bIntIdLambda()))

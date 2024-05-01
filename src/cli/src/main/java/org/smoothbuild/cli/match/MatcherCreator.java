@@ -6,7 +6,7 @@ import static org.smoothbuild.cli.match.ReportMatchers.findMatcher;
 import static org.smoothbuild.cli.match.ReportMatchers.labelPrefixMatcher;
 import static org.smoothbuild.cli.match.ReportMatchers.not;
 import static org.smoothbuild.cli.match.ReportMatchers.or;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherBaseVisitor;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.AndContext;

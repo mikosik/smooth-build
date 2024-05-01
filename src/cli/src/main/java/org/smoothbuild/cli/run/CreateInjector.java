@@ -22,7 +22,7 @@ import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
-import org.smoothbuild.virtualmachine.wire.VirtualMachineWiring;
+import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {
@@ -40,7 +40,7 @@ public class CreateInjector {
         PRODUCTION,
         new CliWiring(setOfAll(bucketIdToPath.keySet())),
         new CompilerBackendWiring(),
-        new VirtualMachineWiring(),
+        new VmWiring(),
         new DiskBucketWiring(bucketIdToPath),
         new ReportWiring(out, reportMatcher, logLevel));
   }

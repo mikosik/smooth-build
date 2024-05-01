@@ -9,7 +9,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,9 +18,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class ReportMatchersTest extends TestingVirtualMachine {
+public class ReportMatchersTest extends TestingVm {
   @ParameterizedTest
   @MethodSource("matcher_matches_cases")
   public void matcher_matches(

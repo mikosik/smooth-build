@@ -40,9 +40,9 @@ import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class SaveArtifactsTest extends TestingVirtualMachine {
+public class SaveArtifactsTest extends TestingVm {
   @Override
   public Bucket hashedDbBucket() {
     return new SubBucket(projectBucket(), HASHED_DB_PATH);

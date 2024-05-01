@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class CombineHasWrongElementsSizeExceptionTest extends TestingVirtualMachine {
+public class CombineHasWrongElementsSizeExceptionTest extends TestingVm {
   @Test
   void message() throws Exception {
     var exception = new CombineHasWrongElementsSizeException(

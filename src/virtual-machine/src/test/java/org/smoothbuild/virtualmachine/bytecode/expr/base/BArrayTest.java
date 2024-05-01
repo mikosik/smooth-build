@@ -15,9 +15,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BArrayTest extends TestingVirtualMachine {
+public class BArrayTest extends TestingVm {
   @Test
   void empty_int_array_can_be_iterated_as_int() throws Exception {
     var array = exprDb().newArrayBuilder(bArrayType(bIntType())).build();

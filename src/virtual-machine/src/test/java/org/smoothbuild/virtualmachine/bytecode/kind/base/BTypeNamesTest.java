@@ -7,9 +7,9 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.lambd
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.tupleTypeName;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BTypeNamesTest extends TestingVirtualMachine {
+public class BTypeNamesTest extends TestingVm {
   @Test
   void array_type_name() throws Exception {
     assertThat(arrayTypeName(bStringType())).isEqualTo("[String]");

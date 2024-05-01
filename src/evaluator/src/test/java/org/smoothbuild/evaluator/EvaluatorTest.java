@@ -66,10 +66,10 @@ import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 
-public class EvaluatorTest extends TestingVirtualMachine {
+public class EvaluatorTest extends TestingVm {
   private final FileContentReader fileContentReader = mock(FileContentReader.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);

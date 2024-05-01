@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BKindCollisionsTest extends TestingVirtualMachine {
+public class BKindCollisionsTest extends TestingVm {
   @Test
   void collisions() {
     HashMap<Hash, BKind> map = new HashMap<>();

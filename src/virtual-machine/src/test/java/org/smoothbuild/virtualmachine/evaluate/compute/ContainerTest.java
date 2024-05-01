@@ -6,9 +6,9 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.mes
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class ContainerTest extends TestingVirtualMachine {
+public class ContainerTest extends TestingVm {
   @Test
   void file_system() {
     assertThat(container().bucket()).isSameInstanceAs(projectBucket());

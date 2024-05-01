@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BPickTest extends TestingVirtualMachine {
+public class BPickTest extends TestingVm {
   @Test
   void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
     assertCall(() -> bPick(bInt(3), bInt(2)))

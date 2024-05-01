@@ -24,7 +24,7 @@ import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.virtualmachine.VirtualMachineConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -37,10 +37,10 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.virtualmachine.testing.TestingVirtualMachine;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 import picocli.CommandLine.TypeConversionException;
 
-public class MatcherCreatorTest extends TestingVirtualMachine {
+public class MatcherCreatorTest extends TestingVm {
   @ParameterizedTest
   @MethodSource("provideArguments")
   public void matcher_instances_matches_same_reports_as_expected_matcher(
