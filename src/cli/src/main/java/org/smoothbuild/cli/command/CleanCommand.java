@@ -1,10 +1,9 @@
 package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.common.plan.Plan.apply0;
+import static org.smoothbuild.cli.run.CreateInjector.createInjector;
 
 import java.nio.file.Path;
 import org.smoothbuild.cli.run.Clean;
-import org.smoothbuild.cli.run.CreateInjector;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -15,8 +14,7 @@ public class CleanCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = CreateInjector.createInjector(projectDir, out(), logLevel);
-    var plan = apply0(Clean.class);
-    return injector.getInstance(CommandExecutor.class).execute(plan);
+    var injector = createInjector(projectDir, out(), logLevel);
+    return injector.getInstance(CommandRunner.class).run(Clean.class);
   }
 }

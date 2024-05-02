@@ -1,19 +1,19 @@
 package org.smoothbuild.cli.run;
 
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction0;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.virtualmachine.wire.Project;
 
-public class Clean implements TryFunction0<Void> {
+public class Clean implements Task0<Void> {
   private final Bucket bucket;
 
   @Inject
@@ -22,17 +22,12 @@ public class Clean implements TryFunction0<Void> {
   }
 
   @Override
-  public Label label() {
-    return Label.label("cli", "clean");
-  }
-
-  @Override
-  public Try<Void> apply() {
+  public Output<Void> execute() {
     var logger = new Logger();
     deleteDir("object cache", Layout.HASHED_DB_PATH, logger);
     deleteDir("computation cache", Layout.COMPUTATION_CACHE_PATH, logger);
     deleteDir("artifacts", Layout.ARTIFACTS_PATH, logger);
-    return success(null, logger);
+    return output(label("cli", "clean"), logger.toList());
   }
 
   private void deleteDir(String name, Path path, Logger logger) {
