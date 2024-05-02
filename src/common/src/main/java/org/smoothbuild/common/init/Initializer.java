@@ -1,32 +1,37 @@
 package org.smoothbuild.common.init;
 
-import static org.smoothbuild.common.log.base.Try.failure;
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.init.Initializable.INITIALIZE_LABEL;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Output.schedulingOutput;
 
 import jakarta.inject.Inject;
 import java.util.Set;
-import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction0;
+import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.task.TaskExecutor;
 
-public class Initializer implements TryFunction0<Void> {
+public class Initializer implements Task0<Void> {
   private final Set<Initializable> initializables;
+  private final TaskExecutor taskExecutor;
 
   @Inject
-  public Initializer(Set<Initializable> initializables) {
+  public Initializer(Set<Initializable> initializables, TaskExecutor taskExecutor) {
     this.initializables = initializables;
+    this.taskExecutor = taskExecutor;
   }
 
   @Override
-  public Try<Void> apply() {
-    var logger = new Logger();
-    for (Initializable initializable : initializables) {
-      var result = initializable.initialize();
-      logger.logAll(result.logs());
-      if (result.toMaybe().isNone()) {
-        return failure(logger);
-      }
-    }
-    return success(null, logger);
+  public Output<Void> execute() {
+    var initializablePromises = listOfAll(initializables).map(taskExecutor::submit);
+    var promise = Promise.<Void>promise();
+    runWhenAllAvailable(initializablePromises, () -> promise.accept(null));
+    var report = report(INITIALIZE_LABEL, new Trace(), EXECUTION, list());
+    return schedulingOutput(promise, report);
   }
 }

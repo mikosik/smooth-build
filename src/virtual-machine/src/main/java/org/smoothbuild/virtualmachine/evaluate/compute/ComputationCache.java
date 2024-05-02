@@ -2,9 +2,10 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.Try.failure;
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
@@ -21,7 +22,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.init.Initializable;
-import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.task.Output;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -50,12 +51,14 @@ public class ComputationCache implements Initializable {
   }
 
   @Override
-  public Try<Void> initialize() {
+  public Output<Void> execute() {
+    var label = INITIALIZE_LABEL.append("hashedDb");
     try {
       bucket.createDir(Path.root());
-      return success(null);
+      return output(label, list());
     } catch (IOException e) {
-      return failure(fatal("Initializing ComputationCache failed with exception:", e));
+      var fatal = fatal("Initializing ComputationCache failed with exception:", e);
+      return output(label, list(fatal));
     }
   }
 

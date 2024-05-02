@@ -7,10 +7,10 @@ import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.Try.failure;
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.task.Output.output;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -26,7 +26,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.init.Initializable;
-import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.task.Output;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBigIntegerException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBooleanException;
@@ -49,12 +49,14 @@ public class HashedDb implements Initializable {
   }
 
   @Override
-  public Try<Void> initialize() {
+  public Output<Void> execute() {
+    var label = INITIALIZE_LABEL.append("hashedDb");
     try {
       bucket.createDir(TEMP_DIR_PATH);
-      return success(null);
+      return output(label, list());
     } catch (IOException e) {
-      return failure(fatal("Initializing HashedDb failed with exception:", e));
+      var fatal = fatal("Initializing HashedDb failed with exception:", e);
+      return output(label, list(fatal));
     }
   }
 

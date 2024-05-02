@@ -4,6 +4,7 @@ import static com.google.common.base.Suppliers.memoize;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
+import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
 
 import com.google.common.base.Supplier;
@@ -16,6 +17,7 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -205,7 +207,7 @@ public class TestingVm extends TestingBytecode {
 
   public ComputationCache computationCache() {
     var computationCache = new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
-    computationCache.initialize().toMaybe().getOrThrow(RuntimeException::new);
+    throwExceptionOnFailure(computationCache.execute());
     return computationCache;
   }
 
@@ -231,7 +233,7 @@ public class TestingVm extends TestingBytecode {
 
   private HashedDb createHashDb() {
     var hashedDb = new HashedDb(hashedDbBucket());
-    hashedDb.initialize().toMaybe().getOrThrow(RuntimeException::new);
+    throwExceptionOnFailure(hashedDb.execute());
     return hashedDb;
   }
 
@@ -309,5 +311,11 @@ public class TestingVm extends TestingBytecode {
 
   public BOutput output(BValue value, BArray messages) {
     return new BOutput(value, messages);
+  }
+
+  private static void throwExceptionOnFailure(Output<Void> output) {
+    if (containsFailure(output.report().logs())) {
+      throw new RuntimeException(output.toString());
+    }
   }
 }

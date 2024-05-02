@@ -150,7 +150,7 @@ public class HashedDbTest extends TestingVm {
   void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
     var bucket = hashedDbBucket();
     var hashedDb = new HashedDb(bucket);
-    hashedDb.initialize();
+    hashedDb.execute();
 
     hashedDb.writeString("abc");
 
@@ -162,7 +162,7 @@ public class HashedDbTest extends TestingVm {
       throws Exception {
     var bucket = hashedDbBucket();
     var hashedDb = new HashedDb(bucket);
-    hashedDb.initialize();
+    hashedDb.execute();
 
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
