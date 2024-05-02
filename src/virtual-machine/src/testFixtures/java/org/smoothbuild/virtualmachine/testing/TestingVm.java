@@ -8,7 +8,6 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchr
 
 import com.google.common.base.Supplier;
 import com.google.inject.Guice;
-import com.google.inject.Injector;
 import jakarta.inject.Provider;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
@@ -18,7 +17,6 @@ import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.TaskExecutor;
-import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -63,8 +61,6 @@ public class TestingVm extends TestingBytecode {
   private final Supplier<HashedDb> hashedDb = memoize(this::createHashDb);
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
-  private final Supplier<MemoryReporter> reporter = memoize(MemoryReporter::new);
-  private final Supplier<TaskExecutor> taskExecutor = memoize(this::newTaskExecutor);
 
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
 
@@ -99,22 +95,6 @@ public class TestingVm extends TestingBytecode {
 
   public Vm vm(TaskExecutor taskExecutor) {
     return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
-  }
-
-  public TaskExecutor taskExecutor(Reporter reporter) {
-    return taskExecutor(Guice.createInjector(), reporter);
-  }
-
-  private static TaskExecutor taskExecutor(Injector injector, Reporter reporter) {
-    return new TaskExecutor(injector, reporter, 4);
-  }
-
-  public TaskExecutor taskExecutor() {
-    return taskExecutor.get();
-  }
-
-  private TaskExecutor newTaskExecutor() {
-    return taskExecutor(reporter());
   }
 
   public BReferenceInliner bReferenceInliner() {
@@ -156,10 +136,6 @@ public class TestingVm extends TestingBytecode {
 
   private JarClassLoaderFactory jarClassLoaderFactory() {
     return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
-  }
-
-  public MemoryReporter reporter() {
-    return reporter.get();
   }
 
   public StepEvaluator stepEvaluator() {

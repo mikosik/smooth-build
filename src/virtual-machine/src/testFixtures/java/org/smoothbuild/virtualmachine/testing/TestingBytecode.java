@@ -13,6 +13,7 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
+import org.smoothbuild.common.testing.TestingCommon;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -58,7 +59,7 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
-public abstract class TestingBytecode {
+public abstract class TestingBytecode extends TestingCommon {
 
   protected abstract BKindDb kindDb();
 
