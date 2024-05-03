@@ -52,6 +52,8 @@ public class TaskExecutor {
     this.executor = new Executor(threadCount);
   }
 
+  // Task0
+
   public <R> Promise<R> submit(Task0<R> task) {
     return submit(task, list());
   }
@@ -61,8 +63,17 @@ public class TaskExecutor {
     return submit(predecessors, execution);
   }
 
+  public <R> Promise<R> submit(Class<? extends Task0<R>> task) {
+    return submit(Key.get(task));
+  }
+
   public <R> Promise<R> submit(Key<? extends Task0<R>> task) {
     return submit(list(), task);
+  }
+
+  public <R> Promise<R> submit(
+      List<? extends Promise<?>> predecessors, Class<? extends Task0<R>> task) {
+    return submit(predecessors, Key.get(task));
   }
 
   public <R> Promise<R> submit(
@@ -70,6 +81,8 @@ public class TaskExecutor {
     var execution = new Execution<>(() -> injector.getInstance(task).execute());
     return submit(predecessors, execution);
   }
+
+  // Task1
 
   public <R, A1> Promise<R> submit(Task1<R, A1> task, Promise<A1> arg1) {
     return submit(list(), task, arg1);
@@ -81,8 +94,19 @@ public class TaskExecutor {
     return submit(predecessors, execution, arg1);
   }
 
+  public <R, A1> Promise<R> submit(Class<? extends Task1<R, A1>> task, Promise<A1> arg1) {
+    return submit(Key.get(task), arg1);
+  }
+
   public <R, A1> Promise<R> submit(Key<? extends Task1<R, A1>> task, Promise<A1> arg1) {
     return submit(list(), task, arg1);
+  }
+
+  public <R, A1> Promise<R> submit(
+      List<? extends Promise<?>> predecessors,
+      Class<? extends Task1<R, A1>> task,
+      Promise<A1> arg1) {
+    return submit(predecessors, Key.get(task), arg1);
   }
 
   public <R, A1> Promise<R> submit(
@@ -90,6 +114,8 @@ public class TaskExecutor {
     var execution = new Execution<>(() -> injector.getInstance(task).execute(arg1.get()));
     return submit(predecessors, execution, arg1);
   }
+
+  // Task2
 
   public <R, A1, A2> Promise<R> submit(Task2<R, A1, A2> task, Promise<A1> arg1, Promise<A2> arg2) {
     return submit(list(), task, arg1, arg2);
@@ -105,8 +131,21 @@ public class TaskExecutor {
   }
 
   public <R, A1, A2> Promise<R> submit(
+      Class<? extends Task2<R, A1, A2>> task, Promise<A1> arg1, Promise<A2> arg2) {
+    return submit(Key.get(task), arg1, arg2);
+  }
+
+  public <R, A1, A2> Promise<R> submit(
       Key<? extends Task2<R, A1, A2>> task, Promise<A1> arg1, Promise<A2> arg2) {
     return submit(list(), task, arg1, arg2);
+  }
+
+  public <R, A1, A2> Promise<R> submit(
+      List<? extends Promise<?>> predecessors,
+      Class<? extends Task2<R, A1, A2>> task,
+      Promise<A1> arg1,
+      Promise<A2> arg2) {
+    return submit(predecessors, Key.get(task), arg1, arg2);
   }
 
   public <R, A1, A2> Promise<R> submit(
@@ -119,6 +158,8 @@ public class TaskExecutor {
     return submit(predecessors, execution, arg1, arg2);
   }
 
+  // TaskX
+
   public <R, A> Promise<R> submit(TaskX<R, A> task, List<? extends Promise<A>> args) {
     return submit(list(), task, args);
   }
@@ -130,8 +171,20 @@ public class TaskExecutor {
   }
 
   public <R, A> Promise<R> submit(
+      Class<? extends TaskX<R, A>> task, List<? extends Promise<A>> args) {
+    return submit(Key.get(task), args);
+  }
+
+  public <R, A> Promise<R> submit(
       Key<? extends TaskX<R, A>> task, List<? extends Promise<A>> args) {
     return submit(list(), task, args);
+  }
+
+  public <R, A> Promise<R> submit(
+      List<? extends Promise<?>> predecessors,
+      Class<? extends TaskX<R, A>> task,
+      List<? extends Promise<A>> args) {
+    return submit(predecessors, Key.get(task), args);
   }
 
   public <R, A> Promise<R> submit(
@@ -142,6 +195,8 @@ public class TaskExecutor {
         new Execution<>(() -> injector.getInstance(task).execute(args.map(Promise::get)));
     return submit(predecessors, execution, args);
   }
+
+  // private
 
   private <R> Promise<R> submit(
       List<? extends Promise<?>> predecessors, Execution<R> execution, Promise<?>... args) {
