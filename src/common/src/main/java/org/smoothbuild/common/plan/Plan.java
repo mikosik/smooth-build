@@ -1,6 +1,12 @@
 package org.smoothbuild.common.plan;
 
 import com.google.inject.Key;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.task.Task1;
+import org.smoothbuild.common.task.Task2;
+import org.smoothbuild.common.task.TaskX;
 
 /**
  * Plan of operations to operations to execute.
@@ -14,6 +20,13 @@ public sealed interface Plan<R>
         Evaluation,
         Injection,
         MaybeApplication,
+        Task0Wrapper,
+        Task0WrapperK,
+        Task1Wrapper,
+        Task1WrapperK,
+        Task2Wrapper,
+        Task2WrapperK,
+        TaskXWrapper,
         Value {
 
   public static <R> Plan<R> apply0(Class<? extends TryFunction0<R>> clazz) {
@@ -100,6 +113,35 @@ public sealed interface Plan<R>
   public static <R> Plan<R> value(R value) {
     return new Value<>(value);
   }
+
+  public static <R> Plan<R> task0(Task0<R> task) {
+    return new Task0Wrapper<>(task);
+  }
+
+  public static <R> Plan<R> task0(Class<? extends Task0<R>> task) {
+    return new Task0WrapperK<>(task);
+  }
+
+  public static <R, A1> Plan<R> task1(Task1<R, A1> task, Promise<A1> a1) {
+    return new Task1Wrapper<>(task, a1);
+  }
+
+  public static <R, A1> Plan<R> task1(Class<? extends Task1<R, A1>> task, Promise<A1> a1) {
+    return new Task1WrapperK<>(task, a1);
+  }
+
+  public static <R, A1, A2> Plan<R> task2(Task2<R, A1, A2> task, Promise<A1> a1, Promise<A2> a2) {
+    return new Task2Wrapper<>(task, a1, a2);
+  }
+
+  public static <R, A1, A2> Plan<R> task2(
+      Class<? extends Task2<R, A1, A2>> task, Promise<A1> a1, Promise<A2> a2) {
+    return new Task2WrapperK<>(task, a1, a2);
+  }
+
+  public static <R, A> Plan<R> taskX(TaskX<R, A> task, List<? extends Promise<A>> args) {
+    return new TaskXWrapper<>(task, args);
+  }
 }
 
 record Application0<R>(Plan<? extends TryFunction0<R>> function) implements Plan<R> {}
@@ -121,3 +163,20 @@ record MaybeApplication<A, R>(Plan<? extends MaybeFunction<A, R>> function, Plan
     implements Plan<R> {}
 
 record Value<R>(R value) implements Plan<R> {}
+
+record Task0Wrapper<R>(Task0<R> value) implements Plan<R> {}
+
+record Task0WrapperK<R>(Class<? extends Task0<R>> value) implements Plan<R> {}
+
+record Task1Wrapper<R, A1>(Task1<R, A1> value, Promise<A1> a1) implements Plan<R> {}
+
+record Task1WrapperK<R, A1>(Class<? extends Task1<R, A1>> value, Promise<A1> a1)
+    implements Plan<R> {}
+
+record Task2Wrapper<R, A1, A2>(Task2<R, A1, A2> value, Promise<A1> a1, Promise<A2> a2)
+    implements Plan<R> {}
+
+record Task2WrapperK<R, A1, A2>(
+    Class<? extends Task2<R, A1, A2>> value, Promise<A1> a1, Promise<A2> a2) implements Plan<R> {}
+
+record TaskXWrapper<R, A>(TaskX<R, A> value, List<? extends Promise<A>> args) implements Plan<R> {}
