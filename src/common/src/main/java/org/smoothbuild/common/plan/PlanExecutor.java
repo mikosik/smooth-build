@@ -12,15 +12,22 @@ import org.smoothbuild.common.collect.Maybe.Some;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.task.TaskExecutor;
 
 public class PlanExecutor {
   private final Injector injector;
   private final Reporter reporter;
+  private final TaskExecutor taskExecutor;
+
+  public PlanExecutor(Injector injector, Reporter reporter) {
+    this(injector, reporter, null);
+  }
 
   @Inject
-  public PlanExecutor(Injector injector, Reporter reporter) {
+  public PlanExecutor(Injector injector, Reporter reporter, TaskExecutor taskExecutor) {
     this.injector = injector;
     this.reporter = reporter;
+    this.taskExecutor = taskExecutor;
   }
 
   public <V> Maybe<V> evaluate(Plan<V> plan) {
@@ -33,7 +40,84 @@ public class PlanExecutor {
       case Injection<V> injection -> evaluateInjection(injection);
       case MaybeApplication<?, V> application -> evaluateMaybeApplication(application);
       case Value<V> value -> evaluateValue(value);
+      case Task0Wrapper<V> v -> evaluateTask0(v);
+      case Task1Wrapper<V, ?> v -> evaluateTask1(v);
+      case Task2Wrapper<V, ?, ?> v -> evaluateTask2(v);
+      case TaskXWrapper<V, ?> v -> evaluateTaskX(v);
+      case Task0WrapperK<V> v -> evaluateTask0K(v);
+      case Task1WrapperK<V, ?> v -> evaluateTask1K(v);
+      case Task2WrapperK<V, ?, ?> v -> evaluateTask2K(v);
     };
+  }
+
+  private <V> Maybe<V> evaluateTask0(Task0Wrapper<V> v) {
+    try {
+      var promise = taskExecutor.submit(v.value());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <V> Maybe<V> evaluateTask0K(Task0WrapperK<V> v) {
+    try {
+      var promise = taskExecutor.submit(v.value());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <V, A1> Maybe<V> evaluateTask1(Task1Wrapper<V, A1> v) {
+    try {
+      var promise = taskExecutor.submit(v.value(), v.a1());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <V, A1> Maybe<V> evaluateTask1K(Task1WrapperK<V, A1> v) {
+    try {
+      var promise = taskExecutor.submit(v.value(), v.a1());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <V, A1, A2> Maybe<V> evaluateTask2(Task2Wrapper<V, A1, A2> v) {
+    try {
+      var promise = taskExecutor.submit(v.value(), v.a1(), v.a2());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <V, A1, A2> Maybe<V> evaluateTask2K(Task2WrapperK<V, A1, A2> v) {
+    try {
+      var promise = taskExecutor.submit(v.value(), v.a1(), v.a2());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private <V, A> Maybe<V> evaluateTaskX(TaskXWrapper<V, A> v) {
+    try {
+      var promise = taskExecutor.submit(v.value(), v.args());
+      taskExecutor.waitUntilIdle();
+      return promise.toMaybe();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private <V> Maybe<V> evaluateApplication0(Application0<V> application) {
