@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend;
 
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.plan.Plan.apply1;
 import static org.smoothbuild.common.plan.Plan.apply2;
@@ -7,13 +8,15 @@ import static org.smoothbuild.common.plan.Plan.evaluate;
 import static org.smoothbuild.common.plan.Plan.value;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
+import jakarta.inject.Inject;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.compilerfrontend.compile.ConvertPs;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
 import org.smoothbuild.compilerfrontend.compile.DetectUndefined;
@@ -38,6 +41,13 @@ public class FrontendCompilationPlan {
   }
 
   public static class InflatePlan implements TryFunction2<SModule, FullPath, Plan<SModule>> {
+    private final TaskExecutor taskExecutor;
+
+    @Inject
+    public InflatePlan(TaskExecutor taskExecutor) {
+      this.taskExecutor = taskExecutor;
+    }
+
     @Override
     public Label label() {
       return Label.label(COMPILE_PREFIX, "inflateFrontendCompilationPlan");
@@ -47,9 +57,9 @@ public class FrontendCompilationPlan {
     public Try<Plan<SModule>> apply(SModule importedModule, FullPath fullPath) {
       var environment = value(importedModule.membersAndImported());
       var pathLegacy = value(fullPath);
-      var path = Promise.promise(fullPath);
-      var fileContent = Plan.task1(ReadFileContent.class, path);
-      var moduleContext = apply2(Parse.class, fileContent, pathLegacy);
+      var path = promise(fullPath);
+      var fileContent = taskExecutor.submit(ReadFileContent.class, path);
+      Plan<ModuleContext> moduleContext = Plan.task2(Parse.class, fileContent, path);
       var moduleP = apply2(TranslateAp.class, moduleContext, pathLegacy);
       var withSyntaxCheck = apply1(FindSyntaxErrors.class, moduleP);
       var withDecodedLiterals = apply1(DecodeLiterals.class, withSyntaxCheck);
