@@ -1,9 +1,10 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.Constants.CHARSET;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.log.base.Try.failure;
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
 import jakarta.inject.Inject;
@@ -11,11 +12,10 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
 
-public class ReadFileContent implements TryFunction1<FullPath, String> {
+public class ReadFileContent implements Task1<String, FullPath> {
   private final FileResolver fileResolver;
 
   @Inject
@@ -24,18 +24,17 @@ public class ReadFileContent implements TryFunction1<FullPath, String> {
   }
 
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "readFileContent");
-  }
-
-  @Override
-  public Try<String> apply(FullPath fullPath) {
+  public Output<String> execute(FullPath fullPath) {
+    var label = label(COMPILE_PREFIX, "readFileContent");
     try {
-      return success(fileResolver.contentOf(fullPath, CHARSET));
+      var content = fileResolver.contentOf(fullPath, CHARSET);
+      return output(content, label, list());
     } catch (NoSuchFileException e) {
-      return failure(error(fullPath.q() + " doesn't exist."));
+      var error = error(fullPath.q() + " doesn't exist.");
+      return output(label, list(error));
     } catch (IOException e) {
-      return failure(error("Cannot read build script file " + fullPath.q() + "."));
+      var error = error("Cannot read build script file " + fullPath.q() + ".");
+      return output(label, list(error));
     }
   }
 }

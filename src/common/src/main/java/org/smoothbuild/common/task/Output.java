@@ -11,8 +11,12 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Trace;
 
 public record Output<V>(Promise<V> result, Report report) {
-  public static Output<Void> output(Label label, List<Log> logs) {
-    return output(null, Report.report(label, new Trace(), EXECUTION, logs));
+  public static <V> Output<V> output(Label label, List<Log> logs) {
+    return output(null, label, logs);
+  }
+
+  public static <V> Output<V> output(V value, Label label, List<Log> logs) {
+    return output(value, Report.report(label, new Trace(), EXECUTION, logs));
   }
 
   public static <V> Output<V> output(V result, Report report) {

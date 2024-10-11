@@ -9,6 +9,7 @@ import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE
 
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.plan.Plan;
@@ -45,10 +46,11 @@ public class FrontendCompilationPlan {
     @Override
     public Try<Plan<SModule>> apply(SModule importedModule, FullPath fullPath) {
       var environment = value(importedModule.membersAndImported());
-      var path = value(fullPath);
-      var fileContent = apply1(ReadFileContent.class, path);
-      var moduleContext = apply2(Parse.class, fileContent, path);
-      var moduleP = apply2(TranslateAp.class, moduleContext, path);
+      var pathLegacy = value(fullPath);
+      var path = Promise.promise(fullPath);
+      var fileContent = Plan.task1(ReadFileContent.class, path);
+      var moduleContext = apply2(Parse.class, fileContent, pathLegacy);
+      var moduleP = apply2(TranslateAp.class, moduleContext, pathLegacy);
       var withSyntaxCheck = apply1(FindSyntaxErrors.class, moduleP);
       var withDecodedLiterals = apply1(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = apply1(InitializeScopes.class, withDecodedLiterals);
