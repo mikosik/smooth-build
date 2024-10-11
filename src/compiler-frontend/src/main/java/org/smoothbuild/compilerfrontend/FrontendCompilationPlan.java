@@ -58,8 +58,8 @@ public class FrontendCompilationPlan {
       var path = promise(fullPath);
       var fileContent = taskExecutor.submit(ReadFileContent.class, path);
       var moduleContext = taskExecutor.submit(Parse.class, fileContent, path);
-      var moduleP = Plan.task2(TranslateAp.class, moduleContext, path);
-      var withSyntaxCheck = apply1(FindSyntaxErrors.class, moduleP);
+      var moduleP = taskExecutor.submit(TranslateAp.class, moduleContext, path);
+      var withSyntaxCheck = Plan.task1(FindSyntaxErrors.class, moduleP);
       var withDecodedLiterals = apply1(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = apply1(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected = apply2(DetectUndefined.class, withInitializedScopes, environment);
