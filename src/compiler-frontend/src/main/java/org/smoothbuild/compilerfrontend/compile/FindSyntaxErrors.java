@@ -1,12 +1,13 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -26,20 +27,16 @@ import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
  * Catching those errors here makes it easier
  * to provide more detailed error message.
  */
-public class FindSyntaxErrors implements TryFunction1<PModule, PModule> {
+public class FindSyntaxErrors implements Task1<PModule, PModule> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "findSyntaxErrors");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule) {
+  public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     detectIllegalNames(pModule, logger);
     detectIllegalAnnotations(pModule, logger);
     detectStructFieldWithDefaultValue(pModule, logger);
     detectLambdaParamWithDefaultValue(pModule, logger);
-    return Try.of(pModule, logger);
+    var label = label(COMPILE_PREFIX, "findSyntaxErrors");
+    return output(pModule, label, logger.toList());
   }
 
   private static void detectIllegalNames(PModule pModule, Logger logger) {
