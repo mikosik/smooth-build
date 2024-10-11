@@ -7,6 +7,8 @@ import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
@@ -40,10 +42,9 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
@@ -71,14 +72,9 @@ import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class TranslateAp implements TryFunction2<ModuleContext, FullPath, PModule> {
+public class TranslateAp implements Task2<PModule, ModuleContext, FullPath> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "simplifyParseTree");
-  }
-
-  @Override
-  public Try<PModule> apply(ModuleContext moduleContext, FullPath fullPath) {
+  public Output<PModule> execute(ModuleContext moduleContext, FullPath fullPath) {
     var logger = new Logger();
     var structs = new ArrayList<PStruct>();
     var evaluables = new ArrayList<PNamedEvaluable>();
@@ -86,7 +82,8 @@ public class TranslateAp implements TryFunction2<ModuleContext, FullPath, PModul
     apTranslatingVisitor.visit(moduleContext);
     var name = fullPath.withExtension("").path().lastPart().toString();
     var moduleP = new PModule(name, listOfAll(structs), listOfAll(evaluables));
-    return Try.of(moduleP, logger);
+    var label = label(COMPILE_PREFIX, "simplifyParseTree");
+    return output(moduleP, label, logger.toList());
   }
 
   private static String unquote(String quotedString) {
