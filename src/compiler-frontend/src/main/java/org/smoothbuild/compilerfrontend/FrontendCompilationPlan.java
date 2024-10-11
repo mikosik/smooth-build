@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend;
 
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.plan.Plan.apply0;
 import static org.smoothbuild.common.plan.Plan.apply1;
 import static org.smoothbuild.common.plan.Plan.apply2;
 import static org.smoothbuild.common.plan.Plan.evaluate;
@@ -30,7 +29,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
 public class FrontendCompilationPlan {
   public static Plan<SModule> frontendCompilationPlan(List<FullPath> modules) {
-    var loadingPlan = apply0(LoadInternalModuleMembers.class);
+    var loadingPlan = Plan.task0(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
       loadingPlan = evaluate(apply2(InflatePlan.class, loadingPlan, value(fullPath)));
     }
