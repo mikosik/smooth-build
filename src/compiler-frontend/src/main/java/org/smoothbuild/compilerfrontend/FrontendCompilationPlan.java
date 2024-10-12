@@ -59,8 +59,8 @@ public class FrontendCompilationPlan {
       var fileContent = taskExecutor.submit(ReadFileContent.class, path);
       var moduleContext = taskExecutor.submit(Parse.class, fileContent, path);
       var moduleP = taskExecutor.submit(TranslateAp.class, moduleContext, path);
-      var withSyntaxCheck = Plan.task1(FindSyntaxErrors.class, moduleP);
-      var withDecodedLiterals = apply1(DecodeLiterals.class, withSyntaxCheck);
+      var withSyntaxCheck = taskExecutor.submit(FindSyntaxErrors.class, moduleP);
+      var withDecodedLiterals = Plan.task1(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = apply1(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected = apply2(DetectUndefined.class, withInitializedScopes, environment);
       var withInjected = apply2(InjectDefaultArguments.class, withUndefinedDetected, environment);
