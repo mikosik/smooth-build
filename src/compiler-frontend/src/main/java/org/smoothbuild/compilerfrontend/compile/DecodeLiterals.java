@@ -1,31 +1,28 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.UnescapeFailedException;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 
-public class DecodeLiterals implements TryFunction1<PModule, PModule> {
+public class DecodeLiterals implements Task1<PModule, PModule> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "decodeLiterals");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule) {
+  public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     new DecodeLiteralModuleVisitor(logger).visitModule(pModule);
-    return Try.of(pModule, logger);
+    var label = label(COMPILE_PREFIX, "decodeLiterals");
+    return output(pModule, label, logger.toList());
   }
 
   private static class DecodeLiteralModuleVisitor extends PModuleVisitor {
