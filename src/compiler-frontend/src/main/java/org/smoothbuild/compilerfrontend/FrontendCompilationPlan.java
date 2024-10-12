@@ -66,8 +66,8 @@ public class FrontendCompilationPlan {
           taskExecutor.submit(DetectUndefined.class, withInitializedScopes, environment);
       var withInjected =
           taskExecutor.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
-      var sorted = Plan.task1(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = apply2(InferTypes.class, sorted, environmentLegacy);
+      var sorted = taskExecutor.submit(SortModuleMembersByDependency.class, withInjected);
+      var typesInferred = Plan.task2(InferTypes.class, sorted, environment);
       var moduleS = apply2(ConvertPs.class, typesInferred, environmentLegacy);
       return success(moduleS);
     }

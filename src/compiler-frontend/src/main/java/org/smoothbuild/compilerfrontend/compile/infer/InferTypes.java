@@ -3,16 +3,17 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
@@ -39,18 +40,14 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements TryFunction2<PModule, SScope, PModule> {
+public class InferTypes implements Task2<PModule, PModule, SScope> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "inferTypes");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule, SScope environment) {
+  public Output<PModule> execute(PModule pModule, SScope environment) {
     var logger = new Logger();
     var typeTeller = new TypeTeller(environment, pModule.scope());
     new Worker(typeTeller, logger).visitModule(pModule);
-    return Try.of(pModule, logger);
+    var label = label(COMPILE_PREFIX, "inferTypes");
+    return output(pModule, label, logger.toList());
   }
 
   public static class Worker {
