@@ -6,6 +6,8 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
@@ -13,11 +15,10 @@ import java.util.ArrayList;
 import java.util.Set;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
@@ -36,17 +37,13 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
-public class InjectDefaultArguments implements TryFunction2<PModule, SScope, PModule> {
+public class InjectDefaultArguments implements Task2<PModule, PModule, SScope> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "injectDefaultArguments");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule, SScope environment) {
+  public Output<PModule> execute(PModule pModule, SScope environment) {
     var logger = new Logger();
     new Visitor(environment, immutableBindings(), logger).visitModule(pModule);
-    return Try.of(pModule, logger);
+    var label = label(COMPILE_PREFIX, "injectDefaultArguments");
+    return output(pModule, label, logger.toList());
   }
 
   private static class Visitor extends PScopingModuleVisitor {
