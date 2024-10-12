@@ -53,7 +53,7 @@ public class InjectDefaultArgumentsTest {
   }
 
   private static void callInjectDefaultArguments(SScope importedS, PModule pModule) {
-    new InitializeScopes().apply(pModule);
+    new InitializeScopes().execute(pModule);
     new InjectDefaultArguments().apply(pModule, importedS);
   }
 }

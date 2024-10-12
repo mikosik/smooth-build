@@ -1,17 +1,18 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.smoothbuild.common.bindings.MutableBindings;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
@@ -30,17 +31,13 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends PModuleVisitor implements TryFunction1<PModule, PModule> {
+public class InitializeScopes extends PModuleVisitor implements Task1<PModule, PModule> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "initializeScopes");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule) {
+  public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     initializeScopes(pModule, logger);
-    return Try.of(pModule, logger);
+    var label = label(COMPILE_PREFIX, "initializeScopes");
+    return output(pModule, label, logger.toList());
   }
 
   @VisibleForTesting
