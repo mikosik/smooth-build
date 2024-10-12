@@ -1,15 +1,16 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
@@ -62,16 +63,13 @@ import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
-public class ConvertPs implements TryFunction2<PModule, SScope, SModule> {
+public class ConvertPs implements Task2<SModule, PModule, SScope> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "buildIr");
-  }
-
-  @Override
-  public Try<SModule> apply(PModule pModule, SScope environment) {
+  public Output<SModule> execute(PModule pModule, SScope environment) {
     var typeTeller = new TypeTeller(environment, pModule.scope());
-    return success(new Worker(typeTeller, environment).convertModule(pModule));
+    var label = label(COMPILE_PREFIX, "buildIr");
+    var sModule = new Worker(typeTeller, environment).convertModule(pModule);
+    return output(sModule, label, list());
   }
 
   public static class Worker {
