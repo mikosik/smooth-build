@@ -54,19 +54,22 @@ public class FrontendCompilationPlan {
 
     @Override
     public Try<Plan<SModule>> apply(SModule importedModule, FullPath fullPath) {
-      var environment = value(importedModule.membersAndImported());
+      var environmentLegacy = value(importedModule.membersAndImported());
+      var environment = promise(importedModule.membersAndImported());
       var path = promise(fullPath);
       var fileContent = taskExecutor.submit(ReadFileContent.class, path);
       var moduleContext = taskExecutor.submit(Parse.class, fileContent, path);
       var moduleP = taskExecutor.submit(TranslateAp.class, moduleContext, path);
       var withSyntaxCheck = taskExecutor.submit(FindSyntaxErrors.class, moduleP);
       var withDecodedLiterals = taskExecutor.submit(DecodeLiterals.class, withSyntaxCheck);
-      var withInitializedScopes = Plan.task1(InitializeScopes.class, withDecodedLiterals);
-      var withUndefinedDetected = apply2(DetectUndefined.class, withInitializedScopes, environment);
-      var withInjected = apply2(InjectDefaultArguments.class, withUndefinedDetected, environment);
+      var withInitializedScopes = taskExecutor.submit(InitializeScopes.class, withDecodedLiterals);
+      var withUndefinedDetected =
+          Plan.task2(DetectUndefined.class, withInitializedScopes, environment);
+      var withInjected =
+          apply2(InjectDefaultArguments.class, withUndefinedDetected, environmentLegacy);
       var sorted = apply1(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = apply2(InferTypes.class, sorted, environment);
-      var moduleS = apply2(ConvertPs.class, typesInferred, environment);
+      var typesInferred = apply2(InferTypes.class, sorted, environmentLegacy);
+      var moduleS = apply2(ConvertPs.class, typesInferred, environmentLegacy);
       return success(moduleS);
     }
   }
