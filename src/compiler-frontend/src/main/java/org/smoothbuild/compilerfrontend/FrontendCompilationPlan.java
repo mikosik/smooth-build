@@ -64,9 +64,9 @@ public class FrontendCompilationPlan {
       var withDecodedLiterals = taskExecutor.submit(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = taskExecutor.submit(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected =
-          Plan.task2(DetectUndefined.class, withInitializedScopes, environment);
+          taskExecutor.submit(DetectUndefined.class, withInitializedScopes, environment);
       var withInjected =
-          apply2(InjectDefaultArguments.class, withUndefinedDetected, environmentLegacy);
+          Plan.task2(InjectDefaultArguments.class, withUndefinedDetected, environment);
       var sorted = apply1(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = apply2(InferTypes.class, sorted, environmentLegacy);
       var moduleS = apply2(ConvertPs.class, typesInferred, environmentLegacy);
