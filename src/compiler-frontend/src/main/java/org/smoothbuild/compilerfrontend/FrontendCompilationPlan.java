@@ -53,7 +53,6 @@ public class FrontendCompilationPlan {
 
     @Override
     public Try<Plan<SModule>> apply(SModule importedModule, FullPath fullPath) {
-      var environmentLegacy = value(importedModule.membersAndImported());
       var environment = promise(importedModule.membersAndImported());
       var path = promise(fullPath);
       var fileContent = taskExecutor.submit(ReadFileContent.class, path);
@@ -67,8 +66,8 @@ public class FrontendCompilationPlan {
       var withInjected =
           taskExecutor.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
       var sorted = taskExecutor.submit(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = Plan.task2(InferTypes.class, sorted, environment);
-      var moduleS = apply2(ConvertPs.class, typesInferred, environmentLegacy);
+      var typesInferred = taskExecutor.submit(InferTypes.class, sorted, environment);
+      var moduleS = Plan.task2(ConvertPs.class, typesInferred, environment);
       return success(moduleS);
     }
   }
