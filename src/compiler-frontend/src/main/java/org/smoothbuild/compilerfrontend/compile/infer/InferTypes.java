@@ -173,21 +173,21 @@ public class InferTypes implements Task2<PModule, PModule, SScope> {
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
         var index = i;
-        param.defaultValue().ifPresent(defaultvalue -> {
+        param.defaultValue().ifPresent(defaultValue -> {
           var schema = namedFunc.schemaS();
           var paramUnifier = new Unifier();
           var resolvedParamT = schema.type().params().elements().get(index);
           var paramT =
               replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
           var defaultValueType =
-              replaceQuantifiedVarsWithTempVars(defaultvalue.schemaS(), paramUnifier);
+              replaceQuantifiedVarsWithTempVars(defaultValue.schemaS(), paramUnifier);
           try {
             paramUnifier.add(new EqualityConstraint(paramT, defaultValueType));
           } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(
-                    param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());
-            this.logger.log(compileError(defaultvalue.location(), message));
+                    param.q(), resolvedParamT.q(), defaultValue.schemaS().type().q());
+            this.logger.log(compileError(defaultValue.location(), message));
           }
         });
       }
