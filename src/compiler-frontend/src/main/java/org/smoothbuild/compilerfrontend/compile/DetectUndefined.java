@@ -1,14 +1,15 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
@@ -26,17 +27,13 @@ import org.smoothbuild.compilerfrontend.lang.define.SScope;
 /**
  * Detect undefined referencables and types.
  */
-public class DetectUndefined implements TryFunction2<PModule, SScope, PModule> {
+public class DetectUndefined implements Task2<PModule, PModule, SScope> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "detectUndefined");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule, SScope imported) {
+  public Output<PModule> execute(PModule pModule, SScope imported) {
     var logger = new Logger();
     new Detector(imported, emptyScope(), logger).visitModule(pModule);
-    return Try.of(pModule, logger);
+    var label = label(COMPILE_PREFIX, "detectUndefined");
+    return output(pModule, label, logger.toList());
   }
 
   private static class Detector extends PScopingModuleVisitor {
