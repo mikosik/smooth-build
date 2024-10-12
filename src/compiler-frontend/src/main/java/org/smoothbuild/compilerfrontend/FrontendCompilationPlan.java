@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend;
 
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.plan.Plan.apply1;
 import static org.smoothbuild.common.plan.Plan.apply2;
 import static org.smoothbuild.common.plan.Plan.evaluate;
 import static org.smoothbuild.common.plan.Plan.value;
@@ -66,8 +65,8 @@ public class FrontendCompilationPlan {
       var withUndefinedDetected =
           taskExecutor.submit(DetectUndefined.class, withInitializedScopes, environment);
       var withInjected =
-          Plan.task2(InjectDefaultArguments.class, withUndefinedDetected, environment);
-      var sorted = apply1(SortModuleMembersByDependency.class, withInjected);
+          taskExecutor.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
+      var sorted = Plan.task1(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = apply2(InferTypes.class, sorted, environmentLegacy);
       var moduleS = apply2(ConvertPs.class, typesInferred, environmentLegacy);
       return success(moduleS);

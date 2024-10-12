@@ -1,9 +1,12 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static java.lang.String.join;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
 import java.util.ArrayList;
@@ -13,11 +16,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
@@ -32,31 +33,26 @@ import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 /**
  * Sort module Evaluables and Structs based on dependencies between them.
  */
-public class SortModuleMembersByDependency implements TryFunction1<PModule, PModule> {
+public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   @Override
-  public Label label() {
-    return Label.label(COMPILE_PREFIX, "sortMembers");
-  }
-
-  @Override
-  public Try<PModule> apply(PModule pModule) {
-    var logger = new Logger();
+  public Output<PModule> execute(PModule pModule) {
+    var label = label(COMPILE_PREFIX, "sortMembers");
     var sortedTs = sortStructsByDeps(pModule.structs());
     if (sortedTs.sorted() == null) {
-      logger.log(createCycleError("Type hierarchy", sortedTs.cycle()));
-      return Try.of(null, logger);
+      var error = createCycleError("Type hierarchy", sortedTs.cycle());
+      return output(label, list(error));
     }
     var sortedEvaluables = sortEvaluablesByDeps(pModule.evaluables());
     if (sortedEvaluables.sorted() == null) {
-      logger.log(createCycleError("Reference graph", sortedEvaluables.cycle()));
-      return Try.of(null, logger);
+      var error = createCycleError("Reference graph", sortedEvaluables.cycle());
+      return output(label, list(error));
     }
     PModule result = new PModule(
         pModule.name(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         pModule.scope());
-    return Try.of(result, logger);
+    return output(result, label, list());
   }
 
   private static TopologicalSortingRes<String, PNamedEvaluable, Location> sortEvaluablesByDeps(
