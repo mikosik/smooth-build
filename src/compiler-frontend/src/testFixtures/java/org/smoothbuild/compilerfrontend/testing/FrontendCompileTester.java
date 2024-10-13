@@ -5,10 +5,10 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.compilerfrontend.FrontendCompilationPlan.frontendCompilationPlan;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.LIBRARY_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
@@ -28,32 +28,34 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.plan.PlanExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
+import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
-public class FrontendCompilerTester {
+public class FrontendCompileTester {
   private final String sourceCode;
   private String importedSourceCode;
   private Try<SModule> moduleS;
 
-  public static FrontendCompilerTester module(String sourceCode) {
-    return new FrontendCompilerTester(sourceCode);
+  public static FrontendCompileTester module(String sourceCode) {
+    return new FrontendCompileTester(sourceCode);
   }
 
-  private FrontendCompilerTester(String sourceCode) {
+  private FrontendCompileTester(String sourceCode) {
     this.sourceCode = sourceCode;
   }
 
-  public FrontendCompilerTester withImported(String imported) {
+  public FrontendCompileTester withImported(String imported) {
     this.importedSourceCode = imported;
     return this;
   }
 
-  public FrontendCompilerTester loadsWithSuccess() {
+  public FrontendCompileTester loadsWithSuccess() {
     moduleS = loadModule();
     assertWithMessage(messageWithSourceCode()).that(moduleS.logs()).isEmpty();
     return this;
@@ -139,8 +141,9 @@ public class FrontendCompilerTester {
       }
     });
     writeModuleFilesToBuckets(buckets);
-    var moduleS =
-        frontendCompilationPlan(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH));
+    var moduleS = Plan.task1(
+        FrontendCompile.class,
+        promise(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH)));
     var module = injector.getInstance(PlanExecutor.class).evaluate(moduleS);
     return Try.of(module.getOr(null), memoryReporter.logs());
   }

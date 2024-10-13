@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.type.STypes.INT;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.returnIntSFunc;

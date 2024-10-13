@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;

@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

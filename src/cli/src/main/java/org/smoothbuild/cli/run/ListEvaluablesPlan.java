@@ -1,10 +1,10 @@
 package org.smoothbuild.cli.run;
 
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.plan.Plan.apply1;
-import static org.smoothbuild.compilerfrontend.FrontendCompilationPlan.frontendCompilationPlan;
 
 import org.smoothbuild.cli.layout.BucketIds;
 import org.smoothbuild.cli.layout.Layout;
@@ -12,6 +12,7 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.SourceLocation;
@@ -21,7 +22,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 
 public class ListEvaluablesPlan {
   public static Plan<Void> listEvaluablesPlan() {
-    var scopeS = frontendCompilationPlan(Layout.MODULES);
+    var scopeS = Plan.task1(FrontendCompile.class, promise(Layout.MODULES));
     return apply1(PrintEvaluables.class, scopeS);
   }
 

@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.err;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompilerTester.module;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.err;
+import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
