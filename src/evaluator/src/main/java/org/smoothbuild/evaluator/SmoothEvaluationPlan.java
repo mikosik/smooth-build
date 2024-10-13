@@ -1,11 +1,11 @@
 package org.smoothbuild.evaluator;
 
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.common.plan.Plan.apply2;
 import static org.smoothbuild.common.plan.Plan.applyMaybeFunction;
 import static org.smoothbuild.common.plan.Plan.evaluate;
 import static org.smoothbuild.common.plan.Plan.value;
-import static org.smoothbuild.compilerfrontend.FrontendCompilationPlan.frontendCompilationPlan;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
 import org.smoothbuild.common.bucket.base.FullPath;
@@ -16,6 +16,7 @@ import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
+import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.compile.FindValues;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
@@ -28,7 +29,7 @@ public class SmoothEvaluationPlan {
 
   private static Plan<CompiledExprs> fullCompilationPlan(
       List<FullPath> modules, List<String> names) {
-    Plan<SModule> moduleS = frontendCompilationPlan(modules);
+    Plan<SModule> moduleS = Plan.task1(FrontendCompile.class, promise(modules));
     return evaluate(apply2(InflatePlan.class, moduleS, value(names)));
   }
 

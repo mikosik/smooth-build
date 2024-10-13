@@ -1,19 +1,20 @@
 package org.smoothbuild.compilerfrontend;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
-import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.common.plan.Plan.apply2;
-import static org.smoothbuild.common.plan.Plan.evaluate;
-import static org.smoothbuild.common.plan.Plan.value;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.Plan;
-import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
+import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.compilerfrontend.compile.ConvertPs;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
@@ -29,30 +30,35 @@ import org.smoothbuild.compilerfrontend.compile.TranslateAp;
 import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
-public class FrontendCompilationPlan {
-  public static Plan<SModule> frontendCompilationPlan(List<FullPath> modules) {
-    var loadingPlan = Plan.task0(LoadInternalModuleMembers.class);
-    for (var fullPath : modules) {
-      loadingPlan = evaluate(apply2(InflatePlan.class, loadingPlan, value(fullPath)));
-    }
-    return loadingPlan;
+public class FrontendCompile implements Task1<SModule, List<FullPath>> {
+  private final TaskExecutor taskExecutor;
+
+  @Inject
+  public FrontendCompile(TaskExecutor taskExecutor) {
+    this.taskExecutor = taskExecutor;
   }
 
-  public static class InflatePlan implements TryFunction2<SModule, FullPath, Plan<SModule>> {
+  @Override
+  public Output<SModule> execute(List<FullPath> modules) {
+    var module = taskExecutor.submit(LoadInternalModuleMembers.class);
+    for (var fullPath : modules) {
+      module = taskExecutor.submit(ScheduleModuleCompilation.class, module, promise(fullPath));
+    }
+    var label = label(COMPILE_PREFIX, "scheduleFrontendCompilation");
+    var report = report(label, new Trace(), EXECUTION, list());
+    return schedulingOutput(module, report);
+  }
+
+  public static class ScheduleModuleCompilation implements Task2<SModule, SModule, FullPath> {
     private final TaskExecutor taskExecutor;
 
     @Inject
-    public InflatePlan(TaskExecutor taskExecutor) {
+    public ScheduleModuleCompilation(TaskExecutor taskExecutor) {
       this.taskExecutor = taskExecutor;
     }
 
     @Override
-    public Label label() {
-      return Label.label(COMPILE_PREFIX, "inflateFrontendCompilationPlan");
-    }
-
-    @Override
-    public Try<Plan<SModule>> apply(SModule importedModule, FullPath fullPath) {
+    public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
       var environment = promise(importedModule.membersAndImported());
       var path = promise(fullPath);
       var fileContent = taskExecutor.submit(ReadFileContent.class, path);
@@ -67,8 +73,10 @@ public class FrontendCompilationPlan {
           taskExecutor.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
       var sorted = taskExecutor.submit(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = taskExecutor.submit(InferTypes.class, sorted, environment);
-      var moduleS = Plan.task2(ConvertPs.class, typesInferred, environment);
-      return success(moduleS);
+      var moduleS = taskExecutor.submit(ConvertPs.class, typesInferred, environment);
+      var label = label(COMPILE_PREFIX, "module");
+      var report = report(label, new Trace(), EXECUTION, list());
+      return schedulingOutput(moduleS, report);
     }
   }
 }
