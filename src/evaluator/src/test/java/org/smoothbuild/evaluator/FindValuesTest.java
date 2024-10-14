@@ -5,7 +5,6 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.log.base.Try.success;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
@@ -26,10 +25,10 @@ public class FindValuesTest {
     var valueS = sValue(schemaS, "myValue", sOrder(sIntType()));
     var scopeS = new SScope(immutableBindings(), immutableBindings(map(valueS.name(), valueS)));
 
-    var exprs = new FindValues().apply(scopeS, list(valueS.name()));
+    var exprs = new FindValues().execute(scopeS, list(valueS.name()));
 
     var referenceS = sReference(schemaS, "myValue", commandLineLocation());
-    assertThat(exprs).isEqualTo(success(list(sInstantiate(referenceS))));
+    assertThat(exprs.result().get()).isEqualTo(list(sInstantiate(referenceS)));
   }
 
   @Test
@@ -37,9 +36,9 @@ public class FindValuesTest {
     var value = sValue(sSchema(sArrayType(varA())), "myValue", sOrder(varA()));
     var scopeS = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
 
-    var exprs = new FindValues().apply(scopeS, list(value.name()));
+    var exprs = new FindValues().execute(scopeS, list(value.name()));
 
-    assertThat(exprs.logs())
+    assertThat(exprs.report().logs())
         .containsExactly(error("`myValue` cannot be calculated as it is a polymorphic value."));
   }
 }

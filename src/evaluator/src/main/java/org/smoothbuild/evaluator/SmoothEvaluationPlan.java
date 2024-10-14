@@ -41,10 +41,10 @@ public class SmoothEvaluationPlan {
 
     @Override
     public Try<Plan<CompiledExprs>> apply(SModule sModule, List<String> valueNames) {
-      var scopeS = value(sModule.membersAndImported());
-      var evaluables = value(sModule.membersAndImported().evaluables());
+      var scopeS = sModule.membersAndImported();
+      var evaluables = value(scopeS.evaluables());
 
-      var findingPlan = apply2(FindValues.class, scopeS, value(valueNames));
+      var findingPlan = Plan.task2(FindValues.class, promise(scopeS), promise(valueNames));
       var backendCompilationPlan = apply2(BackendCompile.class, findingPlan, evaluables);
       return success(backendCompilationPlan);
     }
