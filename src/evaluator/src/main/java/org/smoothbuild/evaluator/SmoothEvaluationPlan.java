@@ -8,12 +8,14 @@ import static org.smoothbuild.common.plan.Plan.evaluate;
 import static org.smoothbuild.common.plan.Plan.value;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
+import jakarta.inject.Inject;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.plan.TryFunction2;
+import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
@@ -34,6 +36,13 @@ public class SmoothEvaluationPlan {
 
   public static class InflatePlan
       implements TryFunction2<SModule, List<String>, Plan<CompiledExprs>> {
+    private final TaskExecutor taskExecutor;
+
+    @Inject
+    public InflatePlan(TaskExecutor taskExecutor) {
+      this.taskExecutor = taskExecutor;
+    }
+
     @Override
     public Label label() {
       return EVALUATE_LABEL.append("scheduleBackendCompile");
@@ -42,10 +51,10 @@ public class SmoothEvaluationPlan {
     @Override
     public Try<Plan<CompiledExprs>> apply(SModule sModule, List<String> valueNames) {
       var scopeS = sModule.membersAndImported();
-      var evaluables = value(scopeS.evaluables());
+      var evaluables = scopeS.evaluables();
 
-      var findingPlan = Plan.task2(FindValues.class, promise(scopeS), promise(valueNames));
-      var backendCompilationPlan = apply2(BackendCompile.class, findingPlan, evaluables);
+      var values = taskExecutor.submit(FindValues.class, promise(scopeS), promise(valueNames));
+      var backendCompilationPlan = Plan.task2(BackendCompile.class, values, promise(evaluables));
       return success(backendCompilationPlan);
     }
   }

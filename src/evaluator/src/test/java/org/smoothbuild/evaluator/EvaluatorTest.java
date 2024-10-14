@@ -10,9 +10,8 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.plan.Plan.apply2;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.plan.Plan.applyMaybeFunction;
-import static org.smoothbuild.common.plan.Plan.value;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
@@ -49,6 +48,7 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.plan.PlanExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.BackendCompile;
@@ -331,9 +331,9 @@ public class EvaluatorTest extends TestingVm {
         bind(Reporter.class).toInstance(reporter);
       }
     });
-    var compilationResult = apply2(backendCompile, value(exprs), value(evaluables));
+    var compilationResult = Plan.task2(backendCompile, promise(exprs), promise(evaluables));
     var evaluationPlan = applyMaybeFunction(BEvaluatorFacade.class, compilationResult);
-    return new PlanExecutor(injector, reporter).evaluate(evaluationPlan);
+    return injector.getInstance(PlanExecutor.class).evaluate(evaluationPlan);
   }
 
   public static BInt returnInt(NativeApi nativeApi, BTuple args) throws BytecodeException {
