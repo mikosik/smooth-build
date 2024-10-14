@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 
@@ -36,7 +36,7 @@ public class InitializeScopes extends PModuleVisitor implements Task1<PModule, P
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     initializeScopes(pModule, logger);
-    var label = label(COMPILE_PREFIX, "initializeScopes");
+    var label = COMPILE_FRONT_LABEL.append("initializeScopes");
     return output(pModule, label, logger.toList());
   }
 

@@ -6,7 +6,7 @@ import static org.smoothbuild.common.plan.Plan.apply2;
 import static org.smoothbuild.common.plan.Plan.applyMaybeFunction;
 import static org.smoothbuild.common.plan.Plan.evaluate;
 import static org.smoothbuild.common.plan.Plan.value;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
+import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
@@ -36,7 +36,7 @@ public class SmoothEvaluationPlan {
       implements TryFunction2<SModule, List<String>, Plan<CompiledExprs>> {
     @Override
     public Label label() {
-      return Label.label(COMPILE_PREFIX, "inflateBackendCompilationPlan");
+      return EVALUATE_LABEL.append("scheduleBackendCompile");
     }
 
     @Override

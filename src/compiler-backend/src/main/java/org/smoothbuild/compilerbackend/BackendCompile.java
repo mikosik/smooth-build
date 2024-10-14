@@ -3,7 +3,7 @@ package org.smoothbuild.compilerbackend;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Try.failure;
 import static org.smoothbuild.common.log.base.Try.success;
-import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILE_PREFIX;
+import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILE_BACK_LABEL;
 import static org.smoothbuild.compilerbackend.CompiledExprs.compilationResult;
 
 import jakarta.inject.Inject;
@@ -26,7 +26,7 @@ public class BackendCompile
 
   @Override
   public Label label() {
-    return Label.label(COMPILE_PREFIX, "generateBytecode");
+    return COMPILE_BACK_LABEL.append("generateBytecode");
   }
 
   @Override
