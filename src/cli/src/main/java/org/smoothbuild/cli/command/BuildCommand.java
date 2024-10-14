@@ -13,6 +13,7 @@ import org.smoothbuild.cli.run.RemoveArtifacts;
 import org.smoothbuild.cli.run.SaveArtifacts;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.plan.Plan;
+import org.smoothbuild.common.task.TaskExecutor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Parameters;
@@ -77,11 +78,12 @@ public class BuildCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var removedArtifacts = apply0(RemoveArtifacts.class);
-    var evaluationPlan = smoothEvaluationPlan(Layout.MODULES, listOfAll(values));
+    var injector = CreateInjector.createInjector(projectDir, out(), logLevel, showTasks);
+    var taskExecutor = injector.getInstance(TaskExecutor.class);
+    var evaluationPlan = smoothEvaluationPlan(taskExecutor, Layout.MODULES, listOfAll(values));
     var artifactsPlan = chain(removedArtifacts, evaluationPlan);
     var plan = Plan.apply1(SaveArtifacts.class, artifactsPlan);
 
-    var injector = CreateInjector.createInjector(projectDir, out(), logLevel, showTasks);
     return injector.getInstance(CommandExecutor.class).execute(plan);
   }
 }
