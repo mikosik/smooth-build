@@ -19,8 +19,8 @@ public class CommandExecutor {
     this.statusPrinter = statusPrinter;
   }
 
-  public Integer execute(Plan<Void> plan) {
-    Maybe<Void> result = planExecutorWrapper.evaluate(plan);
+  public <T> Integer execute(Plan<T> plan) {
+    Maybe<T> result = planExecutorWrapper.evaluate(plan);
     statusPrinter.printSummary();
     return result.map(v -> EXIT_CODE_SUCCESS).getOr(EXIT_CODE_ERROR);
   }
