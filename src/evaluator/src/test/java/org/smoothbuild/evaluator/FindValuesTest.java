@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
