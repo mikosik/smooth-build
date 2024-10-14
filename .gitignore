@@ -19,6 +19,7 @@
 .idea/jarRepositories.xml
 .idea/modules.xml
 .idea/*.iml
+.idea/libraries
 .idea/modules
 .idea/gradle.xml
 .idea/misc.xml
