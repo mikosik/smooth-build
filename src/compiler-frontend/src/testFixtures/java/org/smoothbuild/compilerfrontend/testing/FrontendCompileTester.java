@@ -28,8 +28,7 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.plan.Plan;
-import org.smoothbuild.common.plan.PlanExecutor;
+import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
@@ -141,11 +140,15 @@ public class FrontendCompileTester {
       }
     });
     writeModuleFilesToBuckets(buckets);
-    var moduleS = Plan.task1(
-        FrontendCompile.class,
-        promise(list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH)));
-    var module = injector.getInstance(PlanExecutor.class).evaluate(moduleS);
-    return Try.of(module.getOr(null), memoryReporter.logs());
+    var taskExecutor = injector.getInstance(TaskExecutor.class);
+    var paths = list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH);
+    var module = taskExecutor.submit(FrontendCompile.class, promise(paths));
+    try {
+      taskExecutor.waitUntilIdle();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return Try.of(module.toMaybe().getOr(null), memoryReporter.logs());
   }
 
   private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {
