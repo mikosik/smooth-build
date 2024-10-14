@@ -17,7 +17,6 @@ import org.smoothbuild.common.plan.TryFunction2;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
-import org.smoothbuild.compilerfrontend.compile.FindValues;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
 public class SmoothEvaluationPlan {
