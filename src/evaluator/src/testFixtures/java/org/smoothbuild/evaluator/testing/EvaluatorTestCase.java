@@ -41,6 +41,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.plan.PlanExecutorWrapper;
+import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -112,7 +113,8 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   protected void evaluate(String... names) {
-    var evaluated = smoothEvaluationPlan(modules, listOfAll(asList(names)));
+    var taskExecutor = injector.getInstance(TaskExecutor.class);
+    var evaluated = smoothEvaluationPlan(taskExecutor, modules, listOfAll(asList(names)));
     this.evaluatedExprs = injector.getInstance(PlanExecutorWrapper.class).evaluate(evaluated);
   }
 
