@@ -1,10 +1,10 @@
 package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.run.ListEvaluablesPlan.listEvaluablesPlan;
-
 import java.nio.file.Path;
 import org.smoothbuild.cli.run.CreateInjector;
+import org.smoothbuild.cli.run.ListEvaluables;
 import org.smoothbuild.common.plan.Plan;
+import org.smoothbuild.common.tuple.Tuple0;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -16,7 +16,7 @@ public class ListCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = CreateInjector.createInjector(projectDir, out(), logLevel);
-    Plan<Void> plan = listEvaluablesPlan();
+    Plan<Tuple0> plan = Plan.task0(ListEvaluables.class);
     return injector.getInstance(CommandExecutor.class).execute(plan);
   }
 }
