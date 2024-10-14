@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
@@ -46,7 +46,7 @@ public class InferTypes implements Task2<PModule, PModule, SScope> {
     var logger = new Logger();
     var typeTeller = new TypeTeller(environment, pModule.scope());
     new Worker(typeTeller, logger).visitModule(pModule);
-    var label = label(COMPILE_PREFIX, "inferTypes");
+    var label = COMPILE_FRONT_LABEL.append("inferTypes");
     return output(pModule, label, logger.toList());
   }
 

@@ -4,9 +4,8 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
 
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
@@ -21,7 +20,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypes;
 public class LoadInternalModuleMembers implements Task0<SModule> {
   @Override
   public Output<SModule> execute() {
-    var label = Label.label(COMPILE_PREFIX, "loadInternalModule");
+    var label = COMPILE_FRONT_LABEL.append("loadInternalModule");
     var logger = new Logger();
     var types =
         immutableBindings(STypes.baseTypes().toMap(SType::name, t -> baseTypeDefinitions(t)));

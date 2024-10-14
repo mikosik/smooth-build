@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_PREFIX;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class ReadFileContent implements Task1<String, FullPath> {
 
   @Override
   public Output<String> execute(FullPath fullPath) {
-    var label = label(COMPILE_PREFIX, "readFileContent");
+    var label = COMPILE_FRONT_LABEL.append("readFileContent");
     try {
       var content = fileResolver.contentOf(fullPath, CHARSET);
       return output(content, label, list());
