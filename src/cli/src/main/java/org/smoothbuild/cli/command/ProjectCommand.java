@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import org.smoothbuild.cli.layout.Layout;
-import org.smoothbuild.cli.report.PrintWriterReporter;
 
 public abstract class ProjectCommand extends LoggingCommand implements Callable<Integer> {
   @Override
@@ -36,7 +35,7 @@ public abstract class ProjectCommand extends LoggingCommand implements Callable<
   }
 
   private void printError(String message) {
-    PrintWriterReporter.printErrorToWriter(out(), message);
+    out().println("smooth: error: " + message);
   }
 
   protected abstract Integer executeCommand(Path projectDir);

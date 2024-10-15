@@ -1,11 +1,9 @@
-package org.smoothbuild.cli.report;
+package org.smoothbuild.common.log.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.cli.report.PrintWriterReporter.formatLog;
-import static org.smoothbuild.cli.report.PrintWriterReporter.formatReport;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -13,6 +11,8 @@ import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.PrintWriterReporter.formatLog;
+import static org.smoothbuild.common.log.report.PrintWriterReporter.formatReport;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 
@@ -23,11 +23,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.Trace;
-import org.smoothbuild.common.log.report.TraceLine;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class PrintWriterReporterTest extends TestingVm {
+public class PrintWriterReporterTest {
   @Test
   void submit_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);

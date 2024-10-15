@@ -9,6 +9,7 @@ import org.smoothbuild.common.log.report.CountingReporter;
 import org.smoothbuild.common.log.report.FilteringReporter;
 import org.smoothbuild.common.log.report.LogCounters;
 import org.smoothbuild.common.log.report.LogFilteringReporter;
+import org.smoothbuild.common.log.report.PrintWriterReporter;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 
