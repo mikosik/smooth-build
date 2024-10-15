@@ -20,27 +20,27 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 
 public class BEvaluator {
-  private final Provider<Vm> evaluatorProvider;
+  private final Provider<Vm> vmProvider;
   private final Reporter reporter;
 
   @Inject
-  public BEvaluator(Provider<Vm> evaluatorProvider, Reporter reporter) {
-    this.evaluatorProvider = evaluatorProvider;
+  public BEvaluator(Provider<Vm> vmProvider, Reporter reporter) {
+    this.vmProvider = vmProvider;
     this.reporter = reporter;
   }
 
   public Maybe<List<BValue>> evaluate(List<BExpr> exprs) {
-    var evaluator = evaluatorProvider.get();
-    var evaluationResults = exprs.map(evaluator::evaluate);
+    var vm = vmProvider.get();
+    var results = exprs.map(vm::evaluate);
     try {
-      evaluator.awaitTermination();
+      vm.awaitTermination();
     } catch (InterruptedException e) {
       var fatal = fatal("Waiting for evaluation has been interrupted:", e);
       var report = report(VM_SCHEDULE, new Trace(), EXECUTION, list(fatal));
       reporter.submit(report);
       return none();
     }
-    List<Maybe<BValue>> map = evaluationResults.map(Promise::toMaybe);
+    List<Maybe<BValue>> map = results.map(Promise::toMaybe);
     return pullUpMaybe(map);
   }
 }
