@@ -14,13 +14,13 @@ import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.layout.BucketIds;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.cli.match.ReportMatchers;
-import org.smoothbuild.cli.report.ReportWiring;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.ReportWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
