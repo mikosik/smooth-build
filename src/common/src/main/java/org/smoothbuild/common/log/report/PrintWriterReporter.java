@@ -24,6 +24,9 @@ public class PrintWriterReporter implements Reporter {
   @Override
   public void submit(Report report) {
     printWriter.println(formatReport(report));
+    // We need to flush here. Otherwise, Junit test run from intellij won't show any output
+    // when it fails. That's because junit doesn't flush System.out.
+    printWriter.flush();
   }
 
   static String formatReport(Report report) {
