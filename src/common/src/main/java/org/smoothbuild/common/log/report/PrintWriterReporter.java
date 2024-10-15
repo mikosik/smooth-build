@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.report;
+package org.smoothbuild.common.log.report;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.common.base.Strings.indent;
@@ -8,8 +8,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.PrintWriter;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.log.report.Reporter;
 
 /**
  * This class is thread-safe.
@@ -21,10 +19,6 @@ public class PrintWriterReporter implements Reporter {
   @Inject
   public PrintWriterReporter(PrintWriter printWriter) {
     this.printWriter = printWriter;
-  }
-
-  public static void printErrorToWriter(PrintWriter printWriter, String message) {
-    printWriter.println("smooth: error: " + message);
   }
 
   @Override
