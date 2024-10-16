@@ -72,7 +72,6 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
         """
         :evaluate:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
-        FAILED: 1 error
         """);
   }
 

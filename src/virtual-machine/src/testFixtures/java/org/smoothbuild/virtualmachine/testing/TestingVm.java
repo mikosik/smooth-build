@@ -8,7 +8,6 @@ import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Guice;
-import jakarta.inject.Provider;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
@@ -39,7 +38,6 @@ import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
-import org.smoothbuild.virtualmachine.evaluate.BEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
@@ -66,26 +64,6 @@ public class TestingVm extends TestingBytecode {
   private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
 
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
-
-  public BEvaluator bEvaluator(Reporter reporter) {
-    return bEvaluator(() -> vm(taskExecutor(reporter)), reporter);
-  }
-
-  public BEvaluator bEvaluator() {
-    return bEvaluator(() -> vm());
-  }
-
-  public BEvaluator bEvaluator(Provider<Vm> vmProvider) {
-    return bEvaluator(vmProvider, reporter());
-  }
-
-  public BEvaluator bEvaluator(Provider<Vm> vmProvider, Reporter reporter) {
-    return new BEvaluator(vmProvider, reporter);
-  }
-
-  public BEvaluator bEvaluator(NativeMethodLoader nativeMethodLoader) {
-    return bEvaluator(() -> vm(nativeMethodLoader));
-  }
 
   public Vm vm() {
     return vm(taskExecutor());

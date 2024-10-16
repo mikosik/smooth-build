@@ -37,6 +37,7 @@ import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
@@ -114,6 +115,17 @@ public class EvaluatorTestCase extends TestingBytecode {
 
   protected void evaluate(String... names) {
     var taskExecutor = injector.getInstance(TaskExecutor.class);
+
+    // TODO temporary workaround: PlanExecutorWrapper would normally schedule Initializer
+    // and wait for it to finish however call to `smoothEvaluationPlan` also schedules tasks
+    // which require Initializer to be run which causes race condition
+    taskExecutor.submit(injector.getInstance(Initializer.class));
+    try {
+      taskExecutor.waitUntilIdle();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+
     var evaluated = smoothEvaluationPlan(taskExecutor, modules, listOfAll(asList(names)));
     this.evaluatedExprs = injector.getInstance(PlanExecutorWrapper.class).evaluate(evaluated);
   }

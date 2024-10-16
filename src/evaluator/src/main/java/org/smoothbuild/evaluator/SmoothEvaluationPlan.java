@@ -4,7 +4,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.plan.Plan.applyMaybeFunction;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
@@ -25,9 +24,8 @@ public class SmoothEvaluationPlan {
   public static Plan<EvaluatedExprs> smoothEvaluationPlan(
       TaskExecutor taskExecutor, List<FullPath> modules, List<String> names) {
     var moduleS = taskExecutor.submit(FrontendCompile.class, promise(modules));
-    Plan<CompiledExprs> compilationPlan =
-        Plan.task2(ScheduleBackendCompile.class, moduleS, promise(names));
-    return applyMaybeFunction(BEvaluatorFacade.class, compilationPlan);
+    var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, promise(names));
+    return Plan.task1(BEvaluatorFacade.class, compiledExprs);
   }
 
   public static class ScheduleBackendCompile
