@@ -16,9 +16,9 @@ import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 public class VmWiring extends AbstractModule {
   @Override
   protected void configure() {
-    Multibinder<Initializable> uriBinder = newSetBinder(binder(), Initializable.class);
-    uriBinder.addBinding().to(HashedDb.class);
-    uriBinder.addBinding().to(ComputationCache.class);
+    Multibinder<Initializable> setBinder = newSetBinder(binder(), Initializable.class);
+    setBinder.addBinding().to(HashedDb.class);
+    setBinder.addBinding().to(ComputationCache.class);
   }
 
   @Provides
