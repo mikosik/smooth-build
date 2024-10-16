@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.evaluate;
+package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -30,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
@@ -50,10 +50,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
-import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
-import org.smoothbuild.virtualmachine.evaluate.execute.Job;
-import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.TestingVm;
@@ -74,7 +70,7 @@ public class BEvaluatorTest extends TestingVm {
         var testName = "learning_test";
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
 
-        evaluate(bEvaluator(nativeMethodLoader), invoke);
+        evaluate(vm(nativeMethodLoader), invoke);
 
         assertThat(MEMOIZED).contains(testName);
       }
@@ -87,7 +83,7 @@ public class BEvaluatorTest extends TestingVm {
         var lambda = bLambda(list(bStringType()), bInt(7));
         var call = bCall(lambda, invoke);
 
-        evaluate(bEvaluator(nativeMethodLoader), call);
+        evaluate(vm(nativeMethodLoader), call);
 
         assertThat(MEMOIZED).doesNotContain(testName);
       }
@@ -103,7 +99,7 @@ public class BEvaluatorTest extends TestingVm {
             bLambda(list(bStringType()), bCall(innerLambda, bReference(bStringType(), 0)));
         var call = bCall(outerLambda, invoke);
 
-        evaluate(bEvaluator(nativeMethodLoader), call);
+        evaluate(vm(nativeMethodLoader), call);
 
         assertThat(MEMOIZED).doesNotContain(testName);
       }
@@ -117,7 +113,7 @@ public class BEvaluatorTest extends TestingVm {
         var lambda = bLambda(list(type), bCombine(bReference(type, 0), bReference(type, 0)));
         var call = bCall(lambda, invoke);
 
-        evaluate(bEvaluator(nativeMethodLoader), call);
+        evaluate(vm(nativeMethodLoader), call);
 
         assertThat(MEMOIZED.stream().filter(x -> x.equals(testName)).toList()).hasSize(1);
       }
@@ -132,7 +128,7 @@ public class BEvaluatorTest extends TestingVm {
         var call = bCall(lambda);
 
         var countingVm = countingVm();
-        assertThat(evaluate(bEvaluator(() -> countingVm), call)).isEqualTo(bArray(bInt(7)));
+        assertThat(evaluate(countingVm, call).get()).isEqualTo(bArray(bInt(7)));
 
         assertThat(countingVm.counters().get(BInt.class).intValue()).isEqualTo(1);
       }
@@ -144,7 +140,7 @@ public class BEvaluatorTest extends TestingVm {
         var call = bCall(lambda, bOrder(bBool()));
 
         var countingVm = countingVm();
-        assertThat(evaluate(bEvaluator(() -> countingVm), call)).isEqualTo(bInt(7));
+        assertThat(evaluate(countingVm, call).get()).isEqualTo(bInt(7));
 
         assertThat(countingVm.counters().get(BBool.class)).isNull();
       }
@@ -283,7 +279,7 @@ public class BEvaluatorTest extends TestingVm {
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
             .thenReturn(right(
                 BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-        assertThat(evaluate(bEvaluator(nativeMethodLoader), invoke)).isEqualTo(bInt(33));
+        assertThat(evaluate(vm(nativeMethodLoader), invoke).get()).isEqualTo(bInt(33));
       }
 
       @Test
@@ -319,7 +315,7 @@ public class BEvaluatorTest extends TestingVm {
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var reporter = mock(Reporter.class);
-          evaluateWithFailure(bEvaluator(reporter), pick);
+          evaluate(vm(taskExecutor(reporter)), pick);
           verify(reporter).submit(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
@@ -331,7 +327,7 @@ public class BEvaluatorTest extends TestingVm {
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var reporter = mock(Reporter.class);
-          evaluateWithFailure(bEvaluator(reporter), pick);
+          evaluate(vm(taskExecutor(reporter)), pick);
           verify(reporter).submit(argThat(this::isResultWithNegativeIndexError));
         }
 
@@ -371,7 +367,7 @@ public class BEvaluatorTest extends TestingVm {
         void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
-          evaluateWithFailure(bEvaluator(), call);
+          evaluate(vm(), call);
           var reports = reporter().reports();
           assertReportsContains(
               reports,
@@ -387,7 +383,7 @@ public class BEvaluatorTest extends TestingVm {
                 throws Exception {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
           var call = bCall(lambda, bBlob());
-          evaluateWithFailure(bEvaluator(), call);
+          evaluate(vm(), call);
           assertReportsContains(
               reporter().reports(),
               FATAL,
@@ -411,7 +407,7 @@ public class BEvaluatorTest extends TestingVm {
         var reporter = mock(Reporter.class);
         var vm = vm(reporter, 4);
         var expr = throwExceptionCall();
-        evaluateWithFailure(new BEvaluator(() -> vm, reporter), expr);
+        evaluate(vm, expr);
         verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
@@ -445,7 +441,7 @@ public class BEvaluatorTest extends TestingVm {
         };
         var vm = vm(stepEvaluator);
 
-        evaluateWithFailure(bEvaluator(() -> vm), expr);
+        evaluate(vm, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
             .contains(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
@@ -527,7 +523,7 @@ public class BEvaluatorTest extends TestingVm {
     private void assertTaskReport(
         BExpr expr, String label, BTrace trace, ResultSource resultSource) {
       var reporter = mock(Reporter.class);
-      evaluate(bEvaluator(reporter), expr);
+      evaluate(vm(taskExecutor(reporter)), expr);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
       verify(reporter).submit(taskReport);
     }
@@ -563,8 +559,8 @@ public class BEvaluatorTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1"));
 
       var reporter = reporter();
-      var vm = new BEvaluator(() -> vm(reporter, 4), new MemoryReporter());
-      assertThat(evaluate(vm, bExpr))
+      var vm = vm(reporter, 4);
+      assertThat(evaluate(vm, bExpr).get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
@@ -588,8 +584,9 @@ public class BEvaluatorTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
           invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new BEvaluator(() -> vm(reporter(), 2), new MemoryReporter());
-      assertThat(evaluate(vm, expr)).isEqualTo(bArray(bString("1"), bString("1"), bString("0")));
+      var vm = vm(reporter(), 2);
+      var expected = bArray(bString("1"), bString("1"), bString("0"));
+      assertThat(evaluate(vm, expr).get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
@@ -636,22 +633,17 @@ public class BEvaluatorTest extends TestingVm {
   }
 
   private BExpr evaluate(BExpr expr) {
-    return evaluate(bEvaluator(), expr);
+    return evaluate(vm(), expr).get();
   }
 
-  private BValue evaluate(BEvaluator bEvaluator, BExpr expr) {
-    var maybeResult = bEvaluator.evaluate(list(expr));
-    assertWithMessage(" ==== Console logs ==== \n" + reporter() + "\n ==========\n")
-        .that(maybeResult.isSome())
-        .isTrue();
-    var results = maybeResult.get();
-    assertThat(results.size()).isEqualTo(1);
-    return results.get(0);
-  }
-
-  private void evaluateWithFailure(BEvaluator bEvaluator, BExpr expr) {
-    var results = bEvaluator.evaluate(list(expr));
-    assertThat(results).isEqualTo(none());
+  private Promise<BValue> evaluate(Vm vm, BExpr expr) {
+    var result = vm.evaluate(expr);
+    try {
+      vm.awaitTermination();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return result;
   }
 
   public static BInt returnIntParam(NativeApi nativeApi, BTuple args) throws Exception {
