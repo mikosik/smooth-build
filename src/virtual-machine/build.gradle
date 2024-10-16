@@ -11,7 +11,7 @@ dependencies {
 
     testFixturesApi project(':src:common')
     testFixturesApi project(':src:virtual-machine')
-    testFixturesApi testFixtures(project(':src:compiler-frontend'))
+    testFixturesApi testFixtures(project(':src:common'))
     testFixturesApi libs.guava
     testFixturesApi libs.guice
     testFixturesApi libs.junit.jupiter.api
