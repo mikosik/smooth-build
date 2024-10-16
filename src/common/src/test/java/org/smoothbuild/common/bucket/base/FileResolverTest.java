@@ -10,8 +10,11 @@ import static org.smoothbuild.common.bucket.base.PathState.DIR;
 import static org.smoothbuild.common.bucket.base.PathState.FILE;
 import static org.smoothbuild.common.bucket.base.PathState.NOTHING;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.testing.TestingBucket.createFile;
+import static org.smoothbuild.common.testing.TestingBucket.readFile;
 
 import java.io.IOException;
+import okio.ByteString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,9 +36,24 @@ public class FileResolverTest {
     void contentOf() throws IOException {
       var path = path("file.txt");
       var content = "some string";
-      createFile(path, content);
+      createFile(bucket, path, content);
       assertThat(fileResolver.contentOf(fullPath(bucketId("project"), path), UTF_8))
           .isEqualTo(content);
+    }
+  }
+
+  @Nested
+  class _sink {
+    @Test
+    void sink_writes_to_file() throws IOException {
+      var path = path("file.txt");
+      var content = "some string";
+      var fullPath = fullPath(bucketId("project"), path);
+      try (var sink = buffer(fileResolver.sink(fullPath))) {
+        sink.writeUtf8(content);
+      }
+
+      assertThat(readFile(bucket, path)).isEqualTo(ByteString.encodeUtf8(content));
     }
   }
 
@@ -44,7 +62,7 @@ public class FileResolverTest {
     @Test
     void of_file() throws IOException {
       var path = path("file.txt");
-      createFile(path, "some string");
+      createFile(bucket, path, "some string");
       assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(FILE);
     }
 
@@ -59,12 +77,6 @@ public class FileResolverTest {
     void of_nothing() {
       var path = path("file.txt");
       assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(NOTHING);
-    }
-  }
-
-  private void createFile(Path path, String string) throws IOException {
-    try (var bufferedSink = buffer(bucket.sink(path))) {
-      bufferedSink.writeUtf8(string);
     }
   }
 }
