@@ -5,7 +5,6 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.synchronizedMemoryBucket;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Guice;
@@ -15,6 +14,8 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
+import org.smoothbuild.common.bucket.base.SynchronizedBucket;
+import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Output;
@@ -317,5 +318,9 @@ public class TestingVm extends TestingBytecode {
     if (containsFailure(output.report().logs())) {
       throw new RuntimeException(output.toString());
     }
+  }
+
+  private static SynchronizedBucket synchronizedMemoryBucket() {
+    return new SynchronizedBucket(new MemoryBucket());
   }
 }

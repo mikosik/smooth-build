@@ -26,8 +26,6 @@ import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.base.SynchronizedBucket;
-import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
@@ -842,10 +840,6 @@ public class TestingSExpression {
 
   public static FullPath projectPath(String path) {
     return new FullPath(PROJECT_BUCKET_ID, path(path));
-  }
-
-  public static SynchronizedBucket synchronizedMemoryBucket() {
-    return new SynchronizedBucket(new MemoryBucket());
   }
 
   private static String shortName(String fullName) {
