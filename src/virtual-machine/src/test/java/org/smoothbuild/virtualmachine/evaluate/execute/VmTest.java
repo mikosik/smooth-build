@@ -54,7 +54,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BEvaluatorTest extends TestingVm {
+public class VmTest extends TestingVm {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS =
       new ConcurrentHashMap<>();
@@ -277,8 +277,8 @@ public class BEvaluatorTest extends TestingVm {
         var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
-            .thenReturn(right(
-                BEvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
+            .thenReturn(
+                right(VmTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
         assertThat(evaluate(vm(nativeMethodLoader), invoke).get()).isEqualTo(bInt(33));
       }
 
@@ -654,8 +654,7 @@ public class BEvaluatorTest extends TestingVm {
       throws Exception {
     var nativeMethodLoader = mock(NativeMethodLoader.class);
     when(nativeMethodLoader.load(any()))
-        .thenReturn(
-            right(BEvaluatorTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
+        .thenReturn(right(VmTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
     return nativeMethodLoader;
   }
 
