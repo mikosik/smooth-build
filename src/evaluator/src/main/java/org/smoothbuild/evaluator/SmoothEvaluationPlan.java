@@ -25,7 +25,7 @@ public class SmoothEvaluationPlan {
       TaskExecutor taskExecutor, List<FullPath> modules, List<String> names) {
     var moduleS = taskExecutor.submit(FrontendCompile.class, promise(modules));
     var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, promise(names));
-    return Plan.task1(BEvaluatorFacade.class, compiledExprs);
+    return Plan.task1(VmFacade.class, compiledExprs);
   }
 
   public static class ScheduleBackendCompile

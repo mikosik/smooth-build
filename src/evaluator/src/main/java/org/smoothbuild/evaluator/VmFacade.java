@@ -26,12 +26,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 import org.smoothbuild.virtualmachine.wire.TaskReporter;
 
-public class BEvaluatorFacade implements Task1<EvaluatedExprs, CompiledExprs> {
+public class VmFacade implements Task1<EvaluatedExprs, CompiledExprs> {
   private final Injector injector;
   private final TaskExecutor taskExecutor;
 
   @Inject
-  public BEvaluatorFacade(Injector injector, TaskExecutor taskExecutor) {
+  public VmFacade(Injector injector, TaskExecutor taskExecutor) {
     this.injector = injector;
     this.taskExecutor = taskExecutor;
   }
