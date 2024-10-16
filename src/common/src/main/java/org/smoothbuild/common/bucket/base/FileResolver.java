@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import okio.Sink;
 import okio.Source;
 import org.smoothbuild.common.collect.Map;
 
@@ -29,6 +30,10 @@ public class FileResolver {
 
   public Source source(FullPath fullPath) throws IOException {
     return bucketFor(fullPath).source(fullPath.path());
+  }
+
+  public Sink sink(FullPath fullPath) throws IOException {
+    return bucketFor(fullPath).sink(fullPath.path());
   }
 
   public PathState pathState(FullPath fullPath) {
