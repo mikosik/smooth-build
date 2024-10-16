@@ -308,7 +308,7 @@ public class EvaluatorTest extends TestingVm {
     var initializer = taskExecutor.submit(injector.getInstance(Initializer.class));
     var compiledExprs = taskExecutor.submit(
         list(initializer), BackendCompile.class, promise(exprs), promise(evaluables));
-    var evaluatedExprs = taskExecutor.submit(BEvaluatorFacade.class, compiledExprs);
+    var evaluatedExprs = taskExecutor.submit(VmFacade.class, compiledExprs);
     try {
       taskExecutor.waitUntilIdle();
     } catch (InterruptedException e) {
