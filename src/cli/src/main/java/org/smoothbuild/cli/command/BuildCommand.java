@@ -77,7 +77,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var removedArtifacts = apply0(RemoveArtifacts.class);
+    var removedArtifacts = Plan.task0(RemoveArtifacts.class);
     var injector = CreateInjector.createInjector(projectDir, out(), logLevel, showTasks);
     var taskExecutor = injector.getInstance(TaskExecutor.class);
     var evaluationPlan = smoothEvaluationPlan(taskExecutor, Layout.MODULES, listOfAll(values));
