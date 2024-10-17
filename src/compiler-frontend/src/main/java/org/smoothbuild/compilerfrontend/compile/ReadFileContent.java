@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
