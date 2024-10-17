@@ -21,11 +21,12 @@ public class StatusPrinter {
     this.logCounters = logCounters;
   }
 
-  public void printSummary() {
+  public boolean printSummary() {
     var stats = counterDescriptions();
     var hasFailures = 0 < logCounters.get(ERROR) || 0 < logCounters.get(FATAL);
     var status = hasFailures ? "FAILED: " : "SUCCESS: ";
     printWriter.println(status + String.join(", ", stats));
+    return hasFailures;
   }
 
   private List<String> counterDescriptions() {

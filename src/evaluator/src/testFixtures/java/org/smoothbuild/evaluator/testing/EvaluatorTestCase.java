@@ -13,12 +13,12 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.evaluator.SmoothEvaluationPlan.smoothEvaluationPlan;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -41,11 +41,11 @@ import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.plan.PlanExecutorWrapper;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
+import org.smoothbuild.evaluator.ScheduleEvaluate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
@@ -115,19 +115,18 @@ public class EvaluatorTestCase extends TestingBytecode {
 
   protected void evaluate(String... names) {
     var taskExecutor = injector.getInstance(TaskExecutor.class);
-
-    // TODO temporary workaround: PlanExecutorWrapper would normally schedule Initializer
-    // and wait for it to finish however call to `smoothEvaluationPlan` also schedules tasks
-    // which require Initializer to be run which causes race condition
-    taskExecutor.submit(injector.getInstance(Initializer.class));
+    var initialize = taskExecutor.submit(injector.getInstance(Initializer.class));
+    var evaluated = taskExecutor.submit(
+        list(initialize),
+        ScheduleEvaluate.class,
+        promise(modules),
+        promise(listOfAll(asList(names))));
     try {
       taskExecutor.waitUntilIdle();
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-
-    var evaluated = smoothEvaluationPlan(taskExecutor, modules, listOfAll(asList(names)));
-    this.evaluatedExprs = injector.getInstance(PlanExecutorWrapper.class).evaluate(evaluated);
+    this.evaluatedExprs = evaluated.toMaybe();
   }
 
   protected void restartSmoothWithSameBuckets() {
