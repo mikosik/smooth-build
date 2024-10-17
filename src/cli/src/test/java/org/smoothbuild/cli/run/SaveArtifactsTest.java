@@ -6,9 +6,11 @@ import static org.smoothbuild.cli.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
-import static org.smoothbuild.common.log.base.Try.success;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingBucket.readFile;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
@@ -33,7 +35,9 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.base.Try;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -199,7 +203,7 @@ public class SaveArtifactsTest extends TestingVm {
     var path = path("dir1/file1");
     var valueB = bArray(bFileType(), bFile(path, content1), bFile(path, content2));
 
-    assertThat(saveArtifacts(typeS, valueB).logs())
+    assertThat(saveArtifacts(typeS, valueB).report().logs())
         .isEqualTo(
             list(
                 error(
@@ -216,10 +220,9 @@ public class SaveArtifactsTest extends TestingVm {
         instantiateS(sStringType(), "myValue2"),
         instantiateS(sStringType(), "myValue3"));
     List<BValue> bValues = list(bString(), bString(), bString());
-    var stringTry = saveArtifacts.apply(evaluatedExprs(sExprs, bValues));
-    assertThat(stringTry)
-        .isEqualTo(success(
-            null,
+    var result = saveArtifacts.execute(evaluatedExprs(sExprs, bValues));
+    assertThat(result.report().logs())
+        .isEqualTo(list(
             info("myValue1 -> '.smooth/artifacts/myValue1'"),
             info("myValue2 -> '.smooth/artifacts/myValue2'"),
             info("myValue3 -> '.smooth/artifacts/myValue3'")));
@@ -245,16 +248,16 @@ public class SaveArtifactsTest extends TestingVm {
       throws IOException {
     var result = saveArtifacts(sType, value);
 
-    assertThat(result)
-        .isEqualTo(
-            success(null, info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'")));
+    var label = label("artifacts", "save");
+    var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
+    assertThat(result.report()).isEqualTo(report(label, new Trace(), EXECUTION, logs));
     assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
-  private Try<Void> saveArtifacts(SType sType, BValue value) {
+  private Output<Tuple0> saveArtifacts(SType sType, BValue value) {
     var saveArtifacts = new SaveArtifacts(projectBucket());
     SExpr instantiateS = instantiateS(sType, "myValue");
-    return saveArtifacts.apply(evaluatedExprs(list(instantiateS), list(value)));
+    return saveArtifacts.execute(evaluatedExprs(list(instantiateS), list(value)));
   }
 
   private static ByteString byteStringFrom(String string) {

@@ -6,8 +6,9 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.log.base.Try.failure;
+import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
@@ -20,10 +21,10 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.plan.TryFunction1;
+import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Task1;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuples;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
@@ -37,7 +38,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.wire.Project;
 
-public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
+public class SaveArtifacts implements Task1<Tuple0, EvaluatedExprs> {
   static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 
@@ -47,16 +48,12 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
   }
 
   @Override
-  public Label label() {
-    return Label.label("artifacts", "save");
-  }
-
-  @Override
-  public Try<Void> apply(EvaluatedExprs evaluatedExprs) {
+  public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
+    var label = label("artifacts", "save");
     try {
       bucket.createDir(Layout.ARTIFACTS_PATH);
     } catch (IOException e) {
-      return failure(error(e.getMessage()));
+      return output(label, list(error(e.getMessage())));
     }
     var referenceSs = evaluatedExprs.sExprs().map(this::toReferenceS);
     var artifacts = referenceSs.zip(evaluatedExprs.bValues(), Tuples::tuple);
@@ -64,7 +61,7 @@ public class SaveArtifacts implements TryFunction1<EvaluatedExprs, Void> {
     artifacts
         .sortUsing(comparing(a -> a.element1().referencedName()))
         .forEach(t -> save(t.element1(), t.element2(), logger));
-    return Try.of(null, logger);
+    return output(label, logger.toList());
   }
 
   private SReference toReferenceS(SExpr expr) {

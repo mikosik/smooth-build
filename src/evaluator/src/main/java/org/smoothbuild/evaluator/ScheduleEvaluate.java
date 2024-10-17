@@ -11,7 +11,6 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
-import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.common.task.TaskExecutor;
@@ -20,12 +19,22 @@ import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
-public class SmoothEvaluationPlan {
-  public static Plan<EvaluatedExprs> smoothEvaluationPlan(
-      TaskExecutor taskExecutor, List<FullPath> modules, List<String> names) {
+public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, List<String>> {
+  private final TaskExecutor taskExecutor;
+
+  @Inject
+  public ScheduleEvaluate(TaskExecutor taskExecutor) {
+    this.taskExecutor = taskExecutor;
+  }
+
+  @Override
+  public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
     var moduleS = taskExecutor.submit(FrontendCompile.class, promise(modules));
     var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, promise(names));
-    return Plan.task1(VmFacade.class, compiledExprs);
+    var evaluatedExprs = taskExecutor.submit(VmFacade.class, compiledExprs);
+
+    var label = EVALUATE_LABEL.append("schedule");
+    return schedulingOutput(evaluatedExprs, report(label, new Trace(), EXECUTION, list()));
   }
 
   public static class ScheduleBackendCompile

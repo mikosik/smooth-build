@@ -1,19 +1,21 @@
 package org.smoothbuild.cli.command;
 
+import static org.smoothbuild.cli.run.CreateInjector.createInjector;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.plan.Plan.apply0;
-import static org.smoothbuild.common.plan.Plan.chain;
-import static org.smoothbuild.evaluator.SmoothEvaluationPlan.smoothEvaluationPlan;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 
+import jakarta.inject.Inject;
 import java.nio.file.Path;
+import java.util.List;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.cli.match.MatcherCreator;
-import org.smoothbuild.cli.run.CreateInjector;
 import org.smoothbuild.cli.run.RemoveArtifacts;
 import org.smoothbuild.cli.run.SaveArtifacts;
+import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.common.plan.Plan;
 import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.evaluator.ScheduleEvaluate;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Parameters;
@@ -77,13 +79,34 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var removedArtifacts = Plan.task0(RemoveArtifacts.class);
-    var injector = CreateInjector.createInjector(projectDir, out(), logLevel, showTasks);
-    var taskExecutor = injector.getInstance(TaskExecutor.class);
-    var evaluationPlan = smoothEvaluationPlan(taskExecutor, Layout.MODULES, listOfAll(values));
-    var artifactsPlan = chain(removedArtifacts, evaluationPlan);
-    var plan = Plan.apply1(SaveArtifacts.class, artifactsPlan);
+    var injector = createInjector(projectDir, out(), logLevel, showTasks);
+    return injector.getInstance(BuildCommandRunner.class).run(values);
+  }
 
-    return injector.getInstance(CommandExecutor.class).execute(plan);
+  public static class BuildCommandRunner {
+    private final TaskExecutor taskExecutor;
+    private final CommandCompleter commandCompleter;
+
+    @Inject
+    public BuildCommandRunner(TaskExecutor taskExecutor, CommandCompleter commandCompleter) {
+      this.taskExecutor = taskExecutor;
+      this.commandCompleter = commandCompleter;
+    }
+
+    public int run(java.util.List<String> values) {
+      scheduleBuildTasks(values);
+      return commandCompleter.waitForCompletion();
+    }
+
+    private void scheduleBuildTasks(List<String> values) {
+      var initialize = taskExecutor.submit(Initializer.class);
+      var removeArtifacts = taskExecutor.submit(list(initialize), RemoveArtifacts.class);
+      var evaluatedExprs = taskExecutor.submit(
+          list(removeArtifacts),
+          ScheduleEvaluate.class,
+          promise(Layout.MODULES),
+          promise(listOfAll(values)));
+      taskExecutor.submit(SaveArtifacts.class, evaluatedExprs);
+    }
   }
 }
