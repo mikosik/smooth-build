@@ -15,7 +15,6 @@ import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -79,11 +78,6 @@ public class TestingVm extends TestingBytecode {
 
   public BReferenceInliner bReferenceInliner() {
     return new BReferenceInliner(bytecodeF());
-  }
-
-  public Vm vm(Reporter reporter, int threadCount) {
-    var taskExecutor = taskExecutor(reporter, threadCount);
-    return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
   }
 
   public Vm vm(StepEvaluator stepEvaluator) {
