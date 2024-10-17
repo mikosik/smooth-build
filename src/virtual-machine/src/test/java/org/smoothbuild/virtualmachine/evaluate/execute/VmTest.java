@@ -315,7 +315,8 @@ public class VmTest extends TestingVm {
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var reporter = mock(Reporter.class);
-          evaluate(vm(taskExecutor(reporter)), pick);
+          var taskExecutor = taskExecutor(reporter);
+          evaluate(vm(taskExecutor), pick, taskExecutor);
           verify(reporter).submit(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
@@ -327,7 +328,8 @@ public class VmTest extends TestingVm {
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var reporter = mock(Reporter.class);
-          evaluate(vm(taskExecutor(reporter)), pick);
+          var taskExecutor = taskExecutor(reporter);
+          evaluate(vm(taskExecutor), pick, taskExecutor);
           verify(reporter).submit(argThat(this::isResultWithNegativeIndexError));
         }
 
@@ -405,9 +407,10 @@ public class VmTest extends TestingVm {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(Reporter.class);
-        var vm = vm(reporter, 4);
+        var taskExecutor = taskExecutor(reporter, 4);
+        var vm = vm(taskExecutor);
         var expr = throwExceptionCall();
-        evaluate(vm, expr);
+        evaluate(vm, expr, taskExecutor);
         verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
@@ -523,7 +526,8 @@ public class VmTest extends TestingVm {
     private void assertTaskReport(
         BExpr expr, String label, BTrace trace, ResultSource resultSource) {
       var reporter = mock(Reporter.class);
-      evaluate(vm(taskExecutor(reporter)), expr);
+      var taskExecutor = taskExecutor(reporter);
+      evaluate(vm(taskExecutor), expr, taskExecutor);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
       verify(reporter).submit(taskReport);
     }
@@ -559,8 +563,9 @@ public class VmTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1"));
 
       var reporter = reporter();
-      var vm = vm(reporter, 4);
-      assertThat(evaluate(vm, bExpr).get())
+      var taskExecutor = taskExecutor(reporter, 4);
+      var vm = vm(taskExecutor);
+      assertThat(evaluate(vm, bExpr, taskExecutor).get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
@@ -584,9 +589,10 @@ public class VmTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
           invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = vm(reporter(), 2);
+      var taskExecutor = taskExecutor(reporter(), 2);
+      var vm = vm(taskExecutor);
       var expected = bArray(bString("1"), bString("1"), bString("0"));
-      assertThat(evaluate(vm, expr).get()).isEqualTo(expected);
+      assertThat(evaluate(vm, expr, taskExecutor).get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
@@ -637,9 +643,13 @@ public class VmTest extends TestingVm {
   }
 
   private Promise<BValue> evaluate(Vm vm, BExpr expr) {
+    return evaluate(vm, expr, taskExecutor());
+  }
+
+  private static Promise<BValue> evaluate(Vm vm, BExpr expr, TaskExecutor taskExecutor) {
     var result = vm.evaluate(expr);
     try {
-      vm.awaitTermination();
+      taskExecutor.waitUntilIdle();
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
