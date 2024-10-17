@@ -15,7 +15,7 @@ public class CommandRunner {
     this.commandCompleter = commandCompleter;
   }
 
-  public int run(Class<? extends Task0<Void>> taskClass) {
+  public <T> int run(Class<? extends Task0<T>> taskClass) {
     taskExecutor.submit(Key.get(taskClass));
     return commandCompleter.waitForCompletion();
   }
