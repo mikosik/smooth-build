@@ -82,10 +82,6 @@ public class TestingVm extends TestingBytecode {
     return new BReferenceInliner(bytecodeF());
   }
 
-  public Vm vm(int threadCount) {
-    return vm(threadCount);
-  }
-
   public Vm vm(Reporter reporter, int threadCount) {
     var taskExecutor = new TaskExecutor(Guice.createInjector(), reporter, threadCount);
     return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
