@@ -77,10 +77,6 @@ public class Vm {
     return newJob(expr).evaluate();
   }
 
-  public void awaitTermination() throws InterruptedException {
-    taskExecutor.waitUntilIdle();
-  }
-
   private Promise<BValue> evaluate(Job job) {
     return taskExecutor.submit(() -> {
       try {
