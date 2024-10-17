@@ -7,7 +7,6 @@ import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import com.google.common.base.Supplier;
-import com.google.inject.Guice;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
@@ -83,7 +82,7 @@ public class TestingVm extends TestingBytecode {
   }
 
   public Vm vm(Reporter reporter, int threadCount) {
-    var taskExecutor = new TaskExecutor(Guice.createInjector(), reporter, threadCount);
+    var taskExecutor = taskExecutor(reporter, threadCount);
     return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
   }
 
