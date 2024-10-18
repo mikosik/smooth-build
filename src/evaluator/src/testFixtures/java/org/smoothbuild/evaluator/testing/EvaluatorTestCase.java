@@ -6,6 +6,7 @@ import static com.google.inject.Stage.PRODUCTION;
 import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
@@ -13,11 +14,11 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import com.google.inject.AbstractModule;
@@ -119,14 +120,10 @@ public class EvaluatorTestCase extends TestingBytecode {
     var evaluated = taskExecutor.submit(
         list(initialize),
         ScheduleEvaluate.class,
-        promise(modules),
-        promise(listOfAll(asList(names))));
-    try {
-      taskExecutor.waitUntilIdle();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    this.evaluatedExprs = evaluated.toMaybe();
+        argument(modules),
+        argument(listOfAll(asList(names))));
+    await().until(() -> evaluated.toMaybe().isSome());
+    this.evaluatedExprs = evaluated.get();
   }
 
   protected void restartSmoothWithSameBuckets() {

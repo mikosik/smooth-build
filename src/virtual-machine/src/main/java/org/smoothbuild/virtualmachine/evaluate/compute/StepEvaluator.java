@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
@@ -20,6 +21,7 @@ import jakarta.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Log;
@@ -80,7 +82,8 @@ public class StepEvaluator {
     this.memoryCache = memoryCache;
   }
 
-  public Promise<BValue> evaluate(Step step, List<Promise<BValue>> subExprResults) {
+  public Promise<Maybe<BValue>> evaluate(
+      Step step, List<? extends Promise<? extends Maybe<BValue>>> subExprResults) {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
         return evaluateStep(step, toInput(bValues));
@@ -111,8 +114,10 @@ public class StepEvaluator {
     }
   }
 
-  private Promise<BValue> scheduleTaskWaitingForOtherTaskResult(
+  private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
       Step step, Purity purity, Promise<BOutput> promise) {
+    var convertedPromise = Promise.<Maybe<BOutput>>promise();
+    promise.addConsumer(v -> convertedPromise.accept(some(v)));
     Task1<BValue, BOutput> task = (bOutput) -> {
       try {
         return newOutput(step, bOutput, purity.cacheLevel());
@@ -120,7 +125,7 @@ public class StepEvaluator {
         return outputForException(step, e);
       }
     };
-    return taskExecutor.submit(task, promise);
+    return taskExecutor.submit(task, convertedPromise);
   }
 
   private Output<BValue> readEvaluationFromDiskCache(

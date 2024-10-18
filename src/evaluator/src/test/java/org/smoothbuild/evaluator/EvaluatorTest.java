@@ -2,12 +2,13 @@ package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Guice.createInjector;
+import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.concurrent.Promise.promise;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.testing.TestingFileResolver.saveBytecodeInJar;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
@@ -307,13 +308,9 @@ public class EvaluatorTest extends TestingVm {
     var taskExecutor = injector.getInstance(TaskExecutor.class);
     var initializer = taskExecutor.submit(injector.getInstance(Initializer.class));
     var compiledExprs = taskExecutor.submit(
-        list(initializer), BackendCompile.class, promise(exprs), promise(evaluables));
+        list(initializer), BackendCompile.class, argument(exprs), argument(evaluables));
     var evaluatedExprs = taskExecutor.submit(VmFacade.class, compiledExprs);
-    try {
-      taskExecutor.waitUntilIdle();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    return evaluatedExprs.toMaybe();
+    await().until(() -> evaluatedExprs.toMaybe().isSome());
+    return evaluatedExprs.get();
   }
 }

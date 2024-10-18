@@ -30,6 +30,7 @@ dependencyResolutionManagement {
       library('picocli', 'info.picocli:picocli:4.7.4')
       library('zip4j', 'net.lingala.zip4j:zip4j:2.11.5')
 
+      library('awaitility', 'org.awaitility:awaitility:4.2.2')
       library('guava-testlib', 'com.google.guava:guava-testlib:32.1.0-jre')
       version('junit', '5.9.3')
       library('junit-jupiter-engine', 'org.junit.jupiter', 'junit-jupiter-engine').versionRef('junit')

@@ -19,6 +19,7 @@ dependencies {
     testFixturesApi libs.mockito
     testFixturesApi libs.okio
     testFixturesApi libs.truth
+    testFixturesApi libs.awaitility
 
     testImplementation project(':src:common-testing')
     testRuntimeOnly libs.junit.jupiter.engine
