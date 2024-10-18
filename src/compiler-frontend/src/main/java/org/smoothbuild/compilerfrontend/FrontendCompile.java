@@ -1,9 +1,9 @@
 package org.smoothbuild.compilerfrontend;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
 
@@ -41,7 +41,7 @@ public class FrontendCompile implements Task1<SModule, List<FullPath>> {
   public Output<SModule> execute(List<FullPath> modules) {
     var module = taskExecutor.submit(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
-      module = taskExecutor.submit(ScheduleModuleCompilation.class, module, promise(fullPath));
+      module = taskExecutor.submit(ScheduleModuleCompilation.class, module, argument(fullPath));
     }
     var label = COMPILE_FRONT_LABEL.append("schedule");
     var report = report(label, new Trace(), EXECUTION, list());
@@ -58,8 +58,8 @@ public class FrontendCompile implements Task1<SModule, List<FullPath>> {
 
     @Override
     public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
-      var environment = promise(importedModule.membersAndImported());
-      var path = promise(fullPath);
+      var environment = argument(importedModule.membersAndImported());
+      var path = argument(fullPath);
       var fileContent = taskExecutor.submit(ReadFileContent.class, path);
       var moduleContext = taskExecutor.submit(Parse.class, fileContent, path);
       var moduleP = taskExecutor.submit(TranslateAp.class, moduleContext, path);

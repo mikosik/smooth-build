@@ -259,7 +259,7 @@ public final class List<E> extends AbstractList<E> {
     return zipToMap(map(keyMapper), map(valueMapper));
   }
 
-  public static <E> Maybe<List<E>> pullUpMaybe(List<Maybe<E>> list) {
+  public static <E> Maybe<List<E>> pullUpMaybe(List<? extends Maybe<E>> list) {
     if (list.anyMatches(Maybe::isNone)) {
       return none();
     } else {

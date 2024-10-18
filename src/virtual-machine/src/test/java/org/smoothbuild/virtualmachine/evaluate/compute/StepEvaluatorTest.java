@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
@@ -330,10 +331,10 @@ public class StepEvaluatorTest extends TestingVm {
       BOutput expectedOutput,
       ResultSource expectedResultSource)
       throws Exception {
-    var argPromises = input.elements().map(Promise::promise);
+    var argPromises = input.elements().map(v -> promise(some(v)));
     var resultPromise = stepEvaluator.evaluate(step, argPromises);
     taskExecutor().waitUntilIdle();
-    assertThat(resultPromise.get()).isEqualTo(expectedOutput.value());
+    assertThat(resultPromise.get().get()).isEqualTo(expectedOutput.value());
     var report = report(step.label(), step.trace(), expectedResultSource, list());
     assertThat(reporter().reports()).contains(report);
   }
@@ -351,7 +352,7 @@ public class StepEvaluatorTest extends TestingVm {
         taskExecutor,
         bytecodeF(),
         memoryCache);
-    stepEvaluator.evaluate(step, input.elements().map(Promise::promise));
+    stepEvaluator.evaluate(step, input.elements().map(v -> promise(some(v))));
     taskExecutor.waitUntilIdle();
 
     var stepHash = computationHashFactory.create(step, input);

@@ -2,6 +2,7 @@ package org.smoothbuild.common.init;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.task.Output.output;
 
@@ -25,7 +26,7 @@ public class InitializerTest extends TestingCommon {
 
     assertThat(visited1.get()).isTrue();
     assertThat(visited2.get()).isTrue();
-    assertThat(initializerPromise.get()).isEqualTo(null);
+    assertThat(initializerPromise.get()).isEqualTo(some(null));
   }
 
   private static Initializable initializable(AtomicBoolean visited1) {

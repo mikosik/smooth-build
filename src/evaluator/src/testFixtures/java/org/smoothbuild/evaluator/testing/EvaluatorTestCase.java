@@ -13,11 +13,11 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import com.google.inject.AbstractModule;
@@ -119,14 +119,14 @@ public class EvaluatorTestCase extends TestingBytecode {
     var evaluated = taskExecutor.submit(
         list(initialize),
         ScheduleEvaluate.class,
-        promise(modules),
-        promise(listOfAll(asList(names))));
+        argument(modules),
+        argument(listOfAll(asList(names))));
     try {
       taskExecutor.waitUntilIdle();
+      this.evaluatedExprs = evaluated.getBlocking();
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-    this.evaluatedExprs = evaluated.toMaybe();
   }
 
   protected void restartSmoothWithSameBuckets() {

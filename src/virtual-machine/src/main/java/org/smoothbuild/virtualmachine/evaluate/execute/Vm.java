@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
@@ -13,6 +14,7 @@ import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
@@ -73,11 +75,11 @@ public class Vm {
     this.bReferenceInliner = bReferenceInliner;
   }
 
-  public Promise<BValue> evaluate(BExpr expr) {
+  public Promise<Maybe<BValue>> evaluate(BExpr expr) {
     return newJob(expr).evaluate();
   }
 
-  private Promise<BValue> evaluate(Job job) {
+  private Promise<Maybe<BValue>> evaluate(Job job) {
     return taskExecutor.submit(() -> {
       try {
         return successOutput(job, scheduleJob(job));
@@ -87,14 +89,14 @@ public class Vm {
     });
   }
 
-  private Promise<BValue> scheduleJob(Job job) throws BytecodeException {
+  private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
     return switch (job.expr()) {
       case BCall call -> scheduleCall(job, call);
       case BCombine combine -> scheduleOperation(job, combine, CombineStep::new);
       case BIf if_ -> scheduleIf(job, if_);
       case BMap map -> scheduleMap(job, map);
       case BLambda lambda -> scheduleInlineTask(job);
-      case BValue value -> promise(value);
+      case BValue value -> promise(some(value));
       case BOrder order -> scheduleOperation(job, order, OrderStep::new);
       case BPick pick -> scheduleOperation(job, pick, PickStep::new);
       case BReference reference -> scheduleReference(job, reference);
@@ -105,7 +107,7 @@ public class Vm {
 
   // Call operation
 
-  private Promise<BValue> scheduleCall(Job callJob, BCall bCall) throws BytecodeException {
+  private Promise<Maybe<BValue>> scheduleCall(Job callJob, BCall bCall) throws BytecodeException {
     var subExprs = bCall.subExprs();
     var lambda = subExprs.lambda();
     var lambdaArgs = subExprs.arguments();
@@ -118,7 +120,7 @@ public class Vm {
     }
   }
 
-  private Promise<BValue> scheduleCallWithCombineArgs(
+  private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
       Job callJob, BCall call, BExpr bLambda, BCombine combine) throws BytecodeException {
     Task1<BValue, BValue> schedulingTask = (bValue) -> {
       try {
@@ -134,7 +136,7 @@ public class Vm {
     return taskExecutor.submit(schedulingTask, scheduleNewJob(bLambda, callJob));
   }
 
-  private Promise<BValue> scheduleCallWithTupleArgs(
+  private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
       Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
     Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
       try {
@@ -149,7 +151,7 @@ public class Vm {
     return taskExecutor.submit(schedulingTask, lambdaPromise);
   }
 
-  private Promise<BValue> scheduleCallWithExprArgs(
+  private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
       Job callJob, BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
     Task2<BValue, BValue, BValue> schedulingTask = (lambdaValue, argsValue) -> {
       try {
@@ -171,7 +173,7 @@ public class Vm {
     return taskExecutor.submit(schedulingTask, lambdaPromise, argsPromise);
   }
 
-  private Promise<BValue> scheduleCallBodyWithTupleArguments(
+  private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
       Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple, BLambda bLambda)
       throws BytecodeException {
     var argumentJobs = tuple.elements().map(j -> newJob(j));
@@ -181,7 +183,7 @@ public class Vm {
     return scheduleJob(bodyJob);
   }
 
-  private Promise<BValue> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
+  private Promise<Maybe<BValue>> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
     var subExprs = if_.subExprs();
     Task1<BValue, BValue> schedulingTask = (conditionValue) -> {
       try {
@@ -196,7 +198,7 @@ public class Vm {
     return taskExecutor.submit(schedulingTask, conditionPromise);
   }
 
-  private Promise<BValue> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
+  private Promise<Maybe<BValue>> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
     var subExprs = map.subExprs();
     var arrayArg = subExprs.array();
     Task1<BValue, BValue> schedulingTask = (arrayValue) -> {
@@ -224,16 +226,16 @@ public class Vm {
     return bytecodeFactory.tuple(list(value));
   }
 
-  private <T extends BOperation> Promise<BValue> scheduleOperation(
+  private <T extends BOperation> Promise<Maybe<BValue>> scheduleOperation(
       Job job, T operation, Function2<T, BTrace, Step, BytecodeException> stepFactory)
       throws BytecodeException {
     var step = stepFactory.apply(operation, job.trace());
     List<Job> subExprJobs = operation.subExprs().toList().map(e -> newJob(e, job));
-    var subExprResults = subExprJobs.map(this::scheduleJob);
+    List<Promise<Maybe<BValue>>> subExprResults = subExprJobs.map(this::scheduleJob);
     return stepEvaluator.evaluate(step, subExprResults);
   }
 
-  private Promise<BValue> scheduleReference(Job job, BReference reference)
+  private Promise<Maybe<BValue>> scheduleReference(Job job, BReference reference)
       throws BytecodeException {
     int index = reference.index().toJavaBigInteger().intValue();
     var referencedJob = job.environment().get(index);
@@ -246,7 +248,7 @@ public class Vm {
     }
   }
 
-  private Promise<BValue> scheduleInlineTask(Job job) {
+  private Promise<Maybe<BValue>> scheduleInlineTask(Job job) {
     Task0<BValue> inlineTask = () -> {
       try {
         var inlined = (BValue) bReferenceInliner.inline(job);
@@ -260,11 +262,12 @@ public class Vm {
 
   // helpers
 
-  private Promise<BValue> scheduleNewJob(BExpr bExpr, Job parentJob) throws BytecodeException {
+  private Promise<Maybe<BValue>> scheduleNewJob(BExpr bExpr, Job parentJob)
+      throws BytecodeException {
     return scheduleJob(newJob(bExpr, parentJob));
   }
 
-  private static <T> Output<T> successOutput(Job job, Promise<T> resultPromise) {
+  private static <T> Output<T> successOutput(Job job, Promise<Maybe<T>> resultPromise) {
     return schedulingOutput(resultPromise, newReport(VM_SCHEDULE, job, list()));
   }
 

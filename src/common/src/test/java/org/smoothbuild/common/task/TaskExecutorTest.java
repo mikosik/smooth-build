@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -14,6 +15,7 @@ import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.TaskExecutor.EXECUTE_LABEL;
 import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
@@ -33,6 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Report;
@@ -95,27 +98,28 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
         Task0<String> task = () -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(task, list(predecessor));
-        predecessor.accept("");
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
         Task0<String> task = () -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
-        var result = taskExecutor.submit(task, list(predecessor));
+        Promise<Maybe<String>> result = taskExecutor.submit(task, list(predecessor));
+        predecessor.accept(none());
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.toMaybe()).isEqualTo(none());
+        assertThat(result.get()).isEqualTo(none());
       }
 
       @Test
@@ -166,25 +170,25 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class));
-        predecessor.accept("");
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
+        var predecessor = promise(none());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.toMaybe()).isEqualTo(none());
+        assertThat(result.get()).isEqualTo(none());
       }
 
       @Test
@@ -225,7 +229,7 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), newReport());
-        var arg1 = promise(7);
+        var arg1 = argument(7);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), "7");
       }
 
@@ -233,41 +237,41 @@ public class TaskExecutorTest {
       @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task1<String, Integer> task = (i) -> output(i.toString(), report);
-        var arg1 = promise(7);
+        var arg1 = argument(7);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         Task1<String, Integer> task = (i) -> output(null, newReport());
-        var arg1 = promise(7);
+        var arg1 = argument(7);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
       }
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), task, arg1);
-        arg1.accept("");
-        predecessor.accept("");
+        arg1.accept(some(""));
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
         Task1<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), task, arg1);
-        arg1.accept("");
+        arg1.accept(some(""));
         taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
@@ -279,7 +283,7 @@ public class TaskExecutorTest {
         Task1<Integer, Integer> task = (a1) -> {
           throw exception;
         };
-        Promise<Integer> arg1 = promise(1);
+        var arg1 = argument(1);
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
@@ -307,7 +311,7 @@ public class TaskExecutorTest {
     class _injected_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        var arg1 = promise("");
+        var arg1 = argument("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1), "abc");
@@ -315,7 +319,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
-        var arg1 = promise("");
+        var arg1 = argument("");
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
@@ -330,7 +334,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        var arg1 = promise("");
+        var arg1 = argument("");
         var task = Key.get(ReturnNull.class);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
       }
@@ -344,26 +348,26 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
-        arg1.accept("");
-        predecessor.accept("");
+        arg1.accept(some(""));
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1);
-        arg1.accept("");
+        arg1.accept(some(""));
         taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
@@ -371,7 +375,7 @@ public class TaskExecutorTest {
 
       @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() throws Exception {
-        var arg1 = promise("");
+        var arg1 = argument("");
         var exception = new RuntimeException();
         var injector = Guice.createInjector(new AbstractModule() {
           @Override
@@ -433,8 +437,8 @@ public class TaskExecutorTest {
       void successful_task_execution_sets_result_in_promise() throws Exception {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, newReport());
 
-        var arg1 = promise(7);
-        var arg2 = promise(5);
+        var arg1 = argument(7);
+        var arg2 = argument(5);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), 12);
       }
@@ -443,8 +447,8 @@ public class TaskExecutorTest {
       @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
-        var arg1 = promise(7);
-        var arg2 = promise(7);
+        var arg1 = argument(7);
+        var arg2 = argument(7);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
       }
 
@@ -452,40 +456,40 @@ public class TaskExecutorTest {
       void successful_task_execution_can_return_null() throws Exception {
         Task2<Object, Integer, Integer> task = (a1, a2) -> output(null, newReport());
 
-        var arg1 = promise(7);
-        var arg2 = promise(5);
+        var arg1 = argument(7);
+        var arg2 = argument(5);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
       }
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
-        MutablePromise<String> arg2 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
+        MutablePromise<Maybe<String>> arg2 = promise();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
-        arg1.accept("");
-        arg2.accept("");
-        predecessor.accept("");
+        arg1.accept(some(""));
+        arg2.accept(some(""));
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
-        MutablePromise<String> arg2 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
+        MutablePromise<Maybe<String>> arg2 = promise();
         Task2<String, String, String> task = (a1, a2) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
-        arg1.accept("");
-        arg2.accept("");
+        arg1.accept(some(""));
+        arg2.accept(some(""));
         taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
@@ -497,8 +501,8 @@ public class TaskExecutorTest {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> {
           throw exception;
         };
-        Promise<Integer> arg1 = promise(1);
-        Promise<Integer> arg2 = promise(2);
+        var arg1 = argument(1);
+        var arg2 = argument(2);
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
@@ -526,8 +530,8 @@ public class TaskExecutorTest {
     class _injected_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        var arg1 = promise("");
-        var arg2 = promise("");
+        var arg1 = argument("");
+        var arg2 = argument("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), "abc");
@@ -535,8 +539,8 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
-        var arg1 = promise("");
-        var arg2 = promise("");
+        var arg1 = argument("");
+        var arg2 = argument("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionSubmitsReport(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), newReport());
@@ -551,8 +555,8 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        var arg1 = promise("");
-        var arg2 = promise("");
+        var arg1 = argument("");
+        var arg2 = argument("");
         var task = Key.get(ReturnNull.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
@@ -567,30 +571,30 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
-        MutablePromise<String> arg2 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
+        MutablePromise<Maybe<String>> arg2 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
-        arg1.accept("");
-        arg2.accept("");
-        predecessor.accept("");
+        arg1.accept(some(""));
+        arg2.accept(some(""));
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
-        MutablePromise<String> arg1 = promise();
-        MutablePromise<String> arg2 = promise();
+        MutablePromise<Maybe<String>> predecessor = promise();
+        MutablePromise<Maybe<String>> arg1 = promise();
+        MutablePromise<Maybe<String>> arg2 = promise();
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), arg1, arg2);
-        arg1.accept("");
-        arg2.accept("");
+        arg1.accept(some(""));
+        arg2.accept(some(""));
         taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
@@ -598,8 +602,8 @@ public class TaskExecutorTest {
 
       @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() throws Exception {
-        var arg1 = promise("");
-        var arg2 = promise("");
+        var arg1 = argument("");
+        var arg2 = argument("");
         var exception = new RuntimeException();
         var injector = Guice.createInjector(new AbstractModule() {
           @Override
@@ -661,7 +665,7 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), newReport());
-        var args = list(promise(7));
+        var args = list(promise(some(7)));
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, args), "[7]");
       }
@@ -670,41 +674,41 @@ public class TaskExecutorTest {
       @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
       void successful_task_execution_submits_report(Report report) throws Exception {
         TaskX<String, Integer> task = (i) -> output(i.toString(), report);
-        var args = list(promise(7));
+        var args = list(promise(some(7)));
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
         TaskX<String, Integer> task = (i) -> output(null, newReport());
-        var args = list(promise(7));
+        var args = list(promise(some(7)));
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
       }
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
-        List<MutablePromise<String>> args = list(promise());
+        MutablePromise<Maybe<String>> predecessor = promise();
+        List<MutablePromise<Maybe<String>>> args = list(promise());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), task, args);
-        args.get(0).accept("");
-        predecessor.accept("");
+        args.get(0).accept(some(""));
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
-        List<MutablePromise<String>> args = list(promise());
+        MutablePromise<Maybe<String>> predecessor = promise();
+        List<MutablePromise<Maybe<String>>> args = list(promise());
         TaskX<String, String> task = (a1) -> output("abc", newReport());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), task, args);
-        args.get(0).accept("");
+        args.get(0).accept(some(""));
         taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
@@ -716,7 +720,7 @@ public class TaskExecutorTest {
         TaskX<Integer, Integer> task = (a1) -> {
           throw exception;
         };
-        var args = list(promise(1));
+        var args = list(argument(1));
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
@@ -744,7 +748,7 @@ public class TaskExecutorTest {
     class _injected_task {
       @Test
       void successful_task_execution_sets_result_in_promise() throws Exception {
-        var list = list(promise(""));
+        var list = list(argument(""));
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
             taskExecutor -> taskExecutor.submit(task, list), "abc");
@@ -752,7 +756,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_submits_report() throws Exception {
-        var args = list(promise(""));
+        var args = list(argument(""));
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
         assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
@@ -767,7 +771,7 @@ public class TaskExecutorTest {
 
       @Test
       void successful_task_execution_can_return_null() throws Exception {
-        var args = list(promise(""));
+        var args = list(argument(""));
         var task = Key.get(ReturnNull.class);
         assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
       }
@@ -781,26 +785,26 @@ public class TaskExecutorTest {
 
       @Test
       void task_is_executed_after_its_predecessors() throws Exception {
-        var predecessor = promise();
-        List<MutablePromise<String>> args = list(promise());
+        MutablePromise<Maybe<String>> predecessor = promise();
+        List<MutablePromise<Maybe<String>>> args = list(promise());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);
-        args.get(0).accept("");
-        predecessor.accept("");
+        args.get(0).accept(some(""));
+        predecessor.accept(some(""));
         taskExecutor.waitUntilIdle();
 
-        assertThat(result.get()).isEqualTo("abc");
+        assertThat(result.get()).isEqualTo(some("abc"));
       }
 
       @Test
       void task_is_not_executed_when_predecessor_fails_with_error() throws Exception {
-        var predecessor = promise();
-        List<MutablePromise<String>> args = list(promise());
+        MutablePromise<Maybe<String>> predecessor = promise();
+        List<MutablePromise<Maybe<String>>> args = list(promise());
 
         var taskExecutor = newTaskExecutor();
         var result = taskExecutor.submit(list(predecessor), Key.get(ReturnAbc.class), args);
-        args.get(0).accept("");
+        args.get(0).accept(some(""));
         taskExecutor.waitUntilIdle();
 
         assertThat(result.toMaybe()).isEqualTo(none());
@@ -808,7 +812,7 @@ public class TaskExecutorTest {
 
       @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() throws Exception {
-        var args = list(promise(""));
+        var args = list(argument(""));
         var exception = new RuntimeException();
         var injector = Guice.createInjector(new AbstractModule() {
           @Override
@@ -923,7 +927,7 @@ public class TaskExecutorTest {
           arg2Result);
       taskExecutor.waitUntilIdle();
 
-      assertThat(result.get()).isEqualTo(10);
+      assertThat(result.get()).isEqualTo(some(10));
       assertThat(arg1Thread.get()).isNotSameInstanceAs(thread.get());
       assertThat(arg2Thread.get()).isNotSameInstanceAs(thread.get());
     }
@@ -957,14 +961,14 @@ public class TaskExecutorTest {
   }
 
   private static <R> void assertExecutionStoresResultInPromise(
-      Function<TaskExecutor, Promise<R>> scheduleFunction, R expectedValue)
+      Function<TaskExecutor, Promise<Maybe<R>>> scheduleFunction, R expectedValue)
       throws InterruptedException {
     var taskExecutor = newTaskExecutor();
 
     var result = scheduleFunction.apply(taskExecutor);
     taskExecutor.waitUntilIdle();
 
-    assertThat(result.get()).isEqualTo(expectedValue);
+    assertThat(result.get()).isEqualTo(some(expectedValue));
   }
 
   private static <R> void assertExecutionSubmitsReport(

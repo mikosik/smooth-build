@@ -2,11 +2,11 @@ package org.smoothbuild.cli.run;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
@@ -38,7 +38,7 @@ public class ListEvaluables implements Task0<Tuple0> {
 
   @Override
   public Output<Tuple0> execute() {
-    var scopeS = taskExecutor.submit(FrontendCompile.class, promise(Layout.MODULES));
+    var scopeS = taskExecutor.submit(FrontendCompile.class, argument(Layout.MODULES));
     var result = taskExecutor.submit(PrintEvaluables.class, scopeS);
     var label = label("schedule", "list");
     return schedulingOutput(result, report(label, new Trace(), EXECUTION, list()));
