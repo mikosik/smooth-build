@@ -1,10 +1,10 @@
 package org.smoothbuild.common.task;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
-import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
@@ -15,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Executor;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
@@ -54,169 +55,193 @@ public class TaskExecutor {
 
   // Task0
 
-  public <R> Promise<R> submit(Task0<R> task) {
-    return submit(task, list());
+  public <R> Promise<Maybe<R>> submit(Task0<R> task) {
+    return submit(list(), task);
   }
 
-  public <R> Promise<R> submit(Task0<R> task, List<? extends Promise<?>> predecessors) {
+  public <R> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors, Task0<R> task) {
     var execution = new Execution<>(task::execute);
     return submit(predecessors, execution);
   }
 
-  public <R> Promise<R> submit(Class<? extends Task0<R>> task) {
+  public <R> Promise<Maybe<R>> submit(Class<? extends Task0<R>> task) {
     return submit(Key.get(task));
   }
 
-  public <R> Promise<R> submit(Key<? extends Task0<R>> task) {
+  public <R> Promise<Maybe<R>> submit(Key<? extends Task0<R>> task) {
     return submit(list(), task);
   }
 
-  public <R> Promise<R> submit(
-      List<? extends Promise<?>> predecessors, Class<? extends Task0<R>> task) {
+  public <R> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors, Class<? extends Task0<R>> task) {
     return submit(predecessors, Key.get(task));
   }
 
-  public <R> Promise<R> submit(
-      List<? extends Promise<?>> predecessors, Key<? extends Task0<R>> task) {
+  public <R> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors, Key<? extends Task0<R>> task) {
     var execution = new Execution<>(() -> injector.getInstance(task).execute());
     return submit(predecessors, execution);
   }
 
   // Task1
 
-  public <R, A1> Promise<R> submit(Task1<R, A1> task, Promise<A1> arg1) {
+  public <R, A1> Promise<Maybe<R>> submit(Task1<R, A1> task, Promise<? extends Maybe<A1>> arg1) {
     return submit(list(), task, arg1);
   }
 
-  public <R, A1> Promise<R> submit(
-      List<? extends Promise<?>> predecessors, Task1<R, A1> task, Promise<A1> arg1) {
-    var execution = new Execution<>(() -> task.execute(arg1.get()));
+  public <R, A1> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      Task1<R, A1> task,
+      Promise<? extends Maybe<A1>> arg1) {
+    var execution = new Execution<>(() -> task.execute(arg1.get().get()));
     return submit(predecessors, execution, arg1);
   }
 
-  public <R, A1> Promise<R> submit(Class<? extends Task1<R, A1>> task, Promise<A1> arg1) {
+  public <R, A1> Promise<Maybe<R>> submit(
+      Class<? extends Task1<R, A1>> task, Promise<? extends Maybe<A1>> arg1) {
     return submit(Key.get(task), arg1);
   }
 
-  public <R, A1> Promise<R> submit(Key<? extends Task1<R, A1>> task, Promise<A1> arg1) {
+  public <R, A1> Promise<Maybe<R>> submit(
+      Key<? extends Task1<R, A1>> task, Promise<? extends Maybe<A1>> arg1) {
     return submit(list(), task, arg1);
   }
 
-  public <R, A1> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  public <R, A1> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Class<? extends Task1<R, A1>> task,
-      Promise<A1> arg1) {
+      Promise<? extends Maybe<A1>> arg1) {
     return submit(predecessors, Key.get(task), arg1);
   }
 
-  public <R, A1> Promise<R> submit(
-      List<? extends Promise<?>> predecessors, Key<? extends Task1<R, A1>> task, Promise<A1> arg1) {
-    var execution = new Execution<>(() -> injector.getInstance(task).execute(arg1.get()));
+  public <R, A1> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      Key<? extends Task1<R, A1>> task,
+      Promise<? extends Maybe<A1>> arg1) {
+    var execution =
+        new Execution<>(() -> injector.getInstance(task).execute(arg1.get().get()));
     return submit(predecessors, execution, arg1);
   }
 
   // Task2
 
-  public <R, A1, A2> Promise<R> submit(Task2<R, A1, A2> task, Promise<A1> arg1, Promise<A2> arg2) {
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      Task2<R, A1, A2> task, Promise<? extends Maybe<A1>> arg1, Promise<? extends Maybe<A2>> arg2) {
     return submit(list(), task, arg1, arg2);
   }
 
-  public <R, A1, A2> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Task2<R, A1, A2> task,
-      Promise<A1> arg1,
-      Promise<A2> arg2) {
-    var execution = new Execution<>(() -> task.execute(arg1.get(), arg2.get()));
+      Promise<? extends Maybe<A1>> arg1,
+      Promise<? extends Maybe<A2>> arg2) {
+    var execution =
+        new Execution<>(() -> task.execute(arg1.get().get(), arg2.get().get()));
     return submit(predecessors, execution, arg1, arg2);
   }
 
-  public <R, A1, A2> Promise<R> submit(
-      Class<? extends Task2<R, A1, A2>> task, Promise<A1> arg1, Promise<A2> arg2) {
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      Class<? extends Task2<R, A1, A2>> task,
+      Promise<? extends Maybe<A1>> arg1,
+      Promise<? extends Maybe<A2>> arg2) {
     return submit(Key.get(task), arg1, arg2);
   }
 
-  public <R, A1, A2> Promise<R> submit(
-      Key<? extends Task2<R, A1, A2>> task, Promise<A1> arg1, Promise<A2> arg2) {
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      Key<? extends Task2<R, A1, A2>> task,
+      Promise<? extends Maybe<A1>> arg1,
+      Promise<? extends Maybe<A2>> arg2) {
     return submit(list(), task, arg1, arg2);
   }
 
-  public <R, A1, A2> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Class<? extends Task2<R, A1, A2>> task,
-      Promise<A1> arg1,
-      Promise<A2> arg2) {
+      Promise<? extends Maybe<A1>> arg1,
+      Promise<? extends Maybe<A2>> arg2) {
     return submit(predecessors, Key.get(task), arg1, arg2);
   }
 
-  public <R, A1, A2> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Key<? extends Task2<R, A1, A2>> task,
-      Promise<A1> arg1,
-      Promise<A2> arg2) {
-    var execution =
-        new Execution<>(() -> injector.getInstance(task).execute(arg1.get(), arg2.get()));
+      Promise<? extends Maybe<A1>> arg1,
+      Promise<? extends Maybe<A2>> arg2) {
+    var execution = new Execution<>(
+        () -> injector.getInstance(task).execute(arg1.get().get(), arg2.get().get()));
     return submit(predecessors, execution, arg1, arg2);
   }
 
   // TaskX
 
-  public <R, A> Promise<R> submit(TaskX<R, A> task, List<? extends Promise<A>> args) {
+  public <R, A> Promise<Maybe<R>> submit(
+      TaskX<R, A> task, List<? extends Promise<? extends Maybe<A>>> args) {
     return submit(list(), task, args);
   }
 
-  public <R, A> Promise<R> submit(
-      List<? extends Promise<?>> predecessors, TaskX<R, A> task, List<? extends Promise<A>> args) {
-    var execution = new Execution<>(() -> task.execute(args.map(Promise::get)));
+  public <R, A> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      TaskX<R, A> task,
+      List<? extends Promise<? extends Maybe<? extends A>>> args) {
+    var execution = new Execution<>(() -> task.execute(args.map(p -> p.get().get())));
     return submit(predecessors, execution, args);
   }
 
-  public <R, A> Promise<R> submit(
-      Class<? extends TaskX<R, A>> task, List<? extends Promise<A>> args) {
+  public <R, A> Promise<Maybe<R>> submit(
+      Class<? extends TaskX<R, A>> task, List<? extends Promise<? extends Maybe<A>>> args) {
     return submit(Key.get(task), args);
   }
 
-  public <R, A> Promise<R> submit(
-      Key<? extends TaskX<R, A>> task, List<? extends Promise<A>> args) {
+  public <R, A> Promise<Maybe<R>> submit(
+      Key<? extends TaskX<R, A>> task, List<? extends Promise<? extends Maybe<A>>> args) {
     return submit(list(), task, args);
   }
 
-  public <R, A> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  public <R, A> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Class<? extends TaskX<R, A>> task,
-      List<? extends Promise<A>> args) {
+      List<? extends Promise<? extends Maybe<A>>> args) {
     return submit(predecessors, Key.get(task), args);
   }
 
-  public <R, A> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  public <R, A> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Key<? extends TaskX<R, A>> task,
-      List<? extends Promise<A>> args) {
-    var execution =
-        new Execution<>(() -> injector.getInstance(task).execute(args.map(Promise::get)));
+      List<? extends Promise<? extends Maybe<A>>> args) {
+    var execution = new Execution<>(
+        () -> injector.getInstance(task).execute(args.map(p -> p.get().get())));
     return submit(predecessors, execution, args);
   }
 
   // private
 
-  private <R> Promise<R> submit(
-      List<? extends Promise<?>> predecessors, Execution<R> execution, Promise<?>... args) {
+  private <R> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      Execution<R> execution,
+      Promise<? extends Maybe<?>>... args) {
     return submit(predecessors, execution, list(args));
   }
 
-  private <R> Promise<R> submit(
-      List<? extends Promise<?>> predecessors,
+  private <R> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
       Execution<R> execution,
-      List<? extends Promise<?>> args) {
-    runWhenAllAvailable(concatenate(predecessors, args), () -> executor.submit(execution));
+      List<? extends Promise<? extends Maybe<?>>> args) {
+    var dependencies = concatenate(predecessors, args);
+    runWhenAllAvailable(dependencies, () -> {
+      if (dependencies.anyMatches(d -> d.get().isNone())) {
+        execution.result.accept(none());
+      } else {
+        executor.submit(execution);
+      }
+    });
     return execution.resultPromise();
   }
 
-  private static List<Promise<?>> concatenate(
-      List<? extends Promise<?>> predecessors, List<? extends Promise<?>> args) {
-    // Cast is safe because List is immutable.
-    @SuppressWarnings("unchecked")
-    var cast = (List<Promise<?>>) predecessors;
-    return cast.appendAll(args);
+  private static List<Promise<? extends Maybe<?>>> concatenate(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      List<? extends Promise<? extends Maybe<?>>> args) {
+    return List.<Promise<? extends Maybe<?>>>list().appendAll(predecessors).appendAll(args);
   }
 
   public void waitUntilIdle() throws InterruptedException {
@@ -224,7 +249,7 @@ public class TaskExecutor {
   }
 
   private class Execution<R> implements Runnable {
-    private final MutablePromise<R> result;
+    private final MutablePromise<Maybe<R>> result;
     private final Supplier<Output<R>> taskResultSupplier;
 
     private Execution(Supplier<Output<R>> taskResultSupplier) {
@@ -238,16 +263,15 @@ public class TaskExecutor {
         var taskResult = taskResultSupplier.get();
         var report = taskResult.report();
         reporter.submit(report);
-        if (!containsFailure(report.logs())) {
-          taskResult.result().addConsumer(result);
-        }
+        taskResult.result().addConsumer(result);
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
         reporter.submit(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
+        result.accept(none());
       }
     }
 
-    public Promise<R> resultPromise() {
+    public Promise<Maybe<R>> resultPromise() {
       return result;
     }
   }

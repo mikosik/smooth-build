@@ -5,6 +5,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.synchronizedList;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,6 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
@@ -128,7 +130,7 @@ public class VmTest extends TestingVm {
         var call = bCall(lambda);
 
         var countingVm = countingVm();
-        assertThat(evaluate(countingVm, call).get()).isEqualTo(bArray(bInt(7)));
+        assertThat(evaluate(countingVm, call).get().get()).isEqualTo(bArray(bInt(7)));
 
         assertThat(countingVm.counters().get(BInt.class).intValue()).isEqualTo(1);
       }
@@ -140,7 +142,7 @@ public class VmTest extends TestingVm {
         var call = bCall(lambda, bOrder(bBool()));
 
         var countingVm = countingVm();
-        assertThat(evaluate(countingVm, call).get()).isEqualTo(bInt(7));
+        assertThat(evaluate(countingVm, call).get().get()).isEqualTo(bInt(7));
 
         assertThat(countingVm.counters().get(BBool.class)).isNull();
       }
@@ -279,7 +281,7 @@ public class VmTest extends TestingVm {
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
             .thenReturn(
                 right(VmTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-        assertThat(evaluate(vm(nativeMethodLoader), invoke).get()).isEqualTo(bInt(33));
+        assertThat(evaluate(vm(nativeMethodLoader), invoke).get().get()).isEqualTo(bInt(33));
       }
 
       @Test
@@ -565,7 +567,7 @@ public class VmTest extends TestingVm {
       var reporter = reporter();
       var taskExecutor = taskExecutor(reporter, 4);
       var vm = vm(taskExecutor);
-      assertThat(evaluate(vm, bExpr, taskExecutor).get())
+      assertThat(evaluate(vm, bExpr, taskExecutor).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
@@ -592,7 +594,7 @@ public class VmTest extends TestingVm {
       var taskExecutor = taskExecutor(reporter(), 2);
       var vm = vm(taskExecutor);
       var expected = bArray(bString("1"), bString("1"), bString("0"));
-      assertThat(evaluate(vm, expr, taskExecutor).get()).isEqualTo(expected);
+      assertThat(evaluate(vm, expr, taskExecutor).get().get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
@@ -638,21 +640,17 @@ public class VmTest extends TestingVm {
     }
   }
 
-  private BExpr evaluate(BExpr expr) {
-    return evaluate(vm(), expr).get();
+  private BValue evaluate(BExpr expr) {
+    return evaluate(vm(), expr).get().get();
   }
 
-  private Promise<BValue> evaluate(Vm vm, BExpr expr) {
+  private Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
     return evaluate(vm, expr, taskExecutor());
   }
 
-  private static Promise<BValue> evaluate(Vm vm, BExpr expr, TaskExecutor taskExecutor) {
+  private static Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr, TaskExecutor taskExecutor) {
     var result = vm.evaluate(expr);
-    try {
-      taskExecutor.waitUntilIdle();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    await().until(() -> result.toMaybe().isSome());
     return result;
   }
 

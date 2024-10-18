@@ -23,7 +23,7 @@ dependencies {
     testFixturesApi libs.junit.jupiter.api
     testFixturesApi libs.mockito
     testFixturesApi libs.okio
-    testFixturesApi libs.truth
+    testFixturesApi libs.awaitility
 
     testImplementation project(':src:common-testing')
     testImplementation libs.guava.testlib
@@ -32,6 +32,7 @@ dependencies {
     testImplementation libs.junit.jupiter.params
     testImplementation libs.mockito
     testImplementation libs.truth
+    testImplementation libs.awaitility
 }
 
 test {

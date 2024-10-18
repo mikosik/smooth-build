@@ -1,9 +1,9 @@
 package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
@@ -29,8 +29,8 @@ public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, L
 
   @Override
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
-    var moduleS = taskExecutor.submit(FrontendCompile.class, promise(modules));
-    var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, promise(names));
+    var moduleS = taskExecutor.submit(FrontendCompile.class, argument(modules));
+    var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, argument(names));
     var evaluatedExprs = taskExecutor.submit(VmFacade.class, compiledExprs);
 
     var label = EVALUATE_LABEL.append("schedule");
@@ -52,8 +52,8 @@ public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, L
       var scopeS = sModule.membersAndImported();
       var evaluables = scopeS.evaluables();
 
-      var values = taskExecutor.submit(FindValues.class, promise(scopeS), promise(valueNames));
-      var compiledExprs = taskExecutor.submit(BackendCompile.class, values, promise(evaluables));
+      var values = taskExecutor.submit(FindValues.class, argument(scopeS), argument(valueNames));
+      var compiledExprs = taskExecutor.submit(BackendCompile.class, values, argument(evaluables));
       return schedulingOutput(compiledExprs, report(label, new Trace(), EXECUTION, list()));
     }
   }

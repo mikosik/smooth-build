@@ -28,7 +28,7 @@ public class FindValuesTest {
     var exprs = new FindValues().execute(scopeS, list(valueS.name()));
 
     var referenceS = sReference(schemaS, "myValue", commandLineLocation());
-    assertThat(exprs.result().get()).isEqualTo(list(sInstantiate(referenceS)));
+    assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(referenceS)));
   }
 
   @Test

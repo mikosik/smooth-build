@@ -3,7 +3,7 @@ package org.smoothbuild.cli.command;
 import static org.smoothbuild.cli.run.CreateInjector.createInjector;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.concurrent.Promise.promise;
+import static org.smoothbuild.common.task.Argument.argument;
 
 import jakarta.inject.Inject;
 import java.nio.file.Path;
@@ -104,8 +104,8 @@ public class BuildCommand extends ProjectCommand {
       var evaluatedExprs = taskExecutor.submit(
           list(removeArtifacts),
           ScheduleEvaluate.class,
-          promise(Layout.MODULES),
-          promise(listOfAll(values)));
+          argument(Layout.MODULES),
+          argument(listOfAll(values)));
       taskExecutor.submit(SaveArtifacts.class, evaluatedExprs);
     }
   }

@@ -14,6 +14,7 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
@@ -47,7 +48,7 @@ public class VmFacade implements Task1<EvaluatedExprs, CompiledExprs> {
       }
     });
     var vm = childInjector.getInstance(Vm.class);
-    List<Promise<BValue>> evaluated = compiledExprs.bExprs().map(vm::evaluate);
+    List<Promise<Maybe<BValue>>> evaluated = compiledExprs.bExprs().map(vm::evaluate);
     var r = taskExecutor.submit(new Merge(compiledExprs), evaluated);
     return schedulingOutput(r, report(label("??"), new Trace(), EXECUTION, list()));
   }

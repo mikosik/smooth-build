@@ -3,11 +3,12 @@ package org.smoothbuild.compilerfrontend.testing;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Stage.PRODUCTION;
+import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.LIBRARY_BUCKET_ID;
@@ -142,13 +143,9 @@ public class FrontendCompileTester {
     writeModuleFilesToBuckets(buckets);
     var taskExecutor = injector.getInstance(TaskExecutor.class);
     var paths = list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH);
-    var module = taskExecutor.submit(FrontendCompile.class, promise(paths));
-    try {
-      taskExecutor.waitUntilIdle();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    return Try.of(module.toMaybe().getOr(null), memoryReporter.logs());
+    var module = taskExecutor.submit(FrontendCompile.class, argument(paths));
+    await().until(() -> module.toMaybe().isSome());
+    return Try.of(module.get().getOr(null), memoryReporter.logs());
   }
 
   private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {

@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.task.Argument;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -330,10 +332,11 @@ public class StepEvaluatorTest extends TestingVm {
       BOutput expectedOutput,
       ResultSource expectedResultSource)
       throws Exception {
-    var argPromises = input.elements().map(Promise::promise);
-    var resultPromise = stepEvaluator.evaluate(step, argPromises);
-    taskExecutor().waitUntilIdle();
-    assertThat(resultPromise.get()).isEqualTo(expectedOutput.value());
+    var arg = input.elements().map(Argument::argument);
+    var result = stepEvaluator.evaluate(step, arg);
+    await().until(() -> result.toMaybe().isSome());
+
+    assertThat(result.get().get()).isEqualTo(expectedOutput.value());
     var report = report(step.label(), step.trace(), expectedResultSource, list());
     assertThat(reporter().reports()).contains(report);
   }
@@ -351,8 +354,8 @@ public class StepEvaluatorTest extends TestingVm {
         taskExecutor,
         bytecodeF(),
         memoryCache);
-    stepEvaluator.evaluate(step, input.elements().map(Promise::promise));
-    taskExecutor.waitUntilIdle();
+    var result = stepEvaluator.evaluate(step, input.elements().map(Argument::argument));
+    await().until(() -> result.toMaybe().isSome());
 
     var stepHash = computationHashFactory.create(step, input);
 
