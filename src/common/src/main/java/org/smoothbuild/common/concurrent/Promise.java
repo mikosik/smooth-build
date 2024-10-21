@@ -27,6 +27,7 @@ public interface Promise<T> {
     addConsumer(v -> promise.accept(mapper.apply(v)));
     return promise;
   }
+
   public static void runWhenAllAvailable(List<? extends Promise<?>> promises, Runnable runnable) {
     ThresholdRunnable latch = new ThresholdRunnable(promises.size(), runnable);
     promises.forEach(child -> child.addConsumer(v -> latch.run()));

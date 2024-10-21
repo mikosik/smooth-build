@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
@@ -116,8 +115,6 @@ public class StepEvaluator {
 
   private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
       Step step, Purity purity, Promise<BOutput> promise) {
-    var convertedPromise = Promise.<Maybe<BOutput>>promise();
-    promise.addConsumer(v -> convertedPromise.accept(some(v)));
     Task1<BValue, BOutput> task = (bOutput) -> {
       try {
         return newOutput(step, bOutput, purity.cacheLevel());
@@ -125,7 +122,7 @@ public class StepEvaluator {
         return outputForException(step, e);
       }
     };
-    return taskExecutor.submit(task, convertedPromise);
+    return taskExecutor.submit(task, promise.map(Maybe::some));
   }
 
   private Output<BValue> readEvaluationFromDiskCache(
