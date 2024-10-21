@@ -249,10 +249,6 @@ public class TaskExecutor {
     return List.<Promise<? extends Maybe<?>>>list().appendAll(predecessors).appendAll(args);
   }
 
-  public void waitUntilIdle() throws InterruptedException {
-    executor.waitUntilIdle();
-  }
-
   private class Execution<R> implements Runnable {
     private final MutablePromise<Maybe<R>> result;
     private final Supplier<Output<R>> taskResultSupplier;
