@@ -10,32 +10,30 @@ import static org.smoothbuild.common.log.report.Report.report;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.cli.report.StatusPrinter;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
-import org.smoothbuild.common.task.TaskExecutor;
 
 public class CommandCompleter {
-  private final TaskExecutor taskExecutor;
   private final StatusPrinter statusPrinter;
   private final Reporter reporter;
 
   @Inject
-  public CommandCompleter(
-      TaskExecutor taskExecutor, StatusPrinter statusPrinter, Reporter reporter) {
-    this.taskExecutor = taskExecutor;
+  public CommandCompleter(StatusPrinter statusPrinter, Reporter reporter) {
     this.statusPrinter = statusPrinter;
     this.reporter = reporter;
   }
 
-  public int waitForCompletion() {
+  public int waitForCompletion(Promise<? extends Maybe<?>> commandResult) {
     try {
-      taskExecutor.waitUntilIdle();
+      Maybe<?> result = commandResult.getBlocking();
+      statusPrinter.printSummary();
+      return result.isNone() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
     } catch (InterruptedException e) {
       var fatal = fatal("taskExecutor has been interrupted");
       reporter.submit(report(label("smooth", "executor"), new Trace(), EXECUTION, list(fatal)));
       return EXIT_CODE_ERROR;
     }
-    var hasFailures = statusPrinter.printSummary();
-    return hasFailures ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 }

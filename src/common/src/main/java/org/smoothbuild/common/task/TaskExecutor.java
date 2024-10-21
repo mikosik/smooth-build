@@ -86,7 +86,8 @@ public class TaskExecutor {
 
   // Task1
 
-  public <R, A1> Promise<Maybe<R>> submit(Task1<R, A1> task, Promise<? extends Maybe<? extends A1>> arg1) {
+  public <R, A1> Promise<Maybe<R>> submit(
+      Task1<R, A1> task, Promise<? extends Maybe<? extends A1>> arg1) {
     return submit(list(), task, arg1);
   }
 
@@ -127,7 +128,9 @@ public class TaskExecutor {
   // Task2
 
   public <R, A1, A2> Promise<Maybe<R>> submit(
-      Task2<R, A1, A2> task, Promise<? extends Maybe<? extends A1>> arg1, Promise<? extends Maybe<? extends A2>> arg2) {
+      Task2<R, A1, A2> task,
+      Promise<? extends Maybe<? extends A1>> arg1,
+      Promise<? extends Maybe<? extends A2>> arg2) {
     return submit(list(), task, arg1, arg2);
   }
 
@@ -189,7 +192,8 @@ public class TaskExecutor {
   }
 
   public <R, A> Promise<Maybe<R>> submit(
-      Class<? extends TaskX<R, A>> task, List<? extends Promise<? extends Maybe<? extends A>>> args) {
+      Class<? extends TaskX<R, A>> task,
+      List<? extends Promise<? extends Maybe<? extends A>>> args) {
     return submit(Key.get(task), args);
   }
 

@@ -12,9 +12,12 @@ import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.cli.match.MatcherCreator;
 import org.smoothbuild.cli.run.RemoveArtifacts;
 import org.smoothbuild.cli.run.SaveArtifacts;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
@@ -94,11 +97,10 @@ public class BuildCommand extends ProjectCommand {
     }
 
     public int run(java.util.List<String> values) {
-      scheduleBuildTasks(values);
-      return commandCompleter.waitForCompletion();
+      return commandCompleter.waitForCompletion(scheduleBuildTasks(values));
     }
 
-    private void scheduleBuildTasks(List<String> values) {
+    private Promise<Maybe<Tuple0>> scheduleBuildTasks(List<String> values) {
       var initialize = taskExecutor.submit(Initializer.class);
       var removeArtifacts = taskExecutor.submit(list(initialize), RemoveArtifacts.class);
       var evaluatedExprs = taskExecutor.submit(
@@ -106,7 +108,7 @@ public class BuildCommand extends ProjectCommand {
           ScheduleEvaluate.class,
           argument(Layout.MODULES),
           argument(listOfAll(values)));
-      taskExecutor.submit(SaveArtifacts.class, evaluatedExprs);
+      return taskExecutor.submit(SaveArtifacts.class, evaluatedExprs);
     }
   }
 }
