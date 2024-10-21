@@ -1,10 +1,12 @@
 package org.smoothbuild.common.concurrent;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 
 import org.junit.jupiter.api.Nested;
@@ -12,6 +14,24 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 
 public class PromiseTest {
+  @Nested
+  class map {
+    @Test
+    void promise_created_by_map_is_empty_if_original_is_empty() {
+      MutablePromise<String> promise = promise();
+      var mapped = promise.map(s -> s + "!");
+      assertThat(mapped.toMaybe().isNone()).isTrue();
+    }
+
+    @Test
+    void promise_created_by_map_contains_mapped_value() {
+      MutablePromise<String> promise = promise();
+      var mapped = promise.map(s -> s + "!");
+      promise.accept("abc");
+      assertThat(mapped.get()).isEqualTo("abc!");
+    }
+  }
+
   @Nested
   class run_when_all_available {
     @Test
