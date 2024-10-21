@@ -37,7 +37,7 @@ public class TaskExecutor {
    * to calculate result for them) can simply return `Promise` that they received when submitting
    * scheduled task to TaskExecutor.
    */
-  public static final Label EXECUTE_LABEL = label("execute");
+  public static final Label EXECUTOR_LABEL = label("executor");
   private final Injector injector;
   private final Executor executor;
   private final Reporter reporter;
@@ -267,7 +267,7 @@ public class TaskExecutor {
         taskResult.result().addConsumer(result);
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
-        reporter.submit(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
+        reporter.submit(report(EXECUTOR_LABEL, new Trace(), EXECUTION, list(fatal)));
         result.accept(none());
       }
     }

@@ -19,7 +19,7 @@ import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.common.task.TaskExecutor.EXECUTE_LABEL;
+import static org.smoothbuild.common.task.TaskExecutor.EXECUTOR_LABEL;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -1067,7 +1067,7 @@ public class TaskExecutorTest {
 
   private static Report reportAboutExceptionThrownByTask(RuntimeException exception) {
     var fatal = fatal("Task execution failed with exception:", exception);
-    return report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal));
+    return report(EXECUTOR_LABEL, new Trace(), EXECUTION, list(fatal));
   }
 
   private static Report newReport() {
