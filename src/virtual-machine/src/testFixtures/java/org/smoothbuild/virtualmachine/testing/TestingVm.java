@@ -17,6 +17,7 @@ import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -281,7 +282,7 @@ public class TestingVm extends TestingBytecode {
     return new BOutput(value, messages);
   }
 
-  private static void throwExceptionOnFailure(Output<Void> output) {
+  private static void throwExceptionOnFailure(Output<Tuple0> output) {
     if (containsFailure(output.report().logs())) {
       throw new RuntimeException(output.toString());
     }

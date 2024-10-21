@@ -2,6 +2,7 @@ package org.smoothbuild.cli.run;
 
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -11,9 +12,10 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.virtualmachine.wire.Project;
 
-public class Clean implements Task0<Void> {
+public class Clean implements Task0<Tuple0> {
   private final Bucket bucket;
 
   @Inject
@@ -22,12 +24,12 @@ public class Clean implements Task0<Void> {
   }
 
   @Override
-  public Output<Void> execute() {
+  public Output<Tuple0> execute() {
     var logger = new Logger();
     deleteDir("object cache", Layout.HASHED_DB_PATH, logger);
     deleteDir("computation cache", Layout.COMPUTATION_CACHE_PATH, logger);
     deleteDir("artifacts", Layout.ARTIFACTS_PATH, logger);
-    return output(label("cli", "clean"), logger.toList());
+    return output(tuple(), label("cli", "clean"), logger.toList());
   }
 
   private void deleteDir(String name, Path path, Logger logger) {

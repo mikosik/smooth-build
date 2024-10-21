@@ -5,6 +5,7 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -14,8 +15,9 @@ import org.smoothbuild.cli.layout.InstallationHashes;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.tuple.Tuple0;
 
-public class Version implements Task0<Void> {
+public class Version implements Task0<Tuple0> {
   private final InstallationHashes installationHashes;
 
   @Inject
@@ -24,11 +26,11 @@ public class Version implements Task0<Void> {
   }
 
   @Override
-  public Output<Void> execute() {
+  public Output<Tuple0> execute() {
     var label = label("cli", "version");
     try {
       var info = info(createVersionText(installationHashes.installationNode()));
-      return output(label, list(info));
+      return output(tuple(), label, list(info));
     } catch (IOException e) {
       var fatal = fatal("ERROR: IO error when calculating installation hash: " + e.getMessage());
       return output(label, list(fatal));
