@@ -16,8 +16,6 @@ import org.smoothbuild.common.log.report.Trace;
 
 public record Output<V>(Promise<Maybe<V>> result, Report report) {
   public Output(Promise<Maybe<V>> result, Report report) {
-    // TODO workaround for calls that create Output with result=promise(some(..)) and with report
-    // containing failures. This should be fixed at caller side and here we should only have check?
     if (containsFailure(report.logs())) {
       this.result = promise(none());
     } else {
