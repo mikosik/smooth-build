@@ -9,6 +9,7 @@ import static org.smoothbuild.common.init.Initializable.INITIALIZE_LABEL;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import java.util.Set;
@@ -18,8 +19,9 @@ import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.tuple.Tuple0;
 
-public class Initializer implements Task0<Void> {
+public class Initializer implements Task0<Tuple0> {
   private final Set<Initializable> initializables;
   private final TaskExecutor taskExecutor;
 
@@ -30,10 +32,10 @@ public class Initializer implements Task0<Void> {
   }
 
   @Override
-  public Output<Void> execute() {
+  public Output<Tuple0> execute() {
     var initializablePromises = listOfAll(initializables).map(taskExecutor::submit);
-    MutablePromise<Maybe<Void>> promise = promise();
-    runWhenAllAvailable(initializablePromises, () -> promise.accept(some(null)));
+    MutablePromise<Maybe<Tuple0>> promise = promise();
+    runWhenAllAvailable(initializablePromises, () -> promise.accept(some(tuple())));
     var report = report(INITIALIZE_LABEL, new Trace(), EXECUTION, list());
     return schedulingOutput(promise, report);
   }
