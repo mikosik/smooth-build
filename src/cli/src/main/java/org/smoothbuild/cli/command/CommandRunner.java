@@ -16,7 +16,7 @@ public class CommandRunner {
   }
 
   public <T> int run(Class<? extends Task0<T>> taskClass) {
-    taskExecutor.submit(Key.get(taskClass));
-    return commandCompleter.waitForCompletion();
+    var result = taskExecutor.submit(Key.get(taskClass));
+    return commandCompleter.waitForCompletion(result);
   }
 }
