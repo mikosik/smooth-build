@@ -3,7 +3,7 @@ package org.smoothbuild.common.task;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promise.promise;
-import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;

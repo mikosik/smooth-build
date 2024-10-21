@@ -5,13 +5,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 
-public class PromisesTest {
+public class PromiseTest {
   @Nested
   class run_when_all_available {
     @Test

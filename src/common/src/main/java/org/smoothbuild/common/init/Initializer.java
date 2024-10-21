@@ -4,7 +4,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
-import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 import static org.smoothbuild.common.init.Initializable.INITIALIZE_LABEL;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;

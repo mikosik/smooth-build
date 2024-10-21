@@ -1,6 +1,7 @@
 package org.smoothbuild.common.concurrent;
 
 import java.util.function.Consumer;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 
 public interface Promise<T> {
@@ -19,4 +20,9 @@ public interface Promise<T> {
   public Maybe<T> toMaybe();
 
   public void addConsumer(Consumer<T> consumer);
+
+  public static void runWhenAllAvailable(List<? extends Promise<?>> promises, Runnable runnable) {
+    ThresholdRunnable latch = new ThresholdRunnable(promises.size(), runnable);
+    promises.forEach(child -> child.addConsumer(v -> latch.run()));
+  }
 }
