@@ -20,7 +20,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.TaskExecutor.EXECUTE_LABEL;
+import static org.smoothbuild.common.task.TaskExecutor.EXECUTOR_LABEL;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import java.util.ArrayList;
@@ -449,7 +449,7 @@ public class VmTest extends TestingVm {
         evaluate(vm, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
-            .contains(report(EXECUTE_LABEL, new Trace(), EXECUTION, list(fatal)));
+            .contains(report(EXECUTOR_LABEL, new Trace(), EXECUTION, list(fatal)));
       }
     }
   }
