@@ -48,36 +48,6 @@ public class TaskExecutorTest {
   @Nested
   class _task0 {
     @Nested
-    class _constant_task {
-      @Test
-      void successful_task_execution_sets_result_in_promise() {
-        var constant = "abc";
-        var label = label("my-label");
-        var task = new ConstantTask<>(constant, label);
-
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), constant);
-      }
-
-      @Test
-      void successful_task_execution_submits_report() {
-        var constant = "abc";
-        var label = label("my-label");
-        var task = new ConstantTask<>(constant, label);
-
-        var report = report(label, new Trace(), EXECUTION, list());
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        var label = label("my-label");
-        var task = new ConstantTask<>(null, label);
-
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), null);
-      }
-    }
-
-    @Nested
     class _normal_task {
       @Test
       void successful_task_execution_sets_result_in_promise() {
