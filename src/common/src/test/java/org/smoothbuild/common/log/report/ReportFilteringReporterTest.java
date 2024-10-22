@@ -11,7 +11,7 @@ import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 
 import org.junit.jupiter.api.Test;
 
-public class FilteringReporterTest {
+public class ReportFilteringReporterTest {
   @Test
   void when_task_matcher_matches_then_report_is_forwarded() {
     testVisibility(true);
@@ -28,7 +28,7 @@ public class FilteringReporterTest {
     var logs1 = list(ERROR_LOG);
     var wrappedReporter = mock(Reporter.class);
     var report = report(reportLabel, trace, DISK, logs1);
-    var reporter = new FilteringReporter(wrappedReporter, (label, logs) -> matches);
+    var reporter = new ReportFilteringReporter(wrappedReporter, (label, logs) -> matches);
 
     reporter.submit(report);
 
