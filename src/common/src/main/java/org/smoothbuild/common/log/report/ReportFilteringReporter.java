@@ -1,10 +1,10 @@
 package org.smoothbuild.common.log.report;
 
-public class FilteringReporter implements Reporter {
+public class ReportFilteringReporter implements Reporter {
   private final Reporter reporter;
   private final ReportMatcher reportMatcher;
 
-  public FilteringReporter(Reporter reporter, ReportMatcher reportMatcher) {
+  public ReportFilteringReporter(Reporter reporter, ReportMatcher reportMatcher) {
     this.reporter = reporter;
     this.reportMatcher = reportMatcher;
   }

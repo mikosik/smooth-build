@@ -32,7 +32,7 @@ public class ReportWiring extends AbstractModule {
       LogCounters logCounters,
       ReportMatcher reportMatcher) {
     var logFiltering = new LogFilteringReporter(printWriterReporter, level);
-    var taskFiltering = new FilteringReporter(logFiltering, reportMatcher);
+    var taskFiltering = new ReportFilteringReporter(logFiltering, reportMatcher);
     return new CountingReporter(taskFiltering, logCounters);
   }
 
