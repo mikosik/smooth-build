@@ -31,7 +31,8 @@ public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, L
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
     var moduleS = taskExecutor.submit(FrontendCompile.class, argument(modules));
     var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, argument(names));
-    var evaluatedExprs = taskExecutor.submit(VmFacade.class, compiledExprs);
+    var setBsMapping = taskExecutor.submit(ConfigureBsTranslator.class, compiledExprs);
+    var evaluatedExprs = taskExecutor.submit(list(setBsMapping), VmFacade.class, compiledExprs);
 
     var label = EVALUATE_LABEL.append("schedule");
     return schedulingOutput(evaluatedExprs, report(label, new Trace(), EXECUTION, list()));

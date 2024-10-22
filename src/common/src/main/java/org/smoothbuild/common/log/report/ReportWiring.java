@@ -1,5 +1,7 @@
 package org.smoothbuild.common.log.report;
 
+import static com.google.inject.multibindings.Multibinder.newSetBinder;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
@@ -22,6 +24,7 @@ public class ReportWiring extends AbstractModule {
     bind(Level.class).toInstance(logLevel);
     bind(PrintWriter.class).toInstance(out);
     bind(ReportMatcher.class).toInstance(reportMatcher);
+    newSetBinder(binder(), ReportDecorator.class);
   }
 
   @Provides
@@ -30,8 +33,10 @@ public class ReportWiring extends AbstractModule {
       PrintWriterReporter printWriterReporter,
       Level level,
       LogCounters logCounters,
-      ReportMatcher reportMatcher) {
-    var logFiltering = new LogFilteringReporter(printWriterReporter, level);
+      ReportMatcher reportMatcher,
+      java.util.Set<ReportDecorator> decorators) {
+    var decorating = new DecoratingReporter(printWriterReporter, decorators);
+    var logFiltering = new LogFilteringReporter(decorating, level);
     var taskFiltering = new ReportFilteringReporter(logFiltering, reportMatcher);
     return new CountingReporter(taskFiltering, logCounters);
   }

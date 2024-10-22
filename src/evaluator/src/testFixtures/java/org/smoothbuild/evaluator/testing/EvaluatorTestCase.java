@@ -40,12 +40,16 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.report.DecoratingReporter;
+import org.smoothbuild.common.log.report.Report;
+import org.smoothbuild.common.log.report.ReportDecorator;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
+import org.smoothbuild.evaluator.EvaluatorWiring;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -170,8 +174,12 @@ public class EvaluatorTestCase extends TestingBytecode {
     return memoryReporter().logs();
   }
 
+  protected List<Report> reports() {
+    return memoryReporter().reports();
+  }
+
   protected void assertLogsContainFailure() {
-    assertThat(containsFailure(memoryReporter().logs())).isTrue();
+    assertThat(containsFailure(logs())).isTrue();
   }
 
   private MemoryReporter memoryReporter() {
@@ -180,7 +188,11 @@ public class EvaluatorTestCase extends TestingBytecode {
 
   private Injector createInjector() {
     return Guice.createInjector(
-        PRODUCTION, new TestWiring(), new VmWiring(), new CompilerBackendWiring());
+        PRODUCTION,
+        new TestWiring(),
+        new EvaluatorWiring(),
+        new VmWiring(),
+        new CompilerBackendWiring());
   }
 
   @Override
@@ -197,8 +209,14 @@ public class EvaluatorTestCase extends TestingBytecode {
     @Override
     protected void configure() {
       bind(MemoryReporter.class).toInstance(new MemoryReporter());
-      bind(Reporter.class).to(MemoryReporter.class);
       bind(ReportMatcher.class).toInstance((label, logs) -> true);
+    }
+
+    @Provides
+    @Singleton
+    public Reporter provideReporter(
+        MemoryReporter memoryReporter, java.util.Set<ReportDecorator> decorators) {
+      return new DecoratingReporter(memoryReporter, decorators);
     }
 
     @Provides
@@ -241,6 +259,10 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   private String userFileMessage(int line, String message) {
-    return USER_MODULE_FULL_PATH + ":" + line + ": " + message;
+    return userModuleFullPath() + ":" + line + ": " + message;
+  }
+
+  protected static FullPath userModuleFullPath() {
+    return USER_MODULE_FULL_PATH;
   }
 }

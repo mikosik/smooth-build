@@ -3,6 +3,7 @@ package org.smoothbuild.evaluator;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
@@ -10,11 +11,14 @@ import org.smoothbuild.compilerfrontend.lang.define.STrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 
+@Singleton
 public class BsTranslator {
-  private final BsMapping bsMapping;
+  private volatile BsMapping bsMapping;
 
   @Inject
-  public BsTranslator(BsMapping bsMapping) {
+  public BsTranslator() {}
+
+  public void setBsMapping(BsMapping bsMapping) {
     this.bsMapping = bsMapping;
   }
 

@@ -4,9 +4,15 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
 import static org.smoothbuild.common.base.Strings.q;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTrace;
 
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Nested;
@@ -20,8 +26,8 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.AddElementOfWrongTypeTo
 import org.smoothbuild.virtualmachine.testing.func.nativ.BrokenIdentity;
 import org.smoothbuild.virtualmachine.testing.func.nativ.EmptyStringArray;
 import org.smoothbuild.virtualmachine.testing.func.nativ.MissingMethod;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportError;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReportErrorAndReturnNonNull;
-import org.smoothbuild.virtualmachine.testing.func.nativ.ReportFixedError;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReportWarningAndReturnNull;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnNull;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnStringStruct;
@@ -137,13 +143,19 @@ public class NativeTest extends EvaluatorTestCase {
         var userModule = format(
             """
                 @Native("%s")
-                A reportFixedError();
-                Int result = reportFixedError();
+                Int reportError(String message);
+                result = reportError("ERROR MESSAGE");
                 """,
-            ReportFixedError.class.getCanonicalName());
-        createUserModule(userModule, ReportFixedError.class);
+            ReportError.class.getCanonicalName());
+        createUserModule(userModule, ReportError.class);
+
         evaluate("result");
-        assertThat(logs()).containsExactly(error("some error message"));
+
+        var sTrace = sTrace("reportError", location(userModuleFullPath(), 3));
+        var label = label("vm", "evaluate", "invoke");
+        var errors = list(error("ERROR MESSAGE"));
+        var report = report(label, sTrace, EXECUTION, errors);
+        assertThat(reports()).contains(report);
       }
 
       @Test
