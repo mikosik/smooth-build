@@ -9,14 +9,11 @@ import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
@@ -25,7 +22,6 @@ import org.smoothbuild.common.task.TaskX;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
-import org.smoothbuild.virtualmachine.wire.TaskReporter;
 
 public class VmFacade implements Task1<EvaluatedExprs, CompiledExprs> {
   private final Injector injector;
@@ -39,15 +35,7 @@ public class VmFacade implements Task1<EvaluatedExprs, CompiledExprs> {
 
   @Override
   public Output<EvaluatedExprs> execute(CompiledExprs compiledExprs) {
-    var childInjector = injector.createChildInjector(new AbstractModule() {
-      @Provides
-      @TaskReporter
-      public Reporter provideTaskReporter(Reporter reporter) {
-        var bsTranslator = new BsTranslator(compiledExprs.bsMapping());
-        return new TranslatingReporter(reporter, bsTranslator);
-      }
-    });
-    var vm = childInjector.getInstance(Vm.class);
+    var vm = injector.getInstance(Vm.class);
     List<Promise<Maybe<BValue>>> evaluated = compiledExprs.bExprs().map(vm::evaluate);
     var r = taskExecutor.submit(new Merge(compiledExprs), evaluated);
     return schedulingOutput(r, report(label("??"), new Trace(), EXECUTION, list()));

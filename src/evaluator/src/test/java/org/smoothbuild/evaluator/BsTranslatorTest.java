@@ -25,20 +25,20 @@ public class BsTranslatorTest extends TestingVm {
   @Test
   void empty_trace() {
     var bsMapping = new BsMapping();
-    var bsTraceTranslator = new BsTranslator(bsMapping);
+    var bsTraceTranslator = newBsTranslator(bsMapping);
     assertThat(bsTraceTranslator.translate(new BTrace())).isEqualTo(sTrace());
   }
 
   @Test
   void one_elem_trace() {
-    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
     var trace = bTrace(HASH1, HASH2);
     assertThat(bsTraceTranslator.translate(trace)).isEqualTo(sTrace("name2", location(1)));
   }
 
   @Test
   void two_elem_trace() {
-    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(sTrace("name4", location(3), "name2", location(1)));
@@ -46,7 +46,7 @@ public class BsTranslatorTest extends TestingVm {
 
   @Test
   void trace_with_unknown_name() {
-    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(sTrace("name4", location(3), "???", location(1)));
@@ -54,7 +54,7 @@ public class BsTranslatorTest extends TestingVm {
 
   @Test
   void trace_with_unknown_loc() {
-    var bsTraceTranslator = new BsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
     var trace = bTrace(HASH3, HASH4, bTrace(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(sTrace("name4", location(3), "name2", unknownLocation()));
@@ -72,5 +72,11 @@ public class BsTranslatorTest extends TestingVm {
         HASH3, location(3),
         HASH4, location(4));
     return new BsMapping(names, locations);
+  }
+
+  private static BsTranslator newBsTranslator(BsMapping bsMapping) {
+    var bsTranslator = new BsTranslator();
+    bsTranslator.setBsMapping(bsMapping);
+    return bsTranslator;
   }
 }
