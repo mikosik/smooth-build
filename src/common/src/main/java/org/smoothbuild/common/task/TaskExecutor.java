@@ -8,6 +8,7 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Tasks.taskX;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -216,6 +217,13 @@ public class TaskExecutor {
     var execution = new Execution<>(
         () -> injector.getInstance(task).execute(args.map(p -> p.get().get())));
     return submit(predecessors, execution, args);
+  }
+
+  // helpers
+
+  public <T> Promise<Maybe<List<T>>> join(
+      List<? extends Promise<? extends Maybe<? extends T>>> list) {
+    return submit(taskX(EXECUTOR_LABEL.append("join"), l -> l), list);
   }
 
   // private
