@@ -5,6 +5,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.task.Tasks.map;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
 import jakarta.inject.Inject;
@@ -15,9 +16,9 @@ import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.compilerbackend.BackendCompile;
-import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, List<String>> {
   private final TaskExecutor taskExecutor;
@@ -30,32 +31,15 @@ public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, L
   @Override
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
     var moduleS = taskExecutor.submit(FrontendCompile.class, argument(modules));
-    var compiledExprs = taskExecutor.submit(ScheduleBackendCompile.class, moduleS, argument(names));
+    var mapLabel = EVALUATE_LABEL.append("map");
+    var scopeS = taskExecutor.submit(map(mapLabel, SModule::membersAndImported), moduleS);
+    var values = taskExecutor.submit(FindValues.class, scopeS, argument(names));
+    var evaluables = taskExecutor.submit(map(mapLabel, SScope::evaluables), scopeS);
+    var compiledExprs = taskExecutor.submit(BackendCompile.class, values, evaluables);
     var setBsMapping = taskExecutor.submit(ConfigureBsTranslator.class, compiledExprs);
     var evaluatedExprs = taskExecutor.submit(list(setBsMapping), VmFacade.class, compiledExprs);
 
     var label = EVALUATE_LABEL.append("schedule");
     return schedulingOutput(evaluatedExprs, report(label, new Trace(), EXECUTION, list()));
-  }
-
-  public static class ScheduleBackendCompile
-      implements Task2<CompiledExprs, SModule, List<String>> {
-    private final TaskExecutor taskExecutor;
-
-    @Inject
-    public ScheduleBackendCompile(TaskExecutor taskExecutor) {
-      this.taskExecutor = taskExecutor;
-    }
-
-    @Override
-    public Output<CompiledExprs> execute(SModule sModule, List<String> valueNames) {
-      var label = EVALUATE_LABEL.append("scheduleBackendCompile");
-      var scopeS = sModule.membersAndImported();
-      var evaluables = scopeS.evaluables();
-
-      var values = taskExecutor.submit(FindValues.class, argument(scopeS), argument(valueNames));
-      var compiledExprs = taskExecutor.submit(BackendCompile.class, values, argument(evaluables));
-      return schedulingOutput(compiledExprs, report(label, new Trace(), EXECUTION, list()));
-    }
   }
 }
