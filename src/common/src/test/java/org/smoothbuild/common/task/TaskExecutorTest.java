@@ -938,6 +938,43 @@ public class TaskExecutorTest {
   }
 
   @Nested
+  class _join {
+    @Test
+    void result_is_not_available_until_all_promises_from_list_are_not_available() {
+      var taskExecutor = newTaskExecutor();
+      MutablePromise<Maybe<String>> arg1 = promise();
+
+      var result = taskExecutor.join(list(arg1));
+
+      assertThat(result.toMaybe().isNone()).isTrue();
+    }
+
+    @Test
+    void result_contains_arguments_joined_into_list() {
+      var taskExecutor = newTaskExecutor();
+      var arg1 = promise(some("abc"));
+      var arg2 = promise(some("def"));
+
+      var result = taskExecutor.join(list(arg1, arg2));
+      await().until(() -> result.toMaybe().isSome());
+
+      assertThat(result.get()).isEqualTo(some(list("abc", "def")));
+    }
+
+    @Test
+    void result_is_none_when_one_of_arguments_is_none() {
+      var taskExecutor = newTaskExecutor();
+      var arg1 = promise(some("abc"));
+      var arg2 = promise(none());
+
+      var result = taskExecutor.join(list(arg1, arg2));
+      await().until(() -> result.toMaybe().isSome());
+
+      assertThat(result.get()).isEqualTo(none());
+    }
+  }
+
+  @Nested
   class _thread_separation {
     @Test
     void task0_is_executed_in_thread_different_from_one_that_submitted_task() {
