@@ -5,7 +5,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.task.Tasks.map;
+import static org.smoothbuild.common.task.Tasks.task1;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
 import jakarta.inject.Inject;
@@ -32,9 +32,9 @@ public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, L
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
     var moduleS = taskExecutor.submit(FrontendCompile.class, argument(modules));
     var mapLabel = EVALUATE_LABEL.append("map");
-    var scopeS = taskExecutor.submit(map(mapLabel, SModule::membersAndImported), moduleS);
+    var scopeS = taskExecutor.submit(task1(mapLabel, SModule::membersAndImported), moduleS);
     var values = taskExecutor.submit(FindValues.class, scopeS, argument(names));
-    var evaluables = taskExecutor.submit(map(mapLabel, SScope::evaluables), scopeS);
+    var evaluables = taskExecutor.submit(task1(mapLabel, SScope::evaluables), scopeS);
     var compiledExprs = taskExecutor.submit(BackendCompile.class, values, evaluables);
     var setBsMapping = taskExecutor.submit(ConfigureBsTranslator.class, compiledExprs);
     var evaluatedExprs = taskExecutor.submit(list(setBsMapping), VmFacade.class, compiledExprs);

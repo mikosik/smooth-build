@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 public class TasksTest {
   @Test
-  void map_maps() {
+  void task1_invokes_function() {
     var label = label("label");
-    var mapTask = Tasks.map(label, (String s) -> s + "!");
+    var mapTask = Tasks.task1(label, (String s) -> s + "!");
     assertThat(mapTask.execute("abc")).isEqualTo(output("abc!", label, list()));
   }
 }
