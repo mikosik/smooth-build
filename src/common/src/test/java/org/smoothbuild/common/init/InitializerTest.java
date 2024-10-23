@@ -11,10 +11,7 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.testing.TestingCommon;
-import org.smoothbuild.common.tuple.Tuple0;
 
 public class InitializerTest extends TestingCommon {
   @Test
@@ -26,18 +23,18 @@ public class InitializerTest extends TestingCommon {
     var taskExecutor = taskExecutor();
 
     var initializer = new Initializer(Set.of(initializable1, initializable2), taskExecutor);
-    Promise<Maybe<Tuple0>> result = taskExecutor.submit(initializer);
+    var result = taskExecutor.submit(initializer);
     await().until(() -> result.toMaybe().isSome());
 
     assertThat(visited1.get()).isTrue();
     assertThat(visited2.get()).isTrue();
-    assertThat(result.get()).isEqualTo(some(tuple()));
+    assertThat(result.get()).isEqualTo(some(list(tuple(), tuple())));
   }
 
   private static Initializable initializable(AtomicBoolean visited1) {
     return () -> {
       visited1.set(true);
-      return output(label(), list());
+      return output(tuple(), label(), list());
     };
   }
 }
