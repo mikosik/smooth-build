@@ -15,7 +15,7 @@ public class Tasks {
     return promise(some(value));
   }
 
-  public static <R, A> Task1<R, A> map(Label label, Function<A, R> mapper) {
+  public static <R, A> Task1<R, A> task1(Label label, Function<A, R> mapper) {
     return argument -> output(mapper.apply(argument), label, list());
   }
 }
