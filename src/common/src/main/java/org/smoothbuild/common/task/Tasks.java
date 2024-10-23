@@ -7,6 +7,7 @@ import static org.smoothbuild.common.task.Output.output;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
@@ -22,5 +23,9 @@ public class Tasks {
 
   public static <R, A1, A2> Task2<R, A1, A2> task2(Label label, BiFunction<A1, A2, R> function) {
     return (arg1, arg2) -> output(function.apply(arg1, arg2), label, list());
+  }
+
+  public static <R, A> TaskX<R, A> taskX(Label label, Function<List<A>, R> function) {
+    return (arg) -> output(function.apply(arg), label, list());
   }
 }

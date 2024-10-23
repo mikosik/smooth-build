@@ -6,8 +6,10 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Tasks.task1;
 import static org.smoothbuild.common.task.Tasks.task2;
+import static org.smoothbuild.common.task.Tasks.taskX;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 
 public class TasksTest {
   @Test
@@ -22,5 +24,12 @@ public class TasksTest {
     var label = label("label");
     var mapTask = task2(label, (String s1, String s2) -> s1 + s2);
     assertThat(mapTask.execute("abc", "def")).isEqualTo(output("abcdef", label, list()));
+  }
+
+  @Test
+  void taskX_invokes_function() {
+    var label = label("label");
+    var mapTask = taskX(label, (List<String> list) -> list.toString(","));
+    assertThat(mapTask.execute(list("a", "b", "c"))).isEqualTo(output("a,b,c", label, list()));
   }
 }
