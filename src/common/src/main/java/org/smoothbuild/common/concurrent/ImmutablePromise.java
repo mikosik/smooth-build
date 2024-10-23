@@ -9,7 +9,7 @@ import org.smoothbuild.common.collect.Maybe;
  * Immutable implementation of {@link Promise}.
  * This class is thread-safe.
  */
-public class ImmutablePromise<T> implements Promise<T> {
+public class ImmutablePromise<T> extends AbstractPromise<T> {
   private final T value;
 
   ImmutablePromise(T value) {
