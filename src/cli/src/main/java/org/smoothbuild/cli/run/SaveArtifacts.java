@@ -5,7 +5,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Output.output;
@@ -20,7 +19,6 @@ import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
@@ -68,19 +66,16 @@ public class SaveArtifacts implements Task1<Tuple0, EvaluatedExprs> {
     return (SReference) ((SInstantiate) expr).sPolymorphic();
   }
 
-  private Maybe<Void> save(SReference valueS, BValue value, Logger logger) {
+  private void save(SReference valueS, BValue value, Logger logger) {
     String name = valueS.referencedName();
     try {
       var path = write(valueS, value);
       logger.info(name + " -> " + path.q());
-      return null;
     } catch (IOException | BytecodeException e) {
       logger.fatal("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
-      return none();
     } catch (DuplicatedPathsException e) {
       logger.error(e.getMessage());
-      return none();
     }
   }
 
