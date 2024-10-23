@@ -17,9 +17,9 @@ import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.TaskExecutor.EXECUTOR_LABEL;
+import static org.smoothbuild.common.task.Tasks.argument;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

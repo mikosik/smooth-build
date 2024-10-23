@@ -3,8 +3,8 @@ package org.smoothbuild.evaluator;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
 import jakarta.inject.Inject;

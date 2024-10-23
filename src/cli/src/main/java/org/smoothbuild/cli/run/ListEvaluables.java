@@ -6,9 +6,9 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Argument.argument;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
