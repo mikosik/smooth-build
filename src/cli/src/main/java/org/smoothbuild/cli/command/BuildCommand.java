@@ -3,7 +3,7 @@ package org.smoothbuild.cli.command;
 import static org.smoothbuild.cli.run.CreateInjector.createInjector;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.task.Argument.argument;
+import static org.smoothbuild.common.task.Tasks.argument;
 
 import jakarta.inject.Inject;
 import java.nio.file.Path;

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.ResultSource;
-import org.smoothbuild.common.task.Argument;
+import org.smoothbuild.common.task.Tasks;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -332,7 +332,7 @@ public class StepEvaluatorTest extends TestingVm {
       BOutput expectedOutput,
       ResultSource expectedResultSource)
       throws Exception {
-    var arg = input.elements().map(Argument::argument);
+    var arg = input.elements().map(Tasks::argument);
     var result = stepEvaluator.evaluate(step, arg);
     await().until(() -> result.toMaybe().isSome());
 
@@ -354,7 +354,7 @@ public class StepEvaluatorTest extends TestingVm {
         taskExecutor,
         bytecodeF(),
         memoryCache);
-    var result = stepEvaluator.evaluate(step, input.elements().map(Argument::argument));
+    var result = stepEvaluator.evaluate(step, input.elements().map(Tasks::argument));
     await().until(() -> result.toMaybe().isSome());
 
     var stepHash = computationHashFactory.create(step, input);

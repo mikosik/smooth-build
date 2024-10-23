@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.task.Argument.argument;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.LIBRARY_BUCKET_ID;

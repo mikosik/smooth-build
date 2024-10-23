@@ -18,7 +18,7 @@ import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.common.task.Argument.argument;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import com.google.inject.AbstractModule;

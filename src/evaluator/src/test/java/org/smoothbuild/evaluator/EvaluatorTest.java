@@ -8,7 +8,7 @@ import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.task.Argument.argument;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingFileResolver.saveBytecodeInJar;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
