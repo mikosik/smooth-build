@@ -16,7 +16,7 @@ import org.smoothbuild.common.collect.Maybe;
  * This class is thread-safe.
  * Consumers registered with {@link #addConsumer(Consumer)} are called without any lock held.
  */
-public class MutablePromise<T> implements Consumer<T>, Promise<T> {
+public class MutablePromise<T> extends AbstractPromise<T> implements Consumer<T> {
   private final Object lock = new Object();
   private final List<Consumer<T>> consumers = new ArrayList<>();
   private Maybe<T> value;

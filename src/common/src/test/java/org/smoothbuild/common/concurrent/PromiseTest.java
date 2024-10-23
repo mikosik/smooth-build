@@ -9,11 +9,32 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 
 public class PromiseTest {
+  @Nested
+  class _equality {
+    @Test
+    void equals_and_hash_code() {
+      new EqualsTester()
+          .addEqualityGroup(
+              promise("abc"), promise("abc"), mutablePromise("abc"), mutablePromise("abc"))
+          .addEqualityGroup(
+              promise("def"), promise("def"), mutablePromise("def"), mutablePromise("def"))
+          .addEqualityGroup(promise(), promise())
+          .testEquals();
+    }
+
+    private static <T> MutablePromise<T> mutablePromise(T value) {
+      MutablePromise<T> promise = promise();
+      promise.accept(value);
+      return promise;
+    }
+  }
+
   @Nested
   class map {
     @Test
