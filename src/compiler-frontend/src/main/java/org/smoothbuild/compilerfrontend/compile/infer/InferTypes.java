@@ -39,7 +39,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements Task2<PModule, PModule, SScope> {
+public class InferTypes implements Task2<PModule, SScope, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule, SScope environment) {
     var logger = new Logger();

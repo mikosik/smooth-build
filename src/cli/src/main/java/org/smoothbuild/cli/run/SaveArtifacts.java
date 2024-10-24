@@ -36,7 +36,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.wire.Project;
 
-public class SaveArtifacts implements Task1<Tuple0, EvaluatedExprs> {
+public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final String FILE_STRUCT_NAME = "File";
   private final Bucket bucket;
 

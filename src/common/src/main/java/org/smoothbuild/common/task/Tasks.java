@@ -17,15 +17,15 @@ public class Tasks {
     return promise(some(value));
   }
 
-  public static <R, A1> Task1<R, A1> task1(Label label, Function<A1, R> function) {
+  public static <A1, R> Task1<A1, R> task1(Label label, Function<A1, R> function) {
     return arg1 -> output(function.apply(arg1), label, list());
   }
 
-  public static <R, A1, A2> Task2<R, A1, A2> task2(Label label, BiFunction<A1, A2, R> function) {
+  public static <A1, A2, R> Task2<A1, A2, R> task2(Label label, BiFunction<A1, A2, R> function) {
     return (arg1, arg2) -> output(function.apply(arg1, arg2), label, list());
   }
 
-  public static <R, A> TaskX<R, A> taskX(Label label, Function<List<A>, R> function) {
+  public static <A, R> TaskX<A, R> taskX(Label label, Function<List<A>, R> function) {
     return (arg) -> output(function.apply(arg), label, list());
   }
 }

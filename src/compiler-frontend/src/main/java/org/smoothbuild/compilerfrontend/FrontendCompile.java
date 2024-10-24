@@ -29,7 +29,7 @@ import org.smoothbuild.compilerfrontend.compile.TranslateAp;
 import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
-public class FrontendCompile implements Task1<SModule, List<FullPath>> {
+public class FrontendCompile implements Task1<List<FullPath>, SModule> {
   private final Scheduler scheduler;
 
   @Inject
@@ -48,7 +48,7 @@ public class FrontendCompile implements Task1<SModule, List<FullPath>> {
     return schedulingOutput(module, report);
   }
 
-  public static class ScheduleModuleCompilation implements Task2<SModule, SModule, FullPath> {
+  public static class ScheduleModuleCompilation implements Task2<SModule, FullPath, SModule> {
     private final Scheduler scheduler;
 
     @Inject

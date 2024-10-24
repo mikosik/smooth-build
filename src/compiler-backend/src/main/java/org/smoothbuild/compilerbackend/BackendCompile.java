@@ -15,7 +15,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 
 public class BackendCompile
-    implements Task2<CompiledExprs, List<SExpr>, ImmutableBindings<SNamedEvaluable>> {
+    implements Task2<List<SExpr>, ImmutableBindings<SNamedEvaluable>, CompiledExprs> {
   private final SbTranslatorFactory sbTranslatorFactory;
 
   @Inject

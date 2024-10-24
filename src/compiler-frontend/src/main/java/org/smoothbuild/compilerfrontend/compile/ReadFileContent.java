@@ -14,7 +14,7 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
 
-public class ReadFileContent implements Task1<String, FullPath> {
+public class ReadFileContent implements Task1<FullPath, String> {
   private final FileResolver fileResolver;
 
   @Inject

@@ -9,11 +9,11 @@ import static org.smoothbuild.common.task.Tasks.argument;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 
-public class ParallelTask<R, A1> implements Task1<List<R>, List<? extends A1>> {
+public class ParallelTask<A1, R> implements Task1<List<? extends A1>, List<R>> {
   private final Scheduler scheduler;
-  private final Task1<R, A1> task;
+  private final Task1<A1, R> task;
 
-  ParallelTask(Scheduler scheduler, Task1<R, A1> task) {
+  ParallelTask(Scheduler scheduler, Task1<A1, R> task) {
     this.scheduler = scheduler;
     this.task = task;
   }

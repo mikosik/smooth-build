@@ -26,7 +26,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SScope;
 /**
  * Detect undefined referencables and types.
  */
-public class DetectUndefined implements Task2<PModule, PModule, SScope> {
+public class DetectUndefined implements Task2<PModule, SScope, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule, SScope imported) {
     var logger = new Logger();

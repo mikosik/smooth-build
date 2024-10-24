@@ -115,7 +115,7 @@ public class StepEvaluator {
 
   private Promise<Maybe<BValue>> scheduleTaskWaitingForOtherTaskResult(
       Step step, Purity purity, Promise<BOutput> promise) {
-    Task1<BValue, BOutput> task = (bOutput) -> {
+    Task1<BOutput, BValue> task = (bOutput) -> {
       try {
         return newOutput(step, bOutput, purity.cacheLevel());
       } catch (BytecodeException e) {

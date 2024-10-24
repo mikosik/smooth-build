@@ -11,7 +11,7 @@ import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 
-public class ConfigureBsTranslator implements Task1<Tuple0, CompiledExprs> {
+public class ConfigureBsTranslator implements Task1<CompiledExprs, Tuple0> {
   private final BsTranslator bsTranslator;
 
   @Inject
