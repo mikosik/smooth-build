@@ -36,6 +36,7 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStrin
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
+import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
 import com.google.inject.Injector;
 import org.junit.jupiter.api.Nested;
@@ -47,7 +48,6 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -307,9 +307,8 @@ public class EvaluatorTest extends TestingVm {
       Injector injector, ImmutableBindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
     var scheduler = injector.getInstance(Scheduler.class);
     var initializer = scheduler.submit(injector.getInstance(Initializer.class));
-    var compiledExprs = scheduler.submit(
-        list(initializer), BackendCompile.class, argument(exprs), argument(evaluables));
-    var evaluatedExprs = scheduler.submit(VmFacade.class, compiledExprs);
+    await().until(() -> initializer.toMaybe().isSome());
+    var evaluatedExprs = scheduleEvaluateCore(scheduler, argument(exprs), argument(evaluables));
     await().until(() -> evaluatedExprs.toMaybe().isSome());
     return evaluatedExprs.get();
   }

@@ -58,7 +58,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  * Executes submitted BExpr asynchronously providing result via returned Promise.
  * This class is thread-safe.
  */
-public class Vm {
+public class Vm implements Task1<BValue, BExpr> {
   private final Scheduler scheduler;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
@@ -77,14 +77,16 @@ public class Vm {
   }
 
   public Promise<Maybe<BValue>> evaluate(BExpr expr) {
-    var task = (Task1<BValue, BExpr>) (BExpr arg) -> {
-      try {
-        return successOutput(new BTrace(), scheduleJob(newJob(arg)));
-      } catch (BytecodeException e) {
-        return failedSchedulingOutput(new BTrace(), e);
-      }
-    };
-    return scheduler.submit(task, argument(expr));
+    return scheduler.submit(this, argument(expr));
+  }
+
+  @Override
+  public Output<BValue> execute(BExpr expr) {
+    try {
+      return successOutput(new BTrace(), scheduleJob(newJob(expr)));
+    } catch (BytecodeException e) {
+      return failedSchedulingOutput(new BTrace(), e);
+    }
   }
 
   private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {

@@ -6,19 +6,29 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.task.Tasks.task1;
+import static org.smoothbuild.common.task.Tasks.task2;
+import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
+import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
+import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerbackend.BackendCompile;
+import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
+import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 
 public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, List<String>> {
   private final Scheduler scheduler;
@@ -33,13 +43,28 @@ public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, L
     var moduleS = scheduler.submit(FrontendCompile.class, argument(modules));
     var mapLabel = EVALUATE_LABEL.append("map");
     var scopeS = scheduler.submit(task1(mapLabel, SModule::membersAndImported), moduleS);
-    var values = scheduler.submit(FindValues.class, scopeS, argument(names));
+    var sExprs = scheduler.submit(FindValues.class, scopeS, argument(names));
     var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), scopeS);
-    var compiledExprs = scheduler.submit(BackendCompile.class, values, evaluables);
-    var setBsMapping = scheduler.submit(ConfigureBsTranslator.class, compiledExprs);
-    var evaluatedExprs = scheduler.submit(list(setBsMapping), VmFacade.class, compiledExprs);
 
-    var label = EVALUATE_LABEL.append("schedule");
-    return schedulingOutput(evaluatedExprs, report(label, new Trace(), EXECUTION, list()));
+    var evaluatedExprs = scheduleEvaluateCore(scheduler, sExprs, evaluables);
+
+    var scheduleLabel = EVALUATE_LABEL.append("schedule");
+    return schedulingOutput(evaluatedExprs, report(scheduleLabel, new Trace(), EXECUTION, list()));
+  }
+
+  @VisibleForTesting
+  public static Promise<Maybe<EvaluatedExprs>> scheduleEvaluateCore(
+      Scheduler scheduler,
+      Promise<Maybe<List<SExpr>>> sExprs,
+      Promise<Maybe<ImmutableBindings<SNamedEvaluable>>> evaluables) {
+    var compiledExprs = scheduler.submit(BackendCompile.class, sExprs, evaluables);
+    var setBsMapping = scheduler.submit(ConfigureBsTranslator.class, compiledExprs);
+    var getLabel = EVALUATE_LABEL.append("getCompiledExprs");
+    var bExprs = scheduler.submit(task1(getLabel, CompiledExprs::bExprs), compiledExprs);
+    var evaluated =
+        scheduler.submit(list(setBsMapping), scheduler.newParallelTask(Vm.class), bExprs);
+    var mergeLabel = EVALUATE_LABEL.append("merge");
+    return scheduler.submit(
+        task2(mergeLabel, (ce, ee) -> evaluatedExprs(ce.sExprs(), ee)), compiledExprs, evaluated);
   }
 }
