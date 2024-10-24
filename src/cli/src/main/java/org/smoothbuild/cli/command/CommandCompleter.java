@@ -31,8 +31,8 @@ public class CommandCompleter {
       statusPrinter.printSummary();
       return result.isNone() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
     } catch (InterruptedException e) {
-      var fatal = fatal("taskExecutor has been interrupted");
-      reporter.submit(report(label("smooth", "executor"), new Trace(), EXECUTION, list(fatal)));
+      var fatal = fatal("main thread has been interrupted");
+      reporter.submit(report(label("smooth"), new Trace(), EXECUTION, list(fatal)));
       return EXIT_CODE_ERROR;
     }
   }

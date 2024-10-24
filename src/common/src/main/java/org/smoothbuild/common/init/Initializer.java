@@ -12,24 +12,24 @@ import java.util.Set;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task0;
-import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.tuple.Tuple0;
 
 public class Initializer implements Task0<List<Tuple0>> {
   private final Set<Initializable> initializables;
-  private final TaskExecutor taskExecutor;
+  private final Scheduler scheduler;
 
   @Inject
-  public Initializer(Set<Initializable> initializables, TaskExecutor taskExecutor) {
+  public Initializer(Set<Initializable> initializables, Scheduler scheduler) {
     this.initializables = initializables;
-    this.taskExecutor = taskExecutor;
+    this.scheduler = scheduler;
   }
 
   @Override
   public Output<List<Tuple0>> execute() {
-    var initializablePromises = listOfAll(initializables).map(taskExecutor::submit);
-    var promise = taskExecutor.join(initializablePromises);
+    var initializablePromises = listOfAll(initializables).map(scheduler::submit);
+    var promise = scheduler.join(initializablePromises);
     var report = report(INITIALIZE_LABEL, new Trace(), EXECUTION, list());
     return schedulingOutput(promise, report);
   }

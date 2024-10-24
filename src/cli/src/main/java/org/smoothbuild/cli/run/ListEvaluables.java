@@ -16,9 +16,9 @@ import org.smoothbuild.cli.layout.BucketIds;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.task.Task1;
-import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
@@ -29,17 +29,17 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 
 public class ListEvaluables implements Task0<Tuple0> {
-  private final TaskExecutor taskExecutor;
+  private final Scheduler scheduler;
 
   @Inject
-  public ListEvaluables(TaskExecutor taskExecutor) {
-    this.taskExecutor = taskExecutor;
+  public ListEvaluables(Scheduler scheduler) {
+    this.scheduler = scheduler;
   }
 
   @Override
   public Output<Tuple0> execute() {
-    var scopeS = taskExecutor.submit(FrontendCompile.class, argument(Layout.MODULES));
-    var result = taskExecutor.submit(PrintEvaluables.class, scopeS);
+    var scopeS = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
+    var result = scheduler.submit(PrintEvaluables.class, scopeS);
     var label = label("schedule", "list");
     return schedulingOutput(result, report(label, new Trace(), EXECUTION, list()));
   }

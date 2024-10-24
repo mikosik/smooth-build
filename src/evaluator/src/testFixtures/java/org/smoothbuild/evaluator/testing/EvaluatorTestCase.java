@@ -45,7 +45,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.ReportDecorator;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -119,9 +119,9 @@ public class EvaluatorTestCase extends TestingBytecode {
   }
 
   protected void evaluate(String... names) {
-    var taskExecutor = injector.getInstance(TaskExecutor.class);
-    var initialize = taskExecutor.submit(injector.getInstance(Initializer.class));
-    var evaluated = taskExecutor.submit(
+    var scheduler = injector.getInstance(Scheduler.class);
+    var initialize = scheduler.submit(injector.getInstance(Initializer.class));
+    var evaluated = scheduler.submit(
         list(initialize),
         ScheduleEvaluate.class,
         argument(modules),

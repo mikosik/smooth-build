@@ -31,24 +31,24 @@ import org.smoothbuild.common.log.report.Trace;
  * This class is thread-safe.
  */
 @Singleton
-public class TaskExecutor {
+public class Scheduler {
   /*
    * Design decisions: Output returned by Task*.execute() contains `Promise<T> result` field
    * instead of `T result` so scheduling tasks (tasks that starts other tasks (scheduled tasks)
    * to calculate result for them) can simply return `Promise` that they received when submitting
-   * scheduled task to TaskExecutor.
+   * scheduled task to Scheduler.
    */
-  public static final Label EXECUTOR_LABEL = label("executor");
+  public static final Label LABEL = label("scheduler");
   private final Injector injector;
   private final Executor executor;
   private final Reporter reporter;
 
   @Inject
-  public TaskExecutor(Injector injector, Reporter reporter) {
+  public Scheduler(Injector injector, Reporter reporter) {
     this(injector, reporter, Runtime.getRuntime().availableProcessors());
   }
 
-  public TaskExecutor(Injector injector, Reporter reporter, int threadCount) {
+  public Scheduler(Injector injector, Reporter reporter, int threadCount) {
     this.injector = injector;
     this.reporter = reporter;
     this.executor = new Executor(threadCount);
@@ -223,7 +223,7 @@ public class TaskExecutor {
 
   public <T> Promise<Maybe<List<T>>> join(
       List<? extends Promise<? extends Maybe<? extends T>>> list) {
-    return submit(taskX(EXECUTOR_LABEL.append("join"), l -> l), list);
+    return submit(taskX(LABEL.append("join"), l -> l), list);
   }
 
   // private
@@ -275,7 +275,7 @@ public class TaskExecutor {
         taskResult.result().addConsumer(result);
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
-        reporter.submit(report(EXECUTOR_LABEL, new Trace(), EXECUTION, list(fatal)));
+        reporter.submit(report(LABEL, new Trace(), EXECUTION, list(fatal)));
         result.accept(none());
       }
     }

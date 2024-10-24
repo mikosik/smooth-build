@@ -21,10 +21,10 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.common.task.Task2;
-import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -58,18 +58,18 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  * This class is thread-safe.
  */
 public class Vm {
-  private final TaskExecutor taskExecutor;
+  private final Scheduler scheduler;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
   public Vm(
-      TaskExecutor taskExecutor,
+      Scheduler scheduler,
       StepEvaluator stepEvaluator,
       BytecodeFactory bytecodeFactory,
       BReferenceInliner bReferenceInliner) {
-    this.taskExecutor = taskExecutor;
+    this.scheduler = scheduler;
     this.stepEvaluator = stepEvaluator;
     this.bytecodeFactory = bytecodeFactory;
     this.bReferenceInliner = bReferenceInliner;
@@ -80,7 +80,7 @@ public class Vm {
   }
 
   private Promise<Maybe<BValue>> evaluate(Job job) {
-    return taskExecutor.submit(() -> {
+    return scheduler.submit(() -> {
       try {
         return successOutput(job, scheduleJob(job));
       } catch (BytecodeException e) {
@@ -133,7 +133,7 @@ public class Vm {
         return failedSchedulingOutput(callJob, e);
       }
     };
-    return taskExecutor.submit(schedulingTask, scheduleNewJob(bLambda, callJob));
+    return scheduler.submit(schedulingTask, scheduleNewJob(bLambda, callJob));
   }
 
   private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
@@ -148,7 +148,7 @@ public class Vm {
       }
     };
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-    return taskExecutor.submit(schedulingTask, lambdaPromise);
+    return scheduler.submit(schedulingTask, lambdaPromise);
   }
 
   private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
@@ -170,7 +170,7 @@ public class Vm {
      */
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
     var argsPromise = scheduleNewJob(lambdaArgs, callJob);
-    return taskExecutor.submit(schedulingTask, lambdaPromise, argsPromise);
+    return scheduler.submit(schedulingTask, lambdaPromise, argsPromise);
   }
 
   private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
@@ -195,7 +195,7 @@ public class Vm {
       }
     };
     var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
-    return taskExecutor.submit(schedulingTask, conditionPromise);
+    return scheduler.submit(schedulingTask, conditionPromise);
   }
 
   private Promise<Maybe<BValue>> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
@@ -215,7 +215,7 @@ public class Vm {
       }
     };
     var arrayPromise = scheduleNewJob(arrayArg, mapJob);
-    return taskExecutor.submit(schedulingTask, arrayPromise);
+    return scheduler.submit(schedulingTask, arrayPromise);
   }
 
   private BExpr newCallB(BExpr lambdaExpr, BValue value) throws BytecodeException {
@@ -257,7 +257,7 @@ public class Vm {
         return failedInlineTaskOutput(job, e);
       }
     };
-    return taskExecutor.submit(inlineTask);
+    return scheduler.submit(inlineTask);
   }
 
   // helpers

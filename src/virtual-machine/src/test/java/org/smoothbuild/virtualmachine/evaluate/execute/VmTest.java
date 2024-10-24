@@ -20,7 +20,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.TaskExecutor.EXECUTOR_LABEL;
+import static org.smoothbuild.common.task.Scheduler.LABEL;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
@@ -317,8 +317,8 @@ public class VmTest extends TestingVm {
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var reporter = mock(Reporter.class);
-          var taskExecutor = taskExecutor(reporter);
-          evaluate(vm(taskExecutor), pick, taskExecutor);
+          var scheduler = scheduler(reporter);
+          evaluate(vm(scheduler), pick, scheduler);
           verify(reporter).submit(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
@@ -330,8 +330,8 @@ public class VmTest extends TestingVm {
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var reporter = mock(Reporter.class);
-          var taskExecutor = taskExecutor(reporter);
-          evaluate(vm(taskExecutor), pick, taskExecutor);
+          var scheduler = scheduler(reporter);
+          evaluate(vm(scheduler), pick, scheduler);
           verify(reporter).submit(argThat(this::isResultWithNegativeIndexError));
         }
 
@@ -409,10 +409,10 @@ public class VmTest extends TestingVm {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(Reporter.class);
-        var taskExecutor = taskExecutor(reporter, 4);
-        var vm = vm(taskExecutor);
+        var scheduler = scheduler(reporter, 4);
+        var vm = vm(scheduler);
         var expr = throwExceptionCall();
-        evaluate(vm, expr, taskExecutor);
+        evaluate(vm, expr, scheduler);
         verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
@@ -437,8 +437,8 @@ public class VmTest extends TestingVm {
       void step_evaluator_that_throws_exception_is_detected() throws Exception {
         var expr = bOrder();
         var runtimeException = new RuntimeException();
-        var taskExecutor = taskExecutor();
-        var stepEvaluator = new StepEvaluator(null, null, null, taskExecutor, bytecodeF()) {
+        var scheduler = scheduler();
+        var stepEvaluator = new StepEvaluator(null, null, null, scheduler, bytecodeF()) {
           @Override
           public Output<BValue> evaluateStep(Step task, BTuple input) {
             throw runtimeException;
@@ -449,7 +449,7 @@ public class VmTest extends TestingVm {
         evaluate(vm, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
-            .contains(report(EXECUTOR_LABEL, new Trace(), EXECUTION, list(fatal)));
+            .contains(report(LABEL, new Trace(), EXECUTION, list(fatal)));
       }
     }
   }
@@ -528,8 +528,8 @@ public class VmTest extends TestingVm {
     private void assertTaskReport(
         BExpr expr, String label, BTrace trace, ResultSource resultSource) {
       var reporter = mock(Reporter.class);
-      var taskExecutor = taskExecutor(reporter);
-      evaluate(vm(taskExecutor), expr, taskExecutor);
+      var scheduler = scheduler(reporter);
+      evaluate(vm(scheduler), expr, scheduler);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
       verify(reporter).submit(taskReport);
     }
@@ -565,9 +565,9 @@ public class VmTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1"));
 
       var reporter = reporter();
-      var taskExecutor = taskExecutor(reporter, 4);
-      var vm = vm(taskExecutor);
-      assertThat(evaluate(vm, bExpr, taskExecutor).get().get())
+      var scheduler = scheduler(reporter, 4);
+      var vm = vm(scheduler);
+      assertThat(evaluate(vm, bExpr, scheduler).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
@@ -591,10 +591,10 @@ public class VmTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
           invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
-      var taskExecutor = taskExecutor(reporter(), 2);
-      var vm = vm(taskExecutor);
+      var scheduler = scheduler(reporter(), 2);
+      var vm = vm(scheduler);
       var expected = bArray(bString("1"), bString("1"), bString("0"));
-      assertThat(evaluate(vm, expr, taskExecutor).get().get()).isEqualTo(expected);
+      assertThat(evaluate(vm, expr, scheduler).get().get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
@@ -645,10 +645,10 @@ public class VmTest extends TestingVm {
   }
 
   private Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
-    return evaluate(vm, expr, taskExecutor());
+    return evaluate(vm, expr, scheduler());
   }
 
-  private static Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr, TaskExecutor taskExecutor) {
+  private static Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr, Scheduler scheduler) {
     var result = vm.evaluate(expr);
     await().until(() -> result.toMaybe().isSome());
     return result;
@@ -689,18 +689,18 @@ public class VmTest extends TestingVm {
   }
 
   private CountingVm countingVm() {
-    return new CountingVm(taskExecutor(), stepEvaluator(), bytecodeF(), bReferenceInliner());
+    return new CountingVm(scheduler(), stepEvaluator(), bytecodeF(), bReferenceInliner());
   }
 
   private static class CountingVm extends Vm {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingVm(
-        TaskExecutor taskExecutor,
+        Scheduler scheduler,
         StepEvaluator stepEvaluator,
         BytecodeFactory bytecodeFactory,
         BReferenceInliner bReferenceInliner) {
-      super(taskExecutor, stepEvaluator, bytecodeFactory, bReferenceInliner);
+      super(scheduler, stepEvaluator, bytecodeFactory, bReferenceInliner);
     }
 
     @Override

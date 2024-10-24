@@ -16,7 +16,7 @@ import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -65,16 +65,15 @@ public class TestingVm extends TestingBytecode {
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
 
   public Vm vm() {
-    return vm(taskExecutor());
+    return vm(scheduler());
   }
 
   public Vm vm(NativeMethodLoader nativeMethodLoader) {
-    return new Vm(
-        taskExecutor(), stepEvaluator(nativeMethodLoader), bytecodeF(), bReferenceInliner());
+    return new Vm(scheduler(), stepEvaluator(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public Vm vm(TaskExecutor taskExecutor) {
-    return new Vm(taskExecutor, stepEvaluator(taskExecutor), bytecodeF(), bReferenceInliner());
+  public Vm vm(Scheduler scheduler) {
+    return new Vm(scheduler, stepEvaluator(scheduler), bytecodeF(), bReferenceInliner());
   }
 
   public BReferenceInliner bReferenceInliner() {
@@ -82,7 +81,7 @@ public class TestingVm extends TestingBytecode {
   }
 
   public Vm vm(StepEvaluator stepEvaluator) {
-    return new Vm(taskExecutor(), stepEvaluator, bytecodeF(), bReferenceInliner());
+    return new Vm(scheduler(), stepEvaluator, bytecodeF(), bReferenceInliner());
   }
 
   public NativeMethodLoader nativeMethodLoader() {
@@ -115,7 +114,7 @@ public class TestingVm extends TestingBytecode {
 
   private StepEvaluator newStepEvaluator() {
     return new StepEvaluator(
-        computationHashFactory(), this::container, computationCache(), taskExecutor(), bytecodeF());
+        computationHashFactory(), this::container, computationCache(), scheduler(), bytecodeF());
   }
 
   public StepEvaluator stepEvaluator(NativeMethodLoader nativeMethodLoader) {
@@ -123,13 +122,13 @@ public class TestingVm extends TestingBytecode {
         computationHashFactory(),
         () -> container(nativeMethodLoader),
         computationCache(),
-        taskExecutor(),
+        scheduler(),
         bytecodeF());
   }
 
-  private StepEvaluator stepEvaluator(TaskExecutor taskExecutor) {
+  private StepEvaluator stepEvaluator(Scheduler scheduler) {
     return new StepEvaluator(
-        computationHashFactory(), this::container, computationCache(), taskExecutor, bytecodeF());
+        computationHashFactory(), this::container, computationCache(), scheduler, bytecodeF());
   }
 
   public ComputationHashFactory computationHashFactory() {

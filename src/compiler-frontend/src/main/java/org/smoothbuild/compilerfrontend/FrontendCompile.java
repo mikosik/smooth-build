@@ -12,9 +12,9 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.common.task.Task2;
-import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.compilerfrontend.compile.ConvertPs;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
 import org.smoothbuild.compilerfrontend.compile.DetectUndefined;
@@ -30,18 +30,18 @@ import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
 public class FrontendCompile implements Task1<SModule, List<FullPath>> {
-  private final TaskExecutor taskExecutor;
+  private final Scheduler scheduler;
 
   @Inject
-  public FrontendCompile(TaskExecutor taskExecutor) {
-    this.taskExecutor = taskExecutor;
+  public FrontendCompile(Scheduler scheduler) {
+    this.scheduler = scheduler;
   }
 
   @Override
   public Output<SModule> execute(List<FullPath> modules) {
-    var module = taskExecutor.submit(LoadInternalModuleMembers.class);
+    var module = scheduler.submit(LoadInternalModuleMembers.class);
     for (var fullPath : modules) {
-      module = taskExecutor.submit(ScheduleModuleCompilation.class, module, argument(fullPath));
+      module = scheduler.submit(ScheduleModuleCompilation.class, module, argument(fullPath));
     }
     var label = COMPILE_FRONT_LABEL.append("schedule");
     var report = report(label, new Trace(), EXECUTION, list());
@@ -49,30 +49,30 @@ public class FrontendCompile implements Task1<SModule, List<FullPath>> {
   }
 
   public static class ScheduleModuleCompilation implements Task2<SModule, SModule, FullPath> {
-    private final TaskExecutor taskExecutor;
+    private final Scheduler scheduler;
 
     @Inject
-    public ScheduleModuleCompilation(TaskExecutor taskExecutor) {
-      this.taskExecutor = taskExecutor;
+    public ScheduleModuleCompilation(Scheduler scheduler) {
+      this.scheduler = scheduler;
     }
 
     @Override
     public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
       var environment = argument(importedModule.membersAndImported());
       var path = argument(fullPath);
-      var fileContent = taskExecutor.submit(ReadFileContent.class, path);
-      var moduleContext = taskExecutor.submit(Parse.class, fileContent, path);
-      var moduleP = taskExecutor.submit(TranslateAp.class, moduleContext, path);
-      var withSyntaxCheck = taskExecutor.submit(FindSyntaxErrors.class, moduleP);
-      var withDecodedLiterals = taskExecutor.submit(DecodeLiterals.class, withSyntaxCheck);
-      var withInitializedScopes = taskExecutor.submit(InitializeScopes.class, withDecodedLiterals);
+      var fileContent = scheduler.submit(ReadFileContent.class, path);
+      var moduleContext = scheduler.submit(Parse.class, fileContent, path);
+      var moduleP = scheduler.submit(TranslateAp.class, moduleContext, path);
+      var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, moduleP);
+      var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
+      var withInitializedScopes = scheduler.submit(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected =
-          taskExecutor.submit(DetectUndefined.class, withInitializedScopes, environment);
+          scheduler.submit(DetectUndefined.class, withInitializedScopes, environment);
       var withInjected =
-          taskExecutor.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
-      var sorted = taskExecutor.submit(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = taskExecutor.submit(InferTypes.class, sorted, environment);
-      var moduleS = taskExecutor.submit(ConvertPs.class, typesInferred, environment);
+          scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
+      var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
+      var typesInferred = scheduler.submit(InferTypes.class, sorted, environment);
+      var moduleS = scheduler.submit(ConvertPs.class, typesInferred, environment);
       var label = COMPILE_FRONT_LABEL.append("schedule").append("module");
       var report = report(label, new Trace(), EXECUTION, list());
       return schedulingOutput(moduleS, report);
