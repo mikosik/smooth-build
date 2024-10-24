@@ -56,16 +56,6 @@ public class Scheduler {
 
   // Task0
 
-  public <R> Promise<Maybe<R>> submit(Task0<R> task) {
-    return submit(list(), task);
-  }
-
-  public <R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors, Task0<R> task) {
-    var execution = new Execution<>(task::execute);
-    return submit(predecessors, execution);
-  }
-
   public <R> Promise<Maybe<R>> submit(Class<? extends Task0<R>> task) {
     return submit(Key.get(task));
   }
@@ -81,24 +71,20 @@ public class Scheduler {
 
   public <R> Promise<Maybe<R>> submit(
       List<? extends Promise<? extends Maybe<?>>> predecessors, Key<? extends Task0<R>> task) {
-    var execution = new Execution<>(() -> injector.getInstance(task).execute());
+    return submit(predecessors, injector.getInstance(task));
+  }
+
+  public <R> Promise<Maybe<R>> submit(Task0<R> task) {
+    return submit(list(), task);
+  }
+
+  public <R> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors, Task0<R> task) {
+    var execution = new Execution<>(task::execute);
     return submit(predecessors, execution);
   }
 
   // Task1
-
-  public <R, A1> Promise<Maybe<R>> submit(
-      Task1<R, A1> task, Promise<? extends Maybe<? extends A1>> arg1) {
-    return submit(list(), task, arg1);
-  }
-
-  public <R, A1> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Task1<R, A1> task,
-      Promise<? extends Maybe<? extends A1>> arg1) {
-    var execution = new Execution<>(() -> task.execute(arg1.get().get()));
-    return submit(predecessors, execution, arg1);
-  }
 
   public <R, A1> Promise<Maybe<R>> submit(
       Class<? extends Task1<R, A1>> task, Promise<? extends Maybe<? extends A1>> arg1) {
@@ -121,29 +107,23 @@ public class Scheduler {
       List<? extends Promise<? extends Maybe<?>>> predecessors,
       Key<? extends Task1<R, A1>> task,
       Promise<? extends Maybe<? extends A1>> arg1) {
-    var execution =
-        new Execution<>(() -> injector.getInstance(task).execute(arg1.get().get()));
+    return submit(predecessors, injector.getInstance(task), arg1);
+  }
+
+  public <R, A1> Promise<Maybe<R>> submit(
+      Task1<R, A1> task, Promise<? extends Maybe<? extends A1>> arg1) {
+    return submit(list(), task, arg1);
+  }
+
+  public <R, A1> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      Task1<R, A1> task,
+      Promise<? extends Maybe<? extends A1>> arg1) {
+    var execution = new Execution<>(() -> task.execute(arg1.get().get()));
     return submit(predecessors, execution, arg1);
   }
 
   // Task2
-
-  public <R, A1, A2> Promise<Maybe<R>> submit(
-      Task2<R, A1, A2> task,
-      Promise<? extends Maybe<? extends A1>> arg1,
-      Promise<? extends Maybe<? extends A2>> arg2) {
-    return submit(list(), task, arg1, arg2);
-  }
-
-  public <R, A1, A2> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Task2<R, A1, A2> task,
-      Promise<? extends Maybe<? extends A1>> arg1,
-      Promise<? extends Maybe<? extends A2>> arg2) {
-    var execution =
-        new Execution<>(() -> task.execute(arg1.get().get(), arg2.get().get()));
-    return submit(predecessors, execution, arg1, arg2);
-  }
 
   public <R, A1, A2> Promise<Maybe<R>> submit(
       Class<? extends Task2<R, A1, A2>> task,
@@ -172,25 +152,27 @@ public class Scheduler {
       Key<? extends Task2<R, A1, A2>> task,
       Promise<? extends Maybe<? extends A1>> arg1,
       Promise<? extends Maybe<? extends A2>> arg2) {
-    var execution = new Execution<>(
-        () -> injector.getInstance(task).execute(arg1.get().get(), arg2.get().get()));
+    return submit(predecessors, injector.getInstance(task), arg1, arg2);
+  }
+
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      Task2<R, A1, A2> task,
+      Promise<? extends Maybe<? extends A1>> arg1,
+      Promise<? extends Maybe<? extends A2>> arg2) {
+    return submit(list(), task, arg1, arg2);
+  }
+
+  public <R, A1, A2> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      Task2<R, A1, A2> task,
+      Promise<? extends Maybe<? extends A1>> arg1,
+      Promise<? extends Maybe<? extends A2>> arg2) {
+    var execution =
+        new Execution<>(() -> task.execute(arg1.get().get(), arg2.get().get()));
     return submit(predecessors, execution, arg1, arg2);
   }
 
   // TaskX
-
-  public <R, A> Promise<Maybe<R>> submit(
-      TaskX<R, A> task, List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    return submit(list(), task, args);
-  }
-
-  public <R, A> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      TaskX<R, A> task,
-      List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    var execution = new Execution<>(() -> task.execute(args.map(p -> p.get().get())));
-    return submit(predecessors, execution, args);
-  }
 
   public <R, A> Promise<Maybe<R>> submit(
       Class<? extends TaskX<R, A>> task,
@@ -214,8 +196,19 @@ public class Scheduler {
       List<? extends Promise<? extends Maybe<?>>> predecessors,
       Key<? extends TaskX<R, A>> task,
       List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    var execution = new Execution<>(
-        () -> injector.getInstance(task).execute(args.map(p -> p.get().get())));
+    return submit(predecessors, injector.getInstance(task), args);
+  }
+
+  public <R, A> Promise<Maybe<R>> submit(
+      TaskX<R, A> task, List<? extends Promise<? extends Maybe<? extends A>>> args) {
+    return submit(list(), task, args);
+  }
+
+  public <R, A> Promise<Maybe<R>> submit(
+      List<? extends Promise<? extends Maybe<?>>> predecessors,
+      TaskX<R, A> task,
+      List<? extends Promise<? extends Maybe<? extends A>>> args) {
+    var execution = new Execution<>(() -> task.execute(args.map(p -> p.get().get())));
     return submit(predecessors, execution, args);
   }
 
