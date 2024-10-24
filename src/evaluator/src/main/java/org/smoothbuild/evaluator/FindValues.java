@@ -16,7 +16,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
-public class FindValues implements Task2<List<SExpr>, SScope, List<String>> {
+public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   @Override
   public Output<List<SExpr>> execute(SScope environment, List<String> valueNames) {
     var logger = new Logger();

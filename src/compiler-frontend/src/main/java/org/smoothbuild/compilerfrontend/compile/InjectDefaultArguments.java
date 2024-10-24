@@ -36,7 +36,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
-public class InjectDefaultArguments implements Task2<PModule, PModule, SScope> {
+public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule, SScope environment) {
     var logger = new Logger();

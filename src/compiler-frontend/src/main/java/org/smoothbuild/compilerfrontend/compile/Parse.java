@@ -28,7 +28,7 @@ import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class Parse implements Task2<ModuleContext, String, FullPath> {
+public class Parse implements Task2<String, FullPath, ModuleContext> {
   @Override
   public Output<ModuleContext> execute(String sourceCode, FullPath fullPath) {
     var logger = new Logger();

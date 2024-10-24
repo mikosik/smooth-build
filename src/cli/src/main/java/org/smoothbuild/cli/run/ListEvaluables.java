@@ -44,7 +44,7 @@ public class ListEvaluables implements Task0<Tuple0> {
     return schedulingOutput(result, report(label, new Trace(), EXECUTION, list()));
   }
 
-  public static class PrintEvaluables implements Task1<Tuple0, SModule> {
+  public static class PrintEvaluables implements Task1<SModule, Tuple0> {
     @Override
     public Output<Tuple0> execute(SModule sModule) {
       var oneValuePerLineString =

@@ -71,7 +71,7 @@ import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
-public class TranslateAp implements Task2<PModule, ModuleContext, FullPath> {
+public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
   @Override
   public Output<PModule> execute(ModuleContext moduleContext, FullPath fullPath) {
     var logger = new Logger();

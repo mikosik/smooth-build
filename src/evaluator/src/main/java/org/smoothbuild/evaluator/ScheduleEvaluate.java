@@ -30,7 +30,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 
-public class ScheduleEvaluate implements Task2<EvaluatedExprs, List<FullPath>, List<String>> {
+public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, EvaluatedExprs> {
   private final Scheduler scheduler;
 
   @Inject

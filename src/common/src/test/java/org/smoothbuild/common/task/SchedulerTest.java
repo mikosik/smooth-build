@@ -236,7 +236,7 @@ public class SchedulerTest {
     class _normal_task {
       @Test
       void successful_task_execution_sets_result_in_promise() {
-        Task1<String, Integer> task = (i) -> output(i.toString(), newReport());
+        Task1<Integer, String> task = (i) -> output(i.toString(), newReport());
         var arg1 = argument(7);
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "7");
       }
@@ -244,14 +244,14 @@ public class SchedulerTest {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
-        Task1<String, Integer> task = (i) -> output(i.toString(), report);
+        Task1<Integer, String> task = (i) -> output(i.toString(), report);
         var arg1 = argument(7);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() {
-        Task1<String, Integer> task = (i) -> output(null, newReport());
+        Task1<Integer, String> task = (i) -> output(null, newReport());
         var arg1 = argument(7);
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
       }
@@ -481,7 +481,7 @@ public class SchedulerTest {
 
       @Test
       void successful_task_execution_can_return_null() {
-        Task2<Object, Integer, Integer> task = (a1, a2) -> output(null, newReport());
+        Task2<Integer, Integer, Object> task = (a1, a2) -> output(null, newReport());
 
         var arg1 = argument(7);
         var arg2 = argument(5);
@@ -708,7 +708,7 @@ public class SchedulerTest {
     class _normal_task {
       @Test
       void successful_task_execution_sets_result_in_promise() {
-        TaskX<String, Integer> task = (i) -> output(i.toString(), newReport());
+        TaskX<Integer, String> task = (i) -> output(i.toString(), newReport());
         var args = list(argument(7));
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), "[7]");
       }
@@ -716,14 +716,14 @@ public class SchedulerTest {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
-        TaskX<String, Integer> task = (i) -> output(i.toString(), report);
+        TaskX<Integer, String> task = (i) -> output(i.toString(), report);
         var args = list(argument(7));
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() {
-        TaskX<String, Integer> task = (i) -> output(null, newReport());
+        TaskX<Integer, String> task = (i) -> output(null, newReport());
         var args = list(argument(7));
         assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
       }
