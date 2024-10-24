@@ -8,6 +8,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_INLINE;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_SCHEDULE;
 import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
@@ -76,17 +77,14 @@ public class Vm {
   }
 
   public Promise<Maybe<BValue>> evaluate(BExpr expr) {
-    return newJob(expr).evaluate();
-  }
-
-  private Promise<Maybe<BValue>> evaluate(Job job) {
-    return scheduler.submit(() -> {
+    var task = (Task1<BValue, BExpr>) (BExpr arg) -> {
       try {
-        return successOutput(job, scheduleJob(job));
+        return successOutput(new BTrace(), scheduleJob(newJob(arg)));
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(job, e);
+        return failedSchedulingOutput(new BTrace(), e);
       }
-    });
+    };
+    return scheduler.submit(task, argument(expr));
   }
 
   private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
@@ -128,9 +126,9 @@ public class Vm {
         var bodyEnvironmentJobs = argJobs.appendAll(callJob.environment());
         var bodyTrace = bTrace(call.hash(), bValue.hash(), callJob.trace());
         var bodyJob = newJob(((BLambda) bValue).body(), bodyEnvironmentJobs, bodyTrace);
-        return successOutput(callJob, scheduleJob(bodyJob));
+        return successOutput(callJob.trace(), scheduleJob(bodyJob));
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(callJob, e);
+        return failedSchedulingOutput(callJob.trace(), e);
       }
     };
     return scheduler.submit(schedulingTask, scheduleNewJob(bLambda, callJob));
@@ -142,9 +140,9 @@ public class Vm {
       try {
         var result = scheduleCallBodyWithTupleArguments(
             callJob, bCall, lambdaExpr, tuple, (BLambda) lambdaValue);
-        return successOutput(callJob, result);
+        return successOutput(callJob.trace(), result);
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(callJob, e);
+        return failedSchedulingOutput(callJob.trace(), e);
       }
     };
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
@@ -158,10 +156,10 @@ public class Vm {
         var bLambda = (BLambda) lambdaValue;
         var argsTuple = (BTuple) argsValue;
         return successOutput(
-            callJob,
+            callJob.trace(),
             scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, argsTuple, bLambda));
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(callJob, e);
+        return failedSchedulingOutput(callJob.trace(), e);
       }
     };
     /*
@@ -176,7 +174,7 @@ public class Vm {
   private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
       Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple, BLambda bLambda)
       throws BytecodeException {
-    var argumentJobs = tuple.elements().map(j -> newJob(j));
+    var argumentJobs = tuple.elements().map(this::newJob);
     var bodyEnvironmentJobs = argumentJobs.appendAll(callJob.environment());
     var bodyTrace = bTrace(bCall.hash(), lambdaExpr.hash(), callJob.trace());
     var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
@@ -189,9 +187,9 @@ public class Vm {
       try {
         var condition = ((BBool) conditionValue).toJavaBoolean();
         return successOutput(
-            ifJob, scheduleNewJob(condition ? subExprs.then_() : subExprs.else_(), ifJob));
+            ifJob.trace(), scheduleNewJob(condition ? subExprs.then_() : subExprs.else_(), ifJob));
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(ifJob, e);
+        return failedSchedulingOutput(ifJob.trace(), e);
       }
     };
     var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
@@ -209,9 +207,9 @@ public class Vm {
         var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
         var arrayType = bytecodeFactory.arrayType(mappingLambdaResultType);
         var order = bytecodeFactory.order(arrayType, calls);
-        return successOutput(mapJob, scheduleNewJob(order, mapJob));
+        return successOutput(mapJob.trace(), scheduleNewJob(order, mapJob));
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(mapJob, e);
+        return failedSchedulingOutput(mapJob.trace(), e);
       }
     };
     var arrayPromise = scheduleNewJob(arrayArg, mapJob);
@@ -252,9 +250,9 @@ public class Vm {
     Task0<BValue> inlineTask = () -> {
       try {
         var inlined = (BValue) bReferenceInliner.inline(job);
-        return output(inlined, newReport(VM_INLINE, job, list()));
+        return output(inlined, newReport(VM_INLINE, job.trace(), list()));
       } catch (BytecodeException e) {
-        return failedInlineTaskOutput(job, e);
+        return failedInlineTaskOutput(job.trace(), e);
       }
     };
     return scheduler.submit(inlineTask);
@@ -267,24 +265,25 @@ public class Vm {
     return scheduleJob(newJob(bExpr, parentJob));
   }
 
-  private static <T> Output<T> successOutput(Job job, Promise<Maybe<T>> resultPromise) {
-    return schedulingOutput(resultPromise, newReport(VM_SCHEDULE, job, list()));
+  private static <T> Output<T> successOutput(BTrace trace, Promise<Maybe<T>> resultPromise) {
+    return schedulingOutput(resultPromise, newReport(VM_SCHEDULE, trace, list()));
   }
 
-  private static <T> Output<T> failedSchedulingOutput(Job job, Throwable e) {
-    return failedOutput(VM_SCHEDULE, job, "Scheduling task failed with exception:", e);
+  private static <T> Output<T> failedSchedulingOutput(BTrace trace, Throwable e) {
+    return failedOutput(VM_SCHEDULE, trace, "Scheduling task failed with exception:", e);
   }
 
-  private static Output<BValue> failedInlineTaskOutput(Job job, Throwable e) {
-    return failedOutput(VM_INLINE, job, "Vm inline Task failed with exception:", e);
+  private static Output<BValue> failedInlineTaskOutput(BTrace trace, Throwable e) {
+    return failedOutput(VM_INLINE, trace, "Vm inline Task failed with exception:", e);
   }
 
-  private static <T> Output<T> failedOutput(Label label, Job job, String message, Throwable e) {
-    return output(null, newReport(label, job, list(fatal(message, e))));
+  private static <T> Output<T> failedOutput(
+      Label label, BTrace trace, String message, Throwable e) {
+    return output(null, newReport(label, trace, list(fatal(message, e))));
   }
 
-  static Report newReport(Label label, Job job, List<Log> logs) {
-    return report(label, job.trace(), EXECUTION, logs);
+  static Report newReport(Label label, BTrace trace, List<Log> logs) {
+    return report(label, trace, EXECUTION, logs);
   }
 
   private Job newJob(BExpr expr) {
@@ -297,6 +296,6 @@ public class Vm {
 
   // Visible for testing
   protected Job newJob(BExpr expr, List<Job> environment, BTrace trace) {
-    return new Job(expr, environment, trace, Vm.this::evaluate);
+    return new Job(expr, environment, trace);
   }
 }

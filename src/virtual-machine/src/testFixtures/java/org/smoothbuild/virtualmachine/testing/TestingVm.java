@@ -3,7 +3,6 @@ package org.smoothbuild.virtualmachine.testing;
 import static com.google.common.base.Suppliers.memoize;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import com.google.common.base.Supplier;
@@ -216,7 +215,7 @@ public class TestingVm extends TestingBytecode {
   }
 
   public static Job job(BExpr expr, List<BExpr> list) {
-    return new Job(expr, list.map(TestingVm::job), new BTrace(), (j) -> promise());
+    return new Job(expr, list.map(TestingVm::job), new BTrace());
   }
 
   public static Job job(BExpr expr) {
