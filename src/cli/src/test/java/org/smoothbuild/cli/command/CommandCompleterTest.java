@@ -21,6 +21,6 @@ public class CommandCompleterTest {
     doThrow(InterruptedException.class).when(promise).getBlocking();
     var exitCode = commandCompleter.waitForCompletion(promise);
     assertThat(exitCode).isEqualTo(EXIT_CODE_ERROR);
-    assertThat(reporter.logs()).containsExactly(fatal("taskExecutor has been interrupted"));
+    assertThat(reporter.logs()).containsExactly(fatal("main thread has been interrupted"));
   }
 }

@@ -27,8 +27,8 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task1;
-import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.common.task.TaskX;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -47,7 +47,7 @@ public class StepEvaluator {
   private final Provider<Container> containerProvider;
   private final ComputationCache diskCache;
   private final ConcurrentHashMap<Hash, Promise<BOutput>> memoryCache;
-  private final TaskExecutor taskExecutor;
+  private final Scheduler scheduler;
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
@@ -55,13 +55,13 @@ public class StepEvaluator {
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
-      TaskExecutor taskExecutor,
+      Scheduler scheduler,
       BytecodeFactory bytecodeFactory) {
     this(
         computationHashFactory,
         containerProvider,
         diskCache,
-        taskExecutor,
+        scheduler,
         bytecodeFactory,
         new ConcurrentHashMap<>());
   }
@@ -70,13 +70,13 @@ public class StepEvaluator {
       ComputationHashFactory computationHashFactory,
       Provider<Container> containerProvider,
       ComputationCache diskCache,
-      TaskExecutor taskExecutor,
+      Scheduler scheduler,
       BytecodeFactory bytecodeFactory,
       ConcurrentHashMap<Hash, Promise<BOutput>> memoryCache) {
     this.computationHashFactory = computationHashFactory;
     this.diskCache = diskCache;
     this.containerProvider = containerProvider;
-    this.taskExecutor = taskExecutor;
+    this.scheduler = scheduler;
     this.bytecodeFactory = bytecodeFactory;
     this.memoryCache = memoryCache;
   }
@@ -90,7 +90,7 @@ public class StepEvaluator {
         return outputForException(step, e);
       }
     };
-    return taskExecutor.submit(taskX, subExprResults);
+    return scheduler.submit(taskX, subExprResults);
   }
 
   private BTuple toInput(List<BValue> depResults) throws BytecodeException {
@@ -122,7 +122,7 @@ public class StepEvaluator {
         return outputForException(step, e);
       }
     };
-    return taskExecutor.submit(task, promise.map(Maybe::some));
+    return scheduler.submit(task, promise.map(Maybe::some));
   }
 
   private Output<BValue> readEvaluationFromDiskCache(

@@ -46,7 +46,7 @@ import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.init.Initializer;
-import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -305,11 +305,11 @@ public class EvaluatorTest extends TestingVm {
 
   private Maybe<EvaluatedExprs> evaluate(
       Injector injector, ImmutableBindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
-    var taskExecutor = injector.getInstance(TaskExecutor.class);
-    var initializer = taskExecutor.submit(injector.getInstance(Initializer.class));
-    var compiledExprs = taskExecutor.submit(
+    var scheduler = injector.getInstance(Scheduler.class);
+    var initializer = scheduler.submit(injector.getInstance(Initializer.class));
+    var compiledExprs = scheduler.submit(
         list(initializer), BackendCompile.class, argument(exprs), argument(evaluables));
-    var evaluatedExprs = taskExecutor.submit(VmFacade.class, compiledExprs);
+    var evaluatedExprs = scheduler.submit(VmFacade.class, compiledExprs);
     await().until(() -> evaluatedExprs.toMaybe().isSome());
     return evaluatedExprs.get();
   }

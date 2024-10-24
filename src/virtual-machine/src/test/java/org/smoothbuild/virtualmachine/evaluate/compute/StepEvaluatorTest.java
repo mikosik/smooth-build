@@ -320,7 +320,7 @@ public class StepEvaluatorTest extends TestingVm {
         computationHashFactory,
         this::container,
         computationCache,
-        taskExecutor(),
+        scheduler(),
         bytecodeF(),
         memoryCache);
   }
@@ -346,12 +346,12 @@ public class StepEvaluatorTest extends TestingVm {
     var computationCache = computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
     var computationHashFactory = computationHashFactory();
-    var taskExecutor = taskExecutor();
+    var scheduler = scheduler();
     var stepEvaluator = new StepEvaluator(
         computationHashFactory,
         this::container,
         computationCache,
-        taskExecutor,
+        scheduler,
         bytecodeF(),
         memoryCache);
     var result = stepEvaluator.evaluate(step, input.elements().map(Tasks::argument));

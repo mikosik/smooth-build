@@ -29,7 +29,7 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.MemoryReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
@@ -141,9 +141,9 @@ public class FrontendCompileTester {
       }
     });
     writeModuleFilesToBuckets(buckets);
-    var taskExecutor = injector.getInstance(TaskExecutor.class);
+    var scheduler = injector.getInstance(Scheduler.class);
     var paths = list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH);
-    var module = taskExecutor.submit(FrontendCompile.class, argument(paths));
+    var module = scheduler.submit(FrontendCompile.class, argument(paths));
     await().until(() -> module.toMaybe().isSome());
     return Try.of(module.get().getOr(null), memoryReporter.logs());
   }

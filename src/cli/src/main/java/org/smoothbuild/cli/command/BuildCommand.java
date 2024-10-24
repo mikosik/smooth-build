@@ -16,7 +16,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.common.task.TaskExecutor;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 import picocli.CommandLine.Command;
@@ -87,12 +87,12 @@ public class BuildCommand extends ProjectCommand {
   }
 
   public static class BuildCommandRunner {
-    private final TaskExecutor taskExecutor;
+    private final Scheduler scheduler;
     private final CommandCompleter commandCompleter;
 
     @Inject
-    public BuildCommandRunner(TaskExecutor taskExecutor, CommandCompleter commandCompleter) {
-      this.taskExecutor = taskExecutor;
+    public BuildCommandRunner(Scheduler scheduler, CommandCompleter commandCompleter) {
+      this.scheduler = scheduler;
       this.commandCompleter = commandCompleter;
     }
 
@@ -101,14 +101,14 @@ public class BuildCommand extends ProjectCommand {
     }
 
     private Promise<Maybe<Tuple0>> scheduleBuildTasks(List<String> values) {
-      var initialize = taskExecutor.submit(Initializer.class);
-      var removeArtifacts = taskExecutor.submit(list(initialize), RemoveArtifacts.class);
-      var evaluatedExprs = taskExecutor.submit(
+      var initialize = scheduler.submit(Initializer.class);
+      var removeArtifacts = scheduler.submit(list(initialize), RemoveArtifacts.class);
+      var evaluatedExprs = scheduler.submit(
           list(removeArtifacts),
           ScheduleEvaluate.class,
           argument(Layout.MODULES),
           argument(listOfAll(values)));
-      return taskExecutor.submit(SaveArtifacts.class, evaluatedExprs);
+      return scheduler.submit(SaveArtifacts.class, evaluatedExprs);
     }
   }
 }

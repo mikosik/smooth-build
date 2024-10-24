@@ -18,7 +18,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.common.task.TaskExecutor.EXECUTOR_LABEL;
+import static org.smoothbuild.common.task.Scheduler.LABEL;
 import static org.smoothbuild.common.task.Tasks.argument;
 
 import com.google.inject.AbstractModule;
@@ -44,7 +44,7 @@ import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.SystemOutReporter;
 import org.smoothbuild.common.log.report.Trace;
 
-public class TaskExecutorTest {
+public class SchedulerTest {
   @Nested
   class _task0 {
     @Nested
@@ -52,20 +52,20 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_sets_result_in_promise() {
         Task0<Integer> task = () -> output(7, newReport());
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), 7);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), 7);
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         Task0<Integer> task = () -> output(7, report);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() {
         Task0<Object> task = () -> output(null, newReport());
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
       }
 
       @Test
@@ -73,8 +73,8 @@ public class TaskExecutorTest {
         var atomicInteger = new AtomicInteger(0);
         MutablePromise<Maybe<String>> predecessor = promise();
 
-        var taskExecutor = newTaskExecutor();
-        var result = taskExecutor.submit(list(predecessor), new GetAtomicInteger(atomicInteger));
+        var scheduler = newScheduler();
+        var result = scheduler.submit(list(predecessor), new GetAtomicInteger(atomicInteger));
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -88,8 +88,8 @@ public class TaskExecutorTest {
         var predecessor = promise(none());
         var executed = new AtomicBoolean(false);
 
-        var taskExecutor = newTaskExecutor(executed);
-        var result = taskExecutor.submit(list(predecessor), new SetAtomicBoolean(executed));
+        var scheduler = newScheduler(executed);
+        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed));
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(result.get()).isEqualTo(none());
@@ -104,7 +104,7 @@ public class TaskExecutorTest {
         };
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
       }
     }
 
@@ -113,13 +113,13 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_sets_result_in_promise() {
         var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), "abc");
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), "abc");
       }
 
       @Test
       void successful_task_execution_submits_report() {
         var task = Key.get(ReturnAbc.class);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task), newReport());
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), newReport());
       }
 
       private static class ReturnAbc implements Task0<String> {
@@ -132,7 +132,7 @@ public class TaskExecutorTest {
       @Test
       void successful_task_execution_can_return_null() {
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
       }
 
       private static class ReturnNull implements Task0<String> {
@@ -147,8 +147,8 @@ public class TaskExecutorTest {
         var atomicInteger = new AtomicInteger(0);
         MutablePromise<Maybe<String>> predecessor = promise();
 
-        var taskExecutor = newTaskExecutor(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), GetAtomicInteger.class);
+        var scheduler = newScheduler(atomicInteger);
+        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -161,8 +161,8 @@ public class TaskExecutorTest {
       void task_is_not_executed_when_predecessor_fails_with_error() {
         var predecessor = promise(none());
         var executed = new AtomicBoolean(false);
-        var taskExecutor = newTaskExecutor(executed);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class);
+        var scheduler = newScheduler(executed);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -181,7 +181,7 @@ public class TaskExecutorTest {
 
         var task = Key.get(ThrowException.class);
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, taskExecutor -> taskExecutor.submit(task), report);
+        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task), report);
       }
 
       private static class ThrowException implements Task0<String> {
@@ -237,22 +237,22 @@ public class TaskExecutorTest {
       void successful_task_execution_sets_result_in_promise() {
         Task1<String, Integer> task = (i) -> output(i.toString(), newReport());
         var arg1 = argument(7);
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), "7");
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "7");
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         Task1<String, Integer> task = (i) -> output(i.toString(), report);
         var arg1 = argument(7);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() {
         Task1<String, Integer> task = (i) -> output(null, newReport());
         var arg1 = argument(7);
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
       }
 
       @Test
@@ -261,9 +261,9 @@ public class TaskExecutorTest {
         MutablePromise<Maybe<String>> predecessor = promise();
         var arg1 = argument(7);
 
-        var taskExecutor = newTaskExecutor(atomicInteger);
+        var scheduler = newScheduler(atomicInteger);
         var task = new GetAtomicInteger(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), task, arg1);
+        var result = scheduler.submit(list(predecessor), task, arg1);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -278,8 +278,8 @@ public class TaskExecutorTest {
         var predecessor = promise(none());
         var arg1 = argument(7);
 
-        var taskExecutor = newTaskExecutor();
-        var result = taskExecutor.submit(list(predecessor), new SetAtomicBoolean(executed), arg1);
+        var scheduler = newScheduler();
+        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), arg1);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -295,7 +295,7 @@ public class TaskExecutorTest {
         var arg1 = argument(1);
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
       }
 
       @Test
@@ -304,8 +304,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> arg1 = promise(none());
         var predecessor = argument(7);
 
-        var taskExecutor = newTaskExecutor();
-        var result = taskExecutor.submit(list(predecessor), new SetAtomicBoolean(executed), arg1);
+        var scheduler = newScheduler();
+        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), arg1);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -319,8 +319,7 @@ public class TaskExecutorTest {
       void successful_task_execution_sets_result_in_promise() {
         var arg1 = argument("");
         var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, arg1), "abc");
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "abc");
       }
 
       @Test
@@ -328,7 +327,7 @@ public class TaskExecutorTest {
         var arg1 = argument("");
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
       }
 
       private static class ReturnAbc implements Task1<String, String> {
@@ -342,7 +341,7 @@ public class TaskExecutorTest {
       void successful_task_execution_can_return_null() {
         var arg1 = argument("");
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, arg1), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
       }
 
       private static class ReturnNull implements Task1<String, String> {
@@ -358,8 +357,8 @@ public class TaskExecutorTest {
         MutablePromise<Maybe<String>> predecessor = promise();
         var arg1 = argument(7);
 
-        var taskExecutor = newTaskExecutor(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), GetAtomicInteger.class, arg1);
+        var scheduler = newScheduler(atomicInteger);
+        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class, arg1);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -374,8 +373,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> predecessor = promise(none());
         var arg1 = argument(7);
 
-        var taskExecutor = newTaskExecutor(atomicBoolean);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class, arg1);
+        var scheduler = newScheduler(atomicBoolean);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(atomicBoolean.get()).isFalse();
@@ -395,8 +394,7 @@ public class TaskExecutorTest {
 
         var task = Key.get(ThrowException.class);
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(
-            injector, taskExecutor -> taskExecutor.submit(task, arg1), report);
+        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task, arg1), report);
       }
 
       private static class ThrowException implements Task1<String, String> {
@@ -419,8 +417,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> arg1 = promise(none());
         var predecessor = argument(7);
 
-        var taskExecutor = newTaskExecutor(atomicBoolean);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class, arg1);
+        var scheduler = newScheduler(atomicBoolean);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(atomicBoolean.get()).isFalse();
@@ -468,17 +466,16 @@ public class TaskExecutorTest {
 
         var arg1 = argument(7);
         var arg2 = argument(5);
-        assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, arg1, arg2), 12);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), 12);
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
         var arg1 = argument(7);
         var arg2 = argument(7);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), report);
       }
 
       @Test
@@ -487,8 +484,7 @@ public class TaskExecutorTest {
 
         var arg1 = argument(7);
         var arg2 = argument(5);
-        assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), null);
       }
 
       @Test
@@ -498,9 +494,9 @@ public class TaskExecutorTest {
         var arg1 = argument(7);
         var arg2 = argument(8);
 
-        var taskExecutor = newTaskExecutor(atomicInteger);
+        var scheduler = newScheduler(atomicInteger);
         var task = new GetAtomicInteger(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
+        var result = scheduler.submit(list(predecessor), task, arg1, arg2);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -516,9 +512,9 @@ public class TaskExecutorTest {
         var arg1 = argument(6);
         var arg2 = argument(7);
 
-        var taskExecutor = newTaskExecutor();
+        var scheduler = newScheduler();
         var task = new SetAtomicBoolean(executed);
-        var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
+        var result = scheduler.submit(list(predecessor), task, arg1, arg2);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -535,7 +531,7 @@ public class TaskExecutorTest {
         var arg2 = argument(2);
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, arg1, arg2), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), report);
       }
 
       @Test
@@ -545,9 +541,9 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> arg1 = promise(none());
         var arg2 = argument(7);
 
-        var taskExecutor = newTaskExecutor();
+        var scheduler = newScheduler();
         var task = new SetAtomicBoolean(executed);
-        var result = taskExecutor.submit(list(predecessor), task, arg1, arg2);
+        var result = scheduler.submit(list(predecessor), task, arg1, arg2);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -563,7 +559,7 @@ public class TaskExecutorTest {
         var arg2 = argument("");
         var task = Key.get(ReturnAbc.class);
         assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, arg1, arg2), "abc");
+            scheduler -> scheduler.submit(task, arg1, arg2), "abc");
       }
 
       @Test
@@ -571,8 +567,7 @@ public class TaskExecutorTest {
         var arg1 = argument("");
         var arg2 = argument("");
         var task = Key.get(ReturnAbc.class);
-        assertExecutionSubmitsReport(
-            taskExecutor -> taskExecutor.submit(task, arg1, arg2), newReport());
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), newReport());
       }
 
       private static class ReturnAbc implements Task2<String, String, String> {
@@ -587,8 +582,7 @@ public class TaskExecutorTest {
         var arg1 = argument("");
         var arg2 = argument("");
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, arg1, arg2), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), null);
       }
 
       private static class ReturnNull implements Task2<String, String, String> {
@@ -605,8 +599,8 @@ public class TaskExecutorTest {
         var arg1 = argument(7);
         var arg2 = argument(8);
 
-        var taskExecutor = newTaskExecutor(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), GetAtomicInteger.class, arg1, arg2);
+        var scheduler = newScheduler(atomicInteger);
+        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class, arg1, arg2);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -622,8 +616,8 @@ public class TaskExecutorTest {
         var arg1 = argument(7);
         var arg2 = argument(8);
 
-        var taskExecutor = newTaskExecutor(executed);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class, arg1, arg2);
+        var scheduler = newScheduler(executed);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1, arg2);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -668,8 +662,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> arg1 = promise(none());
         var arg2 = argument(8);
 
-        var taskExecutor = newTaskExecutor(executed);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class, arg1, arg2);
+        var scheduler = newScheduler(executed);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1, arg2);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -715,23 +709,22 @@ public class TaskExecutorTest {
       void successful_task_execution_sets_result_in_promise() {
         TaskX<String, Integer> task = (i) -> output(i.toString(), newReport());
         var args = list(argument(7));
-        assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, args), "[7]");
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), "[7]");
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.TaskExecutorTest#executionReports")
+      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         TaskX<String, Integer> task = (i) -> output(i.toString(), report);
         var args = list(argument(7));
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
       }
 
       @Test
       void successful_task_execution_can_return_null() {
         TaskX<String, Integer> task = (i) -> output(null, newReport());
         var args = list(argument(7));
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
       }
 
       @Test
@@ -740,9 +733,9 @@ public class TaskExecutorTest {
         MutablePromise<Maybe<String>> predecessor = promise();
         var args = list(argument(7));
 
-        var taskExecutor = newTaskExecutor();
+        var scheduler = newScheduler();
         var task = new GetAtomicInteger(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), task, args);
+        var result = scheduler.submit(list(predecessor), task, args);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -757,8 +750,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> predecessor = promise(none());
         var args = list(argument(7));
 
-        var taskExecutor = newTaskExecutor();
-        var result = taskExecutor.submit(list(predecessor), new SetAtomicBoolean(executed), args);
+        var scheduler = newScheduler();
+        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), args);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -774,7 +767,7 @@ public class TaskExecutorTest {
         var args = list(argument(1));
 
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
       }
 
       @Test
@@ -783,8 +776,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> predecessor = argument(6);
         List<Promise<? extends Maybe<? extends Integer>>> args = list(argument(7), promise(none()));
 
-        var taskExecutor = newTaskExecutor();
-        var result = taskExecutor.submit(list(predecessor), new SetAtomicBoolean(executed), args);
+        var scheduler = newScheduler();
+        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), args);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -798,8 +791,7 @@ public class TaskExecutorTest {
       void successful_task_execution_sets_result_in_promise() {
         var list = list(argument(""));
         var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(
-            taskExecutor -> taskExecutor.submit(task, list), "abc");
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, list), "abc");
       }
 
       @Test
@@ -807,7 +799,7 @@ public class TaskExecutorTest {
         var args = list(argument(""));
         var task = Key.get(ReturnAbc.class);
         var report = newReport();
-        assertExecutionSubmitsReport(taskExecutor -> taskExecutor.submit(task, args), report);
+        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
       }
 
       private static class ReturnAbc implements TaskX<String, String> {
@@ -821,7 +813,7 @@ public class TaskExecutorTest {
       void successful_task_execution_can_return_null() {
         var args = list(argument(""));
         var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(taskExecutor -> taskExecutor.submit(task, args), null);
+        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
       }
 
       private static class ReturnNull implements TaskX<String, String> {
@@ -837,8 +829,8 @@ public class TaskExecutorTest {
         MutablePromise<Maybe<String>> predecessor = promise();
         var args = list(argument(7));
 
-        var taskExecutor = newTaskExecutor(atomicInteger);
-        var result = taskExecutor.submit(list(predecessor), GetAtomicInteger.class, args);
+        var scheduler = newScheduler(atomicInteger);
+        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class, args);
         Thread.sleep(1000);
         atomicInteger.set(1);
         predecessor.accept(some(""));
@@ -853,8 +845,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> predecessor = promise(none());
         List<Promise<? extends Maybe<Integer>>> args = list(argument(7));
 
-        var taskExecutor = newTaskExecutor(executed);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class, args);
+        var scheduler = newScheduler(executed);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, args);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -874,8 +866,7 @@ public class TaskExecutorTest {
 
         var task = Key.get(ThrowException.class);
         var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(
-            injector, taskExecutor -> taskExecutor.submit(task, args), report);
+        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task, args), report);
       }
 
       private static class ThrowException implements TaskX<String, String> {
@@ -898,8 +889,8 @@ public class TaskExecutorTest {
         Promise<Maybe<Integer>> predecessor = argument(6);
         List<Promise<? extends Maybe<Integer>>> args = list(argument(7), promise(none()));
 
-        var taskExecutor = newTaskExecutor(executed);
-        var result = taskExecutor.submit(list(predecessor), SetAtomicBoolean.class, args);
+        var scheduler = newScheduler(executed);
+        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, args);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -941,21 +932,21 @@ public class TaskExecutorTest {
   class _join {
     @Test
     void result_is_not_available_until_all_promises_from_list_are_not_available() {
-      var taskExecutor = newTaskExecutor();
+      var scheduler = newScheduler();
       MutablePromise<Maybe<String>> arg1 = promise();
 
-      var result = taskExecutor.join(list(arg1));
+      var result = scheduler.join(list(arg1));
 
       assertThat(result.toMaybe().isNone()).isTrue();
     }
 
     @Test
     void result_contains_arguments_joined_into_list() {
-      var taskExecutor = newTaskExecutor();
+      var scheduler = newScheduler();
       var arg1 = promise(some("abc"));
       var arg2 = promise(some("def"));
 
-      var result = taskExecutor.join(list(arg1, arg2));
+      var result = scheduler.join(list(arg1, arg2));
       await().until(() -> result.toMaybe().isSome());
 
       assertThat(result.get()).isEqualTo(some(list("abc", "def")));
@@ -963,11 +954,11 @@ public class TaskExecutorTest {
 
     @Test
     void result_is_none_when_one_of_arguments_is_none() {
-      var taskExecutor = newTaskExecutor();
+      var scheduler = newScheduler();
       var arg1 = promise(some("abc"));
       var arg2 = promise(none());
 
-      var result = taskExecutor.join(list(arg1, arg2));
+      var result = scheduler.join(list(arg1, arg2));
       await().until(() -> result.toMaybe().isSome());
 
       assertThat(result.get()).isEqualTo(none());
@@ -979,8 +970,8 @@ public class TaskExecutorTest {
     @Test
     void task0_is_executed_in_thread_different_from_one_that_submitted_task() {
       var thread = new AtomicReference<Thread>();
-      var taskExecutor = newTaskExecutor();
-      var result = taskExecutor.submit(() -> {
+      var scheduler = newScheduler();
+      var result = scheduler.submit(() -> {
         thread.set(currentThread());
         return output(7, newReport());
       });
@@ -993,13 +984,13 @@ public class TaskExecutorTest {
     void task1_is_executed_in_thread_different_from_one_that_executed_arg_task() {
       var argThread = new AtomicReference<Thread>();
       var thread = new AtomicReference<Thread>();
-      var taskExecutor = newTaskExecutor();
+      var scheduler = newScheduler();
 
-      var arg = taskExecutor.submit(() -> {
+      var arg = scheduler.submit(() -> {
         argThread.set(currentThread());
         return output(7, newReport());
       });
-      var result = taskExecutor.submit(
+      var result = scheduler.submit(
           (i) -> {
             thread.set(currentThread());
             return output(i + 1, newReport());
@@ -1015,17 +1006,17 @@ public class TaskExecutorTest {
       var arg1Thread = new AtomicReference<Thread>();
       var arg2Thread = new AtomicReference<Thread>();
       var thread = new AtomicReference<Thread>();
-      var taskExecutor = newTaskExecutor();
+      var scheduler = newScheduler();
 
-      var arg1 = taskExecutor.submit(() -> {
+      var arg1 = scheduler.submit(() -> {
         arg1Thread.set(currentThread());
         return output(7, newReport());
       });
-      var arg2 = taskExecutor.submit(() -> {
+      var arg2 = scheduler.submit(() -> {
         arg1Thread.set(currentThread());
         return output(3, newReport());
       });
-      var result = taskExecutor.submit(
+      var result = scheduler.submit(
           (Integer a1, Integer a2) -> {
             thread.set(currentThread());
             return output(a1 + a2, newReport());
@@ -1041,57 +1032,57 @@ public class TaskExecutorTest {
   }
 
   private static <R> void assertExecutionStoresResultInPromise(
-      Function<TaskExecutor, Promise<Maybe<R>>> scheduleFunction, R expectedValue) {
-    var taskExecutor = newTaskExecutor();
+      Function<Scheduler, Promise<Maybe<R>>> scheduleFunction, R expectedValue) {
+    var scheduler = newScheduler();
 
-    var result = scheduleFunction.apply(taskExecutor);
+    var result = scheduleFunction.apply(scheduler);
     await().until(() -> result.toMaybe().isSome());
 
     assertThat(result.get()).isEqualTo(some(expectedValue));
   }
 
   private static <R> void assertExecutionSubmitsReport(
-      Function<TaskExecutor, Promise<R>> scheduleFunction, Report report) {
+      Function<Scheduler, Promise<R>> scheduleFunction, Report report) {
     assertExecutionSubmitsReport(Guice.createInjector(), scheduleFunction, report);
   }
 
   private static <R> void assertExecutionSubmitsReport(
-      Injector injector, Function<TaskExecutor, Promise<R>> scheduleFunction, Report report) {
+      Injector injector, Function<Scheduler, Promise<R>> scheduleFunction, Report report) {
     var reporter = mock(Reporter.class);
-    var taskExecutor = new TaskExecutor(injector, reporter, 4);
+    var scheduler = new Scheduler(injector, reporter, 4);
 
-    var result = scheduleFunction.apply(taskExecutor);
+    var result = scheduleFunction.apply(scheduler);
     await().until(() -> result.toMaybe().isSome());
 
     verify(reporter).submit(report);
   }
 
-  private static TaskExecutor newTaskExecutor() {
-    return newTaskExecutor(Guice.createInjector());
+  private static Scheduler newScheduler() {
+    return newScheduler(Guice.createInjector());
   }
 
-  private static TaskExecutor newTaskExecutor(Injector injector) {
-    return new TaskExecutor(injector, mock(Reporter.class), 4);
+  private static Scheduler newScheduler(Injector injector) {
+    return new Scheduler(injector, mock(Reporter.class), 4);
   }
 
-  private static TaskExecutor newTaskExecutor(AtomicInteger atomicInteger) {
+  private static Scheduler newScheduler(AtomicInteger atomicInteger) {
     var injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
         bind(AtomicInteger.class).toInstance(atomicInteger);
       }
     });
-    return new TaskExecutor(injector, new SystemOutReporter(), 4);
+    return new Scheduler(injector, new SystemOutReporter(), 4);
   }
 
-  private static TaskExecutor newTaskExecutor(AtomicBoolean atomicBoolean) {
+  private static Scheduler newScheduler(AtomicBoolean atomicBoolean) {
     var injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
         bind(AtomicBoolean.class).toInstance(atomicBoolean);
       }
     });
-    return new TaskExecutor(injector, new SystemOutReporter(), 4);
+    return new Scheduler(injector, new SystemOutReporter(), 4);
   }
 
   public static List<Arguments> executionReports() {
@@ -1104,7 +1095,7 @@ public class TaskExecutorTest {
 
   private static Report reportAboutExceptionThrownByTask(RuntimeException exception) {
     var fatal = fatal("Task execution failed with exception:", exception);
-    return report(EXECUTOR_LABEL, new Trace(), EXECUTION, list(fatal));
+    return report(LABEL, new Trace(), EXECUTION, list(fatal));
   }
 
   private static Report newReport() {

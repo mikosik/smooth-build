@@ -13,26 +13,26 @@ import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
+import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task1;
-import org.smoothbuild.common.task.TaskExecutor;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 
 public class VmFacade implements Task1<EvaluatedExprs, CompiledExprs> {
-  private final TaskExecutor taskExecutor;
+  private final Scheduler scheduler;
   private final Vm vm;
 
   @Inject
-  public VmFacade(TaskExecutor taskExecutor, Vm vm) {
-    this.taskExecutor = taskExecutor;
+  public VmFacade(Scheduler scheduler, Vm vm) {
+    this.scheduler = scheduler;
     this.vm = vm;
   }
 
   @Override
   public Output<EvaluatedExprs> execute(CompiledExprs compiledExprs) {
-    var evaluated = taskExecutor.join(compiledExprs.bExprs().map(vm::evaluate));
+    var evaluated = scheduler.join(compiledExprs.bExprs().map(vm::evaluate));
     var mergeLabel = EVALUATE_LABEL.append("merge");
-    var evaluatedExprs = taskExecutor.submit(
+    var evaluatedExprs = scheduler.submit(
         task2(mergeLabel, (ce, ee) -> evaluatedExprs(ce.sExprs(), ee)),
         argument(compiledExprs),
         evaluated);

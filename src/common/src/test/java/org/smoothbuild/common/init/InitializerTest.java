@@ -20,10 +20,10 @@ public class InitializerTest extends TestingCommon {
     var visited2 = new AtomicBoolean(false);
     var initializable1 = initializable(visited1);
     var initializable2 = initializable(visited2);
-    var taskExecutor = taskExecutor();
+    var scheduler = scheduler();
 
-    var initializer = new Initializer(Set.of(initializable1, initializable2), taskExecutor);
-    var result = taskExecutor.submit(initializer);
+    var initializer = new Initializer(Set.of(initializable1, initializable2), scheduler);
+    var result = scheduler.submit(initializer);
     await().until(() -> result.toMaybe().isSome());
 
     assertThat(visited1.get()).isTrue();
