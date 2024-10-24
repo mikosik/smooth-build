@@ -20,6 +20,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Scheduler.LABEL;
 import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.task.Tasks.task1;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -962,6 +963,19 @@ public class SchedulerTest {
       await().until(() -> result.toMaybe().isSome());
 
       assertThat(result.get()).isEqualTo(none());
+    }
+  }
+
+  @Nested
+  class _parallel_task {
+    @Test
+    void parallel_task_executes_encapsulated_task_for_each_list_element() {
+      var scheduler = newScheduler();
+      var task = scheduler.newParallelTask(task1(label(""), s -> s + "!"));
+      var result = scheduler.submit(task, argument(list("a", "b", "c")));
+      await().until(() -> result.toMaybe().isSome());
+
+      assertThat(result.get()).isEqualTo(some(list("a!", "b!", "c!")));
     }
   }
 

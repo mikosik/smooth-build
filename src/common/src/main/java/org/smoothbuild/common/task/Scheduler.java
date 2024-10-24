@@ -226,6 +226,15 @@ public class Scheduler {
     return submit(taskX(LABEL.append("join"), l -> l), list);
   }
 
+  public <R, A1> Task1<List<R>, List<? extends A1>> newParallelTask(
+      Class<? extends Task1<R, A1>> task) {
+    return newParallelTask(injector.getInstance(task));
+  }
+
+  public <R, A1> Task1<List<R>, List<? extends A1>> newParallelTask(Task1<R, A1> task) {
+    return new ParallelTask<>(this, task);
+  }
+
   // private
 
   @SafeVarargs
