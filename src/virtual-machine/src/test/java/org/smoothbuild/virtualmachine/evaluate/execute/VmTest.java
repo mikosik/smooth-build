@@ -318,7 +318,7 @@ public class VmTest extends TestingVm {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
           var reporter = mock(Reporter.class);
           var scheduler = scheduler(reporter);
-          evaluate(vm(scheduler), pick, scheduler);
+          evaluate(vm(scheduler), pick);
           verify(reporter).submit(argThat(this::isResultWithIndexOutOfBoundsError));
         }
 
@@ -331,7 +331,7 @@ public class VmTest extends TestingVm {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
           var reporter = mock(Reporter.class);
           var scheduler = scheduler(reporter);
-          evaluate(vm(scheduler), pick, scheduler);
+          evaluate(vm(scheduler), pick);
           verify(reporter).submit(argThat(this::isResultWithNegativeIndexError));
         }
 
@@ -412,7 +412,7 @@ public class VmTest extends TestingVm {
         var scheduler = scheduler(reporter, 4);
         var vm = vm(scheduler);
         var expr = throwExceptionCall();
-        evaluate(vm, expr, scheduler);
+        evaluate(vm, expr);
         verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
       }
 
@@ -529,7 +529,7 @@ public class VmTest extends TestingVm {
         BExpr expr, String label, BTrace trace, ResultSource resultSource) {
       var reporter = mock(Reporter.class);
       var scheduler = scheduler(reporter);
-      evaluate(vm(scheduler), expr, scheduler);
+      evaluate(vm(scheduler), expr);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
       verify(reporter).submit(taskReport);
     }
@@ -567,7 +567,7 @@ public class VmTest extends TestingVm {
       var reporter = reporter();
       var scheduler = scheduler(reporter, 4);
       var vm = vm(scheduler);
-      assertThat(evaluate(vm, bExpr, scheduler).get().get())
+      assertThat(evaluate(vm, bExpr).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
@@ -594,7 +594,7 @@ public class VmTest extends TestingVm {
       var scheduler = scheduler(reporter(), 2);
       var vm = vm(scheduler);
       var expected = bArray(bString("1"), bString("1"), bString("0"));
-      assertThat(evaluate(vm, expr, scheduler).get().get()).isEqualTo(expected);
+      assertThat(evaluate(vm, expr).get().get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
@@ -644,11 +644,7 @@ public class VmTest extends TestingVm {
     return evaluate(vm(), expr).get().get();
   }
 
-  private Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
-    return evaluate(vm, expr, scheduler());
-  }
-
-  private static Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr, Scheduler scheduler) {
+  private static Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
     var result = vm.evaluate(expr);
     await().until(() -> result.toMaybe().isSome());
     return result;
