@@ -12,7 +12,7 @@ import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
 
 public class TestingCommon {
-  private final Supplier<Scheduler> scheduler = memoize(this::newScheduler);
+  private final Supplier<Scheduler> scheduler = memoize(() -> scheduler(reporter()));
   private final com.google.common.base.Supplier<MemoryReporter> reporter =
       memoize(MemoryReporter::new);
 
@@ -37,10 +37,6 @@ public class TestingCommon {
 
   public Scheduler scheduler() {
     return scheduler.get();
-  }
-
-  private Scheduler newScheduler() {
-    return scheduler(reporter());
   }
 
   public MemoryReporter reporter() {
