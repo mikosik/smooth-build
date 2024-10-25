@@ -11,9 +11,9 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.testing.TestingCommon;
+import org.smoothbuild.common.testing.CommonTestContext;
 
-public class InitializerTest extends TestingCommon {
+public class InitializerTest extends CommonTestContext {
   @Test
   void initializer_schedules_all_initializables() {
     var visited1 = new AtomicBoolean(false);
