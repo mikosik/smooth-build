@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BOutputTest extends TestingVm {
+public class BOutputTest extends BytecodeTestContext {
   @Test
   void null_messages_are_forbidden() {
     assertCall(() -> new BOutput(aString(), null)).throwsException(NullPointerException.class);

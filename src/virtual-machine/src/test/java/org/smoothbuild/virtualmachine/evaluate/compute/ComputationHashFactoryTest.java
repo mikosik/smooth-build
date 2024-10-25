@@ -13,9 +13,9 @@ import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class ComputationHashFactoryTest extends TestingVm {
+public class ComputationHashFactoryTest extends BytecodeTestContext {
   @Test
   void hashes_of_computations_with_same_step_runtime_and_input_are_equal() throws Exception {
     var step = new OrderStep(bOrder(), bTrace());

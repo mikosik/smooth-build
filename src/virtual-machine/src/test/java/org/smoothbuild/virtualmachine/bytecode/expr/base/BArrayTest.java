@@ -14,10 +14,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BArrayTest extends TestingVm {
+public class BArrayTest extends BytecodeTestContext {
   @Test
   void empty_int_array_can_be_iterated_as_int() throws Exception {
     var array = exprDb().newArrayBuilder(bArrayType(bIntType())).build();

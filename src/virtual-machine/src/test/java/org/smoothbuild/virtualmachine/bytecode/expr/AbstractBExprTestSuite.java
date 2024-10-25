@@ -8,9 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public abstract class AbstractBExprTestSuite<T extends BExpr> extends TestingVm {
+public abstract class AbstractBExprTestSuite<T extends BExpr> extends BytecodeTestContext {
   protected abstract List<T> equalExprs() throws BytecodeException;
 
   protected abstract List<T> nonEqualExprs() throws BytecodeException;

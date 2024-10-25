@@ -10,9 +10,9 @@ import static org.smoothbuild.common.log.base.Level.WARNING;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BytecodeFactoryTest extends TestingVm {
+public class BytecodeFactoryTest extends BytecodeTestContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test

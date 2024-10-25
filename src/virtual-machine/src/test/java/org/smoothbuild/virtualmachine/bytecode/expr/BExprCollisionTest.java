@@ -9,9 +9,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BExprCollisionTest extends TestingVm {
+public class BExprCollisionTest extends BytecodeTestContext {
   @Test
   void collisions() throws Exception {
     HashMap<Hash, BExpr> map = new HashMap<>();

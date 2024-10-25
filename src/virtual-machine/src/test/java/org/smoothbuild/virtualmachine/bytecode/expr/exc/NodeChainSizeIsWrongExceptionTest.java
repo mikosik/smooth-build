@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class NodeChainSizeIsWrongExceptionTest extends TestingVm {
+public class NodeChainSizeIsWrongExceptionTest extends BytecodeTestContext {
   @Test
   void message() throws Exception {
     var exception = new NodeChainSizeIsWrongException(Hash.of(123), bIntType(), "node-path", 7, 2);

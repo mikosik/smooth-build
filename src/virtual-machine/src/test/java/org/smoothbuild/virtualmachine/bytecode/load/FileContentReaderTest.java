@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class FileContentReaderTest extends TestingVm {
+public class FileContentReaderTest extends BytecodeTestContext {
   @Test
   void read_returns_file_content() throws Exception {
     var bucket = new MemoryBucket();

@@ -6,9 +6,8 @@ import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSize
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class RootHashChainSizeIsWrongExceptionTest extends TestingVm {
+public class RootHashChainSizeIsWrongExceptionTest {
   @Test
   void cannot_read_root_exception() {
     var exception = cannotReadRootException(Hash.of(123), new RuntimeException());

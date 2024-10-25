@@ -13,13 +13,13 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.MissingMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.OverloadedMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 
-public class MethodLoaderTest extends TestingVm {
+public class MethodLoaderTest extends BytecodeTestContext {
   @Test
   void class_not_found_in_jar_error() throws Exception {
     var methodLoader = methodLoaderWithPlatformClassLoader();

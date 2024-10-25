@@ -6,10 +6,10 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BKindCollisionsTest extends TestingVm {
+public class BKindCollisionsTest extends BytecodeTestContext {
   @Test
   void collisions() {
     HashMap<Hash, BKind> map = new HashMap<>();

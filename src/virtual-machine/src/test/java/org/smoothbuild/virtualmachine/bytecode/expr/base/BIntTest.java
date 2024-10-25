@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BIntTest extends TestingVm {
+public class BIntTest extends BytecodeTestContext {
   @Test
   void type_of_int_is_int_type() throws Exception {
     assertThat(bInt(123).kind()).isEqualTo(bIntType());
