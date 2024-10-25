@@ -7,9 +7,9 @@ import static org.smoothbuild.virtualmachine.testing.JarTester.jar;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class UnzipBlobTest extends TestingVm {
+public class UnzipBlobTest extends BytecodeTestContext {
   @Test
   void unzip_blob() throws Exception {
     BTuple file1 = bFile("file1.txt", "abc");

@@ -32,10 +32,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
 import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BKindTest extends TestingVm {
+public class BKindTest extends BytecodeTestContext {
   @ParameterizedTest
   @MethodSource("names")
   public void name(Function1<BKindDb, BKind, BytecodeException> factoryCall, String name)

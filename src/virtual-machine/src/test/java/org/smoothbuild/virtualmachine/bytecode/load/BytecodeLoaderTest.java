@@ -15,12 +15,12 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ThrowException;
 
-public class BytecodeLoaderTest extends TestingVm {
+public class BytecodeLoaderTest extends BytecodeTestContext {
   @Test
   void loading_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(right(bString("abc")));

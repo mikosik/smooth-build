@@ -7,9 +7,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BExprStableHashTest extends TestingVm {
+public class BExprStableHashTest extends BytecodeTestContext {
   @Nested
   class _array {
     @Test

@@ -54,14 +54,14 @@ import org.smoothbuild.evaluator.ScheduleEvaluate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
-import org.smoothbuild.virtualmachine.testing.TestingBytecode;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
-public class EvaluatorTestCase extends TestingBytecode {
+public class EvaluatorTestCase extends BytecodeTestContext {
   private static final BucketId MODULES_BUCKET_ID = bucketId("module-bucket");
   private static final Path LIB_MODULE_PATH = path("libraryModule.smooth");
   private static final FullPath LIB_MODULE_FULL_PATH =

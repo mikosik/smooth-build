@@ -62,7 +62,8 @@ public class HashedDb implements Initializable {
     }
   }
 
-  void initialize() throws IOException {
+  // TODO made public for initialization in test, can this be avoided?
+  public void initialize() throws IOException {
     bucket.createDir(TEMP_DIR_PATH);
   }
 

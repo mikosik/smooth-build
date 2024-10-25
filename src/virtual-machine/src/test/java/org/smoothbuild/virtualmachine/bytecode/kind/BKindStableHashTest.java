@@ -10,9 +10,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class BKindStableHashTest extends TestingVm {
+public class BKindStableHashTest extends BytecodeTestContext {
   @ParameterizedTest
   @MethodSource("hash_is_stable_cases")
   public void hash_is_stable(BKind kind, String hash) {
