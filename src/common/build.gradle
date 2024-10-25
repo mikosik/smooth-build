@@ -13,6 +13,7 @@ dependencies {
     testFixturesApi libs.okio
     testFixturesImplementation libs.guava
     testFixturesImplementation libs.guice
+    testFixturesImplementation libs.awaitility
 
     testImplementation project(':src:common-testing')
     testRuntimeOnly libs.junit.jupiter.engine

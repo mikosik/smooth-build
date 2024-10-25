@@ -10,6 +10,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingFileResolver.saveBytecodeInJar;
+import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
@@ -46,7 +47,6 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -305,9 +305,8 @@ public class EvaluatorTest extends TestingVm {
 
   private Maybe<EvaluatedExprs> evaluate(
       Injector injector, ImmutableBindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
+    runInitializations(injector);
     var scheduler = injector.getInstance(Scheduler.class);
-    var initializer = scheduler.submit(injector.getInstance(Initializer.class));
-    await().until(() -> initializer.toMaybe().isSome());
     var evaluatedExprs = scheduleEvaluateCore(scheduler, argument(exprs), argument(evaluables));
     await().until(() -> evaluatedExprs.toMaybe().isSome());
     return evaluatedExprs.get();
