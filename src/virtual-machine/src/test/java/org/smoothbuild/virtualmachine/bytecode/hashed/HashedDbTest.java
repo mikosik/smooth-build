@@ -12,6 +12,8 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.stream.IntStream;
@@ -25,16 +27,19 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class HashedDbTest extends TestingVm {
+public class HashedDbTest {
   private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
   private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
+
+  private final Supplier<Bucket> bucket = Suppliers.memoize(MemoryBucket::new);
 
   @Test
   void not_contains_not_written_data() throws CorruptedHashedDbException {
@@ -115,7 +120,7 @@ public class HashedDbTest extends TestingVm {
       throws Exception {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
-    hashedDbBucket().createDir(path);
+    bucket().createDir(path);
 
     assertCall(() -> hashedDb().contains(hash))
         .throwsException(new CorruptedHashedDbException(
@@ -127,7 +132,7 @@ public class HashedDbTest extends TestingVm {
       throws IOException {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
-    hashedDbBucket().createDir(path);
+    bucket().createDir(path);
 
     assertCall(() -> hashedDb().source(hash))
         .throwsException(new CorruptedHashedDbException(format(
@@ -138,7 +143,7 @@ public class HashedDbTest extends TestingVm {
   void when_hash_points_to_directory_then_sink_fails_with_corrupted_exception() throws Exception {
     var hash = Hash.of(BYTE_STRING_1);
     var path = dbPathTo(hash);
-    hashedDbBucket().createDir(path);
+    bucket().createDir(path);
 
     assertCall(() -> hashedDb().writeData(bufferedSink -> bufferedSink.write(BYTE_STRING_1)))
         .throwsException(
@@ -148,7 +153,7 @@ public class HashedDbTest extends TestingVm {
 
   @Test
   void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
-    var bucket = hashedDbBucket();
+    var bucket = bucket();
     var hashedDb = new HashedDb(bucket);
     hashedDb.execute();
 
@@ -160,7 +165,7 @@ public class HashedDbTest extends TestingVm {
   @Test
   void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
-    var bucket = hashedDbBucket();
+    var bucket = bucket();
     var hashedDb = new HashedDb(bucket);
     hashedDb.execute();
 
@@ -235,7 +240,7 @@ public class HashedDbTest extends TestingVm {
       var hash = Hash.of("abc");
       var path = dbPathTo(hash);
 
-      try (var sink = buffer(hashedDbBucket().sink(path))) {
+      try (var sink = buffer(bucket().sink(path))) {
         sink.write(illegalString());
       }
       assertCall(() -> hashedDb().readString(hash))
@@ -311,5 +316,19 @@ public class HashedDbTest extends TestingVm {
       assertCall(() -> hashedDb().readHashChainSize(hash))
           .throwsException(new DecodeHashChainException(hash, 5));
     }
+  }
+
+  private Bucket bucket() {
+    return bucket.get();
+  }
+
+  private HashedDb hashedDb() {
+    var hashedDb = new HashedDb(bucket());
+    try {
+      hashedDb.initialize();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return hashedDb;
   }
 }

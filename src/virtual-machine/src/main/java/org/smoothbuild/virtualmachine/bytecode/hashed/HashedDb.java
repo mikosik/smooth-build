@@ -54,12 +54,16 @@ public class HashedDb implements Initializable {
   public Output<Tuple0> execute() {
     var label = INITIALIZE_LABEL.append("hashedDb");
     try {
-      bucket.createDir(TEMP_DIR_PATH);
+      initialize();
       return output(tuple(), label, list());
     } catch (IOException e) {
       var fatal = fatal("Initializing HashedDb failed with exception:", e);
       return output(label, list(fatal));
     }
+  }
+
+  void initialize() throws IOException {
+    bucket.createDir(TEMP_DIR_PATH);
   }
 
   public Hash writeBigInteger(BigInteger value) throws HashedDbException {
