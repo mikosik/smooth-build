@@ -47,11 +47,6 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.testing.TestingVm;
 
 public class SaveArtifactsTest extends TestingVm {
-  @Override
-  public Bucket hashedDbBucket() {
-    return new SubBucket(projectBucket(), HASHED_DB_PATH);
-  }
-
   @Test
   void store_bool_artifact() throws Exception {
     var typeS = sBoolType();
@@ -270,5 +265,9 @@ public class SaveArtifactsTest extends TestingVm {
 
   public static SStructType fileTS() {
     return sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
+  }
+
+  private Bucket hashedDbBucket() {
+    return new SubBucket(projectBucket(), HASHED_DB_PATH);
   }
 }
