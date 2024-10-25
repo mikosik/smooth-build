@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.evaluator.testing.EvaluatorTestCase;
+import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
@@ -35,7 +35,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowRandomException;
 
-public class NativeTest extends EvaluatorTestCase {
+public class NativeTest extends EvaluatorTestContext {
   @Nested
   class _native {
     @Nested

@@ -61,7 +61,7 @@ import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
-public class EvaluatorTestCase extends BytecodeTestContext {
+public class EvaluatorTestContext extends BytecodeTestContext {
   private static final BucketId MODULES_BUCKET_ID = bucketId("module-bucket");
   private static final Path LIB_MODULE_PATH = path("libraryModule.smooth");
   private static final FullPath LIB_MODULE_FULL_PATH =

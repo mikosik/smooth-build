@@ -5,10 +5,10 @@ import static java.lang.String.format;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.evaluator.testing.EvaluatorTestCase;
+import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.Random;
 
-public class CachingTest extends EvaluatorTestCase {
+public class CachingTest extends EvaluatorTestContext {
   @Nested
   class _result_from_eval_which_is_ {
     @Test
