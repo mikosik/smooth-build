@@ -18,9 +18,8 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 
-public class ReportMatchersTest extends TestingVm {
+public class ReportMatchersTest {
   @ParameterizedTest
   @MethodSource("matcher_matches_cases")
   public void matcher_matches(
