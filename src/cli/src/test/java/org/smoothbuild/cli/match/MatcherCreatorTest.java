@@ -37,10 +37,9 @@ import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 import picocli.CommandLine.TypeConversionException;
 
-public class MatcherCreatorTest extends TestingVm {
+public class MatcherCreatorTest {
   @ParameterizedTest
   @MethodSource("provideArguments")
   public void matcher_instances_matches_same_reports_as_expected_matcher(
