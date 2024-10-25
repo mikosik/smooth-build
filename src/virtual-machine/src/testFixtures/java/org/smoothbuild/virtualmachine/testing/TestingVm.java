@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 
@@ -9,7 +10,6 @@ import com.google.common.base.Supplier;
 import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -59,7 +59,6 @@ public class TestingVm extends TestingBytecode {
   private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);
   private final Supplier<HashedDb> hashedDb = memoize(this::createHashDb);
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
-  private final Supplier<Bucket> hashedDbBucket = memoize(() -> synchronizedMemoryBucket());
 
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
 
@@ -179,7 +178,7 @@ public class TestingVm extends TestingBytecode {
   }
 
   public Bucket computationCacheBucket() {
-    return new SubBucket(projectBucket(), Path.path("cache"));
+    return new SubBucket(projectBucket(), path("cache"));
   }
 
   public Bucket projectBucket() {
@@ -199,13 +198,10 @@ public class TestingVm extends TestingBytecode {
   }
 
   private HashedDb createHashDb() {
-    var hashedDb = new HashedDb(hashedDbBucket());
+    // TODO hardcoded
+    var hashedDb = new HashedDb(new SubBucket(projectBucket(), path(".smooth/hashed")));
     throwExceptionOnFailure(hashedDb.execute());
     return hashedDb;
-  }
-
-  public Bucket hashedDbBucket() {
-    return hashedDbBucket.get();
   }
 
   // Job related
