@@ -39,7 +39,7 @@ import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.testing.MemoryReporter;
+import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
@@ -670,7 +670,7 @@ public class VmTest extends TestingVm {
   }
 
   private static void verifyConstTasksResultSource(
-      int size, ResultSource expectedSource, MemoryReporter reporter) {
+      int size, ResultSource expectedSource, TestReporter reporter) {
     var sources = reporter
         .reports()
         .filter(r -> r.label().equals(VM_EVALUATE.append("invoke")))

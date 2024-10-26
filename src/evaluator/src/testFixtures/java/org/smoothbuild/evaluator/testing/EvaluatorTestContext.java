@@ -46,7 +46,7 @@ import org.smoothbuild.common.log.report.ReportDecorator;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.testing.MemoryReporter;
+import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.evaluator.EvaluatorWiring;
@@ -160,9 +160,9 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     if (evaluatedExprs == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }
-    if (memoryReporter().containsFailure()) {
+    if (testReporter().containsFailure()) {
       fail("Expected artifact but problems have been reported:\n"
-          + memoryReporter().logs());
+          + testReporter().logs());
     }
     if (evaluatedExprs.isNone()) {
       fail("Expected artifact but evaluate() returned null.");
@@ -171,19 +171,19 @@ public class EvaluatorTestContext extends BytecodeTestContext {
   }
 
   protected List<Log> logs() {
-    return memoryReporter().logs();
+    return testReporter().logs();
   }
 
   protected List<Report> reports() {
-    return memoryReporter().reports();
+    return testReporter().reports();
   }
 
   protected void assertLogsContainFailure() {
     assertThat(containsFailure(logs())).isTrue();
   }
 
-  private MemoryReporter memoryReporter() {
-    return injector.getInstance(MemoryReporter.class);
+  private TestReporter testReporter() {
+    return injector.getInstance(TestReporter.class);
   }
 
   private Injector createInjector() {
@@ -208,15 +208,15 @@ public class EvaluatorTestContext extends BytecodeTestContext {
   public class TestWiring extends AbstractModule {
     @Override
     protected void configure() {
-      bind(MemoryReporter.class).toInstance(new MemoryReporter());
+      bind(TestReporter.class).toInstance(new TestReporter());
       bind(ReportMatcher.class).toInstance((label, logs) -> true);
     }
 
     @Provides
     @Singleton
     public Reporter provideReporter(
-        MemoryReporter memoryReporter, java.util.Set<ReportDecorator> decorators) {
-      return new DecoratingReporter(memoryReporter, decorators);
+        TestReporter testReporter, java.util.Set<ReportDecorator> decorators) {
+      return new DecoratingReporter(testReporter, decorators);
     }
 
     @Provides
