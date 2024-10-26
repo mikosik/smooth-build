@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.testing;
 
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
@@ -7,6 +8,7 @@ import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NA
 import java.io.IOException;
 import java.math.BigInteger;
 import okio.ByteString;
+import org.mockito.Mockito;
 import org.smoothbuild.common.Constants;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Path;
@@ -55,6 +57,10 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
+import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
+import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
+import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
@@ -64,6 +70,22 @@ public abstract class TestingBytecode extends CommonTestContext {
   protected abstract BKindDb kindDb();
 
   protected abstract BytecodeFactory bytecodeF();
+
+  public NativeMethodLoader nativeMethodLoader() {
+    return new NativeMethodLoader(methodLoader());
+  }
+
+  public FileContentReader fileContentReader() {
+    return Mockito.mock(FileContentReader.class);
+  }
+
+  private MethodLoader methodLoader() {
+    return new MethodLoader(jarClassLoaderFactory());
+  }
+
+  private JarClassLoaderFactory jarClassLoaderFactory() {
+    return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
+  }
 
   // InstB types
 

@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.testing;
 
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
@@ -7,6 +8,7 @@ import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NA
 import java.io.IOException;
 import java.math.BigInteger;
 import okio.ByteString;
+import org.mockito.Mockito;
 import org.smoothbuild.common.Constants;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
@@ -58,6 +60,12 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
+import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
+import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
+import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
+import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
+import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
@@ -73,6 +81,30 @@ public abstract class BytecodeTestApi extends CommonTestContext {
   public abstract HashedDb hashedDb();
 
   public abstract Bucket bytecodeBucket();
+
+  public NativeMethodLoader nativeMethodLoader() {
+    return new NativeMethodLoader(methodLoader());
+  }
+
+  public FileContentReader fileContentReader() {
+    return Mockito.mock(FileContentReader.class);
+  }
+
+  public BytecodeLoader bytecodeLoader() {
+    return new BytecodeLoader(bytecodeMethodLoader(), bytecodeF());
+  }
+
+  public BytecodeMethodLoader bytecodeMethodLoader() {
+    return new BytecodeMethodLoader(methodLoader());
+  }
+
+  private MethodLoader methodLoader() {
+    return new MethodLoader(jarClassLoaderFactory());
+  }
+
+  private JarClassLoaderFactory jarClassLoaderFactory() {
+    return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
+  }
 
   // InstB types
 

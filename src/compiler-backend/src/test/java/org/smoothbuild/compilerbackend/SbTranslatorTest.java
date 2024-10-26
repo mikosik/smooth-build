@@ -57,12 +57,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnReturnAbcFunc;
 
-public class SbTranslatorTest extends TestingVm {
+public class SbTranslatorTest extends BytecodeTestContext {
   @Nested
   class _translate {
     @Nested
