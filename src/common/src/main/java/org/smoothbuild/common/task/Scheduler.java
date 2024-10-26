@@ -44,11 +44,7 @@ public class Scheduler {
   private final Reporter reporter;
 
   @Inject
-  public Scheduler(Injector injector, Reporter reporter) {
-    this(injector, reporter, Runtime.getRuntime().availableProcessors());
-  }
-
-  public Scheduler(Injector injector, Reporter reporter, int threadCount) {
+  public Scheduler(Injector injector, Reporter reporter, @ThreadCount Integer threadCount) {
     this.injector = injector;
     this.reporter = reporter;
     this.executor = new Executor(threadCount);

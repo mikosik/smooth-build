@@ -3,6 +3,7 @@ package org.smoothbuild.common.testing;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.task.SchedulerWiring;
 
 public class CommonTestContext extends CommonTestApi {
   @Override
@@ -12,6 +13,7 @@ public class CommonTestContext extends CommonTestApi {
       protected void configure() {
         bind(TestReporter.class).toInstance(new TestReporter());
         bind(Reporter.class).to(TestReporter.class);
+        install(new SchedulerWiring());
       }
     };
   }

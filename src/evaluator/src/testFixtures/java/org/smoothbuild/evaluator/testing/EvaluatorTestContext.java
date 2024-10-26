@@ -46,6 +46,7 @@ import org.smoothbuild.common.log.report.ReportDecorator;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.task.SchedulerWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -192,7 +193,8 @@ public class EvaluatorTestContext extends BytecodeTestContext {
         new TestWiring(),
         new EvaluatorWiring(),
         new VmWiring(),
-        new CompilerBackendWiring());
+        new CompilerBackendWiring(),
+        new SchedulerWiring());
   }
 
   @Override
