@@ -8,13 +8,16 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
+import org.smoothbuild.common.log.report.SystemOutReporter;
 
 public class TestReporter implements Reporter {
   private final CopyOnWriteArrayList<Report> reports = new CopyOnWriteArrayList<>();
+  private final Reporter systemOutReporter = new SystemOutReporter();
 
   @Override
   public void submit(Report report) {
     reports.add(report);
+    systemOutReporter.submit(report);
   }
 
   public boolean containsFailure() {
