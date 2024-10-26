@@ -30,6 +30,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.task.SchedulerWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
@@ -133,6 +134,7 @@ public class FrontendCompileTester {
       @Override
       protected void configure() {
         bind(Reporter.class).toInstance(testReporter);
+        install(new SchedulerWiring());
       }
 
       @Provides
