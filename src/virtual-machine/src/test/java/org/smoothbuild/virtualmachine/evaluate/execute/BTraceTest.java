@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.testing.TestingBytecode.bTrace;
+import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
