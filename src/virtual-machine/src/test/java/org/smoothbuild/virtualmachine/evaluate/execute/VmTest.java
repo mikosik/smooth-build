@@ -6,11 +6,10 @@ import static java.util.Collections.nCopies;
 import static java.util.Collections.synchronizedList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
@@ -35,7 +34,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
@@ -316,10 +314,10 @@ public class VmTest extends TestingVm {
         @Test
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
-          var reporter = mock(Reporter.class);
-          var scheduler = scheduler(reporter);
-          evaluate(vm(scheduler), pick);
-          verify(reporter).submit(argThat(this::isResultWithIndexOutOfBoundsError));
+          evaluate(vm(), pick);
+          if (!reporter().reports().anyMatches(this::isResultWithIndexOutOfBoundsError)) {
+            fail("Expected report ERROR caused by index out of bounds but got:\n" + reporter());
+          }
         }
 
         public boolean isResultWithIndexOutOfBoundsError(Report report) {
@@ -329,10 +327,11 @@ public class VmTest extends TestingVm {
         @Test
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
-          var reporter = mock(Reporter.class);
-          var scheduler = scheduler(reporter);
-          evaluate(vm(scheduler), pick);
-          verify(reporter).submit(argThat(this::isResultWithNegativeIndexError));
+          evaluate(vm(), pick);
+          if (!reporter().reports().anyMatches(this::isResultWithNegativeIndexError)) {
+            fail("Expected report with ERROR caused by index out of bounds, but got:\n"
+                + reporter());
+          }
         }
 
         public boolean isResultWithNegativeIndexError(Report report) {
@@ -408,17 +407,20 @@ public class VmTest extends TestingVm {
     class _errors {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
-        var reporter = mock(Reporter.class);
-        var scheduler = scheduler(reporter, 4);
+        var scheduler = scheduler();
         var vm = vm(scheduler);
         var expr = throwExceptionCall();
         evaluate(vm, expr);
-        verify(reporter).submit(argThat(this::reportWithFatalCausedByRuntimeException));
+
+        List<Report> reports = reporter().reports();
+        if (!reports.anyMatches(this::reportWithFatalCausedByRuntimeException)) {
+          fail("Expected FATAL report caused by ArithmeticException but got:\n===\n" + reporter()
+              + "\n===\n");
+        }
       }
 
-      private boolean reportWithFatalCausedByRuntimeException(Report report) {
-        return reportWith(
-            report, FATAL, "Native code thrown exception:\njava.lang.ArithmeticException");
+      private boolean reportWithFatalCausedByRuntimeException(Report r) {
+        return reportWith(r, FATAL, "Native code thrown exception:\njava.lang.ArithmeticException");
       }
 
       private BCall throwExceptionCall() throws Exception {
@@ -527,11 +529,9 @@ public class VmTest extends TestingVm {
 
     private void assertTaskReport(
         BExpr expr, String label, BTrace trace, ResultSource resultSource) {
-      var reporter = mock(Reporter.class);
-      var scheduler = scheduler(reporter);
-      evaluate(vm(scheduler), expr);
+      evaluate(vm(), expr);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
-      verify(reporter).submit(taskReport);
+      assertThat(reporter().reports()).contains(taskReport);
     }
   }
 

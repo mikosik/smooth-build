@@ -9,10 +9,6 @@ import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
 
 public abstract class CommonTestApi extends GuiceTestContext {
-  public Scheduler scheduler(Reporter reporter) {
-    return scheduler(reporter, 4);
-  }
-
   public Scheduler scheduler(Reporter reporter, int threadCount) {
     // Scheduler has to be created via injector because its submit methods takes Class<?> value
     // argument which is used to create instance of such class via Injector. If that class
