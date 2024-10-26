@@ -563,9 +563,9 @@ public class VmTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"));
-
+      setThreadCount(4);
       var reporter = reporter();
-      var scheduler = scheduler(reporter, 4);
+      var scheduler = scheduler();
       var vm = vm(scheduler);
       assertThat(evaluate(vm, bExpr).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
@@ -591,7 +591,8 @@ public class VmTest extends TestingVm {
           invokeExecuteCommands(testName, "INC1,COUNT2,WAIT1,GET1"),
           invokeExecuteCommands(testName, "WAIT2,COUNT1,GET2"));
 
-      var scheduler = scheduler(reporter(), 2);
+      setThreadCount(2);
+      var scheduler = scheduler();
       var vm = vm(scheduler);
       var expected = bArray(bString("1"), bString("1"), bString("0"));
       assertThat(evaluate(vm, expr).get().get()).isEqualTo(expected);
