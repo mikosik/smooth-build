@@ -1,13 +1,11 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
-import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 
 import com.google.common.base.Supplier;
-import org.mockito.Mockito;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.SubBucket;
@@ -30,11 +28,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
-import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
-import org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader;
-import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
-import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
@@ -80,30 +73,6 @@ public class TestingVm extends TestingBytecode {
 
   public Vm vm(StepEvaluator stepEvaluator) {
     return new Vm(scheduler(), stepEvaluator, bytecodeF(), bReferenceInliner());
-  }
-
-  public NativeMethodLoader nativeMethodLoader() {
-    return new NativeMethodLoader(methodLoader());
-  }
-
-  public FileContentReader fileContentReader() {
-    return Mockito.mock(FileContentReader.class);
-  }
-
-  public BytecodeLoader bytecodeLoader() {
-    return new BytecodeLoader(bytecodeMethodLoader(), bytecodeF());
-  }
-
-  public BytecodeMethodLoader bytecodeMethodLoader() {
-    return new BytecodeMethodLoader(methodLoader());
-  }
-
-  private MethodLoader methodLoader() {
-    return new MethodLoader(jarClassLoaderFactory());
-  }
-
-  private JarClassLoaderFactory jarClassLoaderFactory() {
-    return new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader());
   }
 
   public StepEvaluator stepEvaluator() {
