@@ -10,8 +10,8 @@ public class CommonTestContext extends CommonTestApi {
     return new AbstractModule() {
       @Override
       protected void configure() {
-        bind(MemoryReporter.class).toInstance(new MemoryReporter());
-        bind(Reporter.class).to(MemoryReporter.class);
+        bind(TestReporter.class).toInstance(new TestReporter());
+        bind(Reporter.class).to(TestReporter.class);
       }
     };
   }

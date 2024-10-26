@@ -30,7 +30,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.testing.MemoryReporter;
+import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -127,12 +127,12 @@ public class FrontendCompileTester {
     Map<BucketId, Bucket> buckets =
         map(PROJECT_BUCKET_ID, projectBucket, LIBRARY_BUCKET_ID, slBucket);
     var fileResolver = new FileResolver(buckets);
-    var memoryReporter = new MemoryReporter();
+    var testReporter = new TestReporter();
 
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
       @Override
       protected void configure() {
-        bind(Reporter.class).toInstance(memoryReporter);
+        bind(Reporter.class).toInstance(testReporter);
       }
 
       @Provides
@@ -145,7 +145,7 @@ public class FrontendCompileTester {
     var paths = list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH);
     var module = scheduler.submit(FrontendCompile.class, argument(paths));
     await().until(() -> module.toMaybe().isSome());
-    return Try.of(module.get().getOr(null), memoryReporter.logs());
+    return Try.of(module.get().getOr(null), testReporter.logs());
   }
 
   private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {

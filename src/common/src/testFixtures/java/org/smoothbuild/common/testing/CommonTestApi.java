@@ -32,7 +32,7 @@ public abstract class CommonTestApi extends GuiceTestContext {
     return injector().getInstance(Scheduler.class);
   }
 
-  public MemoryReporter reporter() {
-    return injector().getInstance(MemoryReporter.class);
+  public TestReporter reporter() {
+    return injector().getInstance(TestReporter.class);
   }
 }

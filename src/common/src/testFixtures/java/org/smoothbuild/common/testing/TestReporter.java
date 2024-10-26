@@ -9,7 +9,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 
-public class MemoryReporter implements Reporter {
+public class TestReporter implements Reporter {
   private final CopyOnWriteArrayList<Report> reports = new CopyOnWriteArrayList<>();
 
   @Override
