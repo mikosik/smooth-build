@@ -46,13 +46,12 @@ import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
-public class TestingVm extends TestingBytecode {
+public class TestingVm extends BytecodeTestApi {
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
   private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);
-  private final Supplier<HashedDb> hashedDb = memoize(this::createHashDb);
+  private final Supplier<HashedDb> hashedDb = memoize(this::newHashDb);
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
-
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
 
   public Vm vm() {
@@ -132,6 +131,7 @@ public class TestingVm extends TestingBytecode {
     return new BKindDb(hashedDb());
   }
 
+  @Override
   public BExprDb exprDb() {
     return exprDb.get();
   }
@@ -162,15 +162,21 @@ public class TestingVm extends TestingBytecode {
     return newKindDb();
   }
 
+  @Override
   public HashedDb hashedDb() {
     return hashedDb.get();
   }
 
-  private HashedDb createHashDb() {
-    // TODO hardcoded
-    var hashedDb = new HashedDb(new SubBucket(projectBucket(), path(".smooth/hashed")));
+  private HashedDb newHashDb() {
+    var hashedDb = new HashedDb(bytecodeBucket());
     throwExceptionOnFailure(hashedDb.execute());
     return hashedDb;
+  }
+
+  @Override
+  public SubBucket bytecodeBucket() {
+    // TODO hardcoded
+    return new SubBucket(projectBucket(), path(".smooth/hashed"));
   }
 
   // Job related
