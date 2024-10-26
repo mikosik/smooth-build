@@ -13,7 +13,6 @@ import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.init.InitWiring;
 import org.smoothbuild.common.log.report.ReportWiring;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
@@ -27,7 +26,6 @@ public class TestingVmWiring extends AbstractModule {
   @Override
   protected void configure() {
     install(new VmWiring());
-    install(new InitWiring());
     install(new ReportWiring(new PrintWriter(System.out), (label, logs) -> true, INFO));
   }
 
