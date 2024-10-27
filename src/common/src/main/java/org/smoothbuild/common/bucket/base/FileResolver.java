@@ -8,18 +8,17 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import okio.Sink;
 import okio.Source;
-import org.smoothbuild.common.collect.Map;
 
 /**
  * This class is thread-safe.
  */
 @Singleton
 public class FileResolver {
-  private final Map<BucketId, Bucket> buckets;
+  private final BucketResolver bucketResolver;
 
   @Inject
-  public FileResolver(Map<BucketId, Bucket> buckets) {
-    this.buckets = buckets;
+  public FileResolver(BucketResolver bucketResolver) {
+    this.bucketResolver = bucketResolver;
   }
 
   public String contentOf(FullPath fullPath, Charset charset) throws IOException {
@@ -29,26 +28,14 @@ public class FileResolver {
   }
 
   public Source source(FullPath fullPath) throws IOException {
-    return bucketFor(fullPath).source(fullPath.path());
+    return bucketResolver.bucketFor(fullPath.bucketId()).source(fullPath.path());
   }
 
   public Sink sink(FullPath fullPath) throws IOException {
-    return bucketFor(fullPath).sink(fullPath.path());
+    return bucketResolver.bucketFor(fullPath.bucketId()).sink(fullPath.path());
   }
 
   public PathState pathState(FullPath fullPath) {
-    return bucketFor(fullPath).pathState(fullPath.path());
-  }
-
-  private Bucket bucketFor(FullPath fullPath) {
-    return bucketFor(fullPath.bucketId());
-  }
-
-  private Bucket bucketFor(BucketId bucketId) {
-    Bucket bucket = buckets.get(bucketId);
-    if (bucket == null) {
-      throw new IllegalArgumentException("Unknown bucket id " + bucketId + ".");
-    }
-    return bucket;
+    return bucketResolver.bucketFor(fullPath.bucketId()).pathState(fullPath.path());
   }
 }

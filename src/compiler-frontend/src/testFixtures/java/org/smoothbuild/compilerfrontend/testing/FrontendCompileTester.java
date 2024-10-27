@@ -21,6 +21,7 @@ import com.google.inject.Provides;
 import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
@@ -127,7 +128,7 @@ public class FrontendCompileTester {
     var slBucket = new SynchronizedBucket(new MemoryBucket());
     Map<BucketId, Bucket> buckets =
         map(PROJECT_BUCKET_ID, projectBucket, LIBRARY_BUCKET_ID, slBucket);
-    var fileResolver = new FileResolver(buckets);
+    var fileResolver = new FileResolver(new BucketResolver(buckets));
     var testReporter = new TestReporter();
 
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {

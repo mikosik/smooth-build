@@ -27,7 +27,8 @@ public class FileResolverTest {
   @BeforeEach
   public void setUp() {
     bucket = new MemoryBucket();
-    fileResolver = new FileResolver(map(bucketId("project"), bucket));
+    var bucketResolver = new BucketResolver(map(bucketId("project"), bucket));
+    fileResolver = new FileResolver(bucketResolver);
   }
 
   @Nested

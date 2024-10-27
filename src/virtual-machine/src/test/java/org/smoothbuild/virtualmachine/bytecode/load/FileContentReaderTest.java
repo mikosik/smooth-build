@@ -8,6 +8,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
@@ -18,8 +19,8 @@ public class FileContentReaderTest extends BytecodeTestContext {
   void read_returns_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var bucketId = bucketId("project");
-    var fileContentReader =
-        new FileContentReader(new FileResolver(map(bucketId, bucket)), exprDb());
+    var fileResolver = new FileResolver(new BucketResolver(map(bucketId, bucket)));
+    var fileContentReader = new FileContentReader(fileResolver, exprDb());
     var path = path("my/file");
     var content = "file content";
     createFile(bucket, path, content);
@@ -33,8 +34,8 @@ public class FileContentReaderTest extends BytecodeTestContext {
   void read_caches_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var bucketId = bucketId("project");
-    var fileContentReader =
-        new FileContentReader(new FileResolver(map(bucketId, bucket)), exprDb());
+    var fileResolver = new FileResolver(new BucketResolver(map(bucketId, bucket)));
+    var fileContentReader = new FileContentReader(fileResolver, exprDb());
     var path = path("my/file");
     var content = "file content";
     createFile(bucket, path, content);
