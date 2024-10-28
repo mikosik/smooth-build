@@ -53,7 +53,7 @@ public class ComputationCache implements Initializable {
 
   @Override
   public Output<Tuple0> execute() {
-    var label = INITIALIZE_LABEL.append("hashedDb");
+    var label = INITIALIZE_LABEL.append("computationCache");
     try {
       bucket.createDir(Path.root());
       return output(tuple(), label, list());
