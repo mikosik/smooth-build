@@ -3,9 +3,9 @@ package org.smoothbuild.systemtest.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createDirectories;
 import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
+import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
 import static org.smoothbuild.cli.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.cli.layout.Layout.DEFAULT_MODULE_PATH;
-import static org.smoothbuild.cli.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.cli.layout.Layout.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
@@ -28,7 +28,7 @@ public class CleanCommandTest {
       createUserModule("""
               result = "abc";
               """);
-      createDirInProject(HASHED_DB_PATH);
+      createDirInProject(BYTECODE_DB_PATH);
       createDirInProject(COMPUTATION_CACHE_PATH);
       createDirInProject(ARTIFACTS_PATH);
 

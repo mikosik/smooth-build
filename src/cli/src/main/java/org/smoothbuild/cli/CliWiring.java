@@ -1,8 +1,8 @@
 package org.smoothbuild.cli;
 
 import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
+import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
 import static org.smoothbuild.cli.layout.Layout.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.cli.layout.Layout.HASHED_DB_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -50,7 +50,7 @@ public class CliWiring extends AbstractModule {
   @Provides
   @BytecodeDb
   public Bucket provideBytecodeDbBucket(@Project Bucket bucket) {
-    return new SubBucket(bucket, HASHED_DB_PATH);
+    return new SubBucket(bucket, BYTECODE_DB_PATH);
   }
 
   @Provides

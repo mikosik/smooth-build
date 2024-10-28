@@ -176,7 +176,7 @@ public class TestingVm extends BytecodeTestApi {
   @Override
   public SubBucket bytecodeBucket() {
     // TODO hardcoded
-    return new SubBucket(projectBucket(), path(".smooth/hashed"));
+    return new SubBucket(projectBucket(), path(".smooth/bytecode"));
   }
 
   // Job related

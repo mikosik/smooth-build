@@ -26,7 +26,7 @@ public class Clean implements Task0<Tuple0> {
   @Override
   public Output<Tuple0> execute() {
     var logger = new Logger();
-    deleteDir("object cache", Layout.HASHED_DB_PATH, logger);
+    deleteDir("object cache", Layout.BYTECODE_DB_PATH, logger);
     deleteDir("computation cache", Layout.COMPUTATION_CACHE_PATH, logger);
     deleteDir("artifacts", Layout.ARTIFACTS_PATH, logger);
     return output(tuple(), label("cli", "clean"), logger.toList());

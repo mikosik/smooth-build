@@ -15,7 +15,7 @@ public class Layout {
   public static final Path SMOOTH_DIR = path(".smooth");
   public static final Path ARTIFACTS_PATH = SMOOTH_DIR.appendPart("artifacts");
   public static final Path COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");
-  public static final Path HASHED_DB_PATH = SMOOTH_DIR.appendPart("hashed");
+  public static final Path BYTECODE_DB_PATH = SMOOTH_DIR.appendPart("bytecode");
   public static final Path SMOOTH_LOCK_PATH = SMOOTH_DIR.appendPart("lock");
   public static final Path DEFAULT_MODULE_PATH = path("build.smooth");
   public static final FullPath DEFAULT_MODULE_FILE_PATH = fullPath(PROJECT, DEFAULT_MODULE_PATH);

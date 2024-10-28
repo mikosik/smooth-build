@@ -2,7 +2,7 @@ package org.smoothbuild.cli.run;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
-import static org.smoothbuild.cli.layout.Layout.HASHED_DB_PATH;
+import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
@@ -268,6 +268,6 @@ public class SaveArtifactsTest extends TestingVm {
   }
 
   private Bucket hashedDbBucket() {
-    return new SubBucket(projectBucket(), HASHED_DB_PATH);
+    return new SubBucket(projectBucket(), BYTECODE_DB_PATH);
   }
 }
