@@ -1,11 +1,13 @@
 package org.smoothbuild.cli.run;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
 import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
@@ -32,6 +34,8 @@ import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.BucketResolver;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
@@ -209,7 +213,8 @@ public class SaveArtifactsTest extends TestingVm {
 
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
-    var saveArtifacts = new SaveArtifacts(projectBucket());
+    var filesystem = new Filesystem(new BucketResolver(map(PROJECT, projectBucket())));
+    var saveArtifacts = new SaveArtifacts(filesystem);
     List<SExpr> sExprs = list(
         instantiateS(sStringType(), "myValue1"),
         instantiateS(sStringType(), "myValue2"),
@@ -250,7 +255,8 @@ public class SaveArtifactsTest extends TestingVm {
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {
-    var saveArtifacts = new SaveArtifacts(projectBucket());
+    var filesystem = new Filesystem(new BucketResolver(map(PROJECT, projectBucket())));
+    var saveArtifacts = new SaveArtifacts(filesystem);
     SExpr instantiateS = instantiateS(sType, "myValue");
     return saveArtifacts.execute(evaluatedExprs(list(instantiateS), list(value)));
   }
