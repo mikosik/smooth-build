@@ -9,9 +9,11 @@ import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.cli.layout.InstallationHashes;
+import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.bucket.wiring.BucketFactory;
 import org.smoothbuild.common.collect.Map;
@@ -57,5 +59,11 @@ public class CliWiring extends AbstractModule {
   @Project
   public Bucket provideProjectBucket(Map<BucketId, Bucket> map) {
     return map.get(PROJECT);
+  }
+
+  @Provides
+  @Project
+  public FullPath provideProjectPath() {
+    return Layout.PROJECT;
   }
 }

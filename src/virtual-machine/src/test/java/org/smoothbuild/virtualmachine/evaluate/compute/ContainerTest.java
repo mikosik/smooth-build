@@ -10,11 +10,6 @@ import org.smoothbuild.virtualmachine.testing.TestingVm;
 
 public class ContainerTest extends TestingVm {
   @Test
-  void file_system() {
-    assertThat(container().bucket()).isSameInstanceAs(projectBucket());
-  }
-
-  @Test
   void messages_are_logged() throws Exception {
     var container = container();
     container.log().error("message");

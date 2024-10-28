@@ -52,12 +52,12 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.TestingVm;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
 
-public class EvaluatorTest extends BytecodeTestContext {
+public class EvaluatorTest extends TestingVm {
   @Nested
   class _evaluation {
     @Nested
