@@ -165,7 +165,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private static Path targetPath(BValue value) {
-    return Layout.HASHED_DB_PATH.append(dbPathTo(value.dataHash()));
+    return Layout.BYTECODE_DB_PATH.append(dbPathTo(value.dataHash()));
   }
 
   private static Path artifactPath(String name) {
