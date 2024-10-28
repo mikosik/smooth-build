@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.Map;
@@ -54,6 +55,12 @@ public class TestingVmWiring extends AbstractModule {
   @Singleton
   public Bucket provideProjectBucket() {
     return new SynchronizedBucket(new MemoryBucket());
+  }
+
+  @Provides
+  @Project
+  public FullPath provideProjectPath() {
+    return TestingVm.projectPath();
   }
 
   @Provides

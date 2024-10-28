@@ -18,9 +18,8 @@ public class FileFunc {
       return null;
     }
 
-    var fileReader = new FileReader(container);
     try {
-      return fileReader.createFile(validatedPath, validatedPath);
+      return container.fileReader().createFile(validatedPath, validatedPath);
     } catch (IOException e) {
       container.log().error(e.getMessage());
       return null;

@@ -2,7 +2,6 @@ package org.smoothbuild.cli.layout;
 
 import static org.smoothbuild.cli.layout.BucketIds.INSTALL;
 import static org.smoothbuild.cli.layout.BucketIds.LIBRARY;
-import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
@@ -13,7 +12,8 @@ import org.smoothbuild.common.collect.List;
 
 public class Layout {
   public static final Path SMOOTH_DIR = path(".smooth");
-  public static final FullPath SMOOTH = PROJECT.path(".smooth");
+  public static final FullPath PROJECT = BucketIds.PROJECT.path(Path.root());
+  public static final FullPath SMOOTH = PROJECT.appendPart(".smooth");
   public static final Path ARTIFACTS_PATH = SMOOTH_DIR.appendPart("artifacts");
   public static final FullPath ARTIFACTS = SMOOTH.appendPart("artifacts");
   public static final Path COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");
@@ -22,7 +22,8 @@ public class Layout {
   public static final FullPath BYTECODE_DB = SMOOTH.appendPart("bytecode");
   public static final Path SMOOTH_LOCK_PATH = SMOOTH_DIR.appendPart("lock");
   public static final Path DEFAULT_MODULE_PATH = path("build.smooth");
-  public static final FullPath DEFAULT_MODULE_FILE_PATH = fullPath(PROJECT, DEFAULT_MODULE_PATH);
+  public static final FullPath DEFAULT_MODULE_FILE_PATH =
+      fullPath(BucketIds.PROJECT, DEFAULT_MODULE_PATH);
   public static final Path STANDARD_LIBRARY_MODULE_PATH = path("std_lib.smooth");
   public static final FullPath STANDARD_LIBRARY_MODULE_FILE_PATH =
       fullPath(LIBRARY, STANDARD_LIBRARY_MODULE_PATH);

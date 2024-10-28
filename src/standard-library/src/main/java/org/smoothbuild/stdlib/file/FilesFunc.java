@@ -1,13 +1,10 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.common.bucket.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.common.bucket.base.PathIterator;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -21,22 +18,10 @@ public class FilesFunc {
       return null;
     }
     try {
-      return readFiles(container, path);
+      return container.fileReader().createFiles(path);
     } catch (IOException e) {
       container.log().error(e.getMessage());
       return null;
     }
-  }
-
-  private static BArray readFiles(Container container, Path dir)
-      throws IOException, BytecodeException {
-    var fileArrayBuilder =
-        container.factory().arrayBuilderWithElements(container.factory().fileType());
-    var reader = new FileReader(container);
-    for (PathIterator it = recursivePathsIterator(container.bucket(), dir); it.hasNext(); ) {
-      Path path = it.next();
-      fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
-    }
-    return fileArrayBuilder.build();
   }
 }
