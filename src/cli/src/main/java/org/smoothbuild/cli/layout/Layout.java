@@ -17,6 +17,7 @@ public class Layout {
   public static final Path ARTIFACTS_PATH = SMOOTH_DIR.appendPart("artifacts");
   public static final FullPath ARTIFACTS = SMOOTH.appendPart("artifacts");
   public static final Path COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");
+  public static final FullPath COMPUTATION_DB = SMOOTH.appendPart("computations");
   public static final Path BYTECODE_DB_PATH = SMOOTH_DIR.appendPart("bytecode");
   public static final FullPath BYTECODE_DB = SMOOTH.appendPart("bytecode");
   public static final Path SMOOTH_LOCK_PATH = SMOOTH_DIR.appendPart("lock");

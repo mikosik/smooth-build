@@ -7,34 +7,33 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.smoothbuild.cli.layout.Layout;
-import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.bucket.base.Filesystem;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
-import org.smoothbuild.virtualmachine.wire.Project;
 
 public class Clean implements Task0<Tuple0> {
-  private final Bucket bucket;
+  private final Filesystem filesystem;
 
   @Inject
-  public Clean(@Project Bucket bucket) {
-    this.bucket = bucket;
+  public Clean(Filesystem filesystem) {
+    this.filesystem = filesystem;
   }
 
   @Override
   public Output<Tuple0> execute() {
     var logger = new Logger();
-    deleteDir("object cache", Layout.BYTECODE_DB_PATH, logger);
-    deleteDir("computation cache", Layout.COMPUTATION_CACHE_PATH, logger);
-    deleteDir("artifacts", Layout.ARTIFACTS_PATH, logger);
+    deleteDir("object cache", Layout.BYTECODE_DB, logger);
+    deleteDir("computation cache", Layout.COMPUTATION_DB, logger);
+    deleteDir("artifacts", Layout.ARTIFACTS, logger);
     return output(tuple(), label("cli", "clean"), logger.toList());
   }
 
-  private void deleteDir(String name, Path path, Logger logger) {
+  private void deleteDir(String name, FullPath path, Logger logger) {
     try {
-      bucket.delete(path);
+      filesystem.delete(path);
       logger.info(name + " removed");
     } catch (IOException e) {
       logger.error("Unable to delete " + name + " path=" + path.q() + ".");
