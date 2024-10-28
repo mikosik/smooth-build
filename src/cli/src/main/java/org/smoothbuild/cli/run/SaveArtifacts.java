@@ -3,6 +3,7 @@ package org.smoothbuild.cli.run;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.cli.layout.Layout.ARTIFACTS;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -16,7 +17,8 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
 import org.smoothbuild.cli.layout.Layout;
-import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Filesystem;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.log.base.Logger;
@@ -34,22 +36,21 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.wire.Project;
 
 public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final String FILE_STRUCT_NAME = "File";
-  private final Bucket bucket;
+  private final Filesystem filesystem;
 
   @Inject
-  public SaveArtifacts(@Project Bucket bucket) {
-    this.bucket = bucket;
+  public SaveArtifacts(Filesystem filesystem) {
+    this.filesystem = filesystem;
   }
 
   @Override
   public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
     var label = label("artifacts", "save");
     try {
-      bucket.createDir(Layout.ARTIFACTS_PATH);
+      filesystem.createDir(ARTIFACTS);
     } catch (IOException e) {
       return output(label, list(error(e.getMessage())));
     }
@@ -70,7 +71,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     String name = valueS.referencedName();
     try {
       var path = write(valueS, value);
-      logger.info(name + " -> " + path.q());
+      logger.info(name + " -> " + path.path().q());
     } catch (IOException | BytecodeException e) {
       logger.fatal("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
@@ -79,9 +80,9 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     }
   }
 
-  private Path write(SReference sReference, BValue value)
+  private FullPath write(SReference sReference, BValue value)
       throws IOException, DuplicatedPathsException, BytecodeException {
-    Path artifactPath = artifactPath(sReference.referencedName());
+    FullPath artifactPath = artifactPath(sReference.referencedName());
     if (sReference.schema().type() instanceof SArrayType sArrayType) {
       return saveArray(sArrayType, artifactPath, (BArray) value);
     } else if (sReference.schema().type().name().equals(FILE_STRUCT_NAME)) {
@@ -91,15 +92,15 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     }
   }
 
-  private Path saveFile(Path artifactPath, BTuple file)
+  private FullPath saveFile(FullPath artifactPath, BTuple file)
       throws IOException, DuplicatedPathsException, BytecodeException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileValuePath(file));
   }
 
-  private Path saveArray(SArrayType sArrayType, Path artifactPath, BArray array)
+  private FullPath saveArray(SArrayType sArrayType, FullPath artifactPath, BArray array)
       throws IOException, DuplicatedPathsException, BytecodeException {
-    bucket.createDir(artifactPath);
+    filesystem.createDir(artifactPath);
     SType elemTS = sArrayType.elem();
     if (elemTS instanceof SArrayType sElemArrayType) {
       int i = 0;
@@ -115,32 +116,32 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     return artifactPath;
   }
 
-  private void saveNonFileArray(Path artifactPath, BArray array)
+  private void saveNonFileArray(FullPath artifactPath, BArray array)
       throws IOException, BytecodeException {
     int i = 0;
     for (var valueB : array.elements(BValue.class)) {
-      Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
-      Path targetPath = targetPath(valueB);
-      bucket.createLink(sourcePath, targetPath);
+      FullPath sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
+      FullPath targetPath = targetPath(valueB);
+      filesystem.createLink(sourcePath, targetPath);
       i++;
     }
   }
 
-  private void saveFileArray(Path artifactPath, Iterable<BTuple> files)
+  private void saveFileArray(FullPath artifactPath, Iterable<BTuple> files)
       throws IOException, DuplicatedPathsException, BytecodeException {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     for (BTuple file : files) {
       Path filePath = fileValuePath(file);
-      Path sourcePath = artifactPath.append(filePath);
+      FullPath sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
-        Path targetPath = targetPath(fileContent(file));
-        bucket.createDir(sourcePath.parent());
-        bucket.createLink(sourcePath, targetPath);
+        FullPath targetPath = targetPath(fileContent(file));
+        filesystem.createDir(sourcePath.parent());
+        filesystem.createLink(sourcePath, targetPath);
       }
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      bucket.delete(artifactPath);
+      filesystem.delete(artifactPath);
       throw duplicatedPathsMessage(duplicatesDetector.getDuplicateValues());
     }
   }
@@ -153,10 +154,10 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
             + list);
   }
 
-  private Path saveBaseValue(Path artifactPath, BValue value) throws IOException {
-    Path targetPath = targetPath(value);
-    bucket.delete(artifactPath);
-    bucket.createLink(artifactPath, targetPath);
+  private FullPath saveBaseValue(FullPath artifactPath, BValue value) throws IOException {
+    FullPath targetPath = targetPath(value);
+    filesystem.delete(artifactPath);
+    filesystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 
@@ -164,11 +165,11 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     return path(filePath(file).toJavaString());
   }
 
-  private static Path targetPath(BValue value) {
-    return Layout.BYTECODE_DB_PATH.append(dbPathTo(value.dataHash()));
+  private static FullPath targetPath(BValue value) {
+    return Layout.BYTECODE_DB.appendPart(dbPathTo(value.dataHash()).toString());
   }
 
-  private static Path artifactPath(String name) {
-    return Layout.ARTIFACTS_PATH.appendPart(name);
+  private static FullPath artifactPath(String name) {
+    return ARTIFACTS.appendPart(name);
   }
 }
