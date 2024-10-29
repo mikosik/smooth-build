@@ -13,13 +13,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 
-public class FileReader {
+public class BFileCreator {
   private final Filesystem filesystem;
   private final FullPath projectPath;
   private final FileContentReader fileContentReader;
   private final BytecodeFactory factory;
 
-  public FileReader(
+  public BFileCreator(
       Filesystem filesystem,
       FullPath projectPath,
       FileContentReader fileContentReader,

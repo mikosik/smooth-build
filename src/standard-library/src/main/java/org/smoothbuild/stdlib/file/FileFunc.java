@@ -19,7 +19,7 @@ public class FileFunc {
     }
 
     try {
-      return container.fileReader().createFile(validatedPath, validatedPath);
+      return container.bFileCreator().createFile(validatedPath, validatedPath);
     } catch (IOException e) {
       container.log().error(e.getMessage());
       return null;
