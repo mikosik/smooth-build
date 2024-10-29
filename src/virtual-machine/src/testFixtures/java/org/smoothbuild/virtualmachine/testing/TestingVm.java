@@ -1,20 +1,18 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
-import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.Filesystem;
-import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -118,7 +116,7 @@ public class TestingVm extends BytecodeTestApi {
 
   public Container container(NativeMethodLoader nativeMethodLoader) {
     return new Container(
-        filesystem(), projectPath(), fileContentReader(), bytecodeF(), nativeMethodLoader);
+        filesystem(), PROJECT_PATH, fileContentReader(), bytecodeF(), nativeMethodLoader);
   }
 
   private Filesystem filesystem() {
@@ -275,9 +273,5 @@ public class TestingVm extends BytecodeTestApi {
 
   private static SynchronizedBucket synchronizedMemoryBucket() {
     return new SynchronizedBucket(new MemoryBucket());
-  }
-
-  public static FullPath projectPath() {
-    return fullPath(PROJECT, Path.root());
   }
 }
