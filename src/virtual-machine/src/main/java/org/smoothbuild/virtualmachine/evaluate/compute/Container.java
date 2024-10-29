@@ -41,11 +41,7 @@ public class Container implements NativeApi {
   }
 
   public FileReader fileReader() {
-    return new FileReader(this, filesystem, projectPath);
-  }
-
-  public FileContentReader fileContentReader() {
-    return fileContentReader;
+    return new FileReader(filesystem, projectPath, fileContentReader, bytecodeFactory);
   }
 
   @Override
