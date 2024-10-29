@@ -14,7 +14,8 @@ public class BucketResolver {
   public Bucket bucketFor(BucketId bucketId) {
     Bucket bucket = buckets.get(bucketId);
     if (bucket == null) {
-      throw new IllegalArgumentException("Unknown bucket id " + bucketId + ".");
+      throw new IllegalArgumentException(
+          "Unknown bucket id " + bucketId + ". Known buckets = " + buckets.keySet());
     }
     return bucket;
   }
