@@ -5,6 +5,10 @@ package org.smoothbuild.common.bucket.base;
  */
 public record FullPath(BucketId bucketId, Path path) {
 
+  public static FullPath fullPath(BucketId bucketId, String path) {
+    return new FullPath(bucketId, Path.path(path));
+  }
+
   public static FullPath fullPath(BucketId bucketId, Path path) {
     return new FullPath(bucketId, path);
   }
