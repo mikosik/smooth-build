@@ -40,8 +40,8 @@ public class Container implements NativeApi {
     this.nativeMethodLoader = nativeMethodLoader;
   }
 
-  public FileReader fileReader() {
-    return new FileReader(filesystem, projectPath, fileContentReader, bytecodeFactory);
+  public BFileCreator bFileCreator() {
+    return new BFileCreator(filesystem, projectPath, fileContentReader, bytecodeFactory);
   }
 
   @Override

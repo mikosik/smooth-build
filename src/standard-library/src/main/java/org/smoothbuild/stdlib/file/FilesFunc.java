@@ -18,7 +18,7 @@ public class FilesFunc {
       return null;
     }
     try {
-      return container.fileReader().createFiles(path);
+      return container.bFileCreator().createFiles(path);
     } catch (IOException e) {
       container.log().error(e.getMessage());
       return null;
