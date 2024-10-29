@@ -12,7 +12,6 @@ public record FileLocation(FullPath file, int line) implements SourceLocation {
     this.line = line;
   }
 
-  @Override
   public BucketId bucketId() {
     return file().bucketId();
   }

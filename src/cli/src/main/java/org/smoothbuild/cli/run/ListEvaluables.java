@@ -1,6 +1,7 @@
 package org.smoothbuild.cli.run;
 
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.info;
@@ -12,7 +13,6 @@ import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
-import org.smoothbuild.cli.layout.BucketIds;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
@@ -22,8 +22,9 @@ import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
+import org.smoothbuild.compilerfrontend.lang.base.location.CommandLineLocation;
+import org.smoothbuild.compilerfrontend.lang.base.location.FileLocation;
 import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.location.SourceLocation;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
@@ -60,13 +61,20 @@ public class ListEvaluables implements Task0<Tuple0> {
   }
 
   private static boolean isNoArgNotGenericValue(SNamedEvaluable evaluable) {
-    return isInProjectSpace(evaluable.location())
+    return isInUserSpace(evaluable.location())
         && evaluable instanceof SNamedValue
         && evaluable.schema().quantifiedVars().isEmpty();
   }
 
-  private static boolean isInProjectSpace(Location location) {
-    return (location instanceof SourceLocation source)
-        && BucketIds.PROJECT.equals(source.bucketId());
+  private static boolean isInUserSpace(Location location) {
+    return isInProjectBucket(location) || isInCommandLine(location);
+  }
+
+  private static boolean isInProjectBucket(Location location) {
+    return location instanceof FileLocation source && PROJECT.equals(source.bucketId());
+  }
+
+  private static boolean isInCommandLine(Location location) {
+    return location instanceof CommandLineLocation;
   }
 }
