@@ -2,7 +2,6 @@ package org.smoothbuild.cli.run;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
-import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
@@ -251,7 +250,8 @@ public class SaveArtifactsTest extends TestingVm {
     var label = label("artifacts", "save");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, new Trace(), EXECUTION, logs));
-    assertThat(directoryToFileMap(projectBucket(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
+    var artifactsBucket = filesystem().bucketFor(ARTIFACTS);
+    assertThat(directoryToFileMap(artifactsBucket)).isEqualTo(expectedDirectoryMap);
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {

@@ -14,14 +14,13 @@ public class TestingBucketTest {
   @Test
   void directory_to_file_map() throws Exception {
     var bucket = new MemoryBucket();
-    var dir = path("dir");
     var path1 = path("file1");
-    var path2 = path("file2");
+    var path2 = path("dir/file2");
     var content1 = ByteString.encodeUtf8("abc");
     var content2 = ByteString.encodeUtf8("def");
-    createFile(bucket, dir.append(path1), content1);
-    createFile(bucket, dir.append(path2), content2);
+    createFile(bucket, path1, content1);
+    createFile(bucket, path2, content2);
 
-    assertThat(directoryToFileMap(bucket, dir)).isEqualTo(Map.of(path1, content1, path2, content2));
+    assertThat(directoryToFileMap(bucket)).isEqualTo(Map.of(path1, content1, path2, content2));
   }
 }
