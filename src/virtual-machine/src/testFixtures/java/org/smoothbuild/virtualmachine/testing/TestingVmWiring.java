@@ -1,5 +1,6 @@
 package org.smoothbuild.virtualmachine.testing;
 
+import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
 
@@ -22,7 +23,7 @@ import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class TestingVmWiring extends AbstractModule {
-  public static final BucketId PROJECT_BUCKET = new BucketId("project");
+  public static final BucketId PROJECT_BUCKET = bucketId("project");
 
   @Override
   protected void configure() {
