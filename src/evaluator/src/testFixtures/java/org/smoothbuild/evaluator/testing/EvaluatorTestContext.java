@@ -21,6 +21,7 @@ import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -57,7 +58,6 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
@@ -238,7 +238,7 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     @Provides
     @Project
     public FullPath provideProjectPath() {
-      return TestingVm.projectPath();
+      return PROJECT_PATH;
     }
 
     @Provides

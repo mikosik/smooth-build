@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.testing;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
 import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -59,7 +60,7 @@ public class TestingVmWiring extends AbstractModule {
   @Provides
   @Project
   public FullPath provideProjectPath() {
-    return TestingVm.projectPath();
+    return PROJECT_PATH;
   }
 
   @Provides
