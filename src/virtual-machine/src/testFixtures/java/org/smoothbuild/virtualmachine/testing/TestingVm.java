@@ -13,6 +13,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.Filesystem;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -52,6 +53,8 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public class TestingVm extends BytecodeTestApi {
+  public static final FullPath ARTIFACTS = PROJECT.path(".smooth/artifacts");
+
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
   private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);
@@ -119,7 +122,7 @@ public class TestingVm extends BytecodeTestApi {
         filesystem(), PROJECT_PATH, fileContentReader(), bytecodeF(), nativeMethodLoader);
   }
 
-  private Filesystem filesystem() {
+  public Filesystem filesystem() {
     return new Filesystem(bucketResolver());
   }
 

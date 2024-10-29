@@ -13,13 +13,12 @@ import org.smoothbuild.common.bucket.base.PathIterator;
 import org.smoothbuild.common.bucket.base.RecursivePathsIterator;
 
 public class TestingBucket {
-  public static Map<Path, ByteString> directoryToFileMap(Bucket bucket, Path dir)
-      throws IOException {
+  public static Map<Path, ByteString> directoryToFileMap(Bucket bucket) throws IOException {
     var result = new HashMap<Path, ByteString>();
-    PathIterator pathIterator = RecursivePathsIterator.recursivePathsIterator(bucket, dir);
+    PathIterator pathIterator = RecursivePathsIterator.recursivePathsIterator(bucket, Path.root());
     while (pathIterator.hasNext()) {
       var path = pathIterator.next();
-      result.put(path, readFile(bucket, dir.append(path)));
+      result.put(path, readFile(bucket, path));
     }
     return result;
   }
