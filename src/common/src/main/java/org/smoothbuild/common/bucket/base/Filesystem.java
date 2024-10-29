@@ -61,7 +61,7 @@ public class Filesystem {
     return new SubBucket(bucketResolver.bucketFor(path.bucketId()), path.path());
   }
 
-  private Bucket bucketFor(BucketId bucketId) {
+  public Bucket bucketFor(BucketId bucketId) {
     return bucketResolver.bucketFor(bucketId);
   }
 
