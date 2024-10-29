@@ -23,8 +23,8 @@ public class SAnnotatedFuncTest {
             SAnnotatedFunc(
               SAnnotation(
                 name = Native
-                path = SString(String, "impl", {project}/build.smooth:1)
-                location = {project}/build.smooth:1
+                path = SString(String, "impl", {t-project}/build.smooth:1)
+                location = {t-project}/build.smooth:1
               )
               schema = <>(Int)->String
               params = [
@@ -32,10 +32,10 @@ public class SAnnotatedFuncTest {
                   type = Int
                   name = myParam
                   defaultValue = None
-                  location = {project}/build.smooth:1
+                  location = {t-project}/build.smooth:1
                 )
               ]
-              location = {project}/build.smooth:1
+              location = {t-project}/build.smooth:1
             )""");
   }
 }

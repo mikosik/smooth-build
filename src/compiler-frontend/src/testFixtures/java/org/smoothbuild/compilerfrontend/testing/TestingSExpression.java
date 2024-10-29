@@ -13,6 +13,8 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.io.Okios.intToByteString;
+import static org.smoothbuild.common.testing.TestingBucketId.LIBRARY;
+import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -88,14 +90,10 @@ import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class TestingSExpression {
-  public static final BucketId LIBRARY_BUCKET_ID = bucketId("library");
-  public static final BucketId PROJECT_BUCKET_ID = bucketId("project");
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
-  static final FullPath STANDARD_LIBRARY_MODULE_FILE_PATH =
-      fullPath(LIBRARY_BUCKET_ID, path("std_lib.smooth"));
-  static final FullPath DEFAULT_MODULE_FILE_PATH =
-      fullPath(PROJECT_BUCKET_ID, path("build.smooth"));
+  static final FullPath STANDARD_LIBRARY_MODULE_PATH = fullPath(LIBRARY, path("std_lib.smooth"));
+  static final FullPath DEFAULT_MODULE_PATH = fullPath(PROJECT, path("build.smooth"));
 
   public static java.util.List<SType> typesToTest() {
     return nonCompositeTypes().stream()
@@ -835,11 +833,11 @@ public class TestingSExpression {
   }
 
   public static FullPath importedBuildFullPath() {
-    return new FullPath(LIBRARY_BUCKET_ID, path(IMPORTED_FILE_PATH));
+    return new FullPath(LIBRARY, path(IMPORTED_FILE_PATH));
   }
 
   public static FullPath projectPath(String path) {
-    return new FullPath(PROJECT_BUCKET_ID, path(path));
+    return new FullPath(PROJECT, path(path));
   }
 
   private static String shortName(String fullName) {

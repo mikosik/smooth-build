@@ -10,10 +10,10 @@ import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.LIBRARY_BUCKET_ID;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_MODULE_FILE_PATH;
+import static org.smoothbuild.common.testing.TestingBucketId.LIBRARY;
+import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_PATH;
+import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_MODULE_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -125,9 +125,8 @@ public class FrontendCompileTester {
 
   private Try<SModule> loadModule() {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
-    var slBucket = new SynchronizedBucket(new MemoryBucket());
-    Map<BucketId, Bucket> buckets =
-        map(PROJECT_BUCKET_ID, projectBucket, LIBRARY_BUCKET_ID, slBucket);
+    var libraryBucket = new SynchronizedBucket(new MemoryBucket());
+    Map<BucketId, Bucket> buckets = map(PROJECT, projectBucket, LIBRARY, libraryBucket);
     var fileResolver = new FileResolver(new BucketResolver(buckets));
     var testReporter = new TestReporter();
 
@@ -145,7 +144,7 @@ public class FrontendCompileTester {
     });
     writeModuleFilesToBuckets(buckets);
     var scheduler = injector.getInstance(Scheduler.class);
-    var paths = list(STANDARD_LIBRARY_MODULE_FILE_PATH, DEFAULT_MODULE_FILE_PATH);
+    var paths = list(STANDARD_LIBRARY_MODULE_PATH, DEFAULT_MODULE_PATH);
     var module = scheduler.submit(FrontendCompile.class, argument(paths));
     await().until(() -> module.toMaybe().isSome());
     return Try.of(module.get().getOr(null), testReporter.logs());
@@ -154,9 +153,9 @@ public class FrontendCompileTester {
   private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {
     writeModuleFile(
         buckets,
-        STANDARD_LIBRARY_MODULE_FILE_PATH,
+        STANDARD_LIBRARY_MODULE_PATH,
         importedSourceCode == null ? "" : importedSourceCode);
-    writeModuleFile(buckets, DEFAULT_MODULE_FILE_PATH, sourceCode);
+    writeModuleFile(buckets, DEFAULT_MODULE_PATH, sourceCode);
   }
 
   private static void writeModuleFile(
@@ -169,6 +168,6 @@ public class FrontendCompileTester {
   }
 
   public static Log err(int line, String message) {
-    return error("{project}/build.smooth:" + line + ": " + message);
+    return error("{t-project}/build.smooth:" + line + ": " + message);
   }
 }

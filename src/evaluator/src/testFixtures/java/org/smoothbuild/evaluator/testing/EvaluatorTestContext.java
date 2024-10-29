@@ -20,7 +20,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.virtualmachine.testing.TestingVm.projectBucketId;
+import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -232,7 +232,7 @@ public class EvaluatorTestContext extends BytecodeTestContext {
 
     @Provides
     public Map<BucketId, Bucket> provideBucketsMap() {
-      return map(MODULES_BUCKET_ID, modulesBucket, projectBucketId(), projectBucket);
+      return map(MODULES_BUCKET_ID, modulesBucket, PROJECT, projectBucket);
     }
 
     @Provides

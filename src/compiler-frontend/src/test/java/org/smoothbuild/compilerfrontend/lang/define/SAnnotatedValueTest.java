@@ -20,12 +20,12 @@ public class SAnnotatedValueTest {
             SAnnotatedValue(
               SAnnotation(
                 name = myAnnotation
-                path = SString(String, "myPath", {project}/build.smooth:7)
-                location = {project}/build.smooth:17
+                path = SString(String, "myPath", {t-project}/build.smooth:7)
+                location = {t-project}/build.smooth:17
               )
               schema = <>String
               name = myVal
-              location = {project}/build.smooth:7
+              location = {t-project}/build.smooth:7
             )""");
   }
 }
