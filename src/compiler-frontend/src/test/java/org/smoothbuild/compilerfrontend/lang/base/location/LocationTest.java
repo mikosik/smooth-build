@@ -36,7 +36,7 @@ public class LocationTest {
     @Test
     void to_string() {
       var location = fileLocation(projectPath("abc"), 2);
-      assertThat(location.toString()).isEqualTo("{project}/abc:2");
+      assertThat(location.toString()).isEqualTo("{t-project}/abc:2");
     }
   }
 

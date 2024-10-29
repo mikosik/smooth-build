@@ -25,10 +25,10 @@ public class SConstructorTest {
                   type = Int
                   name = field
                   defaultValue = None
-                  location = {project}/build.smooth:2
+                  location = {t-project}/build.smooth:2
                 )
               ]
-              location = {project}/build.smooth:17
+              location = {t-project}/build.smooth:17
             )""");
   }
 }

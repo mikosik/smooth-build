@@ -9,9 +9,9 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
 import static org.smoothbuild.common.testing.TestingFileResolver.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.PROJECT_BUCKET_ID;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
@@ -130,7 +130,7 @@ public class EvaluatorTest extends TestingVm {
               "f",
               nlist());
           var callS = sCall(sInstantiate(funcS));
-          var buildJar = fullPath(PROJECT_BUCKET_ID, path("build.jar"));
+          var buildJar = fullPath(PROJECT, path("build.jar"));
           var fileResolver = injector.getInstance(FileResolver.class);
           saveBytecodeInJar(fileResolver, buildJar, list(ReturnAbc.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
@@ -145,7 +145,7 @@ public class EvaluatorTest extends TestingVm {
               nlist(sItem(sStringType(), "p")));
           var callS = sCall(sInstantiate(funcS), sString("abc"));
           var injector = newInjector();
-          var buildJar = fullPath(PROJECT_BUCKET_ID, path("build.jar"));
+          var buildJar = fullPath(PROJECT, path("build.jar"));
           var fileResolver = injector.getInstance(FileResolver.class);
           saveBytecodeInJar(fileResolver, buildJar, list(StringIdentity.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
@@ -227,7 +227,7 @@ public class EvaluatorTest extends TestingVm {
         @Test
         void ann_func() throws Exception {
           var injector = newInjector();
-          var buildJar = fullPath(PROJECT_BUCKET_ID, path("build.jar"));
+          var buildJar = fullPath(PROJECT, path("build.jar"));
           var fileResolver = injector.getInstance(FileResolver.class);
           saveBytecodeInJar(fileResolver, buildJar, list(ReturnIdFunc.class));
           var binaryName = ReturnIdFunc.class.getName();

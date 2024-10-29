@@ -16,10 +16,10 @@ public class SOrderTest {
             SOrder(
               evaluationType = [Int]
               elements = [
-                SInt(Int, 44, {project}/build.smooth:4)
-                SInt(Int, 55, {project}/build.smooth:5)
+                SInt(Int, 44, {t-project}/build.smooth:4)
+                SInt(Int, 55, {t-project}/build.smooth:5)
               ]
-              location = {project}/build.smooth:3
+              location = {t-project}/build.smooth:3
             )""");
   }
 }

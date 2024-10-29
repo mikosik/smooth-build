@@ -46,7 +46,7 @@ public class SItemTest {
               type = String
               name = name
               defaultValue = None
-              location = {project}/build.smooth:11
+              location = {t-project}/build.smooth:11
             )""");
   }
 }

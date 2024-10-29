@@ -1,8 +1,8 @@
 package org.smoothbuild.virtualmachine.testing;
 
-import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
+import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -23,8 +23,6 @@ import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class TestingVmWiring extends AbstractModule {
-  public static final BucketId PROJECT_BUCKET = bucketId("project");
-
   @Override
   protected void configure() {
     install(new VmWiring());
@@ -34,7 +32,7 @@ public class TestingVmWiring extends AbstractModule {
   @Provides
   @Singleton
   public Map<BucketId, Bucket> provideBucketMap(@Project Bucket projectBucket) {
-    return map(PROJECT_BUCKET, projectBucket);
+    return map(PROJECT, projectBucket);
   }
 
   @Provides
