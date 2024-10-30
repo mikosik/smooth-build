@@ -13,6 +13,8 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
@@ -37,16 +39,19 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 
 /**
  * This class is thread-safe.
  */
+@Singleton
 public class HashedDb implements Initializable {
   static final Path TEMP_DIR_PATH = path("tmp");
   private final Bucket bucket;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
-  public HashedDb(Bucket bucket) {
+  @Inject
+  public HashedDb(@BytecodeDb Bucket bucket) {
     this.bucket = bucket;
   }
 
