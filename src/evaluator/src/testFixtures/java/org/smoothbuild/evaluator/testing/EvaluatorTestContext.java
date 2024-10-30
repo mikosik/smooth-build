@@ -8,7 +8,6 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
@@ -19,8 +18,10 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
+import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
+import static org.smoothbuild.common.testing.TestingFullPath.COMPUTATION_DB_PATH;
 import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
 import com.google.inject.AbstractModule;
@@ -29,10 +30,12 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.io.IOException;
+import okio.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
@@ -58,67 +61,56 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
-import org.smoothbuild.virtualmachine.wire.BytecodeDb;
-import org.smoothbuild.virtualmachine.wire.ComputationDb;
-import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
+import org.smoothbuild.virtualmachine.wire.VmConfig;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class EvaluatorTestContext extends BytecodeTestContext {
-  private static final BucketId MODULES_BUCKET_ID = bucketId("modules");
-  private static final Path LIB_MODULE_PATH = path("libraryModule.smooth");
-  private static final FullPath LIB_MODULE_FULL_PATH =
-      FullPath.fullPath(MODULES_BUCKET_ID, LIB_MODULE_PATH);
-  private static final Path USER_MODULE_PATH = path("userModule.smooth");
-  private static final FullPath USER_MODULE_FULL_PATH =
-      fullPath(MODULES_BUCKET_ID, USER_MODULE_PATH);
+  private static final FullPath LIB_MODULE_PATH = fullPath(PROJECT, path("libraryModule.smooth"));
+  private static final FullPath USER_MODULE_PATH = fullPath(PROJECT, path("userModule.smooth"));
   private Bucket projectBucket;
-  private Bucket bytecodeDbBucket;
-  private Bucket modulesBucket;
-  private Bucket computationCacheBucket;
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
+  private Filesystem filesystem;
 
   @BeforeEach
   public void beforeEach() throws IOException {
     this.projectBucket = new SynchronizedBucket(new MemoryBucket());
-    this.modulesBucket = new SynchronizedBucket(new MemoryBucket());
-    this.bytecodeDbBucket = new SynchronizedBucket(new MemoryBucket());
-    this.computationCacheBucket = new SynchronizedBucket(new MemoryBucket());
     this.modules = list();
     this.injector = createInjector();
+    this.filesystem = injector.getInstance(Filesystem.class);
   }
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
-    try (var sink = buffer(modulesBucket.sink(LIB_MODULE_PATH.changeExtension("jar")))) {
+    try (var sink = buffer(filesystem.sink(LIB_MODULE_PATH.withExtension("jar")))) {
       try (var source = source(jar)) {
         sink.writeAll(source);
       }
     }
     try (var source = buffer(source(code))) {
-      createFile(modulesBucket, LIB_MODULE_PATH, source.readUtf8());
+      createFile(filesystem, LIB_MODULE_PATH, source.readUtf8());
     }
-    modules = modules.append(LIB_MODULE_FULL_PATH);
+    modules = modules.append(LIB_MODULE_PATH);
   }
 
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
     if (classes.length != 0) {
-      try (var sink = modulesBucket.sink(USER_MODULE_PATH.changeExtension("jar"))) {
+      try (var sink = filesystem.sink(USER_MODULE_PATH.withExtension("jar"))) {
         saveBytecodeInJar(sink, list(classes));
       }
     }
-    createFile(modulesBucket, USER_MODULE_PATH, code);
-    modules = modules.append(USER_MODULE_FULL_PATH);
+    createFile(filesystem, USER_MODULE_PATH, code);
+    modules = modules.append(USER_MODULE_PATH);
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
-    createFile(projectBucket, path(path), content);
+    createFile(filesystem, fullPath(PROJECT, path(path)), content);
   }
 
-  protected Bucket projectBucket() {
-    return projectBucket;
+  protected void createProjectFile(Path path, Source content) throws IOException {
+    createFile(filesystem, fullPath(PROJECT, path), content);
   }
 
   protected void evaluate(String... names) {
@@ -232,31 +224,12 @@ public class EvaluatorTestContext extends BytecodeTestContext {
 
     @Provides
     public Map<BucketId, Bucket> provideBucketsMap() {
-      return map(MODULES_BUCKET_ID, modulesBucket, PROJECT, projectBucket);
+      return map(PROJECT, projectBucket);
     }
 
     @Provides
-    @Project
-    public FullPath provideProjectPath() {
-      return PROJECT_PATH;
-    }
-
-    @Provides
-    @ComputationDb
-    public Bucket provideComputationCacheBucket() {
-      return computationCacheBucket;
-    }
-
-    @Provides
-    @BytecodeDb
-    public Bucket provideBytecodeDbBucket() {
-      return bytecodeDbBucket;
-    }
-
-    @Provides
-    @Project
-    public Bucket provideProjectBucket() {
-      return projectBucket;
+    public VmConfig provideVmConfig() {
+      return new VmConfig(PROJECT_PATH, COMPUTATION_DB_PATH, BYTECODE_DB_PATH);
     }
   }
 
@@ -273,6 +246,6 @@ public class EvaluatorTestContext extends BytecodeTestContext {
   }
 
   protected static FullPath userModuleFullPath() {
-    return USER_MODULE_FULL_PATH;
+    return USER_MODULE_PATH;
   }
 }
