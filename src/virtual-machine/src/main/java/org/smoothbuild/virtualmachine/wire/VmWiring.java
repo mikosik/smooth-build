@@ -6,6 +6,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import jakarta.inject.Singleton;
+import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Filesystem;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
@@ -30,5 +33,23 @@ public class VmWiring extends AbstractModule {
   @Singleton
   public BKindDb provideKindDb(HashedDb hashedDb) {
     return new BKindDb(hashedDb);
+  }
+
+  @Provides
+  @BytecodeDb
+  public Bucket provideBytecodeDbBucket(Filesystem filesystem, VmConfig vmConfig) {
+    return filesystem.bucketFor(vmConfig.bytecodeDbPath());
+  }
+
+  @Provides
+  @ComputationDb
+  public Bucket provideComputationDbBucket(Filesystem filesystem, VmConfig vmConfig) {
+    return filesystem.bucketFor(vmConfig.computationDbPath());
+  }
+
+  @Provides
+  @Project
+  public FullPath provideProjectPath(VmConfig vmConfig) {
+    return vmConfig.projectPath();
   }
 }

@@ -93,7 +93,7 @@ public class NativeTest extends EvaluatorTestContext {
             """);
         evaluate("result");
         assertThat(logs())
-            .contains(userFatal(1, "Error loading native jar '{modules}/userModule.jar'."));
+            .contains(userFatal(1, "Error loading native jar '{t-project}/userModule.jar'."));
       }
 
       @Test
