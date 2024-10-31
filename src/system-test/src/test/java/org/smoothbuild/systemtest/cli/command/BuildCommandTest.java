@@ -3,7 +3,6 @@ package org.smoothbuild.systemtest.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.nio.file.Files.exists;
-import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class BuildCommandTest {
   class _basic extends SystemTestCase {
     @Test
     void build_command_clears_artifacts_dir() throws Exception {
-      String path = ARTIFACTS_PATH.appendPart("file.txt").toString();
+      String path = ARTIFACTS_PATH.resolve("file.txt").toString();
       createFile(path, "content");
       createUserModule("""
               syntactically incorrect script

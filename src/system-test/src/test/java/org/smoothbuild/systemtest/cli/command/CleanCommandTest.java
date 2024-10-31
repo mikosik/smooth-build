@@ -2,18 +2,15 @@ package org.smoothbuild.systemtest.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createDirectories;
-import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
-import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
-import static org.smoothbuild.cli.layout.Layout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.cli.layout.Layout.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.cli.layout.Layout.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
@@ -29,7 +26,7 @@ public class CleanCommandTest {
               result = "abc";
               """);
       createDirInProject(BYTECODE_DB_PATH);
-      createDirInProject(COMPUTATION_CACHE_PATH);
+      createDirInProject(COMPUTATION_DB_PATH);
       createDirInProject(ARTIFACTS_PATH);
 
       runSmoothClean();
