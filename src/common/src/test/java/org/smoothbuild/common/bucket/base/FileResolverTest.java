@@ -3,7 +3,7 @@ package org.smoothbuild.common.bucket.base;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
-import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
+import static org.smoothbuild.common.bucket.base.Alias.alias;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.PathState.DIR;
@@ -27,7 +27,7 @@ public class FileResolverTest {
   @BeforeEach
   public void setUp() {
     bucket = new MemoryBucket();
-    var bucketResolver = new BucketResolver(map(bucketId("project"), bucket));
+    var bucketResolver = new BucketResolver(map(alias("project"), bucket));
     fileResolver = new FileResolver(bucketResolver);
   }
 
@@ -38,7 +38,7 @@ public class FileResolverTest {
       var path = path("file.txt");
       var content = "some string";
       createFile(bucket, path, content);
-      assertThat(fileResolver.contentOf(fullPath(bucketId("project"), path), UTF_8))
+      assertThat(fileResolver.contentOf(fullPath(alias("project"), path), UTF_8))
           .isEqualTo(content);
     }
   }
@@ -49,7 +49,7 @@ public class FileResolverTest {
     void sink_writes_to_file() throws IOException {
       var path = path("file.txt");
       var content = "some string";
-      var fullPath = fullPath(bucketId("project"), path);
+      var fullPath = fullPath(alias("project"), path);
       try (var sink = buffer(fileResolver.sink(fullPath))) {
         sink.writeUtf8(content);
       }
@@ -64,20 +64,20 @@ public class FileResolverTest {
     void of_file() throws IOException {
       var path = path("file.txt");
       createFile(bucket, path, "some string");
-      assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(FILE);
+      assertThat(fileResolver.pathState(fullPath(alias("project"), path))).isEqualTo(FILE);
     }
 
     @Test
     void of_directory() throws IOException {
       var path = path("directory");
       bucket.createDir(path);
-      assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(DIR);
+      assertThat(fileResolver.pathState(fullPath(alias("project"), path))).isEqualTo(DIR);
     }
 
     @Test
     void of_nothing() {
       var path = path("file.txt");
-      assertThat(fileResolver.pathState(fullPath(bucketId("project"), path))).isEqualTo(NOTHING);
+      assertThat(fileResolver.pathState(fullPath(alias("project"), path))).isEqualTo(NOTHING);
     }
   }
 }

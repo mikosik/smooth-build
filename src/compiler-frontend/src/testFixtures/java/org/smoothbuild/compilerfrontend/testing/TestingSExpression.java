@@ -3,7 +3,6 @@ package org.smoothbuild.compilerfrontend.testing;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
@@ -13,8 +12,8 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.io.Okios.intToByteString;
-import static org.smoothbuild.common.testing.TestingBucketId.LIBRARY;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.LIBRARY;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -26,7 +25,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
-import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
@@ -816,8 +815,8 @@ public class TestingSExpression {
     return location(userModuleFullPath(), line);
   }
 
-  public static Location location(BucketId bucketId) {
-    return location(fullPath(bucketId, path("path")), 17);
+  public static Location location(Alias alias) {
+    return location(fullPath(alias, path("path")), 17);
   }
 
   public static Location location(FullPath fullPath, int line) {

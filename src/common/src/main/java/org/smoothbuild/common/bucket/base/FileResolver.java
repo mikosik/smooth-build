@@ -28,14 +28,14 @@ public class FileResolver {
   }
 
   public Source source(FullPath fullPath) throws IOException {
-    return bucketResolver.bucketFor(fullPath.bucketId()).source(fullPath.path());
+    return bucketResolver.bucketFor(fullPath.alias()).source(fullPath.path());
   }
 
   public Sink sink(FullPath fullPath) throws IOException {
-    return bucketResolver.bucketFor(fullPath.bucketId()).sink(fullPath.path());
+    return bucketResolver.bucketFor(fullPath.alias()).sink(fullPath.path());
   }
 
   public PathState pathState(FullPath fullPath) {
-    return bucketResolver.bucketFor(fullPath.bucketId()).pathState(fullPath.path());
+    return bucketResolver.bucketFor(fullPath.alias()).pathState(fullPath.path());
   }
 }

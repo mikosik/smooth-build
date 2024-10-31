@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.run;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.cli.layout.BucketIds.PROJECT_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.info;
@@ -71,7 +71,7 @@ public class ListEvaluables implements Task0<Tuple0> {
   }
 
   private static boolean isInProjectBucket(Location location) {
-    return location instanceof FileLocation source && PROJECT_ALIAS.equals(source.bucketId());
+    return location instanceof FileLocation source && PROJECT_ALIAS.equals(source.alias());
   }
 
   private static boolean isInCommandLine(Location location) {

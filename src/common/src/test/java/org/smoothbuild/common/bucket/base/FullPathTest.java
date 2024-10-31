@@ -2,7 +2,7 @@ package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.bucket.base.BucketId.bucketId;
+import static org.smoothbuild.common.bucket.base.Alias.alias;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.Path.root;
@@ -16,8 +16,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class FullPathTest {
-  private static final BucketId PROJECT = bucketId("project");
-  private static final BucketId LIBS = bucketId("libs");
+  private static final Alias PROJECT = alias("project");
+  private static final Alias LIBS = alias("libs");
 
   @Test
   void equals_and_hash_code() {

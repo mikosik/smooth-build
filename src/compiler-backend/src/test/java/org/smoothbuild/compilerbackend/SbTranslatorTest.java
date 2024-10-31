@@ -9,7 +9,7 @@ import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;

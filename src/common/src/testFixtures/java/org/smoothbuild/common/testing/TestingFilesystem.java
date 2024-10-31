@@ -17,12 +17,12 @@ public class TestingFilesystem {
 
   public static void createFile(Filesystem filesystem, FullPath path, String content)
       throws IOException {
-    TestingBucket.createFile(filesystem.bucketFor(path.bucketId()), path.path(), content);
+    TestingBucket.createFile(filesystem.bucketFor(path.alias()), path.path(), content);
   }
 
   public static void createFile(Filesystem filesystem, FullPath path, Source content)
       throws IOException {
-    TestingBucket.createFile(filesystem.bucketFor(path.bucketId()), path.path(), content);
+    TestingBucket.createFile(filesystem.bucketFor(path.alias()), path.path(), content);
   }
 
   public static void writeFile(Filesystem filesystem, FullPath path) throws IOException {

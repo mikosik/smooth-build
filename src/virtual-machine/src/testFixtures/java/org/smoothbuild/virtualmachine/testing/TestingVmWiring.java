@@ -2,7 +2,7 @@ package org.smoothbuild.virtualmachine.testing;
 
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.INFO;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
 import static org.smoothbuild.common.testing.TestingFullPath.COMPUTATION_DB_PATH;
 import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
@@ -12,8 +12,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.io.PrintWriter;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -34,7 +34,7 @@ public class TestingVmWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  public Map<BucketId, Bucket> provideBucketMap() {
+  public Map<Alias, Bucket> provideBucketMap() {
     return map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
   }
 
