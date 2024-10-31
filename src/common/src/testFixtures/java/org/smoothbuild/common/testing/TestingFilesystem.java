@@ -1,6 +1,10 @@
 package org.smoothbuild.common.testing;
 
+import static okio.Okio.buffer;
+import static org.smoothbuild.common.testing.TestingByteString.byteString;
+
 import java.io.IOException;
+import okio.BufferedSink;
 import okio.ByteString;
 import okio.Source;
 import org.smoothbuild.common.bucket.base.Filesystem;
@@ -21,7 +25,20 @@ public class TestingFilesystem {
     TestingBucket.createFile(filesystem.bucketFor(path.bucketId()), path.path(), content);
   }
 
+  public static void writeFile(Filesystem filesystem, FullPath path) throws IOException {
+    writeFile(filesystem, path, byteString("abc"));
+  }
+
+  public static void writeFile(Filesystem filesystem, FullPath path, ByteString content)
+      throws IOException {
+    try (BufferedSink sink = buffer(filesystem.sink(path))) {
+      sink.write(content);
+    }
+  }
+
   public static ByteString readFile(Filesystem filesystem, FullPath path) throws IOException {
-    return TestingBucket.readFile(filesystem.bucketFor(path.bucketId()), path.path());
+    try (var source = buffer(filesystem.source(path))) {
+      return source.readByteString();
+    }
   }
 }

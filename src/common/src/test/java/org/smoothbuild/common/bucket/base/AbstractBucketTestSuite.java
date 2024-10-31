@@ -408,7 +408,7 @@ public abstract class AbstractBucketTestSuite {
   }
 
   @Nested
-  class _link {
+  class _create_link {
     @Test
     void fails_when_link_parent_directory_not_exists() throws Exception {
       var file = path("some/dir/myFile");
