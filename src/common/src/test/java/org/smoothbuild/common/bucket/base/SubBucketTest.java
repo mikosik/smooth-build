@@ -1,11 +1,14 @@
 package org.smoothbuild.common.bucket.base;
 
+import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
+import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 
 import java.io.IOException;
 import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 
 public class SubBucketTest extends AbstractBucketTestSuite {
@@ -16,7 +19,7 @@ public class SubBucketTest extends AbstractBucketTestSuite {
   public void before() throws IOException {
     superBucket = new MemoryBucket();
     superBucket.createDir(subDir);
-    bucket = new SubBucket(superBucket, subDir);
+    bucket = subBucket(superBucket, subDir);
   }
 
   @Override
@@ -35,6 +38,11 @@ public class SubBucketTest extends AbstractBucketTestSuite {
   @Override
   protected String resolve(Path path) {
     return superPath(path).q();
+  }
+
+  @Test
+  void factory_method_not_creates_new_bucket_instance_when_path_is_root() {
+    assertThat(subBucket(superBucket, Path.root())).isSameInstanceAs(superBucket);
   }
 
   private static Path superPath(Path path) {
