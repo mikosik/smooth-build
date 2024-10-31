@@ -6,7 +6,7 @@ import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
 import com.google.common.base.Supplier;

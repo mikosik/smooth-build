@@ -9,7 +9,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFileResolver.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;

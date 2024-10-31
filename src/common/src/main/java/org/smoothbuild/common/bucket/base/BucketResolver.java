@@ -4,18 +4,18 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.Map;
 
 public class BucketResolver {
-  private final Map<BucketId, Bucket> buckets;
+  private final Map<Alias, Bucket> buckets;
 
   @Inject
-  public BucketResolver(Map<BucketId, Bucket> buckets) {
+  public BucketResolver(Map<Alias, Bucket> buckets) {
     this.buckets = buckets;
   }
 
-  public Bucket bucketFor(BucketId bucketId) {
-    Bucket bucket = buckets.get(bucketId);
+  public Bucket bucketFor(Alias alias) {
+    Bucket bucket = buckets.get(alias);
     if (bucket == null) {
       throw new IllegalArgumentException(
-          "Unknown bucket id " + bucketId + ". Known buckets = " + buckets.keySet());
+          "Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
     }
     return bucket;
   }

@@ -17,12 +17,12 @@ public class Filesystem {
   }
 
   public PathState pathState(FullPath path) {
-    return bucketFor(path.bucketId()).pathState(path.path());
+    return bucketFor(path.alias()).pathState(path.path());
   }
 
   public PathIterator filesRecursively(FullPath dir) throws IOException {
     try {
-      return recursivePathsIterator(bucketFor(dir.bucketId()), dir.path());
+      return recursivePathsIterator(bucketFor(dir.alias()), dir.path());
     } catch (IOException e) {
       throw new IOException(
           "Error listing files recursively in %s. %s".formatted(dir.q(), e.getMessage()));
@@ -31,16 +31,16 @@ public class Filesystem {
 
   public Iterable<Path> files(FullPath dir) throws IOException {
     try {
-      return bucketFor(dir.bucketId()).files(dir.path());
+      return bucketFor(dir.alias()).files(dir.path());
     } catch (IOException e) {
       throw new IOException("Error listing files in %s. %s".formatted(dir.q(), e.getMessage()));
     }
   }
 
   public void move(FullPath source, FullPath target) throws IOException {
-    var bucketId = getBucketIdIfEqualOrFail(source, target);
+    var alias = getAliasIfEqualOrFail(source, target);
     try {
-      bucketFor(bucketId).move(source.path(), target.path());
+      bucketFor(alias).move(source.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
           "Error moving %s to %s. %s".formatted(source.q(), target.q(), e.getMessage()));
@@ -48,12 +48,12 @@ public class Filesystem {
   }
 
   public void delete(FullPath path) throws IOException {
-    bucketFor(path.bucketId()).delete(path.path());
+    bucketFor(path.alias()).delete(path.path());
   }
 
   public long size(FullPath path) throws IOException {
     try {
-      return bucketFor(path.bucketId()).size(path.path());
+      return bucketFor(path.alias()).size(path.path());
     } catch (IOException e) {
       throw new IOException("Error fetching size of %s. %s".formatted(path.q(), e.getMessage()));
     }
@@ -61,7 +61,7 @@ public class Filesystem {
 
   public Source source(FullPath path) throws IOException {
     try {
-      return bucketFor(path.bucketId()).source(path.path());
+      return bucketFor(path.alias()).source(path.path());
     } catch (IOException e) {
       throw new IOException("Error reading file %s. %s".formatted(path.q(), e.getMessage()));
     }
@@ -69,16 +69,16 @@ public class Filesystem {
 
   public Sink sink(FullPath path) throws IOException {
     try {
-      return bucketFor(path.bucketId()).sink(path.path());
+      return bucketFor(path.alias()).sink(path.path());
     } catch (IOException e) {
       throw new IOException("Error writing file %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
   public void createLink(FullPath link, FullPath target) throws IOException {
-    var bucketId = getBucketIdIfEqualOrFail(link, target);
+    var alias = getAliasIfEqualOrFail(link, target);
     try {
-      bucketFor(bucketId).createLink(link.path(), target.path());
+      bucketFor(alias).createLink(link.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
           "Error creating link %s -> %s. %s".formatted(link.q(), target.q(), e.getMessage()));
@@ -87,28 +87,29 @@ public class Filesystem {
 
   public void createDir(FullPath path) throws IOException {
     try {
-      bucketFor(path.bucketId()).createDir(path.path());
+      bucketFor(path.alias()).createDir(path.path());
     } catch (IOException e) {
       throw new IOException("Error creating dir %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
   public Bucket bucketFor(FullPath path) {
-    return subBucket(bucketResolver.bucketFor(path.bucketId()), path.path());
+    return subBucket(bucketResolver.bucketFor(path.alias()), path.path());
   }
 
-  public Bucket bucketFor(BucketId bucketId) {
-    return bucketResolver.bucketFor(bucketId);
+  public Bucket bucketFor(Alias alias) {
+    return bucketResolver.bucketFor(alias);
   }
 
-  private static BucketId getBucketIdIfEqualOrFail(FullPath source, FullPath target) {
-    var sourceBucketId = source.bucketId();
-    var targetBucketId = target.bucketId();
-    if (sourceBucketId.equals(targetBucketId)) {
-      return sourceBucketId;
+  private static Alias getAliasIfEqualOrFail(FullPath source, FullPath target) {
+    var sourceAlias = source.alias();
+    var targetAlias = target.alias();
+    if (sourceAlias.equals(targetAlias)) {
+      return sourceAlias;
     } else {
-      throw new IllegalArgumentException("Source bucket '%s' and target bucket '%s' must be equal."
-          .formatted(sourceBucketId.id(), targetBucketId.id()));
+      throw new IllegalArgumentException(
+          "Alias '%s' in source is different from alias '%s' in target."
+              .formatted(sourceAlias.name(), targetAlias.name()));
     }
   }
 }

@@ -2,9 +2,9 @@ package org.smoothbuild.common.bucket.base;
 
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 
-public record BucketId(String id) {
-  public static BucketId bucketId(String id) {
-    return new BucketId(id);
+public record Alias(String name) {
+  public static Alias alias(String name) {
+    return new Alias(name);
   }
 
   public FullPath append(String path) {
@@ -13,5 +13,10 @@ public record BucketId(String id) {
 
   public FullPath append(Path path) {
     return fullPath(this, path);
+  }
+
+  @Override
+  public String toString() {
+    return "'" + name + "'";
   }
 }

@@ -9,9 +9,9 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.testing.TestingAlias.LIBRARY;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.common.testing.TestingBucketId.LIBRARY;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.STANDARD_LIBRARY_MODULE_PATH;
 
@@ -19,8 +19,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 import java.io.IOException;
+import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.bucket.base.FullPath;
@@ -126,7 +126,7 @@ public class FrontendCompileTester {
   private Try<SModule> loadModule() {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
     var libraryBucket = new SynchronizedBucket(new MemoryBucket());
-    Map<BucketId, Bucket> buckets = map(PROJECT, projectBucket, LIBRARY, libraryBucket);
+    Map<Alias, Bucket> buckets = map(PROJECT, projectBucket, LIBRARY, libraryBucket);
     var fileResolver = new FileResolver(new BucketResolver(buckets));
     var testReporter = new TestReporter();
 
@@ -150,7 +150,7 @@ public class FrontendCompileTester {
     return Try.of(module.get().getOr(null), testReporter.logs());
   }
 
-  private void writeModuleFilesToBuckets(Map<BucketId, Bucket> buckets) {
+  private void writeModuleFilesToBuckets(Map<Alias, Bucket> buckets) {
     writeModuleFile(
         buckets,
         STANDARD_LIBRARY_MODULE_PATH,
@@ -159,9 +159,9 @@ public class FrontendCompileTester {
   }
 
   private static void writeModuleFile(
-      Map<BucketId, Bucket> buckets, FullPath fullPath, String content) {
+      Map<Alias, Bucket> buckets, FullPath fullPath, String content) {
     try {
-      createFile(buckets.get(fullPath.bucketId()), fullPath.path(), content);
+      createFile(buckets.get(fullPath.alias()), fullPath.path(), content);
     } catch (IOException e) {
       throw new RuntimeException("Can't happen for MemoryBucket.", e);
     }

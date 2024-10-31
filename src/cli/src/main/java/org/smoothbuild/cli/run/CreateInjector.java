@@ -1,9 +1,9 @@
 package org.smoothbuild.cli.run;
 
 import static com.google.inject.Stage.PRODUCTION;
-import static org.smoothbuild.cli.layout.BucketIds.INSTALL_ALIAS;
-import static org.smoothbuild.cli.layout.BucketIds.LIBRARY_ALIAS;
-import static org.smoothbuild.cli.layout.BucketIds.PROJECT_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.INSTALL_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.LIBRARY_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.cli.layout.Layout.BIN_DIR_NAME;
 import static org.smoothbuild.cli.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
 import static org.smoothbuild.common.collect.Map.map;
@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.match.ReportMatchers;
-import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Level;
@@ -36,30 +36,30 @@ public class CreateInjector {
   public static Injector createInjector(
       Path projectDir, PrintWriter out, Level logLevel, ReportMatcher reportMatcher) {
     var installationDir = installationDir();
-    Map<BucketId, Path> bucketIdToPath = map(
+    Map<Alias, Path> aliasToPath = map(
         PROJECT_ALIAS, projectDir,
         LIBRARY_ALIAS, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
         INSTALL_ALIAS, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new CliWiring(setOfAll(bucketIdToPath.keySet())),
+        new CliWiring(setOfAll(aliasToPath.keySet())),
         new EvaluatorWiring(),
         new CompilerBackendWiring(),
         new VmWiring(),
-        new DiskBucketWiring(bucketIdToPath),
+        new DiskBucketWiring(aliasToPath),
         new ReportWiring(out, reportMatcher, logLevel),
         new SchedulerWiring());
   }
 
   public static Injector createInjector(PrintWriter out) {
     var installationDir = installationDir();
-    Map<BucketId, Path> bucketIdToPath = map(
+    Map<Alias, Path> aliasToPath = map(
         LIBRARY_ALIAS, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
         INSTALL_ALIAS, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new CliWiring(setOfAll(bucketIdToPath.keySet())),
-        new DiskBucketWiring(bucketIdToPath),
+        new CliWiring(setOfAll(aliasToPath.keySet())),
+        new DiskBucketWiring(aliasToPath),
         new ReportWiring(out, ReportMatchers.ALL, INFO),
         new SchedulerWiring());
   }

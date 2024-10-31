@@ -18,7 +18,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.testing.TestingBucketId.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
 import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
 import static org.smoothbuild.common.testing.TestingFullPath.COMPUTATION_DB_PATH;
@@ -33,8 +33,8 @@ import java.io.IOException;
 import okio.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
@@ -225,7 +225,7 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     }
 
     @Provides
-    public Map<BucketId, Bucket> provideBucketsMap() {
+    public Map<Alias, Bucket> provideBucketsMap() {
       return map(PROJECT, projectBucket);
     }
 

@@ -3,18 +3,18 @@ package org.smoothbuild.common.bucket.base;
 /**
  * This class is immutable.
  */
-public record FullPath(BucketId bucketId, Path path) {
+public record FullPath(Alias alias, Path path) {
 
-  public static FullPath fullPath(BucketId bucketId, String path) {
-    return new FullPath(bucketId, Path.path(path));
+  public static FullPath fullPath(Alias alias, String path) {
+    return new FullPath(alias, Path.path(path));
   }
 
-  public static FullPath fullPath(BucketId bucketId, Path path) {
-    return new FullPath(bucketId, path);
+  public static FullPath fullPath(Alias alias, Path path) {
+    return new FullPath(alias, path);
   }
 
   public FullPath appendPart(String part) {
-    return fullPath(bucketId, path.appendPart(part));
+    return fullPath(alias, path.appendPart(part));
   }
 
   public FullPath append(String path) {
@@ -22,15 +22,15 @@ public record FullPath(BucketId bucketId, Path path) {
   }
 
   public FullPath append(Path path) {
-    return fullPath(bucketId, this.path.append(path));
+    return fullPath(alias, this.path.append(path));
   }
 
   public FullPath parent() {
-    return fullPath(bucketId, path.parent());
+    return fullPath(alias, path.parent());
   }
 
   public FullPath withExtension(String extension) {
-    return fullPath(bucketId, path.changeExtension(extension));
+    return fullPath(alias, path.changeExtension(extension));
   }
 
   public String q() {
@@ -39,6 +39,6 @@ public record FullPath(BucketId bucketId, Path path) {
 
   @Override
   public String toString() {
-    return "{" + bucketId().id() + "}/" + path;
+    return "{" + alias().name() + "}/" + path;
   }
 }

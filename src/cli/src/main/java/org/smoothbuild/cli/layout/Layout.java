@@ -1,8 +1,8 @@
 package org.smoothbuild.cli.layout;
 
-import static org.smoothbuild.cli.layout.BucketIds.INSTALL_ALIAS;
-import static org.smoothbuild.cli.layout.BucketIds.LIBRARY_ALIAS;
-import static org.smoothbuild.cli.layout.BucketIds.PROJECT_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.INSTALL_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.LIBRARY_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;

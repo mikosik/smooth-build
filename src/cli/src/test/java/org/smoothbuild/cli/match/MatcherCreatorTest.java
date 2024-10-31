@@ -2,9 +2,9 @@ package org.smoothbuild.cli.match;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.cli.layout.BucketIds.INSTALL_ALIAS;
-import static org.smoothbuild.cli.layout.BucketIds.LIBRARY_ALIAS;
-import static org.smoothbuild.cli.layout.BucketIds.PROJECT_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.INSTALL_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.LIBRARY_ALIAS;
+import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.cli.match.ReportMatchers.ALL;
 import static org.smoothbuild.cli.match.ReportMatchers.COMBINE;
 import static org.smoothbuild.cli.match.ReportMatchers.ERROR;
@@ -59,7 +59,7 @@ public class MatcherCreatorTest {
     var stringBuilder = new StringBuilder();
     var reportMatcher = MatcherCreator.createMatcher(expression);
     for (var label : taskLabels) {
-      for (var bucketId : list(PROJECT_ALIAS, LIBRARY_ALIAS, INSTALL_ALIAS)) {
+      for (var alias : list(PROJECT_ALIAS, LIBRARY_ALIAS, INSTALL_ALIAS)) {
         for (var level : Level.values()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = reportMatcher.matches(label, logs);
@@ -68,7 +68,7 @@ public class MatcherCreatorTest {
             stringBuilder
                 .append(label)
                 .append(" ")
-                .append(bucketId)
+                .append(alias)
                 .append(" ")
                 .append(level)
                 .append(" expected=")
