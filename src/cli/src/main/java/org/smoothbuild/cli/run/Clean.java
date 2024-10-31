@@ -6,28 +6,40 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import org.smoothbuild.cli.layout.Layout;
+import org.smoothbuild.cli.Artifacts;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 public class Clean implements Task0<Tuple0> {
   private final Filesystem filesystem;
+  private final FullPath bytecodeDbPath;
+  private final FullPath computationDbPath;
+  private final FullPath artifactsPath;
 
   @Inject
-  public Clean(Filesystem filesystem) {
+  public Clean(
+      Filesystem filesystem,
+      @BytecodeDb FullPath bytecodeDbPath,
+      @ComputationDb FullPath computationDbPath,
+      @Artifacts FullPath artifactsPath) {
     this.filesystem = filesystem;
+    this.bytecodeDbPath = bytecodeDbPath;
+    this.computationDbPath = computationDbPath;
+    this.artifactsPath = artifactsPath;
   }
 
   @Override
   public Output<Tuple0> execute() {
     var logger = new Logger();
-    deleteDir("object cache", Layout.BYTECODE_DB, logger);
-    deleteDir("computation cache", Layout.COMPUTATION_DB, logger);
-    deleteDir("artifacts", Layout.ARTIFACTS, logger);
+    deleteDir("object cache", bytecodeDbPath, logger);
+    deleteDir("computation cache", computationDbPath, logger);
+    deleteDir("artifacts", artifactsPath, logger);
     return output(tuple(), label("cli", "clean"), logger.toList());
   }
 

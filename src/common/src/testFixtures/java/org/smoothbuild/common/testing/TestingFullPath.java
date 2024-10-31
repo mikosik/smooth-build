@@ -12,4 +12,5 @@ public class TestingFullPath {
   public static final FullPath COMPUTATION_DB_PATH =
       fullPath(PROJECT, path(".smooth/computations"));
   public static final FullPath BYTECODE_DB_PATH = fullPath(PROJECT, path(".smooth/bytecode"));
+  public static final FullPath ARTIFACTS_PATH = fullPath(PROJECT, path(".smooth/artifacts"));
 }
