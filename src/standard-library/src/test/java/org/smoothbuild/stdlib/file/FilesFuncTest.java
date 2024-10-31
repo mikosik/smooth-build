@@ -25,7 +25,9 @@ public class FilesFuncTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(logs()).contains(error("Dir 'nonexistent/path.txt' doesn't exist."));
+    assertThat(logs())
+        .contains(error("Error listing files recursively in '{t-project}/nonexistent/path.txt'. "
+            + "Dir 'nonexistent/path.txt' doesn't exist."));
   }
 
   @Test
@@ -36,7 +38,9 @@ public class FilesFuncTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     createProjectFile("file.txt", "abc");
     evaluate("result");
-    assertThat(logs()).contains(error("Path 'file.txt' is not a dir but a file."));
+    assertThat(logs())
+        .contains(error("Error listing files recursively in '{t-project}/file.txt'. "
+            + "Path 'file.txt' is not a dir but a file."));
   }
 
   @Test
