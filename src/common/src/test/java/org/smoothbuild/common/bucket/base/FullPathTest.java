@@ -38,6 +38,12 @@ public class FullPathTest {
   }
 
   @Test
+  void append_string() {
+    var fullPath = fullPath(PROJECT, path("abc"));
+    assertThat(fullPath.append("def/ghi")).isEqualTo(fullPath(PROJECT, path("abc/def/ghi")));
+  }
+
+  @Test
   void append() {
     var fullPath = fullPath(PROJECT, path("abc"));
     assertThat(fullPath.append(path("def/ghi"))).isEqualTo(fullPath(PROJECT, path("abc/def/ghi")));

@@ -17,6 +17,10 @@ public record FullPath(BucketId bucketId, Path path) {
     return fullPath(bucketId, path.appendPart(part));
   }
 
+  public FullPath append(String path) {
+    return append(Path.path(path));
+  }
+
   public FullPath append(Path path) {
     return fullPath(bucketId, this.path.append(path));
   }
