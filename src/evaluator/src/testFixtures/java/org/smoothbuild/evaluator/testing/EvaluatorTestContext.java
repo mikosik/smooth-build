@@ -61,8 +61,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.wire.ComputationDb;
+import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
-import org.smoothbuild.virtualmachine.wire.VmConfig;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class EvaluatorTestContext extends BytecodeTestContext {
@@ -228,8 +230,21 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     }
 
     @Provides
-    public VmConfig provideVmConfig() {
-      return new VmConfig(PROJECT_PATH, COMPUTATION_DB_PATH, BYTECODE_DB_PATH);
+    @BytecodeDb
+    public FullPath provideBytecodeDb() {
+      return BYTECODE_DB_PATH;
+    }
+
+    @Provides
+    @ComputationDb
+    public FullPath provideComputationDb() {
+      return COMPUTATION_DB_PATH;
+    }
+
+    @Provides
+    @Project
+    public FullPath provideProject() {
+      return PROJECT_PATH;
     }
   }
 

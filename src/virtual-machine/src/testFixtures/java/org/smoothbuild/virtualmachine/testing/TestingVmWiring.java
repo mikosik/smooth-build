@@ -14,12 +14,15 @@ import java.io.PrintWriter;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.report.ReportWiring;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.wire.ComputationDb;
+import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
-import org.smoothbuild.virtualmachine.wire.VmConfig;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class TestingVmWiring extends AbstractModule {
@@ -36,8 +39,21 @@ public class TestingVmWiring extends AbstractModule {
   }
 
   @Provides
-  public VmConfig provideVmConfig() {
-    return new VmConfig(PROJECT_PATH, COMPUTATION_DB_PATH, BYTECODE_DB_PATH);
+  @BytecodeDb
+  public FullPath provideBytecodeDb() {
+    return BYTECODE_DB_PATH;
+  }
+
+  @Provides
+  @ComputationDb
+  public FullPath provideComputationDb() {
+    return COMPUTATION_DB_PATH;
+  }
+
+  @Provides
+  @Project
+  public FullPath provideProject() {
+    return PROJECT_PATH;
   }
 
   @Provides
