@@ -37,19 +37,13 @@ public class VmWiring extends AbstractModule {
 
   @Provides
   @BytecodeDb
-  public Bucket provideBytecodeDbBucket(Filesystem filesystem, VmConfig vmConfig) {
-    return filesystem.bucketFor(vmConfig.bytecodeDbPath());
+  public Bucket provideBytecodeDbBucket(Filesystem filesystem, @BytecodeDb FullPath path) {
+    return filesystem.bucketFor(path);
   }
 
   @Provides
   @ComputationDb
-  public Bucket provideComputationDbBucket(Filesystem filesystem, VmConfig vmConfig) {
-    return filesystem.bucketFor(vmConfig.computationDbPath());
-  }
-
-  @Provides
-  @Project
-  public FullPath provideProjectPath(VmConfig vmConfig) {
-    return vmConfig.projectPath();
+  public Bucket provideComputationDbBucket(Filesystem filesystem, @ComputationDb FullPath path) {
+    return filesystem.bucketFor(path);
   }
 }
