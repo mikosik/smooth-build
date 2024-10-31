@@ -2,7 +2,6 @@ package org.smoothbuild.cli.run;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
-import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
@@ -13,9 +12,10 @@ import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
-import static org.smoothbuild.common.testing.TestingBucket.readFile;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
+import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
+import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
@@ -32,11 +32,9 @@ import java.io.IOException;
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
@@ -101,7 +99,8 @@ public class SaveArtifactsTest extends TestingVm {
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
     var typeS = sStructType("NotAFile", sBlobType(), sStringType());
     var valueB = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
-    var byteString = readFile(hashedDbBucket(), HashedDb.dbPathTo(valueB.dataHash()));
+    var filePath = BYTECODE_DB_PATH.append(HashedDb.dbPathTo(valueB.dataHash()));
+    var byteString = readFile(filesystem(), filePath);
 
     testValueStoring(typeS, valueB, byteString);
   }
@@ -271,9 +270,5 @@ public class SaveArtifactsTest extends TestingVm {
 
   public static SStructType fileTS() {
     return sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
-  }
-
-  private Bucket hashedDbBucket() {
-    return new SubBucket(projectBucket(), BYTECODE_DB_PATH);
   }
 }

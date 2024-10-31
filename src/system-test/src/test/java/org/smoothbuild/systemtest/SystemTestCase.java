@@ -9,9 +9,7 @@ import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.cli.Main.EXIT_CODE_ERROR;
 import static org.smoothbuild.cli.Main.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.cli.layout.Layout.DEFAULT_MODULE_PATH;
-import static org.smoothbuild.cli.layout.Layout.SMOOTH_DIR;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.ExecuteOsProcess.executeOsProcess;
 import static org.smoothbuild.common.base.Strings.convertOsLineSeparatorsToNewLine;
@@ -45,6 +43,10 @@ import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.function.Function1;
 
 public abstract class SystemTestCase {
+  public static final Path SMOOTH_DIR = Paths.get(".smooth");
+  public static final Path COMPUTATION_DB_PATH = SMOOTH_DIR.resolve("computations");
+  public static final Path BYTECODE_DB_PATH = SMOOTH_DIR.resolve("bytecode");
+  public static final Path ARTIFACTS_PATH = SMOOTH_DIR.resolve("artifacts");
   public static final Path SMOOTH_BINARY = findSmoothBinary();
 
   private static Path findSmoothBinary() {
@@ -344,7 +346,7 @@ public abstract class SystemTestCase {
   }
 
   public Path artifactAbsolutePath(String name) {
-    return absolutePath(ARTIFACTS_PATH.appendPart(name).toString());
+    return absolutePath(ARTIFACTS_PATH.resolve(name).toString());
   }
 
   /**
