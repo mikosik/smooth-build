@@ -1,11 +1,9 @@
 package org.smoothbuild.cli.run;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.layout.BucketIds.PROJECT;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
@@ -15,6 +13,7 @@ import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
+import static org.smoothbuild.common.testing.TestingFullPath.ARTIFACTS_PATH;
 import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
@@ -32,8 +31,6 @@ import java.io.IOException;
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.BucketResolver;
-import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
@@ -211,8 +208,7 @@ public class SaveArtifactsTest extends TestingVm {
 
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
-    var filesystem = new Filesystem(new BucketResolver(map(PROJECT, projectBucket())));
-    var saveArtifacts = new SaveArtifacts(filesystem);
+    var saveArtifacts = new SaveArtifacts(filesystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
     List<SExpr> sExprs = list(
         instantiateS(sStringType(), "myValue1"),
         instantiateS(sStringType(), "myValue2"),
@@ -254,8 +250,7 @@ public class SaveArtifactsTest extends TestingVm {
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {
-    var filesystem = new Filesystem(new BucketResolver(map(PROJECT, projectBucket())));
-    var saveArtifacts = new SaveArtifacts(filesystem);
+    var saveArtifacts = new SaveArtifacts(filesystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
     SExpr instantiateS = instantiateS(sType, "myValue");
     return saveArtifacts.execute(evaluatedExprs(list(instantiateS), list(value)));
   }

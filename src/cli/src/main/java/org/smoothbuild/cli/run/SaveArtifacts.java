@@ -3,7 +3,6 @@ package org.smoothbuild.cli.run;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.cli.layout.Layout.ARTIFACTS;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -16,7 +15,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
-import org.smoothbuild.cli.layout.Layout;
+import org.smoothbuild.cli.Artifacts;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
@@ -36,21 +35,27 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 
 public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final String FILE_STRUCT_NAME = "File";
   private final Filesystem filesystem;
+  private final FullPath artifactsPath;
+  private final FullPath bytecodeDb;
 
   @Inject
-  public SaveArtifacts(Filesystem filesystem) {
+  public SaveArtifacts(
+      Filesystem filesystem, @Artifacts FullPath artifactsPath, @BytecodeDb FullPath bytecodeDb) {
     this.filesystem = filesystem;
+    this.artifactsPath = artifactsPath;
+    this.bytecodeDb = bytecodeDb;
   }
 
   @Override
   public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
     var label = label("artifacts", "save");
     try {
-      filesystem.createDir(ARTIFACTS);
+      filesystem.createDir(artifactsPath);
     } catch (IOException e) {
       return output(label, list(error(e.getMessage())));
     }
@@ -165,11 +170,11 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     return path(filePath(file).toJavaString());
   }
 
-  private static FullPath targetPath(BValue value) {
-    return Layout.BYTECODE_DB.appendPart(dbPathTo(value.dataHash()).toString());
+  private FullPath targetPath(BValue value) {
+    return bytecodeDb.appendPart(dbPathTo(value.dataHash()).toString());
   }
 
-  private static FullPath artifactPath(String name) {
-    return ARTIFACTS.appendPart(name);
+  private FullPath artifactPath(String name) {
+    return artifactsPath.appendPart(name);
   }
 }

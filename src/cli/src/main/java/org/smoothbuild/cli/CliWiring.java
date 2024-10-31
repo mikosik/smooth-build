@@ -1,5 +1,6 @@
 package org.smoothbuild.cli;
 
+import static org.smoothbuild.cli.layout.Layout.ARTIFACTS;
 import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB;
 import static org.smoothbuild.cli.layout.Layout.COMPUTATION_DB;
 
@@ -12,9 +13,12 @@ import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketId;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.wiring.BucketFactory;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Set;
+import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmConfig;
 
@@ -29,6 +33,24 @@ public class CliWiring extends AbstractModule {
   @Singleton
   public Map<BucketId, Bucket> provideBucketIdToBucketMap(BucketFactory bucketFactory) {
     return bucketIds.toMap(bucketFactory::create);
+  }
+
+  @Provides
+  @Artifacts
+  public FullPath provideArtifacts() {
+    return ARTIFACTS;
+  }
+
+  @Provides
+  @BytecodeDb
+  public FullPath provideBytecodeDb() {
+    return BYTECODE_DB;
+  }
+
+  @Provides
+  @ComputationDb
+  public FullPath provideComputationDb() {
+    return COMPUTATION_DB;
   }
 
   @Provides
