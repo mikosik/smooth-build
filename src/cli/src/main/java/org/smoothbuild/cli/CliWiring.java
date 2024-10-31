@@ -14,7 +14,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.wiring.BucketFactory;
+import org.smoothbuild.common.bucket.wire.BucketFactory;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;

@@ -1,4 +1,4 @@
-package org.smoothbuild.common.bucket.wiring;
+package org.smoothbuild.common.bucket.wire;
 
 import java.nio.file.Path;
 import java.util.Map;

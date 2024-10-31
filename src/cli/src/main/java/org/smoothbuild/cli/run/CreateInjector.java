@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.match.ReportMatchers;
 import org.smoothbuild.common.bucket.base.Alias;
-import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
+import org.smoothbuild.common.bucket.wire.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
