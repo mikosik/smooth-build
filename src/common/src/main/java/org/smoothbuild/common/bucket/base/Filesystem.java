@@ -1,6 +1,7 @@
 package org.smoothbuild.common.bucket.base;
 
 import static org.smoothbuild.common.bucket.base.RecursivePathsIterator.recursivePathsIterator;
+import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class Filesystem {
   }
 
   public Bucket bucketFor(FullPath path) {
-    return new SubBucket(bucketResolver.bucketFor(path.bucketId()), path.path());
+    return subBucket(bucketResolver.bucketFor(path.bucketId()), path.path());
   }
 
   public Bucket bucketFor(BucketId bucketId) {

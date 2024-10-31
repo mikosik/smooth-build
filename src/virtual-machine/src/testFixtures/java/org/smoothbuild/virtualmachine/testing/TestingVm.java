@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
@@ -14,7 +15,6 @@ import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.base.SubBucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
@@ -164,7 +164,7 @@ public class TestingVm extends BytecodeTestApi {
   }
 
   public Bucket computationCacheBucket() {
-    return new SubBucket(projectBucket(), path("cache"));
+    return subBucket(projectBucket(), path("cache"));
   }
 
   public Bucket projectBucket() {
@@ -191,9 +191,9 @@ public class TestingVm extends BytecodeTestApi {
   }
 
   @Override
-  public SubBucket bytecodeBucket() {
+  public Bucket bytecodeBucket() {
     // TODO hardcoded
-    return new SubBucket(projectBucket(), path(".smooth/bytecode"));
+    return subBucket(projectBucket(), path(".smooth/bytecode"));
   }
 
   // Job related

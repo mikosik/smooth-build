@@ -8,7 +8,15 @@ public class SubBucket implements Bucket {
   private final Bucket bucket;
   private final Path root;
 
-  public SubBucket(Bucket bucket, Path root) {
+  public static Bucket subBucket(Bucket bucket, Path path) {
+    if (path.isRoot()) {
+      return bucket;
+    } else {
+      return new SubBucket(bucket, path);
+    }
+  }
+
+  private SubBucket(Bucket bucket, Path root) {
     this.bucket = bucket;
     this.root = root;
   }
