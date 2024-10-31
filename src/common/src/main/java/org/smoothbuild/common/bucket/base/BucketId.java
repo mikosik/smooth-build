@@ -7,11 +7,11 @@ public record BucketId(String id) {
     return new BucketId(id);
   }
 
-  public FullPath path(String path) {
-    return path(Path.path(path));
+  public FullPath append(String path) {
+    return append(Path.path(path));
   }
 
-  public FullPath path(Path path) {
+  public FullPath append(Path path) {
     return fullPath(this, path);
   }
 }

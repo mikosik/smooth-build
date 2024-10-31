@@ -53,7 +53,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public class TestingVm extends BytecodeTestApi {
-  public static final FullPath ARTIFACTS = PROJECT.path(".smooth/artifacts");
+  public static final FullPath ARTIFACTS = PROJECT.append(".smooth/artifacts");
 
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
