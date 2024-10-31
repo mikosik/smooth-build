@@ -1,6 +1,11 @@
 package org.smoothbuild.cli.run;
 
 import static com.google.inject.Stage.PRODUCTION;
+import static org.smoothbuild.cli.layout.BucketIds.INSTALL_ALIAS;
+import static org.smoothbuild.cli.layout.BucketIds.LIBRARY_ALIAS;
+import static org.smoothbuild.cli.layout.BucketIds.PROJECT_ALIAS;
+import static org.smoothbuild.cli.layout.Layout.BIN_DIR_NAME;
+import static org.smoothbuild.cli.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Set.setOfAll;
 import static org.smoothbuild.common.log.base.Level.INFO;
@@ -11,8 +16,6 @@ import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import org.smoothbuild.cli.CliWiring;
-import org.smoothbuild.cli.layout.BucketIds;
-import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.cli.match.ReportMatchers;
 import org.smoothbuild.common.bucket.base.BucketId;
 import org.smoothbuild.common.bucket.wiring.DiskBucketWiring;
@@ -34,9 +37,9 @@ public class CreateInjector {
       Path projectDir, PrintWriter out, Level logLevel, ReportMatcher reportMatcher) {
     var installationDir = installationDir();
     Map<BucketId, Path> bucketIdToPath = map(
-        BucketIds.PROJECT, projectDir,
-        BucketIds.LIBRARY, installationDir.resolve(Layout.STANDARD_LIBRARY_DIR_NAME),
-        BucketIds.INSTALL, installationDir.resolve(Layout.BIN_DIR_NAME));
+        PROJECT_ALIAS, projectDir,
+        LIBRARY_ALIAS, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
+        INSTALL_ALIAS, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
         new CliWiring(setOfAll(bucketIdToPath.keySet())),
@@ -51,8 +54,8 @@ public class CreateInjector {
   public static Injector createInjector(PrintWriter out) {
     var installationDir = installationDir();
     Map<BucketId, Path> bucketIdToPath = map(
-        BucketIds.LIBRARY, installationDir.resolve(Layout.STANDARD_LIBRARY_DIR_NAME),
-        BucketIds.INSTALL, installationDir.resolve(Layout.BIN_DIR_NAME));
+        LIBRARY_ALIAS, installationDir.resolve(STANDARD_LIBRARY_DIR_NAME),
+        INSTALL_ALIAS, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
         new CliWiring(setOfAll(bucketIdToPath.keySet())),

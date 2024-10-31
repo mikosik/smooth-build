@@ -1,9 +1,9 @@
 package org.smoothbuild.cli;
 
-import static org.smoothbuild.cli.layout.Layout.ARTIFACTS;
-import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB;
-import static org.smoothbuild.cli.layout.Layout.COMPUTATION_DB;
-import static org.smoothbuild.cli.layout.Layout.PROJECT;
+import static org.smoothbuild.cli.layout.Layout.ARTIFACTS_PATH;
+import static org.smoothbuild.cli.layout.Layout.BYTECODE_DB_PATH;
+import static org.smoothbuild.cli.layout.Layout.COMPUTATION_DB_PATH;
+import static org.smoothbuild.cli.layout.Layout.PROJECT_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -38,25 +38,25 @@ public class CliWiring extends AbstractModule {
   @Provides
   @Artifacts
   public FullPath provideArtifacts() {
-    return ARTIFACTS;
+    return ARTIFACTS_PATH;
   }
 
   @Provides
   @BytecodeDb
   public FullPath provideBytecodeDb() {
-    return BYTECODE_DB;
+    return BYTECODE_DB_PATH;
   }
 
   @Provides
   @ComputationDb
   public FullPath provideComputationDb() {
-    return COMPUTATION_DB;
+    return COMPUTATION_DB_PATH;
   }
 
   @Provides
   @Project
   public FullPath provideProject() {
-    return PROJECT;
+    return PROJECT_PATH;
   }
 
   @Provides
