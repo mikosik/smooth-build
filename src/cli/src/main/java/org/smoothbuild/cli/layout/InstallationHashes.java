@@ -1,6 +1,7 @@
 package org.smoothbuild.cli.layout;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.cli.layout.Layout.STD_LIB_MODULES;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -58,7 +59,7 @@ public class InstallationHashes {
 
   private HashNode standardLibrariesNode() throws IOException {
     var builder = new ArrayList<HashNode>();
-    for (var fullPath : Layout.STANDARD_LIBRARY_MODULES) {
+    for (var fullPath : STD_LIB_MODULES) {
       builder.add(moduleNode(fullPath));
     }
     return new HashNode("standard libraries", listOfAll(builder));
