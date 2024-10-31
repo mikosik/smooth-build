@@ -1,4 +1,4 @@
-package org.smoothbuild.common.bucket.wiring;
+package org.smoothbuild.common.bucket.wire;
 
 import com.google.inject.AbstractModule;
 
