@@ -396,7 +396,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
           var valueS = sValue(3, "myValue", sInt(7, 37));
           ImmutableBindings<SNamedEvaluable> evaluables = bindings(valueS);
           SExpr sExpr = sInstantiate(9, valueS);
-          assertNalMapping(evaluables, sExpr, "myValue", location(3));
+          assertNalMapping(evaluables, sExpr, null, location(7));
         }
 
         @Test
@@ -405,7 +405,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
           var valueS = sValue(5, "myValue", sInstantiate(otherValueS));
           ImmutableBindings<SNamedEvaluable> evaluables = bindings(otherValueS, valueS);
           SExpr sExpr = sInstantiate(9, valueS);
-          assertNalMapping(evaluables, sExpr, "myValue", location(5));
+          assertNalMapping(evaluables, sExpr, null, location(7));
         }
 
         @Test
@@ -539,9 +539,9 @@ public class SbTranslatorTest extends BytecodeTestContext {
       class _instantiate {
         @Test
         void expression_value() throws Exception {
-          var sValue = sValue(7, "emptyArray", sOrder(varA()));
+          var sValue = sValue(7, "emptyArray", sOrder(8, varA()));
           var sInstantiate = sInstantiate(4, list(sIntType()), sValue);
-          assertNalMapping(bindings(sValue), sInstantiate, "emptyArray", location(7));
+          assertNalMapping(bindings(sValue), sInstantiate, null, location(8));
         }
 
         @Test
