@@ -20,19 +20,12 @@ import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
-import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
-import static org.smoothbuild.common.testing.TestingFullPath.COMPUTATION_DB_PATH;
-import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.Source;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Filesystem;
@@ -45,13 +38,9 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.DecoratingReporter;
 import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.log.report.ReportDecorator;
-import org.smoothbuild.common.log.report.ReportMatcher;
-import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.task.SchedulerWiring;
+import org.smoothbuild.common.testing.CommonTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -61,11 +50,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
-import org.smoothbuild.virtualmachine.wire.BytecodeDb;
-import org.smoothbuild.virtualmachine.wire.ComputationDb;
-import org.smoothbuild.virtualmachine.wire.Project;
-import org.smoothbuild.virtualmachine.wire.Sandbox;
-import org.smoothbuild.virtualmachine.wire.VmWiring;
+import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 
 public class EvaluatorTestContext extends BytecodeTestContext {
   private static final FullPath LIB_MODULE_PATH = fullPath(PROJECT, path("libraryModule.smooth"));
@@ -186,11 +171,10 @@ public class EvaluatorTestContext extends BytecodeTestContext {
   private Injector createInjector() {
     return Guice.createInjector(
         PRODUCTION,
-        new TestWiring(buckets),
         new EvaluatorWiring(),
-        new VmWiring(),
         new CompilerBackendWiring(),
-        new SchedulerWiring());
+        new VmTestWiring(buckets),
+        new CommonTestWiring());
   }
 
   @Override
@@ -201,58 +185,6 @@ public class EvaluatorTestContext extends BytecodeTestContext {
   @Override
   public BytecodeFactory bytecodeF() {
     return injector.getInstance(BytecodeFactory.class);
-  }
-
-  public static class TestWiring extends AbstractModule {
-    private final Map<Alias, Bucket> buckets;
-
-    public TestWiring(Map<Alias, Bucket> buckets) {
-      this.buckets = buckets;
-    }
-
-    @Override
-    protected void configure() {
-      bind(TestReporter.class).toInstance(new TestReporter());
-      bind(ReportMatcher.class).toInstance((label, logs) -> true);
-    }
-
-    @Provides
-    @Singleton
-    public Reporter provideReporter(
-        TestReporter testReporter, java.util.Set<ReportDecorator> decorators) {
-      return new DecoratingReporter(testReporter, decorators);
-    }
-
-    @Provides
-    @Singleton
-    @Sandbox
-    public Hash provideSandboxHash() {
-      return Hash.of(33);
-    }
-
-    @Provides
-    @Singleton
-    public Map<Alias, Bucket> provideBucketsMap() {
-      return buckets;
-    }
-
-    @Provides
-    @BytecodeDb
-    public FullPath provideBytecodeDb() {
-      return BYTECODE_DB_PATH;
-    }
-
-    @Provides
-    @ComputationDb
-    public FullPath provideComputationDb() {
-      return COMPUTATION_DB_PATH;
-    }
-
-    @Provides
-    @Project
-    public FullPath provideProject() {
-      return PROJECT_PATH;
-    }
   }
 
   public Log userFatal(int line, String message) {
