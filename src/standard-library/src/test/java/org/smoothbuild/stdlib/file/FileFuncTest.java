@@ -25,7 +25,10 @@ public class FileFuncTest extends StandardLibraryTestCase {
         """;
     createUserModule(userModule);
     evaluate("result");
-    assertThat(logs()).contains(error("File 'nonexistent/file.txt' doesn't exist."));
+    assertThat(logs())
+        .contains(
+            error(
+                "Error reading file '{t-project}/nonexistent/file.txt'. File 'nonexistent/file.txt' doesn't exist."));
   }
 
   @Test
@@ -36,7 +39,10 @@ public class FileFuncTest extends StandardLibraryTestCase {
     createUserModule(userModule);
     createProjectFile("some/dir/file", "");
     evaluate("result");
-    assertThat(logs()).contains(error("File 'some/dir' doesn't exist. It is a dir."));
+    assertThat(logs())
+        .contains(
+            error(
+                "Error reading file '{t-project}/some/dir'. File 'some/dir' doesn't exist. It is a dir."));
   }
 
   @Test
