@@ -6,9 +6,9 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.mes
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class ContainerTest extends TestingVm {
+public class ContainerTest extends VmTestContext {
   @Test
   void messages_are_logged() throws Exception {
     var container = container();

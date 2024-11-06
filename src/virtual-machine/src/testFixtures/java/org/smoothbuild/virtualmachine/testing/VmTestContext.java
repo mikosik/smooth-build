@@ -49,7 +49,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
-public class TestingVm extends BytecodeTestContext {
+public class VmTestContext extends BytecodeTestContext {
   public static final FullPath ARTIFACTS = PROJECT.append(".smooth/artifacts");
 
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
@@ -150,7 +150,7 @@ public class TestingVm extends BytecodeTestContext {
   }
 
   public static Job job(BExpr expr, List<BExpr> list) {
-    return new Job(expr, list.map(TestingVm::job), new BTrace());
+    return new Job(expr, list.map(VmTestContext::job), new BTrace());
   }
 
   public static Job job(BExpr expr) {

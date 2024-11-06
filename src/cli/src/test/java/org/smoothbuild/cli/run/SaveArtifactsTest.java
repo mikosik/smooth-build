@@ -42,9 +42,9 @@ import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class SaveArtifactsTest extends TestingVm {
+public class SaveArtifactsTest extends VmTestContext {
   @Test
   void store_bool_artifact() throws Exception {
     var typeS = sBoolType();
