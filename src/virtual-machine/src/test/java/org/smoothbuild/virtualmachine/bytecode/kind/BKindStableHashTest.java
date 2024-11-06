@@ -11,7 +11,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class BKindStableHashTest extends BytecodeTestContext {
   @ParameterizedTest
@@ -21,7 +21,7 @@ public class BKindStableHashTest extends BytecodeTestContext {
   }
 
   public static List<Arguments> hash_is_stable_cases() throws BytecodeException {
-    var t = new TestingVm();
+    var t = new VmTestContext();
     return List.of(
         arguments(
             t.bBlobType(), "1406e05881e299367766d313e26c05564ec91bf721d31726bd6e46e60689539a"),

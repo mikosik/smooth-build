@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.testing.TestingThread.sleepMillis;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.TestingVm;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class JarFuncTest extends TestingVm {
+public class JarFuncTest extends VmTestContext {
   @Test
   void jar_produces_bit_level_equal_file_independent_of_its_creation_time() throws Exception {
     var args = bTuple(bArray(bFile("filename", "context")), bBlob(37));
