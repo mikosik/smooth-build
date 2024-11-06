@@ -26,6 +26,16 @@ import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class TestingVmWiring extends AbstractModule {
+  private final Map<Alias, Bucket> buckets;
+
+  public TestingVmWiring() {
+    this(map(PROJECT, new SynchronizedBucket(new MemoryBucket())));
+  }
+
+  public TestingVmWiring(Map<Alias, Bucket> buckets) {
+    this.buckets = buckets;
+  }
+
   @Override
   protected void configure() {
     install(new VmWiring());
@@ -35,7 +45,7 @@ public class TestingVmWiring extends AbstractModule {
   @Provides
   @Singleton
   public Map<Alias, Bucket> provideBucketMap() {
-    return map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
+    return buckets;
   }
 
   @Provides

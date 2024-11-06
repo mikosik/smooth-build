@@ -28,7 +28,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.Source;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,16 +70,16 @@ import org.smoothbuild.virtualmachine.wire.VmWiring;
 public class EvaluatorTestContext extends BytecodeTestContext {
   private static final FullPath LIB_MODULE_PATH = fullPath(PROJECT, path("libraryModule.smooth"));
   private static final FullPath USER_MODULE_PATH = fullPath(PROJECT, path("userModule.smooth"));
-  private Bucket projectBucket;
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
   private Filesystem filesystem;
+  private Map<Alias, Bucket> buckets;
 
   @BeforeEach
   public void beforeEach() throws IOException {
-    this.projectBucket = new SynchronizedBucket(new MemoryBucket());
     this.modules = list();
+    this.buckets = map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
     this.injector = createInjector();
     this.filesystem = injector.getInstance(Filesystem.class);
   }
@@ -186,7 +186,7 @@ public class EvaluatorTestContext extends BytecodeTestContext {
   private Injector createInjector() {
     return Guice.createInjector(
         PRODUCTION,
-        new TestWiring(),
+        new TestWiring(buckets),
         new EvaluatorWiring(),
         new VmWiring(),
         new CompilerBackendWiring(),
@@ -203,7 +203,13 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     return injector.getInstance(BytecodeFactory.class);
   }
 
-  public class TestWiring extends AbstractModule {
+  public static class TestWiring extends AbstractModule {
+    private final Map<Alias, Bucket> buckets;
+
+    public TestWiring(Map<Alias, Bucket> buckets) {
+      this.buckets = buckets;
+    }
+
     @Override
     protected void configure() {
       bind(TestReporter.class).toInstance(new TestReporter());
@@ -225,8 +231,9 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     }
 
     @Provides
+    @Singleton
     public Map<Alias, Bucket> provideBucketsMap() {
-      return map(PROJECT, projectBucket);
+      return buckets;
     }
 
     @Provides
