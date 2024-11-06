@@ -6,7 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import org.smoothbuild.common.bucket.base.FileResolver;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -19,13 +19,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
  */
 @Singleton
 public class FileContentReader {
-  private final FileResolver fileResolver;
+  private final Filesystem filesystem;
   private final BExprDb exprDb;
   private final ConcurrentHashMap<FullPath, CachingReader> cache;
 
   @Inject
-  public FileContentReader(FileResolver fileResolver, BExprDb exprDb) {
-    this.fileResolver = fileResolver;
+  public FileContentReader(Filesystem filesystem, BExprDb exprDb) {
+    this.filesystem = filesystem;
     this.exprDb = exprDb;
     this.cache = new ConcurrentHashMap<>();
   }
@@ -52,7 +52,7 @@ public class FileContentReader {
 
     private BBlob readImpl() throws BytecodeException, IOException {
       try (BBlobBuilder blobBuilder = exprDb.newBlobBuilder()) {
-        try (var source = buffer(fileResolver.source(fullPath))) {
+        try (var source = buffer(filesystem.source(fullPath))) {
           source.readAll(blobBuilder);
         }
         return blobBuilder.build();

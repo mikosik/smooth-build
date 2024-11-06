@@ -10,7 +10,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
-import static org.smoothbuild.common.testing.TestingFileResolver.saveBytecodeInJar;
+import static org.smoothbuild.common.testing.TestingFilesystem.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
@@ -44,7 +44,7 @@ import com.google.inject.Injector;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
-import org.smoothbuild.common.bucket.base.FileResolver;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.task.Scheduler;
@@ -134,8 +134,8 @@ public class EvaluatorTest extends VmTestContext {
               nlist());
           var callS = sCall(sInstantiate(funcS));
           var buildJar = fullPath(PROJECT, path("build.jar"));
-          var fileResolver = injector.getInstance(FileResolver.class);
-          saveBytecodeInJar(fileResolver, buildJar, list(ReturnAbc.class));
+          var filesystem = injector.getInstance(Filesystem.class);
+          saveBytecodeInJar(filesystem, buildJar, list(ReturnAbc.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
         }
 
@@ -149,8 +149,8 @@ public class EvaluatorTest extends VmTestContext {
           var callS = sCall(sInstantiate(funcS), sString("abc"));
           var injector = newInjector();
           var buildJar = fullPath(PROJECT, path("build.jar"));
-          var fileResolver = injector.getInstance(FileResolver.class);
-          saveBytecodeInJar(fileResolver, buildJar, list(StringIdentity.class));
+          var filesystem = injector.getInstance(Filesystem.class);
+          saveBytecodeInJar(filesystem, buildJar, list(StringIdentity.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
         }
       }
@@ -231,8 +231,8 @@ public class EvaluatorTest extends VmTestContext {
         void ann_func() throws Exception {
           var injector = newInjector();
           var buildJar = fullPath(PROJECT, path("build.jar"));
-          var fileResolver = injector.getInstance(FileResolver.class);
-          saveBytecodeInJar(fileResolver, buildJar, list(ReturnIdFunc.class));
+          var filesystem = injector.getInstance(Filesystem.class);
+          saveBytecodeInJar(filesystem, buildJar, list(ReturnIdFunc.class));
           var binaryName = ReturnIdFunc.class.getName();
           var bytecodeFuncS = sBytecodeFunc(binaryName, varA(), "f", nlist(sItem(varA(), "p")));
           var sExpr = sInstantiate(list(sIntType()), bytecodeFuncS);

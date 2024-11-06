@@ -13,16 +13,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.FileResolver;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.Maybe;
 
 public class InstallationHashes {
-  private final FileResolver fileResolver;
+  private final Filesystem filesystem;
 
   @Inject
-  public InstallationHashes(FileResolver fileResolver) {
-    this.fileResolver = fileResolver;
+  public InstallationHashes(Filesystem filesystem) {
+    this.filesystem = filesystem;
   }
 
   public HashNode installationNode() throws IOException {
@@ -75,7 +75,7 @@ public class InstallationHashes {
 
   private Maybe<HashNode> nodeForNativeJarFor(FullPath fullPath) throws IOException {
     FullPath nativeFileFullPath = fullPath.withExtension("jar");
-    return switch (fileResolver.pathState(nativeFileFullPath)) {
+    return switch (filesystem.pathState(nativeFileFullPath)) {
       case FILE -> some(nodeFor(nativeFileFullPath));
       case DIR, NOTHING -> none();
     };
@@ -86,7 +86,7 @@ public class InstallationHashes {
   }
 
   private Hash hashOf(FullPath fullPath) throws IOException {
-    try (var source = fileResolver.source(fullPath)) {
+    try (var source = filesystem.source(fullPath)) {
       return Hash.of(source);
     }
   }
