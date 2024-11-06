@@ -47,12 +47,13 @@ import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.evaluator.EvaluatorWiring;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
+import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestApi;
 import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 
-public class EvaluatorTestContext extends BytecodeTestContext {
+public class EvaluatorTestContext implements BytecodeTestApi {
   private static final FullPath LIB_MODULE_PATH = fullPath(PROJECT, path("libraryModule.smooth"));
   private static final FullPath USER_MODULE_PATH = fullPath(PROJECT, path("userModule.smooth"));
   private List<FullPath> modules;
@@ -67,6 +68,10 @@ public class EvaluatorTestContext extends BytecodeTestContext {
     this.buckets = map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
     this.injector = createInjector();
     this.filesystem = injector.getInstance(Filesystem.class);
+  }
+
+  protected Filesystem filesystem() {
+    return filesystem;
   }
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
@@ -175,6 +180,11 @@ public class EvaluatorTestContext extends BytecodeTestContext {
         new CompilerBackendWiring(),
         new VmTestWiring(buckets),
         new CommonTestWiring());
+  }
+
+  @Override
+  public BExprDb exprDb() {
+    return injector.getInstance(BExprDb.class);
   }
 
   @Override

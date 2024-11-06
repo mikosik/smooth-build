@@ -55,7 +55,6 @@ public class BytecodeTestContext extends CommonTestContext implements BytecodeTe
     return new BKindDb(hashedDb());
   }
 
-  @Override
   public HashedDb hashedDb() {
     var result = hashedDb.get();
     try {
@@ -67,12 +66,7 @@ public class BytecodeTestContext extends CommonTestContext implements BytecodeTe
   }
 
   private HashedDb newHashDb() {
-    return new HashedDb(bytecodeBucket());
-  }
-
-  @Override
-  public Bucket bytecodeBucket() {
-    return bytecodeBucket.get();
+    return new HashedDb(bytecodeBucket.get());
   }
 
   private Bucket newBytecodeBucket() {
