@@ -22,7 +22,7 @@ import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.BucketResolver;
-import org.smoothbuild.common.bucket.base.FileResolver;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -127,7 +127,7 @@ public class FrontendCompileTester {
     var projectBucket = new SynchronizedBucket(new MemoryBucket());
     var libraryBucket = new SynchronizedBucket(new MemoryBucket());
     Map<Alias, Bucket> buckets = map(PROJECT, projectBucket, LIBRARY, libraryBucket);
-    var fileResolver = new FileResolver(new BucketResolver(buckets));
+    var filesystem = new Filesystem(new BucketResolver(buckets));
     var testReporter = new TestReporter();
 
     var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
@@ -138,8 +138,8 @@ public class FrontendCompileTester {
       }
 
       @Provides
-      public FileResolver provideFileResolver() {
-        return fileResolver;
+      public Filesystem provideFilesystem() {
+        return filesystem;
       }
     });
     writeModuleFilesToBuckets(buckets);
