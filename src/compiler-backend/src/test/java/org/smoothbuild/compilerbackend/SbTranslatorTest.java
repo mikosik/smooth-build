@@ -9,7 +9,7 @@ import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
+import static org.smoothbuild.common.testing.TestingAlias.ALIAS;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
@@ -109,7 +109,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
 
         @Test
         void declaring_mono_native_value_fails() throws Exception {
-          var fullPath = fullPath(PROJECT, path("my/path"));
+          var fullPath = fullPath(ALIAS, path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
           var nativeValueS =
@@ -126,7 +126,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
         @Test
         void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var fullPath = fullPath(PROJECT, path("my/path"));
+          var fullPath = fullPath(ALIAS, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeValueS =
@@ -195,7 +195,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
 
         @Test
         void mono_native_function() throws Exception {
-          var fullPath = fullPath(PROJECT, path("my/path"));
+          var fullPath = fullPath(ALIAS, path("my/path"));
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -217,7 +217,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
         @Test
         void poly_native_function() throws Exception {
           var a = varA();
-          var fullPath = fullPath(PROJECT, path("my/path"));
+          var fullPath = fullPath(ALIAS, path("my/path"));
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
           var annotationS = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
@@ -238,7 +238,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
         @Test
         void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var fullPath = fullPath(PROJECT, path("my/path"));
+          var fullPath = fullPath(ALIAS, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var annotationS = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
@@ -565,7 +565,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
     @Test
     void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
-      var fullPath = fullPath(PROJECT, path("my/path"));
+      var fullPath = fullPath(ALIAS, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
       var bytecodeValueS = sAnnotatedValue(ann, sStringType(), "myFunc", location(fullPath, 2));
@@ -591,7 +591,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
     @Test
     void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
-      var fullPath = fullPath(PROJECT, path("my/path"));
+      var fullPath = fullPath(ALIAS, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
       var bytecodeFuncS =
