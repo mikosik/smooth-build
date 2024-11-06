@@ -7,13 +7,14 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import okio.Sink;
 import okio.Source;
+import org.smoothbuild.common.collect.Map;
 
 public class Filesystem {
-  private final BucketResolver bucketResolver;
+  private final Map<Alias, Bucket> buckets;
 
   @Inject
-  public Filesystem(BucketResolver bucketResolver) {
-    this.bucketResolver = bucketResolver;
+  public Filesystem(Map<Alias, Bucket> buckets) {
+    this.buckets = buckets;
   }
 
   public PathState pathState(FullPath path) {
@@ -94,11 +95,16 @@ public class Filesystem {
   }
 
   public Bucket bucketFor(FullPath path) {
-    return subBucket(bucketResolver.bucketFor(path.alias()), path.path());
+    return subBucket(bucketFor(path.alias()), path.path());
   }
 
   public Bucket bucketFor(Alias alias) {
-    return bucketResolver.bucketFor(alias);
+    Bucket bucket = buckets.get(alias);
+    if (bucket == null) {
+      throw new IllegalArgumentException(
+          "Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
+    }
+    return bucket;
   }
 
   private static Alias getAliasIfEqualOrFail(FullPath source, FullPath target) {

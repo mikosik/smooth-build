@@ -8,7 +8,6 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
@@ -19,7 +18,7 @@ public class FileContentReaderTest extends BytecodeTestContext {
   void read_returns_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var alias = alias("project");
-    var filesystem = new Filesystem(new BucketResolver(map(alias, bucket)));
+    var filesystem = new Filesystem(map(alias, bucket));
     var fileContentReader = new FileContentReader(filesystem, exprDb());
     var path = path("my/file");
     var content = "file content";
@@ -34,7 +33,7 @@ public class FileContentReaderTest extends BytecodeTestContext {
   void read_caches_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var alias = alias("project");
-    var fileResolver = new Filesystem(new BucketResolver(map(alias, bucket)));
+    var fileResolver = new Filesystem(map(alias, bucket));
     var fileContentReader = new FileContentReader(fileResolver, exprDb());
     var path = path("my/file");
     var content = "file content";
