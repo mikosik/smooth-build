@@ -20,6 +20,7 @@ import static org.smoothbuild.common.log.base.ResultSource.DISK;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Scheduler.LABEL;
+import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
@@ -646,8 +647,8 @@ public class VmTest extends TestingVm {
     return evaluate(vm(), expr).get().get();
   }
 
-  private static Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
-    var result = vm.evaluate(expr);
+  private Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
+    var result = scheduler().submit(vm, argument(expr));
     await().until(() -> result.toMaybe().isSome());
     return result;
   }

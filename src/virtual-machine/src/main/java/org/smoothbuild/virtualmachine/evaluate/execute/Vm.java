@@ -8,7 +8,6 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_INLINE;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_SCHEDULE;
 import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
@@ -74,10 +73,6 @@ public class Vm implements Task1<BExpr, BValue> {
     this.stepEvaluator = stepEvaluator;
     this.bytecodeFactory = bytecodeFactory;
     this.bReferenceInliner = bReferenceInliner;
-  }
-
-  public Promise<Maybe<BValue>> evaluate(BExpr expr) {
-    return scheduler.submit(this, argument(expr));
   }
 
   @Override
