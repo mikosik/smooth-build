@@ -2,6 +2,7 @@ package org.smoothbuild.cli.run;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -9,6 +10,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
@@ -26,10 +28,12 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativ
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
+import static org.smoothbuild.virtualmachine.testing.VmTestContext.ARTIFACTS;
 
 import java.io.IOException;
 import java.util.Map;
 import okio.ByteString;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
@@ -40,11 +44,19 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class SaveArtifactsTest extends VmTestContext {
+public class SaveArtifactsTest extends EvaluatorTestContext {
+  @Override
+  @BeforeEach
+  public void beforeEach() throws IOException {
+    super.beforeEach();
+    // TODO we should rather use Initializer
+    filesystem().createDir(fullPath(PROJECT, ".smooth/bytecode/tmp"));
+  }
+
   @Test
   void store_bool_artifact() throws Exception {
     var typeS = sBoolType();

@@ -11,12 +11,10 @@ import java.math.BigInteger;
 import okio.ByteString;
 import org.smoothbuild.common.Constants;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
-import org.smoothbuild.common.testing.CommonTestApi;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -41,7 +39,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
@@ -70,17 +67,13 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
-public interface BytecodeTestApi extends CommonTestApi {
+public interface BytecodeTestApi {
 
   public abstract BytecodeFactory bytecodeF();
 
   public abstract BExprDb exprDb();
 
   public abstract BKindDb kindDb();
-
-  public abstract HashedDb hashedDb();
-
-  public abstract Bucket bytecodeBucket();
 
   public default NativeMethodLoader nativeMethodLoader() {
     return new NativeMethodLoader(methodLoader());
