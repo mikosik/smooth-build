@@ -21,6 +21,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Scheduler.LABEL;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
+import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
