@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import java.util.ArrayList;
 import java.util.HashSet;

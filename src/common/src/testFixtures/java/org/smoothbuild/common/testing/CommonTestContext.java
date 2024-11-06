@@ -5,7 +5,7 @@ import static com.google.common.base.Suppliers.memoize;
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.task.Scheduler;
 
-public class CommonTestContext extends CommonTestApi {
+public class CommonTestContext implements CommonTestApi {
   private final Supplier<Scheduler> scheduler = memoize(this::newScheduler);
   private final Supplier<TestReporter> testReporter = memoize(this::newTestReporter);
   private int threadCount = 4;

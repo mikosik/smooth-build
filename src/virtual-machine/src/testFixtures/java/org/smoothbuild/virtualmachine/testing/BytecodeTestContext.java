@@ -7,12 +7,13 @@ import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
+import org.smoothbuild.common.testing.CommonTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 
-public class BytecodeTestContext extends BytecodeTestApi {
+public class BytecodeTestContext extends CommonTestContext implements BytecodeTestApi {
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
   private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);

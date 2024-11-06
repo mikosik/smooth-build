@@ -9,6 +9,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
+import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Nested;

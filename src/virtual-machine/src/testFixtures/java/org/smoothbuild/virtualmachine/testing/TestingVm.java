@@ -8,6 +8,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
+import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.base.Hash;
@@ -52,7 +53,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
-public class TestingVm extends BytecodeTestApi {
+public class TestingVm extends BytecodeTestContext {
   public static final FullPath ARTIFACTS = PROJECT.append(".smooth/artifacts");
 
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
@@ -169,14 +170,6 @@ public class TestingVm extends BytecodeTestApi {
 
   public Bucket projectBucket() {
     return projectBucket.get();
-  }
-
-  public BExprDb exprDbOther() {
-    return new BExprDb(hashedDb(), kindDbOther());
-  }
-
-  public BKindDb kindDbOther() {
-    return newKindDb();
   }
 
   @Override
