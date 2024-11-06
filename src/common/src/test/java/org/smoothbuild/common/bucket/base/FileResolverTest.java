@@ -1,7 +1,6 @@
 package org.smoothbuild.common.bucket.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.bucket.base.Alias.alias;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
@@ -29,18 +28,6 @@ public class FileResolverTest {
     bucket = new MemoryBucket();
     var bucketResolver = new BucketResolver(map(alias("project"), bucket));
     fileResolver = new FileResolver(bucketResolver);
-  }
-
-  @Nested
-  class _contentOf {
-    @Test
-    void contentOf() throws IOException {
-      var path = path("file.txt");
-      var content = "some string";
-      createFile(bucket, path, content);
-      assertThat(fileResolver.contentOf(fullPath(alias("project"), path), UTF_8))
-          .isEqualTo(content);
-    }
   }
 
   @Nested

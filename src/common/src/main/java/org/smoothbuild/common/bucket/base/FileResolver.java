@@ -1,11 +1,8 @@
 package org.smoothbuild.common.bucket.base;
 
-import static okio.Okio.buffer;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import okio.Sink;
 import okio.Source;
 
@@ -19,12 +16,6 @@ public class FileResolver {
   @Inject
   public FileResolver(BucketResolver bucketResolver) {
     this.bucketResolver = bucketResolver;
-  }
-
-  public String contentOf(FullPath fullPath, Charset charset) throws IOException {
-    try (var source = buffer(source(fullPath))) {
-      return source.readString(charset);
-    }
   }
 
   public Source source(FullPath fullPath) throws IOException {
