@@ -674,6 +674,6 @@ public class FilesystemTest {
   }
 
   private static Filesystem filesystem() {
-    return new Filesystem(new BucketResolver(map(ALIAS, new MemoryBucket())));
+    return new Filesystem(map(ALIAS, new MemoryBucket()));
   }
 }

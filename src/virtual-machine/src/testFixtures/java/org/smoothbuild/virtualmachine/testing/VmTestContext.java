@@ -13,7 +13,6 @@ import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.BucketResolver;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
@@ -116,11 +115,7 @@ public class VmTestContext extends BytecodeTestContext {
   }
 
   public Filesystem filesystem() {
-    return new Filesystem(bucketResolver());
-  }
-
-  private BucketResolver bucketResolver() {
-    return new BucketResolver(map(PROJECT, projectBucket()));
+    return new Filesystem(map(PROJECT, projectBucket()));
   }
 
   public ComputationCache computationCache() {
