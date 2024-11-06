@@ -39,20 +39,23 @@ import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.backendcompile.testing.TestingBackendCompileWiring;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.bucket.base.FileResolver;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.testing.CommonTestWiring;
+import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
@@ -279,7 +282,14 @@ public class EvaluatorTest extends VmTestContext {
   }
 
   private static Injector newInjector() {
-    return createInjector(new TestingBackendCompileWiring());
+    return createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        install(new CompilerBackendWiring());
+        install(new VmTestWiring());
+        install(new CommonTestWiring());
+      }
+    });
   }
 
   private void assertEvaluation(SNamedEvaluable sNamedEvaluable, BExpr bExpr) {
