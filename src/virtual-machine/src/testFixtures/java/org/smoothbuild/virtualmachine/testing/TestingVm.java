@@ -23,8 +23,6 @@ import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -33,8 +31,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
@@ -56,10 +52,6 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
 public class TestingVm extends BytecodeTestContext {
   public static final FullPath ARTIFACTS = PROJECT.append(".smooth/artifacts");
 
-  private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
-  private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
-  private final Supplier<BKindDb> kindDb = memoize(this::newKindDb);
-  private final Supplier<HashedDb> hashedDb = memoize(this::newHashDb);
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
 
@@ -131,33 +123,6 @@ public class TestingVm extends BytecodeTestContext {
     return new BucketResolver(map(PROJECT, projectBucket()));
   }
 
-  @Override
-  public BytecodeFactory bytecodeF() {
-    return bytecodeFactory.get();
-  }
-
-  private BytecodeFactory newBytecodeFactory() {
-    return new BytecodeFactory(exprDb(), kindDb());
-  }
-
-  @Override
-  public BKindDb kindDb() {
-    return kindDb.get();
-  }
-
-  private BKindDb newKindDb() {
-    return new BKindDb(hashedDb());
-  }
-
-  @Override
-  public BExprDb exprDb() {
-    return exprDb.get();
-  }
-
-  private BExprDb newExprDb() {
-    return new BExprDb(hashedDb(), kindDb());
-  }
-
   public ComputationCache computationCache() {
     var computationCache = new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
     throwExceptionOnFailure(computationCache.execute());
@@ -170,17 +135,6 @@ public class TestingVm extends BytecodeTestContext {
 
   public Bucket projectBucket() {
     return projectBucket.get();
-  }
-
-  @Override
-  public HashedDb hashedDb() {
-    return hashedDb.get();
-  }
-
-  private HashedDb newHashDb() {
-    var hashedDb = new HashedDb(bytecodeBucket());
-    throwExceptionOnFailure(hashedDb.execute());
-    return hashedDb;
   }
 
   @Override
