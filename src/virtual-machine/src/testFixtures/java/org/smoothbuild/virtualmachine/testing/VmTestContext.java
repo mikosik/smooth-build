@@ -8,7 +8,6 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
-import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.base.Hash;

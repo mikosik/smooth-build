@@ -628,27 +628,27 @@ public interface BytecodeTestApi {
     return bytecodeF().select(tuple, index);
   }
 
-  public static BTrace bTrace() {
+  public default BTrace bTrace() {
     return new BTrace();
   }
 
-  public static BTrace bTrace(BExpr call, BExpr called) {
+  public default BTrace bTrace(BExpr call, BExpr called) {
     return bTrace(call.hash(), called.hash(), (Line) null);
   }
 
-  public static BTrace bTrace(BExpr call, BExpr called, BTrace next) {
+  public default BTrace bTrace(BExpr call, BExpr called, BTrace next) {
     return BTrace.bTrace(call.hash(), called.hash(), next);
   }
 
-  public static BTrace bTrace(Hash call, Hash called, BTrace next) {
+  public default BTrace bTrace(Hash call, Hash called, BTrace next) {
     return BTrace.bTrace(call, called, next);
   }
 
-  public static BTrace bTrace(Hash call, Hash called) {
+  public default BTrace bTrace(Hash call, Hash called) {
     return bTrace(call, called, (Line) null);
   }
 
-  private static BTrace bTrace(Hash call, Hash called, Line next) {
+  private BTrace bTrace(Hash call, Hash called, Line next) {
     return new BTrace(new Line(call, called, next));
   }
 }
