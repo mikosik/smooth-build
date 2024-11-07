@@ -17,6 +17,7 @@ public class CommandCompleterTest {
     var reporter = new TestReporter();
     var commandCompleter = new CommandCompleter(null, reporter);
 
+    @SuppressWarnings("unchecked")
     Promise<Maybe<Integer>> promise = mock(Promise.class);
     doThrow(InterruptedException.class).when(promise).getBlocking();
     var exitCode = commandCompleter.waitForCompletion(promise);
