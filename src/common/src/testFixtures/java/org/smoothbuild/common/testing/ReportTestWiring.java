@@ -9,12 +9,10 @@ import org.smoothbuild.common.log.report.DecoratingReporter;
 import org.smoothbuild.common.log.report.ReportDecorator;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.task.SchedulerWiring;
 
-public class CommonTestWiring extends AbstractModule {
+public class ReportTestWiring extends AbstractModule {
   @Override
   protected void configure() {
-    install(new SchedulerWiring());
     bind(TestReporter.class).toInstance(new TestReporter());
     bind(ReportMatcher.class).toInstance((label, logs) -> true);
     newSetBinder(binder(), ReportDecorator.class);
