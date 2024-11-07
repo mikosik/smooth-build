@@ -70,10 +70,6 @@ public class EvaluatorTestContext implements BytecodeTestApi {
     this.filesystem = injector.getInstance(Filesystem.class);
   }
 
-  protected Filesystem filesystem() {
-    return filesystem;
-  }
-
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
     try (var sink = buffer(filesystem.sink(LIB_MODULE_PATH.withExtension("jar")))) {
