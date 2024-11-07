@@ -48,7 +48,8 @@ import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.testing.CommonTestWiring;
+import org.smoothbuild.common.task.SchedulerWiring;
+import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -287,7 +288,8 @@ public class EvaluatorTest extends VmTestContext {
       protected void configure() {
         install(new CompilerBackendWiring());
         install(new VmTestWiring());
-        install(new CommonTestWiring());
+        install(new ReportTestWiring());
+        install(new SchedulerWiring());
       }
     });
   }

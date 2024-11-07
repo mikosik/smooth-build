@@ -40,7 +40,8 @@ import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.testing.CommonTestWiring;
+import org.smoothbuild.common.task.SchedulerWiring;
+import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -175,7 +176,8 @@ public class EvaluatorTestContext implements BytecodeTestApi {
         new EvaluatorWiring(),
         new CompilerBackendWiring(),
         new VmTestWiring(buckets),
-        new CommonTestWiring());
+        new ReportTestWiring(),
+        new SchedulerWiring());
   }
 
   @Override
