@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTrace;
-import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;

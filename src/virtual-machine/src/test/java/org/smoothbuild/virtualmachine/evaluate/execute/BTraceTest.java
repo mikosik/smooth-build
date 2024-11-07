@@ -1,12 +1,12 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.virtualmachine.testing.BytecodeTestApi.bTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BTraceTest {
+public class BTraceTest extends BytecodeTestContext {
   @Test
   void to_string() {
     var trace = bTrace(Hash.of(7), Hash.of(9), bTrace(Hash.of(17), Hash.of(19)));
