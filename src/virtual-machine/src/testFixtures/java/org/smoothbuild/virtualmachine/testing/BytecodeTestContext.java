@@ -66,7 +66,11 @@ public class BytecodeTestContext extends CommonTestContext implements BytecodeTe
   }
 
   private HashedDb newHashDb() {
-    return new HashedDb(bytecodeBucket.get());
+    return new HashedDb(bytecodeBucket());
+  }
+
+  public Bucket bytecodeBucket() {
+    return bytecodeBucket.get();
   }
 
   private Bucket newBytecodeBucket() {

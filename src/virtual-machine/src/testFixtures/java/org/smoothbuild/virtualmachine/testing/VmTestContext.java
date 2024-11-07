@@ -132,6 +132,12 @@ public class VmTestContext extends BytecodeTestContext {
     return projectBucket.get();
   }
 
+  @Override
+  public Bucket bytecodeBucket() {
+    // TODO hardcoded
+    return subBucket(projectBucket(), path(".smooth/bytecode"));
+  }
+
   // Job related
 
   public static Job job(BExpr expr, BExpr... environment) {
