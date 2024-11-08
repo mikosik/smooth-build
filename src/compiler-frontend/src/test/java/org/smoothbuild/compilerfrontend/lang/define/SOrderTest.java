@@ -1,12 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SOrderTest {
+public class SOrderTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var orderS = sOrder(3, sInt(4, 44), sInt(5, 55));
@@ -16,10 +15,10 @@ public class SOrderTest {
             SOrder(
               evaluationType = [Int]
               elements = [
-                SInt(Int, 44, {t-project}/build.smooth:4)
-                SInt(Int, 55, {t-project}/build.smooth:5)
+                SInt(Int, 44, {t-project}/module.smooth:4)
+                SInt(Int, 55, {t-project}/module.smooth:5)
               ]
-              location = {t-project}/build.smooth:3
+              location = {t-project}/module.smooth:3
             )""");
   }
 }

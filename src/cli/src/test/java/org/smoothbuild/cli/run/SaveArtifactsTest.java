@@ -13,16 +13,6 @@ import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;
@@ -38,11 +28,11 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class SaveArtifactsTest extends VmTestContext {
+public class SaveArtifactsTest extends FrontendCompilerTestContext {
   @Test
   void store_bool_artifact() throws Exception {
     var typeS = sBoolType();
@@ -257,11 +247,11 @@ public class SaveArtifactsTest extends VmTestContext {
     return ByteString.encodeUtf8(string);
   }
 
-  private static SInstantiate instantiateS(SType sType, String name) {
+  private SInstantiate instantiateS(SType sType, String name) {
     return sInstantiate(list(), sAnnotatedValue(sNativeAnnotation(), sType, name, location()));
   }
 
-  public static SStructType fileTS() {
+  public SStructType fileTS() {
     return sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
   }
 }

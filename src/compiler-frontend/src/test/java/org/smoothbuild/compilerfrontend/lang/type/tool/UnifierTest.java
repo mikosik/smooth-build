@@ -6,30 +6,13 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInterfaceType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTempVarA;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varX;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.SFieldSetType;
@@ -37,8 +20,9 @@ import org.smoothbuild.compilerfrontend.lang.type.STempVar;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class UnifierTest {
+public class UnifierTest extends FrontendCompilerTestContext {
   private final Unifier unifier = new Unifier();
 
   @Nested
@@ -500,28 +484,28 @@ public class UnifierTest {
     @Nested
     class _legal_field_set_merges {
       @ParameterizedTest
-      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      @MethodSource("legalFieldSetMerges")
       public void array_element(SFieldSetType type1, SFieldSetType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sArrayType(type1), sArrayType(type2), sArrayType(expected));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      @MethodSource("legalFieldSetMerges")
       public void tuple_element(SFieldSetType type1, SFieldSetType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sTupleType(type1), sTupleType(type2), sTupleType(expected));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      @MethodSource("legalFieldSetMerges")
       public void func_result(SFieldSetType type1, SFieldSetType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sFuncType(type1), sFuncType(type2), sFuncType(expected));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      @MethodSource("legalFieldSetMerges")
       public void func_param(SFieldSetType type1, SFieldSetType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(
@@ -531,130 +515,132 @@ public class UnifierTest {
       }
 
       @ParameterizedTest
-      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      @MethodSource("legalFieldSetMerges")
       public void struct_field(SFieldSetType type1, SFieldSetType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sStructType(type1), sStructType(type2), sStructType(expected));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      @MethodSource("legalFieldSetMerges")
       public void interface_field(SFieldSetType type1, SFieldSetType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(
             sInterfaceType(type1), sInterfaceType(type2), sInterfaceType(expected));
+      }
+
+      public static List<Arguments> legalFieldSetMerges() {
+        return new UnifierTest().legalFieldSetMerges();
       }
     }
 
     @Nested
     class _illegal_field_set_merges {
       @ParameterizedTest
-      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      @MethodSource("illegalFieldSetMerges")
       public void array_element(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
         assertUnifyFails(sArrayType(type1), sArrayType(type2));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      @MethodSource("illegalFieldSetMerges")
       public void tuple_element(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
         assertUnifyFails(sTupleType(type1), sTupleType(type2));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      @MethodSource("illegalFieldSetMerges")
       public void func_result(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
         assertUnifyFails(sFuncType(type1), sFuncType(type2));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      @MethodSource("illegalFieldSetMerges")
       public void func_param(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
         assertUnifyFails(sFuncType(type1, sIntType()), sFuncType(type2, sIntType()));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      @MethodSource("illegalFieldSetMerges")
       public void struct_field(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
         assertUnifyFails(sStructType(type1), sStructType(type2));
       }
 
       @ParameterizedTest
-      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      @MethodSource("illegalFieldSetMerges")
       public void interface_field(SFieldSetType type1, SFieldSetType type2)
           throws UnifierException {
         assertUnifyFails(sInterfaceType(type1), sInterfaceType(type2));
       }
+
+      public static List<Arguments> illegalFieldSetMerges() {
+        return new UnifierTest().illegalFieldSetMerges();
+      }
     }
   }
 
-  private static class LegalFieldSetMergesProvider implements ArgumentsProvider {
-    @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-      return Stream.of(
-          // struct vs struct
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sStructType("MyStruct", sSig(sIntType(), "myField"))),
+  public List<Arguments> legalFieldSetMerges() {
+    return list(
+        // struct vs struct
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sStructType("MyStruct", sSig(sIntType(), "myField"))),
 
-          // interface vs interface
-          arguments(
-              sInterfaceType(sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sIntType(), "myField"))),
-          arguments(
-              sInterfaceType(sSig(sIntType(), "myField")),
-              sInterfaceType(),
-              sInterfaceType(sSig(sIntType(), "myField"))),
-          arguments(
-              sInterfaceType(sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sIntType(), "otherField")),
-              sInterfaceType(sSig(sIntType(), "otherField"), sSig(sIntType(), "myField"))),
+        // interface vs interface
+        arguments(
+            sInterfaceType(sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sIntType(), "myField"))),
+        arguments(
+            sInterfaceType(sSig(sIntType(), "myField")),
+            sInterfaceType(),
+            sInterfaceType(sSig(sIntType(), "myField"))),
+        arguments(
+            sInterfaceType(sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sIntType(), "otherField")),
+            sInterfaceType(sSig(sIntType(), "otherField"), sSig(sIntType(), "myField"))),
 
-          // struct vs interface
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sIntType(), "myField")),
-              sStructType("MyStruct", sSig(sIntType(), "myField"))),
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sInterfaceType(),
-              sStructType("MyStruct", sSig(sIntType(), "myField"))));
-    }
+        // struct vs interface
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sIntType(), "myField")),
+            sStructType("MyStruct", sSig(sIntType(), "myField"))),
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sInterfaceType(),
+            sStructType("MyStruct", sSig(sIntType(), "myField"))));
   }
 
-  private static class IllegalFieldSetMergesProvider implements ArgumentsProvider {
-    @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-      return Stream.of(
-          // struct vs struct
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sStructType("OtherStruct", sSig(sIntType(), "myField"))),
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sStructType("MyStruct", sSig(sBlobType(), "myField"))),
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sStructType("MyStruct", sSig(sIntType(), "otherField"))),
-          arguments(sStructType("MyStruct", sSig(sIntType(), "myField")), sStructType("MyStruct")),
+  public List<Arguments> illegalFieldSetMerges() {
+    return list(
+        // struct vs struct
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sStructType("OtherStruct", sSig(sIntType(), "myField"))),
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sStructType("MyStruct", sSig(sBlobType(), "myField"))),
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sStructType("MyStruct", sSig(sIntType(), "otherField"))),
+        arguments(sStructType("MyStruct", sSig(sIntType(), "myField")), sStructType("MyStruct")),
 
-          // interface vs interface
-          arguments(
-              sInterfaceType(sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sBlobType(), "myField"))),
+        // interface vs interface
+        arguments(
+            sInterfaceType(sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sBlobType(), "myField"))),
 
-          // struct vs interface
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sBlobType(), "myField"))),
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sIntType(), "otherField"))),
-          arguments(
-              sStructType("MyStruct", sSig(sIntType(), "myField")),
-              sInterfaceType(sSig(sIntType(), "myField"), sSig(sIntType(), "otherField"))));
-    }
+        // struct vs interface
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sBlobType(), "myField"))),
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sIntType(), "otherField"))),
+        arguments(
+            sStructType("MyStruct", sSig(sIntType(), "myField")),
+            sInterfaceType(sSig(sIntType(), "myField"), sSig(sIntType(), "otherField"))));
   }
 
   @Nested

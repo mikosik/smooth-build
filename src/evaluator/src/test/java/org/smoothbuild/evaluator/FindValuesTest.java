@@ -6,19 +6,12 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sReference;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class FindValuesTest {
+public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_evaluable() {
     var schemaS = sSchema(sArrayType(sIntType()));

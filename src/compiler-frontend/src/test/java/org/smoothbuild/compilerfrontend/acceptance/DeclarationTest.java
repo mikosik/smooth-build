@@ -3,27 +3,8 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
 import static org.smoothbuild.compilerfrontend.testing.TestedTSF.TESTED_TYPES;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlob;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -34,9 +15,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.testing.TestedTS;
 
-public class DeclarationTest {
+public class DeclarationTest extends FrontendCompilerTestContext {
   @Nested
   class _members {
     @Nested
@@ -193,7 +175,7 @@ public class DeclarationTest {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  {t-project}/build.smooth:2: MyStruct ~> MyStruct""");
+                  {t-project}/module.smooth:2: MyStruct ~> MyStruct""");
           }
 
           @Test
@@ -209,7 +191,7 @@ public class DeclarationTest {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  {t-project}/build.smooth:3: MyStruct ~> MyStruct""");
+                  {t-project}/module.smooth:3: MyStruct ~> MyStruct""");
           }
 
           @Test
@@ -224,7 +206,7 @@ public class DeclarationTest {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  {t-project}/build.smooth:2: MyStruct ~> MyStruct""");
+                  {t-project}/module.smooth:2: MyStruct ~> MyStruct""");
           }
 
           @Test
@@ -239,7 +221,7 @@ public class DeclarationTest {
                 .loadsWithError(
                     """
                   Type hierarchy contains cycle:
-                  {t-project}/build.smooth:2: MyStruct ~> MyStruct""");
+                  {t-project}/module.smooth:2: MyStruct ~> MyStruct""");
           }
         }
 

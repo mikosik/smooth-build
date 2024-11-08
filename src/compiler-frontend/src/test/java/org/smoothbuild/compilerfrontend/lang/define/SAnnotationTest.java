@@ -1,12 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SAnnotationTest {
+public class SAnnotationTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var annS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
@@ -15,8 +14,8 @@ public class SAnnotationTest {
             """
             SAnnotation(
               name = myAnnotation
-              path = SString(String, "myPath", {t-project}/build.smooth:7)
-              location = {t-project}/build.smooth:17
+              path = SString(String, "myPath", {t-project}/module.smooth:7)
+              location = {t-project}/module.smooth:17
             )""");
   }
 }

@@ -4,14 +4,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sVar;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
@@ -23,17 +15,18 @@ import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedArrayTS;
 import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedFuncTS;
 
 public class TestedTSF {
+  private static final FrontendCompilerTestContext CONTEXT = new FrontendCompilerTestContext();
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(sVar("A"));
-  public static final TestedTS B = new TestedTS(sVar("B"));
-  public static final TestedTS BLOB = new TestedTS(sBlobType());
-  public static final TestedTS BOOL = new TestedTS(sBoolType());
+  public static final TestedTS A = new TestedTS(CONTEXT.sVar("A"));
+  public static final TestedTS B = new TestedTS(CONTEXT.sVar("B"));
+  public static final TestedTS BLOB = new TestedTS(CONTEXT.sBlobType());
+  public static final TestedTS BOOL = new TestedTS(CONTEXT.sBoolType());
 
-  public static final TestedTS INT = new TestedTS(sIntType());
-  public static final TestedTS STRING = new TestedTS(sStringType());
+  public static final TestedTS INT = new TestedTS(CONTEXT.sIntType());
+  public static final TestedTS STRING = new TestedTS(CONTEXT.sStringType());
   public static final TestedTS STRUCT = new TestedTS(
-      sStructType("Person", nlist(itemSigS(sStringType(), "name"))),
+      CONTEXT.sStructType("Person", nlist(itemSigS(CONTEXT.sStringType(), "name"))),
       Set.of("Person{String name}"),
       Set.of("Person{String name}"));
   public static final List<TestedTS> TESTED_TYPES = list(
@@ -84,7 +77,7 @@ public class TestedTSF {
 
   private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
-        type, sArrayType(type.type()), type.typeDeclarations(), type.allDeclarations());
+        type, CONTEXT.sArrayType(type.type()), type.typeDeclarations(), type.allDeclarations());
   }
 
   public TestedTS func(TestedTS resultT, List<TestedTS> paramTs) {
@@ -114,7 +107,7 @@ public class TestedTSF {
     return new TestedFuncTS(
         resultT,
         paramTestedTs,
-        sFuncType(paramSigs.map(SItemSig::type), resultT.type()),
+        CONTEXT.sFuncType(paramSigs.map(SItemSig::type), resultT.type()),
         typeDeclarations,
         declarations);
   }

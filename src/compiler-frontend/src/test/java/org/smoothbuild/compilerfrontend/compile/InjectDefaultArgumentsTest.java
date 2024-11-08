@@ -4,25 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pModule;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pReference;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sParamRef;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class InjectDefaultArgumentsTest {
+public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
   @Test
   void missing_call_argument_is_filled_with_reference_to_default_argument() {
     var myFuncS = sFunc("myFunc", nlist(sItem("param", sInt(7))), sParamRef(sIntType(), "param"));

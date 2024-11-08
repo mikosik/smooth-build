@@ -4,34 +4,15 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncSchema;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sLambda;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class InferenceTest {
+public class InferenceTest extends FrontendCompilerTestContext {
   @Nested
   class _infer_named_value_type {
     @Nested
@@ -184,7 +165,7 @@ public class InferenceTest {
     }
   }
 
-  abstract static class _abstract_infer_function_result_type_suite {
+  abstract class _abstract_infer_function_result_type_suite {
     public void assertInferredFunctionType(String params, String body, SchemaS expected) {
       assertInferredFunctionType("", params, body, expected);
     }

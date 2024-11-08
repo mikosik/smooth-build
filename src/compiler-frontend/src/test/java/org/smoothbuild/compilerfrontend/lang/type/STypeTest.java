@@ -7,20 +7,6 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInterfaceType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sVar;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varC;
 
 import com.google.common.testing.EqualsTester;
 import java.util.function.Function;
@@ -33,8 +19,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class STypeTest {
+public class STypeTest extends FrontendCompilerTestContext {
   @Test
   void verify_all_base_types_are_tested() {
     assertThat(STypes.baseTypes()).hasSize(4);
@@ -59,6 +46,10 @@ public class STypeTest {
   }
 
   public static List<Arguments> names() {
+    return new STypeTest().names_non_static();
+  }
+
+  public List<Arguments> names_non_static() {
     return name_or_to_string()
         .appendAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct"),
@@ -66,6 +57,10 @@ public class STypeTest {
   }
 
   public static List<Arguments> to_string() {
+    return new STypeTest().to_string_non_static();
+  }
+
+  public List<Arguments> to_string_non_static() {
     return name_or_to_string()
         .appendAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct{}"),
@@ -74,7 +69,7 @@ public class STypeTest {
                 "MyStruct{Int field}")));
   }
 
-  public static List<Arguments> name_or_to_string() {
+  public List<Arguments> name_or_to_string() {
     return list(
         arguments(sBlobType(), "Blob"),
         arguments(sBoolType(), "Bool"),
@@ -134,6 +129,10 @@ public class STypeTest {
   }
 
   public static List<Arguments> vars_test_data() {
+    return new STypeTest().vars_test_data_non_static();
+  }
+
+  public List<Arguments> vars_test_data_non_static() {
     return list(
         arguments(sBlobType(), varSetS()),
         arguments(sBoolType(), varSetS()),
@@ -163,6 +162,10 @@ public class STypeTest {
   }
 
   public static List<Arguments> map_vars() {
+    return new STypeTest().map_vars_non_static();
+  }
+
+  public List<Arguments> map_vars_non_static() {
     return list(
         arguments(sBlobType(), sBlobType()),
         arguments(sBoolType(), sBoolType()),
@@ -209,25 +212,29 @@ public class STypeTest {
     }
 
     public static List<Arguments> elemType_test_data() {
-      return list(
-          arguments(sBlobType()),
-          arguments(sBoolType()),
-          arguments(sFuncType(sStringType())),
-          arguments(sIntType()),
-          arguments(sStringType()),
-          arguments(sStructType("MyStruct", nlist())),
-          arguments(varA()),
-          arguments(sArrayType(sBlobType())),
-          arguments(sArrayType(sBoolType())),
-          arguments(sArrayType(sFuncType(sStringType()))),
-          arguments(sArrayType(sIntType())),
-          arguments(sArrayType(sStringType())),
-          arguments(sArrayType(varA())));
+      return new STypeTest().elemType_test_data_non_static();
     }
   }
 
+  public List<Arguments> elemType_test_data_non_static() {
+    return list(
+        arguments(sBlobType()),
+        arguments(sBoolType()),
+        arguments(sFuncType(sStringType())),
+        arguments(sIntType()),
+        arguments(sStringType()),
+        arguments(sStructType("MyStruct", nlist())),
+        arguments(varA()),
+        arguments(sArrayType(sBlobType())),
+        arguments(sArrayType(sBoolType())),
+        arguments(sArrayType(sFuncType(sStringType()))),
+        arguments(sArrayType(sIntType())),
+        arguments(sArrayType(sStringType())),
+        arguments(sArrayType(varA())));
+  }
+
   @Nested
-  class _func {
+  public class _func {
     @ParameterizedTest
     @MethodSource("func_result_cases")
     public void func_result(SFuncType type, SType expected) {
@@ -235,10 +242,7 @@ public class STypeTest {
     }
 
     public static List<Arguments> func_result_cases() {
-      return list(
-          arguments(sFuncType(sIntType()), sIntType()),
-          arguments(sFuncType(sBoolType(), sBlobType()), sBlobType()),
-          arguments(sFuncType(sBoolType(), sIntType(), sBlobType()), sBlobType()));
+      return new STypeTest().func_result_cases_non_static();
     }
 
     @ParameterizedTest
@@ -248,13 +252,23 @@ public class STypeTest {
     }
 
     public static List<Arguments> func_params_cases() {
-      return list(
-          arguments(sFuncType(sIntType()), sTupleType()),
-          arguments(sFuncType(sBoolType(), sBlobType()), sTupleType(sBoolType())),
-          arguments(
-              sFuncType(sBoolType(), sIntType(), sBlobType()),
-              sTupleType(sBoolType(), sIntType())));
+      return new STypeTest().func_params_cases_non_static();
     }
+  }
+
+  public List<Arguments> func_params_cases_non_static() {
+    return list(
+        arguments(sFuncType(sIntType()), sTupleType()),
+        arguments(sFuncType(sBoolType(), sBlobType()), sTupleType(sBoolType())),
+        arguments(
+            sFuncType(sBoolType(), sIntType(), sBlobType()), sTupleType(sBoolType(), sIntType())));
+  }
+
+  public List<Arguments> func_result_cases_non_static() {
+    return list(
+        arguments(sFuncType(sIntType()), sIntType()),
+        arguments(sFuncType(sBoolType(), sBlobType()), sBlobType()),
+        arguments(sFuncType(sBoolType(), sIntType(), sBlobType()), sBlobType()));
   }
 
   @Nested
@@ -283,17 +297,20 @@ public class STypeTest {
     }
 
     public static List<Arguments> struct_fields_cases() {
-      return list(
-          arguments(sStructType("Person", nlist()), nlist()),
-          arguments(
-              sStructType("Person", nlist(itemSigS(sStringType(), "field"))),
-              nlist(itemSigS(sStringType(), "field"))),
-          arguments(
-              sStructType(
-                  "Person",
-                  nlist(itemSigS(sStringType(), "field"), itemSigS(sIntType(), "field2"))),
-              nlist(itemSigS(sStringType(), "field"), itemSigS(sIntType(), "field2"))));
+      return new STypeTest().struct_fields_cases_non_static();
     }
+  }
+
+  public List<Arguments> struct_fields_cases_non_static() {
+    return list(
+        arguments(sStructType("Person", nlist()), nlist()),
+        arguments(
+            sStructType("Person", nlist(itemSigS(sStringType(), "field"))),
+            nlist(itemSigS(sStringType(), "field"))),
+        arguments(
+            sStructType(
+                "Person", nlist(itemSigS(sStringType(), "field"), itemSigS(sIntType(), "field2"))),
+            nlist(itemSigS(sStringType(), "field"), itemSigS(sIntType(), "field2"))));
   }
 
   @Test
@@ -334,11 +351,15 @@ public class STypeTest {
     }
 
     public static List<Arguments> tuple_items_cases() {
-      return list(
-          arguments(sTupleType(), list()),
-          arguments(sTupleType(sBoolType()), list(sBoolType())),
-          arguments(sTupleType(sBoolType(), sIntType()), list(sBoolType(), sIntType())));
+      return new STypeTest().tuple_items_cases();
     }
+  }
+
+  public List<Arguments> tuple_items_cases() {
+    return list(
+        arguments(sTupleType(), list()),
+        arguments(sTupleType(sBoolType()), list(sBoolType())),
+        arguments(sTupleType(sBoolType(), sIntType()), list(sBoolType(), sIntType())));
   }
 
   @Nested

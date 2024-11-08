@@ -8,15 +8,12 @@ import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isUpperCase;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isVarName;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.startsWithLowerCase;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.startsWithUpperCase;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBoolType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class STypeNamesTest {
+public class STypeNamesTest extends FrontendCompilerTestContext {
   @Test
   void is_upper_case() {
     for (char i = 'A'; i <= 'Z'; i++) {

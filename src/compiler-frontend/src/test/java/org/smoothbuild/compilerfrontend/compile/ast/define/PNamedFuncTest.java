@@ -1,11 +1,10 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedFunc;
-
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class PNamedFuncTest {
+public class PNamedFuncTest extends FrontendCompilerTestContext {
   @Test
   void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
@@ -19,7 +18,7 @@ public class PNamedFuncTest {
     tester.testEquals();
   }
 
-  private static PNamedFunc func(String name, int line) {
+  private PNamedFunc func(String name, int line) {
     return pNamedFunc(name, line);
   }
 }

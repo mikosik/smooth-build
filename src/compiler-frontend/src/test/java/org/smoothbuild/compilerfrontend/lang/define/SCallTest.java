@@ -2,15 +2,11 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SCallTest {
+public class SCallTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var funcS = sInstantiate(4, list(sIntType()), idSFunc());
@@ -24,19 +20,19 @@ public class SCallTest {
                 polymorphicS = SReference(
                   schema = <A>(A)->A
                   referencedName = myId
-                  location = {t-project}/build.smooth:4
+                  location = {t-project}/module.smooth:4
                 )
                 evaluationType = (Int)->Int
-                location = {t-project}/build.smooth:4
+                location = {t-project}/module.smooth:4
               )
               args = SCombine(
                 evaluationType = {Int}
                 elements = [
-                  SInt(Int, 7, {t-project}/build.smooth:3)
+                  SInt(Int, 7, {t-project}/module.smooth:3)
                 ]
-                location = {t-project}/build.smooth:3
+                location = {t-project}/module.smooth:3
               )
-              location = {t-project}/build.smooth:3
+              location = {t-project}/module.smooth:3
             )""");
   }
 }

@@ -12,38 +12,6 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.testing.TestingAlias.ALIAS;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.emptySArrayValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.idSFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlob;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBytecode;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCombine;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sConstructor;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sLambda;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sParamRef;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSelect;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userModuleFullPath;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varB;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -52,17 +20,17 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnReturnAbcFunc;
 
-public class SbTranslatorTest extends BytecodeTestContext {
+public class SbTranslatorTest extends FrontendCompilerTestContext {
   @Nested
   class _translate {
     @Nested
@@ -146,7 +114,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = sFuncType(a, a);
-          var fullPath = userModuleFullPath();
+          var fullPath = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeValueS = sAnnotatedValue(2, ann, funcTS, "myFunc");
@@ -258,7 +226,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
           var clazz = ReturnIdFunc.class;
           var a = varA();
           var funcTS = sFuncType(a, a);
-          var fullPath = userModuleFullPath();
+          var fullPath = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(classBinaryName, location(fullPath, 1));
           var bytecodeFuncS =
@@ -354,7 +322,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
         var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(sInstantiate(funcS)))
             .throwsException(
-                new SbTranslatorException("Cannot resolve `p2` at {t-project}/build.smooth:1."));
+                new SbTranslatorException("Cannot resolve `p2` at {t-project}/module.smooth:1."));
       }
 
       @Test
@@ -411,7 +379,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
         @Test
         void bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var fullPath = userModuleFullPath();
+          var fullPath = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 7));
           var bytecodeValueS =
@@ -444,7 +412,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
 
         @Test
         void native_func() throws Exception {
-          var fullPath = userModuleFullPath();
+          var fullPath = moduleFullPath();
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
           var sNativeFunc =
@@ -458,7 +426,7 @@ public class SbTranslatorTest extends BytecodeTestContext {
         @Test
         void bytecode_func() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var fullPath = userModuleFullPath();
+          var fullPath = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
