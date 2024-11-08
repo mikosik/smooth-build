@@ -13,8 +13,6 @@ import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
-import static org.smoothbuild.common.testing.TestingFullPath.ARTIFACTS_PATH;
-import static org.smoothbuild.common.testing.TestingFullPath.BYTECODE_DB_PATH;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
@@ -245,7 +243,7 @@ public class SaveArtifactsTest extends VmTestContext {
     var label = label("artifacts", "save");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, new Trace(), EXECUTION, logs));
-    var artifactsBucket = filesystem().bucketFor(ARTIFACTS);
+    var artifactsBucket = filesystem().bucketFor(ARTIFACTS_PATH);
     assertThat(directoryToFileMap(artifactsBucket)).isEqualTo(expectedDirectoryMap);
   }
 
