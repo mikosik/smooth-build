@@ -90,7 +90,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class TestingSExpression {
   public static final String BUILD_FILE_PATH = "build.smooth";
-  private static final String IMPORTED_FILE_PATH = "imported.smooth";
   static final FullPath STANDARD_LIBRARY_MODULE_PATH = fullPath(LIBRARY, path("std_lib.smooth"));
   static final FullPath DEFAULT_MODULE_PATH = fullPath(PROJECT, path("build.smooth"));
 
@@ -829,10 +828,6 @@ public class TestingSExpression {
 
   public static FullPath nativeFileFullPath() {
     return userModuleFullPath().withExtension("jar");
-  }
-
-  public static FullPath importedBuildFullPath() {
-    return new FullPath(LIBRARY, path(IMPORTED_FILE_PATH));
   }
 
   public static FullPath projectPath(String path) {

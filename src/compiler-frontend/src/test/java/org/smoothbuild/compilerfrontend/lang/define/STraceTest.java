@@ -1,10 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.importedBuildFullPath;
+import static org.smoothbuild.common.bucket.base.Alias.alias;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
+import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTrace;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userModuleFullPath;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,13 @@ public class STraceTest {
   void to_string() {
     var trace = sTrace(
         "first-name",
-        location(userModuleFullPath(), 17),
+        location(fullPath(alias("project"), path("build.smooth")), 17),
         "second-name",
-        location(importedBuildFullPath(), 19));
+        location(fullPath(alias("library"), path("imported.smooth")), 19));
     assertThat(trace.toString())
         .isEqualTo(
             """
-            @ {t-project}/build.smooth:17 first-name
-            @ {t-library}/imported.smooth:19 second-name""");
+            @ {project}/build.smooth:17 first-name
+            @ {library}/imported.smooth:19 second-name""");
   }
 }
