@@ -163,6 +163,8 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
 
   private FullPath saveBaseValue(FullPath artifactPath, BValue value) throws IOException {
     FullPath targetPath = targetPath(value);
+    // It is possible that `smooth build` command contains the same argument (value name)
+    // passed twice. We allow that, but we need to delete previous in that case.
     filesystem.delete(artifactPath);
     filesystem.createLink(artifactPath, targetPath);
     return artifactPath;
