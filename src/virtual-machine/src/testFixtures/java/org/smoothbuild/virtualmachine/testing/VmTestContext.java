@@ -1,19 +1,20 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
-import static org.smoothbuild.common.testing.TestingFullPath.PROJECT_PATH;
 
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 import org.smoothbuild.common.collect.List;
@@ -48,7 +49,10 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public class VmTestContext extends BytecodeTestContext {
-  public static final FullPath ARTIFACTS = PROJECT.append(".smooth/artifacts");
+  public static final FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
+  public static final FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
+  public static final FullPath BYTECODE_DB_PATH = PROJECT.append(".smooth/bytecode");
+  public static final FullPath ARTIFACTS_PATH = PROJECT.append(".smooth/artifacts");
 
   private final Supplier<Bucket> projectBucket = memoize(() -> synchronizedMemoryBucket());
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
