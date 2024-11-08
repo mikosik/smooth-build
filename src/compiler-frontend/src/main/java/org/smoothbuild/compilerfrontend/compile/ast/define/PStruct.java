@@ -7,8 +7,8 @@ import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import java.util.List;
 import java.util.Objects;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
 public final class PStruct extends NalImpl implements PScoped {

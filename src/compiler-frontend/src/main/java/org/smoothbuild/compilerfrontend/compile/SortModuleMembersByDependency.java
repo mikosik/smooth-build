@@ -16,6 +16,7 @@ import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
 import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
@@ -27,7 +28,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 /**
  * Sort module Evaluables and Structs based on dependencies between them.

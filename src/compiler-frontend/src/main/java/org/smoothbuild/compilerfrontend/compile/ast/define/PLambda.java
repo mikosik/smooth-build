@@ -7,7 +7,7 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 

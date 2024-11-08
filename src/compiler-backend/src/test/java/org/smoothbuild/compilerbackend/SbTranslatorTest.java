@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;

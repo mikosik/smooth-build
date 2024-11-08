@@ -1,9 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import java.util.Objects;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.log.report.TraceLine;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 /**
  * Smooth stack trace.

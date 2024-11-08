@@ -7,8 +7,8 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class PItem extends NalImpl implements PReferenceable {

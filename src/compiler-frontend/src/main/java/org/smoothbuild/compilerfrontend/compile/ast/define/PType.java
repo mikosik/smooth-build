@@ -3,8 +3,8 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 public abstract sealed class PType extends NalImpl permits PExplicitType, PImplicitType {
   protected PType(String name, Location location) {

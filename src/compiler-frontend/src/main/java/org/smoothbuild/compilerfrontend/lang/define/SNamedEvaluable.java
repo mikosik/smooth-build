@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.Sanal;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 /**

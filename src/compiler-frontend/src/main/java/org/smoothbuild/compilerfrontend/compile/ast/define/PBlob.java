@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import okio.ByteString;
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.Hex;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public final class PBlob extends PLiteral {
   private ByteString byteString;

@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public final class PArrayType extends PExplicitType {
   private final PType elemT;

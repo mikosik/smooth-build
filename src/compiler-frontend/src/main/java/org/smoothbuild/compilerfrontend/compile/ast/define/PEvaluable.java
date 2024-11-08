@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.compilerfrontend.lang.base.location.Located;
+import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 

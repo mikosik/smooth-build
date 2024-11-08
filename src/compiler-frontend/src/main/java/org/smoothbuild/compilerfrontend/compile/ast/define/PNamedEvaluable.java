@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 /**
  * Evaluable that has fully qualified name.
