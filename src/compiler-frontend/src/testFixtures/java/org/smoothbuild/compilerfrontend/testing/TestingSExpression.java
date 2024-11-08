@@ -826,10 +826,6 @@ public class TestingSExpression {
     return projectPath(BUILD_FILE_PATH);
   }
 
-  public static FullPath nativeFileFullPath() {
-    return userModuleFullPath().withExtension("jar");
-  }
-
   public static FullPath projectPath(String path) {
     return new FullPath(PROJECT, path(path));
   }
