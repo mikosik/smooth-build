@@ -2,14 +2,11 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sConstructor;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SConstructorTest {
+public class SConstructorTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
@@ -25,10 +22,10 @@ public class SConstructorTest {
                   type = Int
                   name = field
                   defaultValue = None
-                  location = {t-project}/build.smooth:2
+                  location = {t-project}/module.smooth:2
                 )
               ]
-              location = {t-project}/build.smooth:17
+              location = {t-project}/module.smooth:17
             )""");
   }
 }

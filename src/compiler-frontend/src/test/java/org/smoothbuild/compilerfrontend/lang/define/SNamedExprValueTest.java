@@ -1,14 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SNamedExprValueTest {
+public class SNamedExprValueTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var namedExprValueS =
@@ -19,8 +16,8 @@ public class SNamedExprValueTest {
             SNamedExprValue(
               schema = <>String
               name = myVal
-              location = {t-project}/build.smooth:7
-              body = SInt(Int, 9, {t-project}/build.smooth:1)
+              location = {t-project}/module.smooth:7
+              body = SInt(Int, 9, {t-project}/module.smooth:1)
             )""");
   }
 }

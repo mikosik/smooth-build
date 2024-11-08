@@ -1,13 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SReferenceTest {
+public class SReferenceTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var refS = new SReference(sSchema(sIntType()), "referenced", location(7));
@@ -17,7 +15,7 @@ public class SReferenceTest {
             SReference(
               schema = <>Int
               referencedName = referenced
-              location = {t-project}/build.smooth:7
+              location = {t-project}/module.smooth:7
             )""");
   }
 }

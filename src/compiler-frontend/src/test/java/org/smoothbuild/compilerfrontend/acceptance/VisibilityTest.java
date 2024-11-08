@@ -1,19 +1,14 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.err;
 import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFuncType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSchema;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.userModuleFullPath;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class VisibilityTest {
+public class VisibilityTest extends FrontendCompilerTestContext {
   @Nested
   class _visibility {
     @Nested
@@ -359,7 +354,7 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myValue ~> myValue""";
+            {t-project}/module.smooth:1: myValue ~> myValue""";
         module(code).loadsWithError(error);
       }
 
@@ -371,7 +366,7 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myFunc1 ~> myFunc1""";
+            {t-project}/module.smooth:1: myFunc1 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -386,7 +381,7 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct ~> MyStruct""";
+            {t-project}/module.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
 
@@ -401,7 +396,7 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct ~> MyStruct""";
+            {t-project}/module.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
 
@@ -416,7 +411,7 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct ~> MyStruct""";
+            {t-project}/module.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
 
@@ -431,7 +426,7 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct ~> MyStruct""";
+            {t-project}/module.smooth:2: MyStruct ~> MyStruct""";
         module(code).loadsWithError(error);
       }
     }
@@ -448,8 +443,8 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myValue1 ~> myValue2
-            {t-project}/build.smooth:2: myValue2 ~> myValue1""";
+            {t-project}/module.smooth:1: myValue1 ~> myValue2
+            {t-project}/module.smooth:2: myValue2 ~> myValue1""";
         module(code).loadsWithError(error);
       }
 
@@ -463,8 +458,8 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myFunc1 ~> myFunc2
-            {t-project}/build.smooth:2: myFunc2 ~> myFunc1""";
+            {t-project}/module.smooth:1: myFunc1 ~> myFunc2
+            {t-project}/module.smooth:2: myFunc2 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -478,7 +473,7 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myFunc ~> myFunc""";
+            {t-project}/module.smooth:1: myFunc ~> myFunc""";
         module(code).loadsWithError(error);
       }
 
@@ -492,7 +487,7 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:2: myValue ~> myValue""";
+            {t-project}/module.smooth:2: myValue ~> myValue""";
         module(code).loadsWithError(error);
       }
 
@@ -510,8 +505,8 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -529,8 +524,8 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -548,8 +543,8 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -567,8 +562,8 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
     }
@@ -586,9 +581,9 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myValue1 ~> myValue2
-            {t-project}/build.smooth:2: myValue2 ~> myValue3
-            {t-project}/build.smooth:3: myValue3 ~> myValue1""";
+            {t-project}/module.smooth:1: myValue1 ~> myValue2
+            {t-project}/module.smooth:2: myValue2 ~> myValue3
+            {t-project}/module.smooth:3: myValue3 ~> myValue1""";
         module(code).loadsWithError(error);
       }
 
@@ -603,9 +598,9 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myFunc1 ~> myFunc2
-            {t-project}/build.smooth:2: myFunc2 ~> myFunc3
-            {t-project}/build.smooth:3: myFunc3 ~> myFunc1""";
+            {t-project}/module.smooth:1: myFunc1 ~> myFunc2
+            {t-project}/module.smooth:2: myFunc2 ~> myFunc3
+            {t-project}/module.smooth:3: myFunc3 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -620,9 +615,9 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myValue1 ~> myFunc
-            {t-project}/build.smooth:2: myFunc ~> myValue2
-            {t-project}/build.smooth:3: myValue2 ~> myValue1""";
+            {t-project}/module.smooth:1: myValue1 ~> myFunc
+            {t-project}/module.smooth:2: myFunc ~> myValue2
+            {t-project}/module.smooth:3: myValue2 ~> myValue1""";
         module(code).loadsWithError(error);
       }
 
@@ -637,9 +632,9 @@ public class VisibilityTest {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/build.smooth:1: myFunc1 ~> myValue
-            {t-project}/build.smooth:2: myValue ~> myFunc2
-            {t-project}/build.smooth:3: myFunc2 ~> myFunc1""";
+            {t-project}/module.smooth:1: myFunc1 ~> myValue
+            {t-project}/module.smooth:2: myValue ~> myFunc2
+            {t-project}/module.smooth:3: myFunc2 ~> myFunc1""";
         module(code).loadsWithError(error);
       }
 
@@ -660,9 +655,9 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct3
-            {t-project}/build.smooth:8: MyStruct3 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct3
+            {t-project}/module.smooth:8: MyStruct3 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -683,9 +678,9 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct3
-            {t-project}/build.smooth:8: MyStruct3 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct3
+            {t-project}/module.smooth:8: MyStruct3 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
 
@@ -706,9 +701,9 @@ public class VisibilityTest {
         var error =
             """
             Type hierarchy contains cycle:
-            {t-project}/build.smooth:2: MyStruct1 ~> MyStruct2
-            {t-project}/build.smooth:5: MyStruct2 ~> MyStruct3
-            {t-project}/build.smooth:8: MyStruct3 ~> MyStruct1""";
+            {t-project}/module.smooth:2: MyStruct1 ~> MyStruct2
+            {t-project}/module.smooth:5: MyStruct2 ~> MyStruct3
+            {t-project}/module.smooth:8: MyStruct3 ~> MyStruct1""";
         module(code).loadsWithError(error);
       }
     }
@@ -760,7 +755,7 @@ public class VisibilityTest {
               myValue = "abc";
               myValue = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myValue"));
+          module(code).loadsWithError(2, alreadyDefinedIn(moduleFullPath(), "myValue"));
         }
 
         @Test
@@ -770,7 +765,7 @@ public class VisibilityTest {
               myFunc() = "abc";
               myFunc = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myFunc"));
+          module(code).loadsWithError(2, alreadyDefinedIn(moduleFullPath(), "myFunc"));
         }
       }
     }
@@ -819,7 +814,7 @@ public class VisibilityTest {
               myValue = "abc";
               myValue() = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myValue"));
+          module(code).loadsWithError(2, alreadyDefinedIn(moduleFullPath(), "myValue"));
         }
 
         @Test
@@ -829,7 +824,7 @@ public class VisibilityTest {
               myFunc() = "abc";
               myFunc() = "def";
               """;
-          module(code).loadsWithError(2, alreadyDefinedIn(userModuleFullPath(), "myFunc"));
+          module(code).loadsWithError(2, alreadyDefinedIn(moduleFullPath(), "myFunc"));
         }
       }
     }
@@ -844,7 +839,7 @@ public class VisibilityTest {
               String param,
               String param) = "abc";
               """;
-        module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "param"));
+        module(code).loadsWithError(3, alreadyDefinedIn(moduleFullPath(), 2, "param"));
       }
 
       @Nested
@@ -915,7 +910,7 @@ public class VisibilityTest {
               String param,
               String param) -> 7;
               """;
-        module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "param"));
+        module(code).loadsWithError(3, alreadyDefinedIn(moduleFullPath(), 2, "param"));
       }
 
       @Nested
@@ -1006,8 +1001,7 @@ public class VisibilityTest {
               OtherModuleStruct {}
               OtherModuleStruct {}
               """;
-          module(code)
-              .loadsWith(err(2, alreadyDefinedIn(userModuleFullPath(), "OtherModuleStruct")));
+          module(code).loadsWith(err(2, alreadyDefinedIn(moduleFullPath(), "OtherModuleStruct")));
         }
       }
     }
@@ -1023,7 +1017,7 @@ public class VisibilityTest {
               String field
             }
             """;
-        module(code).loadsWithError(3, alreadyDefinedIn(userModuleFullPath(), 2, "field"));
+        module(code).loadsWithError(3, alreadyDefinedIn(moduleFullPath(), 2, "field"));
       }
 
       @Nested

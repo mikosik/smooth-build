@@ -2,18 +2,11 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSelect;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SSelectTest {
+public class SSelectTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
@@ -29,13 +22,13 @@ public class SSelectTest {
                 polymorphicS = SReference(
                   schema = <>MyStruct
                   referencedName = structValue
-                  location = {t-project}/build.smooth:12
+                  location = {t-project}/module.smooth:12
                 )
                 evaluationType = MyStruct{Int field}
-                location = {t-project}/build.smooth:12
+                location = {t-project}/module.smooth:12
               )
               field = field
-              location = {t-project}/build.smooth:3
+              location = {t-project}/module.smooth:3
             )""");
   }
 }

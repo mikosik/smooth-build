@@ -3,23 +3,20 @@ package org.smoothbuild.evaluator;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.location.Locations.unknownLocation;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerbackend.BsMapping;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 
-public class BsTranslatorTest extends BytecodeTestContext {
+public class BsTranslatorTest extends FrontendCompilerTestContext {
   private static final Hash HASH1 = Hash.of(1);
   private static final Hash HASH2 = Hash.of(2);
   private static final Hash HASH3 = Hash.of(3);
   private static final Hash HASH4 = Hash.of(4);
-  private static final BsMapping BS_MAPPING = createBsMapping();
   private static final Hash UNKNOWN_HASH = Hash.of(17);
 
   @Test
@@ -31,14 +28,14 @@ public class BsTranslatorTest extends BytecodeTestContext {
 
   @Test
   void one_elem_trace() {
-    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(bsMapping());
     var trace = bTrace(HASH1, HASH2);
     assertThat(bsTraceTranslator.translate(trace)).isEqualTo(sTrace("name2", location(1)));
   }
 
   @Test
   void two_elem_trace() {
-    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(bsMapping());
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(sTrace("name4", location(3), "name2", location(1)));
@@ -46,7 +43,7 @@ public class BsTranslatorTest extends BytecodeTestContext {
 
   @Test
   void trace_with_unknown_name() {
-    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(bsMapping());
     var trace = bTrace(HASH3, HASH4, bTrace(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(sTrace("name4", location(3), "???", location(1)));
@@ -54,13 +51,13 @@ public class BsTranslatorTest extends BytecodeTestContext {
 
   @Test
   void trace_with_unknown_loc() {
-    var bsTraceTranslator = newBsTranslator(BS_MAPPING);
+    var bsTraceTranslator = newBsTranslator(bsMapping());
     var trace = bTrace(HASH3, HASH4, bTrace(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(sTrace("name4", location(3), "name2", unknownLocation()));
   }
 
-  private static BsMapping createBsMapping() {
+  private BsMapping bsMapping() {
     Map<Hash, String> names = map(
         HASH1, "name1",
         HASH2, "name2",

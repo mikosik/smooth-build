@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.Alias.alias;
 import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Map.map;

@@ -1,18 +1,14 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlobType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTempVar;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTupleType;
-
 import com.google.common.truth.Truth;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class AssertStructuresAreEqualTest {
+public class AssertStructuresAreEqualTest extends FrontendCompilerTestContext {
   @ParameterizedTest
   @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingSExpression#nonCompositeTypes")
   public void concrete_non_composite_types_have_equal_structure_to_itself(SType sType) {

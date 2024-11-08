@@ -12,31 +12,6 @@ import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 import static org.smoothbuild.common.testing.TestingFilesystem.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.bindings;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.intIdSFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sAnnotatedFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBlob;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sBytecodeFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sCombine;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sConstructor;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sLambda;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sNativeAnnotation;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sOrder;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sParamRef;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSelect;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sSig;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sString;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStructType;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sValue;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.varA;
 import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
 import com.google.inject.AbstractModule;
@@ -53,15 +28,15 @@ import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
 
-public class EvaluatorTest extends VmTestContext {
+public class EvaluatorTest extends FrontendCompilerTestContext {
   @Nested
   class _evaluation {
     @Nested
@@ -134,7 +109,7 @@ public class EvaluatorTest extends VmTestContext {
               "f",
               nlist());
           var callS = sCall(sInstantiate(funcS));
-          var buildJar = fullPath(PROJECT, path("build.jar"));
+          var buildJar = fullPath(PROJECT, path("module.jar"));
           var filesystem = injector.getInstance(Filesystem.class);
           saveBytecodeInJar(filesystem, buildJar, list(ReturnAbc.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
@@ -149,7 +124,7 @@ public class EvaluatorTest extends VmTestContext {
               nlist(sItem(sStringType(), "p")));
           var callS = sCall(sInstantiate(funcS), sString("abc"));
           var injector = newInjector();
-          var buildJar = fullPath(PROJECT, path("build.jar"));
+          var buildJar = fullPath(PROJECT, path("module.jar"));
           var filesystem = injector.getInstance(Filesystem.class);
           saveBytecodeInJar(filesystem, buildJar, list(StringIdentity.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
@@ -231,7 +206,7 @@ public class EvaluatorTest extends VmTestContext {
         @Test
         void ann_func() throws Exception {
           var injector = newInjector();
-          var buildJar = fullPath(PROJECT, path("build.jar"));
+          var buildJar = fullPath(PROJECT, path("module.jar"));
           var filesystem = injector.getInstance(Filesystem.class);
           saveBytecodeInJar(filesystem, buildJar, list(ReturnIdFunc.class));
           var binaryName = ReturnIdFunc.class.getName();

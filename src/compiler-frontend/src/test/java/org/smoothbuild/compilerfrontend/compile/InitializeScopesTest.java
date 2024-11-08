@@ -5,20 +5,15 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.compile.InitializeScopes.initializeScopes;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pInt;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pItem;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pLambda;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pModule;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedFunc;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.pNamedValue;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class InitializeScopesTest {
+public class InitializeScopesTest extends FrontendCompilerTestContext {
   @Nested
   class _module {
     @Test

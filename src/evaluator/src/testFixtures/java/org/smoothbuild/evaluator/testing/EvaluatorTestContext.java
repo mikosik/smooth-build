@@ -44,6 +44,7 @@ import org.smoothbuild.common.task.SchedulerWiring;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestApi;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.evaluator.EvaluatorWiring;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
@@ -51,10 +52,10 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestApi;
+import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 
-public class EvaluatorTestContext implements BytecodeTestApi {
+public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private static final FullPath LIB_MODULE_PATH = fullPath(PROJECT, path("libraryModule.smooth"));
   private static final FullPath USER_MODULE_PATH = fullPath(PROJECT, path("userModule.smooth"));
   private List<FullPath> modules;
@@ -193,6 +194,26 @@ public class EvaluatorTestContext implements BytecodeTestApi {
   @Override
   public BytecodeFactory bytecodeF() {
     return injector.getInstance(BytecodeFactory.class);
+  }
+
+  @Override
+  public Scheduler scheduler() {
+    return injector.getInstance(Scheduler.class);
+  }
+
+  @Override
+  public TestReporter reporter() {
+    return injector.getInstance(TestReporter.class);
+  }
+
+  @Override
+  public Bucket projectBucket() {
+    return filesystem.bucketFor(PROJECT);
+  }
+
+  @Override
+  public StepEvaluator stepEvaluator() {
+    return injector.getInstance(StepEvaluator.class);
   }
 
   public Log userFatal(int line, String message) {

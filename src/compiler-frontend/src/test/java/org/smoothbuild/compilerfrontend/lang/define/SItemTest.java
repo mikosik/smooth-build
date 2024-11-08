@@ -3,12 +3,11 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
-import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sStringType;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class SItemTest {
+public class SItemTest extends FrontendCompilerTestContext {
   private final String name = "name";
   private SItem param;
 
@@ -46,7 +45,7 @@ public class SItemTest {
               type = String
               name = name
               defaultValue = None
-              location = {t-project}/build.smooth:11
+              location = {t-project}/module.smooth:11
             )""");
   }
 }
