@@ -41,14 +41,16 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final String FILE_STRUCT_NAME = "File";
   private final Filesystem filesystem;
   private final FullPath artifactsPath;
-  private final FullPath bytecodeDb;
+  private final FullPath bytecodeDbPath;
 
   @Inject
   public SaveArtifacts(
-      Filesystem filesystem, @Artifacts FullPath artifactsPath, @BytecodeDb FullPath bytecodeDb) {
+      Filesystem filesystem,
+      @Artifacts FullPath artifactsPath,
+      @BytecodeDb FullPath bytecodeDbPath) {
     this.filesystem = filesystem;
     this.artifactsPath = artifactsPath;
-    this.bytecodeDb = bytecodeDb;
+    this.bytecodeDbPath = bytecodeDbPath;
   }
 
   @Override
@@ -171,7 +173,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private FullPath targetPath(BValue value) {
-    return bytecodeDb.appendPart(dbPathTo(value.dataHash()).toString());
+    return bytecodeDbPath.appendPart(dbPathTo(value.dataHash()).toString());
   }
 
   private FullPath artifactPath(String name) {
