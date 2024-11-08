@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public final class PNamedArg extends PExpr {
   private final String name;

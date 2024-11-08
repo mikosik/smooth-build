@@ -2,15 +2,15 @@ package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
+import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.location;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sTrace;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerbackend.BsMapping;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
 

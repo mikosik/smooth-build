@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.lang.base.location;
+package org.smoothbuild.common.log.location;
 
 public final class CommandLineLocation implements SourceLocation {
   public static final CommandLineLocation INSTANCE = new CommandLineLocation();

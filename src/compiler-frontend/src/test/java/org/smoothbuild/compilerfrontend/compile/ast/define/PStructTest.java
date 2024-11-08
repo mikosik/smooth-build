@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.internalLocation;
+import static org.smoothbuild.common.log.location.Locations.internalLocation;
 
 import org.junit.jupiter.api.Test;
 

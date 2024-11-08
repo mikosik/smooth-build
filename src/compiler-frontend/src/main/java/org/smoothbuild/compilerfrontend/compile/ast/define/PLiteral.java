@@ -4,7 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public abstract sealed class PLiteral extends PExpr permits PBlob, PInt, PString {
   private final String literal;

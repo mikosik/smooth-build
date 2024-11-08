@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.lang.base.location;
+package org.smoothbuild.common.log.location;
 
 public final class InternalLocation implements Location {
   public static final InternalLocation INSTANCE = new InternalLocation();

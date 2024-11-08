@@ -10,6 +10,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.smoothbuild.common.bindings.MutableBindings;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
@@ -24,7 +25,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 /**
  * For each syntactic construct that implements WithScope

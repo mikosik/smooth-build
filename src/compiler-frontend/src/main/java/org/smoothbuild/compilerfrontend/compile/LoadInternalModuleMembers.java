@@ -7,10 +7,10 @@ import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
 
 import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.location.Locations;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
-import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;

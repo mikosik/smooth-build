@@ -5,7 +5,7 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
+import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sArrayType;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sInstantiate;
 import static org.smoothbuild.compilerfrontend.testing.TestingSExpression.sIntType;

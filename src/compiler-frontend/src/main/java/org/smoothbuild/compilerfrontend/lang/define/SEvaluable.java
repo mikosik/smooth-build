@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import org.smoothbuild.compilerfrontend.lang.base.location.Located;
+import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 /**

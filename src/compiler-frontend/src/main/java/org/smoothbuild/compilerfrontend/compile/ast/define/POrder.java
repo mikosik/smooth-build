@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public final class POrder extends PExpr {
   private final List<PExpr> elements;

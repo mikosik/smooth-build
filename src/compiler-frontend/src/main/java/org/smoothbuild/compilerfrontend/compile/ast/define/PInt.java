@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import static java.lang.Character.isDigit;
 
 import java.math.BigInteger;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public final class PInt extends PLiteral {
   private BigInteger bigInteger;

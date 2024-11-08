@@ -23,10 +23,10 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.common.log.location.Locations;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task2;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
 public class Parse implements Task2<String, FullPath, ModuleContext> {
   @Override

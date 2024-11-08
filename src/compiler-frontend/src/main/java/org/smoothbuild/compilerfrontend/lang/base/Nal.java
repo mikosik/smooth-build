@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.collect.Named;
-import org.smoothbuild.compilerfrontend.lang.base.location.Located;
+import org.smoothbuild.common.log.location.Located;
 
 /**
  * NaL = Name and loc.

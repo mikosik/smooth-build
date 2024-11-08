@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.UnescapeFailedException;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
+import org.smoothbuild.common.log.location.Location;
 
 public final class PString extends PLiteral {
   private String unescaped;

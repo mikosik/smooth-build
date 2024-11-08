@@ -1,12 +1,12 @@
 package org.smoothbuild.evaluator;
 
-import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.unknownLocation;
+import static org.smoothbuild.common.log.location.Locations.unknownLocation;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerbackend.BsMapping;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.STrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;

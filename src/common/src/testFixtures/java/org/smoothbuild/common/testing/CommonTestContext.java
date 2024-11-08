@@ -1,8 +1,12 @@
 package org.smoothbuild.common.testing;
 
 import static com.google.common.base.Suppliers.memoize;
+import static org.smoothbuild.common.bucket.base.Alias.alias;
+import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
+import static org.smoothbuild.common.bucket.base.Path.path;
 
 import com.google.common.base.Supplier;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.task.Scheduler;
 
 public class CommonTestContext {
@@ -28,5 +32,13 @@ public class CommonTestContext {
 
   private TestReporter newTestReporter() {
     return new TestReporter();
+  }
+
+  public FullPath moduleFullPath() {
+    return moduleFullPath("module.smooth");
+  }
+
+  public static FullPath moduleFullPath(String path) {
+    return fullPath(alias("t-alias"), path(path));
   }
 }

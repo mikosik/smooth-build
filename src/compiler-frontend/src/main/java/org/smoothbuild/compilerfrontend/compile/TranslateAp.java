@@ -42,6 +42,8 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.log.base.Logger;
+import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.common.log.location.Locations;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
@@ -68,8 +70,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.location.Locations;
 
 public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
   @Override

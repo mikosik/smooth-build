@@ -1,8 +1,8 @@
 package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
 
 import java.util.ArrayList;

@@ -4,8 +4,8 @@ import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.base.Objects;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
-import org.smoothbuild.compilerfrontend.lang.base.location.Location;
 
 /**
  * Annotation.
