@@ -91,7 +91,7 @@ public class NativeTest extends EvaluatorTestContext {
             """);
         evaluate("result");
         assertThat(logs())
-            .contains(userFatal(1, "Error loading native jar '{t-project}/userModule.jar'."));
+            .contains(userFatal(1, "Error loading native jar '{t-project}/module.jar'."));
       }
 
       @Test
@@ -149,7 +149,7 @@ public class NativeTest extends EvaluatorTestContext {
 
         evaluate("result");
 
-        var sTrace = sTrace("reportError", location(userModuleFullPath(), 3));
+        var sTrace = sTrace("reportError", location(moduleFullPath(), 3));
         var label = label("vm", "evaluate", "invoke");
         var errors = list(error("ERROR MESSAGE"));
         var report = report(label, sTrace, EXECUTION, errors);

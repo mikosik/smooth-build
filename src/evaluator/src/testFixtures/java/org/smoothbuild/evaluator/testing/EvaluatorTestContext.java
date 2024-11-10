@@ -55,8 +55,6 @@ import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 
 public class EvaluatorTestContext implements FrontendCompilerTestApi {
-  private static final FullPath LIB_MODULE_PATH = fullPath(PROJECT, path("libraryModule.smooth"));
-  private static final FullPath USER_MODULE_PATH = fullPath(PROJECT, path("userModule.smooth"));
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
@@ -73,25 +71,26 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
-    try (var sink = buffer(filesystem.sink(LIB_MODULE_PATH.withExtension("jar")))) {
+    var fullPath = fullPath(PROJECT, path("libraryModule.smooth"));
+    try (var sink = buffer(filesystem.sink(fullPath.withExtension("jar")))) {
       try (var source = source(jar)) {
         sink.writeAll(source);
       }
     }
     try (var source = buffer(source(code))) {
-      createFile(filesystem, LIB_MODULE_PATH, source.readUtf8());
+      createFile(filesystem, fullPath, source.readUtf8());
     }
-    modules = modules.append(LIB_MODULE_PATH);
+    modules = modules.append(fullPath);
   }
 
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
     if (classes.length != 0) {
-      try (var sink = filesystem.sink(USER_MODULE_PATH.withExtension("jar"))) {
+      try (var sink = filesystem.sink(moduleFullPath().withExtension("jar"))) {
         saveBytecodeInJar(sink, list(classes));
       }
     }
-    createFile(filesystem, USER_MODULE_PATH, code);
-    modules = modules.append(USER_MODULE_PATH);
+    createFile(filesystem, moduleFullPath(), code);
+    modules = modules.append(moduleFullPath());
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
@@ -224,10 +223,6 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   private String userFileMessage(int line, String message) {
-    return userModuleFullPath() + ":" + line + ": " + message;
-  }
-
-  protected static FullPath userModuleFullPath() {
-    return USER_MODULE_PATH;
+    return moduleFullPath() + ":" + line + ": " + message;
   }
 }
