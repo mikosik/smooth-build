@@ -9,8 +9,6 @@ import static org.smoothbuild.common.bucket.base.PathState.NOTHING;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.common.collect.Set.setOfAll;
-import static org.smoothbuild.common.testing.TestingAlias.ALIAS;
-import static org.smoothbuild.common.testing.TestingAlias.UNKNOWN_ALIAS;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
@@ -24,19 +22,21 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
 
 public class FilesystemTest {
+  public static final Alias UNKNOWN_ALIAS = new Alias("unknown");
+
   @Nested
   class _path_state {
     @Test
     void returns_unknown_when_file_not_exists() {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "file");
+      var path = fullPath(alias(), "file");
       assertThat(filesystem.pathState(path)).isEqualTo(NOTHING);
     }
 
     @Test
     void return_file_when_path_points_to_a_file() throws IOException {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "file");
+      var path = fullPath(alias(), "file");
       createFile(filesystem, path);
       assertThat(filesystem.pathState(path)).isEqualTo(FILE);
     }
@@ -44,7 +44,7 @@ public class FilesystemTest {
     @Test
     void returns_dir_when_path_points_to_a_dir() throws IOException {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "dir");
+      var path = fullPath(alias(), "dir");
       filesystem.createDir(path);
       assertThat(filesystem.pathState(path)).isEqualTo(DIR);
     }
@@ -62,31 +62,31 @@ public class FilesystemTest {
     @Test
     void returns_all_files() throws IOException {
       var filesystem = filesystem();
-      createFile(filesystem, fullPath(ALIAS, "file"));
-      createFile(filesystem, fullPath(ALIAS, "dir/file"));
-      createFile(filesystem, fullPath(ALIAS, "dir/file2"));
-      createFile(filesystem, fullPath(ALIAS, "dir/subdir/file3"));
+      createFile(filesystem, fullPath(alias(), "file"));
+      createFile(filesystem, fullPath(alias(), "dir/file"));
+      createFile(filesystem, fullPath(alias(), "dir/file2"));
+      createFile(filesystem, fullPath(alias(), "dir/subdir/file3"));
 
-      var files = toSet(filesystem.filesRecursively(fullPath(ALIAS, "dir")));
+      var files = toSet(filesystem.filesRecursively(fullPath(alias(), "dir")));
       assertThat(files).isEqualTo(set(path("file"), path("file2"), path("subdir/file3")));
     }
 
     @Test
     void returns_nothing_for_empty_dir() throws IOException {
       var filesystem = filesystem();
-      createFile(filesystem, fullPath(ALIAS, "file"));
-      filesystem.createDir(fullPath(ALIAS, "dir"));
+      createFile(filesystem, fullPath(alias(), "file"));
+      filesystem.createDir(fullPath(alias(), "dir"));
 
-      var files = toSet(filesystem.filesRecursively(fullPath(ALIAS, "dir")));
+      var files = toSet(filesystem.filesRecursively(fullPath(alias(), "dir")));
       assertThat(files).isEqualTo(set());
     }
 
     @Test
     void fails_when_dir_not_exists() throws IOException {
       var filesystem = filesystem();
-      createFile(filesystem, fullPath(ALIAS, "file"));
+      createFile(filesystem, fullPath(alias(), "file"));
 
-      assertCall(() -> filesystem.filesRecursively(fullPath(ALIAS, "dir")))
+      assertCall(() -> filesystem.filesRecursively(fullPath(alias(), "dir")))
           .throwsException(IOException.class);
     }
 
@@ -113,7 +113,7 @@ public class FilesystemTest {
     @Test
     void fails_when_path_not_exists() {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, path("abc"));
+      var path = fullPath(alias(), path("abc"));
       assertCall(() -> filesystem.files(path))
           .throwsException(
               new IOException("Error listing files in '{alias-1}/abc'. Dir 'abc' doesn't exist."));
@@ -131,7 +131,7 @@ public class FilesystemTest {
     @Test
     void fails_when_path_is_a_file() throws Exception {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, path("some/dir/myFile"));
+      var path = fullPath(alias(), path("some/dir/myFile"));
       createFile(filesystem, path);
       assertCall(() -> filesystem.files(path))
           .throwsException(new IOException("Error listing files in '{alias-1}/some/dir/myFile'. "
@@ -141,12 +141,12 @@ public class FilesystemTest {
     @Test
     void returns_all_children() throws Exception {
       var filesystem = filesystem();
-      createFile(filesystem, fullPath(ALIAS, "file"));
-      createFile(filesystem, fullPath(ALIAS, "dir/file"));
-      createFile(filesystem, fullPath(ALIAS, "dir/file2"));
-      createFile(filesystem, fullPath(ALIAS, "dir/subdir/file3"));
+      createFile(filesystem, fullPath(alias(), "file"));
+      createFile(filesystem, fullPath(alias(), "dir/file"));
+      createFile(filesystem, fullPath(alias(), "dir/file2"));
+      createFile(filesystem, fullPath(alias(), "dir/subdir/file3"));
 
-      var files = setOfAll(filesystem.files(fullPath(ALIAS, "dir")));
+      var files = setOfAll(filesystem.files(fullPath(alias(), "dir")));
       assertThat(files).containsExactly(path("file"), path("file2"), path("subdir"));
     }
   }
@@ -156,8 +156,8 @@ public class FilesystemTest {
     @Test
     void fails_when_source_not_exists() {
       var filesystem = filesystem();
-      var source = fullPath(ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var source = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
       assertCall(() -> filesystem.move(source, target))
           .throwsException(new IOException("Error moving '{alias-1}/source' to '{alias-1}/target'. "
               + "Cannot move 'source'. It doesn't exist."));
@@ -167,7 +167,7 @@ public class FilesystemTest {
     void fails_when_source_bucket_and_target_bucket_are_different() {
       var filesystem = filesystem();
       var source = fullPath(UNKNOWN_ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var target = fullPath(alias(), "target");
       assertCall(() -> filesystem.move(source, target))
           .throwsException(new IllegalArgumentException(
               "Alias 'unknown' in source is different from alias 'alias-1' in target."));
@@ -186,8 +186,8 @@ public class FilesystemTest {
     @Test
     void fails_when_source_is_a_dir() throws Exception {
       var filesystem = filesystem();
-      var source = fullPath(ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var source = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
       filesystem.createDir(source);
 
       assertCall(() -> filesystem.move(source, target))
@@ -198,8 +198,8 @@ public class FilesystemTest {
     @Test
     void fails_when_target_is_a_dir() throws IOException {
       var filesystem = filesystem();
-      var source = fullPath(ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var source = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
       filesystem.createDir(target);
       assertCall(() -> filesystem.move(source, target))
           .throwsException(new IOException("Error moving '{alias-1}/source' to '{alias-1}/target'. "
@@ -209,8 +209,8 @@ public class FilesystemTest {
     @Test
     void deletes_source_file() throws Exception {
       var filesystem = filesystem();
-      var source = fullPath(ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var source = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
       createFile(filesystem, source);
 
       filesystem.move(source, target);
@@ -221,8 +221,8 @@ public class FilesystemTest {
     @Test
     void copies_file_content_to_target() throws Exception {
       var filesystem = filesystem();
-      var source = fullPath(ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var source = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
       createFile(filesystem, source, "abc");
 
       filesystem.move(source, target);
@@ -233,8 +233,8 @@ public class FilesystemTest {
     @Test
     void overwrites_target_file() throws Exception {
       var filesystem = filesystem();
-      var source = fullPath(ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var source = fullPath(alias(), "source");
+      var target = fullPath(alias(), "target");
       createFile(filesystem, source, "abc");
       createFile(filesystem, target, "def");
 
@@ -249,7 +249,7 @@ public class FilesystemTest {
     @Test
     void directory_removes_it_and_its_files_recursively() throws Exception {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, path("some/dir"));
+      var dir = fullPath(alias(), path("some/dir"));
       var file1 = dir.append(path("myFile"));
       var file2 = dir.append(path("dir2/myFile"));
       createFile(filesystem, file1);
@@ -264,7 +264,7 @@ public class FilesystemTest {
     @Test
     void file_removes_it() throws Exception {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, path("some/dir"));
+      var dir = fullPath(alias(), path("some/dir"));
       var file = dir.append(path("myFile"));
       createFile(filesystem, file);
 
@@ -276,7 +276,7 @@ public class FilesystemTest {
     @Test
     void not_fails_when_path_not_exists() throws Exception {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, path("file"));
+      var path = fullPath(alias(), path("file"));
 
       filesystem.delete(path);
 
@@ -296,12 +296,12 @@ public class FilesystemTest {
     @Test
     void root_path_removes_all_files() throws Exception {
       var filesystem = filesystem();
-      var file1 = fullPath(ALIAS, path("some/dir/myFile"));
-      var file2 = fullPath(ALIAS, path("other/dir/otherFile"));
+      var file1 = fullPath(alias(), path("some/dir/myFile"));
+      var file2 = fullPath(alias(), path("other/dir/otherFile"));
       createFile(filesystem, file1);
       createFile(filesystem, file2);
 
-      filesystem.delete(fullPath(ALIAS, Path.root()));
+      filesystem.delete(fullPath(alias(), Path.root()));
 
       assertThat(filesystem.pathState(file1)).isEqualTo(NOTHING);
       assertThat(filesystem.pathState(file2)).isEqualTo(NOTHING);
@@ -310,8 +310,8 @@ public class FilesystemTest {
     @Test
     void link_removes_it_but_not_target_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, path("some/dir/myFile"));
-      var link = fullPath(ALIAS, path("myLink"));
+      var file = fullPath(alias(), path("some/dir/myFile"));
+      var link = fullPath(alias(), path("myLink"));
       createFile(filesystem, file);
       filesystem.createLink(link, file);
 
@@ -324,9 +324,9 @@ public class FilesystemTest {
     @Test
     void link_to_directory_not_removes_target_directory_nor_file_it_contains() throws Exception {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, path("some/dir"));
+      var dir = fullPath(alias(), path("some/dir"));
       var file = dir.append("myFile");
-      var link = fullPath(ALIAS, path("myLink"));
+      var link = fullPath(alias(), path("myLink"));
       createFile(filesystem, file);
       filesystem.createLink(link, dir);
 
@@ -343,7 +343,7 @@ public class FilesystemTest {
     @Test
     void returns_zero_for_empty_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "file");
+      var file = fullPath(alias(), "file");
       createFile(filesystem, file);
 
       assertThat(filesystem.size(file)).isEqualTo(0);
@@ -352,7 +352,7 @@ public class FilesystemTest {
     @Test
     void returns_file_size() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "file");
+      var file = fullPath(alias(), "file");
       createFile(filesystem, file, "abc");
 
       assertThat(filesystem.size(file)).isEqualTo(3);
@@ -361,7 +361,7 @@ public class FilesystemTest {
     @Test
     void reading_size_of_dir_causes_exception() throws Exception {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "dir");
+      var path = fullPath(alias(), "dir");
       filesystem.createDir(path);
 
       assertCall(() -> filesystem.size(path))
@@ -372,7 +372,7 @@ public class FilesystemTest {
     @Test
     void fails_when_path_not_exists() {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "dir");
+      var path = fullPath(alias(), "dir");
       assertCall(() -> filesystem.size(path)).throwsException(IOException.class);
     }
 
@@ -386,8 +386,8 @@ public class FilesystemTest {
     @Test
     void returns_size_of_target_file_for_link() throws IOException {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, path("some/dir/myFile"));
-      var link = fullPath(ALIAS, path("myLink"));
+      var file = fullPath(alias(), path("some/dir/myFile"));
+      var link = fullPath(alias(), path("myLink"));
       createFile(filesystem, file, "abc");
       filesystem.createLink(link, file);
 
@@ -397,8 +397,8 @@ public class FilesystemTest {
     @Test
     void reading_size_of_link_that_targets_dir_causes_exception() throws IOException {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, path("some/dir"));
-      var link = fullPath(ALIAS, path("myLink"));
+      var dir = fullPath(alias(), path("some/dir"));
+      var link = fullPath(alias(), path("myLink"));
       filesystem.createDir(dir);
       filesystem.createLink(link, dir);
 
@@ -414,7 +414,7 @@ public class FilesystemTest {
     @Test
     void provides_content_of_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "file");
+      var file = fullPath(alias(), "file");
       createFile(filesystem, file, "abc");
 
       assertThat(readFile(filesystem, file)).isEqualTo(byteString("abc"));
@@ -423,8 +423,8 @@ public class FilesystemTest {
     @Test
     void provides_content_of_target_file_for_a_link() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "file");
-      var link = fullPath(ALIAS, "myLink");
+      var file = fullPath(alias(), "file");
+      var link = fullPath(alias(), "myLink");
       createFile(filesystem, file, "abc");
       filesystem.createLink(link, file);
 
@@ -435,8 +435,8 @@ public class FilesystemTest {
     void provides_file_content_of_file_when_one_part_of_path_is_link_to_directory()
         throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "some/dir/myFile");
-      var link = fullPath(ALIAS, "myLink");
+      var file = fullPath(alias(), "some/dir/myFile");
+      var link = fullPath(alias(), "myLink");
       createFile(filesystem, file, "abc");
       filesystem.createLink(link, file.parent());
 
@@ -446,7 +446,7 @@ public class FilesystemTest {
     @Test
     void fails_when_file_not_exists() {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "myFile");
+      var file = fullPath(alias(), "myFile");
       assertCall(() -> readFile(filesystem, file))
           .throwsException(new IOException(
               "Error reading file '{alias-1}/myFile'. File 'myFile' doesn't exist."));
@@ -455,7 +455,7 @@ public class FilesystemTest {
     @Test
     void fails_when_bucket_not_exists() {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "myFile");
+      var file = fullPath(alias(), "myFile");
       assertCall(() -> readFile(filesystem, file))
           .throwsException(new IOException(
               "Error reading file '{alias-1}/myFile'. File 'myFile' doesn't exist."));
@@ -464,7 +464,7 @@ public class FilesystemTest {
     @Test
     void fails_when_path_is_dir() throws Exception {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, "dir");
+      var dir = fullPath(alias(), "dir");
       filesystem.createDir(dir);
       assertCall(() -> readFile(filesystem, dir))
           .throwsException(new IOException(
@@ -477,7 +477,7 @@ public class FilesystemTest {
     @Test
     void data_written_by_sink_can_be_read_by_source() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "myFile");
+      var file = fullPath(alias(), "myFile");
       var content = byteString("abc");
 
       writeFile(filesystem, file, content);
@@ -487,7 +487,7 @@ public class FilesystemTest {
     @Test
     void data_written_to_sink_overwrites_existing_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "myFile");
+      var file = fullPath(alias(), "myFile");
       var content = byteString("abc");
       var content2 = byteString("def");
 
@@ -499,7 +499,7 @@ public class FilesystemTest {
     @Test
     void fails_when_parent_directory_not_exists() {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "dir/myFile");
+      var file = fullPath(alias(), "dir/myFile");
 
       assertCall(() -> filesystem.sink(file))
           .throwsException(new IOException("Error writing file '{alias-1}/dir/myFile'. 'dir'"));
@@ -516,7 +516,7 @@ public class FilesystemTest {
     @Test
     void fails_when_path_is_a_directory() throws Exception {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, "dir");
+      var dir = fullPath(alias(), "dir");
       filesystem.createDir(dir);
       assertCall(() -> filesystem.sink(dir)).throwsException(IOException.class);
     }
@@ -524,8 +524,8 @@ public class FilesystemTest {
     @Test
     void fails_when_parent_is_link_targeting_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "some/dir/myFile");
-      var link = fullPath(ALIAS, "myLink");
+      var file = fullPath(alias(), "some/dir/myFile");
+      var link = fullPath(alias(), "myLink");
       createFile(filesystem, file);
       filesystem.createLink(link, file);
 
@@ -536,8 +536,8 @@ public class FilesystemTest {
     @Test
     void succeeds_when_parent_is_link_targeting_directory() throws Exception {
       var filesystem = filesystem();
-      var dir = fullPath(ALIAS, "some/dir/myFile");
-      var link = fullPath(ALIAS, "myLink");
+      var dir = fullPath(alias(), "some/dir/myFile");
+      var link = fullPath(alias(), "myLink");
       filesystem.createDir(dir);
       filesystem.createLink(link, dir);
       var newFile = link.appendPart("newFile");
@@ -551,7 +551,7 @@ public class FilesystemTest {
     @Test
     void fails_when_parent_exists_and_is_a_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "dir/myFile");
+      var file = fullPath(alias(), "dir/myFile");
 
       createFile(filesystem, file);
       var path = file.append(path("otherFile"));
@@ -566,8 +566,8 @@ public class FilesystemTest {
     @Test
     void fails_when_link_parent_directory_not_exists() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "some/dir/myFile");
-      var link = fullPath(ALIAS, "missing_directory/myLink");
+      var file = fullPath(alias(), "some/dir/myFile");
+      var link = fullPath(alias(), "missing_directory/myLink");
 
       createFile(filesystem, file);
 
@@ -580,8 +580,8 @@ public class FilesystemTest {
     @Test
     void fails_when_link_path_is_taken_by_file() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "some/dir/myFile");
-      var link = fullPath(ALIAS, "myLink");
+      var file = fullPath(alias(), "some/dir/myFile");
+      var link = fullPath(alias(), "myLink");
 
       createFile(filesystem, file);
       createFile(filesystem, link);
@@ -595,8 +595,8 @@ public class FilesystemTest {
     @Test
     void fails_when_link_path_is_taken_by_dir() throws Exception {
       var filesystem = filesystem();
-      var file = fullPath(ALIAS, "some/dir/myFile");
-      var link = fullPath(ALIAS, "myLink");
+      var file = fullPath(alias(), "some/dir/myFile");
+      var link = fullPath(alias(), "myLink");
       createFile(filesystem, file);
       filesystem.createDir(link);
 
@@ -610,7 +610,7 @@ public class FilesystemTest {
     void fails_when_link_bucket_and_target_bucket_are_different() {
       var filesystem = filesystem();
       var link = fullPath(UNKNOWN_ALIAS, "source");
-      var target = fullPath(ALIAS, "target");
+      var target = fullPath(alias(), "target");
       assertCall(() -> filesystem.createLink(link, target))
           .throwsException(new IllegalArgumentException(
               "Alias 'unknown' in source is different from alias 'alias-1' in target."));
@@ -632,7 +632,7 @@ public class FilesystemTest {
     @Test
     void creates_directory() throws Exception {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "dir/subdir");
+      var path = fullPath(alias(), "dir/subdir");
 
       filesystem.createDir(path);
 
@@ -642,7 +642,7 @@ public class FilesystemTest {
     @Test
     void not_fails_when_directory_exists() throws Exception {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "dir/subdir");
+      var path = fullPath(alias(), "dir/subdir");
 
       filesystem.createDir(path);
       filesystem.createDir(path);
@@ -653,7 +653,7 @@ public class FilesystemTest {
     @Test
     void fails_when_file_at_given_path_exists() throws Exception {
       var filesystem = filesystem();
-      var path = fullPath(ALIAS, "dir/file");
+      var path = fullPath(alias(), "dir/file");
 
       createFile(filesystem, path);
 
@@ -674,6 +674,10 @@ public class FilesystemTest {
   }
 
   private static Filesystem filesystem() {
-    return new Filesystem(map(ALIAS, new MemoryBucket()));
+    return new Filesystem(map(alias(), new MemoryBucket()));
+  }
+
+  private static Alias alias() {
+    return new Alias("alias-1");
   }
 }

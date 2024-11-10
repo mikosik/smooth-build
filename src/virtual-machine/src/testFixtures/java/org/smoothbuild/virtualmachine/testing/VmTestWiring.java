@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
+import static org.smoothbuild.virtualmachine.testing.VmTestApi.PROJECT;
 import static org.smoothbuild.virtualmachine.testing.VmTestContext.BYTECODE_DB_PATH;
 import static org.smoothbuild.virtualmachine.testing.VmTestContext.COMPUTATION_DB_PATH;
 import static org.smoothbuild.virtualmachine.testing.VmTestContext.PROJECT_PATH;
