@@ -5,11 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
-import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.testing.TestingAlias.ALIAS;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
@@ -77,14 +74,14 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
         @Test
         void declaring_mono_native_value_fails() throws Exception {
-          var fullPath = fullPath(ALIAS, path("my/path"));
+          var path = moduleFullPath();
           var classBinaryName = "class.binary.name";
-          var nativeAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
+          var nativeAnnotation = sNativeAnnotation(location(path, 1), sString(classBinaryName));
           var nativeValueS =
-              sAnnotatedValue(nativeAnnotation, sStringType(), "myValue", location(fullPath, 2));
+              sAnnotatedValue(nativeAnnotation, sStringType(), "myValue", location(path, 2));
 
           var jar = bBlob(37);
-          var fileContentReader = fileContentReaderMock(fullPath.withExtension("jar"), jar);
+          var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
           var translator = sbTranslator(fileContentReader, bindings(nativeValueS));
 
           assertCall(() -> translator.translateExpr(sInstantiate(nativeValueS)))
@@ -94,14 +91,13 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         @Test
         void mono_bytecode_value() throws Exception {
           var clazz = ReturnAbc.class;
-          var fullPath = fullPath(ALIAS, path("my/path"));
+          var path = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
-          var bytecodeValueS =
-              sAnnotatedValue(ann, sStringType(), "myValue", location(fullPath, 2));
+          var ann = sBytecode(sString(classBinaryName), location(path, 1));
+          var bytecodeValueS = sAnnotatedValue(ann, sStringType(), "myValue", location(path, 2));
 
           var fileContentReader =
-              fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
               fileContentReader,
               bindings(bytecodeValueS),
@@ -163,10 +159,10 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
         @Test
         void mono_native_function() throws Exception {
-          var fullPath = fullPath(ALIAS, path("my/path"));
+          var path = moduleFullPath();
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
-          var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
+          var sAnnotation = sNativeAnnotation(location(path, 1), sString(classBinaryName));
           var sNativeFunc =
               sAnnotatedFunc(sAnnotation, sIntType(), "myFunc", nlist(sItem(sBlobType())));
 
@@ -177,7 +173,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
               bCombine(bReference(bBlobType(), 0)));
           var bLambda = bLambda(list(bBlobType()), bInvoke);
 
-          var fileContentReader = fileContentReaderMock(fullPath.withExtension("jar"), jar);
+          var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
           assertTranslation(
               fileContentReader, bindings(sNativeFunc), sInstantiate(sNativeFunc), bLambda);
         }
@@ -185,10 +181,10 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         @Test
         void poly_native_function() throws Exception {
           var a = varA();
-          var fullPath = fullPath(ALIAS, path("my/path"));
+          var path = moduleFullPath();
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
-          var annotationS = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
+          var annotationS = sNativeAnnotation(location(path, 1), sString(classBinaryName));
           var sNativeFunc = sAnnotatedFunc(annotationS, a, "myIdentity", nlist(sItem(a, "param")));
 
           var bInvoke = bInvoke(
@@ -198,7 +194,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
               bCombine(bReference(bIntType(), 0)));
           var bLambda = bLambda(list(bIntType()), bInvoke);
 
-          var fileContentReader = fileContentReaderMock(fullPath.withExtension("jar"), jar);
+          var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
           var instantiateS = sInstantiate(list(sIntType()), sNativeFunc);
           assertTranslation(fileContentReader, bindings(sNativeFunc), instantiateS, bLambda);
         }
@@ -206,14 +202,14 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         @Test
         void mono_bytecode_function() throws Exception {
           var clazz = ReturnReturnAbcFunc.class;
-          var fullPath = fullPath(ALIAS, path("my/path"));
+          var path = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var annotationS = sBytecode(sString(classBinaryName), location(fullPath, 1));
+          var annotationS = sBytecode(sString(classBinaryName), location(path, 1));
           var bytecodeFuncS =
-              sAnnotatedFunc(annotationS, sStringType(), "myFunc", nlist(), location(fullPath, 2));
+              sAnnotatedFunc(annotationS, sStringType(), "myFunc", nlist(), location(path, 2));
 
           var fileContentReader =
-              fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+              fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
               fileContentReader,
               bindings(bytecodeFuncS),
@@ -533,12 +529,12 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     @Test
     void bytecode_value_translation_result() throws Exception {
       var clazz = ReturnAbc.class;
-      var fullPath = fullPath(ALIAS, path("my/path"));
+      var path = moduleFullPath();
       var classBinaryName = clazz.getCanonicalName();
-      var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
-      var bytecodeValueS = sAnnotatedValue(ann, sStringType(), "myFunc", location(fullPath, 2));
+      var ann = sBytecode(sString(classBinaryName), location(path, 1));
+      var bytecodeValueS = sAnnotatedValue(ann, sStringType(), "myFunc", location(path, 2));
       var fileContentReader =
-          fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
       assertTranslationIsCached(
           fileContentReader, bindings(bytecodeValueS), sInstantiate(bytecodeValueS));
@@ -559,13 +555,12 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     @Test
     void bytecode_function_translation_result() throws Exception {
       var clazz = ReturnReturnAbcFunc.class;
-      var fullPath = fullPath(ALIAS, path("my/path"));
+      var path = moduleFullPath();
       var classBinaryName = clazz.getCanonicalName();
-      var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
-      var bytecodeFuncS =
-          sAnnotatedFunc(ann, sStringType(), "myFunc", nlist(), location(fullPath, 2));
+      var ann = sBytecode(sString(classBinaryName), location(path, 1));
+      var bytecodeFuncS = sAnnotatedFunc(ann, sStringType(), "myFunc", nlist(), location(path, 2));
       var fileContentReader =
-          fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
       assertTranslationIsCached(
           fileContentReader, bindings(bytecodeFuncS), sInstantiate(bytecodeFuncS));

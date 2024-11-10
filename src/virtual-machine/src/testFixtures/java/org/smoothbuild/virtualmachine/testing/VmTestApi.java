@@ -6,9 +6,9 @@ import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
-import static org.smoothbuild.common.testing.TestingAlias.PROJECT;
 
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
@@ -47,10 +47,11 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public interface VmTestApi extends BytecodeTestApi {
-  FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
-  FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
-  FullPath BYTECODE_DB_PATH = PROJECT.append(".smooth/bytecode");
-  FullPath ARTIFACTS_PATH = PROJECT.append(".smooth/artifacts");
+  public static Alias PROJECT = new Alias("t-project");
+  public static FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
+  public static FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
+  public static FullPath BYTECODE_DB_PATH = PROJECT.append(".smooth/bytecode");
+  public static FullPath ARTIFACTS_PATH = PROJECT.append(".smooth/artifacts");
 
   public Bucket projectBucket();
 
