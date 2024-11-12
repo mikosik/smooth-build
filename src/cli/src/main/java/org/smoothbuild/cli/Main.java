@@ -4,7 +4,7 @@ import static org.smoothbuild.common.Constants.CHARSET;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import org.smoothbuild.cli.command.SmoothCommand;
+import org.smoothbuild.cli.command.base.SmoothCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.IParameterExceptionHandler;
 import picocli.CommandLine.Model.CommandSpec;

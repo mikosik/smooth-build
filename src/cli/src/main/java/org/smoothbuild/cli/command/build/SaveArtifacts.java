@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.run;
+package org.smoothbuild.cli.command.build;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;

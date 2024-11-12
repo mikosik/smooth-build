@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.base;
 
 import static org.smoothbuild.cli.Main.EXIT_CODE_ERROR;
 import static org.smoothbuild.cli.Main.EXIT_CODE_SUCCESS;
@@ -10,7 +10,6 @@ import static org.smoothbuild.common.log.report.Report.report;
 
 import jakarta.inject.Inject;
 import java.util.function.Function;
-import org.smoothbuild.cli.report.StatusPrinter;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;

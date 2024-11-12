@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.run;
+package org.smoothbuild.cli.command.base;
 
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.cli.layout.Aliases.INSTALL_ALIAS;

@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

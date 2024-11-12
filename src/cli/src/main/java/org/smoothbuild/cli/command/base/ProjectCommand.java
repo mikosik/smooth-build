@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.base;
 
 import static org.smoothbuild.cli.Main.EXIT_CODE_ERROR;
 import static org.smoothbuild.common.io.LockFile.lockFile;

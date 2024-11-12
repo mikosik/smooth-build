@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.run;
+package org.smoothbuild.cli.command.clean;
 
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.task.Output.output;

@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.run;
+package org.smoothbuild.cli.command.list;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;

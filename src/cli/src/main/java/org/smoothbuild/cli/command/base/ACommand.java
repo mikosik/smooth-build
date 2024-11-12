@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.base;
 
 import java.io.PrintWriter;
 import picocli.CommandLine.Command;

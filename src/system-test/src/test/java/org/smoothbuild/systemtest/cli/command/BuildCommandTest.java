@@ -8,7 +8,7 @@ import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.cli.command.BuildCommand;
+import org.smoothbuild.cli.command.build.BuildCommand;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestContext;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;

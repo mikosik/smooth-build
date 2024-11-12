@@ -1,9 +1,10 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.list;
 
-import static org.smoothbuild.cli.run.CreateInjector.createInjector;
+import static org.smoothbuild.cli.command.base.CreateInjector.createInjector;
 
 import java.nio.file.Path;
-import org.smoothbuild.cli.run.ScheduleList;
+import org.smoothbuild.cli.command.base.CommandRunner;
+import org.smoothbuild.cli.command.base.ProjectCommand;
 import picocli.CommandLine.Command;
 
 @Command(
