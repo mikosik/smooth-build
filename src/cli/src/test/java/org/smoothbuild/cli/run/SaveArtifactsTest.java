@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.report.Trace;
@@ -33,6 +34,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 
 public class SaveArtifactsTest extends FrontendCompilerTestContext {
+  private static final FullPath ARTIFACTS_PATH = PROJECT.append(".smooth/artifacts");
+
   @Test
   void store_bool_artifact() throws Exception {
     var typeS = sBoolType();
