@@ -79,6 +79,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.JarClassLoaderFactory;
 import org.smoothbuild.virtualmachine.bytecode.load.MethodLoader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
+import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCacheInitializer;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
@@ -193,7 +194,7 @@ public interface VmTestApi extends CommonTestApi {
 
   public default ComputationCache computationCache() {
     var computationCache = new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
-    throwExceptionOnFailure(computationCache.execute());
+    throwExceptionOnFailure(new ComputationCacheInitializer(computationCache).execute());
     return computationCache;
   }
 
