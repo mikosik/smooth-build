@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class BTraceTest extends BytecodeTestContext {
+public class BTraceTest extends VmTestContext {
   @Test
   void to_string() {
     var trace = bTrace(Hash.of(7), Hash.of(9), bTrace(Hash.of(17), Hash.of(19)));

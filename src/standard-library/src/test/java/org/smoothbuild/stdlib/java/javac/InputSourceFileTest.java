@@ -7,9 +7,9 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class InputSourceFileTest extends BytecodeTestContext {
+public class InputSourceFileTest extends VmTestContext {
   @Test
   void get_char_content_returns_file_content() throws Exception {
     Path path = path("my/path");

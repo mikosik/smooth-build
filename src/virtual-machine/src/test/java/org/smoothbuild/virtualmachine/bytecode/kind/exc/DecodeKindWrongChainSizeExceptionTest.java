@@ -5,9 +5,9 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class DecodeKindWrongChainSizeExceptionTest extends BytecodeTestContext {
+public class DecodeKindWrongChainSizeExceptionTest extends VmTestContext {
   @Test
   void message() {
     var exception = new DecodeKindWrongChainSizeException(Hash.of(123), INT, "node-path", 7, 2);

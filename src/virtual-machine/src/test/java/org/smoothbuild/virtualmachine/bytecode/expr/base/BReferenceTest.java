@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class BReferenceTest extends BytecodeTestContext {
+public class BReferenceTest extends VmTestContext {
   @Test
   void type_of_var_expr_is_var_type() throws Exception {
     assertThat(bReference(bIntType(), 123).kind()).isEqualTo(bReferenceKind(bIntType()));

@@ -67,9 +67,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindException;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class BExprCorruptedTest extends BytecodeTestContext {
+public class BExprCorruptedTest extends VmTestContext {
   @Nested
   class _expr {
     @Test

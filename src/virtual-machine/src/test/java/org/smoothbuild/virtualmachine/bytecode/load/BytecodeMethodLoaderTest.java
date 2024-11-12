@@ -17,7 +17,7 @@ import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonStaticMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
@@ -25,7 +25,7 @@ import org.smoothbuild.virtualmachine.testing.func.bytecode.WithNonValueResult;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.WithThreeParams;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.WithoutBytecodeF;
 
-public class BytecodeMethodLoaderTest extends BytecodeTestContext {
+public class BytecodeMethodLoaderTest extends VmTestContext {
   @Nested
   class _caching {
     @Test
