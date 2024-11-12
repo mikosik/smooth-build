@@ -1,14 +1,13 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
-public class VisibilityTest extends FrontendCompilerTestContext {
+public class VisibilityTest extends FrontendCompileTester {
   @Nested
   class _visibility {
     @Nested

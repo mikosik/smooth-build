@@ -1,12 +1,10 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
-public class SExprUsageTest extends FrontendCompilerTestContext {
+public class SExprUsageTest extends FrontendCompileTester {
   @Nested
   class _blob_literal_used_as {
     @Test

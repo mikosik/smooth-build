@@ -35,131 +35,140 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class FrontendCompileTester extends FrontendCompilerTestContext {
-  private final String sourceCode;
-  private String importedSourceCode;
-  private Try<SModule> moduleS;
-
-  public static FrontendCompileTester module(String sourceCode) {
-    return new FrontendCompileTester(sourceCode);
+  public Api module(String sourceCode) {
+    return new Api(sourceCode);
   }
 
-  private FrontendCompileTester(String sourceCode) {
-    this.sourceCode = sourceCode;
-  }
+  public class Api {
 
-  public FrontendCompileTester withImported(String imported) {
-    this.importedSourceCode = imported;
-    return this;
-  }
+    private final String sourceCode;
+    private String importedSourceCode;
+    private Try<SModule> moduleS;
 
-  public FrontendCompileTester loadsWithSuccess() {
-    moduleS = loadModule();
-    assertWithMessage(messageWithSourceCode()).that(moduleS.logs()).isEmpty();
-    return this;
-  }
-
-  public void containsEvaluable(SNamedEvaluable expected) {
-    String name = expected.name();
-    var actual = assertContainsEvaluable(name);
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  public void containsEvaluableWithSchema(String name, SchemaS expectedT) {
-    var referenceable = assertContainsEvaluable(name);
-    assertThat(referenceable.schema()).isEqualTo(expectedT);
-  }
-
-  private SNamedEvaluable assertContainsEvaluable(String name) {
-    var evaluables = moduleS.get().members().evaluables();
-    assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(evaluables.contains(name))
-        .isTrue();
-    return evaluables.get(name);
-  }
-
-  public void containsType(SType expected) {
-    var name = expected.name();
-    var types = moduleS.get().members().types();
-    assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-        .that(types.contains(name))
-        .isTrue();
-    SType actual = types.get(name).type();
-    assertWithMessage("Module contains type '" + name + "', but").that(actual).isEqualTo(expected);
-  }
-
-  public SModule getLoadedModule() {
-    return moduleS.get();
-  }
-
-  public void loadsWithProblems() {
-    var module = loadModule();
-    assertWithMessage(messageWithSourceCode())
-        .that(containsFailure(module.logs()))
-        .isTrue();
-  }
-
-  public void loadsWithError(int line, String message) {
-    loadsWith(err(line, message));
-  }
-
-  public void loadsWithError(String message) {
-    loadsWith(error(message));
-  }
-
-  public void loadsWith(Log... logs) {
-    var module = loadModule();
-    assertWithMessage(messageWithSourceCode()).that(module.logs()).containsExactlyElementsIn(logs);
-  }
-
-  private String messageWithSourceCode() {
-    return "For source code = "
-        + "\n====================\n"
-        + sourceCode
-        + "\n====================\n";
-  }
-
-  private Try<SModule> loadModule() {
-    var projectBucket = new SynchronizedBucket(new MemoryBucket());
-    Map<Alias, Bucket> buckets = map(PROJECT, projectBucket);
-    var filesystem = new Filesystem(buckets);
-    var testReporter = new TestReporter();
-
-    var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(Reporter.class).toInstance(testReporter);
-        install(new SchedulerWiring());
-      }
-
-      @Provides
-      public Filesystem provideFilesystem() {
-        return filesystem;
-      }
-    });
-    writeModuleFilesToBuckets(buckets);
-    var scheduler = injector.getInstance(Scheduler.class);
-    var paths = list(standardLibraryModulePath(), moduleFullPath());
-    var module = scheduler.submit(FrontendCompile.class, argument(paths));
-    await().until(() -> module.toMaybe().isSome());
-    return Try.of(module.get().getOr(null), testReporter.logs());
-  }
-
-  private void writeModuleFilesToBuckets(Map<Alias, Bucket> buckets) {
-    writeModuleFile(
-        buckets, standardLibraryModulePath(), importedSourceCode == null ? "" : importedSourceCode);
-    writeModuleFile(buckets, moduleFullPath(), sourceCode);
-  }
-
-  private static void writeModuleFile(
-      Map<Alias, Bucket> buckets, FullPath fullPath, String content) {
-    try {
-      createFile(buckets.get(fullPath.alias()), fullPath.path(), content);
-    } catch (IOException e) {
-      throw new RuntimeException("Can't happen for MemoryBucket.", e);
+    private Api(String sourceCode) {
+      this.sourceCode = sourceCode;
     }
-  }
 
-  private FullPath standardLibraryModulePath() {
-    return PROJECT.append("std_lib.smooth");
+    public Api withImported(String imported) {
+      this.importedSourceCode = imported;
+      return this;
+    }
+
+    public Api loadsWithSuccess() {
+      moduleS = loadModule();
+      assertWithMessage(messageWithSourceCode()).that(moduleS.logs()).isEmpty();
+      return this;
+    }
+
+    public void containsEvaluable(SNamedEvaluable expected) {
+      String name = expected.name();
+      var actual = assertContainsEvaluable(name);
+      assertThat(actual).isEqualTo(expected);
+    }
+
+    public void containsEvaluableWithSchema(String name, SchemaS expectedT) {
+      var referenceable = assertContainsEvaluable(name);
+      assertThat(referenceable.schema()).isEqualTo(expectedT);
+    }
+
+    private SNamedEvaluable assertContainsEvaluable(String name) {
+      var evaluables = moduleS.get().members().evaluables();
+      assertWithMessage("Module doesn't contain '" + name + "'.")
+          .that(evaluables.contains(name))
+          .isTrue();
+      return evaluables.get(name);
+    }
+
+    public void containsType(SType expected) {
+      var name = expected.name();
+      var types = moduleS.get().members().types();
+      assertWithMessage("Module doesn't contain value with '" + name + "' type.")
+          .that(types.contains(name))
+          .isTrue();
+      SType actual = types.get(name).type();
+      assertWithMessage("Module contains type '" + name + "', but")
+          .that(actual)
+          .isEqualTo(expected);
+    }
+
+    public SModule getLoadedModule() {
+      return moduleS.get();
+    }
+
+    public void loadsWithProblems() {
+      var module = loadModule();
+      assertWithMessage(messageWithSourceCode())
+          .that(containsFailure(module.logs()))
+          .isTrue();
+    }
+
+    public void loadsWithError(int line, String message) {
+      loadsWith(err(line, message));
+    }
+
+    public void loadsWithError(String message) {
+      loadsWith(error(message));
+    }
+
+    public void loadsWith(Log... logs) {
+      var module = loadModule();
+      assertWithMessage(messageWithSourceCode())
+          .that(module.logs())
+          .containsExactlyElementsIn(logs);
+    }
+
+    private String messageWithSourceCode() {
+      return "For source code = "
+          + "\n====================\n"
+          + sourceCode
+          + "\n====================\n";
+    }
+
+    private Try<SModule> loadModule() {
+      var projectBucket = new SynchronizedBucket(new MemoryBucket());
+      Map<Alias, Bucket> buckets = map(PROJECT, projectBucket);
+      var filesystem = new Filesystem(buckets);
+      var testReporter = new TestReporter();
+
+      var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
+        @Override
+        protected void configure() {
+          bind(Reporter.class).toInstance(testReporter);
+          install(new SchedulerWiring());
+        }
+
+        @Provides
+        public Filesystem provideFilesystem() {
+          return filesystem;
+        }
+      });
+      writeModuleFilesToBuckets(buckets);
+      var scheduler = injector.getInstance(Scheduler.class);
+      var paths = list(standardLibraryModulePath(), moduleFullPath());
+      var module = scheduler.submit(FrontendCompile.class, argument(paths));
+      await().until(() -> module.toMaybe().isSome());
+      return Try.of(module.get().getOr(null), testReporter.logs());
+    }
+
+    private void writeModuleFilesToBuckets(Map<Alias, Bucket> buckets) {
+      writeModuleFile(
+          buckets,
+          standardLibraryModulePath(),
+          importedSourceCode == null ? "" : importedSourceCode);
+      writeModuleFile(buckets, moduleFullPath(), sourceCode);
+    }
+
+    private static void writeModuleFile(
+        Map<Alias, Bucket> buckets, FullPath fullPath, String content) {
+      try {
+        createFile(buckets.get(fullPath.alias()), fullPath.path(), content);
+      } catch (IOException e) {
+        throw new RuntimeException("Can't happen for MemoryBucket.", e);
+      }
+    }
+
+    private FullPath standardLibraryModulePath() {
+      return PROJECT.append("std_lib.smooth");
+    }
   }
 }
