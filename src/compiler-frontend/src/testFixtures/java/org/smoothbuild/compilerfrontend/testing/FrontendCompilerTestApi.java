@@ -173,15 +173,6 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SchemaS(type.vars(), type);
   }
 
-  public default SStructType sPersonType() {
-    return sStructType(
-        "Person", nlist(sSig(sStringType(), "firstName"), sSig(sStringType(), "lastName")));
-  }
-
-  public default SStructType sAnimalType() {
-    return sStructType("Animal", nlist(sSig(sStringType(), "name"), sSig(sIntType(), "size")));
-  }
-
   public default SStringType sStringType() {
     return STypes.STRING;
   }
