@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.run;
+package org.smoothbuild.cli.command.build;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;

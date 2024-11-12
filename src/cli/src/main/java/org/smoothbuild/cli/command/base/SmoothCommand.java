@@ -1,5 +1,9 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.base;
 
+import org.smoothbuild.cli.command.build.BuildCommand;
+import org.smoothbuild.cli.command.clean.CleanCommand;
+import org.smoothbuild.cli.command.list.ListCommand;
+import org.smoothbuild.cli.command.version.VersionCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;

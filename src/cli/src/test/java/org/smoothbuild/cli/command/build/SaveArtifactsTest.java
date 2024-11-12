@@ -1,7 +1,7 @@
-package org.smoothbuild.cli.run;
+package org.smoothbuild.cli.command.build;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.run.SaveArtifacts.FILE_STRUCT_NAME;
+import static org.smoothbuild.cli.command.build.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;

@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.command;
+package org.smoothbuild.cli.command.base;
 
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;

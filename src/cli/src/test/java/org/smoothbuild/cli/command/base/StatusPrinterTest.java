@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.report;
+package org.smoothbuild.cli.command.base;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
