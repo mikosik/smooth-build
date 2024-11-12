@@ -32,7 +32,6 @@ import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.common.testing.CommonTestApi;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
@@ -87,10 +86,9 @@ import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestApi;
 import org.smoothbuild.virtualmachine.testing.VmTestApi;
 
-public interface FrontendCompilerTestApi extends CommonTestApi, BytecodeTestApi, VmTestApi {
+public interface FrontendCompilerTestApi extends VmTestApi {
   public default SArrayType sArrayType(SType elemT) {
     return new SArrayType(elemT);
   }

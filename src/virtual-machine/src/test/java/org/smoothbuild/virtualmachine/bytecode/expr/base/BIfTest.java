@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class BIfTest extends BytecodeTestContext {
+public class BIfTest extends VmTestContext {
   @Test
   void creating_if_with_non_bool_condition_fails() {
     assertCall(() -> bIf(bInt(), bInt(), bInt()))

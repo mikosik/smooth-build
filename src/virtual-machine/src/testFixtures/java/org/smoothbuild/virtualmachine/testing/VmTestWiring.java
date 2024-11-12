@@ -2,9 +2,6 @@ package org.smoothbuild.virtualmachine.testing;
 
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.virtualmachine.testing.VmTestApi.PROJECT;
-import static org.smoothbuild.virtualmachine.testing.VmTestContext.BYTECODE_DB_PATH;
-import static org.smoothbuild.virtualmachine.testing.VmTestContext.COMPUTATION_DB_PATH;
-import static org.smoothbuild.virtualmachine.testing.VmTestContext.PROJECT_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -47,19 +44,19 @@ public class VmTestWiring extends AbstractModule {
   @Provides
   @BytecodeDb
   public FullPath provideBytecodeDb() {
-    return BYTECODE_DB_PATH;
+    return VmTestApi.BYTECODE_DB_PATH;
   }
 
   @Provides
   @ComputationDb
   public FullPath provideComputationDb() {
-    return COMPUTATION_DB_PATH;
+    return VmTestApi.COMPUTATION_DB_PATH;
   }
 
   @Provides
   @Project
   public FullPath provideProject() {
-    return PROJECT_PATH;
+    return VmTestApi.PROJECT_PATH;
   }
 
   @Provides

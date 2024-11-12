@@ -48,9 +48,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindNodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindRootException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindWrongChainSizeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindWrongNodeKindException;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class BKindCorruptedTest extends BytecodeTestContext {
+public class BKindCorruptedTest extends VmTestContext {
   @Nested
   class _illegal_type_marker {
     @Test

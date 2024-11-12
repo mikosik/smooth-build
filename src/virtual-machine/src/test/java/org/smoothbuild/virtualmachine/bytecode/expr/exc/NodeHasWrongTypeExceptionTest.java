@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class NodeHasWrongTypeExceptionTest extends BytecodeTestContext {
+public class NodeHasWrongTypeExceptionTest extends VmTestContext {
   @Test
   void message_with_types() throws Exception {
     var exception = new NodeHasWrongTypeException(

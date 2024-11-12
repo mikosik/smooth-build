@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class BCallTest extends BytecodeTestContext {
+public class BCallTest extends VmTestContext {
   @Test
   void creating_call_with_lambda_type_not_being_lambda_causes_exception() {
     assertCall(() -> bCall(bInt()))

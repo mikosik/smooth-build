@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
-import org.smoothbuild.virtualmachine.testing.BytecodeTestContext;
+import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class StepHashesCollisionTest extends BytecodeTestContext {
+public class StepHashesCollisionTest extends VmTestContext {
   @Test
   void each_task_has_different_hash() throws Exception {
     List<Hash> list = new ArrayList<>();
