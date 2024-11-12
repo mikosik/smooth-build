@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.List;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.cli.match.MatcherCreator;
-import org.smoothbuild.cli.run.RemoveArtifacts;
+import org.smoothbuild.cli.run.DeleteArtifacts;
 import org.smoothbuild.cli.run.SaveArtifacts;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.ReportMatcher;
@@ -104,7 +104,7 @@ public class BuildCommand extends ProjectCommand {
     @Override
     public Output<Tuple0> execute() {
       var initialize = scheduler.submit(Initializer.class);
-      var removeArtifacts = scheduler.submit(list(initialize), RemoveArtifacts.class);
+      var removeArtifacts = scheduler.submit(list(initialize), DeleteArtifacts.class);
       var evaluatedExprs = scheduler.submit(
           list(removeArtifacts),
           ScheduleEvaluate.class,
