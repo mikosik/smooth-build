@@ -51,7 +51,6 @@ public interface VmTestApi extends BytecodeTestApi {
   public static FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
   public static FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
   public static FullPath BYTECODE_DB_PATH = PROJECT.append(".smooth/bytecode");
-  public static FullPath ARTIFACTS_PATH = PROJECT.append(".smooth/artifacts");
 
   public Bucket projectBucket();
 
