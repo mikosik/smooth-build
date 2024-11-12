@@ -3,20 +3,24 @@ package org.smoothbuild.cli.command;
 import static org.smoothbuild.cli.run.CreateInjector.createInjector;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.task.Tasks.argument;
 
-import jakarta.inject.Inject;
 import java.nio.file.Path;
 import java.util.List;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.cli.match.MatcherCreator;
 import org.smoothbuild.cli.run.RemoveArtifacts;
 import org.smoothbuild.cli.run.SaveArtifacts;
-import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 import picocli.CommandLine.Command;
@@ -83,24 +87,22 @@ public class BuildCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
-    return injector.getInstance(BuildCommandRunner.class).run(values);
+    return injector
+        .getInstance(CommandRunner.class)
+        .run(s -> s.submit(new ScheduleBuild(s, values)));
   }
 
-  public static class BuildCommandRunner {
+  private static class ScheduleBuild implements Task0<Tuple0> {
     private final Scheduler scheduler;
-    private final CommandCompleter commandCompleter;
+    private final java.util.List<String> values;
 
-    @Inject
-    public BuildCommandRunner(Scheduler scheduler, CommandCompleter commandCompleter) {
+    public ScheduleBuild(Scheduler scheduler, List<String> values) {
       this.scheduler = scheduler;
-      this.commandCompleter = commandCompleter;
+      this.values = values;
     }
 
-    public int run(java.util.List<String> values) {
-      return commandCompleter.waitForCompletion(scheduleBuildTasks(values));
-    }
-
-    private Promise<Maybe<Tuple0>> scheduleBuildTasks(List<String> values) {
+    @Override
+    public Output<Tuple0> execute() {
       var initialize = scheduler.submit(Initializer.class);
       var removeArtifacts = scheduler.submit(list(initialize), RemoveArtifacts.class);
       var evaluatedExprs = scheduler.submit(
@@ -108,7 +110,9 @@ public class BuildCommand extends ProjectCommand {
           ScheduleEvaluate.class,
           argument(Layout.MODULES),
           argument(listOfAll(values)));
-      return scheduler.submit(SaveArtifacts.class, evaluatedExprs);
+      var result = scheduler.submit(SaveArtifacts.class, evaluatedExprs);
+      var buildLabel = label("build", "schedule");
+      return schedulingOutput(result, report(buildLabel, new Trace(), EXECUTION, list()));
     }
   }
 }
