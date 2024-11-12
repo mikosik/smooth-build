@@ -98,7 +98,8 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public interface VmTestApi extends CommonTestApi {
   public static Alias PROJECT = new Alias("t-project");
-  public static FullPath BYTECODE_DB_PATH = PROJECT.append(".smooth/bytecode");
+  public static Path BYTECODE_DB_SHORT_PATH = path(".smooth/bytecode");
+  public static FullPath BYTECODE_DB_PATH = PROJECT.append(BYTECODE_DB_SHORT_PATH);
   public static FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
   public static FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
 
