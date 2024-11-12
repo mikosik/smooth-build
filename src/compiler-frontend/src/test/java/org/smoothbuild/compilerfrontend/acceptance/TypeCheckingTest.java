@@ -1,11 +1,10 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.compilerfrontend.testing.FrontendCompileTester.module;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
-public class TypeCheckingTest {
+public class TypeCheckingTest extends FrontendCompileTester {
   @Nested
   class _named_value_type_and_its_body_type {
     @Test
@@ -347,7 +346,7 @@ public class TypeCheckingTest {
     }
   }
 
-  abstract static class _abstract_param_type_and_arg_type_suite {
+  abstract class _abstract_param_type_and_arg_type_suite {
     public abstract String buildSourceCode(String params, String argument);
 
     @Test
