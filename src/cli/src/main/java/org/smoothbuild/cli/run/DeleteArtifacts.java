@@ -14,19 +14,19 @@ import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
 
-public class RemoveArtifacts implements Task0<Tuple0> {
+public class DeleteArtifacts implements Task0<Tuple0> {
   private final Filesystem filesystem;
   private final FullPath artifactsPath;
 
   @Inject
-  public RemoveArtifacts(Filesystem filesystem, @Artifacts FullPath artifactsPath) {
+  public DeleteArtifacts(Filesystem filesystem, @Artifacts FullPath artifactsPath) {
     this.filesystem = filesystem;
     this.artifactsPath = artifactsPath;
   }
 
   @Override
   public Output<Tuple0> execute() {
-    var label = label("artifacts", "removeAll");
+    var label = label("build", "deleteArtifacts");
     try {
       filesystem.delete(artifactsPath);
       return output(label, list());
