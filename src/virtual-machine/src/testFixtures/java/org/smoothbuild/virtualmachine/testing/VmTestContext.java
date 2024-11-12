@@ -1,7 +1,6 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
-import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 
 import com.google.common.base.Supplier;
@@ -35,8 +34,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
   }
 
   public Bucket bytecodeBucket() {
-    // TODO hardcoded
-    return subBucket(projectBucket(), path(".smooth/bytecode"));
+    return subBucket(projectBucket(), BYTECODE_DB_SHORT_PATH);
   }
 
   @Override
