@@ -4,8 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.log.base.Label.label;
-import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import java.util.Set;
@@ -32,9 +30,11 @@ public class InitializerTest extends CommonTestContext {
   }
 
   private static Initializable initializable(AtomicBoolean visited1) {
-    return () -> {
-      visited1.set(true);
-      return output(tuple(), label(), list());
+    return new Initializable("name") {
+      @Override
+      protected void executeImpl() {
+        visited1.set(true);
+      }
     };
   }
 }
