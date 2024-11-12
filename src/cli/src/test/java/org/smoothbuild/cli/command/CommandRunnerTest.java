@@ -9,18 +9,20 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.testing.CommonTestContext;
 import org.smoothbuild.common.testing.TestReporter;
 
-public class CommandCompleterTest {
+public class CommandRunnerTest extends CommonTestContext {
   @Test
   void interrupted_exception_is_logged_as_fatal() throws Exception {
     var reporter = new TestReporter();
-    var commandCompleter = new CommandCompleter(null, reporter);
+    var scheduler = scheduler();
+    var commandRunner = new CommandRunner(scheduler, null, reporter);
 
     @SuppressWarnings("unchecked")
     Promise<Maybe<Integer>> promise = mock(Promise.class);
     doThrow(InterruptedException.class).when(promise).getBlocking();
-    var exitCode = commandCompleter.waitForCompletion(promise);
+    var exitCode = commandRunner.run(s -> promise);
     assertThat(exitCode).isEqualTo(EXIT_CODE_ERROR);
     assertThat(reporter.logs()).containsExactly(fatal("main thread has been interrupted"));
   }
