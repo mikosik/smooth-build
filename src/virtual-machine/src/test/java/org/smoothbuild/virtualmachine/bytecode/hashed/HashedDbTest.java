@@ -155,7 +155,7 @@ public class HashedDbTest {
   void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
     var bucket = bucket();
     var hashedDb = new HashedDb(bucket);
-    hashedDb.execute();
+    hashedDb.initialize();
 
     hashedDb.writeString("abc");
 
@@ -167,7 +167,7 @@ public class HashedDbTest {
       throws Exception {
     var bucket = bucket();
     var hashedDb = new HashedDb(bucket);
-    hashedDb.execute();
+    hashedDb.initialize();
 
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
