@@ -29,11 +29,11 @@ import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 
-public class ListEvaluables implements Task0<Tuple0> {
+public class ScheduleList implements Task0<Tuple0> {
   private final Scheduler scheduler;
 
   @Inject
-  public ListEvaluables(Scheduler scheduler) {
+  public ScheduleList(Scheduler scheduler) {
     this.scheduler = scheduler;
   }
 
@@ -50,7 +50,7 @@ public class ListEvaluables implements Task0<Tuple0> {
     public Output<Tuple0> execute(SModule sModule) {
       var oneValuePerLineString =
           sModule.membersAndImported().evaluables().toMap().values().stream()
-              .filter(ListEvaluables::isNoArgNotGenericValue)
+              .filter(ScheduleList::isNoArgNotGenericValue)
               .map(Nal::name)
               .sorted()
               .collect(joining("\n"));
