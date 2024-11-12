@@ -7,11 +7,7 @@ import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.bucket.base.Path.path;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -28,9 +24,6 @@ import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.function.Consumer1;
-import org.smoothbuild.common.init.Initializable;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBigIntegerException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBooleanException;
@@ -45,7 +38,7 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
  * This class is thread-safe.
  */
 @Singleton
-public class HashedDb implements Initializable {
+public class HashedDb {
   static final Path TEMP_DIR_PATH = path("tmp");
   private final Bucket bucket;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
@@ -55,20 +48,7 @@ public class HashedDb implements Initializable {
     this.bucket = bucket;
   }
 
-  @Override
-  public Output<Tuple0> execute() {
-    var label = INITIALIZE_LABEL.append("hashedDb");
-    try {
-      initialize();
-      return output(tuple(), label, list());
-    } catch (IOException e) {
-      var fatal = fatal("Initializing HashedDb failed with exception:", e);
-      return output(label, list(fatal));
-    }
-  }
-
-  // TODO made public for initialization in test, can this be avoided?
-  public void initialize() throws IOException {
+  void initialize() throws IOException {
     bucket.createDir(TEMP_DIR_PATH);
   }
 

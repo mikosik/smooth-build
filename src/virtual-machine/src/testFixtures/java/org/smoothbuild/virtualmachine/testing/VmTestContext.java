@@ -4,7 +4,6 @@ import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
 
 import com.google.common.base.Supplier;
-import java.io.IOException;
 import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -12,6 +11,7 @@ import org.smoothbuild.common.testing.CommonTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
+import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDbInitializer;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 
@@ -83,11 +83,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
 
   private HashedDb newHashDb() {
     var result = new HashedDb(bytecodeBucket());
-    try {
-      result.initialize();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    throwExceptionOnFailure(new HashedDbInitializer(result).execute());
     return result;
   }
 
