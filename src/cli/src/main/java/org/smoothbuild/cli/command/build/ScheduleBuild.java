@@ -37,7 +37,7 @@ public class ScheduleBuild implements Task0<Tuple0> {
         argument(Layout.MODULES),
         argument(listOfAll(values)));
     var result = scheduler.submit(SaveArtifacts.class, evaluatedExprs);
-    var buildLabel = label("build", "schedule");
+    var buildLabel = label("build:schedule");
     return schedulingOutput(result, report(buildLabel, new Trace(), EXECUTION, list()));
   }
 }

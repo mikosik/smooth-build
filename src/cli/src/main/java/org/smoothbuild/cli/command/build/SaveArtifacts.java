@@ -55,7 +55,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
 
   @Override
   public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
-    var label = label("build", "saveArtifacts");
+    var label = label("build:saveArtifacts");
     try {
       filesystem.createDir(artifactsPath);
     } catch (IOException e) {

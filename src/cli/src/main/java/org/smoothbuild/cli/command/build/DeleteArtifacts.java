@@ -26,7 +26,7 @@ public class DeleteArtifacts implements Task0<Tuple0> {
 
   @Override
   public Output<Tuple0> execute() {
-    var label = label("build", "deleteArtifacts");
+    var label = label("build:deleteArtifacts");
     try {
       filesystem.delete(artifactsPath);
       return output(label, list());

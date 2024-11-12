@@ -15,10 +15,9 @@ import org.smoothbuild.common.collect.List;
 
 public class LabelTest {
   @ParameterizedTest
-  @MethodSource("illegal_parts")
-  void colon_is_forbidden_inside_part_string(String part) {
-    assertCall(() -> label(part))
-        .throwsException(new IllegalArgumentException("Label part cannot contain `:`."));
+  @MethodSource("illegal_labels")
+  void factory_method_fails_for_illegal_label(String label) {
+    assertCall(() -> label(label)).throwsException(IllegalArgumentException.class);
   }
 
   @Nested
@@ -26,30 +25,36 @@ public class LabelTest {
     @Test
     void concatenates_part() {
       var label = label("name");
-      assertThat(label.append("other")).isEqualTo(label("name", "other"));
+      assertThat(label.append("other")).isEqualTo(label("name:other"));
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.common.log.base.LabelTest#illegal_parts")
-    void fails_when_part_contains_colon(String part) {
+    @MethodSource("org.smoothbuild.common.log.base.LabelTest#illegal_labels")
+    void fails_when_part_is_illegal_label(String part) {
       var label = label("name");
-      assertCall(() -> label.append(part))
-          .throwsException(new IllegalArgumentException("Label part cannot contain `:`."));
+      assertCall(() -> label.append(part)).throwsException(IllegalArgumentException.class);
     }
   }
 
-  public static List<Arguments> illegal_parts() {
+  public static List<Arguments> illegal_labels() {
     return list(
+        arguments(""),
+        arguments(" "),
         arguments(":"),
-        arguments(":part"),
-        arguments("part:"),
-        arguments(":part:"),
-        arguments("part:part"),
+        arguments("!"),
+        arguments("."),
+        arguments(","),
+        arguments("a "),
+        arguments(" b"),
+        arguments("a b"),
+        arguments(":text"),
+        arguments("text:"),
+        arguments(":text:"),
         arguments("::"),
-        arguments("::part"),
-        arguments("part::"),
-        arguments("::part::"),
-        arguments("part::part"));
+        arguments("::text"),
+        arguments("text::"),
+        arguments("::text::"),
+        arguments("text::text"));
   }
 
   @ParameterizedTest
@@ -60,28 +65,18 @@ public class LabelTest {
 
   public static List<Arguments> startsWith() {
     return list(
-        arguments(label(), label(), true),
-        arguments(label(), label("a"), false),
-        arguments(label("a"), label(), true),
         arguments(label("a"), label("a"), true),
         arguments(label("a"), label("b"), false),
-        arguments(label("a"), label("a", "b"), false),
-        arguments(label("a", "b"), label(), true),
-        arguments(label("a", "b"), label("a"), true),
-        arguments(label("a", "b"), label("b"), false),
-        arguments(label("a", "b"), label("a", "b"), true),
-        arguments(label("a", "b"), label("a", "c"), false),
-        arguments(label("a", "b"), label("a", "b", "c"), false));
+        arguments(label("a"), label("a:b"), false),
+        arguments(label("a:b"), label("a"), true),
+        arguments(label("a:b"), label("b"), false),
+        arguments(label("a:b"), label("a:b"), true),
+        arguments(label("a:b"), label("a:c"), false),
+        arguments(label("a:b"), label("a:b:c"), false));
   }
 
   @Nested
   class _toString {
-    @Test
-    void with_zero_parts() {
-      var label = label();
-      assertThat(label.toString()).isEqualTo(":");
-    }
-
     @Test
     void with_one_part() {
       var label = label("name");

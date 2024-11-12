@@ -41,7 +41,7 @@ public class ScheduleList implements Task0<Tuple0> {
   public Output<Tuple0> execute() {
     var scopeS = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
     var result = scheduler.submit(PrintEvaluables.class, scopeS);
-    var label = label("schedule", "list");
+    var label = label("schedule:list");
     return schedulingOutput(result, report(label, new Trace(), EXECUTION, list()));
   }
 
@@ -54,7 +54,7 @@ public class ScheduleList implements Task0<Tuple0> {
               .map(Nal::name)
               .sorted()
               .collect(joining("\n"));
-      var label = label("cli", "list");
+      var label = label("cli:list");
       var info = info("Values that can be evaluated:\n" + oneValuePerLineString);
       return output(tuple(), label, list(info));
     }

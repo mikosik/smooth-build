@@ -40,7 +40,7 @@ public class Clean implements Task0<Tuple0> {
     deleteDir("object cache", bytecodeDbPath, logger);
     deleteDir("computation cache", computationDbPath, logger);
     deleteDir("artifacts", artifactsPath, logger);
-    return output(tuple(), label("cli", "clean"), logger.toList());
+    return output(tuple(), label("cli:clean"), logger.toList());
   }
 
   private void deleteDir(String name, FullPath path, Logger logger) {
