@@ -13,14 +13,14 @@ import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
-import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
+import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCacheInitializer;
 
 public class VmWiring extends AbstractModule {
   @Override
   protected void configure() {
     Multibinder<Initializable> setBinder = newSetBinder(binder(), Initializable.class);
     setBinder.addBinding().to(HashedDb.class);
-    setBinder.addBinding().to(ComputationCache.class);
+    setBinder.addBinding().to(ComputationCacheInitializer.class);
   }
 
   @Provides
