@@ -65,7 +65,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   public void beforeEach() throws IOException {
     this.modules = list();
     this.buckets = map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
-    this.injector = createInjector();
+    this.injector = createInjector(buckets);
     this.filesystem = injector.getInstance(Filesystem.class);
   }
 
@@ -114,7 +114,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void restartSmoothWithSameBuckets() {
-    injector = createInjector();
+    injector = createInjector(buckets);
     evaluatedExprs = null;
   }
 
@@ -169,7 +169,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     return injector.getInstance(TestReporter.class);
   }
 
-  private Injector createInjector() {
+  private static Injector createInjector(Map<Alias, Bucket> buckets) {
     return Guice.createInjector(
         PRODUCTION,
         new EvaluatorWiring(),
