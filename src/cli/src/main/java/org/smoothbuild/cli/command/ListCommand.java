@@ -15,6 +15,6 @@ public class ListCommand extends ProjectCommand {
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel);
-    return injector.getInstance(CommandRunner.class).run(ListEvaluables.class);
+    return injector.getInstance(CommandRunner.class).run(s -> s.submit(ListEvaluables.class));
   }
 }

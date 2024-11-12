@@ -1,9 +1,10 @@
 package org.smoothbuild.cli.command;
 
-import com.google.inject.Key;
 import jakarta.inject.Inject;
+import java.util.function.Function;
+import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.task.Task0;
 
 public class CommandRunner {
   private final Scheduler scheduler;
@@ -15,8 +16,8 @@ public class CommandRunner {
     this.commandCompleter = commandCompleter;
   }
 
-  public <T> int run(Class<? extends Task0<T>> taskClass) {
-    var result = scheduler.submit(Key.get(taskClass));
+  public <T extends Maybe<?>> int run(Function<Scheduler, Promise<T>> schedulingFunction) {
+    Promise<T> result = schedulingFunction.apply(scheduler);
     return commandCompleter.waitForCompletion(result);
   }
 }
