@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.log.base.Log.error;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class JarTest extends StandardLibraryTestCase {
+public class JarTest extends StandardLibraryTestContext {
   @Test
   void jar_unjar() throws Exception {
     var userModule =

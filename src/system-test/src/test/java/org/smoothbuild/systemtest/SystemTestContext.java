@@ -42,7 +42,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.function.Function1;
 
-public abstract class SystemTestCase {
+public abstract class SystemTestContext {
   public static final Path SMOOTH_DIR = Paths.get(".smooth");
   public static final Path COMPUTATION_DB_PATH = SMOOTH_DIR.resolve("computations");
   public static final Path BYTECODE_DB_PATH = SMOOTH_DIR.resolve("bytecode");

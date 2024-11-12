@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static okio.ByteString.encodeUtf8;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class ToBlobTest extends StandardLibraryTestCase {
+public class ToBlobTest extends StandardLibraryTestContext {
   @Test
   void to_blob_func() throws Exception {
     var userModule = """

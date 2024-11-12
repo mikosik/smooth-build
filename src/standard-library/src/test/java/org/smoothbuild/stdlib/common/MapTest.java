@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.common;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class MapTest extends StandardLibraryTestCase {
+public class MapTest extends StandardLibraryTestContext {
   @Test
   void mapping_bools() throws Exception {
     var code = """

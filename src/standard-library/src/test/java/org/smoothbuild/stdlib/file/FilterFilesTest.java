@@ -5,9 +5,9 @@ import static org.smoothbuild.common.log.base.Log.error;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class FilterFilesTest extends StandardLibraryTestCase {
+public class FilterFilesTest extends StandardLibraryTestContext {
   @Test
   void illegal_path_in_pattern() throws IOException {
     var userModule = """

@@ -4,10 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 
-public class OrTest extends StandardLibraryTestCase {
+public class OrTest extends StandardLibraryTestContext {
   @Test
   void false_or_false_returns_false() throws Exception {
     var userModule = """

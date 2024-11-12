@@ -8,18 +8,18 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReportError;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReportInfo;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReportWarning;
 
-public class LoggingTest extends SystemTestCase {
+public class LoggingTest extends SystemTestContext {
   private static final String LOG_MESSAGE = "WARNING: my-message-to-log";
 
   @ParameterizedTest
   @MethodSource("test_cases")
   public void log_level_option_filters_logs_below_threshold(
-      TestCaseInitializer userModuleCreator, String logLevel, boolean logShown) throws Throwable {
+      ContextInitializer userModuleCreator, String logLevel, boolean logShown) throws Throwable {
     userModuleCreator.initialize(this);
     runSmoothBuild("--log-level=" + logLevel, "result");
     if (logShown) {
@@ -31,21 +31,21 @@ public class LoggingTest extends SystemTestCase {
 
   private static Stream<Arguments> test_cases() {
     return Stream.of(
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithError, "fatal", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithError, "error", true),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithError, "warning", true),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithError, "info", true),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithWarning, "fatal", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithWarning, "error", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithWarning, "warning", true),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithWarning, "info", true),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "fatal", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "error", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "warning", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "info", true));
+        arguments((ContextInitializer) LoggingTest::createModuleWithError, "fatal", false),
+        arguments((ContextInitializer) LoggingTest::createModuleWithError, "error", true),
+        arguments((ContextInitializer) LoggingTest::createModuleWithError, "warning", true),
+        arguments((ContextInitializer) LoggingTest::createModuleWithError, "info", true),
+        arguments((ContextInitializer) LoggingTest::createModuleWithWarning, "fatal", false),
+        arguments((ContextInitializer) LoggingTest::createModuleWithWarning, "error", false),
+        arguments((ContextInitializer) LoggingTest::createModuleWithWarning, "warning", true),
+        arguments((ContextInitializer) LoggingTest::createModuleWithWarning, "info", true),
+        arguments((ContextInitializer) LoggingTest::createModuleWithInfo, "fatal", false),
+        arguments((ContextInitializer) LoggingTest::createModuleWithInfo, "error", false),
+        arguments((ContextInitializer) LoggingTest::createModuleWithInfo, "warning", false),
+        arguments((ContextInitializer) LoggingTest::createModuleWithInfo, "info", true));
   }
 
-  private static void createModuleWithError(SystemTestCase testCase) throws IOException {
+  private static void createModuleWithError(SystemTestContext testCase) throws IOException {
     testCase.createNativeJar(ReportError.class);
     testCase.createUserModule(format(
         """
@@ -56,7 +56,7 @@ public class LoggingTest extends SystemTestCase {
         ReportError.class.getCanonicalName(), LOG_MESSAGE));
   }
 
-  private static void createModuleWithWarning(SystemTestCase testCase) throws IOException {
+  private static void createModuleWithWarning(SystemTestContext testCase) throws IOException {
     testCase.createNativeJar(ReportWarning.class);
     testCase.createUserModule(format(
         """
@@ -67,7 +67,7 @@ public class LoggingTest extends SystemTestCase {
         ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
   }
 
-  private static void createModuleWithInfo(SystemTestCase testCase) throws IOException {
+  private static void createModuleWithInfo(SystemTestContext testCase) throws IOException {
     testCase.createNativeJar(ReportInfo.class);
     testCase.createUserModule(format(
         """
@@ -79,7 +79,7 @@ public class LoggingTest extends SystemTestCase {
   }
 
   @FunctionalInterface
-  public interface TestCaseInitializer {
-    public void initialize(SystemTestCase testCase) throws Throwable;
+  public interface ContextInitializer {
+    public void initialize(SystemTestContext testCase) throws Throwable;
   }
 }

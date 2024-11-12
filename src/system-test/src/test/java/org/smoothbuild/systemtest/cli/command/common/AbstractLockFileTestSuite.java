@@ -9,10 +9,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.Sleep3s;
 
-public abstract class AbstractLockFileTestSuite extends SystemTestCase {
+public abstract class AbstractLockFileTestSuite extends SystemTestContext {
   @Test
   void command_fails_when_lock_file_is_already_acquired() throws IOException, InterruptedException {
     createNativeJar(Sleep3s.class);
@@ -24,7 +24,7 @@ public abstract class AbstractLockFileTestSuite extends SystemTestCase {
             """,
         Sleep3s.class.getCanonicalName()));
 
-    SystemTestCase otherTest = new SystemTestCase() {};
+    SystemTestContext otherTest = new SystemTestContext() {};
     otherTest.init(projectDirAbsolutePath());
     CommandWithArgs commandWithArgs = commandNameWithArg();
 

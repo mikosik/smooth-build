@@ -5,14 +5,14 @@ import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 
 public class ListCommandTest {
   @Nested
-  class basic extends SystemTestCase {
+  class basic extends SystemTestContext {
     @Test
     void list_command_lists_all_available_values() throws Exception {
       createUserModule(

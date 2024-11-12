@@ -5,10 +5,10 @@ import static java.lang.String.format;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 
-public class IfTest extends StandardLibraryTestCase {
+public class IfTest extends StandardLibraryTestContext {
   @Test
   void if_returns_first_value_when_condition_is_true() throws Exception {
     var userModule = """

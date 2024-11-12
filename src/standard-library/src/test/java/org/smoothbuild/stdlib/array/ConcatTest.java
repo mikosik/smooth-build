@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.array;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class ConcatTest extends StandardLibraryTestCase {
+public class ConcatTest extends StandardLibraryTestContext {
   @Test
   void concat_empty_array() throws Exception {
     var userModule = """

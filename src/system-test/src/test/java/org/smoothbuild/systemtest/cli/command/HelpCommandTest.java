@@ -5,9 +5,9 @@ import org.smoothbuild.cli.command.BuildCommand;
 import org.smoothbuild.cli.command.CleanCommand;
 import org.smoothbuild.cli.command.ListCommand;
 import org.smoothbuild.cli.command.VersionCommand;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 
-public class HelpCommandTest extends SystemTestCase {
+public class HelpCommandTest extends SystemTestContext {
   @Test
   void help_command_prints_general_help() {
     runSmoothHelp();

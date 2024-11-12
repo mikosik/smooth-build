@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.log.base.Log.error;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class FilesFuncTest extends StandardLibraryTestCase {
+public class FilesFuncTest extends StandardLibraryTestContext {
   @Test
   void illegal_path_causes_error() throws Exception {
     var userModule = """

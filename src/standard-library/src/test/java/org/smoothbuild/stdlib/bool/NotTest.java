@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.bool;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class NotTest extends StandardLibraryTestCase {
+public class NotTest extends StandardLibraryTestContext {
 
   @Test
   void not_false_returns_true() throws Exception {

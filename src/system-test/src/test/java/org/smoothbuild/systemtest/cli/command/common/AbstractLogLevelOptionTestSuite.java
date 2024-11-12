@@ -2,9 +2,9 @@ package org.smoothbuild.systemtest.cli.command.common;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 
-public abstract class AbstractLogLevelOptionTestSuite extends SystemTestCase {
+public abstract class AbstractLogLevelOptionTestSuite extends SystemTestContext {
   @Test
   void illegal_log_level_value_causes_error() throws IOException {
     createUserModule("""

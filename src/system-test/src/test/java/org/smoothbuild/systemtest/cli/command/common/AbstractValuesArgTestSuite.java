@@ -2,9 +2,9 @@ package org.smoothbuild.systemtest.cli.command.common;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 
-public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
+public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
   @Test
   void missing_value_arg_causes_error() throws Exception {
     createUserModule("""

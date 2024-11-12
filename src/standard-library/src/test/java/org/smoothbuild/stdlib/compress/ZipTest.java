@@ -5,9 +5,9 @@ import static org.smoothbuild.common.log.base.Log.error;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class ZipTest extends StandardLibraryTestCase {
+public class ZipTest extends StandardLibraryTestContext {
   @Test
   void zip_unzip() throws Exception {
     var userModule =
