@@ -82,11 +82,11 @@ import org.smoothbuild.virtualmachine.evaluate.compute.ComputationCache;
 import org.smoothbuild.virtualmachine.evaluate.compute.ComputationHashFactory;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
-import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
@@ -135,24 +135,25 @@ public interface VmTestApi extends CommonTestApi {
     return new SynchronizedBucket(new MemoryBucket());
   }
 
-  public default Vm vm() {
-    return vm(scheduler());
+  public default BEvaluate bEvaluate() {
+    return bEvaluate(scheduler());
   }
 
-  public default Vm vm(NativeMethodLoader nativeMethodLoader) {
-    return new Vm(scheduler(), stepEvaluator(nativeMethodLoader), bytecodeF(), bReferenceInliner());
+  public default BEvaluate bEvaluate(NativeMethodLoader nativeMethodLoader) {
+    return new BEvaluate(
+        scheduler(), stepEvaluator(nativeMethodLoader), bytecodeF(), bReferenceInliner());
   }
 
-  public default Vm vm(Scheduler scheduler) {
-    return new Vm(scheduler, stepEvaluator(scheduler), bytecodeF(), bReferenceInliner());
+  public default BEvaluate bEvaluate(Scheduler scheduler) {
+    return new BEvaluate(scheduler, stepEvaluator(scheduler), bytecodeF(), bReferenceInliner());
   }
 
   public default BReferenceInliner bReferenceInliner() {
     return new BReferenceInliner(bytecodeF());
   }
 
-  public default Vm vm(StepEvaluator stepEvaluator) {
-    return new Vm(scheduler(), stepEvaluator, bytecodeF(), bReferenceInliner());
+  public default BEvaluate bEvaluate(StepEvaluator stepEvaluator) {
+    return new BEvaluate(scheduler(), stepEvaluator, bytecodeF(), bReferenceInliner());
   }
 
   public default StepEvaluator stepEvaluator(NativeMethodLoader nativeMethodLoader) {

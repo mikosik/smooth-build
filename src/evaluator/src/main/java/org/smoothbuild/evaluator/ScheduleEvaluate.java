@@ -28,7 +28,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
-import org.smoothbuild.virtualmachine.evaluate.execute.Vm;
+import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
 
 public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, EvaluatedExprs> {
   private final Scheduler scheduler;
@@ -62,7 +62,7 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
     var getLabel = EVALUATE_LABEL.append("getCompiledExprs");
     var bExprs = scheduler.submit(task1(getLabel, CompiledExprs::bExprs), compiledExprs);
     var evaluated =
-        scheduler.submit(list(setBsMapping), scheduler.newParallelTask(Vm.class), bExprs);
+        scheduler.submit(list(setBsMapping), scheduler.newParallelTask(BEvaluate.class), bExprs);
     var mergeLabel = EVALUATE_LABEL.append("merge");
     return scheduler.submit(
         task2(mergeLabel, (ce, ee) -> evaluatedExprs(ce.sExprs(), ee)), compiledExprs, evaluated);

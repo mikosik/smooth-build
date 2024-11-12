@@ -53,18 +53,17 @@ import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 /**
- * Virtual machine.
- * Executes submitted BExpr asynchronously providing result via returned Promise.
+ * Evaluates BExpr.
  * This class is thread-safe.
  */
-public class Vm implements Task1<BExpr, BValue> {
+public class BEvaluate implements Task1<BExpr, BValue> {
   private final Scheduler scheduler;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
   private final BReferenceInliner bReferenceInliner;
 
   @Inject
-  public Vm(
+  public BEvaluate(
       Scheduler scheduler,
       StepEvaluator stepEvaluator,
       BytecodeFactory bytecodeFactory,
