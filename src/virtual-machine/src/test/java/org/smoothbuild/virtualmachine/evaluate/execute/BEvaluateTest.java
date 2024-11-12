@@ -55,7 +55,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
-public class VmTest extends VmTestContext {
+public class BEvaluateTest extends VmTestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS =
       new ConcurrentHashMap<>();
@@ -71,7 +71,7 @@ public class VmTest extends VmTestContext {
         var testName = "learning_test";
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
 
-        evaluate(vm(nativeMethodLoader), invoke);
+        evaluate(bEvaluate(nativeMethodLoader), invoke);
 
         assertThat(MEMOIZED).contains(testName);
       }
@@ -84,7 +84,7 @@ public class VmTest extends VmTestContext {
         var lambda = bLambda(list(bStringType()), bInt(7));
         var call = bCall(lambda, invoke);
 
-        evaluate(vm(nativeMethodLoader), call);
+        evaluate(bEvaluate(nativeMethodLoader), call);
 
         assertThat(MEMOIZED).doesNotContain(testName);
       }
@@ -100,7 +100,7 @@ public class VmTest extends VmTestContext {
             bLambda(list(bStringType()), bCall(innerLambda, bReference(bStringType(), 0)));
         var call = bCall(outerLambda, invoke);
 
-        evaluate(vm(nativeMethodLoader), call);
+        evaluate(bEvaluate(nativeMethodLoader), call);
 
         assertThat(MEMOIZED).doesNotContain(testName);
       }
@@ -114,7 +114,7 @@ public class VmTest extends VmTestContext {
         var lambda = bLambda(list(type), bCombine(bReference(type, 0), bReference(type, 0)));
         var call = bCall(lambda, invoke);
 
-        evaluate(vm(nativeMethodLoader), call);
+        evaluate(bEvaluate(nativeMethodLoader), call);
 
         assertThat(MEMOIZED.stream().filter(x -> x.equals(testName)).toList()).hasSize(1);
       }
@@ -128,10 +128,10 @@ public class VmTest extends VmTestContext {
         var lambda = bLambda(bOrder(bInt(7)));
         var call = bCall(lambda);
 
-        var countingVm = countingVm();
-        assertThat(evaluate(countingVm, call).get().get()).isEqualTo(bArray(bInt(7)));
+        var countingBEvaluate = countingBEvaluate();
+        assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bArray(bInt(7)));
 
-        assertThat(countingVm.counters().get(BInt.class).intValue()).isEqualTo(1);
+        assertThat(countingBEvaluate.counters().get(BInt.class).intValue()).isEqualTo(1);
       }
 
       @Test
@@ -140,10 +140,10 @@ public class VmTest extends VmTestContext {
         var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
         var call = bCall(lambda, bOrder(bBool()));
 
-        var countingVm = countingVm();
-        assertThat(evaluate(countingVm, call).get().get()).isEqualTo(bInt(7));
+        var countingBEvaluate = countingBEvaluate();
+        assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bInt(7));
 
-        assertThat(countingVm.counters().get(BBool.class)).isNull();
+        assertThat(countingBEvaluate.counters().get(BBool.class)).isNull();
       }
     }
   }
@@ -278,9 +278,9 @@ public class VmTest extends VmTestContext {
         var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
-            .thenReturn(
-                right(VmTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
-        assertThat(evaluate(vm(nativeMethodLoader), invoke).get().get()).isEqualTo(bInt(33));
+            .thenReturn(right(
+                BEvaluateTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
+        assertThat(evaluate(bEvaluate(nativeMethodLoader), invoke).get().get()).isEqualTo(bInt(33));
       }
 
       @Test
@@ -315,7 +315,7 @@ public class VmTest extends VmTestContext {
         @Test
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
-          evaluate(vm(), pick);
+          evaluate(bEvaluate(), pick);
           if (!reporter().reports().anyMatches(this::isResultWithIndexOutOfBoundsError)) {
             fail("Expected report ERROR caused by index out of bounds but got:\n" + reporter());
           }
@@ -328,7 +328,7 @@ public class VmTest extends VmTestContext {
         @Test
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
-          evaluate(vm(), pick);
+          evaluate(bEvaluate(), pick);
           if (!reporter().reports().anyMatches(this::isResultWithNegativeIndexError)) {
             fail("Expected report with ERROR caused by index out of bounds, but got:\n"
                 + reporter());
@@ -371,7 +371,7 @@ public class VmTest extends VmTestContext {
         void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
-          evaluate(vm(), call);
+          evaluate(bEvaluate(), call);
           var reports = reporter().reports();
           assertReportsContains(
               reports,
@@ -387,7 +387,7 @@ public class VmTest extends VmTestContext {
                 throws Exception {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
           var call = bCall(lambda, bBlob());
-          evaluate(vm(), call);
+          evaluate(bEvaluate(), call);
           assertReportsContains(
               reporter().reports(),
               FATAL,
@@ -409,9 +409,9 @@ public class VmTest extends VmTestContext {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var scheduler = scheduler();
-        var vm = vm(scheduler);
+        var bEvaluate = bEvaluate(scheduler);
         var expr = throwExceptionCall();
-        evaluate(vm, expr);
+        evaluate(bEvaluate, expr);
 
         List<Report> reports = reporter().reports();
         if (!reports.anyMatches(this::reportWithFatalCausedByRuntimeException)) {
@@ -447,9 +447,9 @@ public class VmTest extends VmTestContext {
             throw runtimeException;
           }
         };
-        var vm = vm(stepEvaluator);
+        var bEvaluate = bEvaluate(stepEvaluator);
 
-        evaluate(vm, expr);
+        evaluate(bEvaluate, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
         assertThat(reporter().reports())
             .contains(report(LABEL, new Trace(), EXECUTION, list(fatal)));
@@ -530,7 +530,7 @@ public class VmTest extends VmTestContext {
 
     private void assertTaskReport(
         BExpr expr, String label, BTrace trace, ResultSource resultSource) {
-      evaluate(vm(), expr);
+      evaluate(bEvaluate(), expr);
       var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
       assertThat(reporter().reports()).contains(taskReport);
     }
@@ -567,8 +567,8 @@ public class VmTest extends VmTestContext {
       setThreadCount(4);
       var reporter = reporter();
       var scheduler = scheduler();
-      var vm = vm(scheduler);
-      assertThat(evaluate(vm, bExpr).get().get())
+      var bEvaluate = bEvaluate(scheduler);
+      assertThat(evaluate(bEvaluate, bExpr).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
       verifyConstTasksResultSource(4, DISK, reporter);
@@ -594,9 +594,9 @@ public class VmTest extends VmTestContext {
 
       setThreadCount(2);
       var scheduler = scheduler();
-      var vm = vm(scheduler);
+      var bEvaluate = bEvaluate(scheduler);
       var expected = bArray(bString("1"), bString("1"), bString("0"));
-      assertThat(evaluate(vm, expr).get().get()).isEqualTo(expected);
+      assertThat(evaluate(bEvaluate, expr).get().get()).isEqualTo(expected);
     }
 
     private BInvoke invokeExecuteCommands(String testName, String commands) throws Exception {
@@ -643,11 +643,11 @@ public class VmTest extends VmTestContext {
   }
 
   private BValue evaluate(BExpr expr) {
-    return evaluate(vm(), expr).get().get();
+    return evaluate(bEvaluate(), expr).get().get();
   }
 
-  private Promise<Maybe<BValue>> evaluate(Vm vm, BExpr expr) {
-    var result = scheduler().submit(vm, argument(expr));
+  private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr) {
+    var result = scheduler().submit(bEvaluate, argument(expr));
     await().until(() -> result.toMaybe().isSome());
     return result;
   }
@@ -660,7 +660,8 @@ public class VmTest extends VmTestContext {
       throws Exception {
     var nativeMethodLoader = mock(NativeMethodLoader.class);
     when(nativeMethodLoader.load(any()))
-        .thenReturn(right(VmTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
+        .thenReturn(
+            right(BEvaluateTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
     return nativeMethodLoader;
   }
 
@@ -686,14 +687,14 @@ public class VmTest extends VmTestContext {
     return expected;
   }
 
-  private CountingVm countingVm() {
-    return new CountingVm(scheduler(), stepEvaluator(), bytecodeF(), bReferenceInliner());
+  private CountingBEvaluate countingBEvaluate() {
+    return new CountingBEvaluate(scheduler(), stepEvaluator(), bytecodeF(), bReferenceInliner());
   }
 
-  private static class CountingVm extends Vm {
+  private static class CountingBEvaluate extends BEvaluate {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
-    public CountingVm(
+    public CountingBEvaluate(
         Scheduler scheduler,
         StepEvaluator stepEvaluator,
         BytecodeFactory bytecodeFactory,
