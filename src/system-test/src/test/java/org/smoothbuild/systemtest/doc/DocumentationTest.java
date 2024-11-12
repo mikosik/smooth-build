@@ -13,9 +13,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 
-public class DocumentationTest extends SystemTestCase {
+public class DocumentationTest extends SystemTestContext {
   @ParameterizedTest
   @ArgumentsSource(CodeExampleProvider.class)
   public void example_code_can_be_compiled(String code) throws Exception {

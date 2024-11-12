@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.cli.command.BuildCommand;
 import org.smoothbuild.systemtest.CommandWithArgs;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
@@ -22,7 +22,7 @@ import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 
 public class BuildCommandTest {
   @Nested
-  class _basic extends SystemTestCase {
+  class _basic extends SystemTestContext {
     @Test
     void build_command_clears_artifacts_dir() throws Exception {
       String path = ARTIFACTS_PATH.resolve("file.txt").toString();
@@ -71,7 +71,7 @@ public class BuildCommandTest {
   @Nested
   class _show_tasks_option {
     @Nested
-    class _basic extends SystemTestCase {
+    class _basic extends SystemTestContext {
       @Test
       void illegal_value_causes_error() throws IOException {
         createUserModule("""
@@ -88,7 +88,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _invoke_matcher extends SystemTestCase {
+    class _invoke_matcher extends SystemTestContext {
       private static final String NATIVE_FUNCTION_CALL =
           """
           result = concat([["a"], ["b"]]);
@@ -127,7 +127,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _combine_matcher extends SystemTestCase {
+    class _combine_matcher extends SystemTestContext {
       private static final String COMBINE =
           """
           MyStruct {
@@ -158,7 +158,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _pick_matcher extends SystemTestCase {
+    class _pick_matcher extends SystemTestContext {
       private static final String PICK =
           """
             result = elem([1, 2, 3], 0);
@@ -185,7 +185,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _order_matcher extends SystemTestCase {
+    class _order_matcher extends SystemTestContext {
       private static final String ORDER =
           """
           result = [
@@ -215,7 +215,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _select_matcher extends SystemTestCase {
+    class _select_matcher extends SystemTestContext {
       private static final String SELECT =
           """
             MyStruct {
@@ -249,7 +249,7 @@ public class BuildCommandTest {
   @Nested
   class _when_log_level_option {
     @Nested
-    class is_fatal extends SystemTestCase {
+    class is_fatal extends SystemTestContext {
       @Test
       void then_error_log_is_not_shown() throws IOException {
         createNativeJar(ReportError.class);
@@ -295,7 +295,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class is_error extends SystemTestCase {
+    class is_error extends SystemTestContext {
       @Test
       void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
@@ -343,7 +343,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class is_warning extends SystemTestCase {
+    class is_warning extends SystemTestContext {
       @Test
       void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
@@ -391,7 +391,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class is_info extends SystemTestCase {
+    class is_info extends SystemTestContext {
       @Test
       void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
@@ -440,7 +440,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _reported_task_header_for extends SystemTestCase {
+  class _reported_task_header_for extends SystemTestContext {
     @Test
     void native_call() throws IOException {
       createNativeJar(ReturnAbc.class);

@@ -10,9 +10,9 @@ import static org.smoothbuild.common.log.base.Log.warning;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class JunitTest extends StandardLibraryTestCase {
+public class JunitTest extends StandardLibraryTestContext {
   private static final String FAILING_TEST_CLASS = "MyClassFailingTest";
   private static final String SUCCESSFUL_TEST_CLASS = "MyClassTest";
 

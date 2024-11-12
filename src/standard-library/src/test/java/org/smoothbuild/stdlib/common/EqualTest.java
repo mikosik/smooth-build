@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class EqualTest extends StandardLibraryTestCase {
+public class EqualTest extends StandardLibraryTestContext {
   @Nested
   class _int {
     @Test

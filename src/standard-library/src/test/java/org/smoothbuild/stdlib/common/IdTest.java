@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class IdTest extends StandardLibraryTestCase {
+public class IdTest extends StandardLibraryTestContext {
   @Test
   void returns_unchanged_string_value() throws Exception {
     var userModule = """

@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.bool;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class FalseTest extends StandardLibraryTestCase {
+public class FalseTest extends StandardLibraryTestContext {
   @Test
   void false_value() throws Exception {
     var userModule = """

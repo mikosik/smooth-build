@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.array;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.stdlib.StandardLibraryTestCase;
+import org.smoothbuild.stdlib.StandardLibraryTestContext;
 
-public class SizeTest extends StandardLibraryTestCase {
+public class SizeTest extends StandardLibraryTestContext {
   @Test
   void empty_array_has_size_0() throws Exception {
     createUserModule("""

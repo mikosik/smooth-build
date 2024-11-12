@@ -12,14 +12,14 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.systemtest.SystemTestContext;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 
 public class CleanCommandTest {
   @Nested
-  class clean_command extends SystemTestCase {
+  class clean_command extends SystemTestContext {
     @Test
     void deletes_content_of_smooth_dir_except_lock_file() throws IOException {
       createUserModule("""

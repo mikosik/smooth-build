@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
 
-public class StandardLibraryTestCase extends EvaluatorTestContext {
+public class StandardLibraryTestContext extends EvaluatorTestContext {
   @BeforeEach
   @Override
   public void beforeEach() throws IOException {
