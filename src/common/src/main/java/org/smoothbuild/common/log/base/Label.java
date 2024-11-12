@@ -1,33 +1,47 @@
 package org.smoothbuild.common.log.base;
 
-import static java.util.Arrays.asList;
-import static org.smoothbuild.common.collect.List.listOfAll;
+import com.google.common.base.CharMatcher;
 
-import org.smoothbuild.common.collect.List;
-
-public record Label(List<String> parts) {
+public record Label(String label) {
   private static final String DELIMITER = ":";
+  public static final CharMatcher ALLOWED_CHARS_MATCHER =
+      CharMatcher.anyOf("abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-  public static Label label(String... parts) {
-    return new Label(listOfAll(asList(parts)));
+  public static Label label(String label) {
+    return new Label(label);
   }
 
   public Label {
-    if (parts.anyMatches(p -> p.contains(":"))) {
-      throw new IllegalArgumentException("Label part cannot contain `:`.");
+    if (label.isEmpty()) {
+      throw new IllegalArgumentException("Label cannot be empty string.");
+    }
+    if (!ALLOWED_CHARS_MATCHER.matchesAllOf(label)) {
+      throw new IllegalArgumentException("Illegal character in lable name '" + label + "'.");
+    }
+    if (label.startsWith(DELIMITER)) {
+      throw new IllegalArgumentException(
+          "Label '" + label + "' cannot start with '" + DELIMITER + "'.");
+    }
+    if (label.endsWith(DELIMITER)) {
+      throw new IllegalArgumentException(
+          "Label '" + label + "' cannot end with '" + DELIMITER + "'.");
+    }
+    if (label.contains(DELIMITER + DELIMITER)) {
+      throw new IllegalArgumentException(
+          "Label '" + label + "' cannot contain '" + DELIMITER + DELIMITER + "'.");
     }
   }
 
-  public Label append(String part) {
-    return new Label(parts.append(part));
+  public Label append(String suffix) {
+    return new Label(label + DELIMITER + suffix);
   }
 
   public boolean startsWith(Label prefix) {
-    return parts.startsWith(prefix.parts);
+    return label.startsWith(prefix.label);
   }
 
   @Override
   public String toString() {
-    return parts.isEmpty() ? DELIMITER : parts.toString(DELIMITER, DELIMITER, "");
+    return DELIMITER + label;
   }
 }

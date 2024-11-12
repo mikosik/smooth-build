@@ -27,7 +27,7 @@ public class Version implements Task0<Tuple0> {
 
   @Override
   public Output<Tuple0> execute() {
-    var label = label("cli", "version");
+    var label = label("cli:version");
     try {
       var info = info(createVersionText(installationHashes.installationNode()));
       return output(tuple(), label, list(info));

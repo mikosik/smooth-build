@@ -44,6 +44,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.SystemOutReporter;
 import org.smoothbuild.common.log.report.Trace;
+import org.smoothbuild.common.testing.ReportTestWiring;
 
 public class SchedulerTest {
   @Nested
@@ -971,7 +972,7 @@ public class SchedulerTest {
     @Test
     void parallel_task_executes_encapsulated_task_for_each_list_element() {
       var scheduler = newScheduler();
-      var task = scheduler.newParallelTask(task1(label(""), s -> s + "!"));
+      var task = scheduler.newParallelTask(task1(label("p"), s -> s + "!"));
       var result = scheduler.submit(task, argument(list("a", "b", "c")));
       await().until(() -> result.toMaybe().isSome());
 
@@ -1072,11 +1073,7 @@ public class SchedulerTest {
   }
 
   private static Scheduler newScheduler() {
-    return newScheduler(Guice.createInjector());
-  }
-
-  private static Scheduler newScheduler(Injector injector) {
-    return new Scheduler(injector, mock(Reporter.class), 4);
+    return new Scheduler(Guice.createInjector(new ReportTestWiring()), new SystemOutReporter(), 4);
   }
 
   private static Scheduler newScheduler(AtomicInteger atomicInteger) {
@@ -1102,8 +1099,8 @@ public class SchedulerTest {
   public static List<Arguments> executionReports() {
     return list(arguments(
         newReport(),
-        report(label("my-label"), new Trace(), MEMORY, list(info("message"))),
-        report(label("my-label"), new Trace(), EXECUTION, list(info("message"))),
+        report(label("myLabel"), new Trace(), MEMORY, list(info("message"))),
+        report(label("myLabel"), new Trace(), EXECUTION, list(info("message"))),
         newReportWithError()));
   }
 
@@ -1113,10 +1110,10 @@ public class SchedulerTest {
   }
 
   private static Report newReport() {
-    return report(label("my-label"), new Trace(), EXECUTION, list());
+    return report(label("myLabel"), new Trace(), EXECUTION, list());
   }
 
   private static Report newReportWithError() {
-    return report(label("my-label"), new Trace(), EXECUTION, list(error("message")));
+    return report(label("myLabel"), new Trace(), EXECUTION, list(error("message")));
   }
 }

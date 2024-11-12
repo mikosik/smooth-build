@@ -39,11 +39,11 @@ public class PrintWriterReporterTest {
   @Test
   void test_format_logs() {
     var trace = new Trace(new MyTraceLine("trace-line"));
-    var report = report(label("label-name"), trace, EXECUTION, logsWithAllLevels());
+    var report = report(label("labelName"), trace, EXECUTION, logsWithAllLevels());
     assertThat(formatReport(report) + "\n")
         .isEqualTo(
             """
-            :label-name
+            :labelName
               MyTraceLine[text=trace-line]
               [FATAL] fatal message
               [ERROR] error message

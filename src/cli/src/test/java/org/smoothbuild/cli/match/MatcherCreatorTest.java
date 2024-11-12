@@ -47,7 +47,7 @@ public class MatcherCreatorTest {
 
     var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
         .map(VM_EVALUATE::append)
-        .append(label("not-evaluate"));
+        .append(label("notEvaluate"));
 
     var expectedUpdated = or(expectedMatcher, not(labelPrefixMatcher(VM_EVALUATE)));
     verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
