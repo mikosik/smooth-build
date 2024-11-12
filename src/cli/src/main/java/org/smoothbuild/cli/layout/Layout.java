@@ -14,7 +14,7 @@ import org.smoothbuild.common.collect.List;
 public class Layout {
   public static final Path SMOOTH_DIR = path(".smooth");
   public static final FullPath PROJECT_PATH = PROJECT_ALIAS.append(Path.root());
-  public static final FullPath SMOOTH_PATH = PROJECT_PATH.appendPart(".smooth");
+  public static final FullPath SMOOTH_PATH = PROJECT_PATH.append(SMOOTH_DIR);
   public static final FullPath ARTIFACTS_PATH = SMOOTH_PATH.appendPart("artifacts");
   public static final FullPath COMPUTATION_DB_PATH = SMOOTH_PATH.appendPart("computations");
   public static final FullPath BYTECODE_DB_PATH = SMOOTH_PATH.appendPart("bytecode");
