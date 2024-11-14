@@ -53,14 +53,6 @@ public class Executor {
     }
   }
 
-  public void waitUntilIdle() throws InterruptedException {
-    synchronized (lock) {
-      while (!isIdle()) {
-        lock.wait();
-      }
-    }
-  }
-
   private boolean takePermitOrAddToQueue(Runnable runnable) {
     synchronized (lock) {
       if (runningThreadsCount < maxThreads) {

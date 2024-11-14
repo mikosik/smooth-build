@@ -91,33 +91,6 @@ public class ExecutorTest {
     assertThat(maxRunningThreads).isEqualTo(Optional.of(maxThreads));
   }
 
-  @Test
-  void wait_until_idle() throws Exception {
-    var familyCount = 4;
-    var familyCompletionCount = new AtomicInteger(0);
-    var executor = newExecutor(familyCount / 2);
-
-    for (int i = 0; i < familyCount; i++) {
-      executor.submit(newCloningRunnable(executor, 100, familyCompletionCount));
-    }
-
-    executor.waitUntilIdle();
-    assertThat(familyCompletionCount.get()).isEqualTo(familyCount);
-  }
-
-  private static Runnable newCloningRunnable(
-      Executor executor, int count, AtomicInteger familyCompletionCount) {
-    return () -> {
-      sleepMillis(1);
-      var nextCount = count - 1;
-      if (0 < nextCount) {
-        executor.submit(newCloningRunnable(executor, nextCount, familyCompletionCount));
-      } else {
-        familyCompletionCount.incrementAndGet();
-      }
-    };
-  }
-
   private static <T extends Throwable> Runnable wrapExceptionRunnable(Consumer0<T> consumer) {
     return () -> {
       try {
