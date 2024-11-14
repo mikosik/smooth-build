@@ -20,7 +20,7 @@ public class CommonTestContext implements CommonTestApi {
   }
 
   private Scheduler newScheduler() {
-    return new Scheduler(null, reporter(), threadCount);
+    return new Scheduler(null, reporter());
   }
 
   @Override

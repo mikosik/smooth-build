@@ -22,7 +22,6 @@ import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.task.SchedulerWiring;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
@@ -263,7 +262,6 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         install(new CompilerBackendWiring());
         install(new VmTestWiring());
         install(new ReportTestWiring());
-        install(new SchedulerWiring());
       }
     });
   }

@@ -1062,7 +1062,7 @@ public class SchedulerTest {
   private static <R> void assertExecutionSubmitsReport(
       Injector injector, Function<Scheduler, Promise<R>> scheduleFunction, Report report) {
     var reporter = mock(Reporter.class);
-    var scheduler = new Scheduler(injector, reporter, 4);
+    var scheduler = new Scheduler(injector, reporter);
 
     var result = scheduleFunction.apply(scheduler);
     await().until(() -> result.toMaybe().isSome());
@@ -1071,7 +1071,7 @@ public class SchedulerTest {
   }
 
   private static Scheduler newScheduler() {
-    return new Scheduler(Guice.createInjector(new ReportTestWiring()), new SystemOutReporter(), 4);
+    return new Scheduler(Guice.createInjector(new ReportTestWiring()), new SystemOutReporter());
   }
 
   private static Scheduler newScheduler(AtomicInteger atomicInteger) {
@@ -1081,7 +1081,7 @@ public class SchedulerTest {
         bind(AtomicInteger.class).toInstance(atomicInteger);
       }
     });
-    return new Scheduler(injector, new SystemOutReporter(), 4);
+    return new Scheduler(injector, new SystemOutReporter());
   }
 
   private static Scheduler newScheduler(AtomicBoolean atomicBoolean) {
@@ -1091,7 +1091,7 @@ public class SchedulerTest {
         bind(AtomicBoolean.class).toInstance(atomicBoolean);
       }
     });
-    return new Scheduler(injector, new SystemOutReporter(), 4);
+    return new Scheduler(injector, new SystemOutReporter());
   }
 
   public static List<Arguments> executionReports() {
