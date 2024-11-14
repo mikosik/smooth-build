@@ -14,7 +14,6 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
@@ -43,7 +42,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.SystemOutReporter;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.testing.ReportTestWiring;
 
 public class SchedulerTest {
@@ -1099,21 +1097,21 @@ public class SchedulerTest {
   public static List<Arguments> executionReports() {
     return list(arguments(
         newReport(),
-        report(label("myLabel"), new Trace(), MEMORY, list(info("message"))),
-        report(label("myLabel"), new Trace(), EXECUTION, list(info("message"))),
+        report(label("myLabel"), MEMORY, list(info("message"))),
+        report(label("myLabel"), list(info("message"))),
         newReportWithError()));
   }
 
   private static Report reportAboutExceptionThrownByTask(RuntimeException exception) {
     var fatal = fatal("Task execution failed with exception:", exception);
-    return report(LABEL, new Trace(), EXECUTION, list(fatal));
+    return report(LABEL, list(fatal));
   }
 
   private static Report newReport() {
-    return report(label("myLabel"), new Trace(), EXECUTION, list());
+    return report(label("myLabel"), list());
   }
 
   private static Report newReportWithError() {
-    return report(label("myLabel"), new Trace(), EXECUTION, list(error("message")));
+    return report(label("myLabel"), list(error("message")));
   }
 }

@@ -35,7 +35,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.ResultSource;
 import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
@@ -451,8 +450,7 @@ public class BEvaluateTest extends VmTestContext {
 
         evaluate(bEvaluate, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
-        assertThat(reporter().reports())
-            .contains(report(LABEL, new Trace(), EXECUTION, list(fatal)));
+        assertThat(reporter().reports()).contains(report(LABEL, list(fatal)));
       }
     }
   }

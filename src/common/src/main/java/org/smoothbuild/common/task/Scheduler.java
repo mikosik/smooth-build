@@ -6,7 +6,6 @@ import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Tasks.taskX;
 
@@ -22,7 +21,6 @@ import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.log.report.Trace;
 
 /**
  * Executes submitted task asynchronously providing result via returned Promise.
@@ -273,7 +271,7 @@ public class Scheduler {
         taskResult.result().addConsumer(result);
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
-        reporter.submit(report(LABEL, new Trace(), EXECUTION, list(fatal)));
+        reporter.submit(report(LABEL, list(fatal)));
         result.accept(none());
       }
     }
