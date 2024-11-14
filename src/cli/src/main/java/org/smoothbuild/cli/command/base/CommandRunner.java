@@ -5,7 +5,6 @@ import static org.smoothbuild.cli.Main.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import jakarta.inject.Inject;
@@ -13,7 +12,6 @@ import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Scheduler;
 
 public class CommandRunner {
@@ -40,7 +38,7 @@ public class CommandRunner {
       return result.isNone() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
     } catch (InterruptedException e) {
       var fatal = fatal("main thread has been interrupted");
-      reporter.submit(report(label("smooth"), new Trace(), EXECUTION, list(fatal)));
+      reporter.submit(report(label("smooth"), list(fatal)));
       return EXIT_CODE_ERROR;
     }
   }

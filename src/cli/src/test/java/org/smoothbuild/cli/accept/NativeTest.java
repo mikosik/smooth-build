@@ -9,7 +9,6 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import java.util.regex.Pattern;
@@ -152,7 +151,7 @@ public class NativeTest extends EvaluatorTestContext {
         var sTrace = sTrace("reportError", location(moduleFullPath(), 3));
         var label = label("vm:evaluate:invoke");
         var errors = list(error("ERROR MESSAGE"));
-        var report = report(label, sTrace, EXECUTION, errors);
+        var report = report(label, sTrace, errors);
         assertThat(reports()).contains(report);
       }
 

@@ -1,7 +1,6 @@
 package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.task.Tasks.argument;
@@ -17,7 +16,6 @@ import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task2;
@@ -49,7 +47,7 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
     var evaluatedExprs = scheduleEvaluateCore(scheduler, sExprs, evaluables);
 
     var scheduleLabel = EVALUATOR_LABEL.append("schedule");
-    return schedulingOutput(evaluatedExprs, report(scheduleLabel, new Trace(), EXECUTION, list()));
+    return schedulingOutput(evaluatedExprs, report(scheduleLabel, list()));
   }
 
   @VisibleForTesting

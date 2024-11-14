@@ -1,14 +1,12 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Locations;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
@@ -26,7 +24,7 @@ public class LoadInternalModuleMembers implements Task0<SModule> {
         immutableBindings(STypes.baseTypes().toMap(SType::name, t -> baseTypeDefinitions(t)));
     var members = new SScope(types, immutableBindings());
     var sModule = new SModule(members, members);
-    return output(sModule, report(label, new Trace(), EXECUTION, logger.toList()));
+    return output(sModule, report(label, logger.toList()));
   }
 
   private static STypeDefinition baseTypeDefinitions(SType sBaseType) {

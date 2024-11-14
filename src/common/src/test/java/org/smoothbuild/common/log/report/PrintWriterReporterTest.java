@@ -10,7 +10,6 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
 import static org.smoothbuild.common.log.base.ResultSource.DISK;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.PrintWriterReporter.formatLog;
 import static org.smoothbuild.common.log.report.PrintWriterReporter.formatReport;
 import static org.smoothbuild.common.log.report.Report.report;
@@ -28,7 +27,7 @@ public class PrintWriterReporterTest {
   @Test
   void submit_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);
-    var report = report(label("name"), new Trace(), DISK, logsWithAllLevels());
+    var report = report(label("name"), DISK, logsWithAllLevels());
     var reporter = new PrintWriterReporter(systemOut);
 
     reporter.submit(report);
@@ -39,7 +38,7 @@ public class PrintWriterReporterTest {
   @Test
   void test_format_logs() {
     var trace = new Trace(new MyTraceLine("trace-line"));
-    var report = report(label("labelName"), trace, EXECUTION, logsWithAllLevels());
+    var report = report(label("labelName"), trace, logsWithAllLevels());
     assertThat(formatReport(report) + "\n")
         .isEqualTo(
             """

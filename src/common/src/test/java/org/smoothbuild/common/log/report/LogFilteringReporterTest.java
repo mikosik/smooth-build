@@ -28,7 +28,7 @@ public class LogFilteringReporterTest {
   @MethodSource
   void logs_are_filtered(Level level, List<Log> logs, List<Log> expected) {
     var wrappedReporter = mock(Reporter.class);
-    var report = report(label("name"), new Trace(), DISK, logs);
+    var report = report(label("name"), DISK, logs);
     var reporter = new LogFilteringReporter(wrappedReporter, level);
 
     reporter.submit(report);

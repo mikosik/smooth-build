@@ -7,7 +7,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
@@ -235,7 +233,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
     var label = label("cli:build:saveArtifacts");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
-    assertThat(result.report()).isEqualTo(report(label, new Trace(), EXECUTION, logs));
+    assertThat(result.report()).isEqualTo(report(label, logs));
     var artifactsBucket = filesystem().bucketFor(ARTIFACTS_PATH);
     assertThat(directoryToFileMap(artifactsBucket)).isEqualTo(expectedDirectoryMap);
   }

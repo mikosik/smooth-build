@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.info;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
@@ -16,7 +15,6 @@ import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.log.location.CommandLineLocation;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task0;
@@ -41,7 +39,7 @@ public class ScheduleList implements Task0<Tuple0> {
     var scopeS = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
     var result = scheduler.submit(PrintEvaluables.class, scopeS);
     var label = ListCommand.LABEL.append("schedule");
-    return schedulingOutput(result, report(label, new Trace(), EXECUTION, list()));
+    return schedulingOutput(result, report(label, list()));
   }
 
   public static class PrintEvaluables implements Task1<SModule, Tuple0> {

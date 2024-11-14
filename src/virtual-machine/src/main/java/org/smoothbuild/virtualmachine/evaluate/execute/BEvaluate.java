@@ -4,7 +4,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
@@ -285,7 +284,7 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   }
 
   static Report newReport(Label label, BTrace trace, List<Log> logs) {
-    return report(label, trace, EXECUTION, logs);
+    return report(label, trace, logs);
   }
 
   private Job newJob(BExpr expr) {

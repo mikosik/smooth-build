@@ -4,7 +4,6 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
@@ -12,7 +11,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.log.report.Trace;
 
 public record Output<V>(Promise<Maybe<V>> result, Report report) {
   public Output(Promise<Maybe<V>> result, Report report) {
@@ -29,7 +27,7 @@ public record Output<V>(Promise<Maybe<V>> result, Report report) {
   }
 
   public static <V> Output<V> output(V value, Label label, List<Log> logs) {
-    return output(value, Report.report(label, new Trace(), EXECUTION, logs));
+    return output(value, Report.report(label, logs));
   }
 
   public static <V> Output<V> output(V result, Report report) {

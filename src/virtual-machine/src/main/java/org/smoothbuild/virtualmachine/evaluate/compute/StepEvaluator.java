@@ -106,7 +106,7 @@ public class StepEvaluator {
     if (existingPromise != null) {
       var result = scheduleTaskWaitingForOtherTaskResult(step, purity, existingPromise);
       var label = VM_LABEL.append("scheduleJoin");
-      return schedulingOutput(result, report(label, step.trace(), EXECUTION, list()));
+      return schedulingOutput(result, report(label, step.trace(), list()));
     } else if (purity == PURE && diskCache.contains(hash)) {
       return readEvaluationFromDiskCache(step, hash, resultPromise);
     } else {
@@ -157,7 +157,7 @@ public class StepEvaluator {
 
   private static Output<BValue> outputForException(Step step, Exception e) {
     var fatal = fatal("Vm evaluation Task failed with exception:", e);
-    var report = report(VM_EVALUATE, step.trace(), EXECUTION, list(fatal));
+    var report = report(VM_EVALUATE, step.trace(), list(fatal));
     return output(null, report);
   }
 
