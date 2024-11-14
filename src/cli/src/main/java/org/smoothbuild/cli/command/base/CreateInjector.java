@@ -23,7 +23,6 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import org.smoothbuild.common.log.report.ReportWiring;
-import org.smoothbuild.common.task.SchedulerWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatorWiring;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
@@ -47,8 +46,7 @@ public class CreateInjector {
         new CompilerBackendWiring(),
         new VmWiring(),
         new DiskBucketWiring(aliasToPath),
-        new ReportWiring(out, reportMatcher, logLevel),
-        new SchedulerWiring());
+        new ReportWiring(out, reportMatcher, logLevel));
   }
 
   public static Injector createInjector(PrintWriter out) {
@@ -60,8 +58,7 @@ public class CreateInjector {
         PRODUCTION,
         new CliWiring(setOfAll(aliasToPath.keySet())),
         new DiskBucketWiring(aliasToPath),
-        new ReportWiring(out, ReportMatchers.ALL, INFO),
-        new SchedulerWiring());
+        new ReportWiring(out, ReportMatchers.ALL, INFO));
   }
 
   private static Path installationDir() {

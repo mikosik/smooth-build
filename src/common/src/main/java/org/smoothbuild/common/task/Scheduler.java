@@ -1,5 +1,6 @@
 package org.smoothbuild.common.task;
 
+import static java.lang.Thread.startVirtualThread;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promise.promise;
@@ -16,7 +17,6 @@ import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.concurrent.Executor;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Label;
@@ -38,14 +38,12 @@ public class Scheduler {
    */
   public static final Label LABEL = label("scheduler");
   private final Injector injector;
-  private final Executor executor;
   private final Reporter reporter;
 
   @Inject
-  public Scheduler(Injector injector, Reporter reporter, @ThreadCount Integer threadCount) {
+  public Scheduler(Injector injector, Reporter reporter) {
     this.injector = injector;
     this.reporter = reporter;
-    this.executor = new Executor(threadCount);
   }
 
   // Task0
@@ -241,7 +239,7 @@ public class Scheduler {
       if (dependencies.anyMatches(d -> d.get().isNone())) {
         execution.result.accept(none());
       } else {
-        executor.submit(execution);
+        startVirtualThread(execution);
       }
     });
     return execution.resultPromise();
