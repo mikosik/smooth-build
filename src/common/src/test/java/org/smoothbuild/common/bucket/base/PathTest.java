@@ -156,12 +156,12 @@ public class PathTest {
   }
 
   @ParameterizedTest
-  @MethodSource("changeExtension_cases")
-  public void changeExtension(String path, String extension, String expected) {
-    Truth.assertThat(Path.path(path).changeExtension(extension)).isEqualTo(Path.path(expected));
+  @MethodSource("withExtension_cases")
+  public void withExtension(String path, String extension, String expected) {
+    Truth.assertThat(Path.path(path).withExtension(extension)).isEqualTo(Path.path(expected));
   }
 
-  public static Stream<Arguments> changeExtension_cases() {
+  public static Stream<Arguments> withExtension_cases() {
     return Stream.of(
         arguments("abc", "csv", "abc.csv"),
         arguments("path/abc", "csv", "path/abc.csv"),
@@ -175,13 +175,13 @@ public class PathTest {
   }
 
   @ParameterizedTest
-  @MethodSource("changeExtension_fails_for_cases")
-  public void changeExtension_fails_for(String path, String part) {
-    assertCall(() -> Path.path(path).changeExtension(part))
+  @MethodSource("withExtension_fails_for_cases")
+  public void withExtension_fails_for(String path, String part) {
+    assertCall(() -> Path.path(path).withExtension(part))
         .throwsException(IllegalArgumentException.class);
   }
 
-  public static Stream<Arguments> changeExtension_fails_for_cases() {
+  public static Stream<Arguments> withExtension_fails_for_cases() {
     return Stream.of(
         arguments(".", ""),
         arguments(".", "csv"),

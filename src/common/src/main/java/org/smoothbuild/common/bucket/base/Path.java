@@ -117,7 +117,7 @@ public class Path {
     }
   }
 
-  public Path changeExtension(String extension) {
+  public Path withExtension(String extension) {
     failWithIllegalArgumentIf(isRoot(), "Cannot change extension of '.'.");
     failWithIllegalArgumentIf(
         extension.contains("."), "Extension cannot contain '.', but = " + extension);

@@ -30,7 +30,7 @@ public record FullPath(Alias alias, Path path) {
   }
 
   public FullPath withExtension(String extension) {
-    return fullPath(alias, path.changeExtension(extension));
+    return fullPath(alias, path.withExtension(extension));
   }
 
   public String q() {
