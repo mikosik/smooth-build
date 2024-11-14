@@ -8,7 +8,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_SCHEDULE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsFatal;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.level;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.message;
@@ -105,7 +105,8 @@ public class StepEvaluator {
     var existingPromise = memoryCache.putIfAbsent(hash, resultPromise);
     if (existingPromise != null) {
       var result = scheduleTaskWaitingForOtherTaskResult(step, purity, existingPromise);
-      return schedulingOutput(result, report(VM_SCHEDULE, step.trace(), EXECUTION, list()));
+      var label = VM_LABEL.append("scheduleJoin");
+      return schedulingOutput(result, report(label, step.trace(), EXECUTION, list()));
     } else if (purity == PURE && diskCache.contains(hash)) {
       return readEvaluationFromDiskCache(step, hash, resultPromise);
     } else {

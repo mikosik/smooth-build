@@ -4,7 +4,7 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
@@ -66,7 +66,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
   @Override
   public Output<SModule> execute(PModule pModule, SScope environment) {
     var typeTeller = new TypeTeller(environment, pModule.scope());
-    var label = COMPILE_FRONT_LABEL.append("buildIr");
+    var label = COMPILER_FRONT_LABEL.append("buildIr");
     var sModule = new Worker(typeTeller, environment).convertModule(pModule);
     return output(sModule, label, list());
   }

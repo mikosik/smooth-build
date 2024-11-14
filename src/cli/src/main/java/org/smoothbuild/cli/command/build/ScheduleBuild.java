@@ -2,7 +2,6 @@ package org.smoothbuild.cli.command.build;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
@@ -37,7 +36,7 @@ public class ScheduleBuild implements Task0<Tuple0> {
         argument(Layout.MODULES),
         argument(listOfAll(values)));
     var result = scheduler.submit(SaveArtifacts.class, evaluatedExprs);
-    var buildLabel = label("build:schedule");
+    var buildLabel = BuildCommand.LABEL.append("schedule");
     return schedulingOutput(result, report(buildLabel, new Trace(), EXECUTION, list()));
   }
 }

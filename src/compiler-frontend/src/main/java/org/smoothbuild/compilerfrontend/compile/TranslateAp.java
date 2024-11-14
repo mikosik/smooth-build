@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     apTranslatingVisitor.visit(moduleContext);
     var name = fullPath.withExtension("").path().lastPart().toString();
     var moduleP = new PModule(name, listOfAll(structs), listOfAll(evaluables));
-    var label = COMPILE_FRONT_LABEL.append("simplifyParseTree");
+    var label = COMPILER_FRONT_LABEL.append("simplifyParseTree");
     return output(moduleP, label, logger.toList());
   }
 

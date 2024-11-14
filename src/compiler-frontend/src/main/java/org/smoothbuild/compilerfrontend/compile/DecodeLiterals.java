@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import org.smoothbuild.common.base.DecodeHexException;
@@ -20,7 +20,7 @@ public class DecodeLiterals implements Task1<PModule, PModule> {
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     new DecodeLiteralModuleVisitor(logger).visitModule(pModule);
-    var label = COMPILE_FRONT_LABEL.append("decodeLiterals");
+    var label = COMPILER_FRONT_LABEL.append("decodeLiterals");
     return output(pModule, label, logger.toList());
   }
 

@@ -7,7 +7,7 @@ import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
   public Output<PModule> execute(PModule pModule, SScope environment) {
     var logger = new Logger();
     new Visitor(environment, immutableBindings(), logger).visitModule(pModule);
-    var label = COMPILE_FRONT_LABEL.append("injectDefaultArguments");
+    var label = COMPILER_FRONT_LABEL.append("injectDefaultArguments");
     return output(pModule, label, logger.toList());
   }
 

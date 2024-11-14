@@ -3,7 +3,7 @@ package org.smoothbuild.evaluator;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
-import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
+import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.task.Output;
@@ -22,6 +22,6 @@ public class ConfigureBsTranslator implements Task1<CompiledExprs, Tuple0> {
   @Override
   public Output<Tuple0> execute(CompiledExprs compiledExprs) {
     bsTranslator.setBsMapping(compiledExprs.bsMapping());
-    return output(tuple(), EVALUATE_LABEL, list());
+    return output(tuple(), EVALUATOR_LABEL.append("configureBsTranslator"), list());
   }
 }

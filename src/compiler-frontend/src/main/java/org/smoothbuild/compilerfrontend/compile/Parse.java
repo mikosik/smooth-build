@@ -5,7 +5,7 @@ import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import java.util.BitSet;
@@ -41,7 +41,7 @@ public class Parse implements Task2<String, FullPath, ModuleContext> {
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
 
-    var label = COMPILE_FRONT_LABEL.append("parse");
+    var label = COMPILER_FRONT_LABEL.append("parse");
     return output(smoothAntlrParser.module(), label, logger.toList());
   }
 

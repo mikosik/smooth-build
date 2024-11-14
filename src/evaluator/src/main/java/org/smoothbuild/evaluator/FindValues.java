@@ -3,7 +3,7 @@ package org.smoothbuild.evaluator;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
+import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
@@ -35,7 +35,7 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
         logger.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
       }
     }
-    var label = EVALUATE_LABEL.append("findValues");
+    var label = EVALUATOR_LABEL.append("findValues");
     if (logger.containsFailure()) {
       return output(label, logger.toList());
     }
