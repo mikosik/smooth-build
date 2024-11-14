@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.io.Paths.removeExtension;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -69,8 +68,7 @@ public class InstallationHashes {
     var smoothNode = nodeFor(fullPath);
     var nativeNode = nodeForNativeJarFor(fullPath);
     var nodes = nativeNode.isSome() ? list(smoothNode, nativeNode.get()) : list(smoothNode);
-    var moduleName = removeExtension(fullPath.toString());
-    return new HashNode(moduleName + " module", nodes);
+    return new HashNode(fullPath.withExtension("") + " module", nodes);
   }
 
   private Maybe<HashNode> nodeForNativeJarFor(FullPath fullPath) throws IOException {
