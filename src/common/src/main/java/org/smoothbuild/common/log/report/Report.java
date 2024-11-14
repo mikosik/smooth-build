@@ -1,14 +1,14 @@
 package org.smoothbuild.common.log.report;
 
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.base.Origin;
 
-public record Report(Label label, Trace trace, ResultSource source, List<Log> logs) {
+public record Report(Label label, Trace trace, Origin source, List<Log> logs) {
   public static Report report(Label label, List<Log> logs) {
     return report(label, new Trace(), logs);
   }
@@ -17,11 +17,11 @@ public record Report(Label label, Trace trace, ResultSource source, List<Log> lo
     return report(label, trace, EXECUTION, logs);
   }
 
-  public static Report report(Label label, ResultSource source, List<Log> logs) {
+  public static Report report(Label label, Origin source, List<Log> logs) {
     return report(label, new Trace(), source, logs);
   }
 
-  public static Report report(Label label, Trace trace, ResultSource source, List<Log> logs) {
+  public static Report report(Label label, Trace trace, Origin source, List<Log> logs) {
     return new Report(label, trace, source, logs);
   }
 

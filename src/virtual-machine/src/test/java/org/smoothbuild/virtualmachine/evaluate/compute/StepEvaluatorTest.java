@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
-import static org.smoothbuild.common.log.base.ResultSource.DISK;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
-import static org.smoothbuild.common.log.base.ResultSource.MEMORY;
+import static org.smoothbuild.common.log.base.Origin.DISK;
+import static org.smoothbuild.common.log.base.Origin.EXECUTION;
+import static org.smoothbuild.common.log.base.Origin.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.base.Origin;
 import org.smoothbuild.common.task.Tasks;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -298,10 +298,10 @@ public class StepEvaluatorTest extends VmTestContext {
       BValue memoryValue,
       BValue diskValue,
       BOutput expectedOutput,
-      ResultSource expectedResultSource)
+      Origin expectedOrigin)
       throws Exception {
     var stepEvaluator = stepEvaluatorWithCaches(step, input, memoryValue, diskValue);
-    assertComputationResult(stepEvaluator, step, input, expectedOutput, expectedResultSource);
+    assertComputationResult(stepEvaluator, step, input, expectedOutput, expectedOrigin);
   }
 
   private StepEvaluator stepEvaluatorWithCaches(
@@ -330,14 +330,14 @@ public class StepEvaluatorTest extends VmTestContext {
       Step step,
       BTuple input,
       BOutput expectedOutput,
-      ResultSource expectedResultSource)
+      Origin expectedOrigin)
       throws Exception {
     var arg = input.elements().map(Tasks::argument);
     var result = stepEvaluator.evaluate(step, arg);
     await().until(() -> result.toMaybe().isSome());
 
     assertThat(result.get().get()).isEqualTo(expectedOutput.value());
-    var report = report(step.label(), step.trace(), expectedResultSource, list());
+    var report = report(step.label(), step.trace(), expectedOrigin, list());
     assertThat(reporter().reports()).contains(report);
   }
 

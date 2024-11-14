@@ -2,8 +2,8 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.ResultSource.DISK;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Origin.DISK;
+import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
@@ -24,7 +24,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.base.Origin;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
@@ -150,7 +150,7 @@ public class StepEvaluator {
     return newOutput(step, bOutput, EXECUTION);
   }
 
-  private static Output<BValue> newOutput(Step step, BOutput bOutput, ResultSource source)
+  private static Output<BValue> newOutput(Step step, BOutput bOutput, Origin source)
       throws BytecodeException {
     return output(bOutput.value(), newReport(step, bOutput, source));
   }
@@ -161,12 +161,12 @@ public class StepEvaluator {
     return output(null, report);
   }
 
-  private static Report newReport(Step step, BOutput bOutput, ResultSource resultSource)
+  private static Report newReport(Step step, BOutput bOutput, Origin origin)
       throws BytecodeException {
     var logs = bOutput
         .storedLogs()
         .elements(BTuple.class)
         .map(message -> new Log(level(message), message(message)));
-    return report(step.label(), step.trace(), resultSource, logs);
+    return report(step.label(), step.trace(), origin, logs);
   }
 }

@@ -9,7 +9,7 @@ import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Level.INFO;
 import static org.smoothbuild.common.log.base.Level.WARNING;
-import static org.smoothbuild.common.log.base.ResultSource.DISK;
+import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingLog.ERROR_LOG;
 import static org.smoothbuild.common.testing.TestingLog.FATAL_LOG;
