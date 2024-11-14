@@ -5,7 +5,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.bucket.base.FullPath;
@@ -43,7 +43,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
     for (var fullPath : modules) {
       module = scheduler.submit(ScheduleModuleCompilation.class, module, argument(fullPath));
     }
-    var label = COMPILE_FRONT_LABEL.append("schedule");
+    var label = COMPILER_FRONT_LABEL.append("schedule");
     var report = report(label, new Trace(), EXECUTION, list());
     return schedulingOutput(module, report);
   }
@@ -73,7 +73,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = scheduler.submit(InferTypes.class, sorted, environment);
       var moduleS = scheduler.submit(ConvertPs.class, typesInferred, environment);
-      var label = COMPILE_FRONT_LABEL.append("schedule").append("module");
+      var label = COMPILER_FRONT_LABEL.append("schedule").append("module");
       var report = report(label, new Trace(), EXECUTION, list());
       return schedulingOutput(moduleS, report);
     }

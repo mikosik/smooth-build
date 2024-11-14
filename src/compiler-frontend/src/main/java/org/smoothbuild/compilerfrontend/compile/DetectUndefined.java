@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 
@@ -31,7 +31,7 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
   public Output<PModule> execute(PModule pModule, SScope imported) {
     var logger = new Logger();
     new Detector(imported, emptyScope(), logger).visitModule(pModule);
-    var label = COMPILE_FRONT_LABEL.append("detectUndefined");
+    var label = COMPILER_FRONT_LABEL.append("detectUndefined");
     return output(pModule, label, logger.toList());
   }
 

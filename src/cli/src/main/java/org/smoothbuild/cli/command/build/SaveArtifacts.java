@@ -5,7 +5,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
@@ -55,7 +54,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
 
   @Override
   public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
-    var label = label("build:saveArtifacts");
+    var label = BuildCommand.LABEL.append("saveArtifacts");
     try {
       filesystem.createDir(artifactsPath);
     } catch (IOException e) {

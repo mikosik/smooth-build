@@ -3,7 +3,7 @@ package org.smoothbuild.compilerbackend;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILE_BACK_LABEL;
+import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILER_BACK_LABEL;
 import static org.smoothbuild.compilerbackend.CompiledExprs.compilationResult;
 
 import jakarta.inject.Inject;
@@ -26,7 +26,7 @@ public class BackendCompile
   @Override
   public Output<CompiledExprs> execute(
       List<SExpr> sExprs, ImmutableBindings<SNamedEvaluable> evaluables) {
-    var label = COMPILE_BACK_LABEL.append("generateBytecode");
+    var label = COMPILER_BACK_LABEL.append("generateBytecode");
     var sbTranslator = sbTranslatorFactory.create(evaluables);
     try {
       var bExprs = sExprs.map(sbTranslator::translateExpr);

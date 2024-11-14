@@ -3,7 +3,6 @@ package org.smoothbuild.cli.command.list;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
@@ -41,7 +40,7 @@ public class ScheduleList implements Task0<Tuple0> {
   public Output<Tuple0> execute() {
     var scopeS = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
     var result = scheduler.submit(PrintEvaluables.class, scopeS);
-    var label = label("schedule:list");
+    var label = ListCommand.LABEL.append("schedule");
     return schedulingOutput(result, report(label, new Trace(), EXECUTION, list()));
   }
 
@@ -54,9 +53,8 @@ public class ScheduleList implements Task0<Tuple0> {
               .map(Nal::name)
               .sorted()
               .collect(joining("\n"));
-      var label = label("cli:list");
       var info = info("Values that can be evaluated:\n" + oneValuePerLineString);
-      return output(tuple(), label, list(info));
+      return output(tuple(), ListCommand.LABEL, list(info));
     }
   }
 

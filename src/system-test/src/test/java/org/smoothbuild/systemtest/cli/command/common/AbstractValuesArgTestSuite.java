@@ -24,7 +24,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     assertFinishedWithError();
     assertSystemOutContains(
         """
-            :evaluate:findValues
+            :evaluator:findValues
               [ERROR] Unknown value `unknownValue`.
               Try 'smooth list' to see all available values that can be calculated.\
             """);
@@ -70,7 +70,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     assertFinishedWithError();
     assertSystemOutContains(
         """
-        :evaluate:findValues
+        :evaluator:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
         """);
   }
@@ -85,7 +85,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
     assertFinishedWithError();
     assertSystemOutContains(
         """
-        :evaluate:findValues
+        :evaluator:findValues
           [ERROR] `testStringIdentity` cannot be calculated as it is not a value but a function.
         """);
   }

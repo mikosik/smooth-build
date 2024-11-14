@@ -1,7 +1,6 @@
 package org.smoothbuild.cli.command.build;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Output.output;
 
@@ -26,7 +25,7 @@ public class DeleteArtifacts implements Task0<Tuple0> {
 
   @Override
   public Output<Tuple0> execute() {
-    var label = label("build:deleteArtifacts");
+    var label = BuildCommand.LABEL.append("deleteArtifacts");
     try {
       filesystem.delete(artifactsPath);
       return output(label, list());

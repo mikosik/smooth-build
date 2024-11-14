@@ -8,7 +8,7 @@ import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.task.Tasks.task1;
 import static org.smoothbuild.common.task.Tasks.task2;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
-import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATE_LABEL;
+import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
@@ -41,14 +41,14 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
   @Override
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
     var moduleS = scheduler.submit(FrontendCompile.class, argument(modules));
-    var mapLabel = EVALUATE_LABEL.append("map");
+    var mapLabel = EVALUATOR_LABEL.append("getMembersAndImported");
     var scopeS = scheduler.submit(task1(mapLabel, SModule::membersAndImported), moduleS);
     var sExprs = scheduler.submit(FindValues.class, scopeS, argument(names));
     var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), scopeS);
 
     var evaluatedExprs = scheduleEvaluateCore(scheduler, sExprs, evaluables);
 
-    var scheduleLabel = EVALUATE_LABEL.append("schedule");
+    var scheduleLabel = EVALUATOR_LABEL.append("schedule");
     return schedulingOutput(evaluatedExprs, report(scheduleLabel, new Trace(), EXECUTION, list()));
   }
 
@@ -59,11 +59,11 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
       Promise<Maybe<ImmutableBindings<SNamedEvaluable>>> evaluables) {
     var compiledExprs = scheduler.submit(BackendCompile.class, sExprs, evaluables);
     var setBsMapping = scheduler.submit(ConfigureBsTranslator.class, compiledExprs);
-    var getLabel = EVALUATE_LABEL.append("getCompiledExprs");
+    var getLabel = EVALUATOR_LABEL.append("getCompiledExprs");
     var bExprs = scheduler.submit(task1(getLabel, CompiledExprs::bExprs), compiledExprs);
     var evaluated =
         scheduler.submit(list(setBsMapping), scheduler.newParallelTask(BEvaluate.class), bExprs);
-    var mergeLabel = EVALUATE_LABEL.append("merge");
+    var mergeLabel = EVALUATOR_LABEL.append("merge");
     return scheduler.submit(
         task2(mergeLabel, (ce, ee) -> evaluatedExprs(ce.sExprs(), ee)), compiledExprs, evaluated);
   }

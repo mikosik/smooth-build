@@ -8,8 +8,7 @@ import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Output.output;
 import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_INLINE;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_SCHEDULE;
+import static org.smoothbuild.virtualmachine.VmConstants.VM_LABEL;
 import static org.smoothbuild.virtualmachine.evaluate.execute.BTrace.bTrace;
 
 import jakarta.inject.Inject;
@@ -76,10 +75,11 @@ public class BEvaluate implements Task1<BExpr, BValue> {
 
   @Override
   public Output<BValue> execute(BExpr expr) {
+    var label = VM_LABEL.append("schedule");
     try {
-      return successOutput(new BTrace(), scheduleJob(newJob(expr)));
+      return successOutput(scheduleJob(newJob(expr)), label, new BTrace());
     } catch (BytecodeException e) {
-      return failedSchedulingOutput(new BTrace(), e);
+      return failedSchedulingOutput(label, new BTrace(), e);
     }
   }
 
@@ -117,14 +117,15 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
       Job callJob, BCall call, BExpr bLambda, BCombine combine) throws BytecodeException {
     Task1<BValue, BValue> schedulingTask = (bValue) -> {
+      var label = VM_LABEL.append("scheduleCall");
       try {
         var argJobs = combine.subExprs().items().map(e -> newJob(e, callJob));
         var bodyEnvironmentJobs = argJobs.appendAll(callJob.environment());
         var bodyTrace = bTrace(call.hash(), bValue.hash(), callJob.trace());
         var bodyJob = newJob(((BLambda) bValue).body(), bodyEnvironmentJobs, bodyTrace);
-        return successOutput(callJob.trace(), scheduleJob(bodyJob));
+        return successOutput(scheduleJob(bodyJob), label, callJob.trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(callJob.trace(), e);
+        return failedSchedulingOutput(label, callJob.trace(), e);
       }
     };
     return scheduler.submit(schedulingTask, scheduleNewJob(bLambda, callJob));
@@ -133,12 +134,13 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
       Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
     Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
+      var label = VM_LABEL.append("scheduleCall");
       try {
         var result = scheduleCallBodyWithTupleArguments(
             callJob, bCall, lambdaExpr, tuple, (BLambda) lambdaValue);
-        return successOutput(callJob.trace(), result);
+        return successOutput(result, label, callJob.trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(callJob.trace(), e);
+        return failedSchedulingOutput(label, callJob.trace(), e);
       }
     };
     var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
@@ -148,14 +150,16 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
       Job callJob, BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
     Task2<BValue, BValue, BValue> schedulingTask = (lambdaValue, argsValue) -> {
+      var label = VM_LABEL.append("scheduleCall");
       try {
         var bLambda = (BLambda) lambdaValue;
         var argsTuple = (BTuple) argsValue;
         return successOutput(
-            callJob.trace(),
-            scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, argsTuple, bLambda));
+            scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, argsTuple, bLambda),
+            label,
+            callJob.trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(callJob.trace(), e);
+        return failedSchedulingOutput(label, callJob.trace(), e);
       }
     };
     /*
@@ -180,12 +184,15 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   private Promise<Maybe<BValue>> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
     var subExprs = if_.subExprs();
     Task1<BValue, BValue> schedulingTask = (conditionValue) -> {
+      var label = VM_LABEL.append("scheduleIf");
       try {
         var condition = ((BBool) conditionValue).toJavaBoolean();
         return successOutput(
-            ifJob.trace(), scheduleNewJob(condition ? subExprs.then_() : subExprs.else_(), ifJob));
+            scheduleNewJob(condition ? subExprs.then_() : subExprs.else_(), ifJob),
+            label,
+            ifJob.trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(ifJob.trace(), e);
+        return failedSchedulingOutput(label, ifJob.trace(), e);
       }
     };
     var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
@@ -196,6 +203,7 @@ public class BEvaluate implements Task1<BExpr, BValue> {
     var subExprs = map.subExprs();
     var arrayArg = subExprs.array();
     Task1<BValue, BValue> schedulingTask = (arrayValue) -> {
+      var label = VM_LABEL.append("scheduleMap");
       try {
         var array = ((BArray) arrayValue);
         var mapperArg = subExprs.mapper();
@@ -203,9 +211,9 @@ public class BEvaluate implements Task1<BExpr, BValue> {
         var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
         var arrayType = bytecodeFactory.arrayType(mappingLambdaResultType);
         var order = bytecodeFactory.order(arrayType, calls);
-        return successOutput(mapJob.trace(), scheduleNewJob(order, mapJob));
+        return successOutput(scheduleNewJob(order, mapJob), label, mapJob.trace());
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(mapJob.trace(), e);
+        return failedSchedulingOutput(label, mapJob.trace(), e);
       }
     };
     var arrayPromise = scheduleNewJob(arrayArg, mapJob);
@@ -244,11 +252,12 @@ public class BEvaluate implements Task1<BExpr, BValue> {
 
   private Promise<Maybe<BValue>> scheduleInlineTask(Job job) {
     Task0<BValue> inlineTask = () -> {
+      var label = VM_LABEL.append("inline");
       try {
         var inlined = (BValue) bReferenceInliner.inline(job);
-        return output(inlined, newReport(VM_INLINE, job.trace(), list()));
+        return output(inlined, newReport(label, job.trace(), list()));
       } catch (BytecodeException e) {
-        return failedInlineTaskOutput(job.trace(), e);
+        return failedOutput(label, job.trace(), "Vm inline Task failed with exception:", e);
       }
     };
     return scheduler.submit(inlineTask);
@@ -261,16 +270,13 @@ public class BEvaluate implements Task1<BExpr, BValue> {
     return scheduleJob(newJob(bExpr, parentJob));
   }
 
-  private static <T> Output<T> successOutput(BTrace trace, Promise<Maybe<T>> resultPromise) {
-    return schedulingOutput(resultPromise, newReport(VM_SCHEDULE, trace, list()));
+  private static <T> Output<T> successOutput(
+      Promise<Maybe<T>> resultPromise, Label label, BTrace trace) {
+    return schedulingOutput(resultPromise, newReport(label, trace, list()));
   }
 
-  private static <T> Output<T> failedSchedulingOutput(BTrace trace, Throwable e) {
-    return failedOutput(VM_SCHEDULE, trace, "Scheduling task failed with exception:", e);
-  }
-
-  private static Output<BValue> failedInlineTaskOutput(BTrace trace, Throwable e) {
-    return failedOutput(VM_INLINE, trace, "Vm inline Task failed with exception:", e);
+  private static <T> Output<T> failedSchedulingOutput(Label label, BTrace trace, Throwable e) {
+    return failedOutput(label, trace, "Scheduling task failed with exception:", e);
   }
 
   private static <T> Output<T> failedOutput(

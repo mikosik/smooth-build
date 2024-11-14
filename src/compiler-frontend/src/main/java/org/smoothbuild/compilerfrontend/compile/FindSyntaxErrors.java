@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 
 import org.smoothbuild.common.log.base.Logger;
@@ -34,7 +34,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
     detectIllegalAnnotations(pModule, logger);
     detectStructFieldWithDefaultValue(pModule, logger);
     detectLambdaParamWithDefaultValue(pModule, logger);
-    var label = COMPILE_FRONT_LABEL.append("findSyntaxErrors");
+    var label = COMPILER_FRONT_LABEL.append("findSyntaxErrors");
     return output(pModule, label, logger.toList());
   }
 

@@ -1,11 +1,13 @@
 package org.smoothbuild.cli.command.build;
 
 import static org.smoothbuild.cli.command.base.CreateInjector.createInjector;
+import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
 import org.smoothbuild.cli.command.base.CommandRunner;
 import org.smoothbuild.cli.command.base.ProjectCommand;
 import org.smoothbuild.cli.match.MatcherCreator;
+import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.ReportMatcher;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
@@ -16,6 +18,7 @@ import picocli.CommandLine.Parameters;
     description = "Evaluate specified value(s) and store them as artifact(s).")
 public class BuildCommand extends ProjectCommand {
   public static final String NAME = "build";
+  public static final Label LABEL = label("cli:build");
 
   @picocli.CommandLine.Option(
       names = {"--show-tasks", "-s"},
