@@ -733,16 +733,6 @@ public class VisibilityTest extends FrontendCompileTester {
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleFunc", sSchema(sIntType()));
         }
-
-        @Test
-        void constructor_succeeds() {
-          var code = "otherModuleStruct = 7;";
-          var imported = "OtherModuleStruct {}";
-          module(code)
-              .withImported(imported)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleStruct", sSchema(sIntType()));
-        }
       }
 
       @Nested
@@ -792,16 +782,6 @@ public class VisibilityTest extends FrontendCompileTester {
               .loadsWithSuccess()
               .containsEvaluableWithSchema("otherModuleFunc", sSchema(sFuncType(sIntType())));
         }
-
-        @Test
-        void constructor_succeeds() {
-          var code = "otherModuleStruct() = 7;";
-          var imported = "OtherModuleStruct {}";
-          module(code)
-              .withImported(imported)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleStruct", sSchema(sFuncType(sIntType())));
-        }
       }
 
       @Nested
@@ -837,7 +817,7 @@ public class VisibilityTest extends FrontendCompileTester {
             String myFunc(
               String param,
               String param) = "abc";
-              """;
+            """;
         module(code).loadsWithError(3, alreadyDefinedIn(moduleFullPath(), 2, "param"));
       }
 
@@ -854,13 +834,6 @@ public class VisibilityTest extends FrontendCompileTester {
         void named_function_succeeds() {
           var code = "Int myFunc(String otherModuleFunc) = 8;";
           var imported = "otherModuleFunc() = 7;";
-          module(code).withImported(imported).loadsWithSuccess();
-        }
-
-        @Test
-        void constructor_succeeds() {
-          var code = "Int myFunc(String otherModuleStruct) = 7;";
-          var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -886,16 +859,6 @@ public class VisibilityTest extends FrontendCompileTester {
               """;
           module(code).loadsWithSuccess();
         }
-
-        @Test
-        void constructor_succeeds() {
-          var code =
-              """
-              MyStruct {}
-              String myFunc(String myStruct) = "abc";
-              """;
-          module(code).loadsWithSuccess();
-        }
       }
     }
 
@@ -908,7 +871,7 @@ public class VisibilityTest extends FrontendCompileTester {
             myValue = (
               String param,
               String param) -> 7;
-              """;
+            """;
         module(code).loadsWithError(3, alreadyDefinedIn(moduleFullPath(), 2, "param"));
       }
 
@@ -925,13 +888,6 @@ public class VisibilityTest extends FrontendCompileTester {
         void named_function_succeeds() {
           var code = "myValue = (String otherModuleFunc) -> 7;";
           var imported = "otherModuleFunc() = 8;";
-          module(code).withImported(imported).loadsWithSuccess();
-        }
-
-        @Test
-        void constructor_succeeds() {
-          var code = "myValue = (String otherModuleStruct) -> 7;";
-          var imported = "OtherModuleStruct {}";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -954,16 +910,6 @@ public class VisibilityTest extends FrontendCompileTester {
               """
               myFunc() = "abc";
               myValue = (String myFunc) -> 7;
-              """;
-          module(code).loadsWithSuccess();
-        }
-
-        @Test
-        void constructor_succeeds() {
-          var code =
-              """
-              MyStruct {}
-              myValue = (String myStruct) -> 7;
               """;
           module(code).loadsWithSuccess();
         }
@@ -1034,13 +980,6 @@ public class VisibilityTest extends FrontendCompileTester {
           var imported = "otherModuleFunc() = 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
-
-        @Test
-        void constructor_succeeds() {
-          var code = "MyStruct {String otherModuleStruct}";
-          var imported = "OtherModuleStruct {}";
-          module(code).withImported(imported).loadsWithSuccess();
-        }
       }
 
       @Nested
@@ -1064,18 +1003,6 @@ public class VisibilityTest extends FrontendCompileTester {
               myFunc() = "abc";
               MyStruct {
                 String myFunc,
-              }
-              """;
-          module(code).loadsWithSuccess();
-        }
-
-        @Test
-        void constructor_succeeds() {
-          var code =
-              """
-              MyStruct {}
-              MyOtherStruct {
-                 String myStruct,
               }
               """;
           module(code).loadsWithSuccess();
