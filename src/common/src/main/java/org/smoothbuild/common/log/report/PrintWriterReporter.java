@@ -30,7 +30,7 @@ public class PrintWriterReporter implements Reporter {
   }
 
   static String formatReport(Report report) {
-    var builder = new StringBuilder(labelPlusResultSource(report));
+    var builder = new StringBuilder(labelPlusOrigin(report));
     if (containsFailure(report.logs()) && !(report.trace().topLine() == null)) {
       builder.append("\n");
       builder.append(indent(report.trace().toString()));
@@ -43,13 +43,13 @@ public class PrintWriterReporter implements Reporter {
     return builder.toString();
   }
 
-  private static String labelPlusResultSource(Report report) {
+  private static String labelPlusOrigin(Report report) {
     var labelString = report.label().toString();
-    var resultSourceString = report.source().toString();
-    if (resultSourceString.isEmpty()) {
+    var originString = report.source().toString();
+    if (originString.isEmpty()) {
       return labelString;
     } else {
-      return labelString + padStart(resultSourceString, 79 - labelString.length(), ' ');
+      return labelString + padStart(originString, 79 - labelString.length(), ' ');
     }
   }
 

@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
-import static org.smoothbuild.common.log.base.ResultSource.DISK;
+import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.log.report.Report.report;
 
 import org.junit.jupiter.api.Test;

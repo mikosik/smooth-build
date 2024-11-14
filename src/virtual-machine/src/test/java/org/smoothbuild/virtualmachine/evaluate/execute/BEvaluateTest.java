@@ -16,8 +16,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.log.base.ResultSource.DISK;
-import static org.smoothbuild.common.log.base.ResultSource.EXECUTION;
+import static org.smoothbuild.common.log.base.Origin.DISK;
+import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.task.Scheduler.LABEL;
 import static org.smoothbuild.common.task.Tasks.argument;
@@ -33,7 +33,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
-import org.smoothbuild.common.log.base.ResultSource;
+import org.smoothbuild.common.log.base.Origin;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
@@ -526,10 +526,9 @@ public class BEvaluateTest extends VmTestContext {
       }
     }
 
-    private void assertTaskReport(
-        BExpr expr, String label, BTrace trace, ResultSource resultSource) {
+    private void assertTaskReport(BExpr expr, String label, BTrace trace, Origin origin) {
       evaluate(bEvaluate(), expr);
-      var taskReport = report(VM_EVALUATE.append(label), trace, resultSource, list());
+      var taskReport = report(VM_EVALUATE.append(label), trace, origin, list());
       assertThat(reporter().reports()).contains(taskReport);
     }
   }
@@ -569,7 +568,7 @@ public class BEvaluateTest extends VmTestContext {
       assertThat(evaluate(bEvaluate, bExpr).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
-      verifyConstTasksResultSource(4, DISK, reporter);
+      verifyConstTasksOrigin(4, DISK, reporter);
     }
 
     @Test
@@ -670,8 +669,8 @@ public class BEvaluateTest extends VmTestContext {
     return nativeApi.factory().string("result");
   }
 
-  private static void verifyConstTasksResultSource(
-      int size, ResultSource expectedSource, TestReporter reporter) {
+  private static void verifyConstTasksOrigin(
+      int size, Origin expectedSource, TestReporter reporter) {
     var sources = reporter
         .reports()
         .filter(r -> r.label().equals(VM_EVALUATE.append("invoke")))
@@ -679,7 +678,7 @@ public class BEvaluateTest extends VmTestContext {
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 
-  private static ArrayList<ResultSource> resSourceList(int size, ResultSource expectedSource) {
+  private static ArrayList<Origin> resSourceList(int size, Origin expectedSource) {
     var expected = new ArrayList<>(nCopies(size, expectedSource));
     expected.set(0, EXECUTION);
     return expected;
