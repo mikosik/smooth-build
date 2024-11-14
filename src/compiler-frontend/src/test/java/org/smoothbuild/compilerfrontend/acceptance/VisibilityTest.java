@@ -97,33 +97,33 @@ public class VisibilityTest extends FrontendCompileTester {
     class _imported {
       @Test
       void value_is_visible() {
-        var code = "myValue = otherModuleValue;";
         var imported = "Int otherModuleValue = 7;";
+        var code = "myValue = otherModuleValue;";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
       void func_is_visible() {
-        var code = "myValue = otherModuleFunc;";
         var imported = "Int otherModuleFunc() = 7;";
+        var code = "myValue = otherModuleFunc;";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
       void constructor_is_visible() {
-        var code = "myValue = OtherModuleStruct;";
         var imported = "OtherModuleStruct {}";
+        var code = "myValue = OtherModuleStruct;";
         module(code).withImported(imported).loadsWithSuccess();
       }
 
       @Test
       void struct_is_visible() {
+        var imported = "OtherModuleStruct {}";
         var code =
             """
             @Native("impl.met")
             OtherModuleStruct myFunc();
             """;
-        var imported = "OtherModuleStruct {}";
         module(code).withImported(imported).loadsWithSuccess();
       }
     }
@@ -716,8 +716,8 @@ public class VisibilityTest extends FrontendCompileTester {
       class _imported {
         @Test
         void value_succeeds() {
-          var code = "otherModuleValue = 8;";
           var imported = "otherModuleValue = 7;";
+          var code = "otherModuleValue = 8;";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -726,8 +726,8 @@ public class VisibilityTest extends FrontendCompileTester {
 
         @Test
         void func_succeeds() {
-          var code = "otherModuleFunc = 7;";
           var imported = "otherModuleFunc() = 8;";
+          var code = "otherModuleFunc = 7;";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -765,8 +765,8 @@ public class VisibilityTest extends FrontendCompileTester {
       class _imported {
         @Test
         void value_succeeds() {
-          var code = "otherModuleValue() = 8;";
           var imported = "otherModuleValue = 7;";
+          var code = "otherModuleValue() = 8;";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -775,8 +775,8 @@ public class VisibilityTest extends FrontendCompileTester {
 
         @Test
         void function_succeeds() {
-          var code = "otherModuleFunc() = 8;";
           var imported = "otherModuleFunc() = 7;";
+          var code = "otherModuleFunc() = 8;";
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
@@ -825,15 +825,15 @@ public class VisibilityTest extends FrontendCompileTester {
       class _imported {
         @Test
         void named_value_succeeds() {
-          var code = "Int myFunc(String otherModuleValue) = 8;";
           var imported = "otherModuleValue = 7;";
+          var code = "Int myFunc(String otherModuleValue) = 8;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         void named_function_succeeds() {
-          var code = "Int myFunc(String otherModuleFunc) = 8;";
           var imported = "otherModuleFunc() = 7;";
+          var code = "Int myFunc(String otherModuleFunc) = 8;";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -879,15 +879,15 @@ public class VisibilityTest extends FrontendCompileTester {
       class _imported {
         @Test
         void named_value_succeeds() {
-          var code = "myValue = (String otherModuleValue) -> 7;";
           var imported = "otherModuleValue = 8;";
+          var code = "myValue = (String otherModuleValue) -> 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         void named_function_succeeds() {
-          var code = "myValue = (String otherModuleFunc) -> 7;";
           var imported = "otherModuleFunc() = 8;";
+          var code = "myValue = (String otherModuleFunc) -> 7;";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
@@ -969,15 +969,15 @@ public class VisibilityTest extends FrontendCompileTester {
       class _imported {
         @Test
         void value_succeeds() {
-          var code = "MyStruct {Int otherModuleValue}";
           var imported = "otherModuleValue = 7;";
+          var code = "MyStruct {Int otherModuleValue}";
           module(code).withImported(imported).loadsWithSuccess();
         }
 
         @Test
         void func_succeeds() {
-          var code = "MyStruct {String otherModuleFunc}";
           var imported = "otherModuleFunc() = 7;";
+          var code = "MyStruct {String otherModuleFunc}";
           module(code).withImported(imported).loadsWithSuccess();
         }
       }
