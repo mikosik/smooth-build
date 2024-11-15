@@ -52,14 +52,20 @@ Blob jar([File] files, Blob manifest = 0x);
   [String] options = [],
 ) = javac_(
     srcs = srcs,
-    libs = libs,
+    libs = jarsToFiles(libs),
     options = concat([["-source", source, "-target", target], options]));
 
 @Native("org.smoothbuild.stdlib.java.javac.JavacFunc")
-[File] javac_([File] srcs, [File] libs = [], [String] options = []);
+[File] javac_([File] srcs, [[File]] libs = [], [String] options = []);
+
+String junit(File tests, [File] deps = [], String include = "**Test.class") =
+    junit_(unzip(tests.content), jarsToFiles(deps), include);
 
 @Native("org.smoothbuild.stdlib.java.junit.JunitFunc")
-String junit(File tests, [File] deps = [], String include = "**Test.class");
+String junit_([File] tests, [[File]] deps, String include);
+
+[[File]] jarsToFiles([File] libs) =
+  map(libs, (File lib) -> filterFiles(unzip(lib.content), "**.class"));
 
 @Native("org.smoothbuild.stdlib.string.ToBlobFunc")
 Blob toBlob(String string);

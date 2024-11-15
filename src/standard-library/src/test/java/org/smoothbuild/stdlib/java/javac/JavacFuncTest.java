@@ -2,30 +2,28 @@ package org.smoothbuild.stdlib.java.javac;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bucket.base.Path.path;
-import static org.smoothbuild.stdlib.java.javac.JavacFunc.classesFromJarFiles;
-import static org.smoothbuild.virtualmachine.testing.JarTester.jarByteString;
+import static org.smoothbuild.stdlib.java.javac.JavacFunc.filesToInputClassFiles;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class JavacFuncTest extends VmTestContext {
   @Test
   void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
-    BTuple file1 = bFile(path("my/package/MyKlass.class"));
-    BTuple file2 = bFile(path("my/package/MyKlass2.class"));
-    BTuple jar = bFile("myFile.jar", bBlob(jarByteString(file1, file2)));
-    assertThat(classesFromJarFiles(nativeApi(), bArray(jar)))
+    var file1 = bFile(path("my/package/MyKlass.class"));
+    var file2 = bFile(path("my/package/MyKlass2.class"));
+    var fileArrayArray = bArray(bArray(file1, file2));
+    assertThat(filesToInputClassFiles(nativeApi(), fileArrayArray))
         .containsExactly(new InputClassFile(file1), new InputClassFile(file2));
   }
 
   @Test
   void duplicate_class_file_exception() throws Exception {
-    String name = "my/package/MyKlass.class";
-    BTuple file1 = bFile(path(name));
-    BTuple jar = bFile("myFile.jar", bBlob(jarByteString(file1)));
+    var name = "my/package/MyKlass.class";
+    var file1 = bFile(path(name));
+    var fileArrayArray = bArray(bArray(file1), bArray(file1));
     var nativeApi = nativeApi();
-    assertThat(classesFromJarFiles(nativeApi, bArray(jar, jar))).isNull();
+    assertThat(filesToInputClassFiles(nativeApi, fileArrayArray)).isNull();
     assertThat(nativeApi.messages())
         .isEqualTo(bArray(
             bErrorLog("File " + name + " is contained by two different library jar files.")));
