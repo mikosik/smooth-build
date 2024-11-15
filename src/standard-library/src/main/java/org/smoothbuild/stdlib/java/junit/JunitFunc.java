@@ -4,10 +4,9 @@ import static java.lang.ClassLoader.getPlatformClassLoader;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
-import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromJar;
-import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
+import static org.smoothbuild.stdlib.file.FileHelper.fileArrayArrayToMap;
+import static org.smoothbuild.stdlib.file.FileHelper.fileArrayToMap;
 import static org.smoothbuild.stdlib.java.junit.JUnitCoreWrapper.newInstance;
-import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
@@ -30,16 +29,16 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class JunitFunc {
   public static BValue func(NativeApi nativeApi, BTuple args)
       throws IOException, BytecodeException {
-    BTuple tests = (BTuple) args.get(0);
+    BArray testFileArray = (BArray) args.get(0);
     BArray deps = (BArray) args.get(1);
     BString include = (BString) args.get(2);
 
     try {
-      var filesFromTests = filesFromJar(nativeApi, tests);
+      var filesFromTests = fileArrayToMap(nativeApi, testFileArray);
       if (filesFromTests == null) {
         return null;
       }
-      var filesFromDeps = filesFromLibJars(nativeApi, deps, isClassFilePredicate());
+      var filesFromDeps = fileArrayArrayToMap(nativeApi, deps);
       if (filesFromDeps == null) {
         return null;
       }

@@ -2,8 +2,7 @@ package org.smoothbuild.stdlib.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
-import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
+import static org.smoothbuild.stdlib.file.FileHelper.fileArrayArrayToMap;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -22,24 +21,24 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class JavacFunc {
   public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
     BArray srcs = (BArray) args.get(0);
-    BArray libs = (BArray) args.get(1);
+    BArray fileArrayArray = (BArray) args.get(1);
     BArray options = (BArray) args.get(2);
 
-    return new Worker(nativeApi, srcs, libs, options).execute();
+    return new Worker(nativeApi, srcs, fileArrayArray, options).execute();
   }
 
   private static class Worker {
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
     private final BArray srcs;
-    private final BArray libs;
+    private final BArray fileArrayArray;
     private final BArray options;
 
-    public Worker(NativeApi nativeApi, BArray srcs, BArray libs, BArray options) {
+    public Worker(NativeApi nativeApi, BArray srcs, BArray fileArrayArray, BArray options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.srcs = srcs;
-      this.libs = libs;
+      this.fileArrayArray = fileArrayArray;
       this.options = options;
     }
 
@@ -62,7 +61,7 @@ public class JavacFunc {
       var diagnostic = new LoggingDiagnosticListener(nativeApi);
       var options = options();
       var standardJFM = compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      var libsClasses = classesFromJarFiles(nativeApi, libs);
+      var libsClasses = filesToInputClassFiles(nativeApi, fileArrayArray);
       if (libsClasses == null) {
         return null;
       }
@@ -125,11 +124,12 @@ public class JavacFunc {
     }
   }
 
-  public static Iterable<InputClassFile> classesFromJarFiles(
-      NativeApi nativeApi, BArray libraryJars) throws BytecodeException {
-    var filesMap = filesFromLibJars(nativeApi, libraryJars, isClassFilePredicate());
-    return filesMap == null
-        ? null
-        : listOfAll(filesMap.entrySet()).map(e -> new InputClassFile(e.getValue(), e.getKey()));
+  public static Iterable<InputClassFile> filesToInputClassFiles(
+      NativeApi nativeApi, BArray fileArrayArray) throws BytecodeException {
+    var result = fileArrayArrayToMap(nativeApi, fileArrayArray);
+    if (result == null) {
+      return null;
+    }
+    return listOfAll(result.entrySet()).map(e -> new InputClassFile(e.getValue(), e.getKey()));
   }
 }
