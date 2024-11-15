@@ -381,7 +381,6 @@ Such a change is also more readable in version control.
 ### Things not yet implemented
 
 Basic native functions:
- - `filter` function (`[A] filter([A] array, (A)->Bool predicate`))
  - `fold` function (`B fold([A] array, (A,B)->B func, B zero)`)
  - modules and imports so functions/values do not pollute global namespace
  - recursion

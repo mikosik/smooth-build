@@ -29,6 +29,12 @@ File file(String path);
 @NativeImpure("org.smoothbuild.stdlib.file.FilesFunc")
 [File] files(String dir);
 
+[A] filter([A] array, (A)->Bool predicate) =
+    filterByMask(array, map(array, predicate));
+
+@Native("org.smoothbuild.stdlib.core.FilterByMaskFunc")
+[A] filterByMask([A] array, [Bool] filter);
+
 @Native("org.smoothbuild.stdlib.file.FilterFilesFunc")
 [File] filterFiles([File] files, String pattern);
 
