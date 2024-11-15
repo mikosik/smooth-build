@@ -17,11 +17,6 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class UnzipHelper {
   private static final Predicate<String> NOT_MANIFEST_PREDICATE = f -> !f.equals(JAR_MANIFEST_PATH);
 
-  public static Map<String, BTuple> filesFromLibJars(NativeApi nativeApi, BArray libJars)
-      throws BytecodeException {
-    return filesFromLibJars(nativeApi, libJars, NOT_MANIFEST_PREDICATE);
-  }
-
   public static HashMap<String, BTuple> filesFromLibJars(
       NativeApi nativeApi, BArray libJars, Predicate<String> filter) throws BytecodeException {
     var result = new HashMap<String, BTuple>();
