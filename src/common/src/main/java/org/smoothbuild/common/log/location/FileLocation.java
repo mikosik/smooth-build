@@ -2,8 +2,8 @@ package org.smoothbuild.common.log.location;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.common.bucket.base.Alias;
-import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Alias;
+import org.smoothbuild.common.filesystem.base.FullPath;
 
 public record FileLocation(FullPath file, int line) implements SourceLocation {
 

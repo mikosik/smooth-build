@@ -3,13 +3,13 @@ package org.smoothbuild.cli.layout;
 import static org.smoothbuild.cli.layout.Aliases.INSTALL_ALIAS;
 import static org.smoothbuild.cli.layout.Aliases.LIBRARY_ALIAS;
 import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
-import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
-import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 
-import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.base.Path;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class Layout {
   public static final Path SMOOTH_DIR = path(".smooth");

@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static okio.Okio.buffer;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
@@ -15,8 +15,8 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;

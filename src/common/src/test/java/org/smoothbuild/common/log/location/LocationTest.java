@@ -1,8 +1,8 @@
 package org.smoothbuild.common.log.location;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
 import static org.smoothbuild.common.log.location.Locations.fileLocation;
 import static org.smoothbuild.common.log.location.Locations.internalLocation;
@@ -12,7 +12,7 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.testing.CommonTestContext;
 
 public class LocationTest extends CommonTestContext {

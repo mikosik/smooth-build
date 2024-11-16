@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import okio.ByteString;
 import okio.Source;
-import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.common.bucket.base.PathIterator;
-import org.smoothbuild.common.bucket.base.RecursivePathsIterator;
+import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathIterator;
+import org.smoothbuild.common.filesystem.base.RecursivePathsIterator;
 
 public class TestingBucket {
   public static Map<Path, ByteString> directoryToFileMap(Bucket bucket) throws IOException {

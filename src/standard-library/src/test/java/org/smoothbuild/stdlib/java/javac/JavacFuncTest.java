@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.stdlib.java.javac.JavacFunc.filesToInputClassFiles;
 
 import org.junit.jupiter.api.Test;

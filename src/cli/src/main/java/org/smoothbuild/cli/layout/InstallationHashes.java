@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.Filesystem;
-import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 
 public class InstallationHashes {
   private final Filesystem filesystem;

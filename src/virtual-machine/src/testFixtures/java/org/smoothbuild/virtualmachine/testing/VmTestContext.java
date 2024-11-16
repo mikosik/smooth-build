@@ -1,12 +1,12 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
-import static org.smoothbuild.common.bucket.base.SubBucket.subBucket;
+import static org.smoothbuild.common.filesystem.base.SubBucket.subBucket;
 
 import com.google.common.base.Supplier;
-import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.SynchronizedBucket;
-import org.smoothbuild.common.bucket.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
+import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.common.testing.CommonTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;

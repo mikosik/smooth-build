@@ -1,8 +1,8 @@
 package org.smoothbuild.common.io;
 
-import static org.smoothbuild.common.bucket.base.Path.detectPathError;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.filesystem.base.Path.detectPathError;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -11,7 +11,7 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.cli.layout.InstallationHashes;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;

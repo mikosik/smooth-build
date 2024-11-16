@@ -2,14 +2,14 @@ package org.smoothbuild.stdlib.file.match;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class PathMatcherTest {
   @ParameterizedTest
