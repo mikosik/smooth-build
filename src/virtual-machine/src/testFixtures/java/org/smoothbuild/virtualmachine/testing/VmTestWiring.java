@@ -9,6 +9,7 @@ import com.google.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.bucket.base.Alias;
 import org.smoothbuild.common.bucket.base.Bucket;
+import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
@@ -37,8 +38,8 @@ public class VmTestWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  public Map<Alias, Bucket> provideBucketMap() {
-    return buckets;
+  public Filesystem provideFilesystem() {
+    return new Filesystem(buckets);
   }
 
   @Provides

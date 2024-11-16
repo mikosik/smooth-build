@@ -9,19 +9,16 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.testing.TestingBucket.createFile;
+import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 import java.io.IOException;
-import org.smoothbuild.common.bucket.base.Alias;
-import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.Filesystem;
 import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.bucket.base.SynchronizedBucket;
 import org.smoothbuild.common.bucket.mem.MemoryBucket;
-import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
@@ -125,8 +122,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
     private Try<SModule> loadModule() {
       var projectBucket = new SynchronizedBucket(new MemoryBucket());
-      Map<Alias, Bucket> buckets = map(PROJECT, projectBucket);
-      var filesystem = new Filesystem(buckets);
+      var filesystem = new Filesystem(map(PROJECT, projectBucket));
       var testReporter = new TestReporter();
 
       var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
@@ -140,7 +136,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
           return filesystem;
         }
       });
-      writeModuleFilesToBuckets(buckets);
+      writeModuleFiles(filesystem);
       var scheduler = injector.getInstance(Scheduler.class);
       var paths = list(standardLibraryModulePath(), moduleFullPath());
       var module = scheduler.submit(FrontendCompile.class, argument(paths));
@@ -148,7 +144,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       return Try.of(module.get().getOr(null), testReporter.logs());
     }
 
-    private void writeModuleFilesToBuckets(Map<Alias, Bucket> buckets) {
+    private void writeModuleFiles(Filesystem buckets) {
       writeModuleFile(
           buckets,
           standardLibraryModulePath(),
@@ -156,10 +152,9 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       writeModuleFile(buckets, moduleFullPath(), sourceCode);
     }
 
-    private static void writeModuleFile(
-        Map<Alias, Bucket> buckets, FullPath fullPath, String content) {
+    private static void writeModuleFile(Filesystem filesystem, FullPath fullPath, String content) {
       try {
-        createFile(buckets.get(fullPath.alias()), fullPath.path(), content);
+        createFile(filesystem, fullPath, content);
       } catch (IOException e) {
         throw new RuntimeException("Can't happen for MemoryBucket.", e);
       }

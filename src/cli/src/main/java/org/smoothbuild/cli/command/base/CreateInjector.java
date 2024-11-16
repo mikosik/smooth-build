@@ -7,7 +7,6 @@ import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
 import static org.smoothbuild.cli.layout.Layout.BIN_DIR_NAME;
 import static org.smoothbuild.cli.layout.Layout.STANDARD_LIBRARY_DIR_NAME;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.collect.Set.setOfAll;
 import static org.smoothbuild.common.log.base.Level.INFO;
 
 import com.google.inject.Guice;
@@ -17,8 +16,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.match.ReportMatchers;
+import org.smoothbuild.common.bucket.FilesystemWiring;
 import org.smoothbuild.common.bucket.base.Alias;
-import org.smoothbuild.common.bucket.wire.DiskBucketWiring;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
@@ -41,11 +40,11 @@ public class CreateInjector {
         INSTALL_ALIAS, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new CliWiring(setOfAll(aliasToPath.keySet())),
+        new CliWiring(),
         new EvaluatorWiring(),
         new CompilerBackendWiring(),
         new VmWiring(),
-        new DiskBucketWiring(aliasToPath),
+        new FilesystemWiring(aliasToPath),
         new ReportWiring(out, reportMatcher, logLevel));
   }
 
@@ -56,8 +55,8 @@ public class CreateInjector {
         INSTALL_ALIAS, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new CliWiring(setOfAll(aliasToPath.keySet())),
-        new DiskBucketWiring(aliasToPath),
+        new CliWiring(),
+        new FilesystemWiring(aliasToPath),
         new ReportWiring(out, ReportMatchers.ALL, INFO));
   }
 
