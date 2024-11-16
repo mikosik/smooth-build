@@ -8,6 +8,7 @@
 | [and](api/and.md)                 | Returns `true` if both arguments are `true`.           |
 | [concat](api/concat.md)           | Concatenates an array of arrays.                       |
 | [elem](api/elem.md)               | Returns array element.                                 |
+| [error](api/error.md)             | Fails build with error.                                |
 | [equal](api/equal.md)             | Returns `true` when arguments are equal.               |
 | [file](api/file.md)               | Reads single file from project filesystem.             |
 | [files](api/files.md)             | Reads files from project filesystem.                   |
