@@ -11,30 +11,13 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.cli.layout.InstallationHashes;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.Alias;
-import org.smoothbuild.common.bucket.base.Bucket;
 import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.wire.BucketFactory;
-import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
 import org.smoothbuild.virtualmachine.wire.Sandbox;
 
 public class CliWiring extends AbstractModule {
-  private final Set<Alias> aliases;
-
-  public CliWiring(Set<Alias> aliases) {
-    this.aliases = aliases;
-  }
-
-  @Provides
-  @Singleton
-  public Map<Alias, Bucket> provideAliasToBucketMap(BucketFactory bucketFactory) {
-    return aliases.toMap(bucketFactory::create);
-  }
-
   @Provides
   @Artifacts
   public FullPath provideArtifacts() {
