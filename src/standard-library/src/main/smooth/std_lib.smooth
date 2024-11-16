@@ -84,6 +84,9 @@ Blob zip([File] files);
 
 A id(A a) = a;
 
+@Native("org.smoothbuild.stdlib.core.ErrorFunc")
+A error(String message);
+
 @Bytecode("org.smoothbuild.stdlib.core.IfFunc")
 A if(Bool condition, A then, A else);
 

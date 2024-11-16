@@ -5,6 +5,7 @@ Change Log
 Version ?.??.? (????.??.??)
 ---------------------------
 
+ * added standard library function `error`
  * added standard library function `filter`
  * changed struct declaration syntax to use `{`, `}` instead of `(`, `)`
  * changed cryptographic function used for bytecode content-addressing to SHA-256
