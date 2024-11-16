@@ -7,8 +7,8 @@ import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import jakarta.inject.Inject;
-import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.task.Task1;

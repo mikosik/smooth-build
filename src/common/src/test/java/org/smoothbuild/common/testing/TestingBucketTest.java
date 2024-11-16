@@ -1,14 +1,14 @@
 package org.smoothbuild.common.testing;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
 
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 
 public class TestingBucketTest {
   @Test

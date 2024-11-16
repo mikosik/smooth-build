@@ -10,8 +10,8 @@ import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import org.smoothbuild.common.bucket.base.Filesystem;
-import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
 

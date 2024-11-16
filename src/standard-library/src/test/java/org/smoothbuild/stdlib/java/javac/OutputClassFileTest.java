@@ -7,7 +7,7 @@ import static okio.Okio.sink;
 import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 

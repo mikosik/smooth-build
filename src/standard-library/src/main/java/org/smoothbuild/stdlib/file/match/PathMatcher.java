@@ -4,7 +4,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Path;
 
 public class PathMatcher implements Predicate<Path> {
   private final FileSystem fileSystem;

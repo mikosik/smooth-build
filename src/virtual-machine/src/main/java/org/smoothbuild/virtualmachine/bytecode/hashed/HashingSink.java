@@ -6,8 +6,8 @@ import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 import java.io.IOException;
 import okio.ForwardingSink;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.bucket.base.Bucket;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.function.Function0;
 
 public class HashingSink extends ForwardingSink {

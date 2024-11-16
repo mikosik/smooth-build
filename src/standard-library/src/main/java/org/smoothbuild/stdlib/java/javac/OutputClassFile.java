@@ -6,7 +6,7 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 import okio.ForwardingSink;
 import okio.Okio;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;

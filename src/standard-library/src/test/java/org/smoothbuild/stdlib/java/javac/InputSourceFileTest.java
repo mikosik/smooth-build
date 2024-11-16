@@ -1,11 +1,11 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.Path;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 

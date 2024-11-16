@@ -1,10 +1,10 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import java.io.IOException;
-import org.smoothbuild.common.bucket.base.Filesystem;
-import org.smoothbuild.common.bucket.base.FullPath;
-import org.smoothbuild.common.bucket.base.Path;
-import org.smoothbuild.common.bucket.base.PathIterator;
+import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathIterator;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;

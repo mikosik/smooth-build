@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
-import static org.smoothbuild.common.bucket.base.Path.path;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;

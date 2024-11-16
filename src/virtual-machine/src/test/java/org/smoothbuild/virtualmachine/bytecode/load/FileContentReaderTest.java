@@ -1,14 +1,14 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bucket.base.FullPath.fullPath;
-import static org.smoothbuild.common.bucket.base.Path.path;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
+import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.testing.TestingBucket.createFile;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.Filesystem;
-import org.smoothbuild.common.bucket.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 

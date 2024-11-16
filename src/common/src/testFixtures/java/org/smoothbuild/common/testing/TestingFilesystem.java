@@ -8,9 +8,9 @@ import okio.BufferedSink;
 import okio.ByteString;
 import okio.Sink;
 import okio.Source;
-import org.smoothbuild.common.bucket.base.Filesystem;
-import org.smoothbuild.common.bucket.base.FullPath;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.reflect.Classes;
 
 public class TestingFilesystem {

@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.layout;
 
-import org.smoothbuild.common.bucket.base.Alias;
+import org.smoothbuild.common.filesystem.base.Alias;
 
 public class Aliases {
   public static final Alias PROJECT_ALIAS = new Alias("project");

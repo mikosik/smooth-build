@@ -1,6 +1,6 @@
 package org.smoothbuild.common.testing;
 
-import org.smoothbuild.common.bucket.base.Alias;
+import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.task.Scheduler;
 
 public interface CommonTestApi {

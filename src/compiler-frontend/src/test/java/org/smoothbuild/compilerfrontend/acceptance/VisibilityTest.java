@@ -4,7 +4,7 @@ import static org.smoothbuild.common.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.bucket.base.FullPath;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
 public class VisibilityTest extends FrontendCompileTester {
