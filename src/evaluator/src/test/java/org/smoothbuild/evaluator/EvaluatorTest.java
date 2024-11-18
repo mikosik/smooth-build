@@ -75,6 +75,16 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         }
 
         @Test
+        void call_lambda_returning_enclosing_func_param_after_it_has_been_returned_by_that_func()
+            throws BytecodeException {
+          var lambdaS = sInstantiate(sLambda(nlist(), sParamRef(sIntType(), "p")));
+          var funcS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), lambdaS);
+          var callFunc = sCall(sInstantiate(funcS), sInt(7));
+          var callReturnedLambda = sCall(callFunc);
+          assertEvaluation(newInjector(), bindings(funcS), callReturnedLambda, bInt(7));
+        }
+
+        @Test
         void call_expression_function() throws BytecodeException {
           var funcS = sFunc("n", nlist(), sInt(7));
           var callS = sCall(sInstantiate(funcS));
