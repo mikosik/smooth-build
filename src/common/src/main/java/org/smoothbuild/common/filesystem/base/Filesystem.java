@@ -22,8 +22,9 @@ public class Filesystem {
   }
 
   public PathIterator filesRecursively(FullPath dir) throws IOException {
+    var bucket = bucketFor(dir.alias());
     try {
-      return recursivePathsIterator(bucketFor(dir.alias()), dir.path());
+      return recursivePathsIterator(bucket, dir.path());
     } catch (IOException e) {
       throw new IOException(
           "Error listing files recursively in %s. %s".formatted(dir.q(), e.getMessage()));
@@ -31,17 +32,18 @@ public class Filesystem {
   }
 
   public Iterable<Path> files(FullPath dir) throws IOException {
+    var bucket = bucketFor(dir.alias());
     try {
-      return bucketFor(dir.alias()).files(dir.path());
+      return bucket.files(dir.path());
     } catch (IOException e) {
       throw new IOException("Error listing files in %s. %s".formatted(dir.q(), e.getMessage()));
     }
   }
 
   public void move(FullPath source, FullPath target) throws IOException {
-    var alias = getAliasIfEqualOrFail(source, target);
+    var bucket = bucketFor(getAliasIfEqualOrFail(source, target));
     try {
-      bucketFor(alias).move(source.path(), target.path());
+      bucket.move(source.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
           "Error moving %s to %s. %s".formatted(source.q(), target.q(), e.getMessage()));
@@ -77,9 +79,9 @@ public class Filesystem {
   }
 
   public void createLink(FullPath link, FullPath target) throws IOException {
-    var alias = getAliasIfEqualOrFail(link, target);
+    var bucket = bucketFor(getAliasIfEqualOrFail(link, target));
     try {
-      bucketFor(alias).createLink(link.path(), target.path());
+      bucket.createLink(link.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
           "Error creating link %s -> %s. %s".formatted(link.q(), target.q(), e.getMessage()));
@@ -87,22 +89,22 @@ public class Filesystem {
   }
 
   public void createDir(FullPath path) throws IOException {
+    var bucket = bucketFor(path.alias());
     try {
-      bucketFor(path.alias()).createDir(path.path());
+      bucket.createDir(path.path());
     } catch (IOException e) {
       throw new IOException("Error creating dir %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
-  public Bucket bucketFor(FullPath path) {
+  public Bucket bucketFor(FullPath path) throws IOException {
     return subBucket(bucketFor(path.alias()), path.path());
   }
 
-  public Bucket bucketFor(Alias alias) {
+  public Bucket bucketFor(Alias alias) throws IOException {
     Bucket bucket = buckets.get(alias);
     if (bucket == null) {
-      throw new IllegalArgumentException(
-          "Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
+      throw new IOException("Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
     }
     return bucket;
   }

@@ -204,7 +204,11 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
 
   @Override
   public Bucket projectBucket() {
-    return filesystem.bucketFor(PROJECT);
+    try {
+      return filesystem.bucketFor(PROJECT);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
