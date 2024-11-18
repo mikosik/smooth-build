@@ -4,7 +4,6 @@ import static org.smoothbuild.cli.Main.EXIT_CODE_ERROR;
 import static org.smoothbuild.common.io.LockFile.lockFile;
 
 import java.io.IOException;
-import java.nio.channels.Channel;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,12 +24,15 @@ public abstract class ProjectCommand extends LoggingCommand implements Callable<
     if (fileLock == null) {
       return EXIT_CODE_ERROR;
     }
-    Channel channel = fileLock.acquiredBy();
-    try (channel) {
+    try {
       return executeCommand(normalizedProjectDir);
-    } catch (IOException e) {
-      printError("Error closing file lock.");
-      return EXIT_CODE_ERROR;
+    } finally {
+      try {
+        fileLock.release();
+      } catch (IOException e) {
+        printError("Error closing file lock.");
+        return EXIT_CODE_ERROR;
+      }
     }
   }
 
