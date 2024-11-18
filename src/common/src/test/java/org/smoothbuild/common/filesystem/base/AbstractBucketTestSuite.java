@@ -26,7 +26,7 @@ public abstract class AbstractBucketTestSuite {
   @Nested
   class _path_state {
     @Test
-    void of_nonexistent_path_is_nothing() {
+    void of_nonexistent_path_is_nothing() throws IOException {
       assertThat(bucket.pathState(path("abc"))).isEqualTo(NOTHING);
     }
 

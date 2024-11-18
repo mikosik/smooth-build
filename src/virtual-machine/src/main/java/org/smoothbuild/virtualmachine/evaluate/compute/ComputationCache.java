@@ -17,6 +17,7 @@ import okio.BufferedSink;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.Bucket;
 import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -63,11 +64,19 @@ public class ComputationCache {
 
   public synchronized boolean contains(Hash hash) throws ComputeCacheException {
     var path = toPath(hash);
-    return switch (bucket.pathState(path)) {
+    return switch (stateOf(path)) {
       case FILE -> true;
       case NOTHING -> false;
       case DIR -> throw corruptedValueException(hash, path + " is directory not a file.");
     };
+  }
+
+  private PathState stateOf(Path path) throws ComputeCacheException {
+    try {
+      return bucket.pathState(path);
+    } catch (IOException e) {
+      throw computeException(e);
+    }
   }
 
   public synchronized BOutput read(Hash hash, BType type) throws ComputeCacheException {

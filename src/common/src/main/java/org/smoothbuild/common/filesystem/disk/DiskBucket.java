@@ -14,6 +14,8 @@ import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Objects;
 import okio.Okio;
@@ -34,15 +36,15 @@ public class DiskBucket implements Bucket {
   }
 
   @Override
-  public PathState pathState(Path path) {
+  public PathState pathState(Path path) throws IOException {
     java.nio.file.Path jdkPath = jdkPath(path);
-    if (!Files.exists(jdkPath)) {
+    var provider = jdkPath.getFileSystem().provider();
+    try {
+      var attributes = provider.readAttributes(jdkPath, BasicFileAttributes.class);
+      return attributes.isDirectory() ? DIR : FILE;
+    } catch (NoSuchFileException e) {
       return NOTHING;
     }
-    if (Files.isDirectory(jdkPath)) {
-      return DIR;
-    }
-    return FILE;
   }
 
   @Override

@@ -22,7 +22,7 @@ public class SubBucket implements Bucket {
   }
 
   @Override
-  public PathState pathState(Path path) {
+  public PathState pathState(Path path) throws IOException {
     return bucket.pathState(fullPath(path));
   }
 

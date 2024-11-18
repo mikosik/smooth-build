@@ -15,7 +15,7 @@ public class SynchronizedBucket implements Bucket {
   }
 
   @Override
-  public synchronized PathState pathState(Path path) {
+  public synchronized PathState pathState(Path path) throws IOException {
     return bucket.pathState(path);
   }
 

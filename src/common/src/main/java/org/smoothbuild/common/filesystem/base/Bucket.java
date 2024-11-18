@@ -8,7 +8,7 @@ import okio.Source;
  * Container for files that are identified by {@link Path}.
  */
 public interface Bucket {
-  public PathState pathState(Path path);
+  public PathState pathState(Path path) throws IOException;
 
   public Iterable<Path> files(Path dir) throws IOException;
 
