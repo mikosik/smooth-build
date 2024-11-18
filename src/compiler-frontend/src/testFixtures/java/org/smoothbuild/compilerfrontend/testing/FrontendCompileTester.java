@@ -36,7 +36,6 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
   }
 
   public class Api {
-
     private final String sourceCode;
     private String importedSourceCode;
     private Try<SModule> moduleS;
