@@ -14,6 +14,7 @@ import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -120,10 +121,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private Try<SModule> loadModule() {
-      var projectBucket = new SynchronizedBucket(new MemoryBucket());
-      var filesystem = new Filesystem(map(PROJECT, projectBucket));
       var testReporter = new TestReporter();
-
       var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
         @Override
         protected void configure() {
@@ -131,11 +129,11 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
         }
 
         @Provides
+        @Singleton
         public Filesystem provideFilesystem() {
-          return filesystem;
+          return createFilesystemWithModuleFiles();
         }
       });
-      writeModuleFiles(filesystem);
       var scheduler = injector.getInstance(Scheduler.class);
       var paths = list(standardLibraryModulePath(), moduleFullPath());
       var module = scheduler.submit(FrontendCompile.class, argument(paths));
@@ -143,12 +141,15 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       return Try.of(module.get().getOr(null), testReporter.logs());
     }
 
-    private void writeModuleFiles(Filesystem buckets) {
+    private Filesystem createFilesystemWithModuleFiles() {
+      var projectBucket = new SynchronizedBucket(new MemoryBucket());
+      var filesystem = new Filesystem(map(PROJECT, projectBucket));
       writeModuleFile(
-          buckets,
+          filesystem,
           standardLibraryModulePath(),
           importedSourceCode == null ? "" : importedSourceCode);
-      writeModuleFile(buckets, moduleFullPath(), sourceCode);
+      writeModuleFile(filesystem, moduleFullPath(), sourceCode);
+      return filesystem;
     }
 
     private static void writeModuleFile(Filesystem filesystem, FullPath fullPath, String content) {
