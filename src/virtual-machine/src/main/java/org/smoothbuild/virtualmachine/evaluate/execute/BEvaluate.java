@@ -83,6 +83,10 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   }
 
   private Promise<Maybe<BValue>> scheduleJob(Job job) throws BytecodeException {
+    return job.scheduleEvaluation(this);
+  }
+
+  Promise<Maybe<BValue>> doScheduleJob(Job job) throws BytecodeException {
     return switch (job.expr()) {
       case BCall call -> scheduleCall(job, call);
       case BCombine combine -> scheduleOperation(job, combine, CombineStep::new);
@@ -137,8 +141,7 @@ public class BEvaluate implements Task1<BExpr, BValue> {
       var bLambda = (BLambda) lambdaValue;
       var label = VM_LABEL.append("scheduleCall");
       try {
-        var result = scheduleCallBodyWithTupleArguments(
-            callJob, bCall, lambdaExpr, tuple, bLambda);
+        var result = scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, tuple, bLambda);
         return successOutput(result, label, callJob.trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(label, callJob.trace(), e);

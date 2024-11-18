@@ -119,7 +119,7 @@ public class BEvaluateTest extends VmTestContext {
     }
 
     @Nested
-    class _job_creation {
+    class _job {
       @Test
       void learning_test() throws Exception {
         // Learning test verifies that job creation is counted also inside lambda body.
@@ -144,6 +144,22 @@ public class BEvaluateTest extends VmTestContext {
         assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bInt(7));
 
         assertThat(countingBEvaluate.counters().get(bBool)).isNull();
+      }
+
+      @Test
+      void lambda_arg_used_twice_not_results_in_its_expression_being_evaluated_twice()
+          throws Exception {
+        var boolArrayType = bArrayType(bBoolType());
+        var argReference = bReference(boolArrayType, 0);
+        var lambda = bLambda(list(boolArrayType), bOrder(argReference, argReference));
+        var bool = bBool();
+        var call = bCall(lambda, bOrder(bool));
+
+        var countingBEvaluate = countingBEvaluate();
+        var expected = bArray(bArray(bool), bArray(bool));
+        assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(expected);
+
+        assertThat(countingBEvaluate.counters().get(bool).get()).isEqualTo(1);
       }
     }
   }
