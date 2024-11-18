@@ -39,7 +39,6 @@ import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
@@ -124,25 +123,27 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void learning_test() throws Exception {
         // Learning test verifies that job creation is counted also inside lambda body.
-        var lambda = bLambda(bOrder(bInt(7)));
+        var bInt = bInt(7);
+        var lambda = bLambda(bOrder(bInt));
         var call = bCall(lambda);
 
         var countingBEvaluate = countingBEvaluate();
-        assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bArray(bInt(7)));
+        assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bArray(bInt));
 
-        assertThat(countingBEvaluate.counters().get(BInt.class).intValue()).isEqualTo(1);
+        assertThat(countingBEvaluate.counters().get(bInt).intValue()).isEqualTo(1);
       }
 
       @Test
       void job_for_unused_lambda_arg_is_created_but_not_jobs_for_its_dependencies()
           throws Exception {
         var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
-        var call = bCall(lambda, bOrder(bBool()));
+        var bBool = bBool();
+        var call = bCall(lambda, bOrder(bBool));
 
         var countingBEvaluate = countingBEvaluate();
         assertThat(evaluate(countingBEvaluate, call).get().get()).isEqualTo(bInt(7));
 
-        assertThat(countingBEvaluate.counters().get(BBool.class)).isNull();
+        assertThat(countingBEvaluate.counters().get(bBool)).isNull();
       }
     }
   }
@@ -689,7 +690,7 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private static class CountingBEvaluate extends BEvaluate {
-    private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<BExpr, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingBEvaluate(
         Scheduler scheduler,
@@ -701,11 +702,11 @@ public class BEvaluateTest extends VmTestContext {
 
     @Override
     protected Job newJob(BExpr expr, List<Job> environment, BTrace trace) {
-      counters.computeIfAbsent(expr.getClass(), k -> new AtomicInteger()).incrementAndGet();
+      counters.computeIfAbsent(expr, k -> new AtomicInteger()).incrementAndGet();
       return super.newJob(expr, environment, trace);
     }
 
-    public ConcurrentHashMap<Class<?>, AtomicInteger> counters() {
+    public ConcurrentHashMap<BExpr, AtomicInteger> counters() {
       return counters;
     }
   }
