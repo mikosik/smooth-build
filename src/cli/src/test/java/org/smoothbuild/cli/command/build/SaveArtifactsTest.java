@@ -3,15 +3,16 @@ package org.smoothbuild.cli.command.build;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.command.build.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.testing.TestingSmallFileSystem.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
+import static org.smoothbuild.common.testing.TestingSmallFileSystem.directoryToFileMap;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;
@@ -234,7 +235,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     var label = label("cli:build:saveArtifacts");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, logs));
-    var artifactsBucket = filesystem().bucketFor(ARTIFACTS_PATH);
+    var artifactsBucket = fileSystemPart(filesystem(), ARTIFACTS_PATH);
     assertThat(directoryToFileMap(artifactsBucket)).isEqualTo(expectedDirectoryMap);
   }
 

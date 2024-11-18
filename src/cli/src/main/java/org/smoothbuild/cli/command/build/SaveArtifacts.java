@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.smoothbuild.cli.Artifacts;
 import org.smoothbuild.common.collect.DuplicatesDetector;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.log.base.Logger;
@@ -38,13 +38,13 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 
 public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final String FILE_STRUCT_NAME = "File";
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
   private final FullPath artifactsPath;
   private final FullPath bytecodeDbPath;
 
   @Inject
   public SaveArtifacts(
-      Filesystem filesystem,
+      FileSystem<FullPath> filesystem,
       @Artifacts FullPath artifactsPath,
       @BytecodeDb FullPath bytecodeDbPath) {
     this.filesystem = filesystem;

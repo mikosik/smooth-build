@@ -6,7 +6,7 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.smoothbuild.cli.Artifacts;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.task.Output;
@@ -16,14 +16,14 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 public class Clean implements Task0<Tuple0> {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
   private final FullPath bytecodeDbPath;
   private final FullPath computationDbPath;
   private final FullPath artifactsPath;
 
   @Inject
   public Clean(
-      Filesystem filesystem,
+      FileSystem<FullPath> filesystem,
       @BytecodeDb FullPath bytecodeDbPath,
       @ComputationDb FullPath computationDbPath,
       @Artifacts FullPath artifactsPath) {

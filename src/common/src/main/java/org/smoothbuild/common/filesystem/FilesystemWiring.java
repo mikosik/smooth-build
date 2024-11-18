@@ -6,7 +6,9 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Alias;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullFileSystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
 import org.smoothbuild.common.filesystem.disk.DiskBucket;
 
@@ -19,7 +21,8 @@ public class FilesystemWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  public Filesystem provideFilesystem() {
-    return new Filesystem(aliasToPath.mapValues(p -> new SynchronizedBucket(new DiskBucket(p))));
+  public FileSystem<FullPath> provideFilesystem() {
+    return new FullFileSystem(
+        aliasToPath.mapValues(p -> new SynchronizedBucket(new DiskBucket(p))));
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.compute;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.wire.Project;
  * This class is NOT thread-safe.
  */
 public class Container implements NativeApi {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
   private final FullPath projectPath;
   private final FileContentReader fileContentReader;
   private final BytecodeFactory bytecodeFactory;
@@ -27,7 +27,7 @@ public class Container implements NativeApi {
 
   @Inject
   public Container(
-      Filesystem filesystem,
+      FileSystem<FullPath> filesystem,
       @Project FullPath projectPath,
       FileContentReader fileContentReader,
       BytecodeFactory bytecodeFactory,

@@ -78,7 +78,8 @@ public class RecursivePathsIteratorTest {
     assertThat(created).containsExactlyElementsIn(expectedNames);
   }
 
-  private void createFiles(FileSystem<Path> fileSystem, String rootDir, List<String> names) throws IOException {
+  private void createFiles(FileSystem<Path> fileSystem, String rootDir, List<String> names)
+      throws IOException {
     for (String name : names) {
       var path = path(rootDir).append(path(name));
       createFile(fileSystem, path, "");

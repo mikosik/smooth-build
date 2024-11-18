@@ -19,7 +19,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
@@ -188,8 +188,8 @@ public interface VmTestApi extends CommonTestApi {
         filesystem(), PROJECT_PATH, fileContentReader(), bytecodeF(), nativeMethodLoader);
   }
 
-  public default Filesystem filesystem() {
-    return new Filesystem(map(PROJECT, projectBucket()));
+  public default FileSystem<FullPath> filesystem() {
+    return new FullFileSystem(map(PROJECT, projectBucket()));
   }
 
   public default ComputationCache computationCache() {

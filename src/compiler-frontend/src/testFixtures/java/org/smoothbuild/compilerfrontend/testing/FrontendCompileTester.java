@@ -16,7 +16,8 @@ import com.google.inject.Guice;
 import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
@@ -130,7 +131,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
         @Provides
         @Singleton
-        public Filesystem provideFilesystem() {
+        public FileSystem<FullPath> provideFilesystem() {
           return createFilesystemWithModuleFiles();
         }
       });
@@ -141,9 +142,9 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       return Try.of(module.get().getOr(null), testReporter.logs());
     }
 
-    private Filesystem createFilesystemWithModuleFiles() {
+    private FileSystem<FullPath> createFilesystemWithModuleFiles() {
       var projectBucket = new SynchronizedBucket(new MemoryBucket());
-      var filesystem = new Filesystem(map(PROJECT, projectBucket));
+      var filesystem = new FullFileSystem(map(PROJECT, projectBucket));
       writeModuleFile(
           filesystem,
           standardLibraryModulePath(),
@@ -152,7 +153,8 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       return filesystem;
     }
 
-    private static void writeModuleFile(Filesystem filesystem, FullPath fullPath, String content) {
+    private static void writeModuleFile(
+        FileSystem<FullPath> filesystem, FullPath fullPath, String content) {
       try {
         createFile(filesystem, fullPath, content);
       } catch (IOException e) {
