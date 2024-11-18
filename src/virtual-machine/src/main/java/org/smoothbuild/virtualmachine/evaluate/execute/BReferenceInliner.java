@@ -45,7 +45,7 @@ public class BReferenceInliner {
       case BMap map -> rewriteMap(map, resolver);
       case BOrder order -> rewriteOrder(order, resolver);
       case BPick pick -> rewritePick(pick, resolver);
-      case BReference reference -> rewriteVar(reference, resolver);
+      case BReference reference -> rewriteReference(reference, resolver);
       case BSelect select -> rewriteSelect(select, resolver);
       case BValue value -> value;
     };
@@ -171,8 +171,8 @@ public class BReferenceInliner {
     }
   }
 
-  private BExpr rewriteVar(BReference var, Resolver resolver) throws BytecodeException {
-    return resolver.resolve(var);
+  private BExpr rewriteReference(BReference reference, Resolver resolver) throws BytecodeException {
+    return resolver.resolve(reference);
   }
 
   private static class Resolver {
