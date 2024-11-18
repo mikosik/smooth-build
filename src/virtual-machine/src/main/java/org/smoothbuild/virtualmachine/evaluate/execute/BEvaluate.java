@@ -114,29 +114,31 @@ public class BEvaluate implements Task1<BExpr, BValue> {
   }
 
   private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
-      Job callJob, BCall call, BExpr bLambda, BCombine combine) throws BytecodeException {
-    Task1<BValue, BValue> schedulingTask = (bValue) -> {
+      Job callJob, BCall call, BExpr lambdaExpr, BCombine combine) throws BytecodeException {
+    Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
+      var bLambda = (BLambda) lambdaValue;
       var label = VM_LABEL.append("scheduleCall");
       try {
         var argJobs = combine.subExprs().items().map(e -> newJob(e, callJob));
         var bodyEnvironmentJobs = argJobs.appendAll(callJob.environment());
-        var bodyTrace = bTrace(call.hash(), bValue.hash(), callJob.trace());
-        var bodyJob = newJob(((BLambda) bValue).body(), bodyEnvironmentJobs, bodyTrace);
+        var bodyTrace = bTrace(call.hash(), bLambda.hash(), callJob.trace());
+        var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
         return successOutput(scheduleJob(bodyJob), label, callJob.trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(label, callJob.trace(), e);
       }
     };
-    return scheduler.submit(schedulingTask, scheduleNewJob(bLambda, callJob));
+    return scheduler.submit(schedulingTask, scheduleNewJob(lambdaExpr, callJob));
   }
 
   private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
       Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
     Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
+      var bLambda = (BLambda) lambdaValue;
       var label = VM_LABEL.append("scheduleCall");
       try {
         var result = scheduleCallBodyWithTupleArguments(
-            callJob, bCall, lambdaExpr, tuple, (BLambda) lambdaValue);
+            callJob, bCall, lambdaExpr, tuple, bLambda);
         return successOutput(result, label, callJob.trace());
       } catch (BytecodeException e) {
         return failedSchedulingOutput(label, callJob.trace(), e);
