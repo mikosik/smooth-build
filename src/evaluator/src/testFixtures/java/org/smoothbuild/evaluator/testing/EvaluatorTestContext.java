@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
@@ -22,6 +23,8 @@ import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 import java.io.IOException;
 import okio.Source;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +33,6 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
@@ -57,7 +59,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
-  private Filesystem filesystem;
+  private FileSystem<FullPath> filesystem;
   private Map<Alias, FileSystem<Path>> buckets;
 
   @BeforeEach
@@ -65,7 +67,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     this.modules = list();
     this.buckets = map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
     this.injector = createInjector(buckets);
-    this.filesystem = injector.getInstance(Filesystem.class);
+    this.filesystem = injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
   }
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
@@ -204,11 +206,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
 
   @Override
   public FileSystem<Path> projectBucket() {
-    try {
-      return filesystem.bucketFor(PROJECT);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return fileSystemPart(filesystem, fullPath(PROJECT, Path.root()));
   }
 
   @Override

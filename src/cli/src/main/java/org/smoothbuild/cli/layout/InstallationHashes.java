@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.Properties;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 
 public class InstallationHashes {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
 
   @Inject
-  public InstallationHashes(Filesystem filesystem) {
+  public InstallationHashes(FileSystem<FullPath> filesystem) {
     this.filesystem = filesystem;
   }
 

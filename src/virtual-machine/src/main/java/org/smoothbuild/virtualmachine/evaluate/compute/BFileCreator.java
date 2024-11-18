@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import java.io.IOException;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathIterator;
@@ -14,13 +14,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 
 public class BFileCreator {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
   private final FullPath projectPath;
   private final FileContentReader fileContentReader;
   private final BytecodeFactory factory;
 
   public BFileCreator(
-      Filesystem filesystem,
+      FileSystem<FullPath> filesystem,
       FullPath projectPath,
       FileContentReader fileContentReader,
       BytecodeFactory factory) {

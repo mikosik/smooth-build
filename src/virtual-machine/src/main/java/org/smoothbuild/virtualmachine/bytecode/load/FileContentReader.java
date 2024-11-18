@@ -6,7 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -19,12 +19,12 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
  */
 @Singleton
 public class FileContentReader {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
   private final BExprDb exprDb;
   private final ConcurrentHashMap<FullPath, CachingReader> cache;
 
   @Inject
-  public FileContentReader(Filesystem filesystem, BExprDb exprDb) {
+  public FileContentReader(FileSystem<FullPath> filesystem, BExprDb exprDb) {
     this.filesystem = filesystem;
     this.exprDb = exprDb;
     this.cache = new ConcurrentHashMap<>();

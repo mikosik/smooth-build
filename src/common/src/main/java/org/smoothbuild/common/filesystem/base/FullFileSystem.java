@@ -1,7 +1,6 @@
 package org.smoothbuild.common.filesystem.base;
 
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.common.filesystem.base.SubBucket.subBucket;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -9,20 +8,22 @@ import okio.Sink;
 import okio.Source;
 import org.smoothbuild.common.collect.Map;
 
-public class Filesystem {
+public class FullFileSystem implements FileSystem<FullPath> {
   private final Map<Alias, FileSystem<Path>> buckets;
 
   @Inject
-  public Filesystem(Map<Alias, FileSystem<Path>> buckets) {
+  public FullFileSystem(Map<Alias, FileSystem<Path>> buckets) {
     this.buckets = buckets;
   }
 
+  @Override
   public PathState pathState(FullPath path) throws IOException {
-    return bucketFor(path.alias()).pathState(path.path());
+    return fileSystemPart(path.alias()).pathState(path.path());
   }
 
+  @Override
   public PathIterator filesRecursively(FullPath dir) throws IOException {
-    var bucket = bucketFor(dir.alias());
+    var bucket = fileSystemPart(dir.alias());
     try {
       return recursivePathsIterator(bucket, dir.path());
     } catch (IOException e) {
@@ -31,8 +32,9 @@ public class Filesystem {
     }
   }
 
+  @Override
   public Iterable<Path> files(FullPath dir) throws IOException {
-    var bucket = bucketFor(dir.alias());
+    var bucket = fileSystemPart(dir.alias());
     try {
       return bucket.files(dir.path());
     } catch (IOException e) {
@@ -40,8 +42,9 @@ public class Filesystem {
     }
   }
 
+  @Override
   public void move(FullPath source, FullPath target) throws IOException {
-    var bucket = bucketFor(getAliasIfEqualOrFail(source, target));
+    var bucket = fileSystemPart(getAliasIfEqualOrFail(source, target));
     try {
       bucket.move(source.path(), target.path());
     } catch (IOException e) {
@@ -50,36 +53,41 @@ public class Filesystem {
     }
   }
 
+  @Override
   public void delete(FullPath path) throws IOException {
-    bucketFor(path.alias()).delete(path.path());
+    fileSystemPart(path.alias()).delete(path.path());
   }
 
+  @Override
   public long size(FullPath path) throws IOException {
     try {
-      return bucketFor(path.alias()).size(path.path());
+      return fileSystemPart(path.alias()).size(path.path());
     } catch (IOException e) {
       throw new IOException("Error fetching size of %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
+  @Override
   public Source source(FullPath path) throws IOException {
     try {
-      return bucketFor(path.alias()).source(path.path());
+      return fileSystemPart(path.alias()).source(path.path());
     } catch (IOException e) {
       throw new IOException("Error reading file %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
+  @Override
   public Sink sink(FullPath path) throws IOException {
     try {
-      return bucketFor(path.alias()).sink(path.path());
+      return fileSystemPart(path.alias()).sink(path.path());
     } catch (IOException e) {
       throw new IOException("Error writing file %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
+  @Override
   public void createLink(FullPath link, FullPath target) throws IOException {
-    var bucket = bucketFor(getAliasIfEqualOrFail(link, target));
+    var bucket = fileSystemPart(getAliasIfEqualOrFail(link, target));
     try {
       bucket.createLink(link.path(), target.path());
     } catch (IOException e) {
@@ -88,8 +96,9 @@ public class Filesystem {
     }
   }
 
+  @Override
   public void createDir(FullPath path) throws IOException {
-    var bucket = bucketFor(path.alias());
+    var bucket = fileSystemPart(path.alias());
     try {
       bucket.createDir(path.path());
     } catch (IOException e) {
@@ -97,11 +106,7 @@ public class Filesystem {
     }
   }
 
-  public FileSystem<Path> bucketFor(FullPath path) throws IOException {
-    return subBucket(bucketFor(path.alias()), path.path());
-  }
-
-  public FileSystem<Path> bucketFor(Alias alias) throws IOException {
+  private FileSystem<Path> fileSystemPart(Alias alias) throws IOException {
     FileSystem<Path> bucket = buckets.get(alias);
     if (bucket == null) {
       throw new IOException("Unknown alias " + alias + ". Known aliases = " + buckets.keySet());

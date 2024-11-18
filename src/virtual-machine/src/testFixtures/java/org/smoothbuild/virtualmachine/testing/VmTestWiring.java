@@ -10,7 +10,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
@@ -39,8 +39,8 @@ public class VmTestWiring extends AbstractModule {
 
   @Provides
   @Singleton
-  public Filesystem provideFilesystem() {
-    return new Filesystem(buckets);
+  public FileSystem<FullPath> provideFilesystem() {
+    return new FullFileSystem(buckets);
   }
 
   @Provides

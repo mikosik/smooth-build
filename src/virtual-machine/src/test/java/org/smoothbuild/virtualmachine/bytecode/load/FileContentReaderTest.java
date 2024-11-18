@@ -7,7 +7,7 @@ import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.testing.TestingSmallFileSystem.createFile;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
@@ -17,7 +17,7 @@ public class FileContentReaderTest extends VmTestContext {
   void read_returns_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var alias = alias("project");
-    var filesystem = new Filesystem(map(alias, bucket));
+    var filesystem = new FullFileSystem(map(alias, bucket));
     var fileContentReader = new FileContentReader(filesystem, exprDb());
     var path = path("my/file");
     var content = "file content";
@@ -32,7 +32,7 @@ public class FileContentReaderTest extends VmTestContext {
   void read_caches_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var alias = alias("project");
-    var fileResolver = new Filesystem(map(alias, bucket));
+    var fileResolver = new FullFileSystem(map(alias, bucket));
     var fileContentReader = new FileContentReader(fileResolver, exprDb());
     var path = path("my/file");
     var content = "file content";

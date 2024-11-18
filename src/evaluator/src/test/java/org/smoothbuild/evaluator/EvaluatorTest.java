@@ -15,12 +15,15 @@ import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
@@ -118,7 +121,8 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
               nlist());
           var callS = sCall(sInstantiate(funcS));
           var buildJar = fullPath(PROJECT, path("module.jar"));
-          var filesystem = injector.getInstance(Filesystem.class);
+          var filesystem =
+              injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
           saveBytecodeInJar(filesystem, buildJar, list(ReturnAbc.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
         }
@@ -133,7 +137,8 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var callS = sCall(sInstantiate(funcS), sString("abc"));
           var injector = newInjector();
           var buildJar = fullPath(PROJECT, path("module.jar"));
-          var filesystem = injector.getInstance(Filesystem.class);
+          var filesystem =
+              injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
           saveBytecodeInJar(filesystem, buildJar, list(StringIdentity.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
         }
@@ -215,7 +220,8 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         void ann_func() throws Exception {
           var injector = newInjector();
           var buildJar = fullPath(PROJECT, path("module.jar"));
-          var filesystem = injector.getInstance(Filesystem.class);
+          var filesystem =
+              injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
           saveBytecodeInJar(filesystem, buildJar, list(ReturnIdFunc.class));
           var binaryName = ReturnIdFunc.class.getName();
           var bytecodeFuncS = sBytecodeFunc(binaryName, varA(), "f", nlist(sItem(varA(), "p")));

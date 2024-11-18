@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.wire;
 
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -8,8 +9,8 @@ import com.google.inject.multibindings.Multibinder;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.init.Initializable;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
@@ -39,15 +40,15 @@ public class VmWiring extends AbstractModule {
 
   @Provides
   @BytecodeDb
-  public FileSystem<org.smoothbuild.common.filesystem.base.Path> provideBytecodeDbBucket(
-      Filesystem filesystem, @BytecodeDb FullPath path) throws IOException {
-    return filesystem.bucketFor(path);
+  public FileSystem<Path> provideBytecodeDbBucket(
+      FileSystem<FullPath> filesystem, @BytecodeDb FullPath path) throws IOException {
+    return fileSystemPart(filesystem, path);
   }
 
   @Provides
   @ComputationDb
-  public FileSystem<org.smoothbuild.common.filesystem.base.Path> provideComputationDbBucket(
-      Filesystem filesystem, @ComputationDb FullPath path) throws IOException {
-    return filesystem.bucketFor(path);
+  public FileSystem<Path> provideComputationDbBucket(
+      FileSystem<FullPath> filesystem, @ComputationDb FullPath path) throws IOException {
+    return fileSystemPart(filesystem, path);
   }
 }

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 
-public class FilesystemTest {
+public class FullFileSystemTest {
   public static final Alias UNKNOWN_ALIAS = new Alias("unknown");
 
   @Nested
@@ -667,8 +667,8 @@ public class FilesystemTest {
     }
   }
 
-  private static Filesystem filesystem() {
-    return new Filesystem(map(alias(), new MemoryBucket()));
+  private static FullFileSystem filesystem() {
+    return new FullFileSystem(map(alias(), new MemoryBucket()));
   }
 
   private static Alias alias() {

@@ -10,16 +10,16 @@ import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
 
 public class ReadFileContent implements Task1<FullPath, String> {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
 
   @Inject
-  public ReadFileContent(Filesystem filesystem) {
+  public ReadFileContent(FileSystem<FullPath> filesystem) {
     this.filesystem = filesystem;
   }
 

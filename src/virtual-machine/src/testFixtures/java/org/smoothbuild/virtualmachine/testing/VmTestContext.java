@@ -17,8 +17,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 
 public class VmTestContext extends CommonTestContext implements VmTestApi {
-  private final Supplier<FileSystem<org.smoothbuild.common.filesystem.base.Path>> projectBucket =
-      memoize(this::synchronizedMemoryBucket);
+  private final Supplier<FileSystem<Path>> projectBucket = memoize(this::synchronizedMemoryBucket);
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);

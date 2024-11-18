@@ -7,18 +7,18 @@ import static org.smoothbuild.common.task.Output.output;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.smoothbuild.cli.Artifacts;
-import org.smoothbuild.common.filesystem.base.Filesystem;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
 
 public class DeleteArtifacts implements Task0<Tuple0> {
-  private final Filesystem filesystem;
+  private final FileSystem<FullPath> filesystem;
   private final FullPath artifactsPath;
 
   @Inject
-  public DeleteArtifacts(Filesystem filesystem, @Artifacts FullPath artifactsPath) {
+  public DeleteArtifacts(FileSystem<FullPath> filesystem, @Artifacts FullPath artifactsPath) {
     this.filesystem = filesystem;
     this.artifactsPath = artifactsPath;
   }
