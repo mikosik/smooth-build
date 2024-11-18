@@ -42,7 +42,7 @@ public class HashedDbTest {
   private final Supplier<Bucket> bucket = Suppliers.memoize(MemoryBucket::new);
 
   @Test
-  void not_contains_not_written_data() throws CorruptedHashedDbException {
+  void not_contains_not_written_data() throws HashedDbException {
     assertThat(hashedDb().contains(Hash.of(33))).isFalse();
   }
 

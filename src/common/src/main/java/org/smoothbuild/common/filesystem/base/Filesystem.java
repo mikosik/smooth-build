@@ -17,7 +17,7 @@ public class Filesystem {
     this.buckets = buckets;
   }
 
-  public PathState pathState(FullPath path) {
+  public PathState pathState(FullPath path) throws IOException {
     return bucketFor(path.alias()).pathState(path.path());
   }
 

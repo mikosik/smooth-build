@@ -23,6 +23,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.Bucket;
 import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeBigIntegerException;
@@ -146,13 +147,21 @@ public class HashedDb {
 
   public long readHashChainSize(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
-    var pathState = bucket.pathState(path);
+    var pathState = stateOf(path);
     return switch (pathState) {
       case FILE -> readHashChainSize(hash, path);
       case DIR -> throw new CorruptedHashedDbException(
           format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
       case NOTHING -> throw new NoSuchDataException(hash);
     };
+  }
+
+  private PathState stateOf(Path path) throws HashedDbException {
+    try {
+      return bucket.pathState(path);
+    } catch (IOException e) {
+      throw new HashedDbException(e);
+    }
   }
 
   private long readHashChainSize(Hash hash, Path path) throws HashedDbException {
@@ -185,9 +194,9 @@ public class HashedDb {
     return listOfAll(builder);
   }
 
-  public boolean contains(Hash hash) throws CorruptedHashedDbException {
+  public boolean contains(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
-    var pathState = bucket.pathState(path);
+    var pathState = stateOf(path);
     return switch (pathState) {
       case FILE -> true;
       case DIR -> throw new CorruptedHashedDbException(
@@ -198,7 +207,7 @@ public class HashedDb {
 
   public Source source(Hash hash) throws HashedDbException {
     var path = dbPathTo(hash);
-    var pathState = bucket.pathState(path);
+    var pathState = stateOf(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
       case DIR -> throw new CorruptedHashedDbException(

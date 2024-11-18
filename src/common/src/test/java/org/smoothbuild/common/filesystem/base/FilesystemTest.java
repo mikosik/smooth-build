@@ -27,7 +27,7 @@ public class FilesystemTest {
   @Nested
   class _path_state {
     @Test
-    void returns_unknown_when_file_not_exists() {
+    void returns_unknown_when_file_not_exists() throws IOException {
       var filesystem = filesystem();
       var path = fullPath(alias(), "file");
       assertThat(filesystem.pathState(path)).isEqualTo(NOTHING);
