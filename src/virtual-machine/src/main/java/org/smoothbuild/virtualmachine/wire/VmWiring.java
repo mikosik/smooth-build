@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import jakarta.inject.Singleton;
+import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.Bucket;
 import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -38,13 +39,15 @@ public class VmWiring extends AbstractModule {
 
   @Provides
   @BytecodeDb
-  public Bucket provideBytecodeDbBucket(Filesystem filesystem, @BytecodeDb FullPath path) {
+  public Bucket provideBytecodeDbBucket(Filesystem filesystem, @BytecodeDb FullPath path)
+      throws IOException {
     return filesystem.bucketFor(path);
   }
 
   @Provides
   @ComputationDb
-  public Bucket provideComputationDbBucket(Filesystem filesystem, @ComputationDb FullPath path) {
+  public Bucket provideComputationDbBucket(Filesystem filesystem, @ComputationDb FullPath path)
+      throws IOException {
     return filesystem.bucketFor(path);
   }
 }

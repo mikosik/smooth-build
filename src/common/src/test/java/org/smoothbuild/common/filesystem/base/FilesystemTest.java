@@ -53,7 +53,7 @@ public class FilesystemTest {
     void fails_when_bucket_not_exists() {
       var filesystem = filesystem();
       var path = fullPath(new Alias("unknown"), "file");
-      assertCall(() -> filesystem.pathState(path)).throwsException(IllegalArgumentException.class);
+      assertCall(() -> filesystem.pathState(path)).throwsException(IOException.class);
     }
   }
 
@@ -95,8 +95,7 @@ public class FilesystemTest {
       var filesystem = filesystem();
 
       assertCall(() -> filesystem.filesRecursively(fullPath(UNKNOWN_ALIAS, "file")))
-          .throwsException(
-              new IllegalArgumentException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
+          .throwsException(new IOException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
 
     private static HashSet<Path> toSet(PathIterator iterator) throws IOException {
@@ -124,8 +123,7 @@ public class FilesystemTest {
       var filesystem = filesystem();
       var path = fullPath(UNKNOWN_ALIAS, path("abc"));
       assertCall(() -> filesystem.files(path))
-          .throwsException(
-              new IllegalArgumentException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
+          .throwsException(new IOException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
 
     @Test
@@ -179,8 +177,7 @@ public class FilesystemTest {
       var source = fullPath(UNKNOWN_ALIAS, "source");
       var target = fullPath(UNKNOWN_ALIAS, "target");
       assertCall(() -> filesystem.move(source, target))
-          .throwsException(
-              new IllegalArgumentException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
+          .throwsException(new IOException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
 
     @Test
@@ -289,8 +286,7 @@ public class FilesystemTest {
       var path = fullPath(UNKNOWN_ALIAS, path("file"));
 
       assertCall(() -> filesystem.delete(path))
-          .throwsException(
-              new IllegalArgumentException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
+          .throwsException(new IOException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
 
     @Test
@@ -380,7 +376,7 @@ public class FilesystemTest {
     void fails_when_bucket_not_exists() {
       var filesystem = filesystem();
       var path = fullPath(UNKNOWN_ALIAS, "dir");
-      assertCall(() -> filesystem.size(path)).throwsException(IllegalArgumentException.class);
+      assertCall(() -> filesystem.size(path)).throwsException(IOException.class);
     }
 
     @Test
@@ -510,7 +506,7 @@ public class FilesystemTest {
       var filesystem = filesystem();
       var file = fullPath(UNKNOWN_ALIAS, "myFile");
 
-      assertCall(() -> filesystem.sink(file)).throwsException(IllegalArgumentException.class);
+      assertCall(() -> filesystem.sink(file)).throwsException(IOException.class);
     }
 
     @Test
@@ -622,8 +618,7 @@ public class FilesystemTest {
       var link = fullPath(UNKNOWN_ALIAS, "source");
       var target = fullPath(UNKNOWN_ALIAS, "target");
       assertCall(() -> filesystem.createLink(link, target))
-          .throwsException(
-              new IllegalArgumentException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
+          .throwsException(new IOException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
   }
 
@@ -668,8 +663,7 @@ public class FilesystemTest {
       var path = fullPath(UNKNOWN_ALIAS, "dir/subdir");
 
       assertCall(() -> filesystem.createDir(path))
-          .throwsException(
-              new IllegalArgumentException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
+          .throwsException(new IOException("Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
   }
 
