@@ -13,13 +13,13 @@ import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 
 public class SubBucketTest extends AbstractBucketTestSuite {
   private static final Path subDir = Path.path("some/dir");
-  private MemoryBucket superBucket;
+  private FileSystem<Path> superBucket;
 
   @BeforeEach
   public void before() throws IOException {
     superBucket = new MemoryBucket();
     superBucket.createDir(subDir);
-    bucket = subBucket(superBucket, subDir);
+    fileSystem = subBucket(superBucket, subDir);
   }
 
   @Override

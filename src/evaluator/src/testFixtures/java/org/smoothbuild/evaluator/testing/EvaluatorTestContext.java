@@ -29,7 +29,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.Alias;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
@@ -58,7 +58,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
   private Filesystem filesystem;
-  private Map<Alias, Bucket> buckets;
+  private Map<Alias, FileSystem<Path>> buckets;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -168,7 +168,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     return injector.getInstance(TestReporter.class);
   }
 
-  private static Injector createInjector(Map<Alias, Bucket> buckets) {
+  private static Injector createInjector(Map<Alias, FileSystem<Path>> buckets) {
     return Guice.createInjector(
         PRODUCTION,
         new EvaluatorWiring(),
@@ -203,7 +203,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   @Override
-  public Bucket projectBucket() {
+  public FileSystem<Path> projectBucket() {
     try {
       return filesystem.bucketFor(PROJECT);
     } catch (IOException e) {

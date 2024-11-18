@@ -21,7 +21,7 @@ import okio.Source;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.common.function.Consumer1;
@@ -41,16 +41,16 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 @Singleton
 public class HashedDb {
   static final Path TEMP_DIR_PATH = path("tmp");
-  private final Bucket bucket;
+  private final FileSystem<Path> fileSystem;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
   @Inject
-  public HashedDb(@BytecodeDb Bucket bucket) {
-    this.bucket = bucket;
+  public HashedDb(@BytecodeDb FileSystem<Path> fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   void initialize() throws IOException {
-    bucket.createDir(TEMP_DIR_PATH);
+    fileSystem.createDir(TEMP_DIR_PATH);
   }
 
   public Hash writeBigInteger(BigInteger value) throws HashedDbException {
@@ -158,7 +158,7 @@ public class HashedDb {
 
   private PathState stateOf(Path path) throws HashedDbException {
     try {
-      return bucket.pathState(path);
+      return fileSystem.pathState(path);
     } catch (IOException e) {
       throw new HashedDbException(e);
     }
@@ -166,7 +166,7 @@ public class HashedDb {
 
   private long readHashChainSize(Hash hash, Path path) throws HashedDbException {
     try {
-      var sizeInBytes = bucket.size(path);
+      var sizeInBytes = fileSystem.size(path);
       long remainder = sizeInBytes % Hash.lengthInBytes();
       if (remainder == 0) {
         return sizeInBytes / Hash.lengthInBytes();
@@ -218,7 +218,7 @@ public class HashedDb {
 
   private Source sourceFile(Hash hash, Path path) throws HashedDbException {
     try {
-      return bucket.source(path);
+      return fileSystem.source(path);
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
@@ -226,7 +226,7 @@ public class HashedDb {
 
   public HashingSink sink() throws HashedDbException {
     try {
-      return new HashingSink(bucket, newTempFileProjectPath());
+      return new HashingSink(fileSystem, newTempFileProjectPath());
     } catch (IOException e) {
       throw new HashedDbException(e);
     }

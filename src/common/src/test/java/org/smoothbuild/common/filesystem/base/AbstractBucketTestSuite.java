@@ -18,37 +18,37 @@ import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.testing.TestingBucket;
+import org.smoothbuild.common.testing.TestingSmallFileSystem;
 
 public abstract class AbstractBucketTestSuite {
-  protected Bucket bucket;
+  protected FileSystem<Path> fileSystem;
 
   @Nested
   class _path_state {
     @Test
     void of_nonexistent_path_is_nothing() throws IOException {
-      assertThat(bucket.pathState(path("abc"))).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(path("abc"))).isEqualTo(NOTHING);
     }
 
     @Test
     void of_file_path_is_file() throws Exception {
       var path = path("myFile");
       createFile(path);
-      assertThat(bucket.pathState(path)).isEqualTo(FILE);
+      assertThat(fileSystem.pathState(path)).isEqualTo(FILE);
     }
 
     @Test
     void of_directory_path_is_dir() throws Exception {
       var dir = path("my/dir");
       createDir(dir);
-      assertThat(bucket.pathState(dir)).isEqualTo(DIR);
+      assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
     }
 
     @Test
     void of_nonexistent_path_state_is_nothing_even_when_its_first_part_is_a_dir() throws Exception {
       var file = path("some/dir/myFile");
       createDir(file.parent());
-      assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
     }
   }
 
@@ -57,7 +57,7 @@ public abstract class AbstractBucketTestSuite {
     @Test
     void fails_when_path_does_not_exist() {
       var path = path("abc");
-      assertCall(() -> bucket.files(path))
+      assertCall(() -> fileSystem.files(path))
           .throwsException(new IOException("Dir " + resolve(path) + " doesn't exist."));
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractBucketTestSuite {
     void fails_when_path_is_a_file() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
-      assertCall(() -> bucket.files(file))
+      assertCall(() -> fileSystem.files(file))
           .throwsException(
               new IOException("Dir " + resolve(file) + " doesn't exist. It is a file."));
     }
@@ -75,7 +75,7 @@ public abstract class AbstractBucketTestSuite {
       createFile(path("abc/dir1/file1.txt"));
       createFile(path("abc/dir2/file2.txt"));
       createFile(path("abc/text.txt"));
-      assertThat(bucket.files(path("abc")))
+      assertThat(fileSystem.files(path("abc")))
           .containsExactly(path("dir1"), path("dir2"), path("text.txt"));
     }
   }
@@ -86,21 +86,21 @@ public abstract class AbstractBucketTestSuite {
     void returns_zero_for_empty_file() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
-      assertThat(bucket.size(file)).isEqualTo(0);
+      assertThat(fileSystem.size(file)).isEqualTo(0);
     }
 
     @Test
     void returns_file_size() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file, byteString());
-      assertThat(bucket.size(file)).isEqualTo(3);
+      assertThat(fileSystem.size(file)).isEqualTo(3);
     }
 
     @Test
     void reading_size_of_dir_causes_exception() throws Exception {
       var dir = path("my/dir");
       createDir(dir);
-      assertCall(() -> bucket.size(dir))
+      assertCall(() -> fileSystem.size(dir))
           .throwsException(
               new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
     }
@@ -108,7 +108,7 @@ public abstract class AbstractBucketTestSuite {
     @Test
     void fails_for_nonexistent_path() {
       var dir = path("myFile");
-      assertCall(() -> bucket.size(dir)).throwsException(IOException.class);
+      assertCall(() -> fileSystem.size(dir)).throwsException(IOException.class);
     }
 
     @Test
@@ -117,9 +117,9 @@ public abstract class AbstractBucketTestSuite {
       var link = path("myLink");
       createFile(file, byteString());
 
-      bucket.createLink(link, file);
+      fileSystem.createLink(link, file);
 
-      assertThat(bucket.size(link)).isEqualTo(byteString().size());
+      assertThat(fileSystem.size(link)).isEqualTo(byteString().size());
     }
 
     @Test
@@ -128,9 +128,9 @@ public abstract class AbstractBucketTestSuite {
       var link = path("myLink");
       createDir(dir);
 
-      bucket.createLink(link, dir);
+      fileSystem.createLink(link, dir);
 
-      assertCall(() -> bucket.size(dir))
+      assertCall(() -> fileSystem.size(dir))
           .throwsException(
               new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
     }
@@ -151,7 +151,7 @@ public abstract class AbstractBucketTestSuite {
       var link = path("myLink");
       createFile(file, byteString());
 
-      bucket.createLink(link, file);
+      fileSystem.createLink(link, file);
 
       assertThat(readFile(link)).isEqualTo(byteString());
     }
@@ -163,7 +163,7 @@ public abstract class AbstractBucketTestSuite {
       var link = path("link");
       createFile(file, byteString());
 
-      bucket.createLink(link, file.parent());
+      fileSystem.createLink(link, file.parent());
 
       assertThat(readFile(link.append(file.lastPart()))).isEqualTo(byteString());
     }
@@ -187,7 +187,7 @@ public abstract class AbstractBucketTestSuite {
     @Test
     void data_written_by_sink_can_be_read_by_source() throws Exception {
       var file = path("myFile");
-      try (BufferedSink sink = buffer(bucket.sink(file))) {
+      try (BufferedSink sink = buffer(fileSystem.sink(file))) {
         sink.write(byteString());
       }
       assertThat(readFile(file)).isEqualTo(byteString());
@@ -196,10 +196,10 @@ public abstract class AbstractBucketTestSuite {
     @Test
     void data_written_to_sink_overwrites_existing_file() throws Exception {
       var file = path("myFile");
-      try (BufferedSink sink = buffer(bucket.sink(file))) {
+      try (BufferedSink sink = buffer(fileSystem.sink(file))) {
         sink.write(byteString("abc"));
       }
-      try (BufferedSink sink = buffer(bucket.sink(file))) {
+      try (BufferedSink sink = buffer(fileSystem.sink(file))) {
         sink.write(byteString("def"));
       }
       assertThat(readFile(file)).isEqualTo(byteString("def"));
@@ -222,7 +222,7 @@ public abstract class AbstractBucketTestSuite {
       var file = path("myFile");
       var link = path("link");
       createFile(file);
-      bucket.createLink(link, file);
+      fileSystem.createLink(link, file);
 
       assertThrows(FileSystemException.class, () -> writeFile(link.appendPart("newFile")));
     }
@@ -232,7 +232,7 @@ public abstract class AbstractBucketTestSuite {
       var dir = path("myFile");
       var link = path("link");
       createDir(dir);
-      bucket.createLink(link, dir);
+      fileSystem.createLink(link, dir);
       var newFile = link.appendPart("newFile");
       var content = byteString();
 
@@ -256,7 +256,7 @@ public abstract class AbstractBucketTestSuite {
     void of_nonexistent_file_fails() {
       var source = path("source");
       var target = path("target");
-      assertCall(() -> bucket.move(source, target))
+      assertCall(() -> fileSystem.move(source, target))
           .throwsException(
               new IOException("Cannot move " + resolve(source) + ". It doesn't exist."));
     }
@@ -267,7 +267,7 @@ public abstract class AbstractBucketTestSuite {
       var source = dir.appendPart("file");
       var target = path("target");
       createFile(source);
-      assertCall(() -> bucket.move(dir, target))
+      assertCall(() -> fileSystem.move(dir, target))
           .throwsException(new IOException("Cannot move " + resolve(dir) + ". It is directory."));
     }
 
@@ -277,7 +277,7 @@ public abstract class AbstractBucketTestSuite {
       var dir = path("dir");
       createFile(source);
       createFile(path("dir/file"));
-      assertCall(() -> bucket.move(source, dir))
+      assertCall(() -> fileSystem.move(source, dir))
           .throwsException(
               new IOException("Cannot move to " + resolve(dir) + ". It is directory."));
     }
@@ -288,9 +288,9 @@ public abstract class AbstractBucketTestSuite {
       var target = path("target");
       createFile(source);
 
-      bucket.move(source, target);
+      fileSystem.move(source, target);
 
-      assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(source)).isEqualTo(NOTHING);
     }
 
     @Test
@@ -299,9 +299,9 @@ public abstract class AbstractBucketTestSuite {
       var target = path("target");
       createFile(source, byteString());
 
-      bucket.move(source, target);
+      fileSystem.move(source, target);
 
-      assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(source)).isEqualTo(NOTHING);
       assertThat(readFile(target)).isEqualTo(byteString());
     }
 
@@ -312,9 +312,9 @@ public abstract class AbstractBucketTestSuite {
       createFile(source, byteString());
       createFile(target);
 
-      bucket.move(source, target);
+      fileSystem.move(source, target);
 
-      assertThat(bucket.pathState(source)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(source)).isEqualTo(NOTHING);
       assertThat(readFile(target)).isEqualTo(byteString());
     }
   }
@@ -328,11 +328,11 @@ public abstract class AbstractBucketTestSuite {
       var file2 = dir.append(path("dir2/myFile"));
       createFile(file1);
 
-      bucket.delete(dir);
+      fileSystem.delete(dir);
 
-      assertThat(bucket.pathState(file1)).isEqualTo(NOTHING);
-      assertThat(bucket.pathState(file2)).isEqualTo(NOTHING);
-      assertThat(bucket.pathState(dir)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(file1)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(dir)).isEqualTo(NOTHING);
     }
 
     @Test
@@ -340,18 +340,18 @@ public abstract class AbstractBucketTestSuite {
       var file = path("some/dir/myFile");
       createFile(file);
 
-      bucket.delete(file);
+      fileSystem.delete(file);
 
-      assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
     }
 
     @Test
     void not_fails_for_nonexistent_path() throws Exception {
       var path = path("some/dir/myFile");
 
-      bucket.delete(path);
+      fileSystem.delete(path);
 
-      assertThat(bucket.pathState(path)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(path)).isEqualTo(NOTHING);
     }
 
     @Test
@@ -361,10 +361,10 @@ public abstract class AbstractBucketTestSuite {
       createFile(file);
       createFile(file2);
 
-      bucket.delete(Path.root());
+      fileSystem.delete(Path.root());
 
-      assertThat(bucket.pathState(file)).isEqualTo(NOTHING);
-      assertThat(bucket.pathState(file2)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
     }
 
     @Test
@@ -372,11 +372,11 @@ public abstract class AbstractBucketTestSuite {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file, byteString());
-      bucket.createLink(link, file);
+      fileSystem.createLink(link, file);
 
-      bucket.delete(link);
+      fileSystem.delete(link);
 
-      assertThat(bucket.pathState(link)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(link)).isEqualTo(NOTHING);
     }
 
     @Test
@@ -384,11 +384,11 @@ public abstract class AbstractBucketTestSuite {
       var file = path("some/dir/myFile");
       var link = path("myLink");
       createFile(file, byteString());
-      bucket.createLink(link, file);
+      fileSystem.createLink(link, file);
 
-      bucket.delete(link);
+      fileSystem.delete(link);
 
-      assertThat(bucket.pathState(file)).isEqualTo(FILE);
+      assertThat(fileSystem.pathState(file)).isEqualTo(FILE);
     }
 
     @Test
@@ -397,13 +397,13 @@ public abstract class AbstractBucketTestSuite {
       var file = dir.appendPart("myFile");
       var link = path("myLink");
       createFile(file);
-      bucket.createLink(link, dir);
+      fileSystem.createLink(link, dir);
 
-      bucket.delete(link);
+      fileSystem.delete(link);
 
-      assertThat(bucket.pathState(link)).isEqualTo(NOTHING);
-      assertThat(bucket.pathState(dir)).isEqualTo(DIR);
-      assertThat(bucket.pathState(file)).isEqualTo(FILE);
+      assertThat(fileSystem.pathState(link)).isEqualTo(NOTHING);
+      assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
+      assertThat(fileSystem.pathState(file)).isEqualTo(FILE);
     }
   }
 
@@ -415,7 +415,8 @@ public abstract class AbstractBucketTestSuite {
       var link = path("missing_directory/myLink");
       createFile(file);
 
-      assertCall(() -> bucket.createLink(link, file)).throwsException(NoSuchFileException.class);
+      assertCall(() -> fileSystem.createLink(link, file))
+          .throwsException(NoSuchFileException.class);
     }
 
     @Test
@@ -425,7 +426,7 @@ public abstract class AbstractBucketTestSuite {
       createFile(file);
       createFile(link);
 
-      assertCall(() -> bucket.createLink(link, file))
+      assertCall(() -> fileSystem.createLink(link, file))
           .throwsException(
               new IOException("Cannot use " + resolve(link) + " path. It is already taken."));
     }
@@ -437,7 +438,7 @@ public abstract class AbstractBucketTestSuite {
       createFile(file);
       createDir(link);
 
-      assertCall(() -> bucket.createLink(link.parent(), file))
+      assertCall(() -> fileSystem.createLink(link.parent(), file))
           .throwsException(new IOException(
               "Cannot use " + resolve(link.parent()) + " path. It is already taken."));
     }
@@ -448,23 +449,24 @@ public abstract class AbstractBucketTestSuite {
     @Test
     void creates_directory() throws Exception {
       var file = path("some/dir/myFile");
-      bucket.createDir(file);
-      assertThat(bucket.pathState(file)).isEqualTo(DIR);
+      fileSystem.createDir(file);
+      assertThat(fileSystem.pathState(file)).isEqualTo(DIR);
     }
 
     @Test
     void not_fails_when_directory_exists() throws Exception {
       var file = path("some/dir/myFile");
-      bucket.createDir(file);
-      bucket.createDir(file);
-      assertThat(bucket.pathState(file)).isEqualTo(DIR);
+      fileSystem.createDir(file);
+      fileSystem.createDir(file);
+      assertThat(fileSystem.pathState(file)).isEqualTo(DIR);
     }
 
     @Test
     void fails_when_file_at_given_path_exists() throws Exception {
       var file = path("some/dir/myFile");
       createFile(file);
-      assertCall(() -> bucket.createDir(file)).throwsException(FileAlreadyExistsException.class);
+      assertCall(() -> fileSystem.createDir(file))
+          .throwsException(FileAlreadyExistsException.class);
     }
   }
 
@@ -475,11 +477,11 @@ public abstract class AbstractBucketTestSuite {
   }
 
   private void writeFile(Path path, ByteString byteString) throws IOException {
-    TestingBucket.writeFile(bucket, path, byteString);
+    TestingSmallFileSystem.writeFile(fileSystem, path, byteString);
   }
 
   private ByteString readFile(Path path) throws IOException {
-    return TestingBucket.readFile(bucket, path);
+    return TestingSmallFileSystem.readFile(fileSystem, path);
   }
 
   protected void createFile(Path path) throws IOException {

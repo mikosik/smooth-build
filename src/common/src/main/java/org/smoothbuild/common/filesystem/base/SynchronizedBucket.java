@@ -7,55 +7,60 @@ import okio.Source;
 /**
  * This class is thread-safe.
  */
-public class SynchronizedBucket implements Bucket {
-  private final Bucket bucket;
+public class SynchronizedBucket implements FileSystem<Path> {
+  private final FileSystem<Path> fileSystem;
 
-  public SynchronizedBucket(Bucket bucket) {
-    this.bucket = bucket;
+  public SynchronizedBucket(FileSystem<Path> fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   @Override
   public synchronized PathState pathState(Path path) throws IOException {
-    return bucket.pathState(path);
+    return fileSystem.pathState(path);
+  }
+
+  @Override
+  public PathIterator filesRecursively(Path dir) throws IOException {
+    return fileSystem.filesRecursively(dir);
   }
 
   @Override
   public synchronized Iterable<Path> files(Path dir) throws IOException {
-    return bucket.files(dir);
+    return fileSystem.files(dir);
   }
 
   @Override
   public synchronized void move(Path source, Path target) throws IOException {
-    bucket.move(source, target);
+    fileSystem.move(source, target);
   }
 
   @Override
   public synchronized void delete(Path path) throws IOException {
-    bucket.delete(path);
+    fileSystem.delete(path);
   }
 
   @Override
   public synchronized long size(Path path) throws IOException {
-    return bucket.size(path);
+    return fileSystem.size(path);
   }
 
   @Override
   public synchronized Source source(Path path) throws IOException {
-    return bucket.source(path);
+    return fileSystem.source(path);
   }
 
   @Override
   public synchronized Sink sink(Path path) throws IOException {
-    return bucket.sink(path);
+    return fileSystem.sink(path);
   }
 
   @Override
   public synchronized void createLink(Path link, Path target) throws IOException {
-    bucket.createLink(link, target);
+    fileSystem.createLink(link, target);
   }
 
   @Override
   public synchronized void createDir(Path path) throws IOException {
-    bucket.createDir(path);
+    fileSystem.createDir(path);
   }
 }

@@ -8,7 +8,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class RecursivePathsIterator implements PathIterator {
-  private final Bucket bucket;
+  private final FileSystem<Path> fileSystem;
   private final Path baseDir;
   private final Deque<Path> dirStack;
   private final Deque<Path> pathStack;
@@ -18,17 +18,17 @@ public class RecursivePathsIterator implements PathIterator {
    * @return PathIterator iterating over all files in given `dir` recursively. Paths returns by
    * iterator are relative to `dir`.
    */
-  public static PathIterator recursivePathsIterator(Bucket bucket, Path dir) throws IOException {
-    PathState state = bucket.pathState(dir);
-    return switch (state) {
+  public static PathIterator recursivePathsIterator(FileSystem<Path> fileSystem, Path dir)
+      throws IOException {
+    return switch (fileSystem.pathState(dir)) {
       case FILE -> throw new IOException("Path " + dir.q() + " is not a dir but a file.");
-      case DIR -> new RecursivePathsIterator(bucket, dir);
+      case DIR -> new RecursivePathsIterator(fileSystem, dir);
       case NOTHING -> throw new IOException("Dir " + dir.q() + " doesn't exist.");
     };
   }
 
-  public RecursivePathsIterator(Bucket bucket, Path baseDir) throws IOException {
-    this.bucket = bucket;
+  public RecursivePathsIterator(FileSystem<Path> fileSystem, Path baseDir) throws IOException {
+    this.fileSystem = fileSystem;
     this.baseDir = baseDir;
     this.dirStack = new ArrayDeque<>();
     this.pathStack = new ArrayDeque<>();
@@ -53,12 +53,12 @@ public class RecursivePathsIterator implements PathIterator {
     while (!pathStack.isEmpty() || !dirStack.isEmpty()) {
       if (pathStack.isEmpty()) {
         var path = dirStack.remove();
-        for (Path name : bucket.files(baseDir.append(path))) {
+        for (Path name : fileSystem.files(baseDir.append(path))) {
           pathStack.push(path.append(name));
         }
       } else {
         var path = pathStack.remove();
-        switch (bucket.pathState(baseDir.append(path))) {
+        switch (fileSystem.pathState(baseDir.append(path))) {
           case FILE -> {
             return path;
           }

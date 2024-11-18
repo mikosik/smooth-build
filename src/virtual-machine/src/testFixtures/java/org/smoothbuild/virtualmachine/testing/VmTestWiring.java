@@ -9,9 +9,10 @@ import com.google.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Alias;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
@@ -21,13 +22,13 @@ import org.smoothbuild.virtualmachine.wire.Sandbox;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class VmTestWiring extends AbstractModule {
-  private final Map<Alias, Bucket> buckets;
+  private final Map<Alias, FileSystem<Path>> buckets;
 
   public VmTestWiring() {
     this(map(PROJECT, new SynchronizedBucket(new MemoryBucket())));
   }
 
-  public VmTestWiring(Map<Alias, Bucket> buckets) {
+  public VmTestWiring(Map<Alias, FileSystem<Path>> buckets) {
     this.buckets = buckets;
   }
 

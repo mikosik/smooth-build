@@ -20,7 +20,7 @@ public class DiskBucketTest extends AbstractBucketTestSuite {
   public void before(@TempDir java.nio.file.Path tempDir) throws IOException {
     bucketDir = tempDir.resolve("dir");
     Files.createDirectories(bucketDir);
-    bucket = new DiskBucket(bucketDir);
+    fileSystem = new DiskBucket(bucketDir);
   }
 
   @Override

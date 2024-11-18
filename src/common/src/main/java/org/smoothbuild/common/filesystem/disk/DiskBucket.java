@@ -10,6 +10,7 @@ import static org.smoothbuild.common.filesystem.base.AssertPath.assertPathIsUnus
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
+import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -21,14 +22,15 @@ import java.util.Objects;
 import okio.Okio;
 import okio.Sink;
 import okio.Source;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathIterator;
 import org.smoothbuild.common.filesystem.base.PathState;
 
 /**
  * This class is NOT thread-safe.
  */
-public class DiskBucket implements Bucket {
+public class DiskBucket implements FileSystem<Path> {
   private final java.nio.file.Path rootDir;
 
   public DiskBucket(java.nio.file.Path path) {
@@ -44,6 +46,16 @@ public class DiskBucket implements Bucket {
       return attributes.isDirectory() ? DIR : FILE;
     } catch (NoSuchFileException e) {
       return NOTHING;
+    }
+  }
+
+  @Override
+  public PathIterator filesRecursively(Path dir) throws IOException {
+    try {
+      return recursivePathsIterator(this, dir);
+    } catch (IOException e) {
+      throw new IOException(
+          "Error listing files recursively in %s. %s".formatted(dir.q(), e.getMessage()));
     }
   }
 

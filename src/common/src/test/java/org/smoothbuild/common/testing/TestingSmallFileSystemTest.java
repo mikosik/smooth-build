@@ -2,15 +2,15 @@ package org.smoothbuild.common.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.testing.TestingBucket.createFile;
-import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
+import static org.smoothbuild.common.testing.TestingSmallFileSystem.createFile;
+import static org.smoothbuild.common.testing.TestingSmallFileSystem.directoryToFileMap;
 
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 
-public class TestingBucketTest {
+public class TestingSmallFileSystemTest {
   @Test
   void directory_to_file_map() throws Exception {
     var bucket = new MemoryBucket();

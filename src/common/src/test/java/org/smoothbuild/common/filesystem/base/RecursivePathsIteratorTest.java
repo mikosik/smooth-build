@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.common.testing.TestingBucket.createFile;
+import static org.smoothbuild.common.testing.TestingSmallFileSystem.createFile;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class RecursivePathsIteratorTest {
 
   @Test
   void throws_exception_when_dir_is_a_file() throws Exception {
-    Bucket bucket = new MemoryBucket();
+    FileSystem<Path> bucket = new MemoryBucket();
     createFile(bucket, path("my/file"), "abc");
     assertCall(() -> recursivePathsIterator(bucket, path("my/file")))
         .throwsException(new IOException("Path 'my/file' is not a dir but a file."));
@@ -52,12 +52,12 @@ public class RecursivePathsIteratorTest {
 
   @Test
   void throws_exception_when_dir_disappears_during_iteration() throws Exception {
-    var bucket = new MemoryBucket();
-    createFiles(bucket, "dir", list("1.txt", "2.txt", "subdir/somefile"));
+    var fileSystem = new MemoryBucket();
+    createFiles(fileSystem, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
-    PathIterator iterator = recursivePathsIterator(bucket, path("dir"));
+    PathIterator iterator = recursivePathsIterator(fileSystem, path("dir"));
     iterator.next();
-    bucket.delete(path("dir/subdir"));
+    fileSystem.delete(path("dir/subdir"));
 
     assertCall(iterator::next)
         .throwsException(new IOException(
@@ -78,10 +78,10 @@ public class RecursivePathsIteratorTest {
     assertThat(created).containsExactlyElementsIn(expectedNames);
   }
 
-  private void createFiles(Bucket bucket, String rootDir, List<String> names) throws IOException {
+  private void createFiles(FileSystem<Path> fileSystem, String rootDir, List<String> names) throws IOException {
     for (String name : names) {
       var path = path(rootDir).append(path(name));
-      createFile(bucket, path, "");
+      createFile(fileSystem, path, "");
     }
   }
 }
