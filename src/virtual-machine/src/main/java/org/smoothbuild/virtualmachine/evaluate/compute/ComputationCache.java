@@ -15,7 +15,7 @@ import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -33,24 +33,24 @@ import org.smoothbuild.virtualmachine.wire.ComputationDb;
  */
 @Singleton
 public class ComputationCache {
-  private final Bucket bucket;
+  private final FileSystem<Path> fileSystem;
   private final BExprDb exprDb;
   private final BytecodeFactory bytecodeFactory;
 
   @Inject
   public ComputationCache(
-      @ComputationDb Bucket bucket, BExprDb exprDb, BytecodeFactory bytecodeFactory) {
-    this.bucket = bucket;
+      @ComputationDb FileSystem<Path> fileSystem, BExprDb exprDb, BytecodeFactory bytecodeFactory) {
+    this.fileSystem = fileSystem;
     this.exprDb = exprDb;
     this.bytecodeFactory = bytecodeFactory;
   }
 
   void initialize() throws IOException {
-    bucket.createDir(Path.root());
+    fileSystem.createDir(Path.root());
   }
 
   public synchronized void write(Hash hash, BOutput bOutput) throws ComputeCacheException {
-    try (BufferedSink sink = buffer(bucket.sink(toPath(hash)))) {
+    try (BufferedSink sink = buffer(fileSystem.sink(toPath(hash)))) {
       var storedLogs = bOutput.storedLogs();
       sink.write(storedLogs.hash().toByteString());
       var value = bOutput.value();
@@ -73,14 +73,14 @@ public class ComputationCache {
 
   private PathState stateOf(Path path) throws ComputeCacheException {
     try {
-      return bucket.pathState(path);
+      return fileSystem.pathState(path);
     } catch (IOException e) {
       throw computeException(e);
     }
   }
 
   public synchronized BOutput read(Hash hash, BType type) throws ComputeCacheException {
-    try (var source = buffer(bucket.source(toPath(hash)))) {
+    try (var source = buffer(fileSystem.source(toPath(hash)))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
       var storedLogsArrayType = bytecodeFactory.arrayType(bytecodeFactory.storedLogType());

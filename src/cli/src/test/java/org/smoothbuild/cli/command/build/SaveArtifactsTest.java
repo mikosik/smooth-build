@@ -8,7 +8,7 @@ import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.testing.TestingBucket.directoryToFileMap;
+import static org.smoothbuild.common.testing.TestingSmallFileSystem.directoryToFileMap;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;

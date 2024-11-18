@@ -27,7 +27,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
@@ -39,7 +40,7 @@ public class HashedDbTest {
   private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
   private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
 
-  private final Supplier<Bucket> bucket = Suppliers.memoize(MemoryBucket::new);
+  private final Supplier<FileSystem<Path>> bucket = Suppliers.memoize(MemoryBucket::new);
 
   @Test
   void not_contains_not_written_data() throws HashedDbException {
@@ -318,7 +319,7 @@ public class HashedDbTest {
     }
   }
 
-  private Bucket bucket() {
+  private FileSystem<Path> bucket() {
     return bucket.get();
   }
 

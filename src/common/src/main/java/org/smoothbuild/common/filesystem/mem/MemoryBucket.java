@@ -2,6 +2,7 @@ package org.smoothbuild.common.filesystem.mem;
 
 import static java.text.MessageFormat.format;
 import static okio.Okio.buffer;
+import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -12,8 +13,9 @@ import java.util.List;
 import okio.Sink;
 import okio.Source;
 import org.smoothbuild.common.filesystem.base.AssertPath;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathIterator;
 import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.common.function.Function1;
 
@@ -21,7 +23,7 @@ import org.smoothbuild.common.function.Function1;
  * In memory implementation of Bucket.
  * This class is NOT thread-safe.
  */
-public class MemoryBucket implements Bucket {
+public class MemoryBucket implements FileSystem<Path> {
   private final MemoryDir root = new MemoryDir(null, Path.root());
 
   public MemoryBucket() {}
@@ -36,6 +38,16 @@ public class MemoryBucket implements Bucket {
       return PathState.DIR;
     }
     return PathState.FILE;
+  }
+
+  @Override
+  public PathIterator filesRecursively(Path dir) throws IOException {
+    try {
+      return recursivePathsIterator(this, dir);
+    } catch (IOException e) {
+      throw new IOException(
+          "Error listing files recursively in %s. %s".formatted(dir.q(), e.getMessage()));
+    }
   }
 
   @Override

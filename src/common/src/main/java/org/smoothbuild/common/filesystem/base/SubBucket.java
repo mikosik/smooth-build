@@ -4,66 +4,71 @@ import java.io.IOException;
 import okio.Sink;
 import okio.Source;
 
-public class SubBucket implements Bucket {
-  private final Bucket bucket;
+public class SubBucket implements FileSystem<Path> {
+  private final FileSystem<Path> fileSystem;
   private final Path root;
 
-  public static Bucket subBucket(Bucket bucket, Path path) {
+  public static FileSystem<Path> subBucket(FileSystem<Path> fileSystem, Path path) {
     if (path.isRoot()) {
-      return bucket;
+      return fileSystem;
     } else {
-      return new SubBucket(bucket, path);
+      return new SubBucket(fileSystem, path);
     }
   }
 
-  private SubBucket(Bucket bucket, Path root) {
-    this.bucket = bucket;
+  private SubBucket(FileSystem<Path> fileSystem, Path root) {
+    this.fileSystem = fileSystem;
     this.root = root;
   }
 
   @Override
   public PathState pathState(Path path) throws IOException {
-    return bucket.pathState(fullPath(path));
+    return fileSystem.pathState(fullPath(path));
+  }
+
+  @Override
+  public PathIterator filesRecursively(Path dir) throws IOException {
+    return fileSystem.filesRecursively(fullPath(dir));
   }
 
   @Override
   public Iterable<Path> files(Path dir) throws IOException {
-    return bucket.files(fullPath(dir));
+    return fileSystem.files(fullPath(dir));
   }
 
   @Override
   public void move(Path source, Path target) throws IOException {
-    bucket.move(fullPath(source), fullPath(target));
+    fileSystem.move(fullPath(source), fullPath(target));
   }
 
   @Override
   public void delete(Path path) throws IOException {
-    bucket.delete(fullPath(path));
+    fileSystem.delete(fullPath(path));
   }
 
   @Override
   public long size(Path path) throws IOException {
-    return bucket.size(fullPath(path));
+    return fileSystem.size(fullPath(path));
   }
 
   @Override
   public Source source(Path path) throws IOException {
-    return bucket.source(fullPath(path));
+    return fileSystem.source(fullPath(path));
   }
 
   @Override
   public Sink sink(Path path) throws IOException {
-    return bucket.sink(fullPath(path));
+    return fileSystem.sink(fullPath(path));
   }
 
   @Override
   public void createLink(Path link, Path target) throws IOException {
-    bucket.createLink(fullPath(link), fullPath(target));
+    fileSystem.createLink(fullPath(link), fullPath(target));
   }
 
   @Override
   public void createDir(Path path) throws IOException {
-    bucket.createDir(fullPath(path));
+    fileSystem.createDir(fullPath(path));
   }
 
   private Path fullPath(Path path) {

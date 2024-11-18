@@ -12,23 +12,23 @@ import org.smoothbuild.common.filesystem.base.Path;
 public class MemoryBucketTest extends AbstractBucketTestSuite {
   @BeforeEach
   public void before() throws IOException {
-    bucket = new MemoryBucket();
-    bucket.createDir(Path.root());
+    fileSystem = new MemoryBucket();
+    fileSystem.createDir(Path.root());
   }
 
   // helpers
 
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
-    bucket.createDir(path.parent());
-    try (BufferedSink sink = buffer(bucket.sink(path))) {
+    fileSystem.createDir(path.parent());
+    try (BufferedSink sink = buffer(fileSystem.sink(path))) {
       sink.write(content);
     }
   }
 
   @Override
   protected void createDir(Path path) throws IOException {
-    bucket.createDir(path);
+    fileSystem.createDir(path);
   }
 
   @Override

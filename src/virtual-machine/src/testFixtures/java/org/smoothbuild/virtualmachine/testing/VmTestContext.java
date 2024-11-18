@@ -4,7 +4,8 @@ import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.filesystem.base.SubBucket.subBucket;
 
 import com.google.common.base.Supplier;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.common.testing.CommonTestContext;
@@ -16,7 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 
 public class VmTestContext extends CommonTestContext implements VmTestApi {
-  private final Supplier<Bucket> projectBucket = memoize(this::synchronizedMemoryBucket);
+  private final Supplier<FileSystem<org.smoothbuild.common.filesystem.base.Path>> projectBucket =
+      memoize(this::synchronizedMemoryBucket);
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
@@ -33,12 +35,12 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
         computationHashFactory(), this::container, computationCache(), scheduler(), bytecodeF());
   }
 
-  public Bucket bytecodeBucket() {
+  public FileSystem<Path> bytecodeBucket() {
     return subBucket(projectBucket(), BYTECODE_DB_SHORT_PATH);
   }
 
   @Override
-  public Bucket projectBucket() {
+  public FileSystem<Path> projectBucket() {
     return projectBucket.get();
   }
 
@@ -87,7 +89,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
     return result;
   }
 
-  private Bucket newBytecodeBucket() {
+  private FileSystem<Path> newBytecodeBucket() {
     return new SynchronizedBucket(new MemoryBucket());
   }
 }

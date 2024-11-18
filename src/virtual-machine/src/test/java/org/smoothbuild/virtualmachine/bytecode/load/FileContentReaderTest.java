@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.testing.TestingBucket.createFile;
+import static org.smoothbuild.common.testing.TestingSmallFileSystem.createFile;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.Filesystem;

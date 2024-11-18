@@ -18,7 +18,7 @@ import org.smoothbuild.common.Constants;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Alias;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Filesystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
@@ -104,7 +104,7 @@ public interface VmTestApi extends CommonTestApi {
   public static FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
   public static FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
 
-  public Bucket projectBucket();
+  public FileSystem<Path> projectBucket();
 
   public StepEvaluator stepEvaluator();
 
@@ -198,7 +198,7 @@ public interface VmTestApi extends CommonTestApi {
     return computationCache;
   }
 
-  public default Bucket computationCacheBucket() {
+  public default FileSystem<Path> computationCacheBucket() {
     return subBucket(projectBucket(), path("cache"));
   }
 

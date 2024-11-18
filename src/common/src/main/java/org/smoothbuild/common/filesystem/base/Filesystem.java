@@ -10,10 +10,10 @@ import okio.Source;
 import org.smoothbuild.common.collect.Map;
 
 public class Filesystem {
-  private final Map<Alias, Bucket> buckets;
+  private final Map<Alias, FileSystem<Path>> buckets;
 
   @Inject
-  public Filesystem(Map<Alias, Bucket> buckets) {
+  public Filesystem(Map<Alias, FileSystem<Path>> buckets) {
     this.buckets = buckets;
   }
 
@@ -97,12 +97,12 @@ public class Filesystem {
     }
   }
 
-  public Bucket bucketFor(FullPath path) throws IOException {
+  public FileSystem<Path> bucketFor(FullPath path) throws IOException {
     return subBucket(bucketFor(path.alias()), path.path());
   }
 
-  public Bucket bucketFor(Alias alias) throws IOException {
-    Bucket bucket = buckets.get(alias);
+  public FileSystem<Path> bucketFor(Alias alias) throws IOException {
+    FileSystem<Path> bucket = buckets.get(alias);
     if (bucket == null) {
       throw new IOException("Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
     }

@@ -6,18 +6,18 @@ import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 import java.io.IOException;
 import okio.ForwardingSink;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.filesystem.base.Bucket;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.function.Function0;
 
 public class HashingSink extends ForwardingSink {
-  private final Bucket bucket;
+  private final FileSystem<Path> fileSystem;
   private final Path tempPath;
   private final Function0<Hash, IOException> hashMemoizer;
 
-  HashingSink(Bucket bucket, Path tempPath) throws IOException {
-    super(Hash.hashingSink(bucket.sink(tempPath)));
-    this.bucket = bucket;
+  HashingSink(FileSystem<Path> fileSystem, Path tempPath) throws IOException {
+    super(Hash.hashingSink(fileSystem.sink(tempPath)));
+    this.fileSystem = fileSystem;
     this.tempPath = tempPath;
     this.hashMemoizer = memoizer(this::calculateHash);
   }
@@ -36,10 +36,10 @@ public class HashingSink extends ForwardingSink {
     hashingSink.close();
     var localHash = new Hash(hashingSink.hash());
     var path = dbPathTo(localHash);
-    var pathState = bucket.pathState(path);
+    var pathState = fileSystem.pathState(path);
     switch (pathState) {
-      case NOTHING -> bucket.move(tempPath, path);
-      case FILE -> bucket.delete(tempPath);
+      case NOTHING -> fileSystem.move(tempPath, path);
+      case FILE -> fileSystem.delete(tempPath);
       case DIR -> throw new IOException(
           "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
     }
