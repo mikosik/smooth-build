@@ -2,6 +2,7 @@ package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Alias.alias;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 
 public class FullPathTest {
   private static final Alias PROJECT = alias("project");
@@ -29,6 +31,35 @@ public class FullPathTest {
     tester.addEqualityGroup(fullPath(LIBS, path(file)), fullPath(LIBS, path(file)));
 
     tester.testEquals();
+  }
+
+  @Test
+  void root_is_root() {
+    var root = fullPath(PROJECT, root());
+    assertThat(root.isRoot()).isTrue();
+  }
+
+  @Test
+  void non_root_is_not_root() {
+    var root = fullPath(PROJECT, path("abc"));
+    assertThat(root.isRoot()).isFalse();
+  }
+
+  @ParameterizedTest
+  @MethodSource("starts_with")
+  void starts_with(FullPath fullPath, FullPath prefix, boolean expected) {
+    assertThat(fullPath.startsWith(prefix)).isEqualTo(expected);
+  }
+
+  public static List<Arguments> starts_with() {
+    return list(
+        arguments(fullPath(PROJECT, "abc"), fullPath(PROJECT, "abc"), true),
+        arguments(fullPath(PROJECT, "abc/def"), fullPath(PROJECT, "abc/def"), true),
+        arguments(fullPath(PROJECT, "abc/def"), fullPath(PROJECT, "abc"), true),
+        arguments(fullPath(PROJECT, "abc"), fullPath(PROJECT, "abc/def"), false),
+        arguments(fullPath(PROJECT, "abc"), fullPath(PROJECT, "def"), false),
+        arguments(fullPath(PROJECT, "abc"), fullPath(LIBS, "abc"), false)
+    );
   }
 
   @Test
