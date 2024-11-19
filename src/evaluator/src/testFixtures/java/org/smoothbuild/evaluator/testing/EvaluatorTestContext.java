@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -72,7 +71,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
-    var fullPath = fullPath(PROJECT, path("libraryModule.smooth"));
+    var fullPath = PROJECT_PATH.append("libraryModule.smooth");
     try (var sink = buffer(filesystem.sink(fullPath.withExtension("jar")))) {
       try (var source = source(jar)) {
         sink.writeAll(source);
