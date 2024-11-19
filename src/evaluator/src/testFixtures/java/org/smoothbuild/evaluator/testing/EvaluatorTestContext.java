@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
@@ -43,6 +42,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
+import org.smoothbuild.common.testing.TestingSmallFileSystem;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestApi;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -67,7 +67,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     this.modules = list();
     this.buckets = map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
     this.injector = createInjector(buckets);
-    this.filesystem = injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
+    this.filesystem = injector.getInstance(Key.get(new TypeLiteral<>() {}));
   }
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
@@ -95,11 +95,11 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
-    createFile(filesystem, fullPath(PROJECT, path(path)), content);
+    TestingSmallFileSystem.createFile(projectBucket(), path(path), content);
   }
 
   protected void createProjectFile(Path path, Source content) throws IOException {
-    createFile(filesystem, fullPath(PROJECT, path), content);
+    TestingSmallFileSystem.createFile(projectBucket(), path, content);
   }
 
   protected void evaluate(String... names) {
@@ -205,8 +205,8 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   @Override
-  public FileSystem<Path> projectBucket() {
-    return fileSystemPart(filesystem, fullPath(PROJECT, Path.root()));
+  public FileSystem<FullPath> filesystem() {
+    return filesystem;
   }
 
   @Override

@@ -1,13 +1,12 @@
 package org.smoothbuild.virtualmachine.testing;
 
 import static com.google.common.base.Suppliers.memoize;
-import static org.smoothbuild.common.filesystem.base.SubBucket.subBucket;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 
 import com.google.common.base.Supplier;
 import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.common.testing.CommonTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -17,7 +16,8 @@ import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 
 public class VmTestContext extends CommonTestContext implements VmTestApi {
-  private final Supplier<FileSystem<Path>> projectBucket = memoize(this::synchronizedMemoryBucket);
+  private final Supplier<FileSystem<FullPath>> fullFileSystem =
+      memoize(this::newSynchronizedMemoryFileSystem);
   private final Supplier<StepEvaluator> stepEvaluator = memoize(this::newStepEvaluator);
   private final Supplier<BytecodeFactory> bytecodeFactory = memoize(this::newBytecodeFactory);
   private final Supplier<BExprDb> exprDb = memoize(this::newExprDb);
@@ -35,12 +35,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
   }
 
   public FileSystem<Path> bytecodeBucket() {
-    return subBucket(projectBucket(), BYTECODE_DB_SHORT_PATH);
-  }
-
-  @Override
-  public FileSystem<Path> projectBucket() {
-    return projectBucket.get();
+    return fileSystemPart(filesystem(), BYTECODE_DB_PATH);
   }
 
   @Override
@@ -88,7 +83,8 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
     return result;
   }
 
-  private FileSystem<Path> newBytecodeBucket() {
-    return new SynchronizedBucket(new MemoryBucket());
+  @Override
+  public FileSystem<FullPath> filesystem() {
+    return fullFileSystem.get();
   }
 }
