@@ -60,10 +60,10 @@ public final class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public void addChild(MemoryElement elem) {
+  public void addChild(MemoryElement elem) throws IOException {
     Path elemName = elem.name();
     if (map.containsKey(elemName)) {
-      throw new IllegalStateException("Dir already contains child with name '" + elemName + "'.");
+      throw new IOException("Dir already contains child with name '" + elemName + "'.");
     }
     map.put(elemName, elem);
   }
