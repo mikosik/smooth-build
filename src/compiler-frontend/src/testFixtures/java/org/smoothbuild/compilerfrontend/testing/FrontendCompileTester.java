@@ -5,7 +5,6 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Tasks.argument;
@@ -17,10 +16,7 @@ import com.google.inject.Provides;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
@@ -143,8 +139,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private FileSystem<FullPath> createFilesystemWithModuleFiles() {
-      var projectDir = new SynchronizedBucket(new MemoryBucket());
-      var filesystem = new FullFileSystem(map(PROJECT, projectDir));
+      var filesystem = newSynchronizedMemoryFileSystem();
       writeModuleFile(
           filesystem,
           standardLibraryModulePath(),

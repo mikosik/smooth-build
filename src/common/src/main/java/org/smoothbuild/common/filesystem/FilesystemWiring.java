@@ -9,7 +9,7 @@ import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
+import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.disk.DiskBucket;
 
 public class FilesystemWiring extends AbstractModule {
@@ -22,7 +22,6 @@ public class FilesystemWiring extends AbstractModule {
   @Provides
   @Singleton
   public FileSystem<FullPath> provideFilesystem() {
-    return new FullFileSystem(
-        aliasToPath.mapValues(p -> new SynchronizedBucket(new DiskBucket(p))));
+    return new SynchronizedFileSystem<>(new FullFileSystem(aliasToPath.mapValues(DiskBucket::new)));
   }
 }

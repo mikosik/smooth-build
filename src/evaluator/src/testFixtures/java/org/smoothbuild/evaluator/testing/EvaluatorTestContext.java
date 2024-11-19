@@ -10,7 +10,6 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -27,14 +26,10 @@ import java.io.IOException;
 import okio.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
@@ -59,13 +54,12 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
   private FileSystem<FullPath> filesystem;
-  private Map<Alias, FileSystem<Path>> buckets;
 
   @BeforeEach
   public void beforeEach() throws IOException {
     this.modules = list();
-    this.buckets = map(PROJECT, new SynchronizedBucket(new MemoryBucket()));
-    this.injector = createInjector(buckets);
+    this.filesystem = newSynchronizedMemoryFileSystem();
+    this.injector = createInjector(filesystem);
     this.filesystem = injector.getInstance(Key.get(new TypeLiteral<>() {}));
   }
 
@@ -114,7 +108,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void restartSmoothWithSameBuckets() {
-    injector = createInjector(buckets);
+    injector = createInjector(filesystem);
     evaluatedExprs = null;
   }
 
@@ -169,12 +163,12 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     return injector.getInstance(TestReporter.class);
   }
 
-  private static Injector createInjector(Map<Alias, FileSystem<Path>> buckets) {
+  private static Injector createInjector(FileSystem<FullPath> fileSystem) {
     return Guice.createInjector(
         PRODUCTION,
         new EvaluatorWiring(),
         new CompilerBackendWiring(),
-        new VmTestWiring(buckets),
+        new VmTestWiring(fileSystem),
         new ReportTestWiring());
   }
 
