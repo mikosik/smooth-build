@@ -21,7 +21,7 @@ public sealed interface MemoryElement permits MemoryDir, MemoryFile, MemoryLink 
 
   public List<Path> childNames();
 
-  public void addChild(MemoryElement elem);
+  public void addChild(MemoryElement elem) throws IOException;
 
   public long size();
 

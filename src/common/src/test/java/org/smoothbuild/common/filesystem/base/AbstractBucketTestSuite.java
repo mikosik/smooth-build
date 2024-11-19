@@ -2,7 +2,6 @@ package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
-import static org.junit.Assert.assertThrows;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
@@ -12,10 +11,10 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystemException;
-import java.nio.file.NoSuchFileException;
 import okio.BufferedSink;
 import okio.ByteString;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.testing.TestingFileSystem;
@@ -207,7 +206,7 @@ public abstract class AbstractBucketTestSuite {
 
     @Test
     void fails_when_parent_directory_not_exists() {
-      assertCall(() -> writeFile(path("dir/file"))).throwsException(NoSuchFileException.class);
+      Assertions.assertThrows(IOException.class, () -> writeFile(path("dir/file")));
     }
 
     @Test
@@ -224,7 +223,7 @@ public abstract class AbstractBucketTestSuite {
       createFile(file);
       fileSystem.createLink(link, file);
 
-      assertThrows(FileSystemException.class, () -> writeFile(link.appendPart("newFile")));
+      Assert.assertThrows(IOException.class, () -> writeFile(link.appendPart("newFile")));
     }
 
     @Test
@@ -246,7 +245,7 @@ public abstract class AbstractBucketTestSuite {
       var file = path("myDir/myFile");
       createFile(file);
       var path = file.append(path("otherFile"));
-      assertThrows(FileSystemException.class, () -> writeFile(path));
+      Assert.assertThrows(IOException.class, () -> writeFile(path));
     }
   }
 
@@ -415,8 +414,7 @@ public abstract class AbstractBucketTestSuite {
       var link = path("missing_directory/myLink");
       createFile(file);
 
-      assertCall(() -> fileSystem.createLink(link, file))
-          .throwsException(NoSuchFileException.class);
+      Assertions.assertThrows(IOException.class, () -> fileSystem.createLink(link, file));
     }
 
     @Test

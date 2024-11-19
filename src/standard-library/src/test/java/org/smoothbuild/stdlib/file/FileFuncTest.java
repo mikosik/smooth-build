@@ -28,7 +28,7 @@ public class FileFuncTest extends StandardLibraryTestContext {
     assertThat(logs())
         .contains(
             error(
-                "Error reading file '{t-project}/nonexistent/file.txt'. File 'nonexistent/file.txt' doesn't exist."));
+                "Cannot read '{t-project}/nonexistent/file.txt'. File 'nonexistent/file.txt' doesn't exist."));
   }
 
   @Test
@@ -40,9 +40,8 @@ public class FileFuncTest extends StandardLibraryTestContext {
     createProjectFile("some/dir/file", "");
     evaluate("result");
     assertThat(logs())
-        .contains(
-            error(
-                "Error reading file '{t-project}/some/dir'. File 'some/dir' doesn't exist. It is a dir."));
+        .contains(error(
+            "Cannot read '{t-project}/some/dir'. File 'some/dir' doesn't exist. It is a dir."));
   }
 
   @Test

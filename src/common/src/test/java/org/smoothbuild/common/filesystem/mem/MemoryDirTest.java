@@ -46,24 +46,24 @@ public class MemoryDirTest {
   }
 
   @Test
-  void has_child_that_has_been_added_to_it() {
+  void has_child_that_has_been_added_to_it() throws IOException {
     memoryDir = new MemoryDir(parent, path);
     memoryDir.addChild(child);
     assertThat(memoryDir.hasChild(child.name())).isTrue();
   }
 
   @Test
-  void returns_child_added_to_it_with_given_name() {
+  void returns_child_added_to_it_with_given_name() throws IOException {
     memoryDir = new MemoryDir(parent, path);
     memoryDir.addChild(child);
     assertThat(memoryDir.child(child.name())).isSameInstanceAs(child);
   }
 
   @Test
-  void cannot_add_the_same_child_twice() {
+  void cannot_add_the_same_child_twice() throws IOException {
     memoryDir = new MemoryDir(parent, path);
     memoryDir.addChild(child);
-    assertCall(() -> memoryDir.addChild(child)).throwsException(IllegalStateException.class);
+    assertCall(() -> memoryDir.addChild(child)).throwsException(IOException.class);
   }
 
   @Test
@@ -73,7 +73,7 @@ public class MemoryDirTest {
   }
 
   @Test
-  void child_names_returns_all_added_children() {
+  void child_names_returns_all_added_children() throws IOException {
     memoryDir = new MemoryDir(parent, path);
     memoryDir.addChild(child);
     memoryDir.addChild(child2);
@@ -81,7 +81,7 @@ public class MemoryDirTest {
   }
 
   @Test
-  void has_no_children_after_removing_all_children() {
+  void has_no_children_after_removing_all_children() throws IOException {
     memoryDir = new MemoryDir(parent, path);
     memoryDir.addChild(child);
     memoryDir.addChild(child2);

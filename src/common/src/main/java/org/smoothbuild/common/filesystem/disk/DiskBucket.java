@@ -104,7 +104,7 @@ public class DiskBucket implements FileSystem<Path> {
   @Override
   public Sink sink(Path path) throws IOException {
     if (pathState(path) == DIR) {
-      throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
+      throw new IOException("Cannot use " + path + ". It is already taken by dir.");
     }
     return Okio.sink(jdkPath(path));
   }

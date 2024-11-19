@@ -4,6 +4,7 @@ import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recu
 
 import jakarta.inject.Inject;
 import java.io.IOException;
+import java.util.function.Supplier;
 import okio.Sink;
 import okio.Source;
 import org.smoothbuild.common.collect.Map;
@@ -18,12 +19,13 @@ public class FullFileSystem implements FileSystem<FullPath> {
 
   @Override
   public PathState pathState(FullPath path) throws IOException {
-    return fileSystemPart(path.alias()).pathState(path.path());
+    return fileSystemPart(path.alias(), () -> "").pathState(path.path());
   }
 
   @Override
   public PathIterator filesRecursively(FullPath dir) throws IOException {
-    var bucket = fileSystemPart(dir.alias());
+    var bucket =
+        fileSystemPart(dir.alias(), () -> "Cannot list files recursively in " + dir.q() + ".");
     try {
       return recursivePathsIterator(bucket, dir.path());
     } catch (IOException e) {
@@ -34,7 +36,7 @@ public class FullFileSystem implements FileSystem<FullPath> {
 
   @Override
   public Iterable<Path> files(FullPath dir) throws IOException {
-    var bucket = fileSystemPart(dir.alias());
+    var bucket = fileSystemPart(dir.alias(), () -> "Cannot list files in " + dir.q() + ".");
     try {
       return bucket.files(dir.path());
     } catch (IOException e) {
@@ -44,85 +46,91 @@ public class FullFileSystem implements FileSystem<FullPath> {
 
   @Override
   public void move(FullPath source, FullPath target) throws IOException {
-    var bucket = fileSystemPart(getAliasIfEqualOrFail(source, target));
+    var bucket = fileSystemPart(
+        getAliasIfEqualOrFail(source, target),
+        () -> "Cannot move " + source.q() + " to " + target.q() + ".");
     try {
       bucket.move(source.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
-          "Error moving %s to %s. %s".formatted(source.q(), target.q(), e.getMessage()));
+          "Cannot move %s to %s. %s".formatted(source.q(), target.q(), e.getMessage()));
     }
   }
 
   @Override
   public void delete(FullPath path) throws IOException {
-    fileSystemPart(path.alias()).delete(path.path());
+    var fileSystemPart = fileSystemPart(path.alias(), () -> "Cannot delete " + path.q() + ".");
+    fileSystemPart.delete(path.path());
   }
 
   @Override
   public long size(FullPath path) throws IOException {
     try {
-      return fileSystemPart(path.alias()).size(path.path());
+      return fileSystemPart(path.alias(), () -> "").size(path.path());
     } catch (IOException e) {
-      throw new IOException("Error fetching size of %s. %s".formatted(path.q(), e.getMessage()));
+      throw new IOException("Cannot fetch size of %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
   @Override
   public Source source(FullPath path) throws IOException {
     try {
-      return fileSystemPart(path.alias()).source(path.path());
+      return fileSystemPart(path.alias(), () -> "").source(path.path());
     } catch (IOException e) {
-      throw new IOException("Error reading file %s. %s".formatted(path.q(), e.getMessage()));
+      throw new IOException("Cannot read %s. %s".formatted(path.q(), e.getMessage()));
     }
   }
 
   @Override
   public Sink sink(FullPath path) throws IOException {
     try {
-      return fileSystemPart(path.alias()).sink(path.path());
+      return fileSystemPart(path.alias(), () -> "").sink(path.path());
     } catch (IOException e) {
-      throw new IOException("Error writing file %s. %s".formatted(path.q(), e.getMessage()));
+      throw new IOException("Cannot create sink for %s. %s".formatted(path.q(), e.getMessage()), e);
     }
   }
 
   @Override
   public void createLink(FullPath link, FullPath target) throws IOException {
-    var bucket = fileSystemPart(getAliasIfEqualOrFail(link, target));
+    var bucket = fileSystemPart(
+        getAliasIfEqualOrFail(link, target),
+        () -> "Cannot create link " + link.q() + " -> " + target.q() + ".");
     try {
       bucket.createLink(link.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
-          "Error creating link %s -> %s. %s".formatted(link.q(), target.q(), e.getMessage()));
+          "Cannot create link %s -> %s. %s".formatted(link.q(), target.q(), e.getMessage()));
     }
   }
 
   @Override
-  public void createDir(FullPath path) throws IOException {
-    var bucket = fileSystemPart(path.alias());
+  public void createDir(FullPath dir) throws IOException {
+    var bucket = fileSystemPart(dir.alias(), () -> "Cannot create dir " + dir.q() + ".");
     try {
-      bucket.createDir(path.path());
+      bucket.createDir(dir.path());
     } catch (IOException e) {
-      throw new IOException("Error creating dir %s. %s".formatted(path.q(), e.getMessage()));
+      throw new IOException("Cannot create dir %s. %s".formatted(dir.q(), e.getMessage()));
     }
   }
 
-  private FileSystem<Path> fileSystemPart(Alias alias) throws IOException {
+  private FileSystem<Path> fileSystemPart(Alias alias, Supplier<String> error)
+      throws IOException {
     FileSystem<Path> bucket = buckets.get(alias);
     if (bucket == null) {
-      throw new IOException("Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
+      throw new IOException(error.get() + " Unknown alias " + alias
+          + ". Known aliases = " + buckets.keySet());
     }
     return bucket;
   }
 
-  private static Alias getAliasIfEqualOrFail(FullPath source, FullPath target) {
+  private static Alias getAliasIfEqualOrFail(FullPath source, FullPath target) throws IOException {
     var sourceAlias = source.alias();
     var targetAlias = target.alias();
     if (sourceAlias.equals(targetAlias)) {
       return sourceAlias;
     } else {
-      throw new IllegalArgumentException(
-          "Alias '%s' in source is different from alias '%s' in target."
-              .formatted(sourceAlias.name(), targetAlias.name()));
+      throw new IOException("Alias '%s' in source is different from alias '%s' in target."
+          .formatted(sourceAlias.name(), targetAlias.name()));
     }
   }
 }

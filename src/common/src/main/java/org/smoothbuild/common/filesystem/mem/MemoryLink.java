@@ -57,7 +57,7 @@ public final class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public void addChild(MemoryElement elem) {
+  public void addChild(MemoryElement elem) throws IOException {
     target.addChild(elem);
   }
 

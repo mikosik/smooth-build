@@ -6,8 +6,6 @@ import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recu
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystemException;
-import java.nio.file.NoSuchFileException;
 import java.util.Iterator;
 import java.util.List;
 import okio.Sink;
@@ -108,7 +106,7 @@ public class MemoryBucket implements FileSystem<Path> {
       throws IOException {
     var parent = findElement(path);
     if (parent == null) {
-      throw new NoSuchFileException(path.q());
+      throw new IOException("No such dir " + path.q() + ".");
     }
     return switch (resolveLinksFully(parent)) {
       case MemoryFile file -> throw parentExistAsFileException(path);
@@ -117,8 +115,8 @@ public class MemoryBucket implements FileSystem<Path> {
     };
   }
 
-  private static FileSystemException parentExistAsFileException(Path path) {
-    return new FileSystemException(
+  private static IOException parentExistAsFileException(Path path) {
+    return new IOException(
         format("Cannot create object because its parent {0} exists and is a file.", path.q()));
   }
 
@@ -169,7 +167,7 @@ public class MemoryBucket implements FileSystem<Path> {
           currentDir = (MemoryDir) child;
         } else {
           throw new FileAlreadyExistsException(
-              "Cannot use " + dir + " path. It is already taken by file.");
+              "Cannot use " + dir + ". It is already taken by file.");
         }
       } else {
         MemoryDir newDir = new MemoryDir(currentDir, name);
