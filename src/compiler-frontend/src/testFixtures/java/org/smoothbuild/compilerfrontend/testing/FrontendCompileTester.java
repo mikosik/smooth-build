@@ -143,8 +143,8 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private FileSystem<FullPath> createFilesystemWithModuleFiles() {
-      var projectBucket = new SynchronizedBucket(new MemoryBucket());
-      var filesystem = new FullFileSystem(map(PROJECT, projectBucket));
+      var projectDir = new SynchronizedBucket(new MemoryBucket());
+      var filesystem = new FullFileSystem(map(PROJECT, projectDir));
       writeModuleFile(
           filesystem,
           standardLibraryModulePath(),
