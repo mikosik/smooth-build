@@ -4,9 +4,9 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
-import static org.smoothbuild.common.filesystem.base.SubBucket.subBucket;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
@@ -104,8 +104,6 @@ public interface VmTestApi extends CommonTestApi {
   public static FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
   public static FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
 
-  public FileSystem<Path> projectBucket();
-
   public StepEvaluator stepEvaluator();
 
   public BytecodeFactory bytecodeF();
@@ -116,6 +114,16 @@ public interface VmTestApi extends CommonTestApi {
 
   public default Job job(BExpr expr, BExpr... environment) {
     return job(expr, list(environment));
+  }
+
+  public FileSystem<FullPath> filesystem();
+
+  public default FileSystem<Path> projectBucket() {
+    return fileSystemPart(filesystem(), PROJECT_PATH);
+  }
+
+  public default FileSystem<Path> computationCacheBucket() {
+    return fileSystemPart(filesystem(), COMPUTATION_DB_PATH);
   }
 
   public default Job job(BExpr expr, List<BExpr> list) {
@@ -132,8 +140,8 @@ public interface VmTestApi extends CommonTestApi {
     }
   }
 
-  public default SynchronizedBucket synchronizedMemoryBucket() {
-    return new SynchronizedBucket(new MemoryBucket());
+  public default FileSystem<FullPath> newSynchronizedMemoryFileSystem() {
+    return new FullFileSystem(map(PROJECT, new SynchronizedBucket(new MemoryBucket())));
   }
 
   public default BEvaluate bEvaluate() {
@@ -188,18 +196,10 @@ public interface VmTestApi extends CommonTestApi {
         filesystem(), PROJECT_PATH, fileContentReader(), bytecodeF(), nativeMethodLoader);
   }
 
-  public default FileSystem<FullPath> filesystem() {
-    return new FullFileSystem(map(PROJECT, projectBucket()));
-  }
-
   public default ComputationCache computationCache() {
     var computationCache = new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
     throwExceptionOnFailure(new ComputationCacheInitializer(computationCache).execute());
     return computationCache;
-  }
-
-  public default FileSystem<Path> computationCacheBucket() {
-    return subBucket(projectBucket(), path("cache"));
   }
 
   public default FullPath moduleFullPath() {
