@@ -18,7 +18,7 @@ import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.testing.TestingSmallFileSystem;
+import org.smoothbuild.common.testing.TestingDirFileSystem;
 
 public abstract class AbstractBucketTestSuite {
   protected FileSystem<Path> fileSystem;
@@ -477,11 +477,11 @@ public abstract class AbstractBucketTestSuite {
   }
 
   private void writeFile(Path path, ByteString byteString) throws IOException {
-    TestingSmallFileSystem.writeFile(fileSystem, path, byteString);
+    TestingDirFileSystem.writeFile(fileSystem, path, byteString);
   }
 
   private ByteString readFile(Path path) throws IOException {
-    return TestingSmallFileSystem.readFile(fileSystem, path);
+    return TestingDirFileSystem.readFile(fileSystem, path);
   }
 
   protected void createFile(Path path) throws IOException {
