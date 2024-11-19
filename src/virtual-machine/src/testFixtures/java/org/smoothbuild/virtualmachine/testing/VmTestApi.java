@@ -118,11 +118,11 @@ public interface VmTestApi extends CommonTestApi {
 
   public FileSystem<FullPath> filesystem();
 
-  public default FileSystem<Path> projectBucket() {
+  public default FileSystem<Path> projectDir() {
     return fileSystemPart(filesystem(), PROJECT_PATH);
   }
 
-  public default FileSystem<Path> computationCacheBucket() {
+  public default FileSystem<Path> computationCacheDir() {
     return fileSystemPart(filesystem(), COMPUTATION_DB_PATH);
   }
 
@@ -197,7 +197,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default ComputationCache computationCache() {
-    var computationCache = new ComputationCache(computationCacheBucket(), exprDb(), bytecodeF());
+    var computationCache = new ComputationCache(computationCacheDir(), exprDb(), bytecodeF());
     throwExceptionOnFailure(new ComputationCacheInitializer(computationCache).execute());
     return computationCache;
   }

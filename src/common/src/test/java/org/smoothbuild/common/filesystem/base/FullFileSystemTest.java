@@ -91,7 +91,7 @@ public class FullFileSystemTest {
     }
 
     @Test
-    void fails_for_unknown_bucket() {
+    void fails_for_unknown_alias() {
       var filesystem = filesystem();
 
       assertCall(() -> filesystem.filesRecursively(fullPath(UNKNOWN_ALIAS, "file")))

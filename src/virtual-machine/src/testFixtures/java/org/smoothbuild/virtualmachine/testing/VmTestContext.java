@@ -34,7 +34,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
         computationHashFactory(), this::container, computationCache(), scheduler(), bytecodeF());
   }
 
-  public FileSystem<Path> bytecodeBucket() {
+  public FileSystem<Path> bytecodeDir() {
     return fileSystemPart(filesystem(), BYTECODE_DB_PATH);
   }
 
@@ -78,7 +78,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
   }
 
   private HashedDb newHashDb() {
-    var result = new HashedDb(bytecodeBucket());
+    var result = new HashedDb(bytecodeDir());
     throwExceptionOnFailure(new HashedDbInitializer(result).execute());
     return result;
   }

@@ -95,11 +95,11 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
-    TestingDirFileSystem.createFile(projectBucket(), path(path), content);
+    TestingDirFileSystem.createFile(projectDir(), path(path), content);
   }
 
   protected void createProjectFile(Path path, Source content) throws IOException {
-    TestingDirFileSystem.createFile(projectBucket(), path, content);
+    TestingDirFileSystem.createFile(projectDir(), path, content);
   }
 
   protected void evaluate(String... names) {

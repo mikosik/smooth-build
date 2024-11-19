@@ -40,7 +40,7 @@ public class HashedDbTest {
   private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
   private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
 
-  private final Supplier<FileSystem<Path>> bucket = Suppliers.memoize(MemoryBucket::new);
+  private final Supplier<FileSystem<Path>> fileSystem = Suppliers.memoize(MemoryBucket::new);
 
   @Test
   void not_contains_not_written_data() throws HashedDbException {
@@ -121,7 +121,7 @@ public class HashedDbTest {
       throws Exception {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
-    bucket().createDir(path);
+    fileSystem().createDir(path);
 
     assertCall(() -> hashedDb().contains(hash))
         .throwsException(new CorruptedHashedDbException(
@@ -133,7 +133,7 @@ public class HashedDbTest {
       throws IOException {
     var hash = Hash.of(33);
     var path = dbPathTo(hash);
-    bucket().createDir(path);
+    fileSystem().createDir(path);
 
     assertCall(() -> hashedDb().source(hash))
         .throwsException(new CorruptedHashedDbException(format(
@@ -144,7 +144,7 @@ public class HashedDbTest {
   void when_hash_points_to_directory_then_sink_fails_with_corrupted_exception() throws Exception {
     var hash = Hash.of(BYTE_STRING_1);
     var path = dbPathTo(hash);
-    bucket().createDir(path);
+    fileSystem().createDir(path);
 
     assertCall(() -> hashedDb().writeData(bufferedSink -> bufferedSink.write(BYTE_STRING_1)))
         .throwsException(
@@ -154,7 +154,7 @@ public class HashedDbTest {
 
   @Test
   void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
-    var bucket = bucket();
+    var bucket = fileSystem();
     var hashedDb = new HashedDb(bucket);
     hashedDb.initialize();
 
@@ -166,7 +166,7 @@ public class HashedDbTest {
   @Test
   void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
-    var bucket = bucket();
+    var bucket = fileSystem();
     var hashedDb = new HashedDb(bucket);
     hashedDb.initialize();
 
@@ -241,7 +241,7 @@ public class HashedDbTest {
       var hash = Hash.of("abc");
       var path = dbPathTo(hash);
 
-      try (var sink = buffer(bucket().sink(path))) {
+      try (var sink = buffer(fileSystem().sink(path))) {
         sink.write(illegalString());
       }
       assertCall(() -> hashedDb().readString(hash))
@@ -319,12 +319,12 @@ public class HashedDbTest {
     }
   }
 
-  private FileSystem<Path> bucket() {
-    return bucket.get();
+  private FileSystem<Path> fileSystem() {
+    return fileSystem.get();
   }
 
   private HashedDb hashedDb() {
-    var hashedDb = new HashedDb(bucket());
+    var hashedDb = new HashedDb(fileSystem());
     try {
       hashedDb.initialize();
     } catch (IOException e) {

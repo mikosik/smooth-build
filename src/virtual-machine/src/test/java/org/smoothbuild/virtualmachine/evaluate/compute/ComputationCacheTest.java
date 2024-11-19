@@ -37,7 +37,7 @@ public class ComputationCacheTest extends VmTestContext {
   @Test
   void cache_is_corrupted_when_task_hash_points_to_directory() throws Exception {
     var path = computationCache().toPath(hash);
-    computationCacheBucket().createDir(path);
+    computationCacheDir().createDir(path);
     var computationCache = computationCache();
     assertCall(() -> computationCache.contains(hash))
         .throwsException(corruptedValueException(hash, path + " is directory not a file."));

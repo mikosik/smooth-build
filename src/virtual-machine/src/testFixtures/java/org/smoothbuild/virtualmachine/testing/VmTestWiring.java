@@ -45,19 +45,19 @@ public class VmTestWiring extends AbstractModule {
 
   @Provides
   @BytecodeDb
-  public FullPath provideBytecodeDb() {
+  public FullPath provideBytecodeDbPath() {
     return VmTestApi.BYTECODE_DB_PATH;
   }
 
   @Provides
   @ComputationDb
-  public FullPath provideComputationDb() {
+  public FullPath provideComputationDbPath() {
     return VmTestApi.COMPUTATION_DB_PATH;
   }
 
   @Provides
   @Project
-  public FullPath provideProject() {
+  public FullPath provideProjectPath() {
     return VmTestApi.PROJECT_PATH;
   }
 
