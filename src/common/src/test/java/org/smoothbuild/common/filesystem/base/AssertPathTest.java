@@ -93,7 +93,7 @@ public class AssertPathTest {
   }
 
   private static FileSystem<Path> fileSystemWith(Path path, PathState state) throws IOException {
-    FileSystem<Path> fileSystem = mock(FileSystem.class);
+    FileSystem<Path> fileSystem = mock();
     when(fileSystem.pathState(path)).thenReturn(state);
     return fileSystem;
   }

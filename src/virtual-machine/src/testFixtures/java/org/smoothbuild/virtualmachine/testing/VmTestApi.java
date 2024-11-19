@@ -21,7 +21,7 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.base.SynchronizedBucket;
+import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryBucket;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
@@ -139,7 +139,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default FileSystem<FullPath> newSynchronizedMemoryFileSystem() {
-    return new FullFileSystem(map(PROJECT, new SynchronizedBucket(new MemoryBucket())));
+    return new SynchronizedFileSystem<>(new FullFileSystem(map(PROJECT, new MemoryBucket())));
   }
 
   public default BEvaluate bEvaluate() {
