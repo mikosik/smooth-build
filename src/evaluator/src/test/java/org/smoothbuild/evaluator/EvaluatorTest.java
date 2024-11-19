@@ -6,8 +6,6 @@ import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
-import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.task.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingFilesystem.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
@@ -120,7 +118,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
               "f",
               nlist());
           var callS = sCall(sInstantiate(funcS));
-          var buildJar = fullPath(PROJECT, path("module.jar"));
+          var buildJar = PROJECT_PATH.append("module.jar");
           var filesystem =
               injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
           saveBytecodeInJar(filesystem, buildJar, list(ReturnAbc.class));
@@ -136,7 +134,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
               nlist(sItem(sStringType(), "p")));
           var callS = sCall(sInstantiate(funcS), sString("abc"));
           var injector = newInjector();
-          var buildJar = fullPath(PROJECT, path("module.jar"));
+          var buildJar = PROJECT_PATH.append("module.jar");
           var filesystem =
               injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
           saveBytecodeInJar(filesystem, buildJar, list(StringIdentity.class));
@@ -219,7 +217,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         @Test
         void ann_func() throws Exception {
           var injector = newInjector();
-          var buildJar = fullPath(PROJECT, path("module.jar"));
+          var buildJar = PROJECT_PATH.append("module.jar");
           var filesystem =
               injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
           saveBytecodeInJar(filesystem, buildJar, list(ReturnIdFunc.class));

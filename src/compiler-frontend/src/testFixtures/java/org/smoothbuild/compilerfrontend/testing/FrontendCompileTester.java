@@ -163,7 +163,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private FullPath standardLibraryModulePath() {
-      return PROJECT.append("std_lib.smooth");
+      return PROJECT_PATH.append("std_lib.smooth");
     }
   }
 }

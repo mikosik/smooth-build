@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
-import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
@@ -99,10 +98,9 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
 
 public interface VmTestApi extends CommonTestApi {
   public static Alias PROJECT = new Alias("t-project");
-  public static Path BYTECODE_DB_SHORT_PATH = path(".smooth/bytecode");
-  public static FullPath BYTECODE_DB_PATH = PROJECT.append(BYTECODE_DB_SHORT_PATH);
+  public static FullPath PROJECT_PATH = PROJECT.append(Path.root());
+  public static FullPath BYTECODE_DB_PATH = PROJECT.append(path(".smooth/bytecode"));
   public static FullPath COMPUTATION_DB_PATH = PROJECT.append(".smooth/computations");
-  public static FullPath PROJECT_PATH = fullPath(PROJECT, Path.root());
 
   public StepEvaluator stepEvaluator();
 
@@ -207,7 +205,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default FullPath moduleFullPath(String path) {
-    return fullPath(PROJECT, path(path));
+    return PROJECT_PATH.append(path);
   }
 
   public default Step task() throws BytecodeException {
