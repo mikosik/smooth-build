@@ -7,7 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.testing.TestingFilesystem.saveBytecodeInJar;
+import static org.smoothbuild.common.testing.TestingFileSystem.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
 import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 

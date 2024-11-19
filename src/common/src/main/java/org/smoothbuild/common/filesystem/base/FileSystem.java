@@ -4,7 +4,7 @@ import java.io.IOException;
 import okio.Sink;
 import okio.Source;
 
-public interface FileSystem<P> {
+public interface FileSystem<P extends PathI<P>> {
   public PathState pathState(P path) throws IOException;
 
   public PathIterator filesRecursively(P dir) throws IOException;

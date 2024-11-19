@@ -58,8 +58,7 @@ public class FullPathTest {
         arguments(fullPath(PROJECT, "abc/def"), fullPath(PROJECT, "abc"), true),
         arguments(fullPath(PROJECT, "abc"), fullPath(PROJECT, "abc/def"), false),
         arguments(fullPath(PROJECT, "abc"), fullPath(PROJECT, "def"), false),
-        arguments(fullPath(PROJECT, "abc"), fullPath(LIBS, "abc"), false)
-    );
+        arguments(fullPath(PROJECT, "abc"), fullPath(LIBS, "abc"), false));
   }
 
   @Test
