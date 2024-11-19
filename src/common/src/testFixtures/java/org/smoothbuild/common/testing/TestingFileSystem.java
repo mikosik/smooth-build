@@ -82,8 +82,8 @@ public class TestingFileSystem {
   }
 
   public static <P extends PathI<P>> void saveBytecodeInJar(
-      FileSystem<P> filesystem, P fullPath, List<Class<?>> classes) throws IOException {
-    try (Sink sink = buffer(filesystem.sink(fullPath))) {
+      FileSystem<P> fileSystem, P fullPath, List<Class<?>> classes) throws IOException {
+    try (Sink sink = buffer(fileSystem.sink(fullPath))) {
       Classes.saveBytecodeInJar(sink, classes);
     }
   }

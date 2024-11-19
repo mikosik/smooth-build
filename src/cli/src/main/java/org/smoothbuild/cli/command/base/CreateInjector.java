@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.match.ReportMatchers;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.filesystem.FilesystemWiring;
+import org.smoothbuild.common.filesystem.FileSystemWiring;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
@@ -44,7 +44,7 @@ public class CreateInjector {
         new EvaluatorWiring(),
         new CompilerBackendWiring(),
         new VmWiring(),
-        new FilesystemWiring(aliasToPath),
+        new FileSystemWiring(aliasToPath),
         new ReportWiring(out, reportMatcher, logLevel));
   }
 
@@ -56,7 +56,7 @@ public class CreateInjector {
     return Guice.createInjector(
         PRODUCTION,
         new CliWiring(),
-        new FilesystemWiring(aliasToPath),
+        new FileSystemWiring(aliasToPath),
         new ReportWiring(out, ReportMatchers.ALL, INFO));
   }
 

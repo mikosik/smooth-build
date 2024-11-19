@@ -17,11 +17,11 @@ import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 
 public class InstallationHashes {
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
 
   @Inject
-  public InstallationHashes(FileSystem<FullPath> filesystem) {
-    this.filesystem = filesystem;
+  public InstallationHashes(FileSystem<FullPath> fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   public HashNode installationNode() throws IOException {
@@ -73,7 +73,7 @@ public class InstallationHashes {
 
   private Maybe<HashNode> nodeForNativeJarFor(FullPath fullPath) throws IOException {
     FullPath nativeFileFullPath = fullPath.withExtension("jar");
-    return switch (filesystem.pathState(nativeFileFullPath)) {
+    return switch (fileSystem.pathState(nativeFileFullPath)) {
       case FILE -> some(nodeFor(nativeFileFullPath));
       case DIR, NOTHING -> none();
     };
@@ -84,7 +84,7 @@ public class InstallationHashes {
   }
 
   private Hash hashOf(FullPath fullPath) throws IOException {
-    try (var source = filesystem.source(fullPath)) {
+    try (var source = fileSystem.source(fullPath)) {
       return Hash.of(source);
     }
   }

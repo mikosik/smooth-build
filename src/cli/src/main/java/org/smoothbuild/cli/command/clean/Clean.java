@@ -16,18 +16,18 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 public class Clean implements Task0<Tuple0> {
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
   private final FullPath bytecodeDbPath;
   private final FullPath computationDbPath;
   private final FullPath artifactsPath;
 
   @Inject
   public Clean(
-      FileSystem<FullPath> filesystem,
+      FileSystem<FullPath> fileSystem,
       @BytecodeDb FullPath bytecodeDbPath,
       @ComputationDb FullPath computationDbPath,
       @Artifacts FullPath artifactsPath) {
-    this.filesystem = filesystem;
+    this.fileSystem = fileSystem;
     this.bytecodeDbPath = bytecodeDbPath;
     this.computationDbPath = computationDbPath;
     this.artifactsPath = artifactsPath;
@@ -44,7 +44,7 @@ public class Clean implements Task0<Tuple0> {
 
   private void deleteDir(String name, FullPath path, Logger logger) {
     try {
-      filesystem.delete(path);
+      fileSystem.delete(path);
       logger.info(name + " removed");
     } catch (IOException e) {
       logger.error("Unable to delete " + name + " path=" + path.q() + ".");

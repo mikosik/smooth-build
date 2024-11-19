@@ -19,13 +19,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
  */
 @Singleton
 public class FileContentReader {
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
   private final BExprDb exprDb;
   private final ConcurrentHashMap<FullPath, CachingReader> cache;
 
   @Inject
-  public FileContentReader(FileSystem<FullPath> filesystem, BExprDb exprDb) {
-    this.filesystem = filesystem;
+  public FileContentReader(FileSystem<FullPath> fileSystem, BExprDb exprDb) {
+    this.fileSystem = fileSystem;
     this.exprDb = exprDb;
     this.cache = new ConcurrentHashMap<>();
   }
@@ -52,7 +52,7 @@ public class FileContentReader {
 
     private BBlob readImpl() throws BytecodeException, IOException {
       try (BBlobBuilder blobBuilder = exprDb.newBlobBuilder()) {
-        try (var source = buffer(filesystem.source(fullPath))) {
+        try (var source = buffer(fileSystem.source(fullPath))) {
           source.readAll(blobBuilder);
         }
         return blobBuilder.build();

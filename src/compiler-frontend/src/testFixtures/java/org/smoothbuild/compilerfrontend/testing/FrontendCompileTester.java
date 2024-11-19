@@ -139,19 +139,19 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private FileSystem<FullPath> createFilesystemWithModuleFiles() {
-      var filesystem = newSynchronizedMemoryFileSystem();
+      var fileSystem = newSynchronizedMemoryFileSystem();
       writeModuleFile(
-          filesystem,
+          fileSystem,
           standardLibraryModulePath(),
           importedSourceCode == null ? "" : importedSourceCode);
-      writeModuleFile(filesystem, moduleFullPath(), sourceCode);
-      return filesystem;
+      writeModuleFile(fileSystem, moduleFullPath(), sourceCode);
+      return fileSystem;
     }
 
     private static void writeModuleFile(
-        FileSystem<FullPath> filesystem, FullPath fullPath, String content) {
+        FileSystem<FullPath> fileSystem, FullPath fullPath, String content) {
       try {
-        createFile(filesystem, fullPath, content);
+        createFile(fileSystem, fullPath, content);
       } catch (IOException e) {
         throw new RuntimeException("Can't happen for MemoryBucket.", e);
       }

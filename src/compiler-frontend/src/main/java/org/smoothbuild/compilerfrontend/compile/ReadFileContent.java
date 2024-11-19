@@ -16,11 +16,11 @@ import org.smoothbuild.common.task.Output;
 import org.smoothbuild.common.task.Task1;
 
 public class ReadFileContent implements Task1<FullPath, String> {
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
 
   @Inject
-  public ReadFileContent(FileSystem<FullPath> filesystem) {
-    this.filesystem = filesystem;
+  public ReadFileContent(FileSystem<FullPath> fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   @Override
@@ -39,7 +39,7 @@ public class ReadFileContent implements Task1<FullPath, String> {
   }
 
   private String contentOf(FullPath fullPath) throws IOException {
-    try (var source = buffer(filesystem.source(fullPath))) {
+    try (var source = buffer(fileSystem.source(fullPath))) {
       return source.readString(CHARSET);
     }
   }
