@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
+import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

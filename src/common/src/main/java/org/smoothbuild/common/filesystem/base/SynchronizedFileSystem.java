@@ -7,7 +7,7 @@ import okio.Source;
 /**
  * This class is thread-safe.
  */
-public class SynchronizedFileSystem<P> implements FileSystem<P> {
+public class SynchronizedFileSystem<P extends PathI<P>> implements FileSystem<P> {
   private final FileSystem<P> fileSystem;
 
   public SynchronizedFileSystem(FileSystem<P> fileSystem) {

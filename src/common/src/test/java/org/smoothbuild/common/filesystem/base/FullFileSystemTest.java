@@ -10,9 +10,9 @@ import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 import static org.smoothbuild.common.testing.TestingByteString.byteString;
-import static org.smoothbuild.common.testing.TestingFilesystem.createFile;
-import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
-import static org.smoothbuild.common.testing.TestingFilesystem.writeFile;
+import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
+import static org.smoothbuild.common.testing.TestingFileSystem.readFile;
+import static org.smoothbuild.common.testing.TestingFileSystem.writeFile;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class FullFileSystemTest {
 
     @Test
     void return_file_when_path_points_to_a_file() throws IOException {
-      var filesystem = filesystem();
+      FullFileSystem filesystem = filesystem();
       var path = fullPath(alias(), "file");
       createFile(filesystem, path);
       assertThat(filesystem.pathState(path)).isEqualTo(FILE);
