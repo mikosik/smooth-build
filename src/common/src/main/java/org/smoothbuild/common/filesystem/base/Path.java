@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.collect.List;
 
-public class Path {
+public class Path implements PathI<Path> {
   public static final String SEPARATOR = "/";
   private static final Path ROOT = new Path(".");
 
@@ -62,10 +62,12 @@ public class Path {
     return value;
   }
 
+  @Override
   public boolean isRoot() {
     return this == ROOT;
   }
 
+  @Override
   public Path parent() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return parent of root path");
@@ -78,6 +80,7 @@ public class Path {
     }
   }
 
+  @Override
   public boolean startsWith(Path path) {
     List<Path> thisParts = parts();
     List<Path> thatParts = path.parts();
@@ -92,6 +95,7 @@ public class Path {
     return true;
   }
 
+  @Override
   public Path append(Path path) {
     if (isRoot()) {
       return path;
@@ -102,6 +106,7 @@ public class Path {
     }
   }
 
+  @Override
   public Path appendPart(String part) {
     if (part.contains(SEPARATOR)) {
       throw new IllegalArgumentException(
@@ -117,6 +122,7 @@ public class Path {
     }
   }
 
+  @Override
   public Path withExtension(String extension) {
     failWithIllegalArgumentIf(isRoot(), "Cannot change extension of '.'.");
     failWithIllegalArgumentIf(
@@ -178,6 +184,7 @@ public class Path {
     }
   }
 
+  @Override
   public String q() {
     return "'" + value + "'";
   }
