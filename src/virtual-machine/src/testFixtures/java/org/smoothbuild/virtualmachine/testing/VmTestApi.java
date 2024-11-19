@@ -201,11 +201,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default FullPath moduleFullPath() {
-    return moduleFullPath("module.smooth");
-  }
-
-  public default FullPath moduleFullPath(String path) {
-    return PROJECT_PATH.append(path);
+    return PROJECT_PATH.append("module.smooth");
   }
 
   public default Step task() throws BytecodeException {
