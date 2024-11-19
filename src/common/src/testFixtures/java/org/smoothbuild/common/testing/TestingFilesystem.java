@@ -23,13 +23,13 @@ public class TestingFilesystem {
 
   public static void createFile(FileSystem<FullPath> filesystem, FullPath path, String content)
       throws IOException {
-    TestingSmallFileSystem.createFile(
+    TestingDirFileSystem.createFile(
         fileSystemPart(filesystem, fullPath(path.alias(), Path.root())), path.path(), content);
   }
 
   public static void createFile(FileSystem<FullPath> filesystem, FullPath path, Source content)
       throws IOException {
-    TestingSmallFileSystem.createFile(
+    TestingDirFileSystem.createFile(
         fileSystemPart(filesystem, fullPath(path.alias(), Path.root())), path.path(), content);
   }
 

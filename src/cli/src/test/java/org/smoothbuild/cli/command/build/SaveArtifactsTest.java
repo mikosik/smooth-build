@@ -12,7 +12,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualOne;
 import static org.smoothbuild.common.testing.TestingByteString.byteStringWithSingleByteEqualZero;
 import static org.smoothbuild.common.testing.TestingFilesystem.readFile;
-import static org.smoothbuild.common.testing.TestingSmallFileSystem.directoryToFileMap;
+import static org.smoothbuild.common.testing.TestingDirFileSystem.directoryToFileMap;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 
 import java.io.IOException;

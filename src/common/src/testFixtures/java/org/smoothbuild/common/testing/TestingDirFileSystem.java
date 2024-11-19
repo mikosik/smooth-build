@@ -12,7 +12,7 @@ import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathIterator;
 import org.smoothbuild.common.filesystem.base.RecursivePathsIterator;
 
-public class TestingSmallFileSystem {
+public class TestingDirFileSystem {
   public static Map<Path, ByteString> directoryToFileMap(FileSystem<Path> fileSystem)
       throws IOException {
     var result = new HashMap<Path, ByteString>();

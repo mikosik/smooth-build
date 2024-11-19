@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.common.testing.TestingSmallFileSystem.createFile;
+import static org.smoothbuild.common.testing.TestingDirFileSystem.createFile;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;

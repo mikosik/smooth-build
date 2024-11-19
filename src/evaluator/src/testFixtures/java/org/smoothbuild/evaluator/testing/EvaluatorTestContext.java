@@ -42,7 +42,7 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.task.Scheduler;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
-import org.smoothbuild.common.testing.TestingSmallFileSystem;
+import org.smoothbuild.common.testing.TestingDirFileSystem;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestApi;
 import org.smoothbuild.evaluator.EvaluatedExprs;
@@ -95,11 +95,11 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void createProjectFile(String path, String content) throws IOException {
-    TestingSmallFileSystem.createFile(projectBucket(), path(path), content);
+    TestingDirFileSystem.createFile(projectBucket(), path(path), content);
   }
 
   protected void createProjectFile(Path path, Source content) throws IOException {
-    TestingSmallFileSystem.createFile(projectBucket(), path, content);
+    TestingDirFileSystem.createFile(projectBucket(), path, content);
   }
 
   protected void evaluate(String... names) {
