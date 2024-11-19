@@ -38,16 +38,16 @@ import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 
 public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final String FILE_STRUCT_NAME = "File";
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
   private final FullPath artifactsPath;
   private final FullPath bytecodeDbPath;
 
   @Inject
   public SaveArtifacts(
-      FileSystem<FullPath> filesystem,
+      FileSystem<FullPath> fileSystem,
       @Artifacts FullPath artifactsPath,
       @BytecodeDb FullPath bytecodeDbPath) {
-    this.filesystem = filesystem;
+    this.fileSystem = fileSystem;
     this.artifactsPath = artifactsPath;
     this.bytecodeDbPath = bytecodeDbPath;
   }
@@ -56,7 +56,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
     var label = BuildCommand.LABEL.append("saveArtifacts");
     try {
-      filesystem.createDir(artifactsPath);
+      fileSystem.createDir(artifactsPath);
     } catch (IOException e) {
       return output(label, list(error(e.getMessage())));
     }
@@ -106,7 +106,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
 
   private FullPath saveArray(SArrayType sArrayType, FullPath artifactPath, BArray array)
       throws IOException, DuplicatedPathsException, BytecodeException {
-    filesystem.createDir(artifactPath);
+    fileSystem.createDir(artifactPath);
     SType elemTS = sArrayType.elem();
     if (elemTS instanceof SArrayType sElemArrayType) {
       int i = 0;
@@ -128,7 +128,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     for (var valueB : array.elements(BValue.class)) {
       FullPath sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       FullPath targetPath = targetPath(valueB);
-      filesystem.createLink(sourcePath, targetPath);
+      fileSystem.createLink(sourcePath, targetPath);
       i++;
     }
   }
@@ -141,13 +141,13 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
       FullPath sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
         FullPath targetPath = targetPath(fileContent(file));
-        filesystem.createDir(sourcePath.parent());
-        filesystem.createLink(sourcePath, targetPath);
+        fileSystem.createDir(sourcePath.parent());
+        fileSystem.createLink(sourcePath, targetPath);
       }
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      filesystem.delete(artifactPath);
+      fileSystem.delete(artifactPath);
       throw duplicatedPathsMessage(duplicatesDetector.getDuplicateValues());
     }
   }
@@ -164,8 +164,8 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     FullPath targetPath = targetPath(value);
     // It is possible that `smooth build` command contains the same argument (value name)
     // passed twice. We allow that, but we need to delete previous in that case.
-    filesystem.delete(artifactPath);
-    filesystem.createLink(artifactPath, targetPath);
+    fileSystem.delete(artifactPath);
+    fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 

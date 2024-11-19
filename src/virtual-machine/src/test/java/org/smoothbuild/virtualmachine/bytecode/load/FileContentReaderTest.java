@@ -17,8 +17,8 @@ public class FileContentReaderTest extends VmTestContext {
   void read_returns_file_content() throws Exception {
     var bucket = new MemoryBucket();
     var alias = alias("project");
-    var filesystem = new FullFileSystem(map(alias, bucket));
-    var fileContentReader = new FileContentReader(filesystem, exprDb());
+    var fileSystem = new FullFileSystem(map(alias, bucket));
+    var fileContentReader = new FileContentReader(fileSystem, exprDb());
     var path = path("my/file");
     var content = "file content";
     createFile(bucket, path, content);

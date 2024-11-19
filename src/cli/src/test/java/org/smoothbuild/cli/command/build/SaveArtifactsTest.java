@@ -87,7 +87,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     var typeS = sStructType("NotAFile", sBlobType(), sStringType());
     var valueB = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
     var filePath = BYTECODE_DB_PATH.append(HashedDb.dbPathTo(valueB.dataHash()));
-    var byteString = readFile(filesystem(), filePath);
+    var byteString = readFile(fileSystem(), filePath);
 
     testValueStoring(typeS, valueB, byteString);
   }
@@ -198,7 +198,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
-    var saveArtifacts = new SaveArtifacts(filesystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
+    var saveArtifacts = new SaveArtifacts(fileSystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
     List<SExpr> sExprs = list(
         instantiateS(sStringType(), "myValue1"),
         instantiateS(sStringType(), "myValue2"),
@@ -235,12 +235,12 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     var label = label("cli:build:saveArtifacts");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, logs));
-    var artifactsBucket = fileSystemPart(filesystem(), ARTIFACTS_PATH);
+    var artifactsBucket = fileSystemPart(fileSystem(), ARTIFACTS_PATH);
     assertThat(directoryToFileMap(artifactsBucket)).isEqualTo(expectedDirectoryMap);
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {
-    var saveArtifacts = new SaveArtifacts(filesystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
+    var saveArtifacts = new SaveArtifacts(fileSystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
     SExpr instantiateS = instantiateS(sType, "myValue");
     return saveArtifacts.execute(evaluatedExprs(list(instantiateS), list(value)));
   }

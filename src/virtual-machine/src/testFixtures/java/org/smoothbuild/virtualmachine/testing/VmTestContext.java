@@ -35,7 +35,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
   }
 
   public FileSystem<Path> bytecodeDir() {
-    return fileSystemPart(filesystem(), BYTECODE_DB_PATH);
+    return fileSystemPart(fileSystem(), BYTECODE_DB_PATH);
   }
 
   @Override
@@ -84,7 +84,7 @@ public class VmTestContext extends CommonTestContext implements VmTestApi {
   }
 
   @Override
-  public FileSystem<FullPath> filesystem() {
+  public FileSystem<FullPath> fileSystem() {
     return fullFileSystem.get();
   }
 }

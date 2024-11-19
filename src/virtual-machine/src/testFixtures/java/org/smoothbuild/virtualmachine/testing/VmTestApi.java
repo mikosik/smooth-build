@@ -114,14 +114,14 @@ public interface VmTestApi extends CommonTestApi {
     return job(expr, list(environment));
   }
 
-  public FileSystem<FullPath> filesystem();
+  public FileSystem<FullPath> fileSystem();
 
   public default FileSystem<Path> projectDir() {
-    return fileSystemPart(filesystem(), PROJECT_PATH);
+    return fileSystemPart(fileSystem(), PROJECT_PATH);
   }
 
   public default FileSystem<Path> computationCacheDir() {
-    return fileSystemPart(filesystem(), COMPUTATION_DB_PATH);
+    return fileSystemPart(fileSystem(), COMPUTATION_DB_PATH);
   }
 
   public default Job job(BExpr expr, List<BExpr> list) {
@@ -191,7 +191,7 @@ public interface VmTestApi extends CommonTestApi {
 
   public default Container container(NativeMethodLoader nativeMethodLoader) {
     return new Container(
-        filesystem(), PROJECT_PATH, fileContentReader(), bytecodeF(), nativeMethodLoader);
+        fileSystem(), PROJECT_PATH, fileContentReader(), bytecodeF(), nativeMethodLoader);
   }
 
   public default ComputationCache computationCache() {

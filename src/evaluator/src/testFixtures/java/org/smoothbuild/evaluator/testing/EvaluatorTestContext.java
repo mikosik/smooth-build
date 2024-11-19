@@ -53,37 +53,37 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private List<FullPath> modules;
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
-  private FileSystem<FullPath> filesystem;
+  private FileSystem<FullPath> fileSystem;
 
   @BeforeEach
   public void beforeEach() throws IOException {
     this.modules = list();
-    this.filesystem = newSynchronizedMemoryFileSystem();
-    this.injector = createInjector(filesystem);
-    this.filesystem = injector.getInstance(Key.get(new TypeLiteral<>() {}));
+    this.fileSystem = newSynchronizedMemoryFileSystem();
+    this.injector = createInjector(fileSystem);
+    this.fileSystem = injector.getInstance(Key.get(new TypeLiteral<>() {}));
   }
 
   protected void createLibraryModule(java.nio.file.Path code, java.nio.file.Path jar)
       throws IOException {
     var fullPath = PROJECT_PATH.append("libraryModule.smooth");
-    try (var sink = buffer(filesystem.sink(fullPath.withExtension("jar")))) {
+    try (var sink = buffer(fileSystem.sink(fullPath.withExtension("jar")))) {
       try (var source = source(jar)) {
         sink.writeAll(source);
       }
     }
     try (var source = buffer(source(code))) {
-      createFile(filesystem, fullPath, source.readUtf8());
+      createFile(fileSystem, fullPath, source.readUtf8());
     }
     modules = modules.append(fullPath);
   }
 
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
     if (classes.length != 0) {
-      try (var sink = filesystem.sink(moduleFullPath().withExtension("jar"))) {
+      try (var sink = fileSystem.sink(moduleFullPath().withExtension("jar"))) {
         saveBytecodeInJar(sink, list(classes));
       }
     }
-    createFile(filesystem, moduleFullPath(), code);
+    createFile(fileSystem, moduleFullPath(), code);
     modules = modules.append(moduleFullPath());
   }
 
@@ -108,7 +108,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void restartSmoothWithSameBuckets() {
-    injector = createInjector(filesystem);
+    injector = createInjector(fileSystem);
     evaluatedExprs = null;
   }
 
@@ -198,8 +198,8 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   @Override
-  public FileSystem<FullPath> filesystem() {
-    return filesystem;
+  public FileSystem<FullPath> fileSystem() {
+    return fileSystem;
   }
 
   @Override

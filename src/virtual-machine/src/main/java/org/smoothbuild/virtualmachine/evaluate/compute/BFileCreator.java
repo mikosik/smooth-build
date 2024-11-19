@@ -14,17 +14,17 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 
 public class BFileCreator {
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
   private final FullPath projectPath;
   private final FileContentReader fileContentReader;
   private final BytecodeFactory factory;
 
   public BFileCreator(
-      FileSystem<FullPath> filesystem,
+      FileSystem<FullPath> fileSystem,
       FullPath projectPath,
       FileContentReader fileContentReader,
       BytecodeFactory factory) {
-    this.filesystem = filesystem;
+    this.fileSystem = fileSystem;
     this.projectPath = projectPath;
     this.fileContentReader = fileContentReader;
     this.factory = factory;
@@ -32,7 +32,7 @@ public class BFileCreator {
 
   public BArray createFiles(Path dir) throws IOException, BytecodeException {
     var fileArrayBuilder = factory.arrayBuilderWithElements(factory.fileType());
-    for (PathIterator it = filesystem.filesRecursively(projectPath.append(dir)); it.hasNext(); ) {
+    for (PathIterator it = fileSystem.filesRecursively(projectPath.append(dir)); it.hasNext(); ) {
       Path path = it.next();
       fileArrayBuilder.add(createFile(path, dir.append(path)));
     }

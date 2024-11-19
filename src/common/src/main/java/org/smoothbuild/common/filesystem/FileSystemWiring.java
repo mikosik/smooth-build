@@ -12,10 +12,10 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.disk.DiskBucket;
 
-public class FilesystemWiring extends AbstractModule {
+public class FileSystemWiring extends AbstractModule {
   private final Map<Alias, Path> aliasToPath;
 
-  public FilesystemWiring(Map<Alias, Path> aliasToPath) {
+  public FileSystemWiring(Map<Alias, Path> aliasToPath) {
     this.aliasToPath = aliasToPath;
   }
 

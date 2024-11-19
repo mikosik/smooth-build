@@ -119,9 +119,9 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
               nlist());
           var callS = sCall(sInstantiate(funcS));
           var buildJar = PROJECT_PATH.append("module.jar");
-          var filesystem =
+          var fileSystem =
               injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
-          saveBytecodeInJar(filesystem, buildJar, list(ReturnAbc.class));
+          saveBytecodeInJar(fileSystem, buildJar, list(ReturnAbc.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
         }
 
@@ -135,9 +135,9 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var callS = sCall(sInstantiate(funcS), sString("abc"));
           var injector = newInjector();
           var buildJar = PROJECT_PATH.append("module.jar");
-          var filesystem =
+          var fileSystem =
               injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
-          saveBytecodeInJar(filesystem, buildJar, list(StringIdentity.class));
+          saveBytecodeInJar(fileSystem, buildJar, list(StringIdentity.class));
           assertEvaluation(injector, bindings(funcS), callS, bString("abc"));
         }
       }
@@ -218,9 +218,9 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         void ann_func() throws Exception {
           var injector = newInjector();
           var buildJar = PROJECT_PATH.append("module.jar");
-          var filesystem =
+          var fileSystem =
               injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
-          saveBytecodeInJar(filesystem, buildJar, list(ReturnIdFunc.class));
+          saveBytecodeInJar(fileSystem, buildJar, list(ReturnIdFunc.class));
           var binaryName = ReturnIdFunc.class.getName();
           var bytecodeFuncS = sBytecodeFunc(binaryName, varA(), "f", nlist(sItem(varA(), "p")));
           var sExpr = sInstantiate(list(sIntType()), bytecodeFuncS);

@@ -18,7 +18,7 @@ import org.smoothbuild.virtualmachine.wire.Project;
  * This class is NOT thread-safe.
  */
 public class Container implements NativeApi {
-  private final FileSystem<FullPath> filesystem;
+  private final FileSystem<FullPath> fileSystem;
   private final FullPath projectPath;
   private final FileContentReader fileContentReader;
   private final BytecodeFactory bytecodeFactory;
@@ -27,12 +27,12 @@ public class Container implements NativeApi {
 
   @Inject
   public Container(
-      FileSystem<FullPath> filesystem,
+      FileSystem<FullPath> fileSystem,
       @Project FullPath projectPath,
       FileContentReader fileContentReader,
       BytecodeFactory bytecodeFactory,
       NativeMethodLoader nativeMethodLoader) {
-    this.filesystem = filesystem;
+    this.fileSystem = fileSystem;
     this.projectPath = projectPath;
     this.fileContentReader = fileContentReader;
     this.bytecodeFactory = bytecodeFactory;
@@ -41,7 +41,7 @@ public class Container implements NativeApi {
   }
 
   public BFileCreator bFileCreator() {
-    return new BFileCreator(filesystem, projectPath, fileContentReader, bytecodeFactory);
+    return new BFileCreator(fileSystem, projectPath, fileContentReader, bytecodeFactory);
   }
 
   @Override
