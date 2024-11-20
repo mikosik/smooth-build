@@ -41,14 +41,14 @@ public class VmWiring extends AbstractModule {
   @Provides
   @BytecodeDb
   public FileSystem<Path> provideBytecodeDbDir(
-      FileSystem<FullPath> fileSystem, @BytecodeDb FullPath path) throws IOException {
+      FileSystem<FullPath> fileSystem, @BytecodeDb FullPath path) {
     return fileSystemPart(fileSystem, path);
   }
 
   @Provides
   @ComputationDb
   public FileSystem<Path> provideComputationDbDir(
-      FileSystem<FullPath> fileSystem, @ComputationDb FullPath path) throws IOException {
+      FileSystem<FullPath> fileSystem, @ComputationDb FullPath path) {
     return fileSystemPart(fileSystem, path);
   }
 }
