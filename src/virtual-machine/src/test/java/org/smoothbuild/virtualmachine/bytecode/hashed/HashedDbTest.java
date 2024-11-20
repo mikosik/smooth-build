@@ -7,6 +7,9 @@ import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Set.set;
+import static org.smoothbuild.common.filesystem.base.Alias.alias;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.testing.TestingString.illegalString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
@@ -28,8 +31,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FileSystemPart;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
@@ -40,7 +44,7 @@ public class HashedDbTest {
   private static final ByteString BYTE_STRING_1 = ByteString.encodeUtf8("aaa");
   private static final ByteString BYTE_STRING_2 = ByteString.encodeUtf8("bbb");
 
-  private final Supplier<FileSystem<Path>> fileSystem = Suppliers.memoize(MemoryBucket::new);
+  private final Supplier<FileSystem<Path>> fileSystem = Suppliers.memoize(() -> newFileSystem());
 
   @Test
   void not_contains_not_written_data() throws HashedDbException {
@@ -321,6 +325,12 @@ public class HashedDbTest {
 
   private FileSystem<Path> fileSystem() {
     return fileSystem.get();
+  }
+
+  private static FileSystemPart newFileSystem() {
+    var alias = alias("project");
+    var fullFileSystem = new MemoryFullFileSystem(set(alias));
+    return fileSystemPart(fullFileSystem, alias.append(Path.root()));
   }
 
   private HashedDb hashedDb() {

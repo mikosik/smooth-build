@@ -7,6 +7,10 @@ public record Alias(String name) {
     return new Alias(name);
   }
 
+  public FullPath root() {
+    return append(Path.root());
+  }
+
   public FullPath append(String path) {
     return append(Path.path(path));
   }

@@ -3,7 +3,7 @@ package org.smoothbuild.virtualmachine.testing;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
@@ -18,11 +18,10 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
 import org.smoothbuild.common.io.Okios;
 import org.smoothbuild.common.reflect.Classes;
 import org.smoothbuild.common.task.Output;
@@ -139,7 +138,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default FileSystem<FullPath> newSynchronizedMemoryFileSystem() {
-    return new SynchronizedFileSystem<>(new FullFileSystem(map(PROJECT, new MemoryBucket())));
+    return new SynchronizedFileSystem<>(new MemoryFullFileSystem(set(PROJECT)));
   }
 
   public default BEvaluate bEvaluate() {

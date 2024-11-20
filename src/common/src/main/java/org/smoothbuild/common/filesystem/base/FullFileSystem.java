@@ -113,12 +113,11 @@ public class FullFileSystem implements FileSystem<FullPath> {
     }
   }
 
-  private FileSystem<Path> fileSystemPart(Alias alias, Supplier<String> error)
-      throws IOException {
+  private FileSystem<Path> fileSystemPart(Alias alias, Supplier<String> error) throws IOException {
     FileSystem<Path> bucket = buckets.get(alias);
     if (bucket == null) {
-      throw new IOException(error.get() + " Unknown alias " + alias
-          + ". Known aliases = " + buckets.keySet());
+      throw new IOException(
+          error.get() + " Unknown alias " + alias + ". Known aliases = " + buckets.keySet());
     }
     return bucket;
   }
