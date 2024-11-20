@@ -32,8 +32,7 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
     return pathStateImpl(path, error);
   }
 
-  private PathState pathStateImpl(FullPath path, Supplier<String> error)
-      throws IOException {
+  private PathState pathStateImpl(FullPath path, Supplier<String> error) throws IOException {
     var elem = findElement(path, error);
     if (elem == null) {
       return PathState.NOTHING;
@@ -48,7 +47,7 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
   public PathIterator filesRecursively(FullPath dir) throws IOException {
     findElement(dir, () -> "Cannot list files recursively in " + dir.q() + ".");
     try {
-      return recursivePathsIterator(fileSystemPart(this, dir), Path.root());
+      return recursivePathsIterator(fileSystemPart(this, dir.alias().root()), dir.path());
     } catch (IOException e) {
       throw new IOException("Cannot list files recursively in " + dir.q() + ". " + e.getMessage());
     }
@@ -136,14 +135,11 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
   }
 
   private <T> T createObject(
-      FullPath parentPath,
-      Function1<MemoryDir, T, IOException> creator,
-      Supplier<String> error)
+      FullPath parentPath, Function1<MemoryDir, T, IOException> creator, Supplier<String> error)
       throws IOException {
     var parent = findElement(parentPath, error);
     if (parent == null) {
-      throw new IOException(
-          error.get() + " No such dir " + parentPath.path().q() + ".");
+      throw new IOException(error.get() + " No such dir " + parentPath.path().q() + ".");
     }
     return switch (resolveLinksFully(parent)) {
       case MemoryFile file -> throw parentExistAsFileException(error, parentPath);
@@ -152,8 +148,7 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
     };
   }
 
-  private static IOException parentExistAsFileException(
-      Supplier<String> error, FullPath path) {
+  private static IOException parentExistAsFileException(Supplier<String> error, FullPath path) {
     return new IOException(error.get() + " Cannot create object because its parent "
         + path.path().q() + " exists and is a file.");
   }
@@ -177,13 +172,12 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
 
   @Override
   public void createLink(FullPath link, FullPath target) throws IOException {
-    Supplier<String> error =
-        () -> "Cannot create link " + link.q() + " -> " + target.q() + ".";
+    Supplier<String> error = () -> "Cannot create link " + link.q() + " -> " + target.q() + ".";
 
     assertAliasesAreEqual(link, target);
     switch (pathStateImpl(link, error)) {
-      case FILE, DIR -> throw new IOException(error.get() + " Cannot use "
-          + link.path().q() + " path. It is already taken.");
+      case FILE, DIR -> throw new IOException(
+          error.get() + " Cannot use " + link.path().q() + " path. It is already taken.");
       case NOTHING -> {}
     }
 
@@ -208,8 +202,8 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
         if (child.isDir()) {
           currentDir = (MemoryDir) child;
         } else {
-          throw new IOException(error.get() + " Cannot use " + dir.path()
-              + ". It is already taken by file.");
+          throw new IOException(
+              error.get() + " Cannot use " + dir.path() + ". It is already taken by file.");
         }
       } else {
         MemoryDir newDir = new MemoryDir(currentDir, name);
@@ -219,19 +213,17 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
     }
   }
 
-  private MemoryDir rootDirFor(FullPath path, Supplier<String> error)
-      throws IOException {
+  private MemoryDir rootDirFor(FullPath path, Supplier<String> error) throws IOException {
     var alias = path.alias();
     var bucket = rootDirs.get(alias);
     if (bucket == null) {
-      throw new IOException(error.get() + " Unknown alias " + alias
-          + ". Known aliases = " + rootDirs.keySet());
+      throw new IOException(
+          error.get() + " Unknown alias " + alias + ". Known aliases = " + rootDirs.keySet());
     }
     return bucket;
   }
 
-  private MemoryElement getFile(FullPath path, Supplier<String> error)
-      throws IOException {
+  private MemoryElement getFile(FullPath path, Supplier<String> error) throws IOException {
     var found = getElement(path, error);
     if (found.isFile()) {
       return found;
@@ -241,19 +233,16 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
     }
   }
 
-  private MemoryElement getElement(FullPath path, Supplier<String> error)
-      throws IOException {
+  private MemoryElement getElement(FullPath path, Supplier<String> error) throws IOException {
     MemoryElement found = findElement(path, error);
     if (found == null) {
-      throw new IOException(
-          error.get() + " File " + path.path().q() + " doesn't exist.");
+      throw new IOException(error.get() + " File " + path.path().q() + " doesn't exist.");
     } else {
       return found;
     }
   }
 
-  private MemoryElement findElement(FullPath path, Supplier<String> error)
-      throws IOException {
+  private MemoryElement findElement(FullPath path, Supplier<String> error) throws IOException {
     var memoryDir = rootDirFor(path, error);
     return findElement(memoryDir, path.path());
   }

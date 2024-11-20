@@ -2,6 +2,8 @@ package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Set.set;
+import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
@@ -11,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
 
 public class RecursivePathsIteratorTest {
   @Test
@@ -36,23 +38,23 @@ public class RecursivePathsIteratorTest {
 
   @Test
   void fails_when_dir_not_exists() {
-    var bucket = new MemoryBucket();
+    var fileSystem = fileSystemPart(fileSystem(), alias().root());
     var path = path("my/file");
-    assertCall(() -> recursivePathsIterator(bucket, path))
+    assertCall(() -> recursivePathsIterator(fileSystem, path))
         .throwsException(new IOException("Dir 'my/file' doesn't exist."));
   }
 
   @Test
   void throws_exception_when_dir_is_a_file() throws Exception {
-    FileSystem<Path> bucket = new MemoryBucket();
-    createFile(bucket, path("my/file"), "abc");
-    assertCall(() -> recursivePathsIterator(bucket, path("my/file")))
+    var fileSystem = fileSystemPart(fileSystem(), alias().root());
+    createFile(fileSystem, path("my/file"), "abc");
+    assertCall(() -> recursivePathsIterator(fileSystem, path("my/file")))
         .throwsException(new IOException("Path 'my/file' is not a dir but a file."));
   }
 
   @Test
   void throws_exception_when_dir_disappears_during_iteration() throws Exception {
-    var fileSystem = new MemoryBucket();
+    var fileSystem = fileSystemPart(fileSystem(), alias().root());
     createFiles(fileSystem, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
     PathIterator iterator = recursivePathsIterator(fileSystem, path("dir"));
@@ -67,10 +69,10 @@ public class RecursivePathsIteratorTest {
   private void doTestIterable(
       String rootDir, List<String> names, String expectedRootDir, List<String> expectedNames)
       throws IOException {
-    var bucket = new MemoryBucket();
-    createFiles(bucket, rootDir, names);
+    var fileSystem = fileSystemPart(fileSystem(), alias().root());
+    createFiles(fileSystem, rootDir, names);
 
-    PathIterator iterator = recursivePathsIterator(bucket, path(expectedRootDir));
+    PathIterator iterator = recursivePathsIterator(fileSystem, path(expectedRootDir));
     List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
       created.add(iterator.next().toString());
@@ -84,5 +86,13 @@ public class RecursivePathsIteratorTest {
       var path = path(rootDir).append(path(name));
       createFile(fileSystem, path, "");
     }
+  }
+
+  private static MemoryFullFileSystem fileSystem() {
+    return new MemoryFullFileSystem(set(alias()));
+  }
+
+  private static Alias alias() {
+    return Alias.alias("alias1");
   }
 }
