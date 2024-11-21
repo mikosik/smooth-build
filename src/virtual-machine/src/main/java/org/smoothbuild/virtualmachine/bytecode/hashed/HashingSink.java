@@ -39,7 +39,7 @@ public class HashingSink extends ForwardingSink {
     var pathState = fileSystem.pathState(path);
     switch (pathState) {
       case NOTHING -> fileSystem.move(tempPath, path);
-      case FILE -> fileSystem.delete(tempPath);
+      case FILE -> fileSystem.deleteRecursively(tempPath);
       case DIR -> throw new IOException(
           "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
     }

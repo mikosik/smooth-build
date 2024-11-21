@@ -27,7 +27,7 @@ public class DeleteArtifacts implements Task0<Tuple0> {
   public Output<Tuple0> execute() {
     var label = BuildCommand.LABEL.append("deleteArtifacts");
     try {
-      fileSystem.delete(artifactsPath);
+      fileSystem.deleteRecursively(artifactsPath);
       return output(label, list());
     } catch (IOException e) {
       return output(label, list(error(e.getMessage())));

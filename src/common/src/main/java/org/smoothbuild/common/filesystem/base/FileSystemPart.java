@@ -38,8 +38,8 @@ public class FileSystemPart implements FileSystem<Path> {
   }
 
   @Override
-  public void delete(Path path) throws IOException {
-    fileSystem.delete(fullPath(path));
+  public void deleteRecursively(Path path) throws IOException {
+    fileSystem.deleteRecursively(fullPath(path));
   }
 
   @Override

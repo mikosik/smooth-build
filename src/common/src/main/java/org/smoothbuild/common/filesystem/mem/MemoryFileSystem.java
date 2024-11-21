@@ -85,11 +85,11 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
         bufferedSource.readAll(sink);
       }
     }
-    delete(source);
+    deleteRecursively(source);
   }
 
   @Override
-  public void delete(FullPath path) throws IOException {
+  public void deleteRecursively(FullPath path) throws IOException {
     Supplier<String> message = () -> "Cannot delete " + path.q() + ". ";
     var root = rootDirFor(path, message);
     if (path.isRoot()) {

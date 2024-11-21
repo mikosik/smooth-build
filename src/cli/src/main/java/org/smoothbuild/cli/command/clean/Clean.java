@@ -44,7 +44,7 @@ public class Clean implements Task0<Tuple0> {
 
   private void deleteDir(String name, FullPath path, Logger logger) {
     try {
-      fileSystem.delete(path);
+      fileSystem.deleteRecursively(path);
       logger.info(name + " removed");
     } catch (IOException e) {
       logger.error("Unable to delete " + name + " path=" + path.q() + ".");

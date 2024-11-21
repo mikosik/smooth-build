@@ -147,7 +147,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      fileSystem.delete(artifactPath);
+      fileSystem.deleteRecursively(artifactPath);
       throw duplicatedPathsMessage(duplicatesDetector.getDuplicateValues());
     }
   }
@@ -164,7 +164,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     FullPath targetPath = targetPath(value);
     // It is possible that `smooth build` command contains the same argument (value name)
     // passed twice. We allow that, but we need to delete previous in that case.
-    fileSystem.delete(artifactPath);
+    fileSystem.deleteRecursively(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }

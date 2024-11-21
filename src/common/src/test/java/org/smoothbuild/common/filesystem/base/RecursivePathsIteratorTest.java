@@ -62,7 +62,7 @@ public class RecursivePathsIteratorTest {
     FullPath dir = alias().append("dir");
     PathIterator iterator = new RecursivePathsIterator(fileSystem, dir);
     iterator.next();
-    fileSystem.delete(alias().append("dir/subdir"));
+    fileSystem.deleteRecursively(alias().append("dir/subdir"));
 
     assertCall(iterator::next)
         .throwsException(

@@ -260,7 +260,7 @@ public abstract class AbstractFileSystemTest {
       var file2 = dir.append(path("dir2/myFile"));
       createFile(fileSystem, file1);
 
-      fileSystem.delete(dir);
+      fileSystem.deleteRecursively(dir);
 
       assertThat(fileSystem.pathState(file1)).isEqualTo(NOTHING);
       assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
@@ -274,7 +274,7 @@ public abstract class AbstractFileSystemTest {
       var file = dir.append(path("myFile"));
       createFile(fileSystem, file);
 
-      fileSystem.delete(file);
+      fileSystem.deleteRecursively(file);
 
       assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
     }
@@ -284,7 +284,7 @@ public abstract class AbstractFileSystemTest {
       var fileSystem = fileSystem();
       var path = fullPath(alias(), path("file"));
 
-      fileSystem.delete(path);
+      fileSystem.deleteRecursively(path);
 
       assertThat(fileSystem.pathState(path)).isEqualTo(NOTHING);
     }
@@ -294,7 +294,7 @@ public abstract class AbstractFileSystemTest {
       var fileSystem = fileSystem();
       var path = fullPath(unknown(), path("file"));
 
-      assertCall(() -> fileSystem.delete(path))
+      assertCall(() -> fileSystem.deleteRecursively(path))
           .throwsException(
               new IOException(
                   "Cannot delete '{unknown}/file'. Unknown alias 'unknown'. Known aliases = ['alias-1']"));
@@ -308,7 +308,7 @@ public abstract class AbstractFileSystemTest {
       createFile(fileSystem, file1);
       createFile(fileSystem, file2);
 
-      fileSystem.delete(fullPath(alias(), Path.root()));
+      fileSystem.deleteRecursively(fullPath(alias(), Path.root()));
 
       assertThat(fileSystem.pathState(file1)).isEqualTo(NOTHING);
       assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
@@ -322,7 +322,7 @@ public abstract class AbstractFileSystemTest {
       createFile(fileSystem, file);
       fileSystem.createLink(link, file);
 
-      fileSystem.delete(link);
+      fileSystem.deleteRecursively(link);
 
       assertThat(fileSystem.pathState(link)).isEqualTo(NOTHING);
       assertThat(fileSystem.pathState(file)).isEqualTo(FILE);
@@ -337,7 +337,7 @@ public abstract class AbstractFileSystemTest {
       createFile(fileSystem, file);
       fileSystem.createLink(link, dir);
 
-      fileSystem.delete(link);
+      fileSystem.deleteRecursively(link);
 
       assertThat(fileSystem.pathState(link)).isEqualTo(NOTHING);
       assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
