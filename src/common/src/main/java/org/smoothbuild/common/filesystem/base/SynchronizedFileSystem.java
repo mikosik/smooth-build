@@ -20,7 +20,7 @@ public class SynchronizedFileSystem<P extends PathI<P>> implements FileSystem<P>
   }
 
   @Override
-  public synchronized PathIterator filesRecursively(P dir) throws IOException {
+  public synchronized PathIterator filesRecursively(P dir) {
     return fileSystem.filesRecursively(dir);
   }
 

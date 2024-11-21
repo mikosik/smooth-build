@@ -8,37 +8,33 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class RecursivePathsIterator implements PathIterator {
-  private final FileSystem<Path> fileSystem;
-  private final Path baseDir;
+  private final FileSystem<FullPath> fileSystem;
+  private final FullPath baseDir;
   private final Deque<Path> dirStack;
   private final Deque<Path> pathStack;
   private Path nextFile;
+  private boolean initialized;
 
-  /**
-   * @return PathIterator iterating over all files in given `dir` recursively. Paths returns by
-   * iterator are relative to `dir`.
-   */
-  public static PathIterator recursivePathsIterator(FileSystem<Path> fileSystem, Path dir)
-      throws IOException {
-    return switch (fileSystem.pathState(dir)) {
-      case FILE -> throw new IOException("Path " + dir.q() + " is not a dir but a file.");
-      case DIR -> new RecursivePathsIterator(fileSystem, dir);
-      case NOTHING -> throw new IOException("Dir " + dir.q() + " doesn't exist.");
-    };
-  }
-
-  public RecursivePathsIterator(FileSystem<Path> fileSystem, Path baseDir) throws IOException {
+  public RecursivePathsIterator(FileSystem<FullPath> fileSystem, FullPath baseDir) {
     this.fileSystem = fileSystem;
     this.baseDir = baseDir;
     this.dirStack = new ArrayDeque<>();
     this.pathStack = new ArrayDeque<>();
     this.dirStack.push(Path.root());
-    this.nextFile = fetchNextFile();
+    this.nextFile = null;
   }
 
   @Override
-  public boolean hasNext() {
+  public boolean hasNext() throws IOException {
+    initializeIfNotInitialized();
     return nextFile != null;
+  }
+
+  private void initializeIfNotInitialized() throws IOException {
+    if (!initialized) {
+      nextFile = fetchNextFile();
+      initialized = true;
+    }
   }
 
   @Override

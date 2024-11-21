@@ -7,7 +7,7 @@ import okio.Source;
 public interface FileSystem<P extends PathI<P>> {
   public PathState pathState(P path) throws IOException;
 
-  public PathIterator filesRecursively(P dir) throws IOException;
+  public PathIterator filesRecursively(P dir);
 
   public Iterable<Path> files(P dir) throws IOException;
 

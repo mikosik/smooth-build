@@ -89,16 +89,17 @@ public abstract class AbstractFullFileSystemTest {
       var fileSystem = fileSystem();
       createFile(fileSystem, fullPath(alias(), "file"));
 
-      assertCall(() -> fileSystem.filesRecursively(fullPath(alias(), "dir")))
-          .throwsException(IOException.class);
+      var pathIterator = fileSystem.filesRecursively(fullPath(alias(), "dir"));
+      assertCall(pathIterator::next).throwsException(IOException.class);
     }
 
     @Test
     void fails_for_unknown_alias() {
       var fileSystem = fileSystem();
 
-      assertCall(() -> fileSystem.filesRecursively(fullPath(unknown(), "file")))
-          .throwsException(new IOException("Cannot list files recursively in '{unknown}/file'. "
+      var pathIterator = fileSystem.filesRecursively(fullPath(unknown(), "file"));
+      assertCall(pathIterator::next)
+          .throwsException(new IOException("Cannot list files in '{unknown}/file'. "
               + "Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
 
@@ -118,8 +119,8 @@ public abstract class AbstractFullFileSystemTest {
       var fileSystem = fileSystem();
       var path = fullPath(alias(), path("abc"));
       assertCall(() -> fileSystem.files(path))
-          .throwsException(
-              new IOException("Error listing files in '{alias-1}/abc'. Dir 'abc' doesn't exist."));
+          .throwsException(new IOException(
+              "Cannot list files in '{alias-1}/abc'. " + "Dir '{alias-1}/abc' doesn't exist."));
     }
 
     @Test
@@ -138,8 +139,8 @@ public abstract class AbstractFullFileSystemTest {
       var path = fullPath(alias(), path("some/dir/myFile"));
       createFile(fileSystem, path);
       assertCall(() -> fileSystem.files(path))
-          .throwsException(new IOException("Error listing files in '{alias-1}/some/dir/myFile'. "
-              + "Dir 'some/dir/myFile' doesn't exist. It is a file."));
+          .throwsException(new IOException("Cannot list files in '{alias-1}/some/dir/myFile'. "
+              + "Dir '{alias-1}/some/dir/myFile' doesn't exist. It is a file."));
     }
 
     @Test
@@ -163,8 +164,8 @@ public abstract class AbstractFullFileSystemTest {
       var source = fullPath(alias(), "source");
       var target = fullPath(alias(), "target");
       assertCall(() -> fileSystem.move(source, target))
-          .throwsException(new IOException("Cannot move '{alias-1}/source' to '{alias-1}/target'. "
-              + "Cannot move 'source'. It doesn't exist."));
+          .throwsException(new IOException(
+              "Cannot move '{alias-1}/source' to '{alias-1}/target'. " + "Source doesn't exist."));
     }
 
     @Test
@@ -196,8 +197,8 @@ public abstract class AbstractFullFileSystemTest {
       fileSystem.createDir(source);
 
       assertCall(() -> fileSystem.move(source, target))
-          .throwsException(new IOException("Cannot move '{alias-1}/source' to '{alias-1}/target'. "
-              + "Cannot move 'source'. It is directory."));
+          .throwsException(new IOException(
+              "Cannot move '{alias-1}/source' to '{alias-1}/target'. " + "Source is a directory."));
     }
 
     @Test
@@ -207,8 +208,8 @@ public abstract class AbstractFullFileSystemTest {
       var target = fullPath(alias(), "target");
       fileSystem.createDir(target);
       assertCall(() -> fileSystem.move(source, target))
-          .throwsException(new IOException("Cannot move '{alias-1}/source' to '{alias-1}/target'. "
-              + "Cannot move 'source'. It doesn't exist."));
+          .throwsException(new IOException(
+              "Cannot move '{alias-1}/source' to '{alias-1}/target'. " + "Source doesn't exist."));
     }
 
     @Test
@@ -371,8 +372,8 @@ public abstract class AbstractFullFileSystemTest {
       fileSystem.createDir(path);
 
       assertCall(() -> fileSystem.size(path))
-          .throwsException(new IOException(
-              "Cannot fetch size of '{alias-1}/dir'. File 'dir' doesn't exist. It is a dir."));
+          .throwsException(new IOException("Cannot fetch size of '{alias-1}/dir'. "
+              + "File '{alias-1}/dir' doesn't exist. It is a dir."));
     }
 
     @Test
@@ -410,7 +411,7 @@ public abstract class AbstractFullFileSystemTest {
 
       assertCall(() -> fileSystem.size(dir))
           .throwsException(new IOException("Cannot fetch size of '{alias-1}/some/dir'. "
-              + "File 'some/dir' doesn't exist. It is a dir."));
+              + "File '{alias-1}/some/dir' doesn't exist. It is a dir."));
     }
   }
 
@@ -453,8 +454,8 @@ public abstract class AbstractFullFileSystemTest {
       var fileSystem = fileSystem();
       var file = fullPath(alias(), "myFile");
       assertCall(() -> readFile(fileSystem, file))
-          .throwsException(
-              new IOException("Cannot read '{alias-1}/myFile'. File 'myFile' doesn't exist."));
+          .throwsException(new IOException(
+              "Cannot read '{alias-1}/myFile'. File '{alias-1}/myFile' doesn't exist."));
     }
 
     @Test
@@ -462,8 +463,8 @@ public abstract class AbstractFullFileSystemTest {
       var fileSystem = fileSystem();
       var file = fullPath(alias(), "myFile");
       assertCall(() -> readFile(fileSystem, file))
-          .throwsException(
-              new IOException("Cannot read '{alias-1}/myFile'. File 'myFile' doesn't exist."));
+          .throwsException(new IOException(
+              "Cannot read '{alias-1}/myFile'. File '{alias-1}/myFile' doesn't exist."));
     }
 
     @Test
@@ -473,7 +474,7 @@ public abstract class AbstractFullFileSystemTest {
       fileSystem.createDir(dir);
       assertCall(() -> readFile(fileSystem, dir))
           .throwsException(new IOException(
-              "Cannot read '{alias-1}/dir'. File 'dir' doesn't exist. It is a dir."));
+              "Cannot read '{alias-1}/dir'. File '{alias-1}/dir' doesn't exist. It is a dir."));
     }
   }
 
@@ -507,8 +508,8 @@ public abstract class AbstractFullFileSystemTest {
       var file = fullPath(alias(), "dir/myFile");
 
       assertCall(() -> fileSystem.sink(file))
-          .throwsException(
-              new IOException("Cannot create sink for '{alias-1}/dir/myFile'. No such dir 'dir'."));
+          .throwsException(new IOException(
+              "Cannot create sink for '{alias-1}/dir/myFile'. No such dir '{alias-1}/dir'."));
     }
 
     @Test
@@ -581,7 +582,7 @@ public abstract class AbstractFullFileSystemTest {
       assertCall(() -> fileSystem.createLink(link, file))
           .throwsException(
               new IOException("Cannot create link '{alias-1}/missing_directory/myLink' ->"
-                  + " '{alias-1}/some/dir/myFile'. No such dir 'missing_directory'."));
+                  + " '{alias-1}/some/dir/myFile'. No such dir '{alias-1}/missing_directory'."));
     }
 
     @Test
@@ -596,7 +597,7 @@ public abstract class AbstractFullFileSystemTest {
       assertCall(() -> fileSystem.createLink(link, file))
           .throwsException(new IOException(
               "Cannot create link '{alias-1}/myLink' -> '{alias-1}/some/dir/myFile'. "
-                  + "Cannot use 'myLink' path. It is already taken."));
+                  + "Cannot use '{alias-1}/myLink' path. It is already taken."));
     }
 
     @Test
@@ -610,7 +611,7 @@ public abstract class AbstractFullFileSystemTest {
       assertCall(() -> fileSystem.createLink(link, file))
           .throwsException(new IOException(
               "Cannot create link '{alias-1}/myLink' -> '{alias-1}/some/dir/myFile'. "
-                  + "Cannot use 'myLink' path. It is already taken."));
+                  + "Cannot use '{alias-1}/myLink' path. It is already taken."));
     }
 
     @Test
@@ -667,7 +668,7 @@ public abstract class AbstractFullFileSystemTest {
 
       assertCall(() -> fileSystem.createDir(path))
           .throwsException(new IOException("Cannot create dir '{alias-1}/dir/file'. "
-              + "Cannot use 'dir/file'. It is already taken by file."));
+              + "Cannot use '{alias-1}/dir/file'. It is already taken by file."));
     }
 
     @Test
