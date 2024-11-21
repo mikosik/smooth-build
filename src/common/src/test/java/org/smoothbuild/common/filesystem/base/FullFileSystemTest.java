@@ -1,11 +1,23 @@
 package org.smoothbuild.common.filesystem.base;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.collect.Set;
-import org.smoothbuild.common.filesystem.mem.MemoryBucket;
+import org.smoothbuild.common.filesystem.disk.DiskBucket;
 
 public class FullFileSystemTest extends AbstractFullFileSystemTest {
+  @TempDir
+  java.nio.file.Path path;
+
   @Override
   protected FileSystem<FullPath> fileSystem(Set<Alias> aliases) {
-    return new FullFileSystem(aliases.toMap(a -> new MemoryBucket()));
+    var aliasToPath = aliases.toMap(a -> path.resolve(a.name()));
+    try {
+      aliasToPath.mapValues(Files::createDirectories);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return new FullFileSystem(aliasToPath.mapValues(DiskBucket::new));
   }
 }

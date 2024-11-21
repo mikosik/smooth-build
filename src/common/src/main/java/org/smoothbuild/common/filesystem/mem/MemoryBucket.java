@@ -5,7 +5,6 @@ import static okio.Okio.buffer;
 import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
 
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.Iterator;
 import java.util.List;
 import okio.Sink;
@@ -166,8 +165,7 @@ public class MemoryBucket implements FileSystem<Path> {
         if (child.isDir()) {
           currentDir = (MemoryDir) child;
         } else {
-          throw new FileAlreadyExistsException(
-              "Cannot use " + dir + ". It is already taken by file.");
+          throw new IOException("Cannot use " + dir.q() + ". It is already taken by file.");
         }
       } else {
         MemoryDir newDir = new MemoryDir(currentDir, name);

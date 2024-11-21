@@ -14,6 +14,8 @@ import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recu
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -103,15 +105,31 @@ public class DiskBucket implements FileSystem<Path> {
 
   @Override
   public Sink sink(Path path) throws IOException {
-    if (pathState(path) == DIR) {
-      throw new IOException("Cannot use " + path + ". It is already taken by dir.");
+    try {
+      if (pathState(path) == DIR) {
+        throw new IOException("Cannot use " + path + ". It is already taken by dir.");
+      }
+    } catch (FileSystemException e) {
+      if (e.getMessage().endsWith("Not a directory")) {
+        throw new IOException("One of parents exists and is a file.", e);
+      } else {
+        throw e;
+      }
     }
-    return Okio.sink(jdkPath(path));
+    try {
+      return Okio.sink(jdkPath(path));
+    } catch (NoSuchFileException e) {
+      throw new IOException("No such dir " + path.parent().q() + ".", e);
+    }
   }
 
   @Override
   public void createDir(Path path) throws IOException {
-    Files.createDirectories(jdkPath(path));
+    try {
+      Files.createDirectories(jdkPath(path));
+    } catch (FileAlreadyExistsException e) {
+      throw new IOException("Cannot use " + path.q() + ". It is already taken by file.");
+    }
   }
 
   @Override
@@ -134,6 +152,8 @@ public class DiskBucket implements FileSystem<Path> {
     } catch (UnsupportedOperationException e) {
       // On Filesystems that do not support symbolic link just copy target file.
       Files.copy(jdkPath(link), jdkTarget, REPLACE_EXISTING);
+    } catch (NoSuchFileException e) {
+      throw new IOException("No such dir " + link.parent().q() + ".");
     }
   }
 

@@ -10,7 +10,6 @@ import static org.smoothbuild.common.testing.TestingByteString.byteString;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import okio.BufferedSink;
 import okio.ByteString;
 import org.junit.Assert;
@@ -464,7 +463,8 @@ public abstract class AbstractBucketTestSuite {
       var file = path("some/dir/myFile");
       createFile(file);
       assertCall(() -> fileSystem.createDir(file))
-          .throwsException(FileAlreadyExistsException.class);
+          .throwsException(
+              new IOException("Cannot use 'some/dir/myFile'. It is already taken by file."));
     }
   }
 

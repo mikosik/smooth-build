@@ -564,7 +564,7 @@ public abstract class AbstractFullFileSystemTest {
       assertCall(() -> writeFile(fileSystem, path))
           .throwsException(
               new IOException("Cannot create sink for '{alias-1}/dir/myFile/otherFile'. "
-                  + "Cannot create object because its parent 'dir/myFile' exists and is a file."));
+                  + "One of parents exists and is a file."));
     }
   }
 
@@ -667,7 +667,7 @@ public abstract class AbstractFullFileSystemTest {
 
       assertCall(() -> fileSystem.createDir(path))
           .throwsException(new IOException("Cannot create dir '{alias-1}/dir/file'. "
-              + "Cannot use dir/file. It is already taken by file."));
+              + "Cannot use 'dir/file'. It is already taken by file."));
     }
 
     @Test
