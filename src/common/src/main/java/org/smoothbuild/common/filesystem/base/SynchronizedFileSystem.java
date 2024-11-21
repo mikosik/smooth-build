@@ -35,8 +35,8 @@ public class SynchronizedFileSystem<P extends PathI<P>> implements FileSystem<P>
   }
 
   @Override
-  public synchronized void delete(P path) throws IOException {
-    fileSystem.delete(path);
+  public synchronized void deleteRecursively(P path) throws IOException {
+    fileSystem.deleteRecursively(path);
   }
 
   @Override

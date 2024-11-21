@@ -105,7 +105,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
   }
 
   @Override
-  public void delete(FullPath path) throws IOException {
+  public void deleteRecursively(FullPath path) throws IOException {
     Supplier<String> error = () -> "Cannot delete " + path.q() + ". ";
     var pathJdk = jdkPath(path, error);
     if (pathState(pathJdk, error) == NOTHING) {

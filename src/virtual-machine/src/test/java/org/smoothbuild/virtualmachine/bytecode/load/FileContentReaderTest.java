@@ -34,7 +34,7 @@ public class FileContentReaderTest extends VmTestContext {
     createFile(fileSystem, path, content);
 
     var blob = fileContentReader.read(path);
-    fileSystem.delete(path);
+    fileSystem.deleteRecursively(path);
     var cached = fileContentReader.read(path);
 
     assertThat(cached).isEqualTo(blob);

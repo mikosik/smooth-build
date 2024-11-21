@@ -13,7 +13,7 @@ public interface FileSystem<P extends PathI<P>> {
 
   public void move(P source, P target) throws IOException;
 
-  public void delete(P path) throws IOException;
+  public void deleteRecursively(P path) throws IOException;
 
   public long size(P path) throws IOException;
 
