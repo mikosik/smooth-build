@@ -1,4 +1,4 @@
-package org.smoothbuild.common.filesystem.base;
+package org.smoothbuild.common.filesystem.disk;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
-import static org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem.assertAliasesAreEqual;
+import static org.smoothbuild.common.filesystem.mem.MemoryFileSystem.assertAliasesAreEqual;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -21,15 +21,21 @@ import okio.Okio;
 import okio.Sink;
 import okio.Source;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.filesystem.disk.RecursiveDeleter;
+import org.smoothbuild.common.filesystem.base.Alias;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
+import org.smoothbuild.common.filesystem.base.Path;
+import org.smoothbuild.common.filesystem.base.PathIterator;
+import org.smoothbuild.common.filesystem.base.PathState;
+import org.smoothbuild.common.filesystem.base.RecursivePathsIterator;
 
 /**
  * This class is NOT thread-safe.
  */
-public class FullFileSystem implements FileSystem<FullPath> {
+public class DiskFileSystem implements FileSystem<FullPath> {
   private final Map<Alias, java.nio.file.Path> aliasedDirs;
 
-  public FullFileSystem(Map<Alias, java.nio.file.Path> aliasedDirs) {
+  public DiskFileSystem(Map<Alias, java.nio.file.Path> aliasedDirs) {
     this.aliasedDirs = aliasedDirs;
   }
 

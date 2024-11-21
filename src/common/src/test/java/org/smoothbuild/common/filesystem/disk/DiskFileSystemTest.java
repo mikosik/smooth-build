@@ -1,11 +1,15 @@
-package org.smoothbuild.common.filesystem.base;
+package org.smoothbuild.common.filesystem.disk;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.collect.Set;
+import org.smoothbuild.common.filesystem.base.AbstractFileSystemTest;
+import org.smoothbuild.common.filesystem.base.Alias;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 
-public class FullFileSystemTest extends AbstractFullFileSystemTest {
+public class DiskFileSystemTest extends AbstractFileSystemTest {
   @TempDir
   java.nio.file.Path path;
 
@@ -17,6 +21,6 @@ public class FullFileSystemTest extends AbstractFullFileSystemTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return new FullFileSystem(aliasToPath);
+    return new DiskFileSystem(aliasToPath);
   }
 }

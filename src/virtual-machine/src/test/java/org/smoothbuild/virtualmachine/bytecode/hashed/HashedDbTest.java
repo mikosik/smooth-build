@@ -33,7 +33,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FileSystemPart;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
+import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
@@ -329,7 +329,7 @@ public class HashedDbTest {
 
   private static FileSystemPart newFileSystem() {
     var alias = alias("project");
-    var fullFileSystem = new MemoryFullFileSystem(set(alias));
+    var fullFileSystem = new MemoryFileSystem(set(alias));
     return fileSystemPart(fullFileSystem, alias.append(Path.root()));
   }
 

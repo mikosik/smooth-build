@@ -11,12 +11,12 @@ import static org.smoothbuild.common.testing.TestingFileSystem.directoryToFileMa
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
+import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class TestingFileSystemTest {
   @Test
   void directory_to_file_map() throws Exception {
-    var fullFileSystem = new MemoryFullFileSystem(set(alias("alias1")));
+    var fullFileSystem = new MemoryFileSystem(set(alias("alias1")));
     var fileSystem = fileSystemPart(fullFileSystem, alias("alias1").root());
     var path1 = path("file1");
     var path2 = path("dir/file2");

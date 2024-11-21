@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Set;
 
-public abstract class AbstractFullFileSystemTest {
+public abstract class AbstractFileSystemTest {
   protected FileSystem<FullPath> fileSystem() {
     return fileSystem(set(alias()));
   }
