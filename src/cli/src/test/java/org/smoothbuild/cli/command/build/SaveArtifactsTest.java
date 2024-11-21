@@ -235,8 +235,8 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     var label = label("cli:build:saveArtifacts");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, logs));
-    var artifactsBucket = fileSystemPart(fileSystem(), ARTIFACTS_PATH);
-    assertThat(directoryToFileMap(artifactsBucket)).isEqualTo(expectedDirectoryMap);
+    var artifactsFileSystem = fileSystemPart(fileSystem(), ARTIFACTS_PATH);
+    assertThat(directoryToFileMap(artifactsFileSystem)).isEqualTo(expectedDirectoryMap);
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {

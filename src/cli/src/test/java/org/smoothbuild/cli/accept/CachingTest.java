@@ -23,7 +23,7 @@ public class CachingTest extends EvaluatorTestContext {
       createUserModule(userModule, Random.class);
       evaluate("result");
       var resultFromFirstRun = artifact();
-      restartSmoothWithSameBuckets();
+      restartSmoothWithSameFileSystem();
       evaluate("result");
       var resultFromSecondRun = artifact();
 
@@ -57,7 +57,7 @@ public class CachingTest extends EvaluatorTestContext {
       createUserModule(userModule, Random.class);
       evaluate("result");
       var resultFromFirstRun = artifact();
-      restartSmoothWithSameBuckets();
+      restartSmoothWithSameFileSystem();
       evaluate("result");
       var resultFromSecondRun = artifact();
 

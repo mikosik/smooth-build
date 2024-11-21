@@ -153,7 +153,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       try {
         createFile(fileSystem, fullPath, content);
       } catch (IOException e) {
-        throw new RuntimeException("Can't happen for MemoryBucket.", e);
+        throw new RuntimeException("Can't happen for MemoryFileSystem.", e);
       }
     }
 
