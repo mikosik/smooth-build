@@ -405,7 +405,7 @@ public class SbTranslator {
 
   private static FullPath fullPathOf(Location location) throws SbTranslatorException {
     if (location instanceof FileLocation sourceLocation) {
-      return sourceLocation.file();
+      return sourceLocation.path();
     } else {
       throw new SbTranslatorException(location
           + ": Error loading native jar: Impossible to infer native file name for location "
