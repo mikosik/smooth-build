@@ -149,8 +149,7 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
   }
 
   private static IOException parentExistAsFileException(Supplier<String> error, FullPath path) {
-    return new IOException(error.get() + " Cannot create object because its parent "
-        + path.path().q() + " exists and is a file.");
+    return new IOException(error.get() + " One of parents exists and is a file.");
   }
 
   private MemoryElement resolveLinksFully(MemoryElement element) {
@@ -203,7 +202,7 @@ public class MemoryFullFileSystem implements FileSystem<FullPath> {
           currentDir = (MemoryDir) child;
         } else {
           throw new IOException(
-              error.get() + " Cannot use " + dir.path() + ". It is already taken by file.");
+              error.get() + " Cannot use " + dir.path().q() + ". It is already taken by file.");
         }
       } else {
         MemoryDir newDir = new MemoryDir(currentDir, name);

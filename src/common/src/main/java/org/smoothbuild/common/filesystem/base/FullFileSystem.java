@@ -99,7 +99,7 @@ public class FullFileSystem implements FileSystem<FullPath> {
       bucket.createLink(link.path(), target.path());
     } catch (IOException e) {
       throw new IOException(
-          "Cannot create link %s -> %s. %s".formatted(link.q(), target.q(), e.getMessage()));
+          "Cannot create link %s -> %s. %s".formatted(link.q(), target.q(), e.getMessage()), e);
     }
   }
 
@@ -109,7 +109,7 @@ public class FullFileSystem implements FileSystem<FullPath> {
     try {
       bucket.createDir(dir.path());
     } catch (IOException e) {
-      throw new IOException("Cannot create dir %s. %s".formatted(dir.q(), e.getMessage()));
+      throw new IOException("Cannot create dir %s. %s".formatted(dir.q(), e.getMessage()), e);
     }
   }
 
