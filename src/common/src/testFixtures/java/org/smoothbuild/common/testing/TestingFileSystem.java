@@ -10,18 +10,19 @@ import okio.Sink;
 import okio.Source;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathI;
 import org.smoothbuild.common.reflect.Classes;
 
 public class TestingFileSystem {
-  public static Map<Path, ByteString> directoryToFileMap(FileSystem<Path> fileSystem)
-      throws IOException {
+  public static Map<Path, ByteString> directoryToFileMap(
+      FileSystem<FullPath> fileSystem, FullPath path) throws IOException {
     var result = new HashMap<Path, ByteString>();
-    var pathIterator = fileSystem.filesRecursively(Path.root());
+    var pathIterator = fileSystem.filesRecursively(path);
     while (pathIterator.hasNext()) {
-      var path = pathIterator.next();
-      result.put(path, readFile(fileSystem, path));
+      var current = pathIterator.next();
+      result.put(current, readFile(fileSystem, path.append(current)));
     }
     return result;
   }
