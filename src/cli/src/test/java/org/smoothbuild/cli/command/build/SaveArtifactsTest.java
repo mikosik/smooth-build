@@ -3,7 +3,6 @@ package org.smoothbuild.cli.command.build;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.command.build.SaveArtifacts.FILE_STRUCT_NAME;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.filesystem.base.FileSystemPart.fileSystemPart;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -235,8 +234,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     var label = label("cli:build:saveArtifacts");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, logs));
-    var artifactsFileSystem = fileSystemPart(fileSystem(), ARTIFACTS_PATH);
-    assertThat(directoryToFileMap(artifactsFileSystem)).isEqualTo(expectedDirectoryMap);
+    assertThat(directoryToFileMap(fileSystem(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {
