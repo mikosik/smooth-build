@@ -66,8 +66,8 @@ public class RecursivePathsIteratorTest {
 
     assertCall(iterator::next)
         .throwsException(
-            new IOException(
-                "Bucket changed when iterating tree of directory '{alias1}/dir'. Cannot find '{alias1}/dir/subdir'."));
+            new IOException("FileSystem changed when iterating tree of directory '{alias1}/dir'. "
+                + "Cannot find '{alias1}/dir/subdir'."));
   }
 
   private void doTestIterable(

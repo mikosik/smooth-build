@@ -158,26 +158,26 @@ public class HashedDbTest {
 
   @Test
   void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
-    var bucket = fileSystem();
-    var hashedDb = new HashedDb(bucket);
+    var fileSystem = fileSystem();
+    var hashedDb = new HashedDb(fileSystem);
     hashedDb.initialize();
 
     hashedDb.writeString("abc");
 
-    assertThat(bucket.files(TEMP_DIR_PATH)).isEmpty();
+    assertThat(fileSystem.files(TEMP_DIR_PATH)).isEmpty();
   }
 
   @Test
   void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
-    var bucket = fileSystem();
-    var hashedDb = new HashedDb(bucket);
+    var fileSystem = fileSystem();
+    var hashedDb = new HashedDb(fileSystem);
     hashedDb.initialize();
 
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
 
-    assertThat(bucket.files(TEMP_DIR_PATH)).isEmpty();
+    assertThat(fileSystem.files(TEMP_DIR_PATH)).isEmpty();
   }
 
   @Nested

@@ -127,7 +127,7 @@ public class NativeTest extends EvaluatorTestContext {
         assertLogsContainFailure();
         String timestamp1 = fetchTimestamp(logs().get(0).message());
 
-        restartSmoothWithSameBuckets();
+        restartSmoothWithSameFileSystem();
         evaluate("result");
         assertLogsContainFailure();
         String timestamp2 = fetchTimestamp(logs().get(0).message());

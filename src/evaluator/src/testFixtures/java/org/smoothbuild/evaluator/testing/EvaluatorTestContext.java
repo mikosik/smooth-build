@@ -107,7 +107,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     this.evaluatedExprs = evaluated.get();
   }
 
-  protected void restartSmoothWithSameBuckets() {
+  protected void restartSmoothWithSameFileSystem() {
     injector = createInjector(fileSystem);
     evaluatedExprs = null;
   }

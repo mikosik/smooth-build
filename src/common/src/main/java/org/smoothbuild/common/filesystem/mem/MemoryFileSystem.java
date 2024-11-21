@@ -201,12 +201,12 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
 
   private MemoryDir rootDirFor(FullPath path, Supplier<String> error) throws IOException {
     var alias = path.alias();
-    var bucket = rootDirs.get(alias);
-    if (bucket == null) {
+    var dir = rootDirs.get(alias);
+    if (dir == null) {
       throw new IOException(
           error.get() + "Unknown alias " + alias + ". Known aliases = " + rootDirs.keySet());
     }
-    return bucket;
+    return dir;
   }
 
   private MemoryElement getFile(FullPath path, Supplier<String> error) throws IOException {
