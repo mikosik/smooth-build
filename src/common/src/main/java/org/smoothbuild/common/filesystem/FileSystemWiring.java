@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FullFileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
+import org.smoothbuild.common.filesystem.disk.DiskFileSystem;
 
 public class FileSystemWiring extends AbstractModule {
   private final Map<Alias, Path> aliasToPath;
@@ -21,6 +21,6 @@ public class FileSystemWiring extends AbstractModule {
   @Provides
   @Singleton
   public FileSystem<FullPath> provideFilesystem() {
-    return new SynchronizedFileSystem<>(new FullFileSystem(aliasToPath));
+    return new SynchronizedFileSystem<>(new DiskFileSystem(aliasToPath));
   }
 }

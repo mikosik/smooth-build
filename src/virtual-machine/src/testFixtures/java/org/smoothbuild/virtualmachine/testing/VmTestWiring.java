@@ -13,7 +13,7 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
-import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
+import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;
 import org.smoothbuild.virtualmachine.wire.Project;
@@ -24,7 +24,7 @@ public class VmTestWiring extends AbstractModule {
   private final FileSystem<FullPath> fileSystem;
 
   public VmTestWiring() {
-    this(new SynchronizedFileSystem<>(new MemoryFullFileSystem(set(PROJECT))));
+    this(new SynchronizedFileSystem<>(new MemoryFileSystem(set(PROJECT))));
   }
 
   public VmTestWiring(FileSystem<FullPath> fileSystem) {

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.mem.MemoryFullFileSystem;
+import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class RecursivePathsIteratorTest {
   @Test
@@ -93,8 +93,8 @@ public class RecursivePathsIteratorTest {
     }
   }
 
-  private static MemoryFullFileSystem fileSystem() {
-    return new MemoryFullFileSystem(set(alias()));
+  private static MemoryFileSystem fileSystem() {
+    return new MemoryFileSystem(set(alias()));
   }
 
   private static Alias alias() {

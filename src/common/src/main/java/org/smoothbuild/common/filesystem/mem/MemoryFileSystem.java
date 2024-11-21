@@ -21,10 +21,10 @@ import org.smoothbuild.common.function.Function1;
 /**
  * This class is NOT thread-safe.
  */
-public class MemoryFullFileSystem implements FileSystem<FullPath> {
+public class MemoryFileSystem implements FileSystem<FullPath> {
   private final Map<Alias, MemoryDir> rootDirs;
 
-  public MemoryFullFileSystem(Set<Alias> aliases) {
+  public MemoryFileSystem(Set<Alias> aliases) {
     this.rootDirs = aliases.toMap(a -> new MemoryDir(null, Path.root()));
   }
 
