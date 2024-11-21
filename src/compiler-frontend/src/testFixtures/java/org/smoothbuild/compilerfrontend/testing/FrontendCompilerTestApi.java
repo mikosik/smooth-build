@@ -761,6 +761,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return fullName.substring(Math.max(0, fullName.lastIndexOf(':')));
   }
 
+  @SuppressWarnings("unchecked")
   public default <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
     return immutableBindings(list(nameds).toMap(Named::name, v -> v));
   }
