@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.collect.Set;
-import org.smoothbuild.common.filesystem.disk.DiskBucket;
 
 public class FullFileSystemTest extends AbstractFullFileSystemTest {
   @TempDir
@@ -18,6 +17,6 @@ public class FullFileSystemTest extends AbstractFullFileSystemTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return new FullFileSystem(aliasToPath.mapValues(DiskBucket::new));
+    return new FullFileSystem(aliasToPath);
   }
 }

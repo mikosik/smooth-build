@@ -23,7 +23,7 @@ public class FileSystemPart implements FileSystem<Path> {
   }
 
   @Override
-  public PathIterator filesRecursively(Path dir) throws IOException {
+  public PathIterator filesRecursively(Path dir) {
     return fileSystem.filesRecursively(fullPath(dir));
   }
 
