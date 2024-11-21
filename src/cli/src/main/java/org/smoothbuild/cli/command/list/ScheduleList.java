@@ -67,7 +67,7 @@ public class ScheduleList implements Task0<Tuple0> {
   }
 
   private static boolean isInProjectDir(Location location) {
-    return location instanceof FileLocation source && PROJECT_ALIAS.equals(source.alias());
+    return location instanceof FileLocation source && PROJECT_ALIAS.equals(source.path().alias());
   }
 
   private static boolean isInCommandLine(Location location) {
