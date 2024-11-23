@@ -131,19 +131,17 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
     if (parent == null) {
       throw new IOException(error.get() + "No such dir " + parentPath.q() + ".");
     }
-    return switch (resolveLinksFully(parent)) {
-      case MemoryFile file -> throw new IOException(
-          error.get() + "One of parents exists and is a file.");
-      case MemoryDir dir -> creator.apply(dir);
-      case MemoryLink link -> throw new RuntimeException("Should not happen");
-    };
-  }
-
-  private MemoryElement resolveLinksFully(MemoryElement element) {
-    while (element instanceof MemoryLink link) {
-      element = link.target();
+    MemoryElement resolvedParent = parent;
+    while (true) {
+      switch (resolvedParent) {
+        case MemoryLink link -> resolvedParent = link.target();
+        case MemoryDir dir -> {
+          return creator.apply(dir);
+        }
+        case MemoryFile f -> throw new IOException(
+            error.get() + "One of parents exists and is a file.");
+      }
     }
-    return element;
   }
 
   private static Sink createSink(MemoryDir parentDir, Path name) throws IOException {
