@@ -168,7 +168,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
     try {
       Files.createSymbolicLink(linkJdk, targetRelativeJdk);
     } catch (NoSuchFileException e) {
-      throw new IOException(error.get() + "No such dir " + link.parent().q() + ".");
+      throw new IOException(error.get() + "No such dir " + link.parent().q() + ".", e);
     } catch (UnsupportedOperationException e) {
       // On Filesystems that do not support symbolic link just copy target file.
       Files.copy(linkJdk, targetJdk, REPLACE_EXISTING);
@@ -182,7 +182,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
       Files.createDirectories(jdkPath(dir, error));
     } catch (FileAlreadyExistsException e) {
       throw new IOException(
-          error.get() + "Cannot use " + dir.q() + ". It is already taken by file.");
+          error.get() + "Cannot use " + dir.q() + ". It is already taken by file.", e);
     }
   }
 
