@@ -2,14 +2,14 @@ package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task2;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;

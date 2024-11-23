@@ -1,9 +1,9 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

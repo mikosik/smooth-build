@@ -2,10 +2,10 @@ package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.task.Tasks.task1;
-import static org.smoothbuild.common.task.Tasks.task2;
+import static org.smoothbuild.common.schedule.Output.schedulingOutput;
+import static org.smoothbuild.common.schedule.Tasks.argument;
+import static org.smoothbuild.common.schedule.Tasks.task1;
+import static org.smoothbuild.common.schedule.Tasks.task2;
 import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
@@ -16,9 +16,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.task.Task2;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;

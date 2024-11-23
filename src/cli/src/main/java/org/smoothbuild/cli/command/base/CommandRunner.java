@@ -12,7 +12,7 @@ import java.util.function.Function;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.schedule.Scheduler;
 
 public class CommandRunner {
   private final Scheduler scheduler;

@@ -1,9 +1,9 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.schedule.Output.schedulingOutput;
+import static org.smoothbuild.common.schedule.Tasks.argument;
 
 import org.smoothbuild.common.collect.List;
 

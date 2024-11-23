@@ -2,13 +2,13 @@ package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Locations;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;

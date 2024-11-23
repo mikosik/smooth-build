@@ -1,4 +1,4 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Thread.currentThread;
@@ -16,10 +16,10 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Origin.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.common.task.Scheduler.LABEL;
-import static org.smoothbuild.common.task.Tasks.argument;
-import static org.smoothbuild.common.task.Tasks.task1;
+import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.schedule.Scheduler.LABEL;
+import static org.smoothbuild.common.schedule.Tasks.argument;
+import static org.smoothbuild.common.schedule.Tasks.task1;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -56,7 +56,7 @@ public class SchedulerTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         Task0<Integer> task = () -> output(7, report);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
@@ -241,7 +241,7 @@ public class SchedulerTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         Task1<Integer, String> task = (i) -> output(i.toString(), report);
         var arg1 = argument(7);
@@ -470,7 +470,7 @@ public class SchedulerTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         Task2<Integer, Integer, Integer> task = (a1, a2) -> output(a1 + a2, report);
         var arg1 = argument(7);
@@ -713,7 +713,7 @@ public class SchedulerTest {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.common.task.SchedulerTest#executionReports")
+      @MethodSource("org.smoothbuild.common.schedule.SchedulerTest#executionReports")
       void successful_task_execution_submits_report(Report report) {
         TaskX<Integer, String> task = (i) -> output(i.toString(), report);
         var args = list(argument(7));

@@ -1,12 +1,12 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
-import static org.smoothbuild.common.task.Output.output;
-import static org.smoothbuild.common.task.Tasks.task1;
-import static org.smoothbuild.common.task.Tasks.task2;
-import static org.smoothbuild.common.task.Tasks.taskX;
+import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.common.schedule.Tasks.task1;
+import static org.smoothbuild.common.schedule.Tasks.task2;
+import static org.smoothbuild.common.schedule.Tasks.taskX;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;

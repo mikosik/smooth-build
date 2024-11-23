@@ -1,4 +1,4 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import org.smoothbuild.common.collect.List;
 

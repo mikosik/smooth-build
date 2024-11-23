@@ -2,17 +2,17 @@ package org.smoothbuild.compilerfrontend;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.schedule.Output.schedulingOutput;
+import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.task.Task1;
-import org.smoothbuild.common.task.Task2;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.Task1;
+import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ConvertPs;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
 import org.smoothbuild.compilerfrontend.compile.DetectUndefined;
