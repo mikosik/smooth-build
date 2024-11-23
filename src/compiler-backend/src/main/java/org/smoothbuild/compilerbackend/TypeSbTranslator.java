@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerbackend;
 
-import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import org.smoothbuild.common.collect.Map;
@@ -44,7 +44,7 @@ class TypeSbTranslator {
       case SStringType sStringType -> bytecodeF.stringType();
       case SStructType sStructType -> translate(sStructType);
       case STupleType sTupleType -> translate(sTupleType);
-      case SInterfaceType sInterfaceType -> throw unexpectedCaseExc(sInterfaceType);
+      case SInterfaceType sInterfaceType -> throw unexpectedCaseException(sInterfaceType);
     };
   }
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile;
 
-import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maybe.maybe;
@@ -366,7 +366,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
         case TypeNameContext name -> createT(name);
         case ArrayTContext arrayT -> createArrayT(arrayT);
         case FuncTContext funcT -> createFuncT(funcT);
-        default -> throw unexpectedCaseExc(type);
+        default -> throw unexpectedCaseException(type);
       };
     }
 
