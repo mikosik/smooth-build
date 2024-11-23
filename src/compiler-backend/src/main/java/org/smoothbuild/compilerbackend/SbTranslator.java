@@ -346,8 +346,7 @@ public class SbTranslator {
 
   private BExpr translateNamedExprValue(SNamedExprValue sNamedExprValue)
       throws SbTranslatorException {
-    var bValue = translateExpr(sNamedExprValue.body());
-    return bValue;
+    return translateExpr(sNamedExprValue.body());
   }
 
   // helpers
