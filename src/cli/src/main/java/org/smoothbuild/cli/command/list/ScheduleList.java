@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.command.list;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.cli.layout.Aliases.PROJECT_ALIAS;
+import static org.smoothbuild.cli.layout.Layout.PROJECT_PATH;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.report.Report.report;
@@ -67,7 +67,7 @@ public class ScheduleList implements Task0<Tuple0> {
   }
 
   private static boolean isInProjectDir(Location location) {
-    return location instanceof FileLocation source && PROJECT_ALIAS.equals(source.path().alias());
+    return location instanceof FileLocation source && source.path().startsWith(PROJECT_PATH);
   }
 
   private static boolean isInCommandLine(Location location) {
