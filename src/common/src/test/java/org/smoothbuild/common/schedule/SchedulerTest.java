@@ -85,19 +85,6 @@ public class SchedulerTest {
       }
 
       @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var predecessor = promise(none());
-        var executed = new AtomicBoolean(false);
-
-        var scheduler = newScheduler(executed);
-        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed));
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(result.get()).isEqualTo(none());
-        assertThat(executed.get()).isFalse();
-      }
-
-      @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() {
         var exception = new RuntimeException();
         Task0<Integer> task = () -> {
@@ -156,20 +143,6 @@ public class SchedulerTest {
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var predecessor = promise(none());
-        var executed = new AtomicBoolean(false);
-        var scheduler = newScheduler(executed);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class);
-        ConditionFactory result1;
-        result1 = await();
-        result1.until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
       }
 
       @Test
@@ -276,20 +249,6 @@ public class SchedulerTest {
       }
 
       @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var executed = new AtomicBoolean(false);
-        var predecessor = promise(none());
-        var arg1 = argument(7);
-
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), arg1);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
-      }
-
-      @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() {
         var exception = new RuntimeException();
         Task1<Integer, Integer> task = (a1) -> {
@@ -368,22 +327,6 @@ public class SchedulerTest {
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var atomicBoolean = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> predecessor = promise(none());
-        var arg1 = argument(7);
-
-        var scheduler = newScheduler(atomicBoolean);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1);
-        ConditionFactory result1;
-        result1 = await();
-        result1.until(() -> result.toMaybe().isSome());
-
-        assertThat(atomicBoolean.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
       }
 
       @Test
@@ -511,22 +454,6 @@ public class SchedulerTest {
       }
 
       @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var executed = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> predecessor = promise(none());
-        var arg1 = argument(6);
-        var arg2 = argument(7);
-
-        var scheduler = newScheduler();
-        var task = new SetAtomicBoolean(executed);
-        var result = scheduler.submit(list(predecessor), task, arg1, arg2);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
-      }
-
-      @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() {
         var exception = new RuntimeException();
         Task2<Integer, Integer, Integer> task = (a1, a2) -> {
@@ -614,21 +541,6 @@ public class SchedulerTest {
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var executed = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> predecessor = promise(none());
-        var arg1 = argument(7);
-        var arg2 = argument(8);
-
-        var scheduler = newScheduler(executed);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1, arg2);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
       }
 
       @Test
@@ -752,20 +664,6 @@ public class SchedulerTest {
       }
 
       @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var executed = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> predecessor = promise(none());
-        var args = list(argument(7));
-
-        var scheduler = newScheduler();
-        var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), args);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
-      }
-
-      @Test
       void execution_of_task_that_thrown_exception_submits_fatal_report() {
         var exception = new RuntimeException();
         TaskX<Integer, Integer> task = (a1) -> {
@@ -844,20 +742,6 @@ public class SchedulerTest {
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void task_is_not_executed_when_predecessor_fails_with_error() {
-        var executed = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> predecessor = promise(none());
-        List<Promise<? extends Maybe<Integer>>> args = list(argument(7));
-
-        var scheduler = newScheduler(executed);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, args);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
       }
 
       @Test
