@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -106,7 +107,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
         case PConstructor pConstructor -> convertConstructor(pConstructor);
         case PNamedFunc pNamedFunc -> convertNamedFunc(pNamedFunc);
         case PNamedValue pNamedValue -> convertNamedValue(pNamedValue);
-        case PItem pItem -> throw new RuntimeException("Internal error: unexpected ItemP.");
+        case PItem pItem -> throw unexpectedCaseException(pItem);
       };
     }
 

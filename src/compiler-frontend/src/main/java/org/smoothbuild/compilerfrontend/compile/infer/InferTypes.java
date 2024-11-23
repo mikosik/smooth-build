@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -87,7 +88,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       switch (pReferenceable) {
         case PNamedFunc pNamedFunc -> visitFunc(pNamedFunc);
         case PNamedValue pNamedValue -> visitValue(pNamedValue);
-        case PItem pItem -> throw new RuntimeException("shouldn't happen");
+        case PItem pItem -> throw unexpectedCaseException(pItem);
       }
     }
 

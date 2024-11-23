@@ -1,7 +1,7 @@
 package org.smoothbuild.common.base;
 
 public class Throwables {
-  public static RuntimeException unexpectedCaseExc(Object object) {
+  public static RuntimeException unexpectedCaseException(Object object) {
     return new RuntimeException(messageFor(object));
   }
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
-import static org.smoothbuild.common.base.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -41,7 +41,7 @@ public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObj
       case ERROR -> nativeApi.log().error(diagnostic.getMessage(null));
       case MANDATORY_WARNING, WARNING -> nativeApi.log().warning(diagnostic.getMessage(null));
       case NOTE, OTHER -> nativeApi.log().info(diagnostic.getMessage(null));
-      default -> throw unexpectedCaseExc(diagnostic.getKind());
+      default -> throw unexpectedCaseException(diagnostic.getKind());
     }
     errorReported = true;
   }
