@@ -1,9 +1,9 @@
 package org.smoothbuild.common.init;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import java.util.Set;

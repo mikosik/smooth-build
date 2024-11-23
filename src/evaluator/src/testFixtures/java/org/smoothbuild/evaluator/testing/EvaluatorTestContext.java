@@ -6,7 +6,6 @@ import static com.google.inject.Stage.PRODUCTION;
 import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -16,6 +15,7 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.common.schedule.Tasks.argument;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 
 import com.google.inject.Guice;

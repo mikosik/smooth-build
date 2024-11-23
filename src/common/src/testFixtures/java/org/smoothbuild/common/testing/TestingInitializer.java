@@ -1,6 +1,6 @@
 package org.smoothbuild.common.testing;
 
-import static org.awaitility.Awaitility.await;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 
 import com.google.inject.Injector;
 import org.smoothbuild.common.init.Initializer;

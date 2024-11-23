@@ -5,7 +5,6 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.synchronizedList;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -21,6 +20,7 @@ import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Scheduler.LABEL;
 import static org.smoothbuild.common.schedule.Tasks.argument;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import java.util.ArrayList;
