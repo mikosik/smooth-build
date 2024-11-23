@@ -1,13 +1,13 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 import static org.smoothbuild.common.log.base.Origin.MEMORY;
 import static org.smoothbuild.common.log.report.Report.report;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import java.util.concurrent.ConcurrentHashMap;

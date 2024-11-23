@@ -2,7 +2,6 @@ package org.smoothbuild.common.schedule;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Thread.currentThread;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -20,6 +19,7 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.schedule.Scheduler.LABEL;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.schedule.Tasks.task1;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import org.awaitility.core.ConditionFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -163,7 +164,9 @@ public class SchedulerTest {
         var executed = new AtomicBoolean(false);
         var scheduler = newScheduler(executed);
         var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class);
-        await().until(() -> result.toMaybe().isSome());
+        ConditionFactory result1;
+        result1 = await();
+        result1.until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
         assertThat(result.get()).isEqualTo(none());
@@ -375,7 +378,9 @@ public class SchedulerTest {
 
         var scheduler = newScheduler(atomicBoolean);
         var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1);
-        await().until(() -> result.toMaybe().isSome());
+        ConditionFactory result1;
+        result1 = await();
+        result1.until(() -> result.toMaybe().isSome());
 
         assertThat(atomicBoolean.get()).isFalse();
         assertThat(result.get()).isEqualTo(none());
@@ -544,7 +549,9 @@ public class SchedulerTest {
         var scheduler = newScheduler();
         var task = new SetAtomicBoolean(executed);
         var result = scheduler.submit(list(predecessor), task, arg1, arg2);
-        await().until(() -> result.toMaybe().isSome());
+        ConditionFactory result1;
+        result1 = await();
+        result1.until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
         assertThat(result.get()).isEqualTo(none());

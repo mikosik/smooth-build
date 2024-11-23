@@ -3,11 +3,11 @@ package org.smoothbuild.compilerfrontend.testing;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Stage.PRODUCTION;
-import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.schedule.Tasks.argument;
+import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 
 import com.google.inject.AbstractModule;
