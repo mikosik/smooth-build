@@ -15,7 +15,7 @@ import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 
 import com.google.inject.Guice;
@@ -33,7 +33,7 @@ import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.common.testing.TestingFileSystem;

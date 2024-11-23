@@ -1,4 +1,4 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import static java.lang.Thread.startVirtualThread;
 import static org.smoothbuild.common.collect.List.list;
@@ -8,7 +8,7 @@ import static org.smoothbuild.common.concurrent.Promise.runWhenAllAvailable;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Tasks.taskX;
+import static org.smoothbuild.common.schedule.Tasks.taskX;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;

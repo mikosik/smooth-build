@@ -7,7 +7,7 @@ import static org.awaitility.Awaitility.await;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 
 import com.google.inject.AbstractModule;
@@ -20,7 +20,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;

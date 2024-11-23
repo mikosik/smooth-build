@@ -1,13 +1,13 @@
 package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import jakarta.inject.Inject;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task1;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.common.testing;
 import static com.google.common.base.Suppliers.memoize;
 
 import com.google.common.base.Supplier;
-import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.schedule.Scheduler;
 
 public class CommonTestContext implements CommonTestApi {
   private final Supplier<Scheduler> scheduler = memoize(this::newScheduler);

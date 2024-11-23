@@ -4,7 +4,7 @@ import static org.awaitility.Awaitility.await;
 
 import com.google.inject.Injector;
 import org.smoothbuild.common.init.Initializer;
-import org.smoothbuild.common.task.Scheduler;
+import org.smoothbuild.common.schedule.Scheduler;
 
 public class TestingInitializer {
   public static void runInitializations(Injector injector) {

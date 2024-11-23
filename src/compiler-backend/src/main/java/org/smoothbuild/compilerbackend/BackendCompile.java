@@ -2,15 +2,15 @@ package org.smoothbuild.compilerbackend;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILER_BACK_LABEL;
 import static org.smoothbuild.compilerbackend.CompiledExprs.compilationResult;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task2;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 

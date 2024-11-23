@@ -1,4 +1,4 @@
-package org.smoothbuild.common.task;
+package org.smoothbuild.common.schedule;
 
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;

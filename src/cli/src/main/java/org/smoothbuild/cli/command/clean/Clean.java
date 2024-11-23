@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command.clean;
 
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import jakarta.inject.Inject;
@@ -9,8 +9,8 @@ import org.smoothbuild.cli.Artifacts;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 import org.smoothbuild.virtualmachine.wire.ComputationDb;

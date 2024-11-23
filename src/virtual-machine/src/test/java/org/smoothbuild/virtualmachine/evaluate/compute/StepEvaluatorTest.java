@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Origin;
-import org.smoothbuild.common.task.Tasks;
+import org.smoothbuild.common.schedule.Tasks;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;

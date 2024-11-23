@@ -3,15 +3,15 @@ package org.smoothbuild.cli.command.build;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.log.report.Report.report;
-import static org.smoothbuild.common.task.Output.schedulingOutput;
-import static org.smoothbuild.common.task.Tasks.argument;
+import static org.smoothbuild.common.schedule.Output.schedulingOutput;
+import static org.smoothbuild.common.schedule.Tasks.argument;
 
 import java.util.List;
 import org.smoothbuild.cli.layout.Layout;
 import org.smoothbuild.common.init.Initializer;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Scheduler;
-import org.smoothbuild.common.task.Task0;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 

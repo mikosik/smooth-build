@@ -3,13 +3,13 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task2;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;

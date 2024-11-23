@@ -4,7 +4,7 @@ import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.common.task.Output.output;
+import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import jakarta.inject.Inject;
@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.task.Output;
-import org.smoothbuild.common.task.Task1;
+import org.smoothbuild.common.schedule.Output;
+import org.smoothbuild.common.schedule.Task1;
 
 public class ReadFileContent implements Task1<FullPath, String> {
   private final FileSystem<FullPath> fileSystem;
