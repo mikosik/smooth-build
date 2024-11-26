@@ -87,7 +87,7 @@ public class StepEvaluator {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
         return evaluateStep(step, toInput(bValues));
-      } catch (ComputeCacheException | IOException | InterruptedException e) {
+      } catch (IOException | InterruptedException e) {
         return outputForException(step, e);
       }
     };
@@ -99,7 +99,7 @@ public class StepEvaluator {
   }
 
   protected Output<BValue> evaluateStep(Step step, BTuple input)
-      throws ComputeCacheException, InterruptedException, IOException {
+      throws InterruptedException, IOException {
     var purity = step.purity(input);
     var hash = computationHashFactory.create(step, input);
     var resultPromise = Promise.<BOutput>promise();
@@ -128,8 +128,7 @@ public class StepEvaluator {
   }
 
   private Output<BValue> readEvaluationFromDiskCache(
-      Step step, Hash hash, MutablePromise<BOutput> resultPromise)
-      throws ComputeCacheException, BytecodeException {
+      Step step, Hash hash, MutablePromise<BOutput> resultPromise) throws IOException {
     var bOutput = diskCache.read(hash, step.evaluationType());
     resultPromise.accept(bOutput);
     memoryCache.remove(hash);
@@ -138,7 +137,7 @@ public class StepEvaluator {
 
   private Output<BValue> evaluateNow(
       Step step, BTuple input, MutablePromise<BOutput> resultPromise, Purity purity, Hash hash)
-      throws IOException, ComputeCacheException {
+      throws IOException {
     var container = containerProvider.get();
     var bOutput = step.run(input, container);
     resultPromise.accept(bOutput);

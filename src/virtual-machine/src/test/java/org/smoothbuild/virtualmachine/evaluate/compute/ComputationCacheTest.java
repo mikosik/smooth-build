@@ -5,6 +5,7 @@ import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.corruptedValueException;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class ComputationCacheTest extends VmTestContext {
   @Test
   void reading_not_written_value_fails() {
     assertCall(() -> computationCache().read(hash, bStringType()))
-        .throwsException(ComputeCacheException.class);
+        .throwsException(IOException.class);
   }
 
   @Test

@@ -5,7 +5,6 @@ import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.containsErrorOrAbove;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.isValidLevel;
 import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.levelAsString;
-import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.computeException;
 import static org.smoothbuild.virtualmachine.evaluate.compute.ComputeCacheException.corruptedValueException;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
@@ -48,7 +47,7 @@ public class ComputationCache {
     fileSystem.createDir(Path.root());
   }
 
-  public synchronized void write(Hash hash, BOutput bOutput) throws ComputeCacheException {
+  public synchronized void write(Hash hash, BOutput bOutput) throws IOException {
     try (BufferedSink sink = buffer(fileSystem.sink(toPath(hash)))) {
       var storedLogs = bOutput.storedLogs();
       sink.write(storedLogs.hash().toByteString());
@@ -56,12 +55,10 @@ public class ComputationCache {
       if (value != null) {
         sink.write(value.hash().toByteString());
       }
-    } catch (IOException e) {
-      throw computeException(e);
     }
   }
 
-  public synchronized boolean contains(Hash hash) throws ComputeCacheException {
+  public synchronized boolean contains(Hash hash) throws IOException {
     var path = toPath(hash);
     return switch (stateOf(path)) {
       case FILE -> true;
@@ -70,15 +67,11 @@ public class ComputationCache {
     };
   }
 
-  private PathState stateOf(Path path) throws ComputeCacheException {
-    try {
-      return fileSystem.pathState(path);
-    } catch (IOException e) {
-      throw computeException(e);
-    }
+  private PathState stateOf(Path path) throws IOException {
+    return fileSystem.pathState(path);
   }
 
-  public synchronized BOutput read(Hash hash, BType type) throws ComputeCacheException {
+  public synchronized BOutput read(Hash hash, BType type) throws IOException {
     try (var source = buffer(fileSystem.source(toPath(hash)))) {
       var storedLogsHash = Hash.read(source);
       var storedLogs = exprDb.get(storedLogsHash);
@@ -112,8 +105,6 @@ public class ComputationCache {
           return bOutput((BValue) value, storedLogArray);
         }
       }
-    } catch (IOException e) {
-      throw computeException(e);
     }
   }
 
