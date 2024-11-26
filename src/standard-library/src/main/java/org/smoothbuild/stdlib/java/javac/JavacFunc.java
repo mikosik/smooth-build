@@ -96,7 +96,7 @@ public class JavacFunc {
           nativeApi.log().warning(additionalInfo);
         }
         if (success) {
-          return sandboxedJFM.resultClassfiles();
+          return sandboxedJFM.resultClassFiles();
         } else {
           return null;
         }
