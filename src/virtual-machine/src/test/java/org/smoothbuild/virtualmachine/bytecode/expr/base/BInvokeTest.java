@@ -7,7 +7,6 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
@@ -37,7 +36,7 @@ public class BInvokeTest extends VmTestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BInvoke> {
     @Override
-    protected List<BInvoke> equalExprs() throws BytecodeException {
+    protected List<BInvoke> equalExprs() throws Exception {
       return list(
           bInvoke(
               bLambdaType(bIntType(), bStringType()),
@@ -52,7 +51,7 @@ public class BInvokeTest extends VmTestContext {
     }
 
     @Override
-    protected List<BInvoke> nonEqualExprs() throws BytecodeException {
+    protected List<BInvoke> nonEqualExprs() throws Exception {
       return list(
           bInvoke(
               bLambdaType(bIntType(), bStringType()),

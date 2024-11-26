@@ -9,11 +9,11 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -58,7 +58,7 @@ public class NativeMethodLoaderTest extends VmTestContext {
     assertLoadingCausesError(WrongParameterType.class, wrongParametersErrorMessage());
   }
 
-  private void assertLoadingCausesError(Class<?> clazz, String message) throws BytecodeException {
+  private void assertLoadingCausesError(Class<?> clazz, String message) throws IOException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
     assertThat(nativeMethodLoader.load(bMethod(clazz))).isEqualTo(loadingError(clazz, message));
   }

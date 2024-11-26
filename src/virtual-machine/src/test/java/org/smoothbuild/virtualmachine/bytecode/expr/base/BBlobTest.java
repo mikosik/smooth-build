@@ -8,7 +8,6 @@ import java.util.List;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
@@ -41,12 +40,12 @@ public class BBlobTest extends VmTestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BBlob> {
     @Override
-    protected List<BBlob> equalExprs() throws BytecodeException {
+    protected List<BBlob> equalExprs() throws Exception {
       return list(bBlob(ByteString.encodeUtf8("aaa")), bBlob(ByteString.encodeUtf8("aaa")));
     }
 
     @Override
-    protected List<BBlob> nonEqualExprs() throws BytecodeException {
+    protected List<BBlob> nonEqualExprs() throws Exception {
       return list(
           bBlob(ByteString.encodeUtf8("")),
           bBlob(ByteString.encodeUtf8("aaa")),

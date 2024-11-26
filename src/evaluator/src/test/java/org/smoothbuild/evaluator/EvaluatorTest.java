@@ -41,7 +41,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
     @Nested
     class _constant {
       @Test
-      void blob() throws BytecodeException {
+      void blob() throws Exception {
         assertEvaluation(sBlob(7), bBlob(7));
       }
 

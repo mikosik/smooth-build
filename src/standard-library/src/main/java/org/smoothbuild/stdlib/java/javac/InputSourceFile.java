@@ -25,8 +25,6 @@ public class InputSourceFile extends SimpleJavaFileObject {
     try (Scanner scanner = scanner()) {
       scanner.useDelimiter("\\A");
       return scanner.hasNext() ? scanner.next() : "";
-    } catch (BytecodeException e) {
-      throw e.toIOException();
     }
   }
 

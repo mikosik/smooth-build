@@ -10,15 +10,13 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class ZipFunc {
-  public static BValue func(NativeApi nativeApi, BTuple args) throws BytecodeException {
+  public static BValue func(NativeApi nativeApi, BTuple args) throws IOException {
     BArray files = (BArray) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     try (var blobBuilder = nativeApi.factory().blobBuilder()) {
@@ -31,17 +29,12 @@ public class ZipFunc {
           }
           addZipEntry(zipOutputStream, file);
         }
-      } catch (IOException e) {
-        throw new IoBytecodeException(e);
       }
       return blobBuilder.build();
-    } catch (IOException e) {
-      throw new IoBytecodeException(e);
     }
   }
 
-  private static void addZipEntry(ZipOutputStream zipOutputStream, BTuple file)
-      throws IOException, BytecodeException {
+  private static void addZipEntry(ZipOutputStream zipOutputStream, BTuple file) throws IOException {
     var zipEntry = new ZipEntry(filePath(file).toJavaString());
     zipEntry.setLastModifiedTime(FileTime.fromMillis(0));
     zipOutputStream.putNextEntry(zipEntry);

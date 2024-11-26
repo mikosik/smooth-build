@@ -5,10 +5,10 @@ import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
 import jakarta.inject.Inject;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
@@ -24,7 +24,7 @@ import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final Function1<BMethod, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BMethod, Either<String, Method>, IOException> memoizer;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -32,11 +32,11 @@ public class NativeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
+  public Either<String, Method> load(BMethod bMethod) throws IOException {
     return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> loadImpl(BMethod bMethod) throws BytecodeException {
+  private Either<String, Method> loadImpl(BMethod bMethod) throws IOException {
     return methodLoader
         .load(bMethod)
         .flatMapRight(this::validateMethodSignature)

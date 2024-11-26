@@ -5,11 +5,11 @@ import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 
 import jakarta.inject.Inject;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
@@ -30,7 +30,7 @@ public class BytecodeLoader {
   }
 
   public Either<String, BExpr> load(String name, BMethod bMethod, Map<String, BType> varMap)
-      throws BytecodeException {
+      throws IOException {
     return methodLoader
         .load(bMethod)
         .flatMapRight(jMethod -> invoke(jMethod, varMap))

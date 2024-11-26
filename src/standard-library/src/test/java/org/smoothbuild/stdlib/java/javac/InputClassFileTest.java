@@ -10,7 +10,6 @@ import java.net.URI;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.Path;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
@@ -49,7 +48,7 @@ public class InputClassFileTest extends VmTestContext {
   }
 
   @Test
-  void aPackage_for_inner_class_returns_package_of_enclosing_class() throws BytecodeException {
+  void aPackage_for_inner_class_returns_package_of_enclosing_class() throws Exception {
     InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/MyClass$Inner.class")));
     assertThat(inputClassFile.aPackage()).isEqualTo("a.b");
   }
@@ -68,7 +67,7 @@ public class InputClassFileTest extends VmTestContext {
 
   @Test
   void binary_name_for_inner_class_returns_package_plus_outer_class_plus_inner_class_name()
-      throws BytecodeException {
+      throws Exception {
     InputClassFile inputClassFile = new InputClassFile(bFile(path("a/b/MyClass$Inner.class")));
     assertThat(inputClassFile.binaryName()).isEqualTo("a.b.MyClass$Inner");
   }

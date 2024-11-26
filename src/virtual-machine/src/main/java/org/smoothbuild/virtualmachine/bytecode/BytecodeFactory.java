@@ -39,7 +39,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
@@ -79,14 +78,12 @@ public class BytecodeFactory {
     return exprDb.newArrayBuilder(type);
   }
 
-  public BBlob blob(Consumer1<BufferedSink, IOException> writer) throws BytecodeException {
+  public BBlob blob(Consumer1<BufferedSink, IOException> writer) throws IOException {
     try (BBlobBuilder builder = blobBuilder()) {
       try (var bufferedSink = buffer(builder)) {
         writer.accept(bufferedSink);
       }
       return builder.build();
-    } catch (IOException e) {
-      throw new IoBytecodeException(e);
     }
   }
 

@@ -35,13 +35,9 @@ public class OutputClassFile extends SimpleJavaFileObject {
           @Override
           public void close() throws IOException {
             super.close();
-            try {
-              BString pathString = nativeApi.factory().string(path.toString());
-              BTuple file = nativeApi.factory().file(contentBuilder.build(), pathString);
-              fileArrayBuilder.add(file);
-            } catch (BytecodeException e) {
-              throw e.toIOException();
-            }
+            BString pathString = nativeApi.factory().string(path.toString());
+            BTuple file = nativeApi.factory().file(contentBuilder.build(), pathString);
+            fileArrayBuilder.add(file);
           }
         })
         .outputStream();

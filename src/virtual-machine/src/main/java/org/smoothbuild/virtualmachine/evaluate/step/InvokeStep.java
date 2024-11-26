@@ -7,6 +7,7 @@ import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.IMPURE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -30,7 +31,7 @@ public final class InvokeStep extends Step {
   }
 
   @Override
-  public BOutput run(BTuple input, Container container) throws BytecodeException {
+  public BOutput run(BTuple input, Container container) throws IOException {
     return container
         .nativeMethodLoader()
         .load(new BMethod((BTuple) input.get(METHOD_INDEX)))

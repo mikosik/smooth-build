@@ -7,6 +7,7 @@ import static org.smoothbuild.common.function.Function1.memoizer;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
@@ -21,7 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 @Singleton
 public class MethodLoader {
   private final JarClassLoaderFactory jarClassLoaderFactory;
-  private final Function1<BMethod, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BMethod, Either<String, Method>, IOException> memoizer;
 
   @Inject
   public MethodLoader(JarClassLoaderFactory jarClassLoaderFactory) {
@@ -29,15 +30,15 @@ public class MethodLoader {
     this.memoizer = memoizer(this::findMethod);
   }
 
-  public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
+  public Either<String, Method> load(BMethod bMethod) throws IOException {
     return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> findMethod(BMethod bMethod) throws BytecodeException {
+  private Either<String, Method> findMethod(BMethod bMethod) throws IOException {
     return findClass(bMethod).flatMapRight(c -> findMethodInClass(bMethod, c));
   }
 
-  private Either<String, Class<?>> findClass(BMethod bMethod) throws BytecodeException {
+  private Either<String, Class<?>> findClass(BMethod bMethod) throws IOException {
     return jarClassLoaderFactory
         .classLoaderFor(bMethod.jar())
         .flatMapRight(classLoader -> loadClass(classLoader, bMethod));

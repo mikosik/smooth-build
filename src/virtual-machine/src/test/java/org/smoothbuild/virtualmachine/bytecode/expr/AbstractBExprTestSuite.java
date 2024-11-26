@@ -6,14 +6,13 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import com.google.common.testing.EqualsTester;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public abstract class AbstractBExprTestSuite<T extends BExpr> extends VmTestContext {
-  protected abstract List<T> equalExprs() throws BytecodeException;
+  protected abstract List<T> equalExprs() throws Exception;
 
-  protected abstract List<T> nonEqualExprs() throws BytecodeException;
+  protected abstract List<T> nonEqualExprs() throws Exception;
 
   @Test
   void test_equals_and_hashcode_of_equal_exprs() throws Exception {

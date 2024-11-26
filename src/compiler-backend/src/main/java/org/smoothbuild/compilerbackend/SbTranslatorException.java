@@ -1,10 +1,10 @@
 package org.smoothbuild.compilerbackend;
 
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import java.io.IOException;
 
 public class SbTranslatorException extends Exception {
-  public SbTranslatorException(BytecodeException bytecodeException) {
-    this(bytecodeException.getMessage());
+  public SbTranslatorException(IOException ioException) {
+    this(ioException.getMessage());
   }
 
   public SbTranslatorException(String message, Throwable e) {

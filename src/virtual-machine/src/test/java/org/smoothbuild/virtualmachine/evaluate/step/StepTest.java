@@ -19,14 +19,14 @@ public class StepTest extends VmTestContext {
     }
 
     @Test
-    void invoke_task_is_pure_when_is_pure_argument_is_true() throws BytecodeException {
+    void invoke_task_is_pure_when_is_pure_argument_is_true() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(false), bTuple(bInt()));
       var invokeTask = new InvokeStep(invoke, bTrace());
       assertThat(invokeTask.purity(bTuple(bMethodTuple(), bBool(true), bInt()))).isEqualTo(PURE);
     }
 
     @Test
-    void invoke_task_is_impure_when_is_pure_argument_is_false() throws BytecodeException {
+    void invoke_task_is_impure_when_is_pure_argument_is_false() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(), bBool(true), bTuple(bInt()));
       var invokeTask = new InvokeStep(invoke, bTrace());
       assertThat(invokeTask.purity(bTuple(bMethodTuple(), bBool(false), bInt())))
