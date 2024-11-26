@@ -51,7 +51,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
@@ -207,7 +206,7 @@ public interface VmTestApi extends CommonTestApi {
     return orderTask();
   }
 
-  public default InvokeStep invokeTask() throws BytecodeException {
+  public default InvokeStep invokeTask() throws IOException {
     return invokeTask(bInvoke(), bTrace());
   }
 
@@ -450,7 +449,7 @@ public interface VmTestApi extends CommonTestApi {
         .build();
   }
 
-  public default BBlob blobBJarWithPluginApi(Class<?>... classes) throws BytecodeException {
+  public default BBlob blobBJarWithPluginApi(Class<?>... classes) throws IOException {
     return bBlobWith(list(classes)
         .append(
             BBlob.class,
@@ -462,34 +461,30 @@ public interface VmTestApi extends CommonTestApi {
             BytecodeException.class));
   }
 
-  public default BBlob blobBJarWithJavaByteCode(Class<?>... classes) throws BytecodeException {
+  public default BBlob blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
     return bBlobWith(list(classes));
   }
 
-  private BBlob bBlobWith(java.util.List<Class<?>> list) throws BytecodeException {
-    try {
-      try (var blobBBuilder = bytecodeF().blobBuilder()) {
-        Classes.saveBytecodeInJar(blobBBuilder, list);
-        return blobBBuilder.build();
-      }
-    } catch (IOException e) {
-      throw new IoBytecodeException(e);
+  private BBlob bBlobWith(java.util.List<Class<?>> list) throws IOException {
+    try (var blobBBuilder = bytecodeF().blobBuilder()) {
+      Classes.saveBytecodeInJar(blobBBuilder, list);
+      return blobBBuilder.build();
     }
   }
 
-  public default BBlob bBlob() throws BytecodeException {
+  public default BBlob bBlob() throws IOException {
     return bBlob("blob data");
   }
 
-  public default BBlob bBlob(String string) throws BytecodeException {
+  public default BBlob bBlob(String string) throws IOException {
     return bBlob(byteString(string));
   }
 
-  public default BBlob bBlob(int data) throws BytecodeException {
+  public default BBlob bBlob(int data) throws IOException {
     return bBlob(Okios.intToByteString(data));
   }
 
-  public default BBlob bBlob(ByteString bytes) throws BytecodeException {
+  public default BBlob bBlob(ByteString bytes) throws IOException {
     return bytecodeF().blob(sink -> sink.write(bytes));
   }
 
@@ -505,23 +500,23 @@ public interface VmTestApi extends CommonTestApi {
     return bytecodeF().bool(value);
   }
 
-  public default BTuple bFile(Path path) throws BytecodeException {
+  public default BTuple bFile(Path path) throws IOException {
     return bFile(path, path.toString());
   }
 
-  public default BTuple bFile(Path path, String content) throws BytecodeException {
+  public default BTuple bFile(Path path, String content) throws IOException {
     return bFile(path.toString(), content);
   }
 
-  public default BTuple bFile(String path, String content) throws BytecodeException {
+  public default BTuple bFile(String path, String content) throws IOException {
     return bFile(path, ByteString.encodeString(content, Constants.CHARSET));
   }
 
-  public default BTuple bFile(Path path, ByteString content) throws BytecodeException {
+  public default BTuple bFile(Path path, ByteString content) throws IOException {
     return bFile(path.toString(), content);
   }
 
-  public default BTuple bFile(String path, ByteString content) throws BytecodeException {
+  public default BTuple bFile(String path, ByteString content) throws IOException {
     return bFile(path, bBlob(content));
   }
 
@@ -571,11 +566,11 @@ public interface VmTestApi extends CommonTestApi {
     return bytecodeF().int_(value);
   }
 
-  public default BInvoke bReturnAbcInvoke() throws BytecodeException {
+  public default BInvoke bReturnAbcInvoke() throws IOException {
     return bReturnAbcInvoke(true);
   }
 
-  public default BInvoke bReturnAbcInvoke(boolean isPure) throws BytecodeException {
+  public default BInvoke bReturnAbcInvoke(boolean isPure) throws IOException {
     return bInvoke(bStringType(), ReturnAbcFunc.class, isPure);
   }
 
@@ -585,20 +580,20 @@ public interface VmTestApi extends CommonTestApi {
     }
   }
 
-  public default BInvoke bInvoke() throws BytecodeException {
+  public default BInvoke bInvoke() throws IOException {
     return bInvoke(bIntType());
   }
 
-  public default BInvoke bInvoke(BType evaluationType) throws BytecodeException {
+  public default BInvoke bInvoke(BType evaluationType) throws IOException {
     var bMethodTuple = bMethodTuple(bBlob(7));
     return bInvoke(evaluationType, bMethodTuple, bBool(true), bTuple());
   }
 
-  public default BInvoke bInvoke(Class<?> clazz) throws BytecodeException {
+  public default BInvoke bInvoke(Class<?> clazz) throws IOException {
     return bInvoke(bIntType(), clazz);
   }
 
-  public default BInvoke bInvoke(BType evaluationType, Class<?> clazz) throws BytecodeException {
+  public default BInvoke bInvoke(BType evaluationType, Class<?> clazz) throws IOException {
     return bInvoke(evaluationType, clazz, true);
   }
 
@@ -607,13 +602,12 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BInvoke bInvoke(BType evaluationType, Class<?> clazz, boolean isPure)
-      throws BytecodeException {
+      throws IOException {
     return bInvoke(evaluationType, clazz, isPure, bTuple());
   }
 
   public default BInvoke bInvoke(
-      BType evaluationType, Class<?> clazz, boolean isPure, BTuple arguments)
-      throws BytecodeException {
+      BType evaluationType, Class<?> clazz, boolean isPure, BTuple arguments) throws IOException {
     var bMethodTuple = bMethodTuple(clazz);
     return bInvoke(evaluationType, bMethodTuple, bBool(isPure), arguments);
   }
@@ -628,17 +622,17 @@ public interface VmTestApi extends CommonTestApi {
     return bytecodeF().invoke(evaluationType, method, isPure, arguments);
   }
 
-  public default BTuple bMethodTuple() throws BytecodeException {
+  public default BTuple bMethodTuple() throws IOException {
     var jar = bBlob();
     var classBinaryName = bString();
     return bMethodTuple(jar, classBinaryName);
   }
 
-  public default BTuple bMethodTuple(Class<?> clazz) throws BytecodeException {
+  public default BTuple bMethodTuple(Class<?> clazz) throws IOException {
     return bMethodTuple(clazz, NATIVE_METHOD_NAME);
   }
 
-  public default BTuple bMethodTuple(Class<?> clazz, String methodName) throws BytecodeException {
+  public default BTuple bMethodTuple(Class<?> clazz, String methodName) throws IOException {
     return bMethodTuple(blobBJarWithPluginApi(clazz), clazz.getName(), methodName);
   }
 
@@ -651,7 +645,7 @@ public interface VmTestApi extends CommonTestApi {
     return bMethod(jar, bString(classBinaryName), bString(methodName)).tuple();
   }
 
-  public default BTuple bMethodTuple(String classBinaryName) throws BytecodeException {
+  public default BTuple bMethodTuple(String classBinaryName) throws IOException {
     return bMethodTuple(bBlob(), bString(classBinaryName));
   }
 
@@ -659,11 +653,11 @@ public interface VmTestApi extends CommonTestApi {
     return bMethod(jar, classBinaryName).tuple();
   }
 
-  public default BMethod bMethod(Class<?> clazz) throws BytecodeException {
+  public default BMethod bMethod(Class<?> clazz) throws IOException {
     return bMethod(clazz, NATIVE_METHOD_NAME);
   }
 
-  public default BMethod bMethod(Class<?> clazz, String methodName) throws BytecodeException {
+  public default BMethod bMethod(Class<?> clazz, String methodName) throws IOException {
     return new BMethod(bMethodTuple(clazz, methodName));
   }
 

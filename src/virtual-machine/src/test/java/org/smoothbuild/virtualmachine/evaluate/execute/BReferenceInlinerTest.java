@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -232,15 +233,13 @@ public class BReferenceInlinerTest extends VmTestContext {
   }
 
   private void assertReferenceInliningReplacesReference(
-      Function1<BExpr, BExpr, BytecodeException> factory) throws BytecodeException {
+      Function1<BExpr, BExpr, IOException> factory) throws IOException {
     assertReferenceInliningReplacesReference(2, bInt(3), factory);
   }
 
   private void assertReferenceInliningReplacesReference(
-      int referencedIndex,
-      BInt expectedReplacement,
-      Function1<BExpr, BExpr, BytecodeException> factory)
-      throws BytecodeException {
+      int referencedIndex, BInt expectedReplacement, Function1<BExpr, BExpr, IOException> factory)
+      throws IOException {
     List<BExpr> environment = list(bInt(1), bInt(2), bInt(3));
     assertReferenceInliningReplacesReference(
         referencedIndex, expectedReplacement, environment, factory);
@@ -250,8 +249,8 @@ public class BReferenceInlinerTest extends VmTestContext {
       int referencedIndex,
       BExpr expectedReplacement,
       List<BExpr> environment,
-      Function1<BExpr, BExpr, BytecodeException> factory)
-      throws BytecodeException {
+      Function1<BExpr, BExpr, IOException> factory)
+      throws IOException {
     var referenceEvaluationType = environment.get(referencedIndex).evaluationType();
     BExpr expr = factory.apply(bReference(referenceEvaluationType, referencedIndex));
     BExpr expected = factory.apply(expectedReplacement);
@@ -260,13 +259,12 @@ public class BReferenceInlinerTest extends VmTestContext {
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(
-      Function1<BExpr, BExpr, BytecodeException> factory) throws Exception {
+      Function1<BExpr, BExpr, IOException> factory) throws Exception {
     assertReferenceInliningDoesNotChangeExpression(1, factory);
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(
-      int referencedIndex, Function1<BExpr, BExpr, BytecodeException> factory)
-      throws BytecodeException {
+      int referencedIndex, Function1<BExpr, BExpr, IOException> factory) throws IOException {
     var expr = factory.apply(bReference(bIntType(), referencedIndex));
     var job = job(expr, bInt(1), bInt(2), bInt(3));
     assertThat(bReferenceInliner().inline(job)).isSameInstanceAs(expr);

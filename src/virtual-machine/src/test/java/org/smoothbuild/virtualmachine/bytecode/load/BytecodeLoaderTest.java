@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -40,7 +39,7 @@ public class BytecodeLoaderTest extends VmTestContext {
   }
 
   private Either<String, BExpr> loadBytecode(Class<?> clazz, Map<String, BType> varMap)
-      throws NoSuchMethodException, BytecodeException {
+      throws Exception {
     var jar = bBlob();
     var classBinaryName = "binary.name";
     var bMethod = bMethod(jar, classBinaryName);

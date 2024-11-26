@@ -10,6 +10,7 @@ import static org.smoothbuild.virtualmachine.evaluate.plugin.UnzipBlob.unzipBlob
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.io.IOException;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
@@ -27,7 +28,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 public class JarClassLoaderFactory {
   private final BytecodeFactory bytecodeFactory;
   private final ClassLoader parentClassLoader;
-  private final Function1<BBlob, Either<String, ClassLoader>, BytecodeException> memoizer;
+  private final Function1<BBlob, Either<String, ClassLoader>, IOException> memoizer;
 
   @Inject
   public JarClassLoaderFactory(BytecodeFactory bytecodeFactory) {
@@ -40,11 +41,11 @@ public class JarClassLoaderFactory {
     this.memoizer = memoizer(this::newClassLoader);
   }
 
-  public Either<String, ClassLoader> classLoaderFor(BBlob jar) throws BytecodeException {
+  public Either<String, ClassLoader> classLoaderFor(BBlob jar) throws IOException {
     return memoizer.apply(jar);
   }
 
-  private Either<String, ClassLoader> newClassLoader(BBlob jar) throws BytecodeException {
+  private Either<String, ClassLoader> newClassLoader(BBlob jar) throws IOException {
     return unzipBlob(bytecodeFactory, jar, s -> true)
         .mapRight(this::newClassLoader)
         .mapLeft(error -> "Error unpacking jar with native code: " + error);
@@ -58,11 +59,7 @@ public class JarClassLoaderFactory {
   private ClassLoader newClassLoader(Map<String, BTuple> filesMap) {
     return mapClassLoader(parentClassLoader, path -> {
       BTuple file = filesMap.get(path);
-      try {
-        return file == null ? null : buffer(fileContent(file).source()).inputStream();
-      } catch (BytecodeException e) {
-        throw e.toIOException();
-      }
+      return file == null ? null : buffer(fileContent(file).source()).inputStream();
     });
   }
 }

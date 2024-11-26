@@ -56,7 +56,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
@@ -387,7 +386,7 @@ public class SbTranslator {
       var bMethodName = bytecodeF.string(BYTECODE_METHOD_NAME);
       var bMethod = bytecodeF.method(jar, bClassBinaryName, bMethodName);
       return bytecodeLoader.load(name, bMethod, varNameToTypeMap);
-    } catch (BytecodeException e) {
+    } catch (IOException e) {
       throw new SbTranslatorException(e);
     }
   }
@@ -396,7 +395,7 @@ public class SbTranslator {
     var fullPath = fullPathOf(location).withExtension("jar");
     try {
       return fileContentReader.read(fullPath);
-    } catch (BytecodeException | IOException e) {
+    } catch (IOException e) {
       var message = location + ": Error loading native jar %s.".formatted(fullPath.q());
       throw new SbTranslatorException(message, e);
     }

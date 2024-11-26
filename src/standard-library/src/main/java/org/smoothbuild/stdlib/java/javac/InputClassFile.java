@@ -47,11 +47,7 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public InputStream openInputStream() throws IOException {
-    try {
-      return buffer(fileContent(file).source()).inputStream();
-    } catch (BytecodeException e) {
-      throw e.toIOException();
-    }
+    return buffer(fileContent(file).source()).inputStream();
   }
 
   @Override

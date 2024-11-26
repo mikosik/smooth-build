@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.evaluate.step;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
+import java.io.IOException;
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.log.base.Label;
@@ -46,7 +47,7 @@ public abstract sealed class Step permits CombineStep, InvokeStep, OrderStep, Pi
     return PURE;
   }
 
-  public abstract BOutput run(BTuple input, Container container) throws BytecodeException;
+  public abstract BOutput run(BTuple input, Container container) throws IOException;
 
   @Override
   public int hashCode() {

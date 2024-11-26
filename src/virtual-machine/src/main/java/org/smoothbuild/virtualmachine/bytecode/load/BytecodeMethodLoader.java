@@ -8,10 +8,10 @@ import static org.smoothbuild.common.reflect.Methods.isStatic;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.function.Function1;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
@@ -26,7 +26,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 public class BytecodeMethodLoader {
   public static final String BYTECODE_METHOD_NAME = "bytecode";
   private final MethodLoader methodLoader;
-  private final Function1<BMethod, Either<String, Method>, BytecodeException> memoizer;
+  private final Function1<BMethod, Either<String, Method>, IOException> memoizer;
 
   @Inject
   public BytecodeMethodLoader(MethodLoader methodLoader) {
@@ -34,11 +34,11 @@ public class BytecodeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BMethod bMethod) throws BytecodeException {
+  public Either<String, Method> load(BMethod bMethod) throws IOException {
     return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> loadImpl(BMethod bMethod) throws BytecodeException {
+  private Either<String, Method> loadImpl(BMethod bMethod) throws IOException {
     return methodLoader.load(bMethod).flatMapRight(this::validateSignature);
   }
 

@@ -18,7 +18,6 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathState;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
@@ -114,8 +113,6 @@ public class ComputationCache {
         }
       }
     } catch (IOException e) {
-      throw computeException(e);
-    } catch (BytecodeException e) {
       throw computeException(e);
     }
   }

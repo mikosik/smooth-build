@@ -78,7 +78,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     try {
       var path = write(valueS, value);
       logger.info(name + " -> " + path.path().q());
-    } catch (IOException | BytecodeException e) {
+    } catch (IOException e) {
       logger.fatal("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
     } catch (DuplicatedPathsException e) {
@@ -87,7 +87,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private FullPath write(SReference sReference, BValue value)
-      throws IOException, DuplicatedPathsException, BytecodeException {
+      throws IOException, DuplicatedPathsException {
     FullPath artifactPath = artifactPath(sReference.referencedName());
     if (sReference.schema().type() instanceof SArrayType sArrayType) {
       return saveArray(sArrayType, artifactPath, (BArray) value);
@@ -99,13 +99,13 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private FullPath saveFile(FullPath artifactPath, BTuple file)
-      throws IOException, DuplicatedPathsException, BytecodeException {
+      throws IOException, DuplicatedPathsException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileValuePath(file));
   }
 
   private FullPath saveArray(SArrayType sArrayType, FullPath artifactPath, BArray array)
-      throws IOException, DuplicatedPathsException, BytecodeException {
+      throws IOException, DuplicatedPathsException {
     fileSystem.createDir(artifactPath);
     SType elemTS = sArrayType.elem();
     if (elemTS instanceof SArrayType sElemArrayType) {
@@ -122,8 +122,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     return artifactPath;
   }
 
-  private void saveNonFileArray(FullPath artifactPath, BArray array)
-      throws IOException, BytecodeException {
+  private void saveNonFileArray(FullPath artifactPath, BArray array) throws IOException {
     int i = 0;
     for (var valueB : array.elements(BValue.class)) {
       FullPath sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
@@ -134,7 +133,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private void saveFileArray(FullPath artifactPath, Iterable<BTuple> files)
-      throws IOException, DuplicatedPathsException, BytecodeException {
+      throws IOException, DuplicatedPathsException {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     for (BTuple file : files) {
       Path filePath = fileValuePath(file);

@@ -27,8 +27,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JunitFunc {
-  public static BValue func(NativeApi nativeApi, BTuple args)
-      throws IOException, BytecodeException {
+  public static BValue func(NativeApi nativeApi, BTuple args) throws IOException {
     BArray testFileArray = (BArray) args.get(0);
     BArray deps = (BArray) args.get(1);
     BString include = (BString) args.get(2);
@@ -76,12 +75,8 @@ public class JunitFunc {
 
   private static ClassLoader classLoader(ImmutableMap<String, BTuple> filesMap) {
     return mapClassLoader(getPlatformClassLoader(), path -> {
-      try {
-        BTuple file = filesMap.get(path);
-        return file == null ? null : buffer(fileContent(file).source()).inputStream();
-      } catch (BytecodeException e) {
-        throw e.toIOException();
-      }
+      BTuple file = filesMap.get(path);
+      return file == null ? null : buffer(fileContent(file).source()).inputStream();
     });
   }
 

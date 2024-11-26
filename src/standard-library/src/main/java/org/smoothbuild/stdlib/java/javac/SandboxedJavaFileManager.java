@@ -53,15 +53,11 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   @Override
   public JavaFileObject getJavaFileForOutput(
       Location location, String className, Kind kind, FileObject sibling) throws IOException {
-    try {
-      if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
-        Path classFilePath = path(className.replace('.', '/') + ".class");
-        return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
-      } else {
-        return super.getJavaFileForOutput(location, className, kind, sibling);
-      }
-    } catch (BytecodeException e) {
-      throw e.toIOException();
+    if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
+      Path classFilePath = path(className.replace('.', '/') + ".class");
+      return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
+    } else {
+      return super.getJavaFileForOutput(location, className, kind, sibling);
     }
   }
 

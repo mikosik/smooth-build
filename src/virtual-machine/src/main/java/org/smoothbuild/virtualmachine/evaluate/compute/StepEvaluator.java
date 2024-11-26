@@ -17,6 +17,7 @@ import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
@@ -86,7 +87,7 @@ public class StepEvaluator {
     TaskX<BValue, BValue> taskX = (bValues) -> {
       try {
         return evaluateStep(step, toInput(bValues));
-      } catch (ComputeCacheException | BytecodeException | InterruptedException e) {
+      } catch (ComputeCacheException | IOException | InterruptedException e) {
         return outputForException(step, e);
       }
     };
@@ -98,7 +99,7 @@ public class StepEvaluator {
   }
 
   protected Output<BValue> evaluateStep(Step step, BTuple input)
-      throws ComputeCacheException, InterruptedException, BytecodeException {
+      throws ComputeCacheException, InterruptedException, IOException {
     var purity = step.purity(input);
     var hash = computationHashFactory.create(step, input);
     var resultPromise = Promise.<BOutput>promise();
@@ -137,7 +138,7 @@ public class StepEvaluator {
 
   private Output<BValue> evaluateNow(
       Step step, BTuple input, MutablePromise<BOutput> resultPromise, Purity purity, Hash hash)
-      throws BytecodeException, ComputeCacheException {
+      throws IOException, ComputeCacheException {
     var container = containerProvider.get();
     var bOutput = step.run(input, container);
     resultPromise.accept(bOutput);

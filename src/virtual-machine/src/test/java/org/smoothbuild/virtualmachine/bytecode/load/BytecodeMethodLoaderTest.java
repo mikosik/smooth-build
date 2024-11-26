@@ -14,7 +14,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Either;
-import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
@@ -41,7 +40,7 @@ public class BytecodeMethodLoaderTest extends VmTestContext {
     }
 
     private void testCaching(Either<String, Method> eitherMethod, Either<String, Method> expected)
-        throws BytecodeException {
+        throws Exception {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
