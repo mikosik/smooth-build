@@ -46,7 +46,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     return result;
   }
 
-  public BArray resultClassfiles() throws BytecodeException {
+  public BArray resultClassFiles() throws BytecodeException {
     return resClassFiles.build();
   }
 
