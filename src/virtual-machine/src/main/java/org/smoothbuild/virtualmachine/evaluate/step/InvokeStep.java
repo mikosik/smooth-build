@@ -10,6 +10,7 @@ import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -17,10 +18,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class InvokeStep extends Step {
-  public InvokeStep(BInvoke invoke, BTrace trace) {
+  public InvokeStep(BInvoke invoke, Trace trace) {
     super("invoke", invoke.hash(), invoke.evaluationType(), trace);
   }
 

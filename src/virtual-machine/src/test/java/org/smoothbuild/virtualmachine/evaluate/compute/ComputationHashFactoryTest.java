@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
@@ -18,7 +17,7 @@ import org.smoothbuild.virtualmachine.testing.VmTestContext;
 public class ComputationHashFactoryTest extends VmTestContext {
   @Test
   void hashes_of_computations_with_same_step_runtime_and_input_are_equal() throws Exception {
-    var step = new OrderStep(bOrder(), bTrace());
+    var step = new OrderStep(bOrder(), trace());
     var input = bTuple(bString("input"));
     assertThat(create(Hash.of(13), step, input)).isEqualTo(create(Hash.of(13), step, input));
   }
@@ -26,8 +25,8 @@ public class ComputationHashFactoryTest extends VmTestContext {
   @Test
   void hashes_of_computations_with_different_step_but_same_runtime_and_input_are_not_equal()
       throws Exception {
-    var step1 = new OrderStep(bOrder(bInt()), bTrace());
-    var step2 = new OrderStep(bOrder(bString()), bTrace());
+    var step1 = new OrderStep(bOrder(bInt()), trace());
+    var step2 = new OrderStep(bOrder(bString()), trace());
     var input = bTuple(bString("input"));
     assertThat(create(Hash.of(13), step1, input)).isNotEqualTo(create(Hash.of(13), step2, input));
   }
@@ -35,7 +34,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
   @Test
   void hashes_of_computations_with_same_step_and_input_but_different_runtime_are_not_equal()
       throws Exception {
-    var step = new OrderStep(bOrder(), bTrace());
+    var step = new OrderStep(bOrder(), trace());
     var input = bTuple(bString("input"));
     assertThat(create(Hash.of(13), step, input)).isNotEqualTo(create(Hash.of(14), step, input));
   }
@@ -43,7 +42,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
   @Test
   void hashes_of_computations_with_same_step_runtime_but_different_input_are_not_equal()
       throws Exception {
-    var step = new OrderStep(bOrder(), bTrace());
+    var step = new OrderStep(bOrder(), trace());
     var input1 = bTuple(bString("input"));
     var input2 = bTuple(bString("input2"));
     assertThat(create(Hash.of(13), step, input1)).isNotEqualTo(create(Hash.of(13), step, input2));
@@ -53,7 +52,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
   class _computation_hash_is_stable_for {
     @Test
     void combine_step_and_empty_input() throws Exception {
-      var step = new CombineStep(bCombine(), bTrace());
+      var step = new CombineStep(bCombine(), trace());
       var input = bTuple();
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
@@ -62,7 +61,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
 
     @Test
     void combine_step_and_one_element_input() throws Exception {
-      var step = new CombineStep(bCombine(), bTrace());
+      var step = new CombineStep(bCombine(), trace());
       var input = bTuple(bString("abc"));
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
@@ -71,7 +70,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
 
     @Test
     void combine_step_and_two_elements_input() throws Exception {
-      var step = new CombineStep(bCombine(), bTrace());
+      var step = new CombineStep(bCombine(), trace());
       var input = bTuple(bString("abc"), bString("def"));
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
@@ -81,7 +80,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
     @Test
     void invoke_step_and_empty_input() throws Exception {
       var invoke = bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
-      BTrace trace = bTrace();
+      var trace = trace();
       var step = new InvokeStep(invoke, trace);
       var input = bTuple();
       assertThat(create(Hash.of(13), step, input))
@@ -91,7 +90,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
 
     @Test
     void order_step_and_empty_input() throws Exception {
-      var step = new OrderStep(bOrder(bStringType()), bTrace());
+      var step = new OrderStep(bOrder(bStringType()), trace());
       var input = bTuple();
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
@@ -100,7 +99,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
 
     @Test
     void pick_step() throws Exception {
-      var step = new PickStep(bPick(bArray(bInt(37)), bInt(0)), bTrace());
+      var step = new PickStep(bPick(bArray(bInt(37)), bInt(0)), trace());
       var input = bTuple();
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
@@ -109,7 +108,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
 
     @Test
     void order_step_and_non_empty_input() throws Exception {
-      var step = new OrderStep(bOrder(bStringType()), bTrace());
+      var step = new OrderStep(bOrder(bStringType()), trace());
       var input = bTuple(bString("abc"), bString("def"));
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(
@@ -118,7 +117,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
 
     @Test
     void select_step_and_one_element_input() throws Exception {
-      var step = new SelectStep(bSelect(), bTrace());
+      var step = new SelectStep(bSelect(), trace());
       var input = bTuple(bString("abc"));
       assertThat(create(Hash.of(13), step, input))
           .isEqualTo(

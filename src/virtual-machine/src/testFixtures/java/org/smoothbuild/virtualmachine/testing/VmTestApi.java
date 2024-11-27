@@ -23,6 +23,7 @@ import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.common.io.Okios;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.reflect.Classes;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
@@ -82,8 +83,6 @@ import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
 import org.smoothbuild.virtualmachine.evaluate.execute.BReferenceInliner;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 import org.smoothbuild.virtualmachine.evaluate.execute.Job;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
@@ -123,7 +122,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default Job job(BExpr expr, List<BExpr> list) {
-    return new Job(expr, list.map(this::job), new BTrace());
+    return new Job(expr, list.map(this::job), new Trace());
   }
 
   public default Job job(BExpr expr) {
@@ -207,46 +206,46 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default InvokeStep invokeTask() throws IOException {
-    return invokeTask(bInvoke(), bTrace());
+    return invokeTask(bInvoke(), trace());
   }
 
   public default InvokeStep invokeTask(BInvoke invoke) {
     return invokeTask(invoke, null);
   }
 
-  public default InvokeStep invokeTask(BInvoke invoke, BTrace trace) {
+  public default InvokeStep invokeTask(BInvoke invoke, Trace trace) {
     return new InvokeStep(invoke, trace);
   }
 
   public default CombineStep combineTask() throws BytecodeException {
-    return combineTask(bCombine(), bTrace());
+    return combineTask(bCombine(), trace());
   }
 
-  public default CombineStep combineTask(BCombine combine, BTrace trace) {
+  public default CombineStep combineTask(BCombine combine, Trace trace) {
     return new CombineStep(combine, trace);
   }
 
   public default SelectStep selectTask() throws BytecodeException {
-    return selectTask(bSelect(), bTrace());
+    return selectTask(bSelect(), trace());
   }
 
-  public default SelectStep selectTask(BSelect select, BTrace trace) {
+  public default SelectStep selectTask(BSelect select, Trace trace) {
     return new SelectStep(select, trace);
   }
 
   public default PickStep pickTask() throws BytecodeException {
-    return pickTask(bPick(), bTrace());
+    return pickTask(bPick(), trace());
   }
 
-  public default PickStep pickTask(BPick pick, BTrace trace) {
+  public default PickStep pickTask(BPick pick, Trace trace) {
     return new PickStep(pick, trace);
   }
 
   public default OrderStep orderTask() throws BytecodeException {
-    return orderTask(bOrder(), bTrace());
+    return orderTask(bOrder(), trace());
   }
 
-  public default OrderStep orderTask(BOrder order, BTrace trace) {
+  public default OrderStep orderTask(BOrder order, Trace trace) {
     return new OrderStep(order, trace);
   }
 
@@ -804,29 +803,5 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BSelect bSelect(BExpr tuple, BInt index) throws BytecodeException {
     return bytecodeF().select(tuple, index);
-  }
-
-  public default BTrace bTrace() {
-    return new BTrace();
-  }
-
-  public default BTrace bTrace(BExpr call, BExpr called) {
-    return bTrace(call.hash(), called.hash(), (Line) null);
-  }
-
-  public default BTrace bTrace(BExpr call, BExpr called, BTrace next) {
-    return BTrace.bTrace(call.hash(), called.hash(), next);
-  }
-
-  public default BTrace bTrace(Hash call, Hash called, BTrace next) {
-    return BTrace.bTrace(call, called, next);
-  }
-
-  public default BTrace bTrace(Hash call, Hash called) {
-    return bTrace(call, called, (Line) null);
-  }
-
-  private BTrace bTrace(Hash call, Hash called, Line next) {
-    return new BTrace(new Line(call, called, next));
   }
 }

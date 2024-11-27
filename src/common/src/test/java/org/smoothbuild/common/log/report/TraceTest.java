@@ -5,8 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.testing.CommonTestContext;
 
-public class TraceTest {
+public class TraceTest extends CommonTestContext {
   @Test
   void equals_and_hashCode() {
     var tester = new EqualsTester();
@@ -30,17 +31,18 @@ public class TraceTest {
     void with_1_trace_points() {
       var trace = trace(line("first", null));
       assertThat(trace.toString()).isEqualTo("""
-              [first]""");
+              @ {t-alias}/path:17 first""");
     }
 
     @Test
     void with_3_trace_points() {
       var trace = trace(line("first", line("second", line("third", null))));
       assertThat(trace.toString())
-          .isEqualTo("""
-              [first]
-              [second]
-              [third]""");
+          .isEqualTo(
+              """
+              @ {t-alias}/path:17 first
+              @ {t-alias}/path:17 second
+              @ {t-alias}/path:17 third""");
     }
   }
 
@@ -48,14 +50,7 @@ public class TraceTest {
     return new Trace(topLine);
   }
 
-  private static MyTraceLine line(String name, MyTraceLine next) {
-    return new MyTraceLine(name, next);
-  }
-
-  private record MyTraceLine(String name, MyTraceLine next) implements TraceLine {
-    @Override
-    public String toString() {
-      return "[" + name + "]";
-    }
+  private TraceLine line(String name, TraceLine next) {
+    return new TraceLine(name, location(alias()), next);
   }
 }

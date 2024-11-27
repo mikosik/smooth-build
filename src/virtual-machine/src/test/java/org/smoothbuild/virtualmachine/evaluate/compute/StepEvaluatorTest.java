@@ -36,7 +36,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), trace());
       var input = bTuple(value);
       var memory = bTuple(bInt(1));
       var disk = bTuple(bInt(2));
@@ -47,7 +47,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), trace());
       var input = bTuple(value);
       var disk = bTuple(bInt(2));
 
@@ -57,7 +57,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), trace());
       var input = bTuple(value);
 
       assertComputationResult(step, input, null, null, output(bTuple(value)), EXECUTION);
@@ -66,7 +66,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new CombineStep(bCombine(bInt()), bTrace());
+      var step = new CombineStep(bCombine(bInt()), trace());
       var input = bTuple(value);
 
       assertCachesState(step, input, null, bTuple(value));
@@ -80,7 +80,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
@@ -91,7 +91,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
@@ -101,7 +101,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
 
         assertComputationResult(step, input, null, null, output(bString("abc")), EXECUTION);
@@ -110,7 +110,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(true);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
 
         assertCachesState(step, input, null, bString("abc"));
@@ -122,7 +122,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_in_memory_and_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
         var memory = bString("def");
         var disk = bString("ghi");
@@ -133,7 +133,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
         var disk = bString("ghi");
 
@@ -143,7 +143,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void when_not_cached() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
 
         assertComputationResult(step, input, null, null, output(bString("abc")), EXECUTION);
@@ -152,7 +152,7 @@ public class StepEvaluatorTest extends VmTestContext {
       @Test
       void executed_computation_is_cached_on_disk() throws Exception {
         var invoke = bReturnAbcInvoke(false);
-        var step = new InvokeStep(invoke, bTrace());
+        var step = new InvokeStep(invoke, trace());
         var input = argumentsForInvokeStep(invoke);
 
         assertCachesState(step, input, bOutput(bString("abc"), bLogArrayEmpty()), null);
@@ -171,7 +171,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), trace());
       var input = bTuple(value);
       var memory = bArray(bInt(1));
       var disk = bArray(bInt(2));
@@ -182,7 +182,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), trace());
       var input = bTuple(value);
       var disk = bArray(bInt(2));
 
@@ -192,7 +192,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
       assertComputationResult(step, input, null, null, output(bArray(value)), EXECUTION);
@@ -201,7 +201,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new OrderStep(bOrder(bIntType()), bTrace());
+      var step = new OrderStep(bOrder(bIntType()), trace());
       var input = bTuple(value);
 
       assertCachesState(step, input, null, bArray(value));
@@ -213,7 +213,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var step = new PickStep(bPick(), bTrace());
+      var step = new PickStep(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
@@ -224,7 +224,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var step = new PickStep(bPick(), bTrace());
+      var step = new PickStep(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
       var disk = bInt(2);
 
@@ -234,7 +234,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var step = new PickStep(bPick(), bTrace());
+      var step = new PickStep(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
       assertComputationResult(step, input, null, null, output(value), EXECUTION);
@@ -243,7 +243,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new PickStep(bPick(), bTrace());
+      var task = new PickStep(bPick(), trace());
       var input = bTuple(bArray(value), bInt(0));
 
       assertCachesState(task, input, null, value);
@@ -255,7 +255,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_in_memory_and_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
       var memory = bInt(1);
       var disk = bInt(2);
@@ -266,7 +266,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
       var disk = bInt(2);
 
@@ -276,7 +276,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void when_not_cached() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
       assertComputationResult(task, input, null, null, output(value), EXECUTION);
@@ -285,7 +285,7 @@ public class StepEvaluatorTest extends VmTestContext {
     @Test
     void executed_computation_is_cached_on_disk() throws Exception {
       var value = bInt(17);
-      var task = new SelectStep(bSelect(), bTrace());
+      var task = new SelectStep(bSelect(), trace());
       var input = bTuple(bTuple(value), bInt(0));
 
       assertCachesState(task, input, null, value);
