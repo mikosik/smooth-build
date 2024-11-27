@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerbackend;
+package org.smoothbuild.common.log.report;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;

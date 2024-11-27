@@ -6,8 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.common.log.report.BsMapping;
 import org.smoothbuild.common.log.report.STrace;
-import org.smoothbuild.compilerbackend.BsMapping;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace.Line;
 

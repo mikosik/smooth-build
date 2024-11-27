@@ -54,5 +54,4 @@ public interface CommonTestApi {
   public default Location location(FullPath fullPath, int line) {
     return fileLocation(fullPath, line);
   }
-
 }
