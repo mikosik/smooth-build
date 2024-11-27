@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerbackend.BsMapping;
+import org.smoothbuild.common.log.report.BsMapping;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 

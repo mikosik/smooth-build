@@ -29,6 +29,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.common.log.report.BsMapping;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;

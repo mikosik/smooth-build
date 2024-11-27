@@ -5,7 +5,6 @@ import static org.smoothbuild.common.filesystem.base.FullPath.fullPath;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import com.google.common.testing.EqualsTester;
-import com.google.common.truth.Truth;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.testing.CommonTestContext;
 
