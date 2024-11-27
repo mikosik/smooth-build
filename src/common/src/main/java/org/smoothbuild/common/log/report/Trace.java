@@ -1,9 +1,14 @@
 package org.smoothbuild.common.log.report;
 
 import java.util.Objects;
+import org.smoothbuild.common.log.location.Location;
 
 public class Trace {
   private final TraceLine topLine;
+
+  public Trace(String called, Location location) {
+    this.topLine = new TraceLine(called, location, null);
+  }
 
   public Trace() {
     this(null);

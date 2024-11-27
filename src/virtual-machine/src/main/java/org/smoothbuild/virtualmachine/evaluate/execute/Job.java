@@ -6,6 +6,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.function.Function1;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -13,14 +14,14 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 public final class Job {
   private final BExpr expr;
   private final List<Job> environment;
-  private final BTrace trace;
-  private final Function1<BEvaluate, Promise<Maybe<BValue>>, BytecodeException> evaluation;
+  private final Trace trace;
+  private final Function1<BEvaluate.Worker, Promise<Maybe<BValue>>, BytecodeException> evaluation;
 
-  public Job(BExpr expr, List<Job> environment, BTrace trace) {
+  public Job(BExpr expr, List<Job> environment, Trace trace) {
     this.expr = expr;
     this.environment = environment;
     this.trace = trace;
-    this.evaluation = memoizer((BEvaluate b) -> b.doScheduleJob(this));
+    this.evaluation = memoizer((BEvaluate.Worker b) -> b.doScheduleJob(this));
   }
 
   public BExpr expr() {
@@ -31,7 +32,7 @@ public final class Job {
     return environment;
   }
 
-  public BTrace trace() {
+  public Trace trace() {
     return trace;
   }
 
@@ -45,7 +46,8 @@ public final class Job {
    * (returned or called) so its BReferences to outer lambda parameters will be replaced
    * with actual BExpr and link to Job object will be lost.
    */
-  public Promise<Maybe<BValue>> scheduleEvaluation(BEvaluate bEvaluate) throws BytecodeException {
-    return evaluation.apply(bEvaluate);
+  public Promise<Maybe<BValue>> scheduleEvaluation(BEvaluate.Worker worker)
+      throws BytecodeException {
+    return evaluation.apply(worker);
   }
 }

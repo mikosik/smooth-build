@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
@@ -11,10 +12,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 public final class PickStep extends Step {
-  public PickStep(BPick pick, BTrace trace) {
+  public PickStep(BPick pick, Trace trace) {
     super("pick", pick.hash(), pick.evaluationType(), trace);
   }
 

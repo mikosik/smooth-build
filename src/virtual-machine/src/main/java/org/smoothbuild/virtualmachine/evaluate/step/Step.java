@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.Objects;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.evaluate.compute.Container;
-import org.smoothbuild.virtualmachine.evaluate.execute.BTrace;
 
 /**
  * Evaluation of single Bytecode expression (BExpr).
@@ -22,9 +22,9 @@ public abstract sealed class Step permits CombineStep, InvokeStep, OrderStep, Pi
   private final String name;
   private final Hash hash;
   private final BType evaluationType;
-  private final BTrace trace;
+  private final Trace trace;
 
-  public Step(String name, Hash hash, BType evaluationType, BTrace trace) {
+  public Step(String name, Hash hash, BType evaluationType, Trace trace) {
     this.name = name;
     this.hash = hash;
     this.evaluationType = evaluationType;
@@ -35,7 +35,7 @@ public abstract sealed class Step permits CombineStep, InvokeStep, OrderStep, Pi
     return VM_EVALUATE.append(name);
   }
 
-  public BTrace trace() {
+  public Trace trace() {
     return trace;
   }
 

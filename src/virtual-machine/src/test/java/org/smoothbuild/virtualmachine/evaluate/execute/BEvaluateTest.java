@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -21,6 +22,7 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Scheduler.LABEL;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
+import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import java.util.ArrayList;
@@ -34,7 +36,9 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Origin;
+import org.smoothbuild.common.log.report.BsMapping;
 import org.smoothbuild.common.log.report.Report;
+import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
@@ -493,31 +497,31 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void report_invoke_as_invoke_task() throws Exception {
         var invoke = bReturnAbcInvoke();
-        assertTaskReport(invoke, "invoke", bTrace(), EXECUTION);
+        assertTaskReport(invoke, "invoke", trace(), EXECUTION);
       }
 
       @Test
       void report_combine_as_combine_task() throws Exception {
         var combine = bCombine(bInt(17));
-        assertTaskReport(combine, "combine", bTrace(), EXECUTION);
+        assertTaskReport(combine, "combine", trace(), EXECUTION);
       }
 
       @Test
       void report_order_as_order_task() throws Exception {
         var order = bOrder(bInt(17));
-        assertTaskReport(order, "order", bTrace(), EXECUTION);
+        assertTaskReport(order, "order", trace(), EXECUTION);
       }
 
       @Test
       void report_pick_as_pick_task() throws Exception {
         var pick = bPick(bArray(bInt(17)), bInt(0));
-        assertTaskReport(pick, "pick", bTrace(), EXECUTION);
+        assertTaskReport(pick, "pick", trace(), EXECUTION);
       }
 
       @Test
       void report_select_as_select_task() throws Exception {
         var select = bSelect(bTuple(bInt(17)), bInt(0));
-        assertTaskReport(select, "select", bTrace(), EXECUTION);
+        assertTaskReport(select, "select", trace(), EXECUTION);
       }
     }
 
@@ -529,7 +533,10 @@ public class BEvaluateTest extends VmTestContext {
         var lambda = bLambda(order);
         var lambdaAsExpr = bCall(bLambda(lambda));
         var call = bCall(lambdaAsExpr);
-        assertTaskReport(call, "order", bTrace(call, lambda), EXECUTION);
+        var callLocation = location(alias().append("path"), 3);
+        var bsMapping =
+            new BsMapping(map(lambda.hash(), "lambda.hash()"), map(call.hash(), callLocation));
+        assertTaskReport(call, bsMapping, "order", trace("lambda.hash()", callLocation), EXECUTION);
       }
 
       @Test
@@ -539,12 +546,31 @@ public class BEvaluateTest extends VmTestContext {
         var call2 = bCall(lambda2);
         var lambda1 = bLambda(call2);
         var call1 = bCall(lambda1);
-        assertTaskReport(call1, "order", bTrace(call2, lambda2, bTrace(call1, lambda1)), EXECUTION);
+        var call1Location = location(alias().append("path"), 1);
+        var call2Location = location(alias().append("path"), 2);
+
+        var bsMapping = new BsMapping(
+            map(lambda1.hash(), "lambda1", lambda2.hash(), "lambda2"),
+            map(call1.hash(), call1Location, call2.hash(), call2Location));
+
+        assertTaskReport(
+            call1,
+            bsMapping,
+            "order",
+            trace("lambda2", call2Location, "lambda1", call1Location),
+            EXECUTION);
       }
     }
 
-    private void assertTaskReport(BExpr expr, String label, BTrace trace, Origin origin) {
+    private void assertTaskReport(BExpr expr, String label, Trace trace, Origin origin) {
       evaluate(bEvaluate(), expr);
+      var taskReport = report(VM_EVALUATE.append(label), trace, origin, list());
+      assertThat(reporter().reports()).contains(taskReport);
+    }
+
+    private void assertTaskReport(
+        BExpr expr, BsMapping bsMapping, String label, Trace trace, Origin origin) {
+      evaluate(bEvaluate(), expr, bsMapping);
       var taskReport = report(VM_EVALUATE.append(label), trace, origin, list());
       assertThat(reporter().reports()).contains(taskReport);
     }
@@ -661,7 +687,11 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr) {
-    var result = scheduler().submit(bEvaluate, argument(expr));
+    return evaluate(bEvaluate, expr, new BsMapping());
+  }
+
+  private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr, BsMapping bsMapping) {
+    var result = scheduler().submit(bEvaluate, argument(tuple(expr, bsMapping)));
     await().until(() -> result.toMaybe().isSome());
     return result;
   }
@@ -717,7 +747,7 @@ public class BEvaluateTest extends VmTestContext {
     }
 
     @Override
-    protected Job newJob(BExpr expr, List<Job> environment, BTrace trace) {
+    protected Job newJob(BExpr expr, List<Job> environment, Trace trace) {
       counters.computeIfAbsent(expr, k -> new AtomicInteger()).incrementAndGet();
       return super.newJob(expr, environment, trace);
     }

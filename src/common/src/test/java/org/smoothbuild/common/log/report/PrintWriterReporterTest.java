@@ -22,8 +22,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.log.base.Log;
+import org.smoothbuild.common.testing.CommonTestContext;
 
-public class PrintWriterReporterTest {
+public class PrintWriterReporterTest extends CommonTestContext {
   @Test
   void submit_single_log_prints_log_when_its_level_exceeds_threshold() {
     var systemOut = mock(PrintWriter.class);
@@ -37,13 +38,13 @@ public class PrintWriterReporterTest {
 
   @Test
   void test_format_logs() {
-    var trace = new Trace(new MyTraceLine("trace-line"));
+    var trace = new Trace("called", location(alias()));
     var report = report(label("labelName"), trace, logsWithAllLevels());
     assertThat(formatReport(report) + "\n")
         .isEqualTo(
             """
             :labelName
-              MyTraceLine[text=trace-line]
+              @ {t-alias}/path:17 called
               [FATAL] fatal message
               [ERROR] error message
               [WARNING] warning message
@@ -63,12 +64,5 @@ public class PrintWriterReporterTest {
         arguments(error("message"), "  [ERROR] message"),
         arguments(warning("message"), "  [WARNING] message"),
         arguments(info("message"), "  [INFO] message"));
-  }
-
-  private record MyTraceLine(String text) implements TraceLine {
-    @Override
-    public MyTraceLine next() {
-      return null;
-    }
   }
 }
