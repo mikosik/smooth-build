@@ -4,7 +4,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILER_BACK_LABEL;
-import static org.smoothbuild.compilerbackend.CompiledExprs.compilationResult;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -31,7 +30,7 @@ public class BackendCompile
     try {
       var bExprs = sExprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
-      var result = compilationResult(sExprs, bExprs, bsMapping);
+      var result = new CompiledExprs(bExprs, bsMapping);
       return output(result, label, list());
     } catch (SbTranslatorException e) {
       return output(label, list(fatal(e.getMessage())));

@@ -6,7 +6,6 @@ import static org.smoothbuild.common.schedule.Output.schedulingOutput;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.schedule.Tasks.task1;
 import static org.smoothbuild.common.schedule.Tasks.task2;
-import static org.smoothbuild.evaluator.EvaluatedExprs.evaluatedExprs;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -62,7 +61,6 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
     var evaluated =
         scheduler.submit(list(setBsMapping), scheduler.newParallelTask(BEvaluate.class), bExprs);
     var mergeLabel = EVALUATOR_LABEL.append("merge");
-    return scheduler.submit(
-        task2(mergeLabel, (ce, ee) -> evaluatedExprs(ce.sExprs(), ee)), compiledExprs, evaluated);
+    return scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), sExprs, evaluated);
   }
 }
