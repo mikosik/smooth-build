@@ -10,11 +10,11 @@ public abstract class AbstractLogLevelOptionTestSuite extends SystemTestContext 
     createUserModule("""
             result = "abc";
             """);
-    whenSmoothCommandWithOption("--log-level=wrong_value");
+    whenSmoothCommandWithOption("--filter-logs=wrong_value");
     assertFinishedWithError();
     assertSystemErrContains(
         """
-        Invalid value for option '--log-level': expected one of {f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'
+        Invalid value for option '--filter-logs': expected one of {f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'
 
         Usage:""");
   }

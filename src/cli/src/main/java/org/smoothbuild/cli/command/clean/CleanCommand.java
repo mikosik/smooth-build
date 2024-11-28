@@ -18,7 +18,7 @@ public class CleanCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = createInjector(projectDir, out(), logLevel);
+    var injector = createInjector(projectDir, out(), filterLogs);
     return injector.getInstance(CommandRunner.class).run(s -> s.submit(Clean.class));
   }
 }

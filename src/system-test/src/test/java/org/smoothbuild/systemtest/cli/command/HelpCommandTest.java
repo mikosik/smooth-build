@@ -48,54 +48,51 @@ public class HelpCommandTest extends SystemTestContext {
         Evaluate specified value(s) and store them as artifact(s).
 
         Parameters:
-              <value>...            value(s) to evaluate and store as artifact(s)
+              <value>...   value(s) to evaluate and store as artifact(s)
 
         Options:
-          -l, --log-level=<level>   Show logs with specified level or above.
+          -l, --filter-logs=<level>
+                           Show logs with specified level or above.
 
-                                    Available levels:
-                                      f, fatal   - show FATAL logs
-                                      e, error   - show FATAL, ERROR logs
-                                      w, warning - show FATAL, ERROR, WARNING logs
-                                      i, info    - show FATAL, ERROR, WARNING, INFO logs
+                           Available levels:
+                             f, fatal   - show FATAL logs
+                             e, error   - show FATAL, ERROR logs
+                             w, warning - show FATAL, ERROR, WARNING logs
+                             i, info    - show FATAL, ERROR, WARNING, INFO logs
 
-          -s, --show-tasks=<filter> Show executed build tasks that match filter.
+          -s, --show-tasks=<filter>
+                           Show executed build tasks that match filter.
 
-                                    Filter is a boolean expression made up of matchers
-                                      (listed below), boolean operators '&', '|',
-                                      grouping brackets '(', ')'.
-                                    Default value is 'info|invoke'
+                           Filter is a boolean expression made up of matchers (listed
+                             below), boolean operators '&', '|', grouping brackets '(',
+                             ')'.
+                           Default value is 'info|invoke'
 
-                                    For each matched tasks its name and properties are
-                                      printed together with logs that match filter
-                                      specified with --log-level option. Note that you
-                                      can filter tasks by one log level and its logs by
-                                      other level. For example setting
-                                      '--show-tasks=error --log-level=warning' prints
-                                      tasks that have a log with at least error level
-                                      and for each such a task all logs with at least
-                                      warning level.
+                           For each matched tasks its name and properties are printed
+                             together with logs that match filter specified with
+                             --filter-logs option. Note that you can filter tasks by
+                             one log level and its logs by other level. For example
+                             setting '--show-tasks=error --filter-logs=warning' prints
+                             tasks that have a log with at least error level and for
+                             each such a task all logs with at least warning level.
 
-                                    Available task matchers:
-                                      a, all             - all tasks
-                                      d, default         - shortcut for 'info|invoke'
-                                      n, none            - no tasks
+                           Available task matchers:
+                             a, all             - all tasks
+                             d, default         - shortcut for 'info|invoke'
+                             n, none            - no tasks
 
-                                      lf, fatal          - contains a log with fatal
-                                      level
-                                      le, error          - contains a log with at least
-                                      error level
-                                      lw, warning        - contains a log with at least
-                                      warning level
-                                      li, info           - contains any log
+                             lf, fatal          - contains a log with fatal level
+                             le, error          - contains a log with at least error
+                             level
+                             lw, warning        - contains a log with at least warning
+                             level
+                             li, info           - contains any log
 
-                                      combine            - evaluates tuple creation
-                                      invoke             - evaluates native function
-                                      call
-                                      order              - evaluates array creation
-                                      pick               - evaluates array element
-                                      picking
-                                      select             - evaluates field selection
+                             combine            - evaluates tuple creation
+                             invoke             - evaluates native function call
+                             order              - evaluates array creation
+                             pick               - evaluates array element picking
+                             select             - evaluates field selection
            """);
   }
 
@@ -112,13 +109,14 @@ public class HelpCommandTest extends SystemTestContext {
         Remove all cached objects and artifacts calculated during all previous builds.
 
         Options:
-          -l, --log-level=<level>   Show logs with specified level or above.
+          -l, --filter-logs=<level>
+                 Show logs with specified level or above.
 
-                                    Available levels:
-                                      f, fatal   - show FATAL logs
-                                      e, error   - show FATAL, ERROR logs
-                                      w, warning - show FATAL, ERROR, WARNING logs
-                                      i, info    - show FATAL, ERROR, WARNING, INFO logs
+                 Available levels:
+                   f, fatal   - show FATAL logs
+                   e, error   - show FATAL, ERROR logs
+                   w, warning - show FATAL, ERROR, WARNING logs
+                   i, info    - show FATAL, ERROR, WARNING, INFO logs
 
         """);
   }
@@ -136,13 +134,14 @@ public class HelpCommandTest extends SystemTestContext {
         Print user defined values that can be evaluated and stored as artifact.
 
         Options:
-          -l, --log-level=<level>   Show logs with specified level or above.
+          -l, --filter-logs=<level>
+                 Show logs with specified level or above.
 
-                                    Available levels:
-                                      f, fatal   - show FATAL logs
-                                      e, error   - show FATAL, ERROR logs
-                                      w, warning - show FATAL, ERROR, WARNING logs
-                                      i, info    - show FATAL, ERROR, WARNING, INFO logs
+                 Available levels:
+                   f, fatal   - show FATAL logs
+                   e, error   - show FATAL, ERROR logs
+                   w, warning - show FATAL, ERROR, WARNING logs
+                   i, info    - show FATAL, ERROR, WARNING, INFO logs
 
         """);
   }
@@ -160,13 +159,14 @@ public class HelpCommandTest extends SystemTestContext {
         Print version information.
 
         Options:
-          -l, --log-level=<level>   Show logs with specified level or above.
+          -l, --filter-logs=<level>
+                 Show logs with specified level or above.
 
-                                    Available levels:
-                                      f, fatal   - show FATAL logs
-                                      e, error   - show FATAL, ERROR logs
-                                      w, warning - show FATAL, ERROR, WARNING logs
-                                      i, info    - show FATAL, ERROR, WARNING, INFO logs
+                 Available levels:
+                   f, fatal   - show FATAL logs
+                   e, error   - show FATAL, ERROR logs
+                   w, warning - show FATAL, ERROR, WARNING logs
+                   i, info    - show FATAL, ERROR, WARNING, INFO logs
 
         """);
   }

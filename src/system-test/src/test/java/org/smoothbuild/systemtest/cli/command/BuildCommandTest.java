@@ -258,7 +258,7 @@ public class BuildCommandTest {
                 Nothing reportError(String message);
                 result = reportError("my-error-message");
                 """);
-        runSmooth(buildCommand("--log-level=fatal", "result"));
+        runSmooth(buildCommand("--filter-logs=fatal", "result"));
         assertFinishedWithError();
         assertSystemOutDoesNotContain("my-error-message");
       }
@@ -273,7 +273,7 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=fatal", "result"));
+        runSmooth(buildCommand("--filter-logs=fatal", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain("[WARNING] my-warning-message");
       }
@@ -288,7 +288,7 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=fatal", "result"));
+        runSmooth(buildCommand("--filter-logs=fatal", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain("[INFO] my-info-message");
       }
@@ -306,7 +306,7 @@ public class BuildCommandTest {
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=error", "result"));
+        runSmooth(buildCommand("--filter-logs=error", "result"));
         assertFinishedWithError();
         assertSystemOutContains("[ERROR] my-error-message");
       }
@@ -321,7 +321,7 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=error", "result"));
+        runSmooth(buildCommand("--filter-logs=error", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain("my-warning-message");
       }
@@ -336,7 +336,7 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=error", "result"));
+        runSmooth(buildCommand("--filter-logs=error", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain("my-info-message");
       }
@@ -354,7 +354,7 @@ public class BuildCommandTest {
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=warning", "result"));
+        runSmooth(buildCommand("--filter-logs=warning", "result"));
         assertFinishedWithError();
         assertSystemOutContains("[ERROR] my-error-message");
       }
@@ -369,7 +369,7 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=warning", "result"));
+        runSmooth(buildCommand("--filter-logs=warning", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains("[WARNING] my-warning-message");
       }
@@ -384,7 +384,7 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=warning", "result"));
+        runSmooth(buildCommand("--filter-logs=warning", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain("my-info-message");
       }
@@ -402,7 +402,7 @@ public class BuildCommandTest {
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=info", "result"));
+        runSmooth(buildCommand("--filter-logs=info", "result"));
         assertFinishedWithError();
         assertSystemOutContains("[ERROR] my-error-message");
       }
@@ -417,7 +417,7 @@ public class BuildCommandTest {
             result = reportWarning("my-warning-message");
             """,
             ReportWarning.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=info", "result"));
+        runSmooth(buildCommand("--filter-logs=info", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains("[WARNING] my-warning-message");
       }
@@ -432,7 +432,7 @@ public class BuildCommandTest {
             result = reportInfo("my-info-message");
             """,
             ReportInfo.class.getCanonicalName()));
-        runSmooth(buildCommand("--log-level=info", "result"));
+        runSmooth(buildCommand("--filter-logs=info", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains("[INFO] my-info-message");
       }
