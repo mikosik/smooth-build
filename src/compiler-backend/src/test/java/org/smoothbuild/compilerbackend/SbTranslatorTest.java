@@ -462,10 +462,10 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
         var sbTranslator = newTranslator();
         var bLambda = (BLambda) sbTranslator.translateExpr(monoLambdaS);
-        var nameMapping = sbTranslator.bsMapping().nameMapping();
-        var locationMapping = sbTranslator.bsMapping().locMapping();
-        assertThat(nameMapping.get(bLambda.hash())).isEqualTo("<lambda>");
-        assertThat(locationMapping.get(bLambda.hash())).isEqualTo(location(7));
+        var names = sbTranslator.bExprAttributes().names();
+        var locations = sbTranslator.bExprAttributes().locations();
+        assertThat(names.get(bLambda.hash())).isEqualTo("<lambda>");
+        assertThat(locations.get(bLambda.hash())).isEqualTo(location(7));
       }
 
       @Test
@@ -657,9 +657,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
   private static void assertNalMapping(
       SbTranslator sbTranslator, BExpr expr, String expectedName, Location expectedLocation) {
-    var bsMapping = sbTranslator.bsMapping();
-    assertThat(bsMapping.nameMapping().get(expr.hash())).isEqualTo(expectedName);
-    assertThat(bsMapping.locMapping().get(expr.hash())).isEqualTo(expectedLocation);
+    var bExprAttributes = sbTranslator.bExprAttributes();
+    assertThat(bExprAttributes.names().get(expr.hash())).isEqualTo(expectedName);
+    assertThat(bExprAttributes.locations().get(expr.hash())).isEqualTo(expectedLocation);
   }
 
   private SbTranslator newTranslator() throws Exception {

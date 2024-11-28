@@ -17,7 +17,7 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.BsMapping;
+import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.log.report.TraceLine;
@@ -58,7 +58,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  * Evaluates BExpr.
  * This class is thread-safe.
  */
-public class BEvaluate implements Task1<Tuple2<BExpr, BsMapping>, BValue> {
+public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
   private final Scheduler scheduler;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
@@ -77,15 +77,15 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BsMapping>, BValue> {
   }
 
   @Override
-  public Output<BValue> execute(Tuple2<BExpr, BsMapping> expr) {
+  public Output<BValue> execute(Tuple2<BExpr, BExprAttributes> expr) {
     return new Worker(expr.element2()).scheduleEvaluate(expr.element1());
   }
 
   public class Worker {
-    private final BsMapping bsMapping;
+    private final BExprAttributes bExprAttributes;
 
-    private Worker(BsMapping bsMapping) {
-      this.bsMapping = bsMapping;
+    private Worker(BExprAttributes bExprAttributes) {
+      this.bExprAttributes = bExprAttributes;
     }
 
     public Output<BValue> scheduleEvaluate(BExpr expr) {
@@ -307,8 +307,8 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BsMapping>, BValue> {
     }
 
     private Trace newTrace(BCall call, BExpr called, Trace next) {
-      var name = bsMapping.nameMapping().getOrDefault(called.hash(), "???");
-      var location = bsMapping.locMapping().getOrDefault(call.hash(), unknownLocation());
+      var name = bExprAttributes.names().getOrDefault(called.hash(), "???");
+      var location = bExprAttributes.locations().getOrDefault(call.hash(), unknownLocation());
       return new Trace(new TraceLine(name, location, next.topLine()));
     }
   }

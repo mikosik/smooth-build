@@ -29,7 +29,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.common.log.report.BsMapping;
+import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
@@ -81,8 +81,8 @@ public class SbTranslator {
   private final ImmutableBindings<SNamedEvaluable> evaluables;
   private final NList<SItem> lexicalEnvironment;
   private final HashMap<CacheKey, BExpr> cache;
-  private final HashMap<Hash, String> nameMapping;
-  private final HashMap<Hash, Location> locationMapping;
+  private final HashMap<Hash, String> names;
+  private final HashMap<Hash, Location> locations;
 
   @Inject
   public SbTranslator(
@@ -110,8 +110,8 @@ public class SbTranslator {
       ImmutableBindings<SNamedEvaluable> evaluables,
       NList<SItem> lexicalEnvironment,
       HashMap<CacheKey, BExpr> cache,
-      HashMap<Hash, String> nameMapping,
-      HashMap<Hash, Location> locationMapping) {
+      HashMap<Hash, String> names,
+      HashMap<Hash, Location> locations) {
     this.bytecodeF = bytecodeF;
     this.typeF = typeF;
     this.fileContentReader = fileContentReader;
@@ -119,12 +119,12 @@ public class SbTranslator {
     this.evaluables = evaluables;
     this.lexicalEnvironment = lexicalEnvironment;
     this.cache = cache;
-    this.nameMapping = nameMapping;
-    this.locationMapping = locationMapping;
+    this.names = names;
+    this.locations = locations;
   }
 
-  public BsMapping bsMapping() {
-    return new BsMapping(mapOfAll(nameMapping), mapOfAll(locationMapping));
+  public BExprAttributes bExprAttributes() {
+    return new BExprAttributes(mapOfAll(names), mapOfAll(locations));
   }
 
   private List<BExpr> translateExprs(List<SExpr> exprs) throws SbTranslatorException {
@@ -177,8 +177,8 @@ public class SbTranslator {
         evaluables,
         lexicalEnvironment,
         cache,
-        nameMapping,
-        locationMapping);
+        names,
+        locations);
     return sbTranslator.translatePolymorphic(sInstantiate.sPolymorphic());
   }
 
@@ -235,8 +235,8 @@ public class SbTranslator {
         evaluables,
         newEnvironment,
         cache,
-        nameMapping,
-        locationMapping);
+        names,
+        locations);
   }
 
   private BExpr translateNamedFuncImpl(SNamedFunc sNamedFunc) throws SbTranslatorException {
@@ -434,7 +434,7 @@ public class SbTranslator {
   }
 
   private void saveNal(BExpr bExpr, String name, Located located) {
-    nameMapping.put(bExpr.hash(), name);
+    names.put(bExpr.hash(), name);
     saveLoc(bExpr, located);
   }
 
@@ -443,7 +443,7 @@ public class SbTranslator {
   }
 
   private void saveLoc(BExpr bExpr, Location location) {
-    locationMapping.put(bExpr.hash(), location);
+    locations.put(bExpr.hash(), location);
   }
 
   private static record CacheKey(String name, Map<SVar, BType> varMap) {}

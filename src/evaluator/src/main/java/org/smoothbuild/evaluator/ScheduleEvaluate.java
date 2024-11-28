@@ -16,7 +16,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.log.report.BsMapping;
+import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task2;
@@ -66,7 +66,7 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
     return scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), sExprs, evaluated);
   }
 
-  private static List<Tuple2<BExpr, BsMapping>> toTuples(CompiledExprs compiledExprs) {
-    return compiledExprs.bExprs().map(e -> tuple(e, compiledExprs.bsMapping()));
+  private static List<Tuple2<BExpr, BExprAttributes>> toTuples(CompiledExprs compiledExprs) {
+    return compiledExprs.bExprs().map(e -> tuple(e, compiledExprs.bExprAttributes()));
   }
 }

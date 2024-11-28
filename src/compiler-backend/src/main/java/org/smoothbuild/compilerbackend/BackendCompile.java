@@ -29,8 +29,8 @@ public class BackendCompile
     var sbTranslator = sbTranslatorFactory.create(evaluables);
     try {
       var bExprs = sExprs.map(sbTranslator::translateExpr);
-      var bsMapping = sbTranslator.bsMapping();
-      var result = new CompiledExprs(bExprs, bsMapping);
+      var bExprAttributes = sbTranslator.bExprAttributes();
+      var result = new CompiledExprs(bExprs, bExprAttributes);
       return output(result, label, list());
     } catch (SbTranslatorException e) {
       return output(label, list(fatal(e.getMessage())));
