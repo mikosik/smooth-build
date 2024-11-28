@@ -22,6 +22,10 @@ public class Trace {
     return topLine;
   }
 
+  public boolean isEmpty() {
+    return topLine == null;
+  }
+
   @Override
   public boolean equals(Object obj) {
     return this == obj || (obj instanceof Trace that && Objects.equals(this.topLine, that.topLine));

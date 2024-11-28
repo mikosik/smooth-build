@@ -8,31 +8,31 @@ import org.smoothbuild.common.log.base.Level;
 
 public class ReportWiring extends AbstractModule {
   private final PrintWriter out;
-  private final ReportMatcher reportMatcher;
+  private final ReportMatcher filterTasks;
   private final Level logLevel;
+  private final ReportMatcher filterTraces;
 
-  public ReportWiring(PrintWriter out, ReportMatcher reportMatcher, Level logLevel) {
+  public ReportWiring(
+      PrintWriter out, Level logLevel, ReportMatcher filterTasks, ReportMatcher filterTraces) {
     this.out = out;
-    this.reportMatcher = reportMatcher;
+    this.filterTasks = filterTasks;
     this.logLevel = logLevel;
+    this.filterTraces = filterTraces;
   }
 
   @Override
   protected void configure() {
-    bind(Level.class).toInstance(logLevel);
     bind(PrintWriter.class).toInstance(out);
-    bind(ReportMatcher.class).toInstance(reportMatcher);
+    bind(ReportMatcher.class).toInstance(filterTasks);
   }
 
   @Provides
   @Singleton
-  public Reporter provideReporter(
-      PrintWriterReporter printWriterReporter,
-      Level level,
-      LogCounters logCounters,
-      ReportMatcher reportMatcher) {
-    var logFiltering = new LogFilteringReporter(printWriterReporter, level);
-    var taskFiltering = new ReportFilteringReporter(logFiltering, reportMatcher);
+  public Reporter provideReporter(LogCounters logCounters) {
+    var printWriterReporter = new PrintWriterReporter(out);
+    var traceFiltering = new TraceFilteringReporter(printWriterReporter, filterTraces);
+    var logFiltering = new LogFilteringReporter(traceFiltering, logLevel);
+    var taskFiltering = new ReportFilteringReporter(logFiltering, filterTasks);
     return new CountingReporter(taskFiltering, logCounters);
   }
 

@@ -58,6 +58,19 @@ public class BuildCommand extends ProjectCommand {
           """)
   ReportMatcher filterTasks;
 
+  @picocli.CommandLine.Option(
+      names = {"--filter-stack-traces", "-s"},
+      defaultValue = "error",
+      paramLabel = "<filter>",
+      converter = FilterTasksConverter.class,
+      description =
+          """
+          Show stack trace in reports of task execution if task matches filter.
+          Filter is specified using the same language as used for specifying filters
+          in --filter-tasks option.
+          """)
+  ReportMatcher filterTraces;
+
   public static class FilterTasksConverter implements ITypeConverter<ReportMatcher> {
     @Override
     public ReportMatcher convert(String value) {
@@ -73,7 +86,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = createInjector(projectDir, out(), filterLogs, filterTasks);
+    var injector = createInjector(projectDir, out(), filterLogs, filterTasks, filterTraces);
     return injector
         .getInstance(CommandRunner.class)
         .run(s -> s.submit(new ScheduleBuild(s, values)));

@@ -2,21 +2,16 @@ package org.smoothbuild.common.log.report;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.log.base.Log.containsFailure;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.PrintWriter;
 import org.smoothbuild.common.log.base.Log;
 
 /**
  * This class is thread-safe.
  */
-@Singleton
 public class PrintWriterReporter implements Reporter {
   private final PrintWriter printWriter;
 
-  @Inject
   public PrintWriterReporter(PrintWriter printWriter) {
     this.printWriter = printWriter;
   }
@@ -29,9 +24,9 @@ public class PrintWriterReporter implements Reporter {
     printWriter.flush();
   }
 
-  static String formatReport(Report report) {
+  private static String formatReport(Report report) {
     var builder = new StringBuilder(labelPlusOrigin(report));
-    if (containsFailure(report.logs()) && !(report.trace().topLine() == null)) {
+    if (!(report.trace().isEmpty())) {
       builder.append("\n");
       builder.append(indent(report.trace().toString()));
     }

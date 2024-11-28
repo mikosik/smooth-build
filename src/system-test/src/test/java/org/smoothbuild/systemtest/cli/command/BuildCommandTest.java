@@ -247,17 +247,52 @@ public class BuildCommandTest {
   }
 
   @Nested
+  class _when_filter_stack_traces_option extends SystemTestContext {
+    @Test
+    void matches() throws IOException {
+      createNativeJar(ReportError.class);
+      createUserModule(format(
+          """
+              @Native("%s")
+              A reportError(String message);
+              Int result = reportError("my-error-message");
+              """,
+          ReportError.class.getCanonicalName()));
+      runSmooth(buildCommand("--filter-stack-traces=all", "result"));
+      assertFinishedWithError();
+      assertSystemOutContains("@ {project}/build.smooth:3 reportError");
+    }
+
+    @Test
+    void not_matches() throws IOException {
+      createNativeJar(ReportError.class);
+      createUserModule(format(
+          """
+              @Native("%s")
+              A reportError(String message);
+              Int result = reportError("my-error-message");
+              """,
+          ReportError.class.getCanonicalName()));
+      runSmooth(buildCommand("--filter-stack-traces=none", "result"));
+      assertFinishedWithError();
+      assertSystemOutDoesNotContain("@ {project}/build.smooth:3 reportError");
+    }
+  }
+
+  @Nested
   class _when_filter_logs_option {
     @Nested
     class is_fatal extends SystemTestContext {
       @Test
       void then_error_log_is_not_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(
+        createUserModule(format(
             """
-                Nothing reportError(String message);
-                result = reportError("my-error-message");
-                """);
+                @Native("%s")
+                A reportError(String message);
+                Int result = reportError("my-error-message");
+                """,
+            ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--filter-logs=fatal", "result"));
         assertFinishedWithError();
         assertSystemOutDoesNotContain("my-error-message");

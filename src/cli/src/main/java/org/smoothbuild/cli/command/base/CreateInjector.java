@@ -28,11 +28,15 @@ import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {
-    return createInjector(projectDir, out, logLevel, ReportMatchers.ALL);
+    return createInjector(projectDir, out, logLevel, ReportMatchers.ALL, ReportMatchers.ALL);
   }
 
   public static Injector createInjector(
-      Path projectDir, PrintWriter out, Level logLevel, ReportMatcher reportMatcher) {
+      Path projectDir,
+      PrintWriter out,
+      Level logLevel,
+      ReportMatcher filterTasks,
+      ReportMatcher filterTraces) {
     var installationDir = installationDir();
     Map<Alias, Path> aliasToPath = map(
         PROJECT_ALIAS, projectDir,
@@ -45,7 +49,7 @@ public class CreateInjector {
         new CompilerBackendWiring(),
         new VmWiring(),
         new FileSystemWiring(aliasToPath),
-        new ReportWiring(out, reportMatcher, logLevel));
+        new ReportWiring(out, logLevel, filterTasks, filterTraces));
   }
 
   public static Injector createInjector(PrintWriter out) {
@@ -57,7 +61,7 @@ public class CreateInjector {
         PRODUCTION,
         new CliWiring(),
         new FileSystemWiring(aliasToPath),
-        new ReportWiring(out, ReportMatchers.ALL, INFO));
+        new ReportWiring(out, INFO, ReportMatchers.ALL, ReportMatchers.ALL));
   }
 
   private static Path installationDir() {

@@ -4,7 +4,7 @@ Change Log
 
 Version ?.??.? (????.??.??)
 ---------------------------
-
+ * redesigned cli options of `smooth build` command
  * added standard library function `error`
  * added standard library function `filter`
  * changed struct declaration syntax to use `{`, `}` instead of `(`, `)`
