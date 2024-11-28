@@ -6,7 +6,7 @@ import org.smoothbuild.systemtest.SystemTestContext;
 
 public abstract class AbstractLogLevelOptionTestSuite extends SystemTestContext {
   @Test
-  void illegal_log_level_value_causes_error() throws IOException {
+  void illegal_filter_logs_value_causes_error() throws IOException {
     createUserModule("""
             result = "abc";
             """);

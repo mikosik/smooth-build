@@ -61,7 +61,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _log_level_option extends AbstractLogLevelOptionTestSuite {
+  class _filter_logs_option extends AbstractLogLevelOptionTestSuite {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
       runSmooth(buildCommand(option, "result"));
@@ -69,7 +69,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _show_tasks_option {
+  class _filter_tasks_option {
     @Nested
     class _basic extends SystemTestContext {
       @Test
@@ -77,11 +77,11 @@ public class BuildCommandTest {
         createUserModule("""
                 result = "abc";
                 """);
-        runSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
+        runSmooth(buildCommand("--filter-tasks=ILLEGAL", "result"));
         assertFinishedWithError();
         assertSystemErrContains(
             """
-            Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.
+            Invalid value for option '--filter-tasks': Unknown matcher 'ILLEGAL'.
 
             Usage:""");
       }
@@ -112,7 +112,7 @@ public class BuildCommandTest {
       private void testThatTaskHeaderShownWhenInvokeIsEnabled(
           String callDeclaration, String expectedHeaderToBeShown) throws IOException {
         createUserModule(callDeclaration);
-        runSmooth(buildCommand("--show-tasks=invoke", "result"));
+        runSmooth(buildCommand("--filter-tasks=invoke", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(expectedHeaderToBeShown);
       }
@@ -120,7 +120,7 @@ public class BuildCommandTest {
       private void testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
           String callDeclaration, String headerThatShouldNotBeShows) throws IOException {
         createUserModule(callDeclaration);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
+        runSmooth(buildCommand("--filter-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain(headerThatShouldNotBeShows);
       }
@@ -143,7 +143,7 @@ public class BuildCommandTest {
       @Test
       void shows_when_enabled() throws IOException {
         createUserModule(COMBINE);
-        runSmooth(buildCommand("--show-tasks=combine", "result"));
+        runSmooth(buildCommand("--filter-tasks=combine", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(COMBINE_TASK_HEADER);
       }
@@ -151,7 +151,7 @@ public class BuildCommandTest {
       @Test
       void hides_when_not_enabled() throws IOException {
         createUserModule(COMBINE);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
+        runSmooth(buildCommand("--filter-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain(COMBINE_TASK_HEADER);
       }
@@ -170,7 +170,7 @@ public class BuildCommandTest {
       @Test
       void shows_when_enabled() throws IOException {
         createUserModule(PICK);
-        runSmooth(buildCommand("--show-tasks=pick", "result"));
+        runSmooth(buildCommand("--filter-tasks=pick", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(PICK_TASK_HEADER);
       }
@@ -178,7 +178,7 @@ public class BuildCommandTest {
       @Test
       void hides_when_not_enabled() throws IOException {
         createUserModule(PICK);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
+        runSmooth(buildCommand("--filter-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain(PICK_TASK_HEADER);
       }
@@ -200,7 +200,7 @@ public class BuildCommandTest {
       @Test
       void shows_when_enabled() throws IOException {
         createUserModule(ORDER);
-        runSmooth(buildCommand("--show-tasks=order", "result"));
+        runSmooth(buildCommand("--filter-tasks=order", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(ORDER_TASK_HEADER);
       }
@@ -208,7 +208,7 @@ public class BuildCommandTest {
       @Test
       void hides_when_not_enabled() throws IOException {
         createUserModule(ORDER);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
+        runSmooth(buildCommand("--filter-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
       }
@@ -231,7 +231,7 @@ public class BuildCommandTest {
       @Test
       void shows_when_enabled() throws IOException {
         createUserModule(SELECT);
-        runSmooth(buildCommand("--show-tasks=select", "result"));
+        runSmooth(buildCommand("--filter-tasks=select", "result"));
         assertFinishedWithSuccess();
         assertSystemOutContains(SELECT_TASK_HEADER);
       }
@@ -239,7 +239,7 @@ public class BuildCommandTest {
       @Test
       void hides_when_not_enabled() throws IOException {
         createUserModule(SELECT);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
+        runSmooth(buildCommand("--filter-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSystemOutDoesNotContain(SELECT_TASK_HEADER);
       }
@@ -247,7 +247,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _when_log_level_option {
+  class _when_filter_logs_option {
     @Nested
     class is_fatal extends SystemTestContext {
       @Test
@@ -451,7 +451,7 @@ public class BuildCommandTest {
           result = myFunc();
           """,
           ReturnAbc.class.getCanonicalName()));
-      runSmooth(buildCommand("--show-tasks=all", "result"));
+      runSmooth(buildCommand("--filter-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
           :evaluate:invoke
@@ -464,7 +464,7 @@ public class BuildCommandTest {
           myFunc() = 7;
           result = myFunc();
           """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
+      runSmooth(buildCommand("--filter-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
           :vm:inline""");
@@ -479,7 +479,7 @@ public class BuildCommandTest {
           }
           result = MyStruct("abc").myField;
           """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
+      runSmooth(buildCommand("--filter-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSystemOutContains("""
           :evaluate:select

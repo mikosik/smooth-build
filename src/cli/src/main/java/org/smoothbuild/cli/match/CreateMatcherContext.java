@@ -64,7 +64,7 @@ public class CreateMatcherContext {
       String message = join(
           "\n",
           "Found ambiguity in grammar.",
-          "Report this as a bug together with show-tasks=': " + extractSourceCode(recognizer)
+          "Report this as a bug together with filter-tasks=': " + extractSourceCode(recognizer)
               + "', details:",
           "startIndex=" + startIndex,
           "stopIndex=" + stopIndex,
