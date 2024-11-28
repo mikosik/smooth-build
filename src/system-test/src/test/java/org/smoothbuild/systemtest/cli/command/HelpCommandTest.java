@@ -64,7 +64,7 @@ public class HelpCommandTest extends SystemTestContext {
                                     Filter is a boolean expression made up of matchers
                                       (listed below), boolean operators '&', '|',
                                       grouping brackets '(', ')'.
-                                    Default value is 'info|call'
+                                    Default value is 'info|invoke'
 
                                     For each matched tasks its name and properties are
                                       printed together with logs that match filter
@@ -78,7 +78,7 @@ public class HelpCommandTest extends SystemTestContext {
 
                                     Available task matchers:
                                       a, all             - all tasks
-                                      d, default         - shortcut for 'info|call'
+                                      d, default         - shortcut for 'info|invoke'
                                       n, none            - no tasks
 
                                       lf, fatal          - contains a log with fatal
