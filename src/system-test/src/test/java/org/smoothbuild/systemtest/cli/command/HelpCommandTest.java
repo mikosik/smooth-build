@@ -42,7 +42,7 @@ public class HelpCommandTest extends SystemTestContext {
     assertSystemOutContains(
         """
         Usage:
-        smooth build [-l=<level>] [-s=<filter>] <value>...
+        smooth build [-l=<level>] [-t=<filter>] <value>...
 
         Description:
         Evaluate specified value(s) and store them as artifact(s).
@@ -60,7 +60,7 @@ public class HelpCommandTest extends SystemTestContext {
                              w, warning - show FATAL, ERROR, WARNING logs
                              i, info    - show FATAL, ERROR, WARNING, INFO logs
 
-          -s, --show-tasks=<filter>
+          -t, --filter-tasks=<filter>
                            Show executed build tasks that match filter.
 
                            Filter is a boolean expression made up of matchers (listed
@@ -72,9 +72,9 @@ public class HelpCommandTest extends SystemTestContext {
                              together with logs that match filter specified with
                              --filter-logs option. Note that you can filter tasks by
                              one log level and its logs by other level. For example
-                             setting '--show-tasks=error --filter-logs=warning' prints
-                             tasks that have a log with at least error level and for
-                             each such a task all logs with at least warning level.
+                             setting '--filter-tasks=error --filter-logs=warning'
+                             prints tasks that have a log with at least error level and
+                             for each such a task all logs with at least warning level.
 
                            Available task matchers:
                              a, all             - all tasks

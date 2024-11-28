@@ -18,7 +18,7 @@ public class LoggingTest extends SystemTestContext {
 
   @ParameterizedTest
   @MethodSource("test_cases")
-  public void log_level_option_filters_logs_below_threshold(
+  public void filter_logs_option_filters_logs_below_threshold(
       ContextInitializer userModuleCreator, String logLevel, boolean logShown) throws Throwable {
     userModuleCreator.initialize(this);
     runSmoothBuild("--filter-logs=" + logLevel, "result");

@@ -20,7 +20,7 @@ import picocli.CommandLine.TypeConversionException;
 public class MatcherCreator {
   public static ReportMatcher createMatcher(String expression) {
     var matcher = buildMatcher(createMatcherContext(expression));
-    // For the time being (until `smooth build --show-tasks` is updated to handle more detailed
+    // For the time being (until `smooth build --filter-tasks` is updated to handle more detailed
     // label matching) we always match reports with label prefixed with something different than
     // evaluate.
     return or(matcher, not(labelPrefixMatcher(VM_EVALUATE)));

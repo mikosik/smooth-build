@@ -21,10 +21,10 @@ public class BuildCommand extends ProjectCommand {
   public static final Label LABEL = label("cli:build");
 
   @picocli.CommandLine.Option(
-      names = {"--show-tasks", "-s"},
+      names = {"--filter-tasks", "-t"},
       defaultValue = "default",
       paramLabel = "<filter>",
-      converter = ShowTasksConverter.class,
+      converter = FilterTasksConverter.class,
       description =
           """
           Show executed build tasks that match filter.
@@ -36,7 +36,7 @@ public class BuildCommand extends ProjectCommand {
           For each matched tasks its name and properties are printed together with logs that \
           match filter specified with --filter-logs option. \
           Note that you can filter tasks by one log level and its logs by other level. \
-          For example setting '--show-tasks=error --filter-logs=warning' prints tasks that \
+          For example setting '--filter-tasks=error --filter-logs=warning' prints tasks that \
           have a log with at least error level and for each such a task all logs with at \
           least warning level.
 
@@ -56,9 +56,9 @@ public class BuildCommand extends ProjectCommand {
             pick               - evaluates array element picking
             select             - evaluates field selection
           """)
-  ReportMatcher showTasks;
+  ReportMatcher filterTasks;
 
-  public static class ShowTasksConverter implements ITypeConverter<ReportMatcher> {
+  public static class FilterTasksConverter implements ITypeConverter<ReportMatcher> {
     @Override
     public ReportMatcher convert(String value) {
       return MatcherCreator.createMatcher(value);
@@ -73,7 +73,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = createInjector(projectDir, out(), filterLogs, showTasks);
+    var injector = createInjector(projectDir, out(), filterLogs, filterTasks);
     return injector
         .getInstance(CommandRunner.class)
         .run(s -> s.submit(new ScheduleBuild(s, values)));
