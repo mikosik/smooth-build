@@ -21,7 +21,7 @@ public class LoggingTest extends SystemTestContext {
   public void log_level_option_filters_logs_below_threshold(
       ContextInitializer userModuleCreator, String logLevel, boolean logShown) throws Throwable {
     userModuleCreator.initialize(this);
-    runSmoothBuild("--log-level=" + logLevel, "result");
+    runSmoothBuild("--filter-logs=" + logLevel, "result");
     if (logShown) {
       assertSystemOutContains(LOG_MESSAGE);
     } else {

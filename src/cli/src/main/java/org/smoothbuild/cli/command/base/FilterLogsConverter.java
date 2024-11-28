@@ -13,7 +13,7 @@ import picocli.CommandLine.TypeConversionException;
 /**
  * Log level converter.
  */
-public class LogLevelConverter implements ITypeConverter<Level> {
+public class FilterLogsConverter implements ITypeConverter<Level> {
   private static final ImmutableMap<String, Level> MAP = ImmutableMap.<String, Level>builder()
       .put("f", FATAL)
       .put("fatal", FATAL)

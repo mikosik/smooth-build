@@ -34,9 +34,9 @@ public class BuildCommand extends ProjectCommand {
           Default value is 'info|invoke'
 
           For each matched tasks its name and properties are printed together with logs that \
-          match filter specified with --log-level option. \
+          match filter specified with --filter-logs option. \
           Note that you can filter tasks by one log level and its logs by other level. \
-          For example setting '--show-tasks=error --log-level=warning' prints tasks that \
+          For example setting '--show-tasks=error --filter-logs=warning' prints tasks that \
           have a log with at least error level and for each such a task all logs with at \
           least warning level.
 
@@ -73,7 +73,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = createInjector(projectDir, out(), logLevel, showTasks);
+    var injector = createInjector(projectDir, out(), filterLogs, showTasks);
     return injector
         .getInstance(CommandRunner.class)
         .run(s -> s.submit(new ScheduleBuild(s, values)));

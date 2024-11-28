@@ -7,10 +7,10 @@ import picocli.CommandLine.Option;
 @Command
 public class LoggingCommand extends ACommand {
   @Option(
-      names = {"--log-level", "-l"},
+      names = {"--filter-logs", "-l"},
       defaultValue = "info",
       paramLabel = "<level>",
-      converter = LogLevelConverter.class,
+      converter = FilterLogsConverter.class,
       description =
           """
               Show logs with specified level or above.
@@ -21,5 +21,5 @@ public class LoggingCommand extends ACommand {
                 w, warning - show FATAL, ERROR, WARNING logs
                 i, info    - show FATAL, ERROR, WARNING, INFO logs
               """)
-  public Level logLevel;
+  public Level filterLogs;
 }
