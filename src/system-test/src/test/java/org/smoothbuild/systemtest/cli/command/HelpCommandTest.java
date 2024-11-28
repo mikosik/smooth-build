@@ -42,7 +42,7 @@ public class HelpCommandTest extends SystemTestContext {
     assertSystemOutContains(
         """
         Usage:
-        smooth build [-l=<level>] [-t=<filter>] <value>...
+        smooth build [-l=<level>] [-s=<filter>] [-t=<filter>] <value>...
 
         Description:
         Evaluate specified value(s) and store them as artifact(s).
@@ -59,6 +59,13 @@ public class HelpCommandTest extends SystemTestContext {
                              e, error   - show FATAL, ERROR logs
                              w, warning - show FATAL, ERROR, WARNING logs
                              i, info    - show FATAL, ERROR, WARNING, INFO logs
+
+          -s, --filter-stack-traces=<filter>
+                           Show stack trace in reports of task execution if task
+                             matches filter.
+                           Filter is specified using the same language as used for
+                             specifying filters
+                           in --filter-tasks option.
 
           -t, --filter-tasks=<filter>
                            Show executed build tasks that match filter.

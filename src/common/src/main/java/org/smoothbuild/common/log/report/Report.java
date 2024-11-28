@@ -29,6 +29,10 @@ public record Report(Label label, Trace trace, Origin source, List<Log> logs) {
     return new Report(label, trace, source, logs);
   }
 
+  public Report withTrace(Trace trace) {
+    return new Report(label, trace, source, logs);
+  }
+
   public Report withLogs(List<Log> logs) {
     return new Report(label, trace, source, logs);
   }
