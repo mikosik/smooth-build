@@ -36,7 +36,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Origin;
-import org.smoothbuild.common.log.report.BsMapping;
+import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;
@@ -534,9 +534,10 @@ public class BEvaluateTest extends VmTestContext {
         var lambdaAsExpr = bCall(bLambda(lambda));
         var call = bCall(lambdaAsExpr);
         var callLocation = location(alias().append("path"), 3);
-        var bsMapping =
-            new BsMapping(map(lambda.hash(), "lambda.hash()"), map(call.hash(), callLocation));
-        assertTaskReport(call, bsMapping, "order", trace("lambda.hash()", callLocation), EXECUTION);
+        var bExprAttributes = new BExprAttributes(
+            map(lambda.hash(), "lambda.hash()"), map(call.hash(), callLocation));
+        assertTaskReport(
+            call, bExprAttributes, "order", trace("lambda.hash()", callLocation), EXECUTION);
       }
 
       @Test
@@ -549,13 +550,13 @@ public class BEvaluateTest extends VmTestContext {
         var call1Location = location(alias().append("path"), 1);
         var call2Location = location(alias().append("path"), 2);
 
-        var bsMapping = new BsMapping(
+        var bExprAttributes = new BExprAttributes(
             map(lambda1.hash(), "lambda1", lambda2.hash(), "lambda2"),
             map(call1.hash(), call1Location, call2.hash(), call2Location));
 
         assertTaskReport(
             call1,
-            bsMapping,
+            bExprAttributes,
             "order",
             trace("lambda2", call2Location, "lambda1", call1Location),
             EXECUTION);
@@ -569,8 +570,8 @@ public class BEvaluateTest extends VmTestContext {
     }
 
     private void assertTaskReport(
-        BExpr expr, BsMapping bsMapping, String label, Trace trace, Origin origin) {
-      evaluate(bEvaluate(), expr, bsMapping);
+        BExpr expr, BExprAttributes bExprAttributes, String label, Trace trace, Origin origin) {
+      evaluate(bEvaluate(), expr, bExprAttributes);
       var taskReport = report(VM_EVALUATE.append(label), trace, origin, list());
       assertThat(reporter().reports()).contains(taskReport);
     }
@@ -687,11 +688,12 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr) {
-    return evaluate(bEvaluate, expr, new BsMapping());
+    return evaluate(bEvaluate, expr, new BExprAttributes());
   }
 
-  private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr, BsMapping bsMapping) {
-    var result = scheduler().submit(bEvaluate, argument(tuple(expr, bsMapping)));
+  private Promise<Maybe<BValue>> evaluate(
+      BEvaluate bEvaluate, BExpr expr, BExprAttributes bExprAttributes) {
+    var result = scheduler().submit(bEvaluate, argument(tuple(expr, bExprAttributes)));
     await().until(() -> result.toMaybe().isSome());
     return result;
   }
