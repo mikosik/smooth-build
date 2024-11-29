@@ -3,10 +3,7 @@ package org.smoothbuild.cli.match;
 import static org.smoothbuild.cli.match.CreateMatcherContext.createMatcherContext;
 import static org.smoothbuild.cli.match.ReportMatchers.and;
 import static org.smoothbuild.cli.match.ReportMatchers.findMatcher;
-import static org.smoothbuild.cli.match.ReportMatchers.labelPrefixMatcher;
-import static org.smoothbuild.cli.match.ReportMatchers.not;
 import static org.smoothbuild.cli.match.ReportMatchers.or;
-import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherBaseVisitor;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.AndContext;
@@ -19,11 +16,7 @@ import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreator {
   public static ReportMatcher createMatcher(String expression) {
-    var matcher = buildMatcher(createMatcherContext(expression));
-    // For the time being (until `smooth build --filter-tasks` is updated to handle more detailed
-    // label matching) we always match reports with label prefixed with something different than
-    // evaluate.
-    return or(matcher, not(labelPrefixMatcher(VM_EVALUATE)));
+    return buildMatcher(createMatcherContext(expression));
   }
 
   private static ReportMatcher buildMatcher(MatcherContext matcherContext) {
