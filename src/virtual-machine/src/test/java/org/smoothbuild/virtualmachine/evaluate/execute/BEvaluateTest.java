@@ -723,7 +723,7 @@ public class BEvaluateTest extends VmTestContext {
     var sources = reporter
         .reports()
         .filter(r -> r.label().equals(VM_EVALUATE.append("invoke")))
-        .map(Report::source);
+        .map(Report::origin);
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 

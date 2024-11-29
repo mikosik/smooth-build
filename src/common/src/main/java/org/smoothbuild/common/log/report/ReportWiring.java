@@ -29,11 +29,9 @@ public class ReportWiring extends AbstractModule {
   @Provides
   @Singleton
   public Reporter provideReporter(LogCounters logCounters) {
-    var printWriterReporter = new PrintWriterReporter(out);
-    var traceFiltering = new TraceFilteringReporter(printWriterReporter, filterTraces);
-    var logFiltering = new LogFilteringReporter(traceFiltering, logLevel);
-    var taskFiltering = new ReportFilteringReporter(logFiltering, filterTasks);
-    return new CountingReporter(taskFiltering, logCounters);
+    var reportPrinter = new ReportPrinter(out);
+    var filtering = new FilteringReporter(reportPrinter, filterTasks, filterTraces, logLevel);
+    return new CountingReporter(filtering, logCounters);
   }
 
   @Provides
