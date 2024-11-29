@@ -17,8 +17,6 @@ import static org.smoothbuild.cli.match.ReportMatchers.PICK;
 import static org.smoothbuild.cli.match.ReportMatchers.SELECT;
 import static org.smoothbuild.cli.match.ReportMatchers.WARNING;
 import static org.smoothbuild.cli.match.ReportMatchers.and;
-import static org.smoothbuild.cli.match.ReportMatchers.labelPrefixMatcher;
-import static org.smoothbuild.cli.match.ReportMatchers.not;
 import static org.smoothbuild.cli.match.ReportMatchers.or;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
@@ -49,9 +47,8 @@ public class MatcherCreatorTest {
         .map(VM_EVALUATE::append)
         .append(label("notEvaluate"));
 
-    var expectedUpdated = or(expectedMatcher, not(labelPrefixMatcher(VM_EVALUATE)));
     verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
-        expression, expectedUpdated, taskLabels);
+        expression, expectedMatcher, taskLabels);
   }
 
   private static void verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
