@@ -38,6 +38,9 @@ public class Trace {
 
   @Override
   public String toString() {
+    if (topLine == null) {
+      return "@ <empty trace>";
+    }
     var builder = new StringBuilder();
     var currentLine = topLine;
     while (currentLine != null) {

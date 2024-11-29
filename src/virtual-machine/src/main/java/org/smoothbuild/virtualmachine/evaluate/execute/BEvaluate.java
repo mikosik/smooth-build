@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.concurrent.Promise.promise;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -18,7 +19,6 @@ import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.BExprAttributes;
-import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.common.schedule.Output;
@@ -59,6 +59,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  * This class is thread-safe.
  */
 public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
+  private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append("scheduleCall");
   private final Scheduler scheduler;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
@@ -91,9 +92,9 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     public Output<BValue> scheduleEvaluate(BExpr expr) {
       var label = VM_LABEL.append("schedule");
       try {
-        return successOutput(scheduleJob(newJob(expr)), label, new Trace());
+        return successOutput(scheduleJob(newJob(expr)), label);
       } catch (BytecodeException e) {
-        return failedSchedulingOutput(label, new Trace(), e);
+        return failedSchedulingOutput(label, e);
       }
     }
 
@@ -136,15 +137,14 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         Job callJob, BCall call, BExpr lambdaExpr, BCombine combine) throws BytecodeException {
       Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
         var bLambda = (BLambda) lambdaValue;
-        var label = VM_LABEL.append("scheduleCall");
         try {
           var argJobs = combine.subExprs().items().map(e -> newJob(e, callJob));
           var bodyEnvironmentJobs = argJobs.appendAll(callJob.environment());
           var bodyTrace = newTrace(call, bLambda, callJob.trace());
           var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
-          return successOutput(scheduleJob(bodyJob), label, callJob.trace());
+          return successOutput(scheduleJob(bodyJob), SCHEDULE_CALL_LABEL, callJob.trace());
         } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, callJob.trace(), e);
+          return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
         }
       };
       return scheduler.submit(schedulingTask, scheduleNewJob(lambdaExpr, callJob));
@@ -154,13 +154,12 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
       Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
         var bLambda = (BLambda) lambdaValue;
-        var label = VM_LABEL.append("scheduleCall");
         try {
           var result =
               scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, tuple, bLambda);
-          return successOutput(result, label, callJob.trace());
+          return successOutput(result, SCHEDULE_CALL_LABEL, callJob.trace());
         } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, callJob.trace(), e);
+          return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
         }
       };
       var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
@@ -170,16 +169,15 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
         Job callJob, BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
       Task2<BValue, BValue, BValue> schedulingTask = (lambdaValue, argsValue) -> {
-        var label = VM_LABEL.append("scheduleCall");
         try {
           var bLambda = (BLambda) lambdaValue;
           var argsTuple = (BTuple) argsValue;
           return successOutput(
               scheduleCallBodyWithTupleArguments(callJob, bCall, lambdaExpr, argsTuple, bLambda),
-              label,
+              SCHEDULE_CALL_LABEL,
               callJob.trace());
         } catch (BytecodeException e) {
-          return failedSchedulingOutput(label, callJob.trace(), e);
+          return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
         }
       };
       /*
@@ -275,9 +273,10 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         var label = VM_LABEL.append("inline");
         try {
           var inlined = (BValue) bReferenceInliner.inline(job);
-          return output(inlined, newReport(label, job.trace(), list()));
+          List<Log> logs = list();
+          return output(inlined, report(label, job.trace(), logs));
         } catch (BytecodeException e) {
-          return failedOutput(label, job.trace(), "Vm inline Task failed with exception:", e);
+          return failedOutput(label, some(job.trace()), "Vm inline Task failed with exception:", e);
         }
       };
       return scheduler.submit(inlineTask);
@@ -290,20 +289,26 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       return scheduleJob(newJob(bExpr, parentJob));
     }
 
+    private <T> Output<T> successOutput(Promise<Maybe<T>> resultPromise, Label label) {
+      return schedulingOutput(resultPromise, report(label, none(), list()));
+    }
+
     private <T> Output<T> successOutput(Promise<Maybe<T>> resultPromise, Label label, Trace trace) {
-      return schedulingOutput(resultPromise, newReport(label, trace, list()));
+      return schedulingOutput(resultPromise, report(label, trace, list()));
     }
 
     private <T> Output<T> failedSchedulingOutput(Label label, Trace trace, Throwable e) {
-      return failedOutput(label, trace, "Scheduling task failed with exception:", e);
+      return failedOutput(label, some(trace), "Scheduling task failed with exception:", e);
     }
 
-    private <T> Output<T> failedOutput(Label label, Trace trace, String message, Throwable e) {
-      return output(null, newReport(label, trace, list(fatal(message, e))));
+    private <T> Output<T> failedSchedulingOutput(Label label, Throwable e) {
+      return failedOutput(label, none(), "Scheduling task failed with exception:", e);
     }
 
-    private Report newReport(Label label, Trace trace, List<Log> logs) {
-      return report(label, trace, logs);
+    private <T> Output<T> failedOutput(
+        Label label, Maybe<Trace> trace, String message, Throwable e) {
+      List<Log> logs = list(fatal(message, e));
+      return output(null, report(label, trace, logs));
     }
 
     private Trace newTrace(BCall call, BExpr called, Trace next) {

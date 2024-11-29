@@ -16,7 +16,7 @@ public record Label(String label) {
       throw new IllegalArgumentException("Label cannot be empty string.");
     }
     if (!ALLOWED_CHARS_MATCHER.matchesAllOf(label)) {
-      throw new IllegalArgumentException("Illegal character in lable name '" + label + "'.");
+      throw new IllegalArgumentException("Illegal character in label name '" + label + "'.");
     }
     if (label.startsWith(DELIMITER)) {
       throw new IllegalArgumentException(
