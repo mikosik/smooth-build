@@ -19,10 +19,9 @@ public class FilteringReporter implements Reporter {
   @Override
   public void submit(Report report) {
     if (taskFilter.matches(report.label(), report.logs())) {
-      var filteredTrace =
-          traceFilter.matches(report.label(), report.logs()) ? report.trace() : new Trace();
-      var filteredLogs = report.logs().filter(l -> l.level().hasPriorityAtLeast(logLevel));
-      reporter.print(report.label(), filteredTrace, report.origin(), filteredLogs);
+      var trace = traceFilter.matches(report.label(), report.logs()) ? report.trace() : null;
+      var logs = report.logs().filter(l -> l.level().hasPriorityAtLeast(logLevel));
+      reporter.print(report.label(), trace, report.origin(), logs);
     }
   }
 }

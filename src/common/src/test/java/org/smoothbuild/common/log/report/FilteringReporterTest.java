@@ -65,7 +65,7 @@ public class FilteringReporterTest extends CommonTestContext {
 
     reporter.submit(report(aLabel(), aTrace(), DISK, logs()));
 
-    verify(reportPrinter).print(aLabel(), new Trace(), DISK, logs());
+    verify(reportPrinter).print(aLabel(), null, DISK, logs());
   }
 
   @ParameterizedTest

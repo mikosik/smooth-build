@@ -30,4 +30,22 @@ public class ReportPrinterTest extends CommonTestContext {
               [INFO] info message
             """);
   }
+
+  @Test
+  void when_trace_is_null_then_it_is_not_printed() {
+    var stringWriter = new StringWriter();
+    var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
+
+    printWriterReporter.print(label("labelName"), null, DISK, logsWithAllLevels());
+
+    assertThat(stringWriter.toString())
+        .isEqualTo(
+            """
+            :labelName                                                              d-cache
+              [FATAL] fatal message
+              [ERROR] error message
+              [WARNING] warning message
+              [INFO] info message
+            """);
+  }
 }
