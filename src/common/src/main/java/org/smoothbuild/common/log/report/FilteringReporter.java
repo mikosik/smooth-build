@@ -1,5 +1,6 @@
 package org.smoothbuild.common.log.report;
 
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Level;
 
 public class FilteringReporter implements Reporter {
@@ -19,7 +20,8 @@ public class FilteringReporter implements Reporter {
   @Override
   public void submit(Report report) {
     if (taskFilter.matches(report.label(), report.logs())) {
-      var trace = traceFilter.matches(report.label(), report.logs()) ? report.trace() : null;
+      var trace =
+          traceFilter.matches(report.label(), report.logs()) ? report.trace() : Maybe.<Trace>none();
       var logs = report.logs().filter(l -> l.level().hasPriorityAtLeast(logLevel));
       reporter.print(report.label(), trace, report.origin(), logs);
     }

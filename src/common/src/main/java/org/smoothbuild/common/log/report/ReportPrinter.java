@@ -5,6 +5,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.io.PrintWriter;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Origin;
@@ -19,12 +20,12 @@ public class ReportPrinter {
     this.printWriter = printWriter;
   }
 
-  public void print(Label label, Trace trace, Origin origin, List<Log> logs) {
+  public void print(Label label, Maybe<Trace> trace, Origin origin, List<Log> logs) {
     var builder = new StringBuilder(labelPlusOrigin(label, origin));
-    if (trace != null) {
+    trace.ifPresent(t -> {
       builder.append("\n");
-      builder.append(indent(trace.toString()));
-    }
+      builder.append(indent(t.toString()));
+    });
 
     for (Log log : logs) {
       builder.append("\n");

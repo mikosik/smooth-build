@@ -1,27 +1,37 @@
 package org.smoothbuild.common.log.report;
 
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Origin.EXECUTION;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Origin;
 
-public record Report(Label label, Trace trace, Origin origin, List<Log> logs) {
+public record Report(Label label, Maybe<Trace> trace, Origin origin, List<Log> logs) {
   public static Report report(Label label, List<Log> logs) {
-    return report(label, new Trace(), logs);
+    return report(label, Maybe.none(), logs);
   }
 
   public static Report report(Label label, Trace trace, List<Log> logs) {
     return report(label, trace, EXECUTION, logs);
   }
 
+  public static Report report(Label label, Maybe<Trace> trace, List<Log> logs) {
+    return report(label, trace, EXECUTION, logs);
+  }
+
   public static Report report(Label label, Origin origin, List<Log> logs) {
-    return report(label, new Trace(), origin, logs);
+    return report(label, Maybe.none(), origin, logs);
   }
 
   public static Report report(Label label, Trace trace, Origin origin, List<Log> logs) {
+    return new Report(label, some(trace), origin, logs);
+  }
+
+  public static Report report(Label label, Maybe<Trace> trace, Origin origin, List<Log> logs) {
     return new Report(label, trace, origin, logs);
   }
 
@@ -29,7 +39,7 @@ public record Report(Label label, Trace trace, Origin origin, List<Log> logs) {
     return new Report(label, trace, origin, logs);
   }
 
-  public Report withTrace(Trace trace) {
+  public Report withTrace(Maybe<Trace> trace) {
     return new Report(label, trace, origin, logs);
   }
 

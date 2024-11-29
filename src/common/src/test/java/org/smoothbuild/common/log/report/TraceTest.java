@@ -24,7 +24,7 @@ public class TraceTest extends CommonTestContext {
     @Test
     void with_0_trace_points() {
       var trace = trace(null);
-      assertThat(trace.toString()).isEqualTo("");
+      assertThat(trace.toString()).isEqualTo("@ <empty trace>");
     }
 
     @Test

@@ -1,6 +1,8 @@
 package org.smoothbuild.common.log.report;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.common.log.base.Origin.DISK;
 import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
@@ -17,7 +19,10 @@ public class ReportPrinterTest extends CommonTestContext {
     var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
 
     printWriterReporter.print(
-        label("labelName"), new Trace("called", location(alias())), DISK, logsWithAllLevels());
+        label("labelName"),
+        some(new Trace("called", location(alias()))),
+        DISK,
+        logsWithAllLevels());
 
     assertThat(stringWriter.toString())
         .isEqualTo(
@@ -32,16 +37,40 @@ public class ReportPrinterTest extends CommonTestContext {
   }
 
   @Test
-  void when_trace_is_null_then_it_is_not_printed() {
+  void when_trace_is_none_then_it_is_not_printed() {
     var stringWriter = new StringWriter();
     var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
 
-    printWriterReporter.print(label("labelName"), null, DISK, logsWithAllLevels());
+    printWriterReporter.print(label("labelName"), none(), DISK, logsWithAllLevels());
 
     assertThat(stringWriter.toString())
         .isEqualTo(
             """
             :labelName                                                              d-cache
+              [FATAL] fatal message
+              [ERROR] error message
+              [WARNING] warning message
+              [INFO] info message
+            """);
+  }
+
+  @Test
+  void consecutive_reports_are_separated_by_new_line() {
+    var stringWriter = new StringWriter();
+    var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
+
+    printWriterReporter.print(label("labelA"), none(), DISK, logsWithAllLevels());
+    printWriterReporter.print(label("labelB"), none(), DISK, logsWithAllLevels());
+
+    assertThat(stringWriter.toString())
+        .isEqualTo(
+            """
+            :labelA                                                                 d-cache
+              [FATAL] fatal message
+              [ERROR] error message
+              [WARNING] warning message
+              [INFO] info message
+            :labelB                                                                 d-cache
               [FATAL] fatal message
               [ERROR] error message
               [WARNING] warning message
