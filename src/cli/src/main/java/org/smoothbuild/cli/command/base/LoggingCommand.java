@@ -13,7 +13,7 @@ public class LoggingCommand extends ACommand {
       converter = FilterLogsConverter.class,
       description =
           """
-              Show logs with specified level or above.
+              Print logs with specified level or above.
 
               Available levels:
                 f, fatal   - show FATAL logs
