@@ -27,14 +27,14 @@ public class BuildCommand extends ProjectCommand {
       converter = FilterTasksConverter.class,
       description =
           """
-          Show executed build tasks that match filter.
+          Print executed build tasks that match filter.
 
           Filter is a boolean expression made up of matchers (listed below), \
           boolean operators '&', '|', grouping brackets '(', ')'.
           Default value is 'info|invoke'
 
-          For each matched tasks its name and properties are printed together with logs that \
-          match filter specified with --filter-logs option. \
+          For each matched tasks its label, trace and logs are printed which can be further \
+          filtered using --filter-logs and --filter-stack-traces options. \
           Note that you can filter tasks by one log level and its logs by other level. \
           For example setting '--filter-tasks=error --filter-logs=warning' prints tasks that \
           have a log with at least error level and for each such a task all logs with at \
@@ -65,7 +65,8 @@ public class BuildCommand extends ProjectCommand {
       converter = FilterTasksConverter.class,
       description =
           """
-          Show stack trace in reports of task execution if task matches filter.
+          Print stack trace for task execution reports that match filter.
+
           Filter is specified using the same language as used for specifying filters
           in --filter-tasks option.
           """)

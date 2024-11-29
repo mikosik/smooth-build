@@ -52,7 +52,7 @@ public class HelpCommandTest extends SystemTestContext {
 
         Options:
           -l, --filter-logs=<level>
-                           Show logs with specified level or above.
+                           Print logs with specified level or above.
 
                            Available levels:
                              f, fatal   - show FATAL logs
@@ -61,27 +61,29 @@ public class HelpCommandTest extends SystemTestContext {
                              i, info    - show FATAL, ERROR, WARNING, INFO logs
 
           -s, --filter-stack-traces=<filter>
-                           Show stack trace in reports of task execution if task
-                             matches filter.
+                           Print stack trace for task execution reports that match
+                             filter.
+
                            Filter is specified using the same language as used for
                              specifying filters
                            in --filter-tasks option.
 
           -t, --filter-tasks=<filter>
-                           Show executed build tasks that match filter.
+                           Print executed build tasks that match filter.
 
                            Filter is a boolean expression made up of matchers (listed
                              below), boolean operators '&', '|', grouping brackets '(',
                              ')'.
                            Default value is 'info|invoke'
 
-                           For each matched tasks its name and properties are printed
-                             together with logs that match filter specified with
-                             --filter-logs option. Note that you can filter tasks by
-                             one log level and its logs by other level. For example
-                             setting '--filter-tasks=error --filter-logs=warning'
-                             prints tasks that have a log with at least error level and
-                             for each such a task all logs with at least warning level.
+                           For each matched tasks its label, trace and logs are printed
+                             which can be further filtered using --filter-logs and
+                             --filter-stack-traces options. Note that you can filter
+                             tasks by one log level and its logs by other level. For
+                             example setting '--filter-tasks=error
+                             --filter-logs=warning' prints tasks that have a log with
+                             at least error level and for each such a task all logs
+                             with at least warning level.
 
                            Available task matchers:
                              a, all             - all tasks
@@ -117,7 +119,7 @@ public class HelpCommandTest extends SystemTestContext {
 
         Options:
           -l, --filter-logs=<level>
-                 Show logs with specified level or above.
+                 Print logs with specified level or above.
 
                  Available levels:
                    f, fatal   - show FATAL logs
@@ -142,7 +144,7 @@ public class HelpCommandTest extends SystemTestContext {
 
         Options:
           -l, --filter-logs=<level>
-                 Show logs with specified level or above.
+                 Print logs with specified level or above.
 
                  Available levels:
                    f, fatal   - show FATAL logs
@@ -167,7 +169,7 @@ public class HelpCommandTest extends SystemTestContext {
 
         Options:
           -l, --filter-logs=<level>
-                 Show logs with specified level or above.
+                 Print logs with specified level or above.
 
                  Available levels:
                    f, fatal   - show FATAL logs
