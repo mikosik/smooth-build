@@ -21,7 +21,7 @@ public class ReportPrinter {
 
   public void print(Label label, Trace trace, Origin origin, List<Log> logs) {
     var builder = new StringBuilder(labelPlusOrigin(label, origin));
-    if (!(trace.isEmpty())) {
+    if (trace != null) {
       builder.append("\n");
       builder.append(indent(trace.toString()));
     }
