@@ -36,7 +36,7 @@ public class Scheduler {
    * to calculate result for them) can simply return `Promise` that they received when submitting
    * scheduled task to Scheduler.
    */
-  public static final Label LABEL = label("scheduler");
+  public static final Label LABEL = label(":scheduler");
   private final Injector injector;
   private final Reporter reporter;
 
@@ -208,7 +208,7 @@ public class Scheduler {
 
   public <T> Promise<Maybe<List<T>>> join(
       List<? extends Promise<? extends Maybe<? extends T>>> list) {
-    return submit(taskX(LABEL.append("join"), l -> l), list);
+    return submit(taskX(LABEL.append(":join"), l -> l), list);
   }
 
   public <A1, R> Task1<List<? extends A1>, List<R>> newParallelTask(

@@ -18,7 +18,7 @@ import picocli.CommandLine.Parameters;
     description = "Evaluate specified value(s) and store them as artifact(s).")
 public class BuildCommand extends ProjectCommand {
   public static final String NAME = "build";
-  public static final Label LABEL = label("cli:build");
+  public static final Label LABEL = label(":cli:build");
 
   @picocli.CommandLine.Option(
       names = {"--filter-tasks", "-t"},

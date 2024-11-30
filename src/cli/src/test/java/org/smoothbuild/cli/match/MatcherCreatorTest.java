@@ -43,9 +43,9 @@ public class MatcherCreatorTest {
   public void matcher_instances_matches_same_reports_as_expected_matcher(
       String expression, ReportMatcher expectedMatcher) {
 
-    var taskLabels = list("combine", "const", "invoke", "order", "pick", "select")
+    var taskLabels = list(":combine", ":const", ":invoke", ":order", ":pick", ":select")
         .map(VM_EVALUATE::append)
-        .append(label("notEvaluate"));
+        .append(label(":notEvaluate"));
 
     verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
         expression, expectedMatcher, taskLabels);

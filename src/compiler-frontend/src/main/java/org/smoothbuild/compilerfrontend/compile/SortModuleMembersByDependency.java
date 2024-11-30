@@ -35,7 +35,7 @@ import org.smoothbuild.compilerfrontend.lang.base.Nal;
 public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
-    var label = COMPILER_FRONT_LABEL.append("sortMembers");
+    var label = COMPILER_FRONT_LABEL.append(":sortMembers");
     var sortedTs = sortStructsByDeps(pModule.structs());
     if (sortedTs.sorted() == null) {
       var error = createCycleError("Type hierarchy", sortedTs.cycle());

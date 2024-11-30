@@ -14,7 +14,7 @@ import picocli.CommandLine.Command;
     description = "Remove all cached objects and artifacts calculated during all previous builds.")
 public class CleanCommand extends ProjectCommand {
   public static final String NAME = "clean";
-  public static final Label LABEL = label("cli:clean");
+  public static final Label LABEL = label(":cli:clean");
 
   @Override
   protected Integer executeCommand(Path projectDir) {

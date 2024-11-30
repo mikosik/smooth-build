@@ -46,7 +46,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     var logger = new Logger();
     var typeTeller = new TypeTeller(environment, pModule.scope());
     new Worker(typeTeller, logger).visitModule(pModule);
-    var label = COMPILER_FRONT_LABEL.append("inferTypes");
+    var label = COMPILER_FRONT_LABEL.append(":inferTypes");
     return output(pModule, label, logger.toList());
   }
 

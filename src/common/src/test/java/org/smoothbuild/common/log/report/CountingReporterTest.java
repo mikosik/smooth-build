@@ -32,7 +32,7 @@ public class CountingReporterTest {
     var stepReporter = mock(Reporter.class);
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
-    var label = label("name");
+    var label = label(":name");
     var trace = new Trace();
     countingReporter.submit(report(label, trace, DISK, list(ERROR_LOG)));
 
@@ -46,7 +46,7 @@ public class CountingReporterTest {
     var stepReporter = mock(Reporter.class);
     var countingReporter = new CountingReporter(stepReporter, logCounters);
 
-    var label = label("name");
+    var label = label(":name");
     var trace = new Trace();
     countingReporter.submit(report(label, trace, DISK, list(log)));
 

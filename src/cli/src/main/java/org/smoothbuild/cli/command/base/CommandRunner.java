@@ -38,7 +38,7 @@ public class CommandRunner {
       return result.isNone() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
     } catch (InterruptedException e) {
       var fatal = fatal("main thread has been interrupted");
-      reporter.submit(report(label("smooth"), list(fatal)));
+      reporter.submit(report(label(":smooth"), list(fatal)));
       return EXIT_CODE_ERROR;
     }
   }

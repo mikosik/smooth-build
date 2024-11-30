@@ -41,7 +41,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
     for (var fullPath : modules) {
       module = scheduler.submit(ScheduleModuleCompilation.class, module, argument(fullPath));
     }
-    var label = COMPILER_FRONT_LABEL.append("schedule");
+    var label = COMPILER_FRONT_LABEL.append(":schedule");
     var report = report(label, list());
     return schedulingOutput(module, report);
   }
@@ -71,7 +71,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = scheduler.submit(InferTypes.class, sorted, environment);
       var moduleS = scheduler.submit(ConvertPs.class, typesInferred, environment);
-      var label = COMPILER_FRONT_LABEL.append("schedule").append("module");
+      var label = COMPILER_FRONT_LABEL.append(":schedule").append(":module");
       var report = report(label, list());
       return schedulingOutput(moduleS, report);
     }

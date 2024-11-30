@@ -19,7 +19,7 @@ public class ReportPrinterTest extends CommonTestContext {
     var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
 
     printWriterReporter.print(
-        label("labelName"),
+        label(":labelName"),
         some(new Trace("called", location(alias()))),
         DISK,
         logsWithAllLevels());
@@ -41,7 +41,7 @@ public class ReportPrinterTest extends CommonTestContext {
     var stringWriter = new StringWriter();
     var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
 
-    printWriterReporter.print(label("labelName"), none(), DISK, logsWithAllLevels());
+    printWriterReporter.print(label(":labelName"), none(), DISK, logsWithAllLevels());
 
     assertThat(stringWriter.toString())
         .isEqualTo(
@@ -59,8 +59,8 @@ public class ReportPrinterTest extends CommonTestContext {
     var stringWriter = new StringWriter();
     var printWriterReporter = new ReportPrinter(new PrintWriter(stringWriter));
 
-    printWriterReporter.print(label("labelA"), none(), DISK, logsWithAllLevels());
-    printWriterReporter.print(label("labelB"), none(), DISK, logsWithAllLevels());
+    printWriterReporter.print(label(":labelA"), none(), DISK, logsWithAllLevels());
+    printWriterReporter.print(label(":labelB"), none(), DISK, logsWithAllLevels());
 
     assertThat(stringWriter.toString())
         .isEqualTo(

@@ -18,7 +18,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypes;
 public class LoadInternalModuleMembers implements Task0<SModule> {
   @Override
   public Output<SModule> execute() {
-    var label = COMPILER_FRONT_LABEL.append("loadInternalModule");
+    var label = COMPILER_FRONT_LABEL.append(":loadInternalModule");
     var logger = new Logger();
     var types =
         immutableBindings(STypes.baseTypes().toMap(SType::name, t -> baseTypeDefinitions(t)));

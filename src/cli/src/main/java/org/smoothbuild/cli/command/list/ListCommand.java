@@ -14,7 +14,7 @@ import picocli.CommandLine.Command;
     description = "Print user defined values that can be evaluated and stored as artifact.")
 public class ListCommand extends ProjectCommand {
   public static final String NAME = "list";
-  public static final Label LABEL = label("cli:list");
+  public static final Label LABEL = label(":cli:list");
 
   @Override
   protected Integer executeCommand(Path projectDir) {

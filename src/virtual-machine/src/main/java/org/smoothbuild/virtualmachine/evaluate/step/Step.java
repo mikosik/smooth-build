@@ -32,7 +32,7 @@ public abstract sealed class Step permits CombineStep, InvokeStep, OrderStep, Pi
   }
 
   public Label label() {
-    return VM_EVALUATE.append(name);
+    return VM_EVALUATE.append(":" + name);
   }
 
   public Trace trace() {

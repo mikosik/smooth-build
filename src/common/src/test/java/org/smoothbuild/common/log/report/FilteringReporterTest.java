@@ -92,7 +92,7 @@ public class FilteringReporterTest extends CommonTestContext {
   }
 
   private static Label aLabel() {
-    return label("name");
+    return label(":name");
   }
 
   private Maybe<Trace> aTrace() {

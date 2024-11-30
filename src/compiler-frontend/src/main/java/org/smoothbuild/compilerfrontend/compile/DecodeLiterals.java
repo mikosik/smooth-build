@@ -20,7 +20,7 @@ public class DecodeLiterals implements Task1<PModule, PModule> {
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     new DecodeLiteralModuleVisitor(logger).visitModule(pModule);
-    var label = COMPILER_FRONT_LABEL.append("decodeLiterals");
+    var label = COMPILER_FRONT_LABEL.append(":decodeLiterals");
     return output(pModule, label, logger.toList());
   }
 

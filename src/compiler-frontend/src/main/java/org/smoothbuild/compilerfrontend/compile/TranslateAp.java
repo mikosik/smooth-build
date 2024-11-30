@@ -81,7 +81,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     apTranslatingVisitor.visit(moduleContext);
     var name = fullPath.withExtension("").path().lastPart().toString();
     var moduleP = new PModule(name, listOfAll(structs), listOfAll(evaluables));
-    var label = COMPILER_FRONT_LABEL.append("simplifyParseTree");
+    var label = COMPILER_FRONT_LABEL.append(":simplifyParseTree");
     return output(moduleP, label, logger.toList());
   }
 

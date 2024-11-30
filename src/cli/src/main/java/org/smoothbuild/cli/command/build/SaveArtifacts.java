@@ -54,7 +54,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
 
   @Override
   public Output<Tuple0> execute(EvaluatedExprs evaluatedExprs) {
-    var label = BuildCommand.LABEL.append("saveArtifacts");
+    var label = BuildCommand.LABEL.append(":saveArtifacts");
     try {
       fileSystem.createDir(artifactsPath);
     } catch (IOException e) {
