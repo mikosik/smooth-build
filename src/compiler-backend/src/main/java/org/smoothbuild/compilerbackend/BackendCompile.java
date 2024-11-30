@@ -25,7 +25,7 @@ public class BackendCompile
   @Override
   public Output<CompiledExprs> execute(
       List<SExpr> sExprs, ImmutableBindings<SNamedEvaluable> evaluables) {
-    var label = COMPILER_BACK_LABEL.append("generateBytecode");
+    var label = COMPILER_BACK_LABEL.append(":generateBytecode");
     var sbTranslator = sbTranslatorFactory.create(evaluables);
     try {
       var bExprs = sExprs.map(sbTranslator::translateExpr);

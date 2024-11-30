@@ -563,16 +563,20 @@ public class BEvaluateTest extends VmTestContext {
       }
     }
 
-    private void assertTaskReport(BExpr expr, String label, Trace trace, Origin origin) {
+    private void assertTaskReport(BExpr expr, String operationName, Trace trace, Origin origin) {
       evaluate(bEvaluate(), expr);
-      var taskReport = report(VM_EVALUATE.append(label), trace, origin, list());
+      var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
       assertThat(reporter().reports()).contains(taskReport);
     }
 
     private void assertTaskReport(
-        BExpr expr, BExprAttributes bExprAttributes, String label, Trace trace, Origin origin) {
+        BExpr expr,
+        BExprAttributes bExprAttributes,
+        String operationName,
+        Trace trace,
+        Origin origin) {
       evaluate(bEvaluate(), expr, bExprAttributes);
-      var taskReport = report(VM_EVALUATE.append(label), trace, origin, list());
+      var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
       assertThat(reporter().reports()).contains(taskReport);
     }
   }
@@ -722,7 +726,7 @@ public class BEvaluateTest extends VmTestContext {
       int size, Origin expectedSource, TestReporter reporter) {
     var sources = reporter
         .reports()
-        .filter(r -> r.label().equals(VM_EVALUATE.append("invoke")))
+        .filter(r -> r.label().equals(VM_EVALUATE.append(":invoke")))
         .map(Report::origin);
     assertThat(sources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }

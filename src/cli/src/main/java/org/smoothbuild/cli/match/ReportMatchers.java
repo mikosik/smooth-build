@@ -18,11 +18,11 @@ public class ReportMatchers {
   static final ReportMatcher WARNING = logLevelMatcher(Level.WARNING);
   static final ReportMatcher INFO = logLevelMatcher(Level.INFO);
 
-  static final ReportMatcher INVOKE = labelPrefixMatcher(VM_EVALUATE.append("invoke"));
-  static final ReportMatcher COMBINE = labelPrefixMatcher(VM_EVALUATE.append("combine"));
-  static final ReportMatcher ORDER = labelPrefixMatcher(VM_EVALUATE.append("order"));
-  static final ReportMatcher PICK = labelPrefixMatcher(VM_EVALUATE.append("pick"));
-  static final ReportMatcher SELECT = labelPrefixMatcher(VM_EVALUATE.append("select"));
+  static final ReportMatcher INVOKE = labelPrefixMatcher(VM_EVALUATE.append(":invoke"));
+  static final ReportMatcher COMBINE = labelPrefixMatcher(VM_EVALUATE.append(":combine"));
+  static final ReportMatcher ORDER = labelPrefixMatcher(VM_EVALUATE.append(":order"));
+  static final ReportMatcher PICK = labelPrefixMatcher(VM_EVALUATE.append(":pick"));
+  static final ReportMatcher SELECT = labelPrefixMatcher(VM_EVALUATE.append(":select"));
 
   static final ReportMatcher DEFAULT = or(INFO, INVOKE);
 

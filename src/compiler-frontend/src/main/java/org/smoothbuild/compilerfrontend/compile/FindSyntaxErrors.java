@@ -34,7 +34,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
     detectIllegalAnnotations(pModule, logger);
     detectStructFieldWithDefaultValue(pModule, logger);
     detectLambdaParamWithDefaultValue(pModule, logger);
-    var label = COMPILER_FRONT_LABEL.append("findSyntaxErrors");
+    var label = COMPILER_FRONT_LABEL.append(":findSyntaxErrors");
     return output(pModule, label, logger.toList());
   }
 

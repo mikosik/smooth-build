@@ -41,7 +41,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
   public Output<PModule> execute(PModule pModule, SScope environment) {
     var logger = new Logger();
     new Visitor(environment, immutableBindings(), logger).visitModule(pModule);
-    var label = COMPILER_FRONT_LABEL.append("injectDefaultArguments");
+    var label = COMPILER_FRONT_LABEL.append(":injectDefaultArguments");
     return output(pModule, label, logger.toList());
   }
 

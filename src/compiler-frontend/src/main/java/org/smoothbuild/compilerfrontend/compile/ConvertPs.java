@@ -67,7 +67,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
   @Override
   public Output<SModule> execute(PModule pModule, SScope environment) {
     var typeTeller = new TypeTeller(environment, pModule.scope());
-    var label = COMPILER_FRONT_LABEL.append("buildIr");
+    var label = COMPILER_FRONT_LABEL.append(":buildIr");
     var sModule = new Worker(typeTeller, environment).convertModule(pModule);
     return output(sModule, label, list());
   }

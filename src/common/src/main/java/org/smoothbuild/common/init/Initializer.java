@@ -28,7 +28,7 @@ public class Initializer implements Task0<List<Tuple0>> {
   public Output<List<Tuple0>> execute() {
     var initializablePromises = listOfAll(initializables).map(scheduler::submit);
     var promise = scheduler.join(initializablePromises);
-    var report = report(INITIALIZE_LABEL.append("schedule"), list());
+    var report = report(INITIALIZE_LABEL.append(":schedule"), list());
     return schedulingOutput(promise, report);
   }
 }

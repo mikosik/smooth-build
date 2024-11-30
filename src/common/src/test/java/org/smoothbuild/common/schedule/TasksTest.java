@@ -14,21 +14,21 @@ import org.smoothbuild.common.collect.List;
 public class TasksTest {
   @Test
   void task1_invokes_function() {
-    var label = label("label");
+    var label = label(":label");
     var mapTask = task1(label, (String s) -> s + "!");
     assertThat(mapTask.execute("abc")).isEqualTo(output("abc!", label, list()));
   }
 
   @Test
   void task2_invokes_function() {
-    var label = label("label");
+    var label = label(":label");
     var mapTask = task2(label, (String s1, String s2) -> s1 + s2);
     assertThat(mapTask.execute("abc", "def")).isEqualTo(output("abcdef", label, list()));
   }
 
   @Test
   void taskX_invokes_function() {
-    var label = label("label");
+    var label = label(":label");
     var mapTask = taskX(label, (List<String> list) -> list.toString(","));
     assertThat(mapTask.execute(list("a", "b", "c"))).isEqualTo(output("a,b,c", label, list()));
   }

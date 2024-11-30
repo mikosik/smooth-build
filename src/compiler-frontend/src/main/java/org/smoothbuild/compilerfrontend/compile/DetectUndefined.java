@@ -31,7 +31,7 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
   public Output<PModule> execute(PModule pModule, SScope imported) {
     var logger = new Logger();
     new Detector(imported, emptyScope(), logger).visitModule(pModule);
-    var label = COMPILER_FRONT_LABEL.append("detectUndefined");
+    var label = COMPILER_FRONT_LABEL.append(":detectUndefined");
     return output(pModule, label, logger.toList());
   }
 

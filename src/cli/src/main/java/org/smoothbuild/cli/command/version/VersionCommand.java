@@ -12,7 +12,7 @@ import picocli.CommandLine.Command;
 @Command(name = VersionCommand.NAME, description = "Print version information.")
 public class VersionCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "version";
-  public static final Label LABEL = label("cli:version");
+  public static final Label LABEL = label(":cli:version");
 
   @Override
   public Integer call() {

@@ -25,7 +25,7 @@ public class ReadFileContent implements Task1<FullPath, String> {
 
   @Override
   public Output<String> execute(FullPath fullPath) {
-    var label = COMPILER_FRONT_LABEL.append("readFileContent");
+    var label = COMPILER_FRONT_LABEL.append(":readFileContent");
     try {
       var content = contentOf(fullPath);
       return output(content, label, list());

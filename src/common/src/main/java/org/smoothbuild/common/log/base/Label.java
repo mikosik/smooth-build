@@ -12,15 +12,33 @@ public record Label(String label) {
   }
 
   public Label {
-    if (label.isEmpty()) {
-      throw new IllegalArgumentException("Label cannot be empty string.");
+    verify(label);
+  }
+
+  public Label append(String suffix) {
+    verify(suffix);
+    return new Label(label + suffix);
+  }
+
+  public boolean startsWith(Label prefix) {
+    return label.startsWith(prefix.label);
+  }
+
+  @Override
+  public String toString() {
+    return label;
+  }
+
+  private static void verify(String label) {
+    if (label.length() < 2) {
+      throw new IllegalArgumentException("Label must have at least 2 characters.");
     }
     if (!ALLOWED_CHARS_MATCHER.matchesAllOf(label)) {
       throw new IllegalArgumentException("Illegal character in label name '" + label + "'.");
     }
-    if (label.startsWith(DELIMITER)) {
+    if (!label.startsWith(DELIMITER)) {
       throw new IllegalArgumentException(
-          "Label '" + label + "' cannot start with '" + DELIMITER + "'.");
+          "Label '" + label + "' must start with '" + DELIMITER + "'.");
     }
     if (label.endsWith(DELIMITER)) {
       throw new IllegalArgumentException(
@@ -30,18 +48,5 @@ public record Label(String label) {
       throw new IllegalArgumentException(
           "Label '" + label + "' cannot contain '" + DELIMITER + DELIMITER + "'.");
     }
-  }
-
-  public Label append(String suffix) {
-    return new Label(label + DELIMITER + suffix);
-  }
-
-  public boolean startsWith(Label prefix) {
-    return label.startsWith(prefix.label);
-  }
-
-  @Override
-  public String toString() {
-    return DELIMITER + label;
   }
 }

@@ -55,16 +55,16 @@ public class ReportMatchersTest {
         arguments(or(matcher("all"), matcher("none")), null, null, true),
         arguments(or(matcher("none"), matcher("all")), null, null, true),
         arguments(or(matcher("none"), matcher("none")), null, null, false),
-        arguments(matcher("invoke"), VM_EVALUATE.append("invoke"), null, true),
-        arguments(matcher("invoke"), VM_EVALUATE.append("order"), null, false),
-        arguments(matcher("combine"), VM_EVALUATE.append("combine"), null, true),
-        arguments(matcher("combine"), VM_EVALUATE.append("order"), null, false),
-        arguments(matcher("order"), VM_EVALUATE.append("order"), null, true),
-        arguments(matcher("order"), VM_EVALUATE.append("invoke"), null, false),
-        arguments(matcher("pick"), VM_EVALUATE.append("pick"), null, true),
-        arguments(matcher("pick"), VM_EVALUATE.append("order"), null, false),
-        arguments(matcher("select"), VM_EVALUATE.append("select"), null, true),
-        arguments(matcher("select"), VM_EVALUATE.append("order"), null, false));
+        arguments(matcher("invoke"), VM_EVALUATE.append(":invoke"), null, true),
+        arguments(matcher("invoke"), VM_EVALUATE.append(":order"), null, false),
+        arguments(matcher("combine"), VM_EVALUATE.append(":combine"), null, true),
+        arguments(matcher("combine"), VM_EVALUATE.append(":order"), null, false),
+        arguments(matcher("order"), VM_EVALUATE.append(":order"), null, true),
+        arguments(matcher("order"), VM_EVALUATE.append(":invoke"), null, false),
+        arguments(matcher("pick"), VM_EVALUATE.append(":pick"), null, true),
+        arguments(matcher("pick"), VM_EVALUATE.append(":order"), null, false),
+        arguments(matcher("select"), VM_EVALUATE.append(":select"), null, true),
+        arguments(matcher("select"), VM_EVALUATE.append(":order"), null, false));
   }
 
   private static ReportMatcher matcher(String name) {

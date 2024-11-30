@@ -861,7 +861,7 @@ public class SchedulerTest {
     @Test
     void parallel_task_executes_encapsulated_task_for_each_list_element() {
       var scheduler = newScheduler();
-      var task = scheduler.newParallelTask(task1(label("p"), s -> s + "!"));
+      var task = scheduler.newParallelTask(task1(label(":p"), s -> s + "!"));
       var result = scheduler.submit(task, argument(list("a", "b", "c")));
       await().until(() -> result.toMaybe().isSome());
 
@@ -988,8 +988,8 @@ public class SchedulerTest {
   public static List<Arguments> executionReports() {
     return list(arguments(
         newReport(),
-        report(label("myLabel"), MEMORY, list(info("message"))),
-        report(label("myLabel"), list(info("message"))),
+        report(label(":myLabel"), MEMORY, list(info("message"))),
+        report(label(":myLabel"), list(info("message"))),
         newReportWithError()));
   }
 
@@ -999,10 +999,10 @@ public class SchedulerTest {
   }
 
   private static Report newReport() {
-    return report(label("myLabel"), list());
+    return report(label(":myLabel"), list());
   }
 
   private static Report newReportWithError() {
-    return report(label("myLabel"), list(error("message")));
+    return report(label(":myLabel"), list(error("message")));
   }
 }

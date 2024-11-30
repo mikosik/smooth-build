@@ -41,7 +41,7 @@ public class Parse implements Task2<String, FullPath, ModuleContext> {
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
 
-    var label = COMPILER_FRONT_LABEL.append("parse");
+    var label = COMPILER_FRONT_LABEL.append(":parse");
     return output(smoothAntlrParser.module(), label, logger.toList());
   }
 

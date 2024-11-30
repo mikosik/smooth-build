@@ -24,14 +24,14 @@ public class LabelTest {
   class _append {
     @Test
     void concatenates_part() {
-      var label = label("name");
-      assertThat(label.append("other")).isEqualTo(label("name:other"));
+      var label = label(":name");
+      assertThat(label.append(":other")).isEqualTo(label(":name:other"));
     }
 
     @ParameterizedTest
     @MethodSource("org.smoothbuild.common.log.base.LabelTest#illegal_labels")
     void fails_when_part_is_illegal_label(String part) {
-      var label = label("name");
+      var label = label(":name");
       assertCall(() -> label.append(part)).throwsException(IllegalArgumentException.class);
     }
   }
@@ -44,17 +44,18 @@ public class LabelTest {
         arguments("!"),
         arguments("."),
         arguments(","),
+        arguments("a"),
         arguments("a "),
         arguments(" b"),
         arguments("a b"),
-        arguments(":text"),
+        arguments("text"),
         arguments("text:"),
         arguments(":text:"),
         arguments("::"),
         arguments("::text"),
         arguments("text::"),
         arguments("::text::"),
-        arguments("text::text"));
+        arguments(":text::text"));
   }
 
   @ParameterizedTest
@@ -65,27 +66,27 @@ public class LabelTest {
 
   public static List<Arguments> startsWith() {
     return list(
-        arguments(label("a"), label("a"), true),
-        arguments(label("a"), label("b"), false),
-        arguments(label("a"), label("a:b"), false),
-        arguments(label("a:b"), label("a"), true),
-        arguments(label("a:b"), label("b"), false),
-        arguments(label("a:b"), label("a:b"), true),
-        arguments(label("a:b"), label("a:c"), false),
-        arguments(label("a:b"), label("a:b:c"), false));
+        arguments(label(":a"), label(":a"), true),
+        arguments(label(":a"), label(":b"), false),
+        arguments(label(":a"), label(":a:b"), false),
+        arguments(label(":a:b"), label(":a"), true),
+        arguments(label(":a:b"), label(":b"), false),
+        arguments(label(":a:b"), label(":a:b"), true),
+        arguments(label(":a:b"), label(":a:c"), false),
+        arguments(label(":a:b"), label(":a:b:c"), false));
   }
 
   @Nested
   class _toString {
     @Test
     void with_one_part() {
-      var label = label("name");
+      var label = label(":name");
       assertThat(label.toString()).isEqualTo(":name");
     }
 
     @Test
     void with_two_parts() {
-      var label = label("name").append("second");
+      var label = label(":name").append(":second");
       assertThat(label.toString()).isEqualTo(":name:second");
     }
   }

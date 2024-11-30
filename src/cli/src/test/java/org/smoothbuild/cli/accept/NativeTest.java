@@ -149,7 +149,7 @@ public class NativeTest extends EvaluatorTestContext {
         evaluate("result");
 
         var trace = trace("reportError", location(moduleFullPath(), 3));
-        var label = label("vm:evaluate:invoke");
+        var label = label(":vm:evaluate:invoke");
         var errors = list(error("ERROR MESSAGE"));
         var report = report(label, trace, errors);
         assertThat(reports()).contains(report);

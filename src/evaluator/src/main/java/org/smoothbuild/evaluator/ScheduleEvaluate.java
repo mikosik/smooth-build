@@ -42,14 +42,14 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
   @Override
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
     var moduleS = scheduler.submit(FrontendCompile.class, argument(modules));
-    var mapLabel = EVALUATOR_LABEL.append("getMembersAndImported");
+    var mapLabel = EVALUATOR_LABEL.append(":getMembersAndImported");
     var scopeS = scheduler.submit(task1(mapLabel, SModule::membersAndImported), moduleS);
     var sExprs = scheduler.submit(FindValues.class, scopeS, argument(names));
     var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), scopeS);
 
     var evaluatedExprs = scheduleEvaluateCore(scheduler, sExprs, evaluables);
 
-    var scheduleLabel = EVALUATOR_LABEL.append("schedule");
+    var scheduleLabel = EVALUATOR_LABEL.append(":schedule");
     return schedulingOutput(evaluatedExprs, report(scheduleLabel, list()));
   }
 
@@ -59,10 +59,10 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
       Promise<Maybe<List<SExpr>>> sExprs,
       Promise<Maybe<ImmutableBindings<SNamedEvaluable>>> evaluables) {
     var compiledExprs = scheduler.submit(BackendCompile.class, sExprs, evaluables);
-    var getLabel = EVALUATOR_LABEL.append("getCompiledExprs");
+    var getLabel = EVALUATOR_LABEL.append(":getCompiledExprs");
     var bExprs = scheduler.submit(task1(getLabel, ScheduleEvaluate::toTuples), compiledExprs);
     var evaluated = scheduler.submit(scheduler.newParallelTask(BEvaluate.class), bExprs);
-    var mergeLabel = EVALUATOR_LABEL.append("merge");
+    var mergeLabel = EVALUATOR_LABEL.append(":merge");
     return scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), sExprs, evaluated);
   }
 

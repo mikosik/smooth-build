@@ -106,7 +106,7 @@ public class StepEvaluator {
     var existingPromise = memoryCache.putIfAbsent(hash, resultPromise);
     if (existingPromise != null) {
       var result = scheduleTaskWaitingForOtherTaskResult(step, purity, existingPromise);
-      var label = VM_LABEL.append("scheduleJoin");
+      var label = VM_LABEL.append(":scheduleJoin");
       return schedulingOutput(result, report(label, step.trace(), list()));
     } else if (purity == PURE && diskCache.contains(hash)) {
       return readEvaluationFromDiskCache(step, hash, resultPromise);

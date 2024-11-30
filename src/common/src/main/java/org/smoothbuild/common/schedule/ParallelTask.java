@@ -20,7 +20,7 @@ public class ParallelTask<A1, R> implements Task1<List<? extends A1>, List<R>> {
   public Output<List<R>> execute(List<? extends A1> list) {
     var mappedList = list.map(a -> scheduler.submit(task, argument(a)));
     var joined = scheduler.join(mappedList);
-    var report = report(Scheduler.LABEL.append("scheduleParallel"), list());
+    var report = report(Scheduler.LABEL.append(":scheduleParallel"), list());
     return schedulingOutput(joined, report);
   }
 }

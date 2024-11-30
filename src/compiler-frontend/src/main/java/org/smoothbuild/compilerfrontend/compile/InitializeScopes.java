@@ -35,7 +35,7 @@ public class InitializeScopes extends PModuleVisitor implements Task1<PModule, P
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     initializeScopes(pModule, logger);
-    var label = COMPILER_FRONT_LABEL.append("initializeScopes");
+    var label = COMPILER_FRONT_LABEL.append(":initializeScopes");
     return output(pModule, label, logger.toList());
   }
 

@@ -59,7 +59,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
  * This class is thread-safe.
  */
 public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> {
-  private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append("scheduleCall");
+  private static final Label SCHEDULE_CALL_LABEL = VM_LABEL.append(":scheduleCall");
   private final Scheduler scheduler;
   private final StepEvaluator stepEvaluator;
   private final BytecodeFactory bytecodeFactory;
@@ -90,7 +90,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     }
 
     public Output<BValue> scheduleEvaluate(BExpr expr) {
-      var label = VM_LABEL.append("schedule");
+      var label = VM_LABEL.append(":schedule");
       try {
         return successOutput(scheduleJob(newJob(expr)), label);
       } catch (BytecodeException e) {
@@ -202,7 +202,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     private Promise<Maybe<BValue>> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
       var subExprs = if_.subExprs();
       Task1<BValue, BValue> schedulingTask = (conditionValue) -> {
-        var label = VM_LABEL.append("scheduleIf");
+        var label = VM_LABEL.append(":scheduleIf");
         try {
           var condition = ((BBool) conditionValue).toJavaBoolean();
           return successOutput(
@@ -221,7 +221,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       var subExprs = map.subExprs();
       var arrayArg = subExprs.array();
       Task1<BValue, BValue> schedulingTask = (arrayValue) -> {
-        var label = VM_LABEL.append("scheduleMap");
+        var label = VM_LABEL.append(":scheduleMap");
         try {
           var array = ((BArray) arrayValue);
           var mapperArg = subExprs.mapper();
@@ -270,7 +270,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
 
     private Promise<Maybe<BValue>> scheduleInlineTask(Job job) {
       Task0<BValue> inlineTask = () -> {
-        var label = VM_LABEL.append("inline");
+        var label = VM_LABEL.append(":inline");
         try {
           var inlined = (BValue) bReferenceInliner.inline(job);
           List<Log> logs = list();

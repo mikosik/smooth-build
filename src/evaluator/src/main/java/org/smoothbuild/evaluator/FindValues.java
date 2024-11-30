@@ -35,7 +35,7 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
         logger.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
       }
     }
-    var label = EVALUATOR_LABEL.append("findValues");
+    var label = EVALUATOR_LABEL.append(":findValues");
     if (logger.containsFailure()) {
       return output(label, logger.toList());
     }
