@@ -1,13 +1,12 @@
 package org.smoothbuild.cli.match;
 
-import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import com.google.common.collect.ImmutableMap;
-import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.base.Label;
+import org.smoothbuild.common.log.base.LabelMatcher;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.ReportMatcher;
+import picocli.CommandLine.TypeConversionException;
 
 public class ReportMatchers {
   public static final ReportMatcher ALL = (label, logs) -> true;
@@ -18,13 +17,8 @@ public class ReportMatchers {
   static final ReportMatcher WARNING = logLevelMatcher(Level.WARNING);
   static final ReportMatcher INFO = logLevelMatcher(Level.INFO);
 
-  static final ReportMatcher INVOKE = labelPrefixMatcher(VM_EVALUATE.append(":invoke"));
-  static final ReportMatcher COMBINE = labelPrefixMatcher(VM_EVALUATE.append(":combine"));
-  static final ReportMatcher ORDER = labelPrefixMatcher(VM_EVALUATE.append(":order"));
-  static final ReportMatcher PICK = labelPrefixMatcher(VM_EVALUATE.append(":pick"));
-  static final ReportMatcher SELECT = labelPrefixMatcher(VM_EVALUATE.append(":select"));
-
-  static final ReportMatcher DEFAULT = or(INFO, INVOKE);
+  static final ReportMatcher DEFAULT =
+      or(INFO, labelMatcher(VM_EVALUATE.append(":invoke").toString()));
 
   private static final ImmutableMap<String, ReportMatcher> MATCHERS_MAP =
       ImmutableMap.<String, ReportMatcher>builder()
@@ -42,15 +36,27 @@ public class ReportMatchers {
           .put("lw", WARNING)
           .put("info", INFO)
           .put("li", INFO)
-          .put("invoke", INVOKE)
-          .put("combine", COMBINE)
-          .put("order", ORDER)
-          .put("pick", PICK)
-          .put("select", SELECT)
           .build();
 
-  public static Maybe<ReportMatcher> findMatcher(String name) {
-    return maybe(MATCHERS_MAP.get(name));
+  public static ReportMatcher labelMatcher(String pattern) {
+    var labelMatcher = newLabelMatcher(pattern);
+    return (label, logs) -> labelMatcher.test(label);
+  }
+
+  private static LabelMatcher newLabelMatcher(String pattern) {
+    try {
+      return new LabelMatcher(pattern);
+    } catch (IllegalArgumentException e) {
+      throw new TypeConversionException("Illegal label pattern " + pattern + ". " + e.getMessage());
+    }
+  }
+
+  public static ReportMatcher findMatcher(String name) {
+    var reportMatcher = MATCHERS_MAP.get(name);
+    if (reportMatcher == null) {
+      throw new TypeConversionException("Unknown matcher '" + name + "'.");
+    }
+    return reportMatcher;
   }
 
   public static ReportMatcher and(ReportMatcher left, ReportMatcher right) {
@@ -67,9 +73,5 @@ public class ReportMatchers {
 
   private static ReportMatcher logLevelMatcher(Level level) {
     return (label, logs) -> logs.stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
-  }
-
-  public static ReportMatcher labelPrefixMatcher(Label prefix) {
-    return (label, logs) -> label.startsWith(prefix);
   }
 }

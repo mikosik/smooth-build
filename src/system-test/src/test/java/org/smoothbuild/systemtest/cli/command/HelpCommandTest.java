@@ -74,7 +74,7 @@ public class HelpCommandTest extends SystemTestContext {
                            Filter is a boolean expression made up of matchers (listed
                              below), boolean operators '&', '|', grouping brackets '(',
                              ')'.
-                           Default value is 'info|invoke'
+                           Default value is 'info|:vm:evaluate:invoke'
 
                            For each matched tasks its label, trace and logs are printed
                              which can be further filtered using --filter-logs and
@@ -86,22 +86,19 @@ public class HelpCommandTest extends SystemTestContext {
                              with at least warning level.
 
                            Available task matchers:
-                             a, all             - all tasks
-                             d, default         - shortcut for 'info|invoke'
-                             n, none            - no tasks
+                             a, all         - all tasks
+                             d, default     - shortcut for 'info|invoke'
+                             n, none        - no tasks
 
-                             lf, fatal          - contains a log with fatal level
-                             le, error          - contains a log with at least error
-                             level
-                             lw, warning        - contains a log with at least warning
-                             level
-                             li, info           - contains any log
+                             lf, fatal      - contains a log with fatal level
+                             le, error      - contains a log with at least error level
+                             lw, warning    - contains a log with at least warning level
+                             li, info       - contains any log
 
-                             combine            - evaluates tuple creation
-                             invoke             - evaluates native function call
-                             order              - evaluates array creation
-                             pick               - evaluates array element picking
-                             select             - evaluates field selection
+                             <glob pattern> - has label that matches glob pattern. "**"
+                             matches any number of characters. "*" matches any number
+                             of characters that not contain ":". For example ":vm:**"
+                             matches all tasks which label starts with ":vm:".
            """);
   }
 
