@@ -13,10 +13,15 @@ expression
    | < assoc = right > expression '|' expression # Or
    | '(' expression ')' # Brackets
    | MATCHER_NAME # MatcherName
+   | LABEL_PATTERN # LabelPattern
    ;
 
 MATCHER_NAME
    : [a-zA-Z]+
+   ;
+
+LABEL_PATTERN
+   : (':' [a-zA-Z*]+)+
    ;
 
 WS

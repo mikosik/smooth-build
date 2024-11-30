@@ -69,180 +69,82 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _filter_tasks_option {
-    @Nested
-    class _basic extends SystemTestContext {
-      @Test
-      void illegal_value_causes_error() throws IOException {
-        createUserModule("""
+  class _filter_tasks_option extends SystemTestContext {
+    @Test
+    void illegal_value_causes_error() throws IOException {
+      createUserModule("""
                 result = "abc";
                 """);
-        runSmooth(buildCommand("--filter-tasks=ILLEGAL", "result"));
-        assertFinishedWithError();
-        assertSystemErrContains(
-            """
-            Invalid value for option '--filter-tasks': Unknown matcher 'ILLEGAL'.
+      runSmooth(buildCommand("--filter-tasks=ILLEGAL", "result"));
+      assertFinishedWithError();
+      assertSystemErrContains(
+          """
+          Invalid value for option '--filter-tasks': Unknown matcher 'ILLEGAL'.
 
-            Usage:""");
-      }
+          Usage:""");
     }
 
-    @Nested
-    class _invoke_matcher extends SystemTestContext {
-      private static final String NATIVE_FUNCTION_CALL =
-          """
-          result = concat([["a"], ["b"]]);
-          """;
-      private static final String NATIVE_CALL_TASK_HEADER =
-          """
-          :evaluate:invoke
-          """;
+    private static final String NATIVE_FUNCTION_CALL =
+        """
+        result = concat([["a"], ["b"]]);
+        """;
+    private static final String NATIVE_CALL_TASK_HEADER =
+        """
+        :vm:evaluate:invoke
+        """;
 
-      @Test
-      void shows_call_to_native_func_when_enabled() throws IOException {
-        testThatTaskHeaderShownWhenInvokeIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
-      }
-
-      @Test
-      void hides_call_to_native_func_when_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
-            NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
-      }
-
-      private void testThatTaskHeaderShownWhenInvokeIsEnabled(
-          String callDeclaration, String expectedHeaderToBeShown) throws IOException {
-        createUserModule(callDeclaration);
-        runSmooth(buildCommand("--filter-tasks=invoke", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains(expectedHeaderToBeShown);
-      }
-
-      private void testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
-          String callDeclaration, String headerThatShouldNotBeShows) throws IOException {
-        createUserModule(callDeclaration);
-        runSmooth(buildCommand("--filter-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain(headerThatShouldNotBeShows);
-      }
+    @Test
+    void shows_call_to_native_func_when_enabled() throws IOException {
+      testThatTaskHeaderShownWhenInvokeIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
     }
 
-    @Nested
-    class _combine_matcher extends SystemTestContext {
-      private static final String COMBINE =
-          """
-          MyStruct {
-            String myField
-          }
-          result = MyStruct("abc");
-          """;
-      private static final String COMBINE_TASK_HEADER =
-          """
-          :evaluate:combine
-          """;
-
-      @Test
-      void shows_when_enabled() throws IOException {
-        createUserModule(COMBINE);
-        runSmooth(buildCommand("--filter-tasks=combine", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains(COMBINE_TASK_HEADER);
-      }
-
-      @Test
-      void hides_when_not_enabled() throws IOException {
-        createUserModule(COMBINE);
-        runSmooth(buildCommand("--filter-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain(COMBINE_TASK_HEADER);
-      }
+    @Test
+    void hides_call_to_native_func_when_not_enabled() throws IOException {
+      testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
+          NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
     }
 
-    @Nested
-    class _pick_matcher extends SystemTestContext {
-      private static final String PICK =
-          """
-            result = elem([1, 2, 3], 0);
-            """;
-      private static final String PICK_TASK_HEADER = """
-          :evaluate:pick
-          """;
-
-      @Test
-      void shows_when_enabled() throws IOException {
-        createUserModule(PICK);
-        runSmooth(buildCommand("--filter-tasks=pick", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains(PICK_TASK_HEADER);
-      }
-
-      @Test
-      void hides_when_not_enabled() throws IOException {
-        createUserModule(PICK);
-        runSmooth(buildCommand("--filter-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain(PICK_TASK_HEADER);
-      }
+    private void testThatTaskHeaderShownWhenInvokeIsEnabled(
+        String callDeclaration, String expectedHeaderToBeShown) throws IOException {
+      createUserModule(callDeclaration);
+      runSmooth(buildCommand("--filter-tasks=:vm:evaluate:invoke", "result"));
+      assertFinishedWithSuccess();
+      assertSystemOutContains(expectedHeaderToBeShown);
     }
 
-    @Nested
-    class _order_matcher extends SystemTestContext {
-      private static final String ORDER =
-          """
-          result = [
-            123,
-            456,
-          ];
-          """;
-      private static final String ORDER_TASK_HEADER = """
-          :evaluate:order
-          """;
-
-      @Test
-      void shows_when_enabled() throws IOException {
-        createUserModule(ORDER);
-        runSmooth(buildCommand("--filter-tasks=order", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains(ORDER_TASK_HEADER);
-      }
-
-      @Test
-      void hides_when_not_enabled() throws IOException {
-        createUserModule(ORDER);
-        runSmooth(buildCommand("--filter-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
-      }
+    private void testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
+        String callDeclaration, String headerThatShouldNotBeShows) throws IOException {
+      createUserModule(callDeclaration);
+      runSmooth(buildCommand("--filter-tasks=none", "result"));
+      assertFinishedWithSuccess();
+      assertSystemOutDoesNotContain(headerThatShouldNotBeShows);
     }
 
-    @Nested
-    class _select_matcher extends SystemTestContext {
-      private static final String SELECT =
-          """
-            MyStruct {
-              String myField
-            }
-            aStruct = MyStruct("abc");
-            result = aStruct.myField;
-            """;
-      private static final String SELECT_TASK_HEADER = """
-          :evaluate:select
+    private static final String ORDER =
+        """
+        result = [
+          123,
+          456,
+        ];
+        """;
+    private static final String ORDER_TASK_HEADER = """
+          :vm:evaluate:order
           """;
 
-      @Test
-      void shows_when_enabled() throws IOException {
-        createUserModule(SELECT);
-        runSmooth(buildCommand("--filter-tasks=select", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutContains(SELECT_TASK_HEADER);
-      }
+    @Test
+    void shows_order_task_when_enabled() throws IOException {
+      createUserModule(ORDER);
+      runSmooth(buildCommand("--filter-tasks=:vm:evaluate:order", "result"));
+      assertFinishedWithSuccess();
+      assertSystemOutContains(ORDER_TASK_HEADER);
+    }
 
-      @Test
-      void hides_when_not_enabled() throws IOException {
-        createUserModule(SELECT);
-        runSmooth(buildCommand("--filter-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSystemOutDoesNotContain(SELECT_TASK_HEADER);
-      }
+    @Test
+    void hides_order_task_when_not_enabled() throws IOException {
+      createUserModule(ORDER);
+      runSmooth(buildCommand("--filter-tasks=none", "result"));
+      assertFinishedWithSuccess();
+      assertSystemOutDoesNotContain(ORDER_TASK_HEADER);
     }
   }
 

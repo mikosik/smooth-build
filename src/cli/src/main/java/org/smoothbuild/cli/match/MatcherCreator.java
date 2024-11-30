@@ -3,16 +3,17 @@ package org.smoothbuild.cli.match;
 import static org.smoothbuild.cli.match.CreateMatcherContext.createMatcherContext;
 import static org.smoothbuild.cli.match.ReportMatchers.and;
 import static org.smoothbuild.cli.match.ReportMatchers.findMatcher;
+import static org.smoothbuild.cli.match.ReportMatchers.labelMatcher;
 import static org.smoothbuild.cli.match.ReportMatchers.or;
 
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherBaseVisitor;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.AndContext;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.BracketsContext;
+import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.LabelPatternContext;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.MatcherContext;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.MatcherNameContext;
 import org.smoothbuild.antlr.reportmatcher.ReportMatcherParser.OrContext;
 import org.smoothbuild.common.log.report.ReportMatcher;
-import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreator {
   public static ReportMatcher createMatcher(String expression) {
@@ -44,9 +45,12 @@ public class MatcherCreator {
 
       @Override
       public ReportMatcher visitMatcherName(MatcherNameContext nameContext) {
-        String name = nameContext.MATCHER_NAME().getText();
-        return findMatcher(name)
-            .getOrThrow(() -> new TypeConversionException("Unknown matcher '" + name + "'."));
+        return findMatcher(nameContext.MATCHER_NAME().getText());
+      }
+
+      @Override
+      public ReportMatcher visitLabelPattern(LabelPatternContext labelPatternContext) {
+        return labelMatcher(labelPatternContext.LABEL_PATTERN().getText());
       }
     }.visit(matcherContext);
   }
