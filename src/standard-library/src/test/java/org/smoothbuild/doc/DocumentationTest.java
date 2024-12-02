@@ -1,4 +1,4 @@
-package org.smoothbuild.systemtest.doc;
+package org.smoothbuild.doc;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,15 +13,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.smoothbuild.systemtest.SystemTestContext;
+import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
 
-public class DocumentationTest extends SystemTestContext {
+public class DocumentationTest extends EvaluatorTestContext {
   @ParameterizedTest
   @ArgumentsSource(CodeExampleProvider.class)
-  public void example_code_can_be_compiled(String code) throws Exception {
-    createUserModule(code);
-    runSmoothList();
-    assertFinishedWithSuccess();
+  public void example_code_can_be_compiled(String code) throws IOException {
+    createUserModule(code + "\n my_result = 7;");
+    evaluate("my_result");
   }
 
   private static class CodeExampleProvider implements ArgumentsProvider {
