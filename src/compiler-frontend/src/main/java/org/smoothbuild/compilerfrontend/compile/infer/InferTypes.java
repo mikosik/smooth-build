@@ -1,6 +1,5 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -16,9 +15,9 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
@@ -63,7 +62,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     private void visitModule(PModule pModule) {
       pModule.structs().forEach(this::visitStruct);
-      pModule.evaluables().forEach(this::visitReferenceable);
+      pModule.evaluables().forEach(this::visitNamedEvaluable);
     }
 
     private void visitStruct(PStruct pStruct) {
@@ -84,11 +83,10 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       constructorP.setTypeS(funcTS);
     }
 
-    private void visitReferenceable(PReferenceable pReferenceable) {
-      switch (pReferenceable) {
+    private void visitNamedEvaluable(PNamedEvaluable namedEvaluable) {
+      switch (namedEvaluable) {
         case PNamedFunc pNamedFunc -> visitFunc(pNamedFunc);
         case PNamedValue pNamedValue -> visitValue(pNamedValue);
-        case PItem pItem -> throw unexpectedCaseException(pItem);
       }
     }
 
