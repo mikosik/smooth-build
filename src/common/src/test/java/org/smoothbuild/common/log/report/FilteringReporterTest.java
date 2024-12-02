@@ -34,7 +34,7 @@ public class FilteringReporterTest extends CommonTestContext {
   @Test
   void when_task_filter_matches_then_task_is_printed() {
     var reportPrinter = mock(ReportPrinter.class);
-    var reporter = new FilteringReporter(reportPrinter, (l, ls) -> true, (l, ls) -> true, INFO);
+    var reporter = new FilteringReporter(reportPrinter, r -> true, r -> true, INFO);
 
     reporter.submit(report(aLabel(), aTrace(), DISK, logs()));
 
@@ -44,7 +44,7 @@ public class FilteringReporterTest extends CommonTestContext {
   @Test
   void when_task_filter_not_matches_then_task_is_not_printed() {
     var reportPrinter = mock(ReportPrinter.class);
-    var reporter = new FilteringReporter(reportPrinter, (l, ls) -> false, (l, ls) -> true, INFO);
+    var reporter = new FilteringReporter(reportPrinter, r -> false, r -> true, INFO);
 
     reporter.submit(report(aLabel(), aTrace(), DISK, logs()));
 
@@ -54,7 +54,7 @@ public class FilteringReporterTest extends CommonTestContext {
   @Test
   void when_trace_filter_matches_then_trace_is_printed() {
     var reportPrinter = mock(ReportPrinter.class);
-    var reporter = new FilteringReporter(reportPrinter, (l, ls) -> true, (l, ls) -> true, INFO);
+    var reporter = new FilteringReporter(reportPrinter, r -> true, r -> true, INFO);
 
     reporter.submit(report(aLabel(), aTrace(), DISK, logs()));
 
@@ -64,7 +64,7 @@ public class FilteringReporterTest extends CommonTestContext {
   @Test
   void when_trace_filter_not_matches_then_trace_is_not_printed() {
     var reportPrinter = mock(ReportPrinter.class);
-    var reporter = new FilteringReporter(reportPrinter, (l, ls) -> true, (l, ls) -> false, INFO);
+    var reporter = new FilteringReporter(reportPrinter, r -> true, r -> false, INFO);
 
     reporter.submit(report(aLabel(), aTrace(), DISK, logs()));
 
@@ -76,7 +76,7 @@ public class FilteringReporterTest extends CommonTestContext {
   void logs_that_match_level_or_above_are_printed(Level level, List<Log> logs, List<Log> expected) {
     var wrappedReporter = mock(ReportPrinter.class);
     var report = report(aLabel(), aTrace(), DISK, logs);
-    var reporter = new FilteringReporter(wrappedReporter, (l, ls) -> true, (l, ls) -> true, level);
+    var reporter = new FilteringReporter(wrappedReporter, r -> true, r -> true, level);
 
     reporter.submit(report);
 

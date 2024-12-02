@@ -18,8 +18,10 @@ import static org.smoothbuild.cli.match.ReportMatchers.or;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,14 +32,14 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Report;
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreatorTest {
   @ParameterizedTest
   @MethodSource("provideArguments")
   public void matcher_instances_matches_same_reports_as_expected_matcher(
-      String expression, ReportMatcher expectedMatcher) {
+      String expression, Predicate<Report> expectedMatcher) {
 
     var taskLabels = list(
         label(":vm:evaluate:combine"),
@@ -53,15 +55,16 @@ public class MatcherCreatorTest {
   }
 
   private static void verifyCreatedMatcherInstanceMatchesSameReportsAsExpectedMatcher(
-      String expression, ReportMatcher expectedMatcher, List<Label> taskLabels) {
+      String expression, Predicate<Report> expectedMatcher, List<Label> taskLabels) {
     var stringBuilder = new StringBuilder();
     var reportMatcher = createMatcher(expression);
     for (var label : taskLabels) {
       for (var alias : list(PROJECT_ALIAS, LIBRARY_ALIAS, INSTALL_ALIAS)) {
         for (var level : Level.values()) {
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
-          boolean actual = reportMatcher.matches(label, logs);
-          boolean expected = expectedMatcher.matches(label, logs);
+          var report = report(label, logs);
+          boolean actual = reportMatcher.test(report);
+          boolean expected = expectedMatcher.test(report);
           if (actual != expected) {
             stringBuilder
                 .append(label)

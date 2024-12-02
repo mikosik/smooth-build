@@ -4,11 +4,12 @@ import static org.smoothbuild.cli.command.base.CreateInjector.createInjector;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
+import java.util.function.Predicate;
 import org.smoothbuild.cli.command.base.CommandRunner;
 import org.smoothbuild.cli.command.base.ProjectCommand;
 import org.smoothbuild.cli.match.MatcherCreator;
 import org.smoothbuild.common.log.base.Label;
-import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Report;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Parameters;
@@ -55,7 +56,7 @@ public class BuildCommand extends ProjectCommand {
           "*" matches any number of characters that not contain ":". \
           For example ":vm:**" matches all tasks which label starts with ":vm:".
           """)
-  ReportMatcher filterTasks;
+  Predicate<Report> filterTasks;
 
   @picocli.CommandLine.Option(
       names = {"--filter-stack-traces", "-s"},
@@ -69,11 +70,11 @@ public class BuildCommand extends ProjectCommand {
           Filter is specified using the same language as used for specifying filters
           in --filter-tasks option.
           """)
-  ReportMatcher filterTraces;
+  Predicate<Report> filterTraces;
 
-  public static class FilterTasksConverter implements ITypeConverter<ReportMatcher> {
+  public static class FilterTasksConverter implements ITypeConverter<Predicate<Report>> {
     @Override
-    public ReportMatcher convert(String value) {
+    public Predicate<Report> convert(String value) {
       return MatcherCreator.createMatcher(value);
     }
   }
