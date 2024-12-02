@@ -4,8 +4,9 @@ import com.google.common.base.CharMatcher;
 
 public record Label(String label) {
   private static final String DELIMITER = ":";
-  public static final CharMatcher ALLOWED_CHARS_MATCHER =
-      CharMatcher.anyOf(":abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  public static final String ALLOWED_CHARS =
+      ":abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  public static final CharMatcher ALLOWED_CHARS_MATCHER = CharMatcher.anyOf(ALLOWED_CHARS);
 
   public static Label label(String label) {
     return new Label(label);
