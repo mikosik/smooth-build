@@ -11,22 +11,24 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.base.Log.info;
 import static org.smoothbuild.common.log.base.Log.warning;
+import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
+import java.util.function.Predicate;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Report;
 
 public class ReportMatchersTest {
   @ParameterizedTest
   @MethodSource("matcher_matches_cases")
   public void matcher_matches(
-      ReportMatcher matcher, Label label, List<Log> logs, boolean expected) {
-    assertThat(matcher.matches(label, logs)).isEqualTo(expected);
+      Predicate<Report> matcher, Label label, List<Log> logs, boolean expected) {
+    assertThat(matcher.test(report(label, logs))).isEqualTo(expected);
   }
 
   public static List<Arguments> matcher_matches_cases() {

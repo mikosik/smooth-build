@@ -3,25 +3,26 @@ package org.smoothbuild.cli.match;
 import static org.smoothbuild.virtualmachine.VmConstants.VM_EVALUATE;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.function.Predicate;
 import org.smoothbuild.common.log.base.LabelMatcher;
 import org.smoothbuild.common.log.base.Level;
-import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Report;
 import picocli.CommandLine.TypeConversionException;
 
 public class ReportMatchers {
-  public static final ReportMatcher ALL = (label, logs) -> true;
-  public static final ReportMatcher NONE = (label, logs) -> false;
+  public static final Predicate<Report> ALL = (report) -> true;
+  public static final Predicate<Report> NONE = (report) -> false;
 
-  static final ReportMatcher FATAL = logLevelMatcher(Level.FATAL);
-  static final ReportMatcher ERROR = logLevelMatcher(Level.ERROR);
-  static final ReportMatcher WARNING = logLevelMatcher(Level.WARNING);
-  static final ReportMatcher INFO = logLevelMatcher(Level.INFO);
+  static final Predicate<Report> FATAL = logLevelMatcher(Level.FATAL);
+  static final Predicate<Report> ERROR = logLevelMatcher(Level.ERROR);
+  static final Predicate<Report> WARNING = logLevelMatcher(Level.WARNING);
+  static final Predicate<Report> INFO = logLevelMatcher(Level.INFO);
 
-  static final ReportMatcher DEFAULT =
+  static final Predicate<Report> DEFAULT =
       or(INFO, labelMatcher(VM_EVALUATE.append(":invoke").toString()));
 
-  private static final ImmutableMap<String, ReportMatcher> MATCHERS_MAP =
-      ImmutableMap.<String, ReportMatcher>builder()
+  private static final ImmutableMap<String, Predicate<Report>> MATCHERS_MAP =
+      ImmutableMap.<String, Predicate<Report>>builder()
           .put("all", ALL)
           .put("a", ALL)
           .put("default", DEFAULT)
@@ -38,9 +39,9 @@ public class ReportMatchers {
           .put("li", INFO)
           .build();
 
-  public static ReportMatcher labelMatcher(String pattern) {
+  public static Predicate<Report> labelMatcher(String pattern) {
     var labelMatcher = newLabelMatcher(pattern);
-    return (label, logs) -> labelMatcher.test(label);
+    return (report) -> labelMatcher.test(report.label());
   }
 
   private static LabelMatcher newLabelMatcher(String pattern) {
@@ -51,7 +52,7 @@ public class ReportMatchers {
     }
   }
 
-  public static ReportMatcher findMatcher(String name) {
+  public static Predicate<Report> findMatcher(String name) {
     var reportMatcher = MATCHERS_MAP.get(name);
     if (reportMatcher == null) {
       throw new TypeConversionException("Unknown matcher '" + name + "'.");
@@ -59,19 +60,19 @@ public class ReportMatchers {
     return reportMatcher;
   }
 
-  public static ReportMatcher and(ReportMatcher left, ReportMatcher right) {
-    return (label, logs) -> left.matches(label, logs) && right.matches(label, logs);
+  public static Predicate<Report> and(Predicate<Report> left, Predicate<Report> right) {
+    return (report) -> left.test(report) && right.test(report);
   }
 
-  public static ReportMatcher or(ReportMatcher left, ReportMatcher right) {
-    return (label, logs) -> left.matches(label, logs) || right.matches(label, logs);
+  public static Predicate<Report> or(Predicate<Report> left, Predicate<Report> right) {
+    return (report) -> left.test(report) || right.test(report);
   }
 
-  public static ReportMatcher not(ReportMatcher matcher) {
-    return (label, logs) -> !matcher.matches(label, logs);
+  public static Predicate<Report> not(Predicate<Report> matcher) {
+    return (report) -> !matcher.test(report);
   }
 
-  private static ReportMatcher logLevelMatcher(Level level) {
-    return (label, logs) -> logs.stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
+  private static Predicate<Report> logLevelMatcher(Level level) {
+    return (report) -> report.logs().stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
   }
 }

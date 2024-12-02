@@ -14,13 +14,14 @@ import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.function.Predicate;
 import org.smoothbuild.cli.CliWiring;
 import org.smoothbuild.cli.match.ReportMatchers;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.FileSystemWiring;
 import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.log.base.Level;
-import org.smoothbuild.common.log.report.ReportMatcher;
+import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.ReportWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.evaluator.EvaluatorWiring;
@@ -35,8 +36,8 @@ public class CreateInjector {
       Path projectDir,
       PrintWriter out,
       Level logLevel,
-      ReportMatcher filterTasks,
-      ReportMatcher filterTraces) {
+      Predicate<Report> filterTasks,
+      Predicate<Report> filterTraces) {
     var installationDir = installationDir();
     Map<Alias, Path> aliasToPath = map(
         PROJECT_ALIAS, projectDir,
