@@ -15,8 +15,8 @@ public record SSelect(SExpr selectable, String field, Location location) impleme
 
   @Override
   public SType evaluationType() {
-    var structTS = (SStructType) selectable.evaluationType();
-    return structTS.fields().get(field).type();
+    var sStructType = (SStructType) selectable.evaluationType();
+    return sStructType.fields().get(field).type();
   }
 
   @Override
