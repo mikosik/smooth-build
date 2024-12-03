@@ -12,7 +12,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
@@ -29,25 +28,17 @@ public class TempVarsNamer {
   private final Unifier unifier;
   private final SVarSet outerScopeVars;
 
-  public TempVarsNamer(Unifier unifier) {
-    this(unifier, varSetS());
-  }
-
   private TempVarsNamer(Unifier unifier, SVarSet outerScopeVars) {
     this.unifier = unifier;
     this.outerScopeVars = outerScopeVars;
   }
 
-  public void nameVarsInNamedValue(PNamedValue namedValue) {
-    nameVarsInEvaluable(namedValue);
+  public static void nameVarsInNamedValue(Unifier unifier, PNamedValue namedValue) {
+    new TempVarsNamer(unifier, varSetS()).nameVarsInEvaluable(namedValue);
   }
 
-  public void nameVarsInNamedFunc(PNamedFunc namedFunc) {
-    nameVarsInEvaluable(namedFunc);
-  }
-
-  private void handleExpr(SVarSet varsInScope, PExpr expr) {
-    new TempVarsNamer(unifier, varsInScope).handleExpr(expr);
+  public static void nameVarsInNamedFunc(Unifier unifier, PEvaluable namedFunc) {
+    new TempVarsNamer(unifier, varSetS()).nameVarsInEvaluable(namedFunc);
   }
 
   private void handleExpr(PExpr expr) {
@@ -93,7 +84,8 @@ public class TempVarsNamer {
     var body = evaluable.body();
     var localScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAddedAll(localScopeVars);
-    body.ifPresent(b -> handleExpr(varsInScope, b));
+    var localScopeNamer = new TempVarsNamer(unifier, varsInScope);
+    body.ifPresent(localScopeNamer::handleExpr);
     var resolvedAndRenamedT = nameVars(resolvedT, localScopeVars);
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
   }

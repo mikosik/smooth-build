@@ -50,7 +50,7 @@ public class ExprTypeUnifier {
   private final SVarSet outerScopeVars;
   private final Logger logger;
 
-  public ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller, Logger logger) {
+  private ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller, Logger logger) {
     this(unifier, typeTeller, varSetS(), logger);
   }
 
@@ -62,8 +62,13 @@ public class ExprTypeUnifier {
     this.logger = logger;
   }
 
-  public boolean unifyNamedValue(PNamedValue namedValue) {
-    return unifyValue(namedValue) && setNamedValueSchema(namedValue);
+  public static boolean unifyNamedValue(
+      Unifier unifier, TypeTeller typeTeller, Logger logger, PNamedValue pNamedValue) {
+    return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedValue(pNamedValue);
+  }
+
+  private boolean unifyNamedValue(PNamedValue pNamedValue) {
+    return unifyValue(pNamedValue) && setNamedValueSchema(pNamedValue);
   }
 
   private boolean setNamedValueSchema(PNamedValue pNamedValue) {
@@ -73,7 +78,12 @@ public class ExprTypeUnifier {
     return true;
   }
 
-  public boolean unifyFunc(PFunc namedFunc) {
+  public static boolean unifyFunc(
+      Unifier unifier, TypeTeller typeTeller, Logger logger, PFunc namedFunc) {
+    return new ExprTypeUnifier(unifier, typeTeller, logger).unifyFunc(namedFunc);
+  }
+
+  private boolean unifyFunc(PFunc namedFunc) {
     return unifyFuncImpl(namedFunc) && setFuncSchema(namedFunc);
   }
 
