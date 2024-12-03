@@ -162,7 +162,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     }
 
     private boolean resolveNamedFunc(PNamedFunc namedFunc) {
-      return new TypeInferrerResolve(unifier, logger).resolveNamedFunc(namedFunc);
+      return new TypeInferrerResolve(unifier, logger).resolveFunc(namedFunc);
     }
 
     private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc) {
