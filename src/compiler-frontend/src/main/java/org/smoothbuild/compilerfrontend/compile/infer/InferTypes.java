@@ -65,8 +65,8 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     }
 
     private void visitStruct(PStruct pStruct) {
-      var structTS = inferStructT(pStruct);
-      structTS.ifPresent(st -> visitConstructor(pStruct, st));
+      var sStructType = inferStructT(pStruct);
+      sStructType.ifPresent(t -> visitConstructor(pStruct, t));
     }
 
     private void visitConstructor(PStruct pStruct, SStructType structT) {
@@ -123,7 +123,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     private boolean inferNamedValueSchema(PNamedValue namedValue) {
       if (unifyNamedValue(namedValue)) {
         nameImplicitVars(namedValue);
-        return resolveValueSchema(namedValue);
+        return resolveNamedValue(namedValue);
       } else {
         return false;
       }
@@ -137,7 +137,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       new TempVarsNamer(unifier).nameVarsInNamedValue(namedValue);
     }
 
-    private boolean resolveValueSchema(PNamedValue pNamedValue) {
+    private boolean resolveNamedValue(PNamedValue pNamedValue) {
       return new TypeInferrerResolve(unifier, logger).resolveNamedValue(pNamedValue);
     }
 
