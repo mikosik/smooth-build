@@ -49,12 +49,10 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
   }
 
   public static class Worker {
-    private final Unifier unifier;
     private final TypeTeller typeTeller;
     private final Logger logger;
 
     private Worker(TypeTeller typeTeller, Logger logger) {
-      this.unifier = new Unifier();
       this.typeTeller = typeTeller;
       this.logger = logger;
     }
@@ -84,17 +82,9 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     private void visitNamedEvaluable(PNamedEvaluable namedEvaluable) {
       switch (namedEvaluable) {
-        case PNamedFunc pNamedFunc -> visitFunc(pNamedFunc);
-        case PNamedValue pNamedValue -> visitValue(pNamedValue);
+        case PNamedFunc pNamedFunc -> inferNamedFuncSchema(pNamedFunc);
+        case PNamedValue pNamedValue -> inferNamedValueSchema(pNamedValue);
       }
-    }
-
-    private void visitValue(PNamedValue pNamedValue) {
-      inferNamedValueSchema(pNamedValue);
-    }
-
-    private void visitFunc(PNamedFunc pNamedFunc) {
-      inferNamedFuncSchema(pNamedFunc);
     }
 
     private Maybe<SStructType> inferStructT(PStruct struct) {
@@ -121,48 +111,28 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     // value
 
     private boolean inferNamedValueSchema(PNamedValue namedValue) {
-      if (unifyNamedValue(namedValue)) {
-        nameImplicitVars(namedValue);
-        return resolveNamedValue(namedValue);
+      var unifier = new Unifier();
+
+      if (new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedValue(namedValue)) {
+        new TempVarsNamer(unifier).nameVarsInNamedValue(namedValue);
+        return new TypeInferrerResolve(unifier, logger).resolveNamedValue(namedValue);
       } else {
         return false;
       }
     }
 
-    private boolean unifyNamedValue(PNamedValue namedValue) {
-      return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedValue(namedValue);
-    }
-
-    private void nameImplicitVars(PNamedValue namedValue) {
-      new TempVarsNamer(unifier).nameVarsInNamedValue(namedValue);
-    }
-
-    private boolean resolveNamedValue(PNamedValue pNamedValue) {
-      return new TypeInferrerResolve(unifier, logger).resolveNamedValue(pNamedValue);
-    }
-
     // func
 
     private void inferNamedFuncSchema(PNamedFunc namedFunc) {
+      var unifier = new Unifier();
       var params = namedFunc.params();
-      if (inferParamDefaultValues(params) && unifyNamedFunc(namedFunc)) {
-        nameImplicitVars(namedFunc);
-        if (resolveNamedFunc(namedFunc)) {
+      if (inferParamDefaultValues(params)
+          && new ExprTypeUnifier(unifier, typeTeller, logger).unifyFunc(namedFunc)) {
+        new TempVarsNamer(unifier).nameVarsInNamedFunc(namedFunc);
+        if (new TypeInferrerResolve(unifier, logger).resolveFunc(namedFunc)) {
           detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
         }
       }
-    }
-
-    private boolean unifyNamedFunc(PNamedFunc namedFunc) {
-      return new ExprTypeUnifier(unifier, typeTeller, logger).unifyFunc(namedFunc);
-    }
-
-    private void nameImplicitVars(PNamedFunc namedFunc) {
-      new TempVarsNamer(unifier).nameVarsInNamedFunc(namedFunc);
-    }
-
-    private boolean resolveNamedFunc(PNamedFunc namedFunc) {
-      return new TypeInferrerResolve(unifier, logger).resolveFunc(namedFunc);
     }
 
     private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc) {
@@ -202,13 +172,11 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     // param default value
 
     private boolean inferParamDefaultValues(NList<PItem> params) {
-      return params.stream()
-          .flatMap(p -> p.defaultValue().toList().stream())
-          .allMatch(this::inferParamDefaultValue);
-    }
-
-    private boolean inferParamDefaultValue(PNamedValue defaultValue) {
-      return inferNamedValueSchema(defaultValue);
+      boolean result = true;
+      for (var param : params) {
+        result &= param.defaultValue().map(this::inferNamedValueSchema).getOr(true);
+      }
+      return result;
     }
   }
 }
