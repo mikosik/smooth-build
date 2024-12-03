@@ -4,7 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
  * Annotated value (one that has not a body).
@@ -13,7 +13,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 public final class SAnnotatedValue extends SNamedValue {
   private final SAnnotation annotation;
 
-  public SAnnotatedValue(SAnnotation annotation, SchemaS schema, String name, Location location) {
+  public SAnnotatedValue(SAnnotation annotation, SSchema schema, String name, Location location) {
     super(schema, name, location);
     this.annotation = annotation;
   }

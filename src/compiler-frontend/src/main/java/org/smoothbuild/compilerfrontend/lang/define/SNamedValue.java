@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
  * Named value.
@@ -11,7 +11,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
  */
 public abstract sealed class SNamedValue extends SNamedEvaluable
     permits SAnnotatedValue, SNamedExprValue {
-  public SNamedValue(SchemaS schema, String name, Location location) {
+  public SNamedValue(SSchema schema, String name, Location location) {
     super(schema, name, location);
   }
 

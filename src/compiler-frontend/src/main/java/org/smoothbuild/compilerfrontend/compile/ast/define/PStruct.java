@@ -45,11 +45,11 @@ public final class PStruct extends NalImpl implements PScoped {
     this.scope = scope;
   }
 
-  public SStructType typeS() {
+  public SStructType sType() {
     return sStructType;
   }
 
-  public void setTypeS(SStructType sStructType) {
+  public void setSType(SStructType sStructType) {
     this.sStructType = sStructType;
   }
 

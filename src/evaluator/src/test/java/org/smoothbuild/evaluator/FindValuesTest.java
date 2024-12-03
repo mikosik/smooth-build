@@ -14,22 +14,22 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_evaluable() {
-    var schemaS = sSchema(sArrayType(sIntType()));
-    var valueS = sValue(schemaS, "myValue", sOrder(sIntType()));
-    var scopeS = new SScope(immutableBindings(), immutableBindings(map(valueS.name(), valueS)));
+    var sSchema = sSchema(sArrayType(sIntType()));
+    var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
+    var sScope = new SScope(immutableBindings(), immutableBindings(map(sValue.name(), sValue)));
 
-    var exprs = new FindValues().execute(scopeS, list(valueS.name()));
+    var exprs = new FindValues().execute(sScope, list(sValue.name()));
 
-    var referenceS = sReference(schemaS, "myValue", commandLineLocation());
-    assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(referenceS)));
+    var sReference = sReference(sSchema, "myValue", commandLineLocation());
+    assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
   }
 
   @Test
   void find_polymorphic_evaluable_fails() {
     var value = sValue(sSchema(sArrayType(varA())), "myValue", sOrder(varA()));
-    var scopeS = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
+    var sScope = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
 
-    var exprs = new FindValues().execute(scopeS, list(value.name()));
+    var exprs = new FindValues().execute(sScope, list(value.name()));
 
     assertThat(exprs.report().logs())
         .containsExactly(error("`myValue` cannot be calculated as it is a polymorphic value."));

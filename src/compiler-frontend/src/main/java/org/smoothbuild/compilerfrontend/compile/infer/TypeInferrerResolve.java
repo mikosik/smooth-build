@@ -23,10 +23,10 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 public class TypeInferrerResolve {
@@ -52,8 +52,8 @@ public class TypeInferrerResolve {
 
   private boolean resolveSchema(PEvaluable pEvaluable) {
     switch (pEvaluable) {
-      case PNamedValue valueP -> valueP.setSchemaS(resolveSchema(valueP.schemaS()));
-      case PFunc pFunc -> pFunc.setSchemaS(resolveSchema(pFunc.schemaS()));
+      case PNamedValue valueP -> valueP.setSSchema(resolveSchema(valueP.sSchema()));
+      case PFunc pFunc -> pFunc.setSSchema(resolveSchema(pFunc.sSchema()));
     }
     return true;
   }
@@ -63,17 +63,17 @@ public class TypeInferrerResolve {
         resolveQuantifiedVars(sFuncSchema), (SFuncType) resolveType(sFuncSchema));
   }
 
-  private SchemaS resolveSchema(SchemaS schemaS) {
-    return new SchemaS(resolveQuantifiedVars(schemaS), resolveType(schemaS));
+  private SSchema resolveSchema(SSchema sSchema) {
+    return new SSchema(resolveQuantifiedVars(sSchema), resolveType(sSchema));
   }
 
-  private SVarSet resolveQuantifiedVars(SchemaS schemaS) {
+  private SVarSet resolveQuantifiedVars(SSchema sSchema) {
     return varSetS(
-        schemaS.quantifiedVars().stream().map(v -> (SVar) unifier.resolve(v)).toList());
+        sSchema.quantifiedVars().stream().map(v -> (SVar) unifier.resolve(v)).toList());
   }
 
-  private SType resolveType(SchemaS schemaS) {
-    return unifier.resolve(schemaS.type());
+  private SType resolveType(SSchema sSchema) {
+    return unifier.resolve(sSchema.type());
   }
 
   private boolean resolveBody(Maybe<PExpr> body) {
@@ -147,7 +147,7 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveExprType(PExpr pExpr) {
-    pExpr.setTypeS(unifier.resolve(pExpr.typeS()));
+    pExpr.setSType(unifier.resolve(pExpr.sType()));
     return true;
   }
 

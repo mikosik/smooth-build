@@ -18,9 +18,9 @@ import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class TypeTeller {
   private final SScope imported;
@@ -35,13 +35,13 @@ public class TypeTeller {
     return new TypeTeller(imported, pScope);
   }
 
-  public Maybe<SchemaS> schemaFor(String name) {
+  public Maybe<SSchema> schemaFor(String name) {
     return pScope
         .referencables()
         .getMaybe(name)
         .map(r -> switch (r) {
-          case PNamedEvaluable pNamedEvaluable -> maybe(pNamedEvaluable.schemaS());
-          case PItem pItem -> maybe(pItem.typeS()).map(t -> new SchemaS(varSetS(), t));
+          case PNamedEvaluable pNamedEvaluable -> maybe(pNamedEvaluable.sSchema());
+          case PItem pItem -> maybe(pItem.sType()).map(t -> new SSchema(varSetS(), t));
         })
         .getOrGet(() -> some(imported.evaluables().get(name).schema()));
   }
@@ -64,7 +64,7 @@ public class TypeTeller {
   private Maybe<SType> typeWithName(PType type) {
     Maybe<PStruct> structP = pScope.types().getMaybe(type.name());
     if (structP.isSome()) {
-      return maybe(structP.get().typeS());
+      return maybe(structP.get().sType());
     } else {
       return some(imported.types().get(type.name()).type());
     }

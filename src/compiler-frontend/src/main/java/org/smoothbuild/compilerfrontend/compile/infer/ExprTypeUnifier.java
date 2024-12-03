@@ -36,11 +36,11 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -86,8 +86,8 @@ public class ExprTypeUnifier {
     var resolvedT = resolveType(pEvaluable);
     var vars = resolveQuantifiedVars(resolvedT);
     switch (pEvaluable) {
-      case PNamedValue valueP -> valueP.setSchemaS(new SchemaS(vars, resolvedT));
-      case PFunc pFunc -> pFunc.setSchemaS(new SFuncSchema(vars, (SFuncType) resolvedT));
+      case PNamedValue valueP -> valueP.setSSchema(new SSchema(vars, resolvedT));
+      case PFunc pFunc -> pFunc.setSSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
     }
     return true;
   }
@@ -97,13 +97,13 @@ public class ExprTypeUnifier {
   }
 
   private SType resolveType(PEvaluable pEvaluable) {
-    return unifier.resolve(pEvaluable.typeS());
+    return unifier.resolve(pEvaluable.sType());
   }
 
   private boolean unifyValue(PNamedValue pNamedValue) {
     return translateOrGenerateTempVar(pNamedValue.evaluationType())
         .map(evaluationType -> {
-          pNamedValue.setTypeS(evaluationType);
+          pNamedValue.setSType(evaluationType);
           return unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, typeTeller);
         })
         .getOr(false);
@@ -118,13 +118,13 @@ public class ExprTypeUnifier {
   private boolean unifyFunc(PFunc pFunc, List<SType> paramTs, SType resultT) {
     var typeTellerForBody = typeTeller.withScope(pFunc.scope());
     var funcTS = new SFuncType(paramTs, resultT);
-    pFunc.setTypeS(funcTS);
+    pFunc.setSType(funcTS);
     return unifyEvaluableBody(pFunc, resultT, funcTS, typeTellerForBody);
   }
 
   private Maybe<List<SType>> inferParamTs(NList<PItem> params) {
     var paramTs = pullUpMaybe(params.list().map(p -> typeTeller.translate(p.type())));
-    paramTs.ifPresent(types -> params.list().zip(types, PItem::setTypeS));
+    paramTs.ifPresent(types -> params.list().zip(types, PItem::setSType));
     return paramTs.map(List::listOfAll);
   }
 
@@ -173,13 +173,13 @@ public class ExprTypeUnifier {
   }
 
   private Maybe<SType> setAndMemoize(SType sType, PExpr pExpr) {
-    pExpr.setTypeS(sType);
+    pExpr.setSType(sType);
     return some(sType);
   }
 
   private <T extends PExpr> Maybe<SType> unifyAndMemoize(
       Function<T, Maybe<SType>> unifier, T exprP) {
-    return unifier.apply(exprP).ifPresent(exprP::setTypeS);
+    return unifier.apply(exprP).ifPresent(exprP::setSType);
   }
 
   private Maybe<SType> unifyCall(PCall pCall) {
@@ -204,7 +204,7 @@ public class ExprTypeUnifier {
   private Maybe<SType> unifyInstantiate(PInstantiate pInstantiate) {
     var polymorphicP = pInstantiate.polymorphic();
     if (unifyPolymorphic(polymorphicP)) {
-      var schema = polymorphicP.schemaS();
+      var schema = polymorphicP.sSchema();
       pInstantiate.setTypeArgs(generateList(schema.quantifiedVars().size(), unifier::newTempVar));
       return some(schema.instantiate(pInstantiate.typeArgs()));
     } else {
@@ -249,9 +249,9 @@ public class ExprTypeUnifier {
   }
 
   private boolean unifyReference(PReference pReference) {
-    Maybe<SchemaS> schemaS = typeTeller.schemaFor(pReference.referencedName());
-    if (schemaS.isSome()) {
-      pReference.setSchemaS(schemaS.get());
+    Maybe<SSchema> sSchema = typeTeller.schemaFor(pReference.referencedName());
+    if (sSchema.isSome()) {
+      pReference.setSSchema(sSchema.get());
       return true;
     } else {
       return false;

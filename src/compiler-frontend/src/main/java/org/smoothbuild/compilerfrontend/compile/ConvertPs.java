@@ -59,9 +59,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class ConvertPs implements Task2<PModule, SScope, SModule> {
   @Override
@@ -82,24 +82,24 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
     }
 
     private SModule convertModule(PModule pModule) {
-      var scopeP = pModule.scope();
-      var structs = scopeP.types().toMap().mapValues(this::convertStruct);
-      var evaluables = scopeP.referencables().toMap().mapValues(this::convertReferenceableP);
+      var pScope = pModule.scope();
+      var structs = pScope.types().toMap().mapValues(this::convertStruct);
+      var evaluables = pScope.referencables().toMap().mapValues(this::convertReferenceableP);
       var members = new SScope(immutableBindings(structs), immutableBindings(evaluables));
-      var scopeS = SScope.scopeS(imported, members);
-      return new SModule(members, scopeS);
+      var sScope = SScope.sScope(imported, members);
+      return new SModule(members, sScope);
     }
 
     private STypeDefinition convertStruct(PStruct pStruct) {
-      return new STypeDefinition(pStruct.typeS(), pStruct.location());
+      return new STypeDefinition(pStruct.sType(), pStruct.location());
     }
 
     private SConstructor convertConstructor(PConstructor pConstructor) {
       var fields = pConstructor.params();
       var params =
-          fields.map(f -> new SItem(fields.get(f.name()).typeS(), f.name(), none(), f.location()));
+          fields.map(f -> new SItem(fields.get(f.name()).sType(), f.name(), none(), f.location()));
       return new SConstructor(
-          pConstructor.schemaS(), pConstructor.name(), params, pConstructor.location());
+          pConstructor.sSchema(), pConstructor.name(), params, pConstructor.location());
     }
 
     private SNamedEvaluable convertReferenceableP(PReferenceable pReferenceable) {
@@ -112,7 +112,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
     }
 
     public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
-      var schema = pNamedValue.schemaS();
+      var schema = pNamedValue.sSchema();
       var name = pNamedValue.name();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
@@ -139,14 +139,14 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
     }
 
     public SItem convertParam(PItem paramP) {
-      var type = paramP.typeS();
+      var type = paramP.sType();
       var name = paramP.name();
       var body = paramP.defaultValue().map(this::convertNamedValue);
       return new SItem(type, name, body, paramP.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
-      var schema = pNamedFunc.schemaS();
+      var schema = pNamedFunc.sSchema();
       var name = pNamedFunc.name();
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
@@ -185,7 +185,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda, pLambda.bodyGet());
-      return new SLambda(pLambda.schemaS(), params, body, pLambda.location());
+      return new SLambda(pLambda.sSchema(), params, body, pLambda.location());
     }
 
     private SBlob convertBlob(PBlob blob) {
@@ -227,7 +227,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
 
     private SExpr convertOrder(POrder order) {
       var elems = convertExprs(order.elements());
-      return new SOrder((SArrayType) order.typeS(), elems, order.location());
+      return new SOrder((SArrayType) order.sType(), elems, order.location());
     }
 
     private SReference convertReference(PReference pReference) {
@@ -235,8 +235,8 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
           pReference, typeTeller.schemaFor(pReference.referencedName()).get());
     }
 
-    private SReference convertReference(PReference pReference, SchemaS schemaS) {
-      return new SReference(schemaS, pReference.referencedName(), pReference.location());
+    private SReference convertReference(PReference pReference, SSchema sSchema) {
+      return new SReference(sSchema, pReference.referencedName(), pReference.location());
     }
 
     private SExpr convertSelect(PSelect pSelect) {

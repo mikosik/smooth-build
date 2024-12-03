@@ -10,12 +10,12 @@ import java.util.Objects;
 /**
  * Polymorphic type (aka type schema).
  */
-public sealed class SchemaS permits SFuncSchema {
+public sealed class SSchema permits SFuncSchema {
   private final String name;
   private final SVarSet quantifiedVars;
   private final SType type;
 
-  public SchemaS(SVarSet quantifiedVars, SType type) {
+  public SSchema(SVarSet quantifiedVars, SType type) {
     assertQuantifiedVarsArePresentInType(quantifiedVars, type);
     this.name = calculateName(quantifiedVars, type);
     this.quantifiedVars = requireNonNull(quantifiedVars);
@@ -59,7 +59,7 @@ public sealed class SchemaS permits SFuncSchema {
     if (this == object) {
       return true;
     }
-    return object instanceof SchemaS schema
+    return object instanceof SSchema schema
         && quantifiedVars.equals(schema.quantifiedVars)
         && type.equals(schema.type);
   }

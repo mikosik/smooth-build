@@ -36,8 +36,8 @@ public class ScheduleList implements Task0<Tuple0> {
 
   @Override
   public Output<Tuple0> execute() {
-    var scopeS = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
-    var result = scheduler.submit(PrintEvaluables.class, scopeS);
+    var sScope = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
+    var result = scheduler.submit(PrintEvaluables.class, sScope);
     var label = ListCommand.LABEL.append(":schedule");
     return schedulingOutput(result, report(label, list()));
   }

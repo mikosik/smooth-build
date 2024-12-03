@@ -5,11 +5,11 @@ import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 public final class PReference extends PPolymorphic {
   private final String referencedName;
-  private SchemaS schemaS;
+  private SSchema sSchema;
 
   public PReference(String referencedName, Location location) {
     super(location);
@@ -21,12 +21,12 @@ public final class PReference extends PPolymorphic {
   }
 
   @Override
-  public SchemaS schemaS() {
-    return schemaS;
+  public SSchema sSchema() {
+    return sSchema;
   }
 
-  public void setSchemaS(SchemaS schemaS) {
-    this.schemaS = schemaS;
+  public void setSSchema(SSchema schema) {
+    this.sSchema = schema;
   }
 
   @Override

@@ -71,6 +71,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SIntType;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STempVar;
@@ -79,7 +80,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.virtualmachine.testing.VmTestApi;
 
 public interface FrontendCompilerTestApi extends VmTestApi {
@@ -163,8 +163,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SInterfaceType(fieldSignatures);
   }
 
-  public default SchemaS sSchema(SType type) {
-    return new SchemaS(type.vars(), type);
+  public default SSchema sSchema(SType type) {
+    return new SSchema(type.vars(), type);
   }
 
   public default SStringType sStringType() {
@@ -354,18 +354,18 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sReference(line, new SchemaS(varSetS(), type), name));
+    return sInstantiate(line, sReference(line, new SSchema(varSetS(), type), name));
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
     return sReference(line, namedEvaluable.schema(), namedEvaluable.name());
   }
 
-  public default SReference sReference(int line, SchemaS schema, String name) {
+  public default SReference sReference(int line, SSchema schema, String name) {
     return sReference(schema, name, location(line));
   }
 
-  public default SReference sReference(SchemaS schema, String name, Location location) {
+  public default SReference sReference(SSchema schema, String name, Location location) {
     return new SReference(schema, name, location);
   }
 
@@ -493,11 +493,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sValue(line, sSchema(type), name, body);
   }
 
-  public default SNamedExprValue sValue(SchemaS schema, String name, SExpr body) {
+  public default SNamedExprValue sValue(SSchema schema, String name, SExpr body) {
     return sValue(1, schema, name, body);
   }
 
-  public default SNamedExprValue sValue(int line, SchemaS schema, String name, SExpr body) {
+  public default SNamedExprValue sValue(int line, SSchema schema, String name, SExpr body) {
     return new SNamedExprValue(schema, name, body, location(line));
   }
 
@@ -587,8 +587,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SLambda sLambda(
       int line, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
     var funcTS = sFuncType(toTypes(params.list()), body.evaluationType());
-    var funcSchemaS = sFuncSchema(quantifiedVars, funcTS);
-    return new SLambda(funcSchemaS, params, body, location(line));
+    var funcSSchema = sFuncSchema(quantifiedVars, funcTS);
+    return new SLambda(funcSSchema, params, body, location(line));
   }
 
   public default SLambda sLambda(SExpr body) {
@@ -600,8 +600,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SLambda sLambda(int line, NList<SItem> params, SExpr body) {
-    var funcSchemaS = sFuncSchema(toTypes(params.list()), body.evaluationType());
-    return new SLambda(funcSchemaS, params, body, location(line));
+    var funcSSchema = sFuncSchema(toTypes(params.list()), body.evaluationType());
+    return new SLambda(funcSSchema, params, body, location(line));
   }
 
   public default SNamedExprFunc idSFunc() {

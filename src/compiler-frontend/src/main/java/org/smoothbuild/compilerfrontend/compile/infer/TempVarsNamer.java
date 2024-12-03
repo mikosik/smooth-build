@@ -89,7 +89,7 @@ public class TempVarsNamer {
   }
 
   private void nameVarsInEvaluable(PEvaluable evaluable) {
-    var resolvedT = unifier.resolve(evaluable.typeS());
+    var resolvedT = unifier.resolve(evaluable.sType());
     var body = evaluable.body();
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAddedAll(thisScopeVars);

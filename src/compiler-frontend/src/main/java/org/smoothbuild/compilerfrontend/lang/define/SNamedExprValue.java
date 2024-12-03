@@ -4,7 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
  * Named Expression Value (one that has a body).
@@ -13,7 +13,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 public final class SNamedExprValue extends SNamedValue {
   private final SExpr body;
 
-  public SNamedExprValue(SchemaS schema, String name, SExpr body, Location location) {
+  public SNamedExprValue(SSchema schema, String name, SExpr body, Location location) {
     super(schema, name, location);
     this.body = body;
   }

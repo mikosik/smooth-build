@@ -21,11 +21,11 @@ public abstract sealed class PExpr implements Located
     return location;
   }
 
-  public SType typeS() {
+  public SType sType() {
     return type;
   }
 
-  public void setTypeS(SType type) {
+  public void setSType(SType type) {
     this.type = type;
   }
 }

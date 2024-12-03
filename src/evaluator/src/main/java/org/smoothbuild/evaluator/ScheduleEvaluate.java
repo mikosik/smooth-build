@@ -41,11 +41,11 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
 
   @Override
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
-    var moduleS = scheduler.submit(FrontendCompile.class, argument(modules));
+    var sModule = scheduler.submit(FrontendCompile.class, argument(modules));
     var mapLabel = EVALUATOR_LABEL.append(":getMembersAndImported");
-    var scopeS = scheduler.submit(task1(mapLabel, SModule::membersAndImported), moduleS);
-    var sExprs = scheduler.submit(FindValues.class, scopeS, argument(names));
-    var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), scopeS);
+    var sScope = scheduler.submit(task1(mapLabel, SModule::membersAndImported), sModule);
+    var sExprs = scheduler.submit(FindValues.class, sScope, argument(names));
+    var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), sScope);
 
     var evaluatedExprs = scheduleEvaluateCore(scheduler, sExprs, evaluables);
 

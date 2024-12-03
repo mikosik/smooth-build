@@ -6,13 +6,13 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public final class PNamedValue extends PNamedEvaluable {
   private final PType type;
   private SType sType;
-  private SchemaS schemaS;
+  private SSchema sSchema;
 
   public PNamedValue(
       PType type,
@@ -35,21 +35,21 @@ public final class PNamedValue extends PNamedEvaluable {
   }
 
   @Override
-  public SType typeS() {
+  public SType sType() {
     return sType;
   }
 
-  public void setTypeS(SType sType) {
+  public void setSType(SType sType) {
     this.sType = sType;
   }
 
   @Override
-  public SchemaS schemaS() {
-    return schemaS;
+  public SSchema sSchema() {
+    return sSchema;
   }
 
-  public void setSchemaS(SchemaS schemaS) {
-    this.schemaS = schemaS;
+  public void setSSchema(SSchema schema) {
+    this.sSchema = schema;
   }
 
   @Override

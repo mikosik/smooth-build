@@ -18,34 +18,34 @@ public class InitializeScopesTest extends FrontendCompilerTestContext {
   class _module {
     @Test
     void module_scope_has_its_member_function_in_referenceables() {
-      var namedFuncP = pNamedFunc("myFunc");
-      var moduleP = pModule(list(), list(namedFuncP));
+      var pNamedFunc = pNamedFunc("myFunc");
+      var pModule = pModule(list(), list(pNamedFunc));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      assertThat(moduleP.scope().referencables().get("myFunc")).isEqualTo(namedFuncP);
+      assertThat(pModule.scope().referencables().get("myFunc")).isEqualTo(pNamedFunc);
     }
 
     @Test
     void module_scope_has_its_member_value_in_referenceables() {
-      var namedValueP = pNamedValue("myValue");
-      var moduleP = pModule(list(), list(namedValueP));
+      var pNamedValue = pNamedValue("myValue");
+      var pModule = pModule(list(), list(pNamedValue));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      assertThat(moduleP.scope().referencables().get("myValue")).isEqualTo(namedValueP);
+      assertThat(pModule.scope().referencables().get("myValue")).isEqualTo(pNamedValue);
     }
 
     @Test
     void module_scope_has_its_member_function_param_default_value_in_referenceables() {
       var defaultValue = pNamedValue("myFunc:param");
       var param = pItem("param", defaultValue);
-      var namedFuncP = pNamedFunc("myFunc", nlist(param));
-      var moduleP = pModule(list(), list(namedFuncP));
+      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pModule = pModule(list(), list(pNamedFunc));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      assertThat(moduleP.scope().referencables().get("myFunc:param")).isEqualTo(defaultValue);
+      assertThat(pModule.scope().referencables().get("myFunc:param")).isEqualTo(defaultValue);
     }
   }
 
@@ -57,10 +57,10 @@ public class InitializeScopesTest extends FrontendCompilerTestContext {
       void parameter_default_value_scope_referenceables_does_not_contain_that_parameter() {
         var defaultValue = pNamedValue("myFunc:param");
         var param = pItem("param", defaultValue);
-        var namedFuncP = pNamedFunc("myFunc", nlist(param));
-        var moduleP = pModule(list(), list(namedFuncP));
+        var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+        var pModule = pModule(list(), list(pNamedFunc));
 
-        initializeScopes(moduleP, new Logger());
+        initializeScopes(pModule, new Logger());
 
         assertThat(defaultValue.scope().referencables().getMaybe("param")).isEqualTo(none());
       }
@@ -70,10 +70,10 @@ public class InitializeScopesTest extends FrontendCompilerTestContext {
         var param1DefaultValue = pNamedValue("myFunc:param");
         var param1 = pItem("param1", param1DefaultValue);
         var param2 = pItem("param2");
-        var namedFuncP = pNamedFunc("myFunc", nlist(param1, param2));
-        var moduleP = pModule(list(), list(namedFuncP));
+        var pNamedFunc = pNamedFunc("myFunc", nlist(param1, param2));
+        var pModule = pModule(list(), list(pNamedFunc));
 
-        initializeScopes(moduleP, new Logger());
+        initializeScopes(pModule, new Logger());
 
         assertThat(param1DefaultValue.scope().referencables().getMaybe("param2"))
             .isEqualTo(none());
@@ -93,10 +93,10 @@ public class InitializeScopesTest extends FrontendCompilerTestContext {
           PNamedEvaluable member) {
         var defaultValue = pNamedValue("myFuncWithParamWithDefaultValue:param");
         var param = pItem("param", defaultValue);
-        var namedFuncP = pNamedFunc("myFuncWithParamWithDefaultValue", nlist(param));
-        var moduleP = pModule(list(), list(namedFuncP, member));
+        var pNamedFunc = pNamedFunc("myFuncWithParamWithDefaultValue", nlist(param));
+        var pModule = pModule(list(), list(pNamedFunc, member));
 
-        initializeScopes(moduleP, new Logger());
+        initializeScopes(pModule, new Logger());
 
         assertThat(defaultValue.scope().referencables().get(member.name())).isEqualTo(member);
       }
@@ -105,36 +105,36 @@ public class InitializeScopesTest extends FrontendCompilerTestContext {
     @Test
     void named_function_scope_has_its_parameter() {
       var param = pItem("param");
-      var namedFuncP = pNamedFunc("myFunc", nlist(param));
-      var moduleP = pModule(list(), list(namedFuncP));
+      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pModule = pModule(list(), list(pNamedFunc));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      assertThat(namedFuncP.scope().referencables().get("param")).isEqualTo(param);
+      assertThat(pNamedFunc.scope().referencables().get("param")).isEqualTo(param);
     }
 
     @Test
     void named_function_scope_has_its_sibling_named_value() {
-      var namedValueP = pNamedValue("myValue");
+      var pNamedValue = pNamedValue("myValue");
       var param = pItem("param");
-      var namedFuncP = pNamedFunc("myFunc", nlist(param));
-      var moduleP = pModule(list(), list(namedFuncP, namedValueP));
+      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pModule = pModule(list(), list(pNamedFunc, pNamedValue));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      assertThat(namedFuncP.scope().referencables().get("myValue")).isEqualTo(namedValueP);
+      assertThat(pNamedFunc.scope().referencables().get("myValue")).isEqualTo(pNamedValue);
     }
 
     @Test
     void named_function_scope_has_its_sibling_named_function() {
       var otherFunc = pNamedFunc("otherFunc");
       var param = pItem("param");
-      var namedFuncP = pNamedFunc("myFunc", nlist(param));
-      var moduleP = pModule(list(), list(namedFuncP, otherFunc));
+      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pModule = pModule(list(), list(pNamedFunc, otherFunc));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      assertThat(namedFuncP.scope().referencables().get("otherFunc")).isEqualTo(otherFunc);
+      assertThat(pNamedFunc.scope().referencables().get("otherFunc")).isEqualTo(otherFunc);
     }
   }
 
@@ -143,38 +143,38 @@ public class InitializeScopesTest extends FrontendCompilerTestContext {
     @Test
     void lambda_scope_has_value_that_encloses_it() {
       var param = pItem("param");
-      var lambdaP = pLambda(nlist(param), pInt());
-      var namedValueP = pNamedValue("myValue", lambdaP);
-      var moduleP = pModule(list(), list(namedValueP));
+      var pLambda = pLambda(nlist(param), pInt());
+      var pNamedValue = pNamedValue("myValue", pLambda);
+      var pModule = pModule(list(), list(pNamedValue));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      var cast = ((PLambda) lambdaP.polymorphic());
-      assertThat(cast.scope().referencables().get("myValue")).isEqualTo(namedValueP);
+      var cast = ((PLambda) pLambda.polymorphic());
+      assertThat(cast.scope().referencables().get("myValue")).isEqualTo(pNamedValue);
     }
 
     @Test
     void lambda_scope_has_function_that_encloses_it() {
       var param = pItem("param");
-      var lambdaP = pLambda(nlist(param), pInt());
-      var namedValueP = pNamedFunc("myFunc", lambdaP);
-      var moduleP = pModule(list(), list(namedValueP));
+      var pLambda = pLambda(nlist(param), pInt());
+      var pNamedValue = pNamedFunc("myFunc", pLambda);
+      var pModule = pModule(list(), list(pNamedValue));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      var cast = ((PLambda) lambdaP.polymorphic());
-      assertThat(cast.scope().referencables().get("myFunc")).isEqualTo(namedValueP);
+      var cast = ((PLambda) pLambda.polymorphic());
+      assertThat(cast.scope().referencables().get("myFunc")).isEqualTo(pNamedValue);
     }
 
     @Test
     void lambda_scope_has_its_parameter() {
       var param = pItem("param");
-      var lambdaP = pLambda(nlist(param), pInt());
-      var moduleP = pModule(list(), list(pNamedValue(lambdaP)));
+      var pLambda = pLambda(nlist(param), pInt());
+      var pModule = pModule(list(), list(pNamedValue(pLambda)));
 
-      initializeScopes(moduleP, new Logger());
+      initializeScopes(pModule, new Logger());
 
-      var cast = ((PLambda) lambdaP.polymorphic());
+      var cast = ((PLambda) pLambda.polymorphic());
       assertThat(cast.scope().referencables().get("param")).isEqualTo(param);
     }
   }
