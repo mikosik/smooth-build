@@ -83,9 +83,8 @@ public class TempVarsNamer {
     var resolvedT = unifier.resolve(evaluable.sType());
     var body = evaluable.body();
     var localScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
-    var varsInScope = outerScopeVars.withAddedAll(localScopeVars);
-    var localScopeNamer = new TempVarsNamer(unifier, varsInScope);
-    body.ifPresent(localScopeNamer::handleExpr);
+    var fullScopeVars = outerScopeVars.withAddedAll(localScopeVars);
+    body.ifPresent(b -> new TempVarsNamer(unifier, fullScopeVars).handleExpr(b));
     var resolvedAndRenamedT = nameVars(resolvedT, localScopeVars);
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
   }
