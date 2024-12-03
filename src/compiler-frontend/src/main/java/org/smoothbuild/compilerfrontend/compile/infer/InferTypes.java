@@ -36,7 +36,6 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  * Type inferring consists of
  *   - replacing not declared types with TempVar-s
  *   - walking expression tree unifying types with {@link ExprTypeUnifier}
- *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
 public class InferTypes implements Task2<PModule, SScope, PModule> {
