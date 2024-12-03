@@ -7,14 +7,12 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
@@ -39,22 +37,20 @@ public class TypeInferrerResolve {
   }
 
   public boolean resolveNamedValue(PNamedValue pNamedValue) {
-    return resolveEvaluable(pNamedValue);
+    return resolveBody(pNamedValue.body()) && resolveSchema(pNamedValue);
   }
 
-  public boolean resolveNamedFunc(PNamedFunc pNamedFunc) {
-    return resolveEvaluable(pNamedFunc);
+  private boolean resolveSchema(PNamedValue pEvaluable) {
+    pEvaluable.setSSchema(resolveSchema(pEvaluable.sSchema()));
+    return true;
   }
 
-  private boolean resolveEvaluable(PEvaluable pEvaluable) {
-    return resolveBody(pEvaluable.body()) && resolveSchema(pEvaluable);
+  public boolean resolveFunc(PFunc pNamedFunc) {
+    return resolveBody(pNamedFunc.body()) && resolveSchema(pNamedFunc);
   }
 
-  private boolean resolveSchema(PEvaluable pEvaluable) {
-    switch (pEvaluable) {
-      case PNamedValue valueP -> valueP.setSSchema(resolveSchema(valueP.sSchema()));
-      case PFunc pFunc -> pFunc.setSSchema(resolveSchema(pFunc.sSchema()));
-    }
+  private boolean resolveSchema(PFunc pEvaluable) {
+    pEvaluable.setSSchema(resolveSchema(pEvaluable.sSchema()));
     return true;
   }
 
@@ -125,13 +121,9 @@ public class TypeInferrerResolve {
 
   private boolean resolvePolymorphic(PPolymorphic pPolymorphic) {
     return switch (pPolymorphic) {
-      case PLambda pLambda -> resolveLambda(pLambda);
+      case PLambda pLambda -> resolveFunc(pLambda);
       case PReference pReference -> true;
     };
-  }
-
-  private boolean resolveLambda(PLambda pLambda) {
-    return resolveEvaluable(pLambda);
   }
 
   private boolean resolveNamedArg(PNamedArg pNamedArg) {
