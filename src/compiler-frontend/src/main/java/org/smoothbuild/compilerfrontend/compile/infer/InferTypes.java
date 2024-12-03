@@ -6,6 +6,12 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyFunc;
+import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyNamedValue;
+import static org.smoothbuild.compilerfrontend.compile.infer.TempVarsNamer.nameVarsInNamedFunc;
+import static org.smoothbuild.compilerfrontend.compile.infer.TempVarsNamer.nameVarsInNamedValue;
+import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveFunc;
+import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
@@ -112,10 +118,9 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     private boolean inferNamedValueSchema(PNamedValue namedValue) {
       var unifier = new Unifier();
-
-      if (new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedValue(namedValue)) {
-        new TempVarsNamer(unifier).nameVarsInNamedValue(namedValue);
-        return new TypeInferrerResolve(unifier, logger).resolveNamedValue(namedValue);
+      if (unifyNamedValue(unifier, typeTeller, logger, namedValue)) {
+        nameVarsInNamedValue(unifier, namedValue);
+        return resolveNamedValue(unifier, logger, namedValue);
       } else {
         return false;
       }
@@ -126,10 +131,9 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     private void inferNamedFuncSchema(PNamedFunc namedFunc) {
       var unifier = new Unifier();
       var params = namedFunc.params();
-      if (inferParamDefaultValues(params)
-          && new ExprTypeUnifier(unifier, typeTeller, logger).unifyFunc(namedFunc)) {
-        new TempVarsNamer(unifier).nameVarsInNamedFunc(namedFunc);
-        if (new TypeInferrerResolve(unifier, logger).resolveFunc(namedFunc)) {
+      if (inferParamDefaultValues(params) && unifyFunc(unifier, typeTeller, logger, namedFunc)) {
+        nameVarsInNamedFunc(unifier, namedFunc);
+        if (resolveFunc(unifier, logger, namedFunc)) {
           detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
         }
       }

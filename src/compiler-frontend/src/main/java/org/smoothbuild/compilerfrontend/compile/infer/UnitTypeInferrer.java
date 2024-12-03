@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
@@ -17,8 +18,12 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 public class UnitTypeInferrer extends PModuleVisitor {
   private final Unifier unifier;
 
-  public UnitTypeInferrer(Unifier unifier) {
+  private UnitTypeInferrer(Unifier unifier) {
     this.unifier = unifier;
+  }
+
+  public static void inferUnitTypes(Unifier unifier, PExpr expr) {
+    new UnitTypeInferrer(unifier).visitExpr(expr);
   }
 
   @Override

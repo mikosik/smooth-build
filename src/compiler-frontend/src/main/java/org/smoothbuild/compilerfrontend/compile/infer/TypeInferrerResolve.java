@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
@@ -31,12 +32,16 @@ public class TypeInferrerResolve {
   private final Unifier unifier;
   private final Logger logger;
 
-  public TypeInferrerResolve(Unifier unifier, Logger logger) {
+  private TypeInferrerResolve(Unifier unifier, Logger logger) {
     this.unifier = unifier;
     this.logger = logger;
   }
 
-  public boolean resolveNamedValue(PNamedValue pNamedValue) {
+  public static boolean resolveNamedValue(Unifier unifier, Logger logger, PNamedValue pNamedValue) {
+    return new TypeInferrerResolve(unifier, logger).resolveNamedValue(pNamedValue);
+  }
+
+  private boolean resolveNamedValue(PNamedValue pNamedValue) {
     return resolveBody(pNamedValue.body()) && resolveSchema(pNamedValue);
   }
 
@@ -45,7 +50,11 @@ public class TypeInferrerResolve {
     return true;
   }
 
-  public boolean resolveFunc(PFunc pNamedFunc) {
+  public static boolean resolveFunc(Unifier unifier, Logger logger, PFunc pFunc) {
+    return new TypeInferrerResolve(unifier, logger).resolveFunc(pFunc);
+  }
+
+  private boolean resolveFunc(PFunc pNamedFunc) {
     return resolveBody(pNamedFunc.body()) && resolveSchema(pNamedFunc);
   }
 
@@ -77,12 +86,8 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveBody(PExpr body) {
-    inferUnitTypes(body);
+    inferUnitTypes(unifier, body);
     return resolveExpr(body);
-  }
-
-  private void inferUnitTypes(PExpr expr) {
-    new UnitTypeInferrer(unifier).visitExpr(expr);
   }
 
   private boolean resolveExpr(PExpr expr) {
