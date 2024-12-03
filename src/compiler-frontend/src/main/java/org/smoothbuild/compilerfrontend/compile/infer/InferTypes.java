@@ -19,9 +19,9 @@ import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
@@ -54,7 +54,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     return output(pModule, label, logger.toList());
   }
 
-  public static class Worker {
+  public static class Worker extends PModuleVisitor {
     private final TypeTeller typeTeller;
     private final Logger logger;
 
@@ -63,12 +63,8 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       this.logger = logger;
     }
 
-    private void visitModule(PModule pModule) {
-      pModule.structs().forEach(this::visitStruct);
-      pModule.evaluables().forEach(this::visitNamedEvaluable);
-    }
-
-    private void visitStruct(PStruct pStruct) {
+    @Override
+    public void visitStruct(PStruct pStruct) {
       var sStructType = inferStructT(pStruct);
       sStructType.ifPresent(t -> visitConstructor(pStruct, t));
     }
@@ -84,13 +80,6 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       var schema = new SFuncSchema(varSetS(), funcTS);
       constructorP.setSSchema(schema);
       constructorP.setSType(funcTS);
-    }
-
-    private void visitNamedEvaluable(PNamedEvaluable namedEvaluable) {
-      switch (namedEvaluable) {
-        case PNamedFunc pNamedFunc -> inferNamedFuncSchema(pNamedFunc);
-        case PNamedValue pNamedValue -> inferNamedValueSchema(pNamedValue);
-      }
     }
 
     private Maybe<SStructType> inferStructT(PStruct struct) {
@@ -116,7 +105,12 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     // value
 
-    private boolean inferNamedValueSchema(PNamedValue namedValue) {
+    @Override
+    public void visitNamedValue(PNamedValue namedValue) {
+      inferNamedValue(namedValue);
+    }
+
+    private boolean inferNamedValue(PNamedValue namedValue) {
       var unifier = new Unifier();
       if (unifyNamedValue(unifier, typeTeller, logger, namedValue)) {
         nameVarsInNamedValue(unifier, namedValue);
@@ -128,7 +122,8 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     // func
 
-    private void inferNamedFuncSchema(PNamedFunc namedFunc) {
+    @Override
+    public void visitNamedFunc(PNamedFunc namedFunc) {
       var unifier = new Unifier();
       var params = namedFunc.params();
       if (inferParamDefaultValues(params) && unifyFunc(unifier, typeTeller, logger, namedFunc)) {
@@ -178,7 +173,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     private boolean inferParamDefaultValues(NList<PItem> params) {
       boolean result = true;
       for (var param : params) {
-        result &= param.defaultValue().map(this::inferNamedValueSchema).getOr(true);
+        result &= param.defaultValue().map(this::inferNamedValue).getOr(true);
       }
       return result;
     }
