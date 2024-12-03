@@ -91,10 +91,10 @@ public class TempVarsNamer {
   private void nameVarsInEvaluable(PEvaluable evaluable) {
     var resolvedT = unifier.resolve(evaluable.sType());
     var body = evaluable.body();
-    var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
-    var varsInScope = outerScopeVars.withAddedAll(thisScopeVars);
+    var localScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
+    var varsInScope = outerScopeVars.withAddedAll(localScopeVars);
     body.ifPresent(b -> handleExpr(varsInScope, b));
-    var resolvedAndRenamedT = nameVars(resolvedT, thisScopeVars);
+    var resolvedAndRenamedT = nameVars(resolvedT, localScopeVars);
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
   }
 
