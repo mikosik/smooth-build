@@ -11,8 +11,8 @@ public abstract sealed class SNamedFunc extends SNamedEvaluable implements SFunc
     permits SAnnotatedFunc, SNamedExprFunc, SConstructor {
   private final NList<SItem> params;
 
-  public SNamedFunc(SFuncSchema schemaS, String name, NList<SItem> params, Location location) {
-    super(schemaS, name, location);
+  public SNamedFunc(SFuncSchema sSchema, String name, NList<SItem> params, Location location) {
+    super(sSchema, name, location);
     this.params = params;
   }
 

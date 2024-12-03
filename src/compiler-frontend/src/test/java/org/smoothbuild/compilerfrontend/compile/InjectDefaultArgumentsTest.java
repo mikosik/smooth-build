@@ -40,8 +40,8 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
     assertThat(callP.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
 
-  private static void callInjectDefaultArguments(SScope importedS, PModule pModule) {
+  private static void callInjectDefaultArguments(SScope sImported, PModule pModule) {
     new InitializeScopes().execute(pModule);
-    new InjectDefaultArguments().execute(pModule, importedS);
+    new InjectDefaultArguments().execute(pModule, sImported);
   }
 }

@@ -24,10 +24,10 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -79,8 +79,8 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
           .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
       var funcTS = new SFuncType(SItem.toTypes(params), structT);
       var schema = new SFuncSchema(varSetS(), funcTS);
-      constructorP.setSchemaS(schema);
-      constructorP.setTypeS(funcTS);
+      constructorP.setSSchema(schema);
+      constructorP.setSType(funcTS);
     }
 
     private void visitNamedEvaluable(PNamedEvaluable namedEvaluable) {
@@ -102,13 +102,13 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       return pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
           .map(NList::nlist)
           .map(is -> new SStructType(struct.name(), is))
-          .ifPresent(struct::setTypeS);
+          .ifPresent(struct::setSType);
     }
 
     private Maybe<SItemSig> inferFieldSig(PItem field) {
       return typeTeller.translate(field.type()).flatMap(t -> {
         if (t.vars().isEmpty()) {
-          field.setTypeS(t);
+          field.setSType(t);
           return some(new SItemSig(t, field.name()));
         } else {
           var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -172,27 +172,27 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
         var param = params.get(i);
         var index = i;
         param.defaultValue().ifPresent(defaultValue -> {
-          var schema = namedFunc.schemaS();
+          var schema = namedFunc.sSchema();
           var paramUnifier = new Unifier();
           var resolvedParamT = schema.type().params().elements().get(index);
           var paramT =
               replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
           var defaultValueType =
-              replaceQuantifiedVarsWithTempVars(defaultValue.schemaS(), paramUnifier);
+              replaceQuantifiedVarsWithTempVars(defaultValue.sSchema(), paramUnifier);
           try {
             paramUnifier.add(new EqualityConstraint(paramT, defaultValueType));
           } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(
-                    param.q(), resolvedParamT.q(), defaultValue.schemaS().type().q());
+                    param.q(), resolvedParamT.q(), defaultValue.sSchema().type().q());
             this.logger.log(compileError(defaultValue.location(), message));
           }
         });
       }
     }
 
-    private static SType replaceQuantifiedVarsWithTempVars(SchemaS schemaS, Unifier unifier) {
-      return replaceVarsWithTempVars(schemaS.quantifiedVars(), schemaS.type(), unifier);
+    private static SType replaceQuantifiedVarsWithTempVars(SSchema sSchema, Unifier unifier) {
+      return replaceVarsWithTempVars(sSchema.quantifiedVars(), sSchema.type(), unifier);
     }
 
     private static SType replaceVarsWithTempVars(SVarSet vars, SType type, Unifier unifier) {

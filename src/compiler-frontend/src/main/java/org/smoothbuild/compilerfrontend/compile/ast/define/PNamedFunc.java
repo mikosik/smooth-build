@@ -45,22 +45,22 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
   }
 
   @Override
-  public SFuncType typeS() {
+  public SFuncType sType() {
     return typeS;
   }
 
   @Override
-  public void setTypeS(SFuncType type) {
+  public void setSType(SFuncType type) {
     this.typeS = type;
   }
 
   @Override
-  public SFuncSchema schemaS() {
+  public SFuncSchema sSchema() {
     return sFuncSchema;
   }
 
   @Override
-  public void setSchemaS(SFuncSchema sFuncSchema) {
+  public void setSSchema(SFuncSchema sFuncSchema) {
     this.sFuncSchema = sFuncSchema;
   }
 

@@ -17,7 +17,7 @@ public final class PLambda extends PPolymorphic implements PFunc {
   private final PExpr body;
   private final String name;
   private SFuncType typeS;
-  private SFuncSchema schemaS;
+  private SFuncSchema sSchema;
   private PScope scope;
 
   public PLambda(String name, NList<PItem> params, PExpr body, Location location) {
@@ -53,23 +53,23 @@ public final class PLambda extends PPolymorphic implements PFunc {
   }
 
   @Override
-  public SFuncType typeS() {
+  public SFuncType sType() {
     return typeS;
   }
 
   @Override
-  public void setTypeS(SFuncType type) {
+  public void setSType(SFuncType type) {
     this.typeS = type;
   }
 
   @Override
-  public SFuncSchema schemaS() {
-    return schemaS;
+  public SFuncSchema sSchema() {
+    return sSchema;
   }
 
   @Override
-  public void setSchemaS(SFuncSchema schemaS) {
-    this.schemaS = schemaS;
+  public void setSSchema(SFuncSchema sSchema) {
+    this.sSchema = sSchema;
   }
 
   @Override

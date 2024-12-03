@@ -35,17 +35,17 @@ public final class PItem extends NalImpl implements PReferenceable {
     return defaultValue;
   }
 
-  public SType typeS() {
+  public SType sType() {
     return sType;
   }
 
-  public SType setTypeS(SType type) {
+  public SType setSType(SType type) {
     this.sType = type;
     return type;
   }
 
-  public static List<SType> toTypeS(NList<PItem> params) {
-    return params.list().map(PItem::typeS);
+  public static List<SType> toSType(NList<PItem> params) {
+    return params.list().map(PItem::sType);
   }
 
   @Override

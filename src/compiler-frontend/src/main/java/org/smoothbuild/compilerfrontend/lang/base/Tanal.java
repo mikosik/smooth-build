@@ -3,9 +3,9 @@ package org.smoothbuild.compilerfrontend.lang.base;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 /**
  * TANAL = Type and Name and Loc.
@@ -22,7 +22,7 @@ public abstract class Tanal extends NalImpl {
     return type;
   }
 
-  public SchemaS schema() {
-    return new SchemaS(SVarSet.varSetS(), type);
+  public SSchema schema() {
+    return new SSchema(SVarSet.varSetS(), type);
   }
 }

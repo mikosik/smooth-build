@@ -25,8 +25,8 @@ import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
 
 public class FrontendCompileTester extends FrontendCompilerTestContext {
   public Api module(String sourceCode) {
@@ -59,7 +59,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       assertThat(actual).isEqualTo(expected);
     }
 
-    public void containsEvaluableWithSchema(String name, SchemaS expectedT) {
+    public void containsEvaluableWithSchema(String name, SSchema expectedT) {
       var referenceable = assertContainsEvaluable(name);
       assertThat(referenceable.schema()).isEqualTo(expectedT);
     }

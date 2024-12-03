@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
-import org.smoothbuild.compilerfrontend.lang.type.SchemaS;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
 public class InferenceTest extends FrontendCompileTester {
@@ -140,7 +140,7 @@ public class InferenceTest extends FrontendCompileTester {
   class _infer_named_function_result_type extends _abstract_infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
-        String declarations, String params, String body, SchemaS expected) {
+        String declarations, String params, String body, SSchema expected) {
       var code = declarations + "\n" + "myFunc(" + params + ") = " + body + ";";
       module(code).loadsWithSuccess().containsEvaluableWithSchema("myFunc", expected);
     }
@@ -150,7 +150,7 @@ public class InferenceTest extends FrontendCompileTester {
   class _infer_lambda_result_type extends _abstract_infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
-        String declarations, String params, String body, SchemaS expected) {
+        String declarations, String params, String body, SSchema expected) {
       var code = declarations + "\n" + "myValue = (" + params + ") -> " + body + ";";
       var myValue = module(code)
           .loadsWithSuccess()
@@ -165,12 +165,12 @@ public class InferenceTest extends FrontendCompileTester {
   }
 
   abstract class _abstract_infer_function_result_type_suite {
-    public void assertInferredFunctionType(String params, String body, SchemaS expected) {
+    public void assertInferredFunctionType(String params, String body, SSchema expected) {
       assertInferredFunctionType("", params, body, expected);
     }
 
     public abstract void assertInferredFunctionType(
-        String declarations, String params, String body, SchemaS expected);
+        String declarations, String params, String body, SSchema expected);
 
     @Nested
     class _of_mono_function_from {
