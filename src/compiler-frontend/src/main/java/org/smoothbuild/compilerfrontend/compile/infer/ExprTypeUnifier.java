@@ -25,7 +25,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
@@ -64,31 +63,24 @@ public class ExprTypeUnifier {
   }
 
   public boolean unifyNamedValue(PNamedValue namedValue) {
-    return unifyEvaluableAndSetSchema(namedValue);
+    return unifyValue(namedValue) && setNamedValueSchema(namedValue);
   }
 
-  public boolean unifyNamedFunc(PNamedFunc namedFunc) {
-    return unifyEvaluableAndSetSchema(namedFunc);
-  }
-
-  private boolean unifyEvaluableAndSetSchema(PEvaluable pEvaluable) {
-    return unifyEvaluable(pEvaluable) && setEvaluableSchema(pEvaluable);
-  }
-
-  private boolean unifyEvaluable(PEvaluable pEvaluable) {
-    return switch (pEvaluable) {
-      case PFunc pFunc -> unifyFunc(pFunc);
-      case PNamedValue pNamedValue -> unifyValue(pNamedValue);
-    };
-  }
-
-  private boolean setEvaluableSchema(PEvaluable pEvaluable) {
-    var resolvedT = resolveType(pEvaluable);
+  private boolean setNamedValueSchema(PNamedValue pNamedValue) {
+    var resolvedT = resolveType(pNamedValue);
     var vars = resolveQuantifiedVars(resolvedT);
-    switch (pEvaluable) {
-      case PNamedValue valueP -> valueP.setSSchema(new SSchema(vars, resolvedT));
-      case PFunc pFunc -> pFunc.setSSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
-    }
+    pNamedValue.setSSchema(new SSchema(vars, resolvedT));
+    return true;
+  }
+
+  public boolean unifyFunc(PFunc namedFunc) {
+    return unifyFuncImpl(namedFunc) && setFuncSchema(namedFunc);
+  }
+
+  private boolean setFuncSchema(PFunc pFunc) {
+    var resolvedT = resolveType(pFunc);
+    var vars = resolveQuantifiedVars(resolvedT);
+    pFunc.setSSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
     return true;
   }
 
@@ -109,13 +101,13 @@ public class ExprTypeUnifier {
         .getOr(false);
   }
 
-  private boolean unifyFunc(PFunc pFunc) {
+  private boolean unifyFuncImpl(PFunc pFunc) {
     var paramTs = inferParamTs(pFunc.params());
     var resultT = translateOrGenerateTempVar(pFunc.resultT());
-    return paramTs.mapWith(resultT, (p, r) -> unifyFunc(pFunc, p, r)).getOr(false);
+    return paramTs.mapWith(resultT, (p, r) -> unifyFuncImpl(pFunc, p, r)).getOr(false);
   }
 
-  private boolean unifyFunc(PFunc pFunc, List<SType> paramTs, SType resultT) {
+  private boolean unifyFuncImpl(PFunc pFunc, List<SType> paramTs, SType resultT) {
     var typeTellerForBody = typeTeller.withScope(pFunc.scope());
     var funcTS = new SFuncType(paramTs, resultT);
     pFunc.setSType(funcTS);
@@ -128,14 +120,14 @@ public class ExprTypeUnifier {
     return paramTs.map(List::listOfAll);
   }
 
-  private Boolean unifyEvaluableBody(
+  private boolean unifyEvaluableBody(
       PEvaluable pEvaluable, SType evaluationType, SType type, TypeTeller typeTeller) {
     var vars = outerScopeVars.withAddedAll(type.vars());
     return new ExprTypeUnifier(unifier, typeTeller, vars, logger)
         .unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
-  private Boolean unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType) {
+  private boolean unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType) {
     return pEvaluable
         .body()
         .map(body -> unifyBodyExprAndEvaluationType(pEvaluable, evaluationType, body))
@@ -214,13 +206,9 @@ public class ExprTypeUnifier {
 
   private boolean unifyPolymorphic(PPolymorphic pPolymorphic) {
     return switch (pPolymorphic) {
-      case PLambda pLambda -> unifyLambdaFunc(pLambda);
+      case PLambda pLambda -> unifyFunc(pLambda);
       case PReference pReference -> unifyReference(pReference);
     };
-  }
-
-  private boolean unifyLambdaFunc(PLambda pLambda) {
-    return unifyEvaluableAndSetSchema(pLambda);
   }
 
   private Maybe<SType> unifyNamedArg(PNamedArg pNamedArg) {

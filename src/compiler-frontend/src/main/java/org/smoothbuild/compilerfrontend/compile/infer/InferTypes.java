@@ -155,7 +155,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     }
 
     private boolean unifyNamedFunc(PNamedFunc namedFunc) {
-      return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedFunc(namedFunc);
+      return new ExprTypeUnifier(unifier, typeTeller, logger).unifyFunc(namedFunc);
     }
 
     private void nameImplicitVars(PNamedFunc namedFunc) {
