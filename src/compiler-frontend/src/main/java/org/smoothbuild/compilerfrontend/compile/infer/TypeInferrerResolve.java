@@ -82,7 +82,7 @@ public class TypeInferrerResolve {
   }
 
   private void inferUnitTypes(PExpr expr) {
-    new UnitTypeInferrer(unifier).infer(expr);
+    new UnitTypeInferrer(unifier).visitExpr(expr);
   }
 
   private boolean resolveExpr(PExpr expr) {
