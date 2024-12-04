@@ -57,16 +57,16 @@ public class TypeTeller {
         var paramsOpt = pullUpMaybe(func.params().map(this::translate));
         yield resultOpt.mapWith(paramsOpt, (r, p) -> new SFuncType(listOfAll(p), r));
       }
-      default -> typeWithName(type);
+      default -> typeWithName(type.name());
     };
   }
 
-  private Maybe<SType> typeWithName(PType type) {
-    Maybe<PStruct> structP = pScope.types().getMaybe(type.name());
+  private Maybe<SType> typeWithName(String typeName) {
+    Maybe<PStruct> structP = pScope.types().getMaybe(typeName);
     if (structP.isSome()) {
       return maybe(structP.get().sType());
     } else {
-      return some(imported.types().get(type.name()).type());
+      return some(imported.types().get(typeName).type());
     }
   }
 }
