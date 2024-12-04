@@ -24,11 +24,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class TypeTeller {
   private final SScope imported;
-  private final PScope pScope;
+  private final PScope currentScope;
 
-  public TypeTeller(SScope imported, PScope pScope) {
+  public TypeTeller(SScope imported, PScope currentScope) {
     this.imported = imported;
-    this.pScope = pScope;
+    this.currentScope = currentScope;
   }
 
   public TypeTeller withScope(PScope pScope) {
@@ -36,7 +36,7 @@ public class TypeTeller {
   }
 
   public Maybe<SSchema> schemaFor(String name) {
-    return pScope
+    return currentScope
         .referencables()
         .getMaybe(name)
         .map(r -> switch (r) {
@@ -62,7 +62,7 @@ public class TypeTeller {
   }
 
   private Maybe<SType> typeWithName(String typeName) {
-    Maybe<PStruct> structP = pScope.types().getMaybe(typeName);
+    Maybe<PStruct> structP = currentScope.types().getMaybe(typeName);
     if (structP.isSome()) {
       return maybe(structP.get().sType());
     } else {

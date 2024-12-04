@@ -65,10 +65,10 @@ import org.smoothbuild.compilerfrontend.lang.type.STypes;
 
 public class ConvertPs implements Task2<PModule, SScope, SModule> {
   @Override
-  public Output<SModule> execute(PModule pModule, SScope environment) {
-    var typeTeller = new TypeTeller(environment, pModule.scope());
+  public Output<SModule> execute(PModule pModule, SScope imported) {
+    var typeTeller = new TypeTeller(imported, pModule.scope());
     var label = COMPILER_FRONT_LABEL.append(":buildIr");
-    var sModule = new Worker(typeTeller, environment).convertModule(pModule);
+    var sModule = new Worker(typeTeller, imported).convertModule(pModule);
     return output(sModule, label, list());
   }
 
