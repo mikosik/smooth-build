@@ -39,7 +39,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectIllegalNames(PModule pModule, Logger logger) {
-    new PModuleVisitor() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitNameOf(PReferenceable pReferenceable) {
         var name = pReferenceable.shortName();
@@ -79,7 +79,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectIllegalAnnotations(PModule pModule, Logger logger) {
-    new PModuleVisitor() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitNamedFunc(PNamedFunc pNamedFunc) {
         super.visitNamedFunc(pNamedFunc);
@@ -140,7 +140,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectStructFieldWithDefaultValue(PModule pModule, Logger logger) {
-    new PModuleVisitor() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitStruct(PStruct pStruct) {
         super.visitStruct(pStruct);
@@ -159,7 +159,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectLambdaParamWithDefaultValue(PModule pModule, Logger logger) {
-    new PModuleVisitor() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitLambda(PLambda pLambda) {
         super.visitLambda(pLambda);

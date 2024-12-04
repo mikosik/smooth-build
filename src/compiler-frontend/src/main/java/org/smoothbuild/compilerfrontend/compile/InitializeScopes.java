@@ -30,7 +30,8 @@ import org.smoothbuild.compilerfrontend.lang.base.Nal;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends PModuleVisitor implements Task1<PModule, PModule> {
+public class InitializeScopes extends PModuleVisitor<RuntimeException>
+    implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
@@ -44,7 +45,7 @@ public class InitializeScopes extends PModuleVisitor implements Task1<PModule, P
     new Initializer(emptyScope(), logger).visitModule(pModule);
   }
 
-  private static class Initializer extends PScopingModuleVisitor {
+  private static class Initializer extends PScopingModuleVisitor<RuntimeException> {
     private final PScope scope;
     private final Logger logger;
 
@@ -62,7 +63,7 @@ public class InitializeScopes extends PModuleVisitor implements Task1<PModule, P
     }
   }
 
-  private static class ScopeCreator extends PModuleVisitor {
+  private static class ScopeCreator extends PModuleVisitor<RuntimeException> {
     private final PScope scope;
     private final Logger log;
     private final MutableBindings<PReferenceable> referenceables = mutableBindings();

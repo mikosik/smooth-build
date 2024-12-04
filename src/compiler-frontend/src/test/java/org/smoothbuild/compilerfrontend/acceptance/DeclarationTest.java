@@ -134,8 +134,7 @@ public class DeclarationTest extends FrontendCompileTester {
 
           @Test
           void cannot_be_polytype_regression_test() {
-            // Verify that illegal field type does not cause error during processing of code that
-            // references field's struct.
+            // Verify that illegal field type fails with error and further code is not checked.
             var code =
                 """
                 MyStruct{

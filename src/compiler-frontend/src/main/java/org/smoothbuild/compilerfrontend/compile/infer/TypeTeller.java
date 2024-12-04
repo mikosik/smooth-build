@@ -1,9 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.List.pullUpMaybe;
-import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.common.collect.Maybe.some;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
@@ -35,38 +32,34 @@ public class TypeTeller {
     return new TypeTeller(imported, pScope);
   }
 
-  public Maybe<SSchema> schemaFor(String name) {
+  public SSchema schemaFor(String name) {
     return currentScope
         .referencables()
         .getMaybe(name)
         .map(r -> switch (r) {
-          case PNamedEvaluable pNamedEvaluable -> maybe(pNamedEvaluable.sSchema());
-          case PItem pItem -> maybe(pItem.sType()).map(t -> new SSchema(varSetS(), t));
+          case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.sSchema();
+          case PItem pItem -> new SSchema(varSetS(), requireNonNull(pItem.sType()));
         })
-        .getOrGet(() -> some(imported.evaluables().get(name).schema()));
+        .getOrGet(() -> imported.evaluables().get(name).schema());
   }
 
-  public Maybe<SType> translate(PType type) {
+  public SType translate(PType type) {
     if (STypeNames.isVarName(type.name())) {
-      return some(new SVar(type.name()));
+      return new SVar(type.name());
     }
     return switch (type) {
-      case PArrayType array -> translate(array.elemT()).map(SArrayType::new);
-      case PFuncType func -> {
-        var resultOpt = translate(func.result());
-        var paramsOpt = pullUpMaybe(func.params().map(this::translate));
-        yield resultOpt.mapWith(paramsOpt, (r, p) -> new SFuncType(listOfAll(p), r));
-      }
+      case PArrayType a -> new SArrayType(translate(a.elemT()));
+      case PFuncType f -> new SFuncType(f.params().map(this::translate), translate(f.result()));
       default -> typeWithName(type.name());
     };
   }
 
-  private Maybe<SType> typeWithName(String typeName) {
+  private SType typeWithName(String typeName) {
     Maybe<PStruct> structP = currentScope.types().getMaybe(typeName);
     if (structP.isSome()) {
-      return maybe(structP.get().sType());
+      return requireNonNull(structP.get().sType());
     } else {
-      return some(imported.types().get(typeName).type());
+      return imported.types().get(typeName).type();
     }
   }
 }

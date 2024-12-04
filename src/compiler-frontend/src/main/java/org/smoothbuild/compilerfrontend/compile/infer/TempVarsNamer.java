@@ -13,7 +13,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnusedVarsGenerator;
 
-public class TempVarsNamer extends PModuleVisitor {
+public class TempVarsNamer extends PModuleVisitor<RuntimeException> {
   private final Unifier unifier;
   private final SVarSet outerScopeVars;
 

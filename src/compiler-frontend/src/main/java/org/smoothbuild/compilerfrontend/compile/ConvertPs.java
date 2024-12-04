@@ -231,8 +231,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
     }
 
     private SReference convertReference(PReference pReference) {
-      return convertReference(
-          pReference, typeTeller.schemaFor(pReference.referencedName()).get());
+      return convertReference(pReference, typeTeller.schemaFor(pReference.referencedName()));
     }
 
     private SReference convertReference(PReference pReference, SSchema sSchema) {

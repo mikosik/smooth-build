@@ -15,7 +15,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
  * - is not used in function result type
  * - is resolved as temp-var after inferring phase (= it is not constrained).
  */
-public class UnitTypeInferrer extends PModuleVisitor {
+public class UnitTypeInferrer extends PModuleVisitor<RuntimeException> {
   private final Unifier unifier;
 
   private UnitTypeInferrer(Unifier unifier) {

@@ -67,7 +67,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   private static GraphNode<String, PNamedEvaluable, Location> evaluable(
       PNamedEvaluable evaluable, Set<String> names) {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
-    new PModuleVisitor() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitReference(PReference pReference) {
         super.visitReference(pReference);
@@ -89,7 +89,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   private static GraphNode<String, PStruct, Location> structToGraphNode(
       PStruct struct, Set<String> funcNames) {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
-    new PModuleVisitor() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitStructSignature(PStruct pStruct) {
         super.visitStructSignature(pStruct);
