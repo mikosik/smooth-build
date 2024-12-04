@@ -35,7 +35,7 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
     return output(pModule, label, logger.toList());
   }
 
-  private static class Detector extends PScopingModuleVisitor {
+  private static class Detector extends PScopingModuleVisitor<RuntimeException> {
     private final SScope imported;
     private final PScope scope;
     private final Logger log;

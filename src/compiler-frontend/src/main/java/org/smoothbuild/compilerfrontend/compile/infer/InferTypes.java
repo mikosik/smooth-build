@@ -1,8 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
@@ -14,7 +12,6 @@ import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
@@ -49,110 +46,101 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
   public Output<PModule> execute(PModule pModule, SScope imported) {
     var logger = new Logger();
     var typeTeller = new TypeTeller(imported, pModule.scope());
-    new Worker(typeTeller, logger).visitModule(pModule);
+    try {
+      new Worker(typeTeller).visitModule(pModule);
+    } catch (TypeException e) {
+      logger.log(e.log());
+    }
     return output(pModule, COMPILER_FRONT_LABEL.append(":inferTypes"), logger.toList());
   }
 
-  public static class Worker extends PModuleVisitor {
+  public static class Worker extends PModuleVisitor<TypeException> {
     private final TypeTeller typeTeller;
-    private final Logger logger;
 
-    private Worker(TypeTeller typeTeller, Logger logger) {
+    private Worker(TypeTeller typeTeller) {
       this.typeTeller = typeTeller;
-      this.logger = logger;
     }
 
     @Override
-    public void visitStruct(PStruct pStruct) {
-      var sStructType = inferStructT(pStruct);
-      sStructType.ifPresent(t -> visitConstructor(pStruct, t));
+    public void visitStruct(PStruct pStruct) throws TypeException {
+      var sStructType = inferStructType(pStruct);
+      visitConstructor(pStruct, sStructType);
     }
 
     private void visitConstructor(PStruct pStruct, SStructType structT) {
-      var constructorP = pStruct.constructor();
+      var pConstructor = pStruct.constructor();
       var fieldSigs = structT.fields();
       var params = pStruct
           .fields()
           .list()
           .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
-      var funcTS = new SFuncType(SItem.toTypes(params), structT);
-      var schema = new SFuncSchema(varSetS(), funcTS);
-      constructorP.setSSchema(schema);
-      constructorP.setSType(funcTS);
+      var sFuncType = new SFuncType(SItem.toTypes(params), structT);
+      var schema = new SFuncSchema(varSetS(), sFuncType);
+      pConstructor.setSSchema(schema);
+      pConstructor.setSType(sFuncType);
     }
 
-    private Maybe<SStructType> inferStructT(PStruct struct) {
-      return pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
-          .map(NList::nlist)
-          .map(is -> new SStructType(struct.name(), is))
-          .ifPresent(struct::setSType);
+    private SStructType inferStructType(PStruct struct) throws TypeException {
+      NList<SItemSig> sItemSigs = struct.fields().map(this::inferFieldSig);
+      var sStructType = new SStructType(struct.name(), sItemSigs);
+      struct.setSType(sStructType);
+      return sStructType;
     }
 
-    private Maybe<SItemSig> inferFieldSig(PItem field) {
-      return typeTeller.translate(field.type()).flatMap(t -> {
-        if (t.vars().isEmpty()) {
-          field.setSType(t);
-          return some(new SItemSig(t, field.name()));
-        } else {
-          var message = "Field type cannot be polymorphic. Found field %s with type %s."
-              .formatted(field.q(), t.q());
-          logger.log(compileError(field.type(), message));
-          return none();
-        }
-      });
+    private SItemSig inferFieldSig(PItem field) throws TypeException {
+      var type = typeTeller.translate(field.type());
+      if (type.vars().isEmpty()) {
+        field.setSType(type);
+        return new SItemSig(type, field.name());
+      } else {
+        var message = "Field type cannot be polymorphic. Found field %s with type %s."
+            .formatted(field.q(), type.q());
+        throw new TypeException(compileError(field.type(), message));
+      }
     }
 
     // value
 
     @Override
-    public void visitNamedValue(PNamedValue namedValue) {
-      inferNamedValue(namedValue);
-    }
-
-    private boolean inferNamedValue(PNamedValue namedValue) {
+    public void visitNamedValue(PNamedValue namedValue) throws TypeException {
       var unifier = new Unifier();
-      if (unifyNamedValue(unifier, typeTeller, logger, namedValue)) {
-        nameVarsInNamedValue(unifier, namedValue);
-        return resolveNamedValue(unifier, logger, namedValue);
-      } else {
-        return false;
-      }
+      unifyNamedValue(unifier, typeTeller, namedValue);
+      nameVarsInNamedValue(unifier, namedValue);
+      resolveNamedValue(unifier, namedValue);
     }
 
     // func
 
     @Override
-    public void visitNamedFunc(PNamedFunc namedFunc) {
+    public void visitNamedFunc(PNamedFunc namedFunc) throws TypeException {
+      namedFunc.params().list().withEach(p -> p.defaultValue().ifPresent(this::visitNamedValue));
       var unifier = new Unifier();
-      var params = namedFunc.params();
-      if (inferParamDefaultValues(params) && unifyFunc(unifier, typeTeller, logger, namedFunc)) {
-        nameVarsInNamedFunc(unifier, namedFunc);
-        if (resolveFunc(unifier, logger, namedFunc)) {
-          detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
-        }
-      }
+      unifyFunc(unifier, typeTeller, namedFunc);
+      nameVarsInNamedFunc(unifier, namedFunc);
+      resolveFunc(unifier, namedFunc);
+      detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
     }
 
-    private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc) {
+    private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc)
+        throws TypeException {
       var params = namedFunc.params();
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
         var index = i;
         param.defaultValue().ifPresent(defaultValue -> {
-          var schema = namedFunc.sSchema();
-          var paramUnifier = new Unifier();
-          var resolvedParamT = schema.type().params().elements().get(index);
-          var paramT =
-              replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
-          var defaultValueType =
-              replaceQuantifiedVarsWithTempVars(defaultValue.sSchema(), paramUnifier);
+          var funcSchema = namedFunc.sSchema();
+          var unifier = new Unifier();
+          var resolvedParamType = funcSchema.type().params().elements().get(index);
+          var paramType =
+              replaceVarsWithTempVars(funcSchema.quantifiedVars(), resolvedParamType, unifier);
+          var sSchema = defaultValue.sSchema();
+          var defaultValueType = replaceQuantifiedVarsWithTempVars(sSchema, unifier);
           try {
-            paramUnifier.add(new Constraint(paramT, defaultValueType));
+            unifier.add(new Constraint(paramType, defaultValueType));
           } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
-                .formatted(
-                    param.q(), resolvedParamT.q(), defaultValue.sSchema().type().q());
-            this.logger.log(compileError(defaultValue.location(), message));
+                .formatted(param.q(), resolvedParamType.q(), sSchema.type().q());
+            throw new TypeException(compileError(defaultValue.location(), message), e);
           }
         });
       }
@@ -165,16 +153,6 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     private static SType replaceVarsWithTempVars(SVarSet vars, SType type, Unifier unifier) {
       var mapping = vars.toList().toMap(v -> (SType) unifier.newTempVar());
       return type.mapVars(mapping);
-    }
-
-    // param default value
-
-    private boolean inferParamDefaultValues(NList<PItem> params) {
-      boolean result = true;
-      for (var param : params) {
-        result &= param.defaultValue().map(this::inferNamedValue).getOr(true);
-      }
-      return result;
     }
   }
 }

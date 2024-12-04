@@ -24,7 +24,7 @@ public class DecodeLiterals implements Task1<PModule, PModule> {
     return output(pModule, label, logger.toList());
   }
 
-  private static class DecodeLiteralModuleVisitor extends PModuleVisitor {
+  private static class DecodeLiteralModuleVisitor extends PModuleVisitor<RuntimeException> {
     private final Logger logger;
 
     public DecodeLiteralModuleVisitor(Logger logger) {

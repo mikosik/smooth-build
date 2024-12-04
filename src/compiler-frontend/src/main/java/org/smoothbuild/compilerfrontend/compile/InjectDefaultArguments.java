@@ -45,7 +45,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     return output(pModule, label, logger.toList());
   }
 
-  private static class Visitor extends PScopingModuleVisitor {
+  private static class Visitor extends PScopingModuleVisitor<RuntimeException> {
     private final SScope imported;
     private final Bindings<PReferenceable> referenceables;
     private final Logger logger;
@@ -57,7 +57,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     @Override
-    protected PModuleVisitor createVisitorForScopeOf(PScoped pScoped) {
+    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
       return new Visitor(imported, pScoped.scope().referencables(), logger);
     }
 
