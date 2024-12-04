@@ -155,7 +155,7 @@ public class InferenceTest extends FrontendCompileTester {
       var myValue = module(code)
           .loadsWithSuccess()
           .getLoadedModule()
-          .members()
+          .localScope()
           .evaluables()
           .get("myValue");
       var myValueBody = ((SNamedExprValue) myValue).body();

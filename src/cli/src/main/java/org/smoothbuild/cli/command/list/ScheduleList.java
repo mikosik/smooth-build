@@ -46,7 +46,7 @@ public class ScheduleList implements Task0<Tuple0> {
     @Override
     public Output<Tuple0> execute(SModule sModule) {
       var oneValuePerLineString =
-          sModule.membersAndImported().evaluables().toMap().values().stream()
+          sModule.fullScope().evaluables().toMap().values().stream()
               .filter(ScheduleList::isNoArgNotGenericValue)
               .map(Nal::name)
               .sorted()

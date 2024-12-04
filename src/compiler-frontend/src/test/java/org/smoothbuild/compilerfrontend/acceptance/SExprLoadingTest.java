@@ -158,7 +158,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
           SEvaluable result = module(code)
               .loadsWithSuccess()
               .getLoadedModule()
-              .members()
+              .localScope()
               .evaluables()
               .get("result");
           SExpr actualDefArg =
