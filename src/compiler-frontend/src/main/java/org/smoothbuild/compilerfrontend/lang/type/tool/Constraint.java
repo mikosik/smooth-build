@@ -1,3 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
-public sealed interface Constraint permits EqualityConstraint, InstantiationConstraint {}
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+
+/**
+ * Constraint stating that two types are equal.
+ */
+public record Constraint(SType type1, SType type2) {}

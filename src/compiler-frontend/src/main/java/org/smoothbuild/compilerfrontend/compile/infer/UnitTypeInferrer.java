@@ -6,7 +6,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
-import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
+import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 /**
@@ -31,8 +31,7 @@ public class UnitTypeInferrer extends PModuleVisitor {
     for (var typeArg : pInstantiate.typeArgs()) {
       for (var var : unifier.resolve(typeArg).vars()) {
         if (var.isTemporary()) {
-          unifier.addOrFailWithRuntimeException(
-              new EqualityConstraint(var, new STupleType(list())));
+          unifier.addOrFailWithRuntimeException(new Constraint(var, new STupleType(list())));
         }
       }
     }

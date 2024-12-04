@@ -34,7 +34,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
+import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
@@ -147,7 +147,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
           var defaultValueType =
               replaceQuantifiedVarsWithTempVars(defaultValue.sSchema(), paramUnifier);
           try {
-            paramUnifier.add(new EqualityConstraint(paramT, defaultValueType));
+            paramUnifier.add(new Constraint(paramT, defaultValueType));
           } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(
