@@ -41,8 +41,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
     for (var fullPath : modules) {
       module = scheduler.submit(ScheduleModuleCompilation.class, module, argument(fullPath));
     }
-    var label = COMPILER_FRONT_LABEL.append(":schedule");
-    var report = report(label, list());
+    var report = report(COMPILER_FRONT_LABEL.append(":schedule"), list());
     return schedulingOutput(module, report);
   }
 
@@ -56,24 +55,23 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
 
     @Override
     public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
-      var environment = argument(importedModule.membersAndImported());
+      var scope = argument(importedModule.fullScope());
       var path = argument(fullPath);
       var fileContent = scheduler.submit(ReadFileContent.class, path);
       var moduleContext = scheduler.submit(Parse.class, fileContent, path);
-      var moduleP = scheduler.submit(TranslateAp.class, moduleContext, path);
-      var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, moduleP);
+      var pModule = scheduler.submit(TranslateAp.class, moduleContext, path);
+      var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, pModule);
       var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = scheduler.submit(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected =
-          scheduler.submit(DetectUndefined.class, withInitializedScopes, environment);
+          scheduler.submit(DetectUndefined.class, withInitializedScopes, scope);
       var withInjected =
-          scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, environment);
+          scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, scope);
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = scheduler.submit(InferTypes.class, sorted, environment);
-      var moduleS = scheduler.submit(ConvertPs.class, typesInferred, environment);
-      var label = COMPILER_FRONT_LABEL.append(":schedule").append(":module");
-      var report = report(label, list());
-      return schedulingOutput(moduleS, report);
+      var typesInferred = scheduler.submit(InferTypes.class, sorted, scope);
+      var sModule = scheduler.submit(ConvertPs.class, typesInferred, scope);
+      var report = report(COMPILER_FRONT_LABEL.append(":schedule:module"), list());
+      return schedulingOutput(sModule, report);
     }
   }
 }
