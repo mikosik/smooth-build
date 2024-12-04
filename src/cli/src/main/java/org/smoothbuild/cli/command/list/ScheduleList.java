@@ -45,12 +45,11 @@ public class ScheduleList implements Task0<Tuple0> {
   public static class PrintEvaluables implements Task1<SModule, Tuple0> {
     @Override
     public Output<Tuple0> execute(SModule sModule) {
-      var oneValuePerLineString =
-          sModule.fullScope().evaluables().toMap().values().stream()
-              .filter(ScheduleList::isNoArgNotGenericValue)
-              .map(Nal::name)
-              .sorted()
-              .collect(joining("\n"));
+      var oneValuePerLineString = sModule.fullScope().evaluables().toMap().values().stream()
+          .filter(ScheduleList::isNoArgNotGenericValue)
+          .map(Nal::name)
+          .sorted()
+          .collect(joining("\n"));
       var info = info("Values that can be evaluated:\n" + oneValuePerLineString);
       return output(tuple(), ListCommand.LABEL, list(info));
     }

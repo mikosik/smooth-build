@@ -55,7 +55,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
 
     @Override
     public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
-      var scope = argument(importedModule.fullScope());
+      var importedScope = argument(importedModule.fullScope());
       var path = argument(fullPath);
       var fileContent = scheduler.submit(ReadFileContent.class, path);
       var moduleContext = scheduler.submit(Parse.class, fileContent, path);
@@ -64,12 +64,12 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = scheduler.submit(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected =
-          scheduler.submit(DetectUndefined.class, withInitializedScopes, scope);
+          scheduler.submit(DetectUndefined.class, withInitializedScopes, importedScope);
       var withInjected =
-          scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, scope);
+          scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, importedScope);
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = scheduler.submit(InferTypes.class, sorted, scope);
-      var sModule = scheduler.submit(ConvertPs.class, typesInferred, scope);
+      var typesInferred = scheduler.submit(InferTypes.class, sorted, importedScope);
+      var sModule = scheduler.submit(ConvertPs.class, typesInferred, importedScope);
       var report = report(COMPILER_FRONT_LABEL.append(":schedule:module"), list());
       return schedulingOutput(sModule, report);
     }

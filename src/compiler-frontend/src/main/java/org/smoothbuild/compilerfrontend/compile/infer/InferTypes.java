@@ -46,12 +46,11 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
  */
 public class InferTypes implements Task2<PModule, SScope, PModule> {
   @Override
-  public Output<PModule> execute(PModule pModule, SScope environment) {
+  public Output<PModule> execute(PModule pModule, SScope imported) {
     var logger = new Logger();
-    var typeTeller = new TypeTeller(environment, pModule.scope());
+    var typeTeller = new TypeTeller(imported, pModule.scope());
     new Worker(typeTeller, logger).visitModule(pModule);
-    var label = COMPILER_FRONT_LABEL.append(":inferTypes");
-    return output(pModule, label, logger.toList());
+    return output(pModule, COMPILER_FRONT_LABEL.append(":inferTypes"), logger.toList());
   }
 
   public static class Worker extends PModuleVisitor {
