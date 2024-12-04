@@ -22,9 +22,9 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class ConstraintInferrer {
   public static SType unifyAndInferConstraints(
-      SType type1, SType type2, Queue<EqualityConstraint> constraints) throws UnifierException {
+      SType type1, SType type2, Queue<Constraint> constraints) throws UnifierException {
     if (type1 instanceof STempVar tempVar1) {
-      constraints.add(new EqualityConstraint(type1, type2));
+      constraints.add(new Constraint(type1, type2));
       // Prefer older Temp so when debugging Unifier data is more stable.
       if (type2 instanceof STempVar tempVar2 && !tempVar1.isOlderThan(tempVar2)) {
         return tempVar2;
@@ -33,7 +33,7 @@ public class ConstraintInferrer {
       }
     }
     if (type2 instanceof STempVar) {
-      constraints.add(new EqualityConstraint(type1, type2));
+      constraints.add(new Constraint(type1, type2));
       return type2;
     }
     return switch (type1) {
@@ -55,8 +55,7 @@ public class ConstraintInferrer {
   }
 
   private static SArrayType unifyArrayAndType(
-      SArrayType array1, SType type2, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      SArrayType array1, SType type2, Queue<Constraint> constraints) throws UnifierException {
     if (type2 instanceof SArrayType array2) {
       return new SArrayType(unifyAndInferConstraints(array1.elem(), array2.elem(), constraints));
     } else {
@@ -65,8 +64,7 @@ public class ConstraintInferrer {
   }
 
   private static SFieldSetType unifyFieldSetAndType(
-      SFieldSetType fieldSet, SType type, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      SFieldSetType fieldSet, SType type, Queue<Constraint> constraints) throws UnifierException {
     return switch (type) {
       case SInterfaceType sInterfaceType -> unifyFieldSetAndInterface(
           fieldSet, sInterfaceType, constraints);
@@ -76,7 +74,7 @@ public class ConstraintInferrer {
   }
 
   private static SFieldSetType unifyFieldSetAndInterface(
-      SFieldSetType fieldSet, SInterfaceType interface2, Queue<EqualityConstraint> constraints)
+      SFieldSetType fieldSet, SInterfaceType interface2, Queue<Constraint> constraints)
       throws UnifierException {
     return switch (fieldSet) {
       case SInterfaceType interface1 -> unifyInterfaceAndInterface(
@@ -86,13 +84,13 @@ public class ConstraintInferrer {
   }
 
   private static SInterfaceType unifyInterfaceAndInterface(
-      SInterfaceType interface1, SInterfaceType interface2, Queue<EqualityConstraint> constraints)
+      SInterfaceType interface1, SInterfaceType interface2, Queue<Constraint> constraints)
       throws UnifierException {
     return new SInterfaceType(unifyFieldSetAndFieldSet(interface1, interface2, constraints));
   }
 
   private static SStructType unifyFieldSetAndStruct(
-      SFieldSetType fieldSet, SStructType struct2, Queue<EqualityConstraint> constraints)
+      SFieldSetType fieldSet, SStructType struct2, Queue<Constraint> constraints)
       throws UnifierException {
     return switch (fieldSet) {
       case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, constraints);
@@ -101,7 +99,7 @@ public class ConstraintInferrer {
   }
 
   private static SStructType unifyStructAndInterface(
-      SStructType struct, SInterfaceType interface_, Queue<EqualityConstraint> constraints)
+      SStructType struct, SInterfaceType interface_, Queue<Constraint> constraints)
       throws UnifierException {
     var unifiedFields = unifyFieldSetAndFieldSet(struct, interface_, constraints);
     if (unifiedFields.size() != struct.fields().size()) {
@@ -112,7 +110,7 @@ public class ConstraintInferrer {
   }
 
   private static Map<String, SItemSig> unifyFieldSetAndFieldSet(
-      SFieldSetType fieldSet1, SFieldSetType fieldSet2, Queue<EqualityConstraint> constraints)
+      SFieldSetType fieldSet1, SFieldSetType fieldSet2, Queue<Constraint> constraints)
       throws UnifierException {
     var fields1 = fieldSet1.fieldSet();
     var fields2 = fieldSet2.fieldSet();
@@ -132,7 +130,7 @@ public class ConstraintInferrer {
   }
 
   private static SStructType unifyStructAndStruct(
-      SStructType struct1, SStructType struct2, Queue<EqualityConstraint> constraints)
+      SStructType struct1, SStructType struct2, Queue<Constraint> constraints)
       throws UnifierException {
     if (!struct1.name().equals(struct2.name())) {
       throw new UnifierException();
@@ -145,8 +143,7 @@ public class ConstraintInferrer {
   }
 
   private static SItemSig unifyItemSigAndItemSig(
-      SItemSig itemSig1, SItemSig itemSig2, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      SItemSig itemSig1, SItemSig itemSig2, Queue<Constraint> constraints) throws UnifierException {
     var name1 = itemSig1.name();
     var name2 = itemSig2.name();
     if (!name1.equals(name2)) {
@@ -158,7 +155,7 @@ public class ConstraintInferrer {
   }
 
   private static SFuncType unifyFunctionAndType(
-      SFuncType func1, SType type, Queue<EqualityConstraint> constraints) throws UnifierException {
+      SFuncType func1, SType type, Queue<Constraint> constraints) throws UnifierException {
     if (type instanceof SFuncType func2) {
       var result1 = func1.result();
       var result2 = func2.result();
@@ -173,8 +170,7 @@ public class ConstraintInferrer {
   }
 
   private static STupleType unifyTupleAndType(
-      STupleType tuple1, SType type, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      STupleType tuple1, SType type, Queue<Constraint> constraints) throws UnifierException {
     if (type instanceof STupleType tuple2) {
       return unifyTupleAndTuple(tuple1, tuple2, constraints);
     } else {
@@ -183,8 +179,7 @@ public class ConstraintInferrer {
   }
 
   private static STupleType unifyTupleAndTuple(
-      STupleType tuple1, STupleType tuple2, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      STupleType tuple1, STupleType tuple2, Queue<Constraint> constraints) throws UnifierException {
     var elements = zip(
         tuple1.elements(),
         tuple2.elements(),

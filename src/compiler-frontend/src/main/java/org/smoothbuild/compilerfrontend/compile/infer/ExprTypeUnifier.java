@@ -40,7 +40,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
+import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
@@ -275,7 +275,7 @@ public class ExprTypeUnifier {
   }
 
   private void unify(SType sType, SType bodyT) throws UnifierException {
-    unifier.add(new EqualityConstraint(sType, bodyT));
+    unifier.add(new Constraint(sType, bodyT));
   }
 
   private Maybe<SType> translateOrGenerateTempVar(PType pType) {

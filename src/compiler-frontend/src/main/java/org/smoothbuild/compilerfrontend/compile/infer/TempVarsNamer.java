@@ -9,7 +9,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
-import org.smoothbuild.compilerfrontend.lang.type.tool.EqualityConstraint;
+import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnusedVarsGenerator;
 
@@ -42,7 +42,7 @@ public class TempVarsNamer extends PModuleVisitor {
     var fullScopeVars = outerScopeVars.withAddedAll(localScopeVars);
     body.ifPresent(b -> new TempVarsNamer(unifier, fullScopeVars).visitExpr(b));
     var resolvedAndRenamedT = nameVars(resolvedT, localScopeVars);
-    unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
+    unifier.addOrFailWithRuntimeException(new Constraint(resolvedAndRenamedT, resolvedT));
   }
 
   private static SType nameVars(SType resolvedT, SVarSet reservedVars) {

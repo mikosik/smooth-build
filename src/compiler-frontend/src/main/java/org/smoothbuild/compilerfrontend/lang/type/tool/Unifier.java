@@ -3,16 +3,13 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.base.Strings.q;
-import static org.smoothbuild.common.collect.List.listOfAll;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.STempVar;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
@@ -20,7 +17,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 /**
  * Unifier allows unifying types (`TypeS`s)
  * and type parameters (`Var`s), so it is possible to infer types.
- *
+ * <p>
  * Unifier treats differently VarS and TempVarS.
  * VarS represents type parameter that is fixed and any unification with type different
  * from itself causes error. For example VarS(A) can represent type of function parameter so
@@ -28,7 +25,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
  * TempVarS is type variable that is unknown but can be inferred during unification. For example
  * TempVarS(1) can represent result type of function which doesn't specify its result type.
  * We can unify it with String and infer its type.
- *
+ * <p>
  * InterfaceTS describes type by enumerating some (possibly all) of its fields.
  * Unifying such field with other InterfaceTS or StructTS is handled slightly
  * differently than other types. For example unifying some TempVar with
@@ -38,41 +35,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
  */
 public class Unifier {
   private final Map<SVar, Unified> varToUnified;
-  private final Set<InstantiationConstraint> instantiationConstraints;
   private final TempVarGenerator tempVarGenerator;
 
   public Unifier() {
     this.varToUnified = new HashMap<>();
-    this.instantiationConstraints = new HashSet<>();
     this.tempVarGenerator = new TempVarGenerator();
   }
 
-  public void add(Constraint constraint) throws UnifierException {
-    switch (constraint) {
-      case EqualityConstraint equality -> add(equality);
-      case InstantiationConstraint instatiation -> add(instatiation);
-    }
-  }
-
-  // instantiation constraint
-
-  public void add(InstantiationConstraint constraint) throws UnifierException {
-    instantiationConstraints.add(constraint);
-    add(toEqualityConstraint(constraint));
-  }
-
-  private EqualityConstraint toEqualityConstraint(InstantiationConstraint constraint) {
-    return new EqualityConstraint(constraint.instantiation(), structureOf(constraint.schema()));
-  }
-
-  public SType structureOf(SType type) {
-    var tempMap = new HashMap<SType, SType>();
-    return resolve(type).mapTemps((temp) -> tempMap.computeIfAbsent(temp, t -> newTempVar()));
-  }
-
-  // equality constraint
-
-  public void addOrFailWithRuntimeException(EqualityConstraint constraint) {
+  public void addOrFailWithRuntimeException(Constraint constraint) {
     try {
       add(constraint);
     } catch (UnifierException e) {
@@ -83,52 +53,19 @@ public class Unifier {
     }
   }
 
-  public void add(EqualityConstraint constraint) throws UnifierException {
-    var queue = new LinkedList<EqualityConstraint>();
+  public void add(Constraint constraint) throws UnifierException {
+    var queue = new LinkedList<Constraint>();
     queue.add(constraint);
-    var ordered = listOfAll(instantiationConstraints);
-    while (!queue.isEmpty()) {
-      var resolvedBefore = resolvedInstantiationConstraints(ordered);
-      drainQueue(queue);
-      var resolvedAfter = resolvedInstantiationConstraints(ordered);
-      var updated = findUpdated(resolvedBefore, resolvedAfter, ordered);
-      queue = new LinkedList<>(updated.map(this::toEqualityConstraint));
-    }
+    drainQueue(queue);
   }
 
-  private static List<InstantiationConstraint> findUpdated(
-      List<ResolvedInstantiation> before,
-      List<ResolvedInstantiation> after,
-      List<InstantiationConstraint> ordered) {
-    var builder = new ArrayList<InstantiationConstraint>();
-    for (int i = 0; i < before.size(); i++) {
-      if (!before.get(i).equals(after.get(i))) {
-        builder.add(ordered.get(i));
-      }
-    }
-    return listOfAll(builder);
-  }
-
-  private static record ResolvedInstantiation(SType instantiation, SType schema) {}
-
-  private List<ResolvedInstantiation> resolvedInstantiationConstraints(
-      List<InstantiationConstraint> orderedInstantiationConstraints) {
-    return orderedInstantiationConstraints.map(this::resolve);
-  }
-
-  private ResolvedInstantiation resolve(InstantiationConstraint constraint) {
-    return new ResolvedInstantiation(
-        resolve(constraint.instantiation()), resolve(constraint.schema()));
-  }
-
-  private void drainQueue(LinkedList<EqualityConstraint> queue) throws UnifierException {
+  private void drainQueue(LinkedList<Constraint> queue) throws UnifierException {
     while (!queue.isEmpty()) {
       unify(queue.remove(), queue);
     }
   }
 
-  private void unify(EqualityConstraint constraint, Queue<EqualityConstraint> queue)
-      throws UnifierException {
+  private void unify(Constraint constraint, Queue<Constraint> queue) throws UnifierException {
     var type1 = constraint.type1();
     var type2 = constraint.type2();
     if (type1 instanceof STempVar tempVar1) {
@@ -147,8 +84,7 @@ public class Unifier {
   }
 
   private void unifyTempVarAndTempVar(
-      STempVar tempVar1, STempVar tempVar2, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      STempVar tempVar1, STempVar tempVar2, Queue<Constraint> constraints) throws UnifierException {
     var unified1 = unifiedFor(tempVar1);
     var unified2 = unifiedFor(tempVar2);
     if (unified1 != unified2) {
@@ -161,8 +97,7 @@ public class Unifier {
   }
 
   private void mergeUnifiedGroups(
-      Unified destination, Unified source, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      Unified destination, Unified source, Queue<Constraint> constraints) throws UnifierException {
     destination.vars.addAll(source.vars);
     destination.usedIn.addAll(source.usedIn);
     source.vars.forEach(v -> varToUnified.put(v, destination));
@@ -175,8 +110,8 @@ public class Unifier {
     failIfCycleExists(destination);
   }
 
-  private void unifyTempVarAndNonTempVar(
-      STempVar temp, SType type, Queue<EqualityConstraint> constraints) throws UnifierException {
+  private void unifyTempVarAndNonTempVar(STempVar temp, SType type, Queue<Constraint> constraints)
+      throws UnifierException {
     var unified = unifiedFor(temp);
     if (unified.type == null) {
       unified.type = type;
