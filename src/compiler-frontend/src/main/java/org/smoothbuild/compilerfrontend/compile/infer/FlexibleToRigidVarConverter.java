@@ -4,6 +4,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
@@ -31,20 +32,25 @@ public class FlexibleToRigidVarConverter extends PModuleVisitor<RuntimeException
   }
 
   private void nameVarsInEvaluable(PEvaluable evaluable) {
-    var resolvedT = unifier.resolve(evaluable.sType());
-    var body = evaluable.body();
-    var localScopeVars = resolvedT.vars().filter(v -> !v.isFlexibleVar());
-    var fullScopeVars = outerScopeVars.withAddedAll(localScopeVars);
-    body.ifPresent(b -> new FlexibleToRigidVarConverter(unifier, fullScopeVars).visitExpr(b));
-    var resolvedAndRenamedT = renameFlexibleVars(resolvedT, localScopeVars);
-    unifier.addOrFailWithRuntimeException(new Constraint(resolvedAndRenamedT, resolvedT));
+    evaluable.body().ifPresent(b -> nameVarsInBody(evaluable, b));
+    var resolvedType = unifier.resolve(evaluable.sType());
+    var renamedVarsType = renameFlexibleVarsToRigid(resolvedType, outerScopeVars);
+    unifier.addOrFailWithRuntimeException(new Constraint(renamedVarsType, resolvedType));
   }
 
-  private static SType renameFlexibleVars(SType resolvedT, SVarSet reservedVars) {
-    var vars = resolvedT.vars();
-    var varsToRename = vars.filter(SVar::isFlexibleVar);
-    var varGenerator = new UnusedVarsGenerator(reservedVars);
-    var mapping = varsToRename.toList().toMap(v -> (SType) varGenerator.next());
-    return resolvedT.mapVars(mapping);
+  private void nameVarsInBody(PEvaluable evaluable, PExpr body) {
+    var resolvedType = unifier.resolve(evaluable.sType());
+    var rigidVars = resolvedType.vars().filter(var -> !var.isFlexibleVar());
+    var reservedVars = outerScopeVars.withAddedAll(rigidVars);
+    new FlexibleToRigidVarConverter(unifier, reservedVars).visitExpr(body);
+  }
+
+  private static SType renameFlexibleVarsToRigid(SType sType, SVarSet reservedVars) {
+    var vars = sType.vars();
+    var rigidVars = vars.filter(var -> !var.isFlexibleVar());
+    var varGenerator = new UnusedVarsGenerator(reservedVars.withAddedAll(rigidVars));
+    var flexibleVars = vars.filter(SVar::isFlexibleVar);
+    var mapping = flexibleVars.toList().toMap(v -> (SType) varGenerator.next());
+    return sType.mapVars(mapping);
   }
 }
