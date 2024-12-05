@@ -48,29 +48,39 @@ public abstract sealed class SType
     return vars;
   }
 
-  public void forEachTempVar(Consumer<STempVar> consumer) {
-    forEachTempVar(this, consumer);
+  public boolean isFlexibleVar() {
+    return false;
   }
 
-  private static void forEachTempVar(SType sType, Consumer<STempVar> consumer) {
+  public void forEachFlexibleVar(Consumer<SVar> consumer) {
+    forEachFlexibleVar(this, consumer);
+  }
+
+  private static void forEachFlexibleVar(SType sType, Consumer<SVar> consumer) {
     switch (sType) {
-      case SArrayType sArrayType -> forEachTempVar(sArrayType.elem(), consumer);
+      case SArrayType sArrayType -> forEachFlexibleVar(sArrayType.elem(), consumer);
       case SFieldSetType sFieldSetType -> sFieldSetType
           .fieldSet()
           .values()
-          .forEach(f -> forEachTempVar(f.type(), consumer));
+          .forEach(f -> forEachFlexibleVar(f.type(), consumer));
       case SFuncType sFuncType -> {
-        forEachTempVar(sFuncType.params(), consumer);
-        forEachTempVar(sFuncType.result(), consumer);
+        forEachFlexibleVar(sFuncType.params(), consumer);
+        forEachFlexibleVar(sFuncType.result(), consumer);
       }
-      case STupleType sTupleType -> sTupleType.elements().forEach(t -> forEachTempVar(t, consumer));
-      case STempVar temp -> consumer.accept(temp);
+      case STupleType sTupleType -> sTupleType
+          .elements()
+          .forEach(t -> forEachFlexibleVar(t, consumer));
+      case SVar sVar -> {
+        if (sVar.isFlexibleVar()) {
+          consumer.accept(sVar);
+        }
+      }
       default -> {}
     }
   }
 
-  public SType mapTemps(Function<SType, SType> map) {
-    return mapVars(t -> t instanceof STempVar ? map.apply(t) : t);
+  public SType mapFlexibleVars(Function<SType, SType> map) {
+    return mapVars(t -> t.isFlexibleVar() ? map.apply(t) : t);
   }
 
   public SType mapVars(Map<SVar, SType> map) {

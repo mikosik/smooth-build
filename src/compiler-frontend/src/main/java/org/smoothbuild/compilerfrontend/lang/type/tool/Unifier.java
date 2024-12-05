@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.base.Strings.q;
+import static org.smoothbuild.compilerfrontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,36 +11,34 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import org.smoothbuild.compilerfrontend.lang.type.STempVar;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 /**
  * Unifier allows unifying types (`TypeS`s)
- * and type parameters (`Var`s), so it is possible to infer types.
+ * and type variables (`Var`s), so it is possible to infer types.
  * <p>
- * Unifier treats differently VarS and TempVarS.
- * VarS represents type parameter that is fixed and any unification with type different
- * from itself causes error. For example VarS(A) can represent type of function parameter so
- * unifying it with VarS(B) (type of different parameter) is type error.
- * TempVarS is type variable that is unknown but can be inferred during unification. For example
- * TempVarS(1) can represent result type of function which doesn't specify its result type.
- * We can unify it with String and infer its type.
+ * Unifier treats differently VarS that are flexible (`isFlexibleVar()` returns true) and VarS
+ * that are rigid (`isFlexibleVar()` returns false). Rigid var represents type variable that is
+ * fixed and any unification with type different from itself causes error. For example `A` can
+ * represent type of function parameter so unifying it with B (type of different parameter) is
+ * a type error. Flexible var represents unknown type that can be inferred during unification.
+ * For example _1 can represent result type of function which doesn't specify its result type.
+ * We can unify it with String or A and infer its type this way.
  * <p>
  * InterfaceTS describes type by enumerating some (possibly all) of its fields.
  * Unifying such field with other InterfaceTS or StructTS is handled slightly
- * differently than other types. For example unifying some TempVar with
+ * differently than other types. For example unifying some flexible var with
  * Interface(Int field1) and then with Interface(Int field2) won't cause
  * type error (as it would in case of unifying two structs) but just merge
- * both interfaces inferring type of TempVar as Interface(Int field1, Int field2).
+ * both interfaces inferring type of flexible var as Interface(Int field1, Int field2).
  */
 public class Unifier {
-  private final Map<SVar, Unified> varToUnified;
-  private final TempVarGenerator tempVarGenerator;
+  private final Map<SVar, Unified> flexibleVarToUnified;
+  private int flexibleVarCounter = 0;
 
   public Unifier() {
-    this.varToUnified = new HashMap<>();
-    this.tempVarGenerator = new TempVarGenerator();
+    this.flexibleVarToUnified = new HashMap<>();
   }
 
   public void addOrFailWithRuntimeException(Constraint constraint) {
@@ -68,86 +67,87 @@ public class Unifier {
   private void unify(Constraint constraint, Queue<Constraint> queue) throws UnifierException {
     var type1 = constraint.type1();
     var type2 = constraint.type2();
-    if (type1 instanceof STempVar tempVar1) {
-      if (type2 instanceof STempVar tempVar2) {
-        unifyTempVarAndTempVar(tempVar1, tempVar2, queue);
+    if (type1.isFlexibleVar()) {
+      if (type2.isFlexibleVar()) {
+        unifyFlexibleVarAndFlexibleVar((SVar) type1, (SVar) type2, queue);
       } else {
-        unifyTempVarAndNonTempVar(tempVar1, type2, queue);
+        unifyFlexibleVarAndNonFlexibleVar((SVar) type1, type2, queue);
       }
     } else {
-      if (type2 instanceof STempVar tempVar2) {
-        unifyTempVarAndNonTempVar(tempVar2, type1, queue);
+      if (type2.isFlexibleVar()) {
+        unifyFlexibleVarAndNonFlexibleVar((SVar) type2, type1, queue);
       } else {
-        ConstraintInferrer.unifyAndInferConstraints(type1, type2, queue);
+        unifyAndInferConstraints(type1, type2, queue);
       }
     }
   }
 
-  private void unifyTempVarAndTempVar(
-      STempVar tempVar1, STempVar tempVar2, Queue<Constraint> constraints) throws UnifierException {
-    var unified1 = unifiedFor(tempVar1);
-    var unified2 = unifiedFor(tempVar2);
+  private void unifyFlexibleVarAndFlexibleVar(SVar var1, SVar var2, Queue<Constraint> constraints)
+      throws UnifierException {
+    var unified1 = unifiedFor(var1);
+    var unified2 = unifiedFor(var2);
     if (unified1 != unified2) {
-      if (unified1.mainVar.isOlderThan(unified2.mainVar)) {
-        mergeUnifiedGroups(unified1, unified2, constraints);
-      } else {
-        mergeUnifiedGroups(unified2, unified1, constraints);
-      }
+      mergeUnifiedGroups(unified1, unified2, constraints);
     }
   }
 
   private void mergeUnifiedGroups(
-      Unified destination, Unified source, Queue<Constraint> constraints) throws UnifierException {
-    destination.vars.addAll(source.vars);
-    destination.usedIn.addAll(source.usedIn);
-    source.vars.forEach(v -> varToUnified.put(v, destination));
-    if (destination.type != null && source.type != null) {
-      destination.type =
-          ConstraintInferrer.unifyAndInferConstraints(destination.type, source.type, constraints);
+      Unified source, Unified destination, Queue<Constraint> constraints) throws UnifierException {
+    var sourceSmaller = source.vars.size() + source.usedIn.size()
+        < destination.vars.size() + destination.usedIn.size();
+    var s = sourceSmaller ? source : destination;
+    var d = sourceSmaller ? destination : source;
+
+    d.vars.addAll(s.vars);
+    d.usedIn.addAll(s.usedIn);
+    s.vars.forEach(v -> flexibleVarToUnified.put(v, d));
+    if (d.type != null && s.type != null) {
+      d.type = unifyAndInferConstraints(d.type, s.type, constraints);
     } else {
-      destination.type = destination.type != null ? destination.type : source.type;
+      d.type = d.type != null ? d.type : s.type;
     }
-    failIfCycleExists(destination);
+    failIfCycleExists(d);
   }
 
-  private void unifyTempVarAndNonTempVar(STempVar temp, SType type, Queue<Constraint> constraints)
-      throws UnifierException {
-    var unified = unifiedFor(temp);
+  private void unifyFlexibleVarAndNonFlexibleVar(
+      SVar var, SType type, Queue<Constraint> constraints) throws UnifierException {
+    var unified = unifiedFor(var);
     if (unified.type == null) {
       unified.type = type;
     } else {
-      unified.type = ConstraintInferrer.unifyAndInferConstraints(unified.type, type, constraints);
+      unified.type = unifyAndInferConstraints(unified.type, type, constraints);
     }
-    type.forEachTempVar(t -> unifiedFor(t).usedIn.add(unified));
+    type.forEachFlexibleVar(t -> unifiedFor(t).usedIn.add(unified));
     failIfCycleExists(unified);
   }
 
-  public STempVar newTempVar() {
-    var tempVar = tempVarGenerator.next();
-    varToUnified.put(tempVar, new Unified(tempVar));
-    return tempVar;
+  public SVar newFlexibleVar() {
+    var var = SVar.newFlexibleVar(flexibleVarCounter++);
+    flexibleVarToUnified.put(var, new Unified(var));
+    return var;
   }
 
   // resolving
 
   public SType resolve(SType sType) {
-    return switch (sType) {
-      case STempVar tempVar -> resolveTempVar(tempVar);
-      default -> resolveNonTemp(sType);
-    };
-  }
-
-  private SType resolveTempVar(STempVar tempVar) {
-    var unified = unifiedFor(tempVar);
-    if (unified.type == null) {
-      return unified.mainVar;
+    if (sType.isFlexibleVar()) {
+      return resolveFlexibleVar((SVar) sType);
     } else {
-      return resolveNonTemp(unified.type);
+      return resolveNonFlexible(sType);
     }
   }
 
-  private SType resolveNonTemp(SType type) {
-    return type.mapTemps(this::resolve);
+  private SType resolveFlexibleVar(SVar var) {
+    var unified = unifiedFor(var);
+    if (unified.type == null) {
+      return unified.mainVar;
+    } else {
+      return resolveNonFlexible(unified.type);
+    }
+  }
+
+  private SType resolveNonFlexible(SType type) {
+    return type.mapFlexibleVars(this::resolve);
   }
 
   // Unified helpers
@@ -168,17 +168,17 @@ public class Unifier {
     }
   }
 
-  private Unified unifiedFor(STempVar tempVar) {
-    var unified = varToUnified.get(tempVar);
+  private Unified unifiedFor(SVar var) {
+    var unified = flexibleVarToUnified.get(var);
     if (unified == null) {
-      throw new IllegalStateException("Unknown temp var " + q(tempVar.name()) + ".");
+      throw new IllegalStateException("Unknown flexible var " + q(var.name()) + ".");
     }
     return unified;
   }
 
   @Override
   public String toString() {
-    return new HashSet<>(varToUnified.values())
+    return new HashSet<>(flexibleVarToUnified.values())
         .stream()
             .sorted(comparing(u -> u.mainVar.name()))
             .map(Object::toString)
@@ -186,12 +186,12 @@ public class Unifier {
   }
 
   private static class Unified {
-    private final STempVar mainVar;
-    private final Set<STempVar> vars;
+    private final SVar mainVar;
+    private final Set<SVar> vars;
     private final Set<Unified> usedIn;
     private SType type;
 
-    public Unified(STempVar var) {
+    public Unified(SVar var) {
       this.mainVar = var;
       this.vars = new HashSet<>();
       this.usedIn = new HashSet<>();

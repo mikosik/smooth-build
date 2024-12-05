@@ -361,27 +361,4 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sTupleType(sBoolType()), list(sBoolType())),
         arguments(sTupleType(sBoolType(), sIntType()), list(sBoolType(), sIntType())));
   }
-
-  @Nested
-  class _temp_var {
-    @Test
-    void is_older_than_1_1() {
-      assertThat(new STempVar("1").isOlderThan(new STempVar("1"))).isFalse();
-    }
-
-    @Test
-    void is_older_than_1_2() {
-      assertThat(new STempVar("1").isOlderThan(new STempVar("2"))).isTrue();
-    }
-
-    @Test
-    void is_older_than_1_10() {
-      assertThat(new STempVar("1").isOlderThan(new STempVar("10"))).isTrue();
-    }
-
-    @Test
-    void is_older_than_2_1() {
-      assertThat(new STempVar("2").isOlderThan(new STempVar("1"))).isFalse();
-    }
-  }
 }

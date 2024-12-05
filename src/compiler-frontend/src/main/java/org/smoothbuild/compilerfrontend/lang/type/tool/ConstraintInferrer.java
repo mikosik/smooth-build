@@ -15,7 +15,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SFieldSetType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
-import org.smoothbuild.compilerfrontend.lang.type.STempVar;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
@@ -23,16 +22,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 public class ConstraintInferrer {
   public static SType unifyAndInferConstraints(
       SType type1, SType type2, Queue<Constraint> constraints) throws UnifierException {
-    if (type1 instanceof STempVar tempVar1) {
+    if (type1.isFlexibleVar()) {
       constraints.add(new Constraint(type1, type2));
-      // Prefer older Temp so when debugging Unifier data is more stable.
-      if (type2 instanceof STempVar tempVar2 && !tempVar1.isOlderThan(tempVar2)) {
-        return tempVar2;
-      } else {
-        return tempVar1;
-      }
+      return type1;
     }
-    if (type2 instanceof STempVar) {
+    if (type2.isFlexibleVar()) {
       constraints.add(new Constraint(type1, type2));
       return type2;
     }

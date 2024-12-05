@@ -59,7 +59,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
-    var evaluationType = translateOrGenerateTempVar(pNamedValue.evaluationType());
+    var evaluationType = translateOrGenerateFlexibleVar(pNamedValue.evaluationType());
     pNamedValue.setSType(evaluationType);
     unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, typeTeller);
     var resolvedType = resolveType(pNamedValue);
@@ -74,7 +74,7 @@ public class ExprTypeUnifier {
 
   private void unifyFunc(PFunc namedFunc) throws TypeException {
     var paramTypes = inferParamTypes(namedFunc.params());
-    var resultType = translateOrGenerateTempVar(namedFunc.resultT());
+    var resultType = translateOrGenerateFlexibleVar(namedFunc.resultT());
     var funcTS = new SFuncType(paramTypes, resultType);
     namedFunc.setSType(funcTS);
     unifyEvaluableBody(namedFunc, resultType, funcTS, typeTeller.withScope(namedFunc.scope()));
@@ -163,7 +163,7 @@ public class ExprTypeUnifier {
 
   private SType unifyCall(SType calleeType, List<SType> argTypes, Location location)
       throws TypeException {
-    var resultType = unifier.newTempVar();
+    var resultType = unifier.newFlexibleVar();
     var funcType = new SFuncType(argTypes, resultType);
     try {
       unify(funcType, calleeType);
@@ -177,7 +177,7 @@ public class ExprTypeUnifier {
     var polymorphicP = pInstantiate.polymorphic();
     unifyPolymorphic(polymorphicP);
     var schema = polymorphicP.sSchema();
-    pInstantiate.setTypeArgs(generateList(schema.quantifiedVars().size(), unifier::newTempVar));
+    pInstantiate.setTypeArgs(generateList(schema.quantifiedVars().size(), unifier::newFlexibleVar));
     return schema.instantiate(pInstantiate.typeArgs());
   }
 
@@ -200,7 +200,7 @@ public class ExprTypeUnifier {
 
   private SArrayType unifyElementsWithArray(List<SType> elemTypes, Location location)
       throws TypeException {
-    var elemVar = unifier.newTempVar();
+    var elemVar = unifier.newFlexibleVar();
     for (SType elemType : elemTypes) {
       try {
         unify(elemVar, elemType);
@@ -238,9 +238,9 @@ public class ExprTypeUnifier {
     unifier.add(new Constraint(sType, bodyType));
   }
 
-  private SType translateOrGenerateTempVar(PType pType) {
+  private SType translateOrGenerateFlexibleVar(PType pType) {
     if (pType instanceof PImplicitType) {
-      return unifier.newTempVar();
+      return unifier.newFlexibleVar();
     } else {
       return typeTeller.translate(pType);
     }

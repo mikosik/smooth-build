@@ -6,8 +6,7 @@ import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILE
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyNamedValue;
-import static org.smoothbuild.compilerfrontend.compile.infer.TempVarsNamer.nameVarsInNamedFunc;
-import static org.smoothbuild.compilerfrontend.compile.infer.TempVarsNamer.nameVarsInNamedValue;
+import static org.smoothbuild.compilerfrontend.compile.infer.FlexibleToRigidVarConverter.convertFlexibleVarsToRigid;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
@@ -35,12 +34,6 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
-/**
- * Type inferring consists of
- *   - replacing not declared types with TempVar-s
- *   - walking expression tree unifying types with {@link ExprTypeUnifier}
- *   - resolving types from normalized {@link TypeInferrerResolve}
- */
 public class InferTypes implements Task2<PModule, SScope, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule, SScope imported) {
@@ -105,7 +98,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     public void visitNamedValue(PNamedValue namedValue) throws TypeException {
       var unifier = new Unifier();
       unifyNamedValue(unifier, typeTeller, namedValue);
-      nameVarsInNamedValue(unifier, namedValue);
+      convertFlexibleVarsToRigid(unifier, namedValue);
       resolveNamedValue(unifier, namedValue);
     }
 
@@ -116,7 +109,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       namedFunc.params().list().withEach(p -> p.defaultValue().ifPresent(this::visitNamedValue));
       var unifier = new Unifier();
       unifyFunc(unifier, typeTeller, namedFunc);
-      nameVarsInNamedFunc(unifier, namedFunc);
+      convertFlexibleVarsToRigid(unifier, namedFunc);
       resolveFunc(unifier, namedFunc);
       detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
     }
@@ -132,9 +125,9 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
           var unifier = new Unifier();
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
-              replaceVarsWithTempVars(funcSchema.quantifiedVars(), resolvedParamType, unifier);
+              replaceVarsWithFlexible(funcSchema.quantifiedVars(), resolvedParamType, unifier);
           var sSchema = defaultValue.sSchema();
-          var defaultValueType = replaceQuantifiedVarsWithTempVars(sSchema, unifier);
+          var defaultValueType = replaceQuantifiedVarsWithFlexible(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
           } catch (UnifierException e) {
@@ -146,12 +139,12 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       }
     }
 
-    private static SType replaceQuantifiedVarsWithTempVars(SSchema sSchema, Unifier unifier) {
-      return replaceVarsWithTempVars(sSchema.quantifiedVars(), sSchema.type(), unifier);
+    private static SType replaceQuantifiedVarsWithFlexible(SSchema sSchema, Unifier unifier) {
+      return replaceVarsWithFlexible(sSchema.quantifiedVars(), sSchema.type(), unifier);
     }
 
-    private static SType replaceVarsWithTempVars(SVarSet vars, SType type, Unifier unifier) {
-      var mapping = vars.toList().toMap(v -> (SType) unifier.newTempVar());
+    private static SType replaceVarsWithFlexible(SVarSet vars, SType type, Unifier unifier) {
+      var mapping = vars.toList().toMap(v -> (SType) unifier.newFlexibleVar());
       return type.mapVars(mapping);
     }
   }
