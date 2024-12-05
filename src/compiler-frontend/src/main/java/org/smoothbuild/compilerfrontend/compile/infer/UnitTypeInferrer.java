@@ -10,10 +10,10 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 /**
- * Infers unit type (which is empty tuple) for each quantified var
- * in any call to polymorphic function when that quantified var:
- * - is not used in function result type
- * - is resolved as temp-var after inferring phase (= it is not constrained).
+ * Infers unit type (which is represented by empty tuple in smooth) for each type argument
+ * to PInstantiate that has not been inferred after inferring phase. Such situation may happen when
+ * type variable is used in function parameters but not in return type.
+ * For example in call `concat([[]])`.
  */
 public class UnitTypeInferrer extends PModuleVisitor<RuntimeException> {
   private final Unifier unifier;
