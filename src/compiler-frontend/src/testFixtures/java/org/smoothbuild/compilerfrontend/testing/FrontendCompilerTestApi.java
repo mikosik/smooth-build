@@ -74,7 +74,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
-import org.smoothbuild.compilerfrontend.lang.type.STempVar;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
@@ -217,14 +216,6 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SStructType sStructType(String name, NList<SItemSig> fields) {
     return new SStructType(name, fields);
-  }
-
-  public default SVar sTempVarA() {
-    return sTempVar("1");
-  }
-
-  public default STempVar sTempVar(String name) {
-    return new STempVar(name);
   }
 
   public default SVar varA() {

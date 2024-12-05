@@ -101,7 +101,7 @@ public class TypeInferrerResolve {
 
   private void resolveInstantiateTypeArgs(PInstantiate pInstantiate) throws TypeException {
     var resolvedTypeArgs = pInstantiate.typeArgs().map(unifier::resolve);
-    if (resolvedTypeArgs.stream().anyMatch(this::hasTempVar)) {
+    if (resolvedTypeArgs.stream().anyMatch(this::hasFlexibleVar)) {
       throw new TypeException(
           compileError(pInstantiate.location(), "Cannot infer actual type parameters."));
     }
@@ -134,7 +134,7 @@ public class TypeInferrerResolve {
     pExpr.setSType(unifier.resolve(pExpr.sType()));
   }
 
-  private boolean hasTempVar(SType t) {
-    return t.vars().stream().anyMatch(SVar::isTemporary);
+  private boolean hasFlexibleVar(SType sType) {
+    return sType.vars().stream().anyMatch(SVar::isFlexibleVar);
   }
 }

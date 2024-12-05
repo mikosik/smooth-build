@@ -30,7 +30,7 @@ public class UnitTypeInferrer extends PModuleVisitor<RuntimeException> {
   public void visitInstantiateP(PInstantiate pInstantiate) {
     for (var typeArg : pInstantiate.typeArgs()) {
       for (var var : unifier.resolve(typeArg).vars()) {
-        if (var.isTemporary()) {
+        if (var.isFlexibleVar()) {
           unifier.addOrFailWithRuntimeException(new Constraint(var, new STupleType(list())));
         }
       }
