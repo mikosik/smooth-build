@@ -7,8 +7,8 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyNamedValue;
 import static org.smoothbuild.compilerfrontend.compile.infer.FlexibleToRigidVarConverter.convertFlexibleVarsToRigid;
-import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveFunc;
-import static org.smoothbuild.compilerfrontend.compile.infer.TypeInferrerResolve.resolveNamedValue;
+import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveFunc;
+import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.NList;

@@ -27,16 +27,16 @@ import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
-public class TypeInferrerResolve {
+public class TypeResolver {
   private final Unifier unifier;
 
-  private TypeInferrerResolve(Unifier unifier) {
+  private TypeResolver(Unifier unifier) {
     this.unifier = unifier;
   }
 
   public static void resolveNamedValue(Unifier unifier, PNamedValue pNamedValue)
       throws TypeException {
-    new TypeInferrerResolve(unifier).resolveNamedValue(pNamedValue);
+    new TypeResolver(unifier).resolveNamedValue(pNamedValue);
   }
 
   private void resolveNamedValue(PNamedValue pNamedValue) throws TypeException {
@@ -47,7 +47,7 @@ public class TypeInferrerResolve {
   }
 
   public static void resolveFunc(Unifier unifier, PFunc pFunc) throws TypeException {
-    new TypeInferrerResolve(unifier).resolveFunc(pFunc);
+    new TypeResolver(unifier).resolveFunc(pFunc);
   }
 
   private void resolveFunc(PFunc pFunc) throws TypeException {
