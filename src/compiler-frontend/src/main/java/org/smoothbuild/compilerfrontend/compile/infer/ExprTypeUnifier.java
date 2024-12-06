@@ -72,15 +72,15 @@ public class ExprTypeUnifier {
     new ExprTypeUnifier(unifier, typeTeller).unifyFunc(namedFunc);
   }
 
-  private void unifyFunc(PFunc namedFunc) throws TypeException {
-    var paramTypes = inferParamTypes(namedFunc.params());
-    var resultType = translateOrGenerateFlexibleVar(namedFunc.resultT());
+  private void unifyFunc(PFunc pFunc) throws TypeException {
+    var paramTypes = inferParamTypes(pFunc.params());
+    var resultType = translateOrGenerateFlexibleVar(pFunc.resultT());
     var funcTS = new SFuncType(paramTypes, resultType);
-    namedFunc.setSType(funcTS);
-    unifyEvaluableBody(namedFunc, resultType, funcTS, typeTeller.withScope(namedFunc.scope()));
-    var resolvedT = resolveType(namedFunc);
+    pFunc.setSType(funcTS);
+    unifyEvaluableBody(pFunc, resultType, funcTS, typeTeller.withScope(pFunc.scope()));
+    var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
-    namedFunc.setSSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
+    pFunc.setSSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
   }
 
   private SVarSet resolveQuantifiedVars(SType sType) {
