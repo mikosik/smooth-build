@@ -50,11 +50,11 @@ public class TypeInferrerResolve {
     new TypeInferrerResolve(unifier).resolveFunc(pFunc);
   }
 
-  private void resolveFunc(PFunc pNamedFunc) throws TypeException {
-    resolveBody(pNamedFunc.body());
-    var sSchema = pNamedFunc.sSchema();
+  private void resolveFunc(PFunc pFunc) throws TypeException {
+    resolveBody(pFunc.body());
+    var sSchema = pFunc.sSchema();
     var quantifiedVars = resolveQuantifiedVars(sSchema);
-    pNamedFunc.setSSchema(new SFuncSchema(quantifiedVars, (SFuncType) resolveType(sSchema)));
+    pFunc.setSSchema(new SFuncSchema(quantifiedVars, (SFuncType) resolveType(sSchema)));
   }
 
   private SVarSet resolveQuantifiedVars(SSchema sSchema) {
