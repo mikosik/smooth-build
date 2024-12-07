@@ -83,6 +83,50 @@ import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.virtualmachine.testing.VmTestApi;
 
 public interface FrontendCompilerTestApi extends VmTestApi {
+  public default SArrayType sBlobArrayT() {
+    return sArrayType(sBlobType());
+  }
+
+  public default SArrayType sBoolArrayT() {
+    return sArrayType(sBoolType());
+  }
+
+  public default SArrayType sIntIntArrayT() {
+    return sArrayType(sIntArrayT());
+  }
+
+  public default SArrayType sIntArrayT() {
+    return sArrayType(sIntType());
+  }
+
+  public default SArrayType sStringStringArrayT() {
+    return sArrayType(sStringArrayT());
+  }
+
+  public default SArrayType sStringArrayT() {
+    return sArrayType(sStringType());
+  }
+
+  public default SArrayType sVarAArrayT() {
+    return sArrayType(varA());
+  }
+
+  public default SArrayType sVarBArrayT() {
+    return sArrayType(varB());
+  }
+
+  public default SArrayType sVar1ArrayT() {
+    return sArrayType(var1());
+  }
+
+  public default SArrayType sVar2ArrayT() {
+    return sArrayType(var2());
+  }
+
+  public default SArrayType sVar3ArrayT() {
+    return sArrayType(var3());
+  }
+
   public default SArrayType sArrayType(SType elemT) {
     return new SArrayType(elemT);
   }
@@ -93,6 +137,22 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SBoolType sBoolType() {
     return STypes.BOOL;
+  }
+
+  public default SFuncType sBlobFuncType() {
+    return sFuncType(sBlobType());
+  }
+
+  public default SFuncType sIntFuncType() {
+    return sFuncType(sIntType());
+  }
+
+  public default SFuncType sStringFuncType() {
+    return sFuncType(sStringType());
+  }
+
+  public default SFuncType sVarAFuncType() {
+    return sFuncType(varA());
   }
 
   public default SFuncType sFuncType(SType resultType) {

@@ -26,7 +26,7 @@ public class BOrderTest extends VmTestContext {
 
   @Test
   void elemT_can_be_equal_elementT_specified_in_kind() throws Exception {
-    bOrder(bArrayType(bIntType()), bArray(bInt(3)));
+    bOrder(bIntArrayType(), bArray(bInt(3)));
   }
 
   @Test

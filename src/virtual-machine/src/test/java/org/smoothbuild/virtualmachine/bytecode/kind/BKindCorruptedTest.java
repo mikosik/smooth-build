@@ -115,7 +115,7 @@ public class BKindCorruptedTest extends VmTestContext {
          * to save array type in HashedDb.
          */
         var hash = hash(hash(ARRAY.byteMarker()), hash(bStringType()));
-        assertThat(hash).isEqualTo(bArrayType(bStringType()).hash());
+        assertThat(hash).isEqualTo(bStringArrayType().hash());
       }
 
       @Test
@@ -519,8 +519,8 @@ public class BKindCorruptedTest extends VmTestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save MAP kind in HashedDb.
          */
-        var hash = hash(hash(MAP.byteMarker()), hash(bArrayType(bIntType())));
-        assertThat(hash).isEqualTo(bMapKind(bArrayType(bIntType())).hash());
+        var hash = hash(hash(MAP.byteMarker()), hash(bIntArrayType()));
+        assertThat(hash).isEqualTo(bMapKind(bIntArrayType()).hash());
       }
 
       @Nested
@@ -547,7 +547,7 @@ public class BKindCorruptedTest extends VmTestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save ORDER kind in HashedDb.
          */
-        var hash = hash(hash(ORDER.byteMarker()), hash(bArrayType(bIntType())));
+        var hash = hash(hash(ORDER.byteMarker()), hash(bIntArrayType()));
         assertThat(hash).isEqualTo(bOrderKind(bIntType()).hash());
       }
 

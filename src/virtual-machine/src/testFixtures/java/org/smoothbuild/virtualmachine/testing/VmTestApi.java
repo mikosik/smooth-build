@@ -288,7 +288,27 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BArrayType bArrayType() throws BytecodeException {
+    return bStringArrayType();
+  }
+
+  public default BArrayType bBoolArrayType() throws BytecodeException {
+    return bArrayType(bBoolType());
+  }
+
+  public default BArrayType bBlobArrayType() throws BytecodeException {
+    return bArrayType(bBlobType());
+  }
+
+  public default BArrayType bIntArrayType() throws BytecodeException {
+    return bArrayType(bIntType());
+  }
+
+  public default BArrayType bStringArrayType() throws BytecodeException {
     return bArrayType(bStringType());
+  }
+
+  public default BArrayType bFileArrayType() throws BytecodeException {
+    return bArrayType(bFileType());
   }
 
   public default BArrayType bArrayType(BType elemT) throws BytecodeException {
@@ -311,8 +331,20 @@ public interface VmTestApi extends CommonTestApi {
     return bLambdaType(bBlobType(), bStringType(), bIntType());
   }
 
+  public default BLambdaType bStringLambdaType() throws BytecodeException {
+    return bLambdaType(bStringType());
+  }
+
+  public default BLambdaType bIntLambdaType() throws BytecodeException {
+    return bLambdaType(bIntType());
+  }
+
   public default BLambdaType bLambdaType(BType resultT) throws BytecodeException {
     return bLambdaType(list(), resultT);
+  }
+
+  public default BLambdaType bIntIntLambdaType() throws BytecodeException {
+    return bLambdaType(bIntType(), bIntType());
   }
 
   public default BLambdaType bLambdaType(BType param1, BType resultT) throws BytecodeException {
@@ -384,7 +416,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BMapKind bMapKind() throws BytecodeException {
-    return bMapKind(bArrayType(bIntType()));
+    return bMapKind(bIntArrayType());
   }
 
   public default BMapKind bMapKind(BType evaluationType) throws BytecodeException {

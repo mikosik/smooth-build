@@ -66,7 +66,7 @@ public class ComputationCacheTest extends VmTestContext {
     var file = bFile(path("file/path"), bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new BOutput(bArray(file), bLogArrayEmpty()));
-    var arrayType = bArrayType(bytecodeF().fileType());
+    var arrayType = bFileArrayType();
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BTuple.class))
         .containsExactly(file);
@@ -77,7 +77,7 @@ public class ComputationCacheTest extends VmTestContext {
     var blob = bBlob(bytes);
     var computationCache = computationCache();
     computationCache.write(hash, new BOutput(bArray(blob), bLogArrayEmpty()));
-    var arrayType = bArrayType(bBlobType());
+    var arrayType = bBlobArrayType();
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BBlob.class))
         .containsExactly(blob);
@@ -88,7 +88,7 @@ public class ComputationCacheTest extends VmTestContext {
     var bool = bBool(true);
     var computationCache = computationCache();
     computationCache.write(hash, new BOutput(bArray(bool), bLogArrayEmpty()));
-    var arrayType = bArrayType(bBoolType());
+    var arrayType = bBoolArrayType();
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BBool.class))
         .containsExactly(bool);
@@ -99,7 +99,7 @@ public class ComputationCacheTest extends VmTestContext {
     var int_ = bInt(123);
     var computationCache = computationCache();
     computationCache.write(hash, new BOutput(bArray(int_), bLogArrayEmpty()));
-    var arrayType = bArrayType(bIntType());
+    var arrayType = bIntArrayType();
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BInt.class))
         .containsExactly(int_);
@@ -111,7 +111,7 @@ public class ComputationCacheTest extends VmTestContext {
     var array = bArray(string);
     var computationCache = computationCache();
     computationCache.write(hash, new BOutput(array, bLogArrayEmpty()));
-    var arrayType = bArrayType(bStringType());
+    var arrayType = bStringArrayType();
 
     assertThat(((BArray) computationCache.read(hash, arrayType).value()).elements(BString.class))
         .containsExactly(string);

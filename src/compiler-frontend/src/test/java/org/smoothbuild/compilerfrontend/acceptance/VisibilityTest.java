@@ -770,7 +770,7 @@ public class VisibilityTest extends FrontendCompileTester {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleValue", sSchema(sFuncType(sIntType())));
+              .containsEvaluableWithSchema("otherModuleValue", sSchema(sIntFuncType()));
         }
 
         @Test
@@ -780,7 +780,7 @@ public class VisibilityTest extends FrontendCompileTester {
           module(code)
               .withImported(imported)
               .loadsWithSuccess()
-              .containsEvaluableWithSchema("otherModuleFunc", sSchema(sFuncType(sIntType())));
+              .containsEvaluableWithSchema("otherModuleFunc", sSchema(sIntFuncType()));
         }
       }
 

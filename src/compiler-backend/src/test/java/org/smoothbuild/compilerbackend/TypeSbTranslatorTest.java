@@ -37,7 +37,7 @@ public class TypeSbTranslatorTest extends FrontendCompilerTestContext {
 
     @Test
     void int_array_type() throws Exception {
-      assertTranslation(sArrayType(sIntType()), bArrayType(bIntType()));
+      assertTranslation(sIntArrayT(), bIntArrayType());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class TypeSbTranslatorTest extends FrontendCompilerTestContext {
   class _poly {
     @Test
     void array_type() throws Exception {
-      assertTranslation(map(varA(), bIntType()), sArrayType(varA()), bArrayType(bIntType()));
+      assertTranslation(map(varA(), bIntType()), sVarAArrayT(), bIntArrayType());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class TypeSbTranslatorTest extends FrontendCompilerTestContext {
 
     @Test
     void missing_mapping_for_variable_causes_exception() {
-      assertCall(() -> assertTranslation(sArrayType(varA()), bArrayType(bIntType())))
+      assertCall(() -> assertTranslation(sVarAArrayT(), bIntArrayType()))
           .throwsException(new IllegalStateException("Unknown variable `A`."));
     }
   }
