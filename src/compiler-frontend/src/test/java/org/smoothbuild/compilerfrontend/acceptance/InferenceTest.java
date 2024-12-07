@@ -3,6 +3,9 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.arrayTypeMessage;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
+import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,8 +22,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void string_literal() {
         var code = """
-          myValue = "abc";
-          """;
+            myValue = "abc";
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
@@ -29,8 +32,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void blob_literal() {
         var code = """
-          myValue = 0x07;
-          """;
+            myValue = 0x07;
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sBlobType()));
@@ -39,16 +42,16 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void int_literal() {
         var code = """
-          myValue = 123;
-          """;
+            myValue = 123;
+            """;
         module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", sSchema(sIntType()));
       }
 
       @Test
       void array_literal() {
         var code = """
-          myValue = ["abc"];
-          """;
+            myValue = ["abc"];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
@@ -58,9 +61,9 @@ public class InferenceTest extends FrontendCompileTester {
       void mono_value_ref() {
         var code =
             """
-          String stringValue = "abc";
-          myValue = stringValue;
-          """;
+                String stringValue = "abc";
+                myValue = stringValue;
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
@@ -70,9 +73,9 @@ public class InferenceTest extends FrontendCompileTester {
       void mono_func_ref() {
         var code =
             """
-          String myFunc(Blob param) = "abc";
-          myValue = myFunc;
-          """;
+                String myFunc(Blob param) = "abc";
+                myValue = myFunc;
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sFuncSchema(sBlobType(), sStringType()));
@@ -82,9 +85,9 @@ public class InferenceTest extends FrontendCompileTester {
       void mono_func_ref_call() {
         var code =
             """
-          String myFunc() = "abc";
-          myValue = myFunc();
-          """;
+                String myFunc() = "abc";
+                myValue = myFunc();
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
@@ -93,9 +96,9 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void poly_func_ref_call() {
         var code = """
-          A myId(A a) = a;
-          myValue = myId(7);
-          """;
+            A myId(A a) = a;
+            myValue = myId(7);
+            """;
         module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", sSchema(sIntType()));
       }
     }
@@ -105,8 +108,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void poly_literal() {
         var code = """
-          myValue = [];
-          """;
+            myValue = [];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(varA())));
@@ -114,10 +117,11 @@ public class InferenceTest extends FrontendCompileTester {
 
       @Test
       void poly_value_ref() {
-        var code = """
-          [A] emptyArray = [];
-          myValue = emptyArray;
-          """;
+        var code =
+            """
+            [A] emptyArray = [];
+            myValue = emptyArray;
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(varA())));
@@ -126,9 +130,9 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void poly_func_ref() {
         var code = """
-          A myId(A a) = a;
-          myValue = myId;
-          """;
+            A myId(A a) = a;
+            myValue = myId;
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sFuncSchema(varA(), varA()));
@@ -392,8 +396,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void zero_elements_order() {
         var code = """
-          result = [];
-          """;
+            result = [];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(varA())));
@@ -405,8 +409,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_string_type() {
         var code = """
-          result = ["abc"];
-          """;
+            result = ["abc"];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
@@ -415,8 +419,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_int_type() {
         var code = """
-          result = [7];
-          """;
+            result = [7];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntType())));
@@ -425,8 +429,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_blob_type() {
         var code = """
-          result = [0xAB];
-          """;
+            result = [0xAB];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sBlobType())));
@@ -435,8 +439,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_array_type() {
         var code = """
-          result = [[7]];
-          """;
+            result = [[7]];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sArrayType(sIntType()))));
@@ -445,9 +449,9 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_value_ref() {
         var code = """
-          Int myValue = 7;
-          result = [myValue];
-          """;
+            Int myValue = 7;
+            result = [myValue];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntType())));
@@ -457,9 +461,9 @@ public class InferenceTest extends FrontendCompileTester {
       void with_mono_function_ref() {
         var code =
             """
-          Int myIntId(Int i) = i;
-          result = [myIntId];
-          """;
+                Int myIntId(Int i) = i;
+                result = [myIntId];
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema(
@@ -469,9 +473,9 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_poly_function_ref() {
         var code = """
-          A myId(A a) = a;
-          result = [myId];
-          """;
+            A myId(A a) = a;
+            result = [myId];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sFuncType(varA(), varA()))));
@@ -483,8 +487,8 @@ public class InferenceTest extends FrontendCompileTester {
       @Test
       void with_same_base_type() {
         var code = """
-          result = ["abc", "def"];
-          """;
+            result = ["abc", "def"];
+            """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
@@ -494,27 +498,25 @@ public class InferenceTest extends FrontendCompileTester {
       void with_different_base_types_fails() {
         var code =
             """
-          result = [
-            "abc",
-            0x01,
-          ];
-          """;
-        module(code)
-            .loadsWithError(
-                1, "Cannot infer type for array literal. Its element types are not compatible.");
+                result = [
+                  "abc",
+                  0x01,
+                ];
+                """;
+        module(code).loadsWithError(1, arrayTypeMessage(1, sStringType(), sBlobType()));
       }
 
       @Test
       void with_same_mono_function_types() {
         var code =
             """
-          Int firstFunc() = 7;
-          Int secondFunc() = 3;
-          result = [
-            firstFunc,
-            secondFunc,
-          ];
-          """;
+                Int firstFunc() = 7;
+                Int secondFunc() = 3;
+                result = [
+                  firstFunc,
+                  secondFunc,
+                ];
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("result", sSchema(sArrayType(sFuncType(sIntType()))));
@@ -524,26 +526,26 @@ public class InferenceTest extends FrontendCompileTester {
       void with_different_mono_function_types_fails() {
         var code =
             """
-          String firstFunc() = "abc";
-          Blob secondFunc() = 0x01;
-          result = [
-            firstFunc,
-            secondFunc,
-          ];
-          """;
+                String firstFunc() = "abc";
+                Blob secondFunc() = 0x01;
+                result = [
+                  firstFunc,
+                  secondFunc,
+                ];
+                """;
         module(code)
             .loadsWithError(
-                3, "Cannot infer type for array literal. Its element types are not compatible.");
+                3, arrayTypeMessage(1, sFuncType(sStringType()), sFuncType(sBlobType())));
       }
 
       @Test
       void with_same_poly_function_types() {
         var code =
             """
-          A myId(A a) = a;
-          B myOtherId(B b) = b;
-          result = [myId, myOtherId];
-          """;
+                A myId(A a) = a;
+                B myOtherId(B b) = b;
+                result = [myId, myOtherId];
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema(
@@ -554,23 +556,24 @@ public class InferenceTest extends FrontendCompileTester {
       void with_different_poly_function_types_fails() {
         var code =
             """
-          A myId(A a) = a;
-          B otherFunc(B b, C c) = b;
-          result = [myId, otherFunc];
-          """;
+                A myId(A a) = a;
+                B otherFunc(B b, C c) = b;
+                result = [myId, otherFunc];
+                """;
         module(code)
             .loadsWithError(
-                3, "Cannot infer type for array literal. Its element types are not compatible.");
+                3,
+                arrayTypeMessage(1, sFuncType(var1(), var1()), sFuncType(var2(), var3(), var2())));
       }
 
       @Test
       void one_with_mono_type_one_with_poly_type_convertible_to_mono_one() {
         var code =
             """
-          Int myIntId(Int i) = i;
-          A myId(A a) = a;
-          result = [myIntId, myId];
-          """;
+                Int myIntId(Int i) = i;
+                A myId(A a) = a;
+                result = [myIntId, myId];
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema(
@@ -581,13 +584,15 @@ public class InferenceTest extends FrontendCompileTester {
       void one_with_mono_type_one_with_poly_type_not_convertible_to_mono_one_fails() {
         var code =
             """
-          Int myIntId(Int i) = i;
-          A myId(A a, A b) = a;
-          result = [myIntId, myId];
-          """;
+                Int myIntId(Int i) = i;
+                A myId(A a, A b) = a;
+                result = [myIntId, myId];
+                """;
         module(code)
             .loadsWithError(
-                3, "Cannot infer type for array literal. Its element types are not compatible.");
+                3,
+                arrayTypeMessage(
+                    1, sFuncType(sIntType(), sIntType()), sFuncType(var1(), var1(), var1())));
       }
     }
   }
@@ -600,48 +605,63 @@ public class InferenceTest extends FrontendCompileTester {
       void base_types() {
         var code =
             """
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual("def", 0x01);
-            """;
-        module(code).loadsWithError(2, "Illegal call.");
+                String myEqual(A p1, A p2) = "true";
+                result = myEqual("def", 0x01);
+                """;
+        module(code)
+            .loadsWithError(
+                2,
+                illegalCallMessage(
+                    sFuncType(var1(), var1(), sStringType()), list(sStringType(), sBlobType())));
       }
 
       @Test
       void base_type_and_array_of_that_base_type() {
         var code =
             """
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual(7, [7]);
-            """;
-        module(code).loadsWithError(2, "Illegal call.");
+                String myEqual(A p1, A p2) = "true";
+                result = myEqual(7, [7]);
+                """;
+        module(code)
+            .loadsWithError(
+                2,
+                illegalCallMessage(
+                    sFuncType(var1(), var1(), sStringType()),
+                    list(sIntType(), sArrayType(sIntType()))));
       }
 
       @Test
       void arrays() {
         var code =
             """
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual(["def"], [0x01]);
-            """;
-        module(code).loadsWithError(2, "Illegal call.");
+                String myEqual(A p1, A p2) = "true";
+                result = myEqual(["def"], [0x01]);
+                """;
+        module(code)
+            .loadsWithError(
+                2,
+                illegalCallMessage(
+                    sFuncType(var1(), var1(), sStringType()),
+                    list(sArrayType(sStringType()), sArrayType(sBlobType()))));
       }
 
       @Test
       void structs_with_the_same_object_db_representation() {
         var code =
             """
-            MyStruct1{
-              String x,
-              String y,
-            }
-            MyStruct2{
-              String a,
-              String b,
-            }
-            A myEqual(A a1, A a2) = a1;
-            result = myEqual(MyStruct1("aaa", "bbb"), MyStruct2("aaa", "bbb"));
-            """;
-        module(code).loadsWithError(10, "Illegal call.");
+                MyStruct1{
+                  String x,
+                }
+                MyStruct2{
+                  String a,
+                }
+                A myEqual(A a1, A a2) = a1;
+                result = myEqual(MyStruct1("aaa"), MyStruct2("aaa"));
+                """;
+        var arg1 = sStructType("MyStruct1", itemSigS(sStringType(), "x"));
+        var arg2 = sStructType("MyStruct2", itemSigS(sStringType(), "a"));
+        var called = sFuncType(var1(), var1(), var1());
+        module(code).loadsWithError(8, illegalCallMessage(called, list(arg1, arg2)));
       }
     }
 
@@ -651,9 +671,9 @@ public class InferenceTest extends FrontendCompileTester {
       void arg_of_base_type() {
         var code =
             """
-            A myIdentity(A a) = a;
-            myValue = myIdentity("abc");
-            """;
+                A myIdentity(A a) = a;
+                myValue = myIdentity("abc");
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
@@ -663,9 +683,9 @@ public class InferenceTest extends FrontendCompileTester {
       void array() {
         var code =
             """
-            A myIdentity(A a) = a;
-            myValue = myIdentity(["abc"]);
-            """;
+                A myIdentity(A a) = a;
+                myValue = myIdentity(["abc"]);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
@@ -675,10 +695,10 @@ public class InferenceTest extends FrontendCompileTester {
       void func() {
         var code =
             """
-            A myIdentity(A a) = a;
-            String myFunc(Blob param) = "abc";
-            myValue = myIdentity(myFunc);
-            """;
+                A myIdentity(A a) = a;
+                String myFunc(Blob param) = "abc";
+                myValue = myIdentity(myFunc);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sFuncSchema(sBlobType(), sStringType()));
@@ -691,10 +711,10 @@ public class InferenceTest extends FrontendCompileTester {
       void array() {
         var code =
             """
-            @Native("impl.met")
-            A firstElement([A] array);
-            myValue = firstElement(["abc"]);
-            """;
+                @Native("impl.met")
+                A firstElement([A] array);
+                myValue = firstElement(["abc"]);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sStringType()));
@@ -704,10 +724,10 @@ public class InferenceTest extends FrontendCompileTester {
       void array2() {
         var code =
             """
-            @Native("impl.met")
-            A firstElement([A] array);
-            myValue = firstElement([["abc"]]);
-            """;
+                @Native("impl.met")
+                A firstElement([A] array);
+                myValue = firstElement([["abc"]]);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
@@ -720,9 +740,9 @@ public class InferenceTest extends FrontendCompileTester {
       void arg_of_base_type() {
         var code =
             """
-            [A] singleElement(A a) = [a];
-            myValue = singleElement("abc");
-            """;
+                [A] singleElement(A a) = [a];
+                myValue = singleElement("abc");
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
@@ -732,9 +752,9 @@ public class InferenceTest extends FrontendCompileTester {
       void array() {
         var code =
             """
-            [A] singleElement(A a) = [a];
-            myValue = singleElement(["abc"]);
-            """;
+                [A] singleElement(A a) = [a];
+                myValue = singleElement(["abc"]);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sArrayType(sStringType()))));
@@ -744,10 +764,10 @@ public class InferenceTest extends FrontendCompileTester {
       void function() {
         var code =
             """
-            [A] singleElement(A a) = [a];
-            String myFunc(Blob param) = "abc";
-            myValue = singleElement(myFunc);
-            """;
+                [A] singleElement(A a) = [a];
+                String myFunc(Blob param) = "abc";
+                myValue = singleElement(myFunc);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema(
@@ -761,9 +781,9 @@ public class InferenceTest extends FrontendCompileTester {
       void generic_param_with_default_value_with_concrete_type() {
         var code =
             """
-              A myFunc(A a = 7) = a;
-              myValue = myFunc();
-              """;
+                A myFunc(A a = 7) = a;
+                myValue = myFunc();
+                """;
         module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", sSchema(sIntType()));
       }
 
@@ -771,10 +791,10 @@ public class InferenceTest extends FrontendCompileTester {
       void generic_param_with_default_value_with_polymorphic_type() {
         var code =
             """
-              A myId(A a) = a;
-              (B)->A myFunc(A a, (B)->A f = myId) = f;
-              myValue = myFunc(7);
-              """;
+                A myId(A a) = a;
+                (B)->A myFunc(A a, (B)->A f = myId) = f;
+                myValue = myFunc(7);
+                """;
         module(code)
             .loadsWithSuccess()
             .containsEvaluableWithSchema("myValue", sFuncSchema(sIntType(), sIntType()));
@@ -784,10 +804,14 @@ public class InferenceTest extends FrontendCompileTester {
       void generic_param_with_default_value_with_concrete_type_error_case() {
         var code =
             """
-              A myFunc(A a, A other = 7) = a;
-              myValue = myFunc("abc");
-              """;
-        module(code).loadsWithError(2, "Illegal call.");
+                A myFunc(A a, A other = 7) = a;
+                myValue = myFunc("abc");
+                """;
+        module(code)
+            .loadsWithError(
+                2,
+                illegalCallMessage(
+                    sFuncType(var1(), var1(), var1()), list(sStringType(), sIntType())));
       }
 
       @Test
@@ -795,10 +819,10 @@ public class InferenceTest extends FrontendCompileTester {
           two_differently_instantitaed_calls_to_poly_function_with_poly_default_value_within_one_expr() {
         var code =
             """
-          [A] empty([A] array = []) = array;
-          myFunc([String] s, [Int] i) = 7;
-          myValue = myFunc(empty(), empty());
-          """;
+                [A] empty([A] array = []) = array;
+                myFunc([String] s, [Int] i) = 7;
+                myValue = myFunc(empty(), empty());
+                """;
         module(code).loadsWithSuccess();
       }
 
@@ -806,10 +830,10 @@ public class InferenceTest extends FrontendCompileTester {
       void two_param_default_values_with_different_vars_referencing_same_poly_function() {
         var code =
             """
-          A myId(A a) = a;
-          myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
-          myValue = myFunc(7, "abc");
-          """;
+                A myId(A a) = a;
+                myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
+                myValue = myFunc(7, "abc");
+                """;
         module(code).loadsWithSuccess();
       }
     }
@@ -818,10 +842,10 @@ public class InferenceTest extends FrontendCompileTester {
     void converter_applier() {
       var code =
           """
-          B converterApplier(A item, (A)->B convert) = convert(item);
-          [C] single(C elem) = [elem];
-          result = converterApplier("abc", single);
-          """;
+              B converterApplier(A item, (A)->B convert) = convert(item);
+              [C] single(C elem) = [elem];
+              result = converterApplier("abc", single);
+              """;
       module(code)
           .loadsWithSuccess()
           .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
@@ -846,8 +870,8 @@ public class InferenceTest extends FrontendCompileTester {
     @Test
     void lambda() {
       var code = """
-              result = ((A a) -> 7)([]);
-              """;
+          result = ((A a) -> 7)([]);
+          """;
       var lambda = sLambda(1, nlist(sItem(1, varA(), "a")), sInt(1, 7));
       var emptyArray = sOrder(1, sTupleType());
       var call = sCall(1, sInstantiate(1, list(sArrayType(sTupleType())), lambda), emptyArray);
@@ -865,11 +889,11 @@ public class InferenceTest extends FrontendCompileTester {
     void select_with_selectable_with_infer_type_error() {
       var code =
           """
-          @Native("impl")
-          A firstElem([A] array);
-          valueWithNoninferableType = firstElem(7);
-          Int myValue = valueWithNoninferableType.field;
-          """;
+              @Native("impl")
+              A firstElem([A] array);
+              valueWithNoninferableType = firstElem(7);
+              Int myValue = valueWithNoninferableType.field;
+              """;
       module(code).loadsWithProblems();
     }
 
@@ -877,11 +901,11 @@ public class InferenceTest extends FrontendCompileTester {
     void order_with_element_with_infer_type_error() {
       var code =
           """
-          @Native("impl")
-          A firstElem([A] array);
-          valueWithNonInferableType = firstElem(7);
-          [Int] myValue = [valueWithNonInferableType];
-          """;
+              @Native("impl")
+              A firstElem([A] array);
+              valueWithNonInferableType = firstElem(7);
+              [Int] myValue = [valueWithNonInferableType];
+              """;
       module(code).loadsWithProblems();
     }
 
@@ -889,11 +913,11 @@ public class InferenceTest extends FrontendCompileTester {
     void call_with_callee_with_infer_type_error() {
       var code =
           """
-          @Native("impl")
-          A firstElem([A] array);
-          valueWithNonInferableType = firstElem(7);
-          Int myValue = valueWithNonInferableType(7);
-          """;
+              @Native("impl")
+              A firstElem([A] array);
+              valueWithNonInferableType = firstElem(7);
+              Int myValue = valueWithNonInferableType(7);
+              """;
       module(code).loadsWithProblems();
     }
 
@@ -901,10 +925,10 @@ public class InferenceTest extends FrontendCompileTester {
     void mono_func_call_with_illegal_params() {
       var code =
           """
-          @Native("impl")
-          Int myFunc(String string);
-          Int myValue = myFunc(7);
-          """;
+              @Native("impl")
+              Int myFunc(String string);
+              Int myValue = myFunc(7);
+              """;
       module(code).loadsWithProblems();
     }
 
@@ -912,10 +936,10 @@ public class InferenceTest extends FrontendCompileTester {
     void poly_function_call_with_illegal_params() {
       var code =
           """
-          @Native("impl")
-          A myId(A a, String string);
-          Int myValue = myId(7, 7);
-          """;
+              @Native("impl")
+              A myId(A a, String string);
+              Int myValue = myId(7, 7);
+              """;
       module(code).loadsWithProblems();
     }
   }

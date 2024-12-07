@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.base.Strings.q;
+import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
 import static org.smoothbuild.compilerfrontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
 import java.util.HashMap;
@@ -122,7 +123,7 @@ public class Unifier {
   }
 
   public SVar newFlexibleVar() {
-    var var = SVar.newFlexibleVar(flexibleVarCounter++);
+    var var = flexibleVar(flexibleVarCounter++);
     flexibleVarToUnified.put(var, new Unified(var));
     return var;
   }
