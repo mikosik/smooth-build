@@ -135,7 +135,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         void poly_expression_function() throws Exception {
           var funcS = idSFunc();
           var instantiateS = sInstantiate(list(sIntType()), funcS);
-          var lambdaB = bLambda(bLambdaType(bIntType(), bIntType()), bReference(bIntType(), 0));
+          var lambdaB = bLambda(bIntIntLambdaType(), bReference(bIntType(), 0));
           assertTranslation(bindings(funcS), instantiateS, lambdaB);
         }
 
@@ -151,9 +151,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var wrapFuncS = sFunc(b, "wrap", nlist(sItem(b, "p")), bodyS);
           var wrapMonoFuncS = sInstantiate(list(sIntType()), wrapFuncS);
 
-          var bIdLambda = bLambda(bLambdaType(bIntType(), bIntType()), bReference(bIntType(), 0));
-          var bWrapLambda = bLambda(
-              bLambdaType(bIntType(), bIntType()), bCall(bIdLambda, bReference(bIntType(), 0)));
+          var bIdLambda = bLambda(bIntIntLambdaType(), bReference(bIntType(), 0));
+          var bWrapLambda =
+              bLambda(bIntIntLambdaType(), bCall(bIdLambda, bReference(bIntType(), 0)));
           assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, bWrapLambda);
         }
 
@@ -270,7 +270,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var monoFuncS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), monoLambdaS);
 
         var bodyB = bLambda(bReference(bIntType(), 0));
-        var lambdaB = bLambda(bLambdaType(bIntType(), bLambdaType(bIntType())), bodyB);
+        var lambdaB = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
       }
@@ -342,7 +342,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var instantiateS = sInstantiate(list(sIntType()), funcS);
 
         var bodyB = bLambda(bReference(bIntType(), 0));
-        var lambdaB = bLambda(bLambdaType(bIntType(), bLambdaType(bIntType())), bodyB);
+        var lambdaB = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
 
         assertTranslation(bindings(funcS), instantiateS, lambdaB);
       }

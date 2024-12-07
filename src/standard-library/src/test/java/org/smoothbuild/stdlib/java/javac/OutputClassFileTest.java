@@ -29,8 +29,8 @@ public class OutputClassFileTest extends VmTestContext {
 
   @Test
   void get_name_returns_file_path() throws Exception {
-    var arrayTH = bArrayType(bFileType());
-    var outputClassFile = new OutputClassFile(exprDb().newArrayBuilder(arrayTH), path, nativeApi());
+    var outputClassFile =
+        new OutputClassFile(exprDb().newArrayBuilder(bFileArrayType()), path, nativeApi());
     assertThat(outputClassFile.getName()).isEqualTo("/" + path);
   }
 }

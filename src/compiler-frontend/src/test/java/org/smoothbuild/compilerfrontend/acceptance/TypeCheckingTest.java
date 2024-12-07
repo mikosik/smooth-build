@@ -49,8 +49,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           [Int] result = [[]];
           """;
-      module(sourceCode)
-          .loadsWithError(1, bodyTypeMessage("result", sArrayType(var1()), sArrayType(sIntType())));
+      module(sourceCode).loadsWithError(1, bodyTypeMessage("result", sVar1ArrayT(), sIntArrayT()));
     }
 
     @Test
@@ -66,8 +65,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           [A] result = [[]];
           """;
-      module(sourceCode)
-          .loadsWithError(1, bodyTypeMessage("result", sArrayType(var1()), sArrayType(varA())));
+      module(sourceCode).loadsWithError(1, bodyTypeMessage("result", sVar1ArrayT(), sVarAArrayT()));
     }
   }
 
@@ -130,8 +128,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
           [Int] myFunc() = [[]];
           """;
         module(sourceCode)
-            .loadsWithError(
-                1, bodyTypeMessage("myFunc", sArrayType(var1()), sArrayType(sIntType())));
+            .loadsWithError(1, bodyTypeMessage("myFunc", sVar1ArrayT(), sIntArrayT()));
       }
 
       @Test
@@ -148,7 +145,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
           [A] myFunc() = [[]];
           """;
         module(sourceCode)
-            .loadsWithError(1, bodyTypeMessage("myFunc", sArrayType(var1()), sArrayType(varA())));
+            .loadsWithError(1, bodyTypeMessage("myFunc", sVar1ArrayT(), sVarAArrayT()));
       }
     }
 
@@ -210,8 +207,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
           """;
         module(sourceCode)
             .loadsWithError(
-                2,
-                illegalCallMessage(sFuncType(sArrayType(var1()), sStringType()), list(sIntType())));
+                2, illegalCallMessage(sFuncType(sVar1ArrayT(), sStringType()), list(sIntType())));
       }
 
       @Test
@@ -235,8 +231,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
             .loadsWithError(
                 2,
                 illegalCallMessage(
-                    sFuncType(sArrayType(sIntType()), sStringType()),
-                    list(sArrayType(sArrayType(var1())))));
+                    sFuncType(sIntArrayT(), sStringType()), list(sArrayType(sVar1ArrayT()))));
       }
 
       @Test
@@ -260,7 +255,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
             .loadsWithError(
                 2,
                 illegalCallMessage(
-                    sFuncType(sFuncType(var1(), var1()), sStringType()), list(sArrayType(var2()))));
+                    sFuncType(sFuncType(var1(), var1()), sStringType()), list(sVar2ArrayT())));
       }
     }
 
@@ -404,8 +399,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var code = buildSourceCode("[A] a", "7");
       module(code)
           .loadsWithError(
-              2,
-              illegalCallMessage(sFuncType(sArrayType(var2()), sStringType()), list(sIntType())));
+              2, illegalCallMessage(sFuncType(sVar2ArrayT(), sStringType()), list(sIntType())));
     }
 
     @Test
@@ -417,8 +411,8 @@ public class TypeCheckingTest extends FrontendCompileTester {
     @Test
     void poly_to_mono_error() {
       var code = buildSourceCode("[Int] param", "[[]]");
-      var called = sFuncType(sArrayType(sIntType()), sStringType());
-      var args = list(sArrayType(sArrayType(var2())));
+      var called = sFuncType(sIntArrayT(), sStringType());
+      var args = list(sArrayType(sVar2ArrayT()));
       module(code).loadsWithError(2, illegalCallMessage(called, args));
     }
 
@@ -435,7 +429,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
           .loadsWithError(
               2,
               illegalCallMessage(
-                  sFuncType(sFuncType(var2(), var2()), sStringType()), list(sArrayType(var3()))));
+                  sFuncType(sFuncType(var2(), var2()), sStringType()), list(sVar3ArrayT())));
     }
   }
 

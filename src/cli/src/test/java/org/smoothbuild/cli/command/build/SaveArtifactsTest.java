@@ -93,7 +93,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_empty_bool_array_artifact() throws Exception {
-    var sType = sArrayType(sBoolType());
+    var sType = sBoolArrayT();
     var bValue = bArray(bBoolType());
 
     testValueStoring(sType, bValue, "myValue", Map.of());
@@ -101,7 +101,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_not_empty_bool_array_artifact() throws Exception {
-    var sType = sArrayType(sBoolType());
+    var sType = sBoolArrayT();
     var bValue = bArray(bBoolType(), bBool(true), bBool(false));
 
     testValueStoring(
@@ -117,7 +117,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_empty_string_array_artifact() throws Exception {
-    var sType = sArrayType(sStringType());
+    var sType = sStringArrayT();
     var bValue = bArray(bStringType());
 
     testValueStoring(sType, bValue, "myValue", Map.of());
@@ -125,7 +125,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_not_empty_string_array_artifact() throws Exception {
-    var sType = sArrayType(sStringType());
+    var sType = sStringArrayT();
     var bValue = bArray(bStringType(), bString("abc"), bString("def"));
 
     testValueStoring(
@@ -137,7 +137,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_empty_blob_array_artifact() throws Exception {
-    var sType = sArrayType(sBlobType());
+    var sType = sBlobArrayT();
     var bValue = bArray(bBlobType());
 
     testValueStoring(sType, bValue, "myValue", Map.of());
@@ -145,7 +145,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_not_empty_blob_array_artifact() throws Exception {
-    var sType = sArrayType(sBlobType());
+    var sType = sBlobArrayT();
     var bValue = bArray(bBlobType(), bBlob(7), bBlob(8));
 
     testValueStoring(

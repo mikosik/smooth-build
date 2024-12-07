@@ -81,10 +81,10 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sTupleType(sIntType(), sBoolType()), "{Int,Bool}"),
         arguments(sTupleType(varA()), "{A}"),
         arguments(sTupleType(varA(), varB()), "{A,B}"),
-        arguments(sArrayType(sBlobType()), "[Blob]"),
-        arguments(sArrayType(sBoolType()), "[Bool]"),
-        arguments(sArrayType(sIntType()), "[Int]"),
-        arguments(sArrayType(sStringType()), "[String]"),
+        arguments(sBlobArrayT(), "[Blob]"),
+        arguments(sBoolArrayT(), "[Bool]"),
+        arguments(sIntArrayT(), "[Int]"),
+        arguments(sStringArrayT(), "[String]"),
         arguments(sArrayType(sTupleType()), "[{}]"),
         arguments(sArrayType(sTupleType(sIntType())), "[{Int}]"),
         arguments(sArrayType(sTupleType(sIntType(), sBoolType())), "[{Int,Bool}]"),
@@ -94,11 +94,11 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(
             sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "field")))),
             "[MyStruct]"),
-        arguments(sArrayType(varA()), "[A]"),
-        arguments(sArrayType(sArrayType(varA())), "[[A]]"),
-        arguments(sArrayType(sArrayType(sBlobType())), "[[Blob]]"),
-        arguments(sArrayType(sArrayType(sBoolType())), "[[Bool]]"),
-        arguments(sArrayType(sArrayType(sIntType())), "[[Int]]"),
+        arguments(sVarAArrayT(), "[A]"),
+        arguments(sArrayType(sVarAArrayT()), "[[A]]"),
+        arguments(sArrayType(sBlobArrayT()), "[[Blob]]"),
+        arguments(sArrayType(sBoolArrayT()), "[[Bool]]"),
+        arguments(sArrayType(sIntArrayT()), "[[Int]]"),
         arguments(sArrayType(sArrayType(sTupleType())), "[[{}]]"),
         arguments(sArrayType(sArrayType(sTupleType(sIntType()))), "[[{Int}]]"),
         arguments(sArrayType(sArrayType(sTupleType(sIntType(), sBoolType()))), "[[{Int,Bool}]]"),
@@ -108,11 +108,11 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(
             sArrayType(sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "filed"))))),
             "[[MyStruct]]"),
-        arguments(sArrayType(sArrayType(sStringType())), "[[String]]"),
-        arguments(sFuncType(sArrayType(varA()), varA()), "([A])->A"),
-        arguments(sFuncType(sArrayType(varA()), sStringType()), "([A])->String"),
+        arguments(sArrayType(sStringArrayT()), "[[String]]"),
+        arguments(sFuncType(sVarAArrayT(), varA()), "([A])->A"),
+        arguments(sFuncType(sVarAArrayT(), sStringType()), "([A])->String"),
         arguments(sFuncType(varA(), varA()), "(A)->A"),
-        arguments(sFuncType(sStringType()), "()->String"),
+        arguments(sStringFuncType(), "()->String"),
         arguments(sFuncType(sStringType(), sStringType()), "(String)->String"),
         arguments(sFuncType(sTupleType(sIntType()), sStringType()), "({Int})->String"),
         arguments(sInterfaceType(), "{}"),
@@ -141,8 +141,8 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sStringType(), varSetS()),
         arguments(sTupleType(sIntType()), varSetS()),
         arguments(sTupleType(varA(), varB()), varSetS(varA(), varB())),
-        arguments(sArrayType(sIntType()), varSetS()),
-        arguments(sArrayType(varA()), varSetS(varA())),
+        arguments(sIntArrayT(), varSetS()),
+        arguments(sVarAArrayT(), varSetS(varA())),
         arguments(sFuncType(sBoolType(), sBlobType()), varSetS()),
         arguments(sFuncType(sBoolType(), varA()), varSetS(varA())),
         arguments(sFuncType(varA(), sBlobType()), varSetS(varA())),
@@ -177,7 +177,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sTupleType(sIntType()), sTupleType(sIntType())),
         arguments(sTupleType(varA(), varB()), sTupleType(sVar("prefix.A"), sVar("prefix.B"))),
         arguments(sTupleType(sTupleType(varA())), sTupleType(sTupleType(sVar("prefix.A")))),
-        arguments(sArrayType(sIntType()), sArrayType(sIntType())),
+        arguments(sIntArrayT(), sIntArrayT()),
         arguments(sArrayType(sVar("A")), sArrayType(sVar("prefix.A"))),
         arguments(sArrayType(sVar("p.A")), sArrayType(sVar("prefix.p.A"))),
         arguments(sArrayType(sArrayType(sVar("A"))), sArrayType(sArrayType(sVar("prefix.A")))),
@@ -186,7 +186,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sFuncType(sVar("A"), sBlobType()), sFuncType(sVar("prefix.A"), sBlobType())),
         arguments(sFuncType(sBoolType(), sVar("p.A")), sFuncType(sBoolType(), sVar("prefix.p.A"))),
         arguments(sFuncType(sVar("p.A"), sBlobType()), sFuncType(sVar("prefix.p.A"), sBlobType())),
-        arguments(sFuncType(sFuncType(sVar("A"))), sFuncType(sFuncType(sVar("prefix.A")))),
+        arguments(sFuncType(sVarAFuncType()), sFuncType(sFuncType(sVar("prefix.A")))),
         arguments(
             sFuncType(sFuncType(sVar("A"), sIntType()), sIntType()),
             sFuncType(sFuncType(sVar("prefix.A"), sIntType()), sIntType())),
@@ -221,8 +221,8 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sStringType(), false),
         arguments(sTupleType(sIntType()), false),
         arguments(sTupleType(varA(), varB()), false),
-        arguments(sArrayType(sIntType()), false),
-        arguments(sArrayType(varA()), false),
+        arguments(sIntArrayT(), false),
+        arguments(sVarAArrayT(), false),
         arguments(sFuncType(sBoolType(), sBlobType()), false),
         arguments(sFuncType(sBoolType(), varA()), false),
         arguments(sFuncType(varA(), sBlobType()), false),
@@ -258,17 +258,17 @@ public class STypeTest extends FrontendCompilerTestContext {
     return list(
         arguments(sBlobType()),
         arguments(sBoolType()),
-        arguments(sFuncType(sStringType())),
+        arguments(sStringFuncType()),
         arguments(sIntType()),
         arguments(sStringType()),
         arguments(sStructType("MyStruct", nlist())),
         arguments(varA()),
-        arguments(sArrayType(sBlobType())),
-        arguments(sArrayType(sBoolType())),
-        arguments(sArrayType(sFuncType(sStringType()))),
-        arguments(sArrayType(sIntType())),
-        arguments(sArrayType(sStringType())),
-        arguments(sArrayType(varA())));
+        arguments(sBlobArrayT()),
+        arguments(sBoolArrayT()),
+        arguments(sArrayType(sStringFuncType())),
+        arguments(sIntArrayT()),
+        arguments(sStringArrayT()),
+        arguments(sVarAArrayT()));
   }
 
   @Nested
@@ -296,7 +296,7 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   public List<Arguments> func_params_cases_non_static() {
     return list(
-        arguments(sFuncType(sIntType()), sTupleType()),
+        arguments(sIntFuncType(), sTupleType()),
         arguments(sFuncType(sBoolType(), sBlobType()), sTupleType(sBoolType())),
         arguments(
             sFuncType(sBoolType(), sIntType(), sBlobType()), sTupleType(sBoolType(), sIntType())));
@@ -304,7 +304,7 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   public List<Arguments> func_result_cases_non_static() {
     return list(
-        arguments(sFuncType(sIntType()), sIntType()),
+        arguments(sIntFuncType(), sIntType()),
         arguments(sFuncType(sBoolType(), sBlobType()), sBlobType()),
         arguments(sFuncType(sBoolType(), sIntType(), sBlobType()), sBlobType()));
   }
@@ -366,8 +366,8 @@ public class STypeTest extends FrontendCompilerTestContext {
         varA(),
         varB(),
         varC(),
-        sFuncType(sBlobType()),
-        sFuncType(sStringType()),
+        sBlobFuncType(),
+        sStringFuncType(),
         sFuncType(sStringType(), sBlobType()),
         sFuncType(sBlobType(), sBlobType()));
 

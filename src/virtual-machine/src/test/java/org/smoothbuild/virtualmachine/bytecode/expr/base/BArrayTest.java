@@ -20,14 +20,13 @@ import org.smoothbuild.virtualmachine.testing.VmTestContext;
 public class BArrayTest extends VmTestContext {
   @Test
   void empty_int_array_can_be_iterated_as_int() throws Exception {
-    var array = exprDb().newArrayBuilder(bArrayType(bIntType())).build();
+    var array = exprDb().newArrayBuilder(bIntArrayType()).build();
     assertThat(array.elements(BInt.class)).isEmpty();
   }
 
   @Test
   void string_array_cannot_be_iterated_as_tuple() throws Exception {
-    var array =
-        exprDb().newArrayBuilder(bArrayType(bStringType())).add(bString("abc")).build();
+    var array = exprDb().newArrayBuilder(bStringArrayType()).add(bString("abc")).build();
     assertCall(() -> array.elements(BTuple.class))
         .throwsException(new IllegalArgumentException(
             "[String] cannot be viewed as Iterable of " + BTuple.class.getCanonicalName() + "."));
@@ -136,10 +135,10 @@ public class BArrayTest extends VmTestContext {
 
   @ParameterizedTest
   @MethodSource("type_test_data")
-  public void type(BType elemT) throws Exception {
-    var arrayTH = bArrayType(elemT);
-    var arrayH = exprDb().newArrayBuilder(arrayTH).build();
-    assertThat(arrayH.kind()).isEqualTo(arrayTH);
+  public void type(BType elemType) throws Exception {
+    var bArrayType = bArrayType(elemType);
+    var bArray = exprDb().newArrayBuilder(bArrayType).build();
+    assertThat(bArray.kind()).isEqualTo(bArrayType);
   }
 
   private static List<BKind> type_test_data() {

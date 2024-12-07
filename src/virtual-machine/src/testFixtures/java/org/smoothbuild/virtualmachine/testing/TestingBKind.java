@@ -79,8 +79,8 @@ public class TestingBKind {
         CONTEXT.bSelectKind(CONTEXT.bStringType()),
         CONTEXT.bIfKind(CONTEXT.bBlobType()),
         CONTEXT.bIfKind(CONTEXT.bStringType()),
-        CONTEXT.bMapKind(CONTEXT.bArrayType(CONTEXT.bBlobType())),
-        CONTEXT.bMapKind(CONTEXT.bArrayType(CONTEXT.bStringType())),
+        CONTEXT.bMapKind(CONTEXT.bBlobArrayType()),
+        CONTEXT.bMapKind(CONTEXT.bStringArrayType()),
         CONTEXT.bInvokeKind(CONTEXT.bBlobType()),
         CONTEXT.bInvokeKind(CONTEXT.bStringType()));
 

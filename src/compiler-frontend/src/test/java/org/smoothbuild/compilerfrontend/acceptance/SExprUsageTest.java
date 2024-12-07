@@ -248,7 +248,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = ["text"]("abc");
           """)
-          .loadsWithError(1, illegalCallMessage(sArrayType(sStringType()), list(sStringType())));
+          .loadsWithError(1, illegalCallMessage(sStringArrayT(), list(sStringType())));
     }
 
     @Test
@@ -256,7 +256,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = ["abc"].accessedField;
           """)
-          .loadsWithError(1, missingField(sArrayType(sStringType()), "accessedField"));
+          .loadsWithError(1, missingField(sStringArrayT(), "accessedField"));
     }
 
     @Test
@@ -648,7 +648,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       var code = """
           result = (() -> 7).myField;
           """;
-      module(code).loadsWithError(1, missingField(sFuncType(sIntType()), "myField"));
+      module(code).loadsWithError(1, missingField(sIntFuncType(), "myField"));
     }
 
     @Test
@@ -727,7 +727,7 @@ public class SExprUsageTest extends FrontendCompileTester {
             myFunc() = "abc";
             result = myFunc.myField;
             """;
-      module(code).loadsWithError(2, missingField(sFuncType(sStringType()), "myField"));
+      module(code).loadsWithError(2, missingField(sStringFuncType(), "myField"));
     }
 
     @Test

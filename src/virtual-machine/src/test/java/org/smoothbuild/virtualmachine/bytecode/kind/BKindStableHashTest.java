@@ -41,19 +41,16 @@ public class BKindStableHashTest extends VmTestContext {
             t.bTupleType(t.bBlobType()),
             "e6831749c04819dc01d5e7ae2c9c4e85eb54fcf3a2866270e679c908e9529efa"),
         arguments(
-            t.bArrayType(t.bBlobType()),
-            "8d0c2024fc9bedc6905b582e4f0f815eb16f1573f021332d7957ec12dfd1ba05"),
+            t.bBlobArrayType(), "8d0c2024fc9bedc6905b582e4f0f815eb16f1573f021332d7957ec12dfd1ba05"),
         arguments(
-            t.bArrayType(t.bBoolType()),
-            "d2f329dc9ff111fadbf744f3baa9ddd497ba6254cb04811bd765698164e8bf68"),
+            t.bBoolArrayType(), "d2f329dc9ff111fadbf744f3baa9ddd497ba6254cb04811bd765698164e8bf68"),
         arguments(
             t.bArrayType(t.bLambdaType()),
             "b8b7e24699498e50ff3b633bd471c776c533920652860b4d486748b60c9e0848"),
         arguments(
-            t.bArrayType(t.bIntType()),
-            "5a627db2a53ab5c02ea2aa798b79c6e4717c14afa433f39daf1acc45bd8e8c90"),
+            t.bIntArrayType(), "5a627db2a53ab5c02ea2aa798b79c6e4717c14afa433f39daf1acc45bd8e8c90"),
         arguments(
-            t.bArrayType(t.bStringType()),
+            t.bStringArrayType(),
             "61e7ec0f483b43991e647a5dc0d365044a5f6ac299846a273b0b1ba94d615972"),
         arguments(
             t.bArrayType(t.bTupleType(t.bBlobType())),

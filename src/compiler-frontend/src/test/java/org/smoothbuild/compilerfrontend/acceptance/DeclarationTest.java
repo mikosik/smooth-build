@@ -1228,8 +1228,8 @@ public class DeclarationTest extends FrontendCompileTester {
         void can_have_trailing_comma() {
           module(arrayLiteral("0x07,"))
               .loadsWithSuccess()
-              .containsEvaluable(sValue(
-                  1, sArrayType(sBlobType()), "result", sOrder(1, sBlobType(), sBlob(1, 7))));
+              .containsEvaluable(
+                  sValue(1, sBlobArrayT(), "result", sOrder(1, sBlobType(), sBlob(1, 7))));
         }
 
         @Test

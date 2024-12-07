@@ -13,11 +13,11 @@ public class SSchemaTest extends FrontendCompilerTestContext {
     new EqualsTester()
         .addEqualityGroup(new SSchema(varSetS(), sIntType()))
         .addEqualityGroup(new SSchema(varSetS(), sBlobType()))
-        .addEqualityGroup(new SSchema(varSetS(), sArrayType(sIntType())))
-        .addEqualityGroup(new SSchema(varSetS(), sFuncType(sIntType())))
+        .addEqualityGroup(new SSchema(varSetS(), sIntArrayT()))
+        .addEqualityGroup(new SSchema(varSetS(), sIntFuncType()))
         .addEqualityGroup(new SSchema(varSetS(), sFuncType(sIntType(), sIntType())))
-        .addEqualityGroup(new SSchema(varSetS(varA()), sArrayType(varA())))
-        .addEqualityGroup(new SSchema(varSetS(varA()), sFuncType(varA())))
+        .addEqualityGroup(new SSchema(varSetS(varA()), sVarAArrayT()))
+        .addEqualityGroup(new SSchema(varSetS(varA()), sVarAFuncType()))
         .addEqualityGroup(new SSchema(varSetS(varA()), sFuncType(varA(), varA())))
         .testEquals();
   }

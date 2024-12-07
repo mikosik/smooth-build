@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_evaluable() {
-    var sSchema = sSchema(sArrayType(sIntType()));
+    var sSchema = sSchema(sIntArrayT());
     var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
     var sScope = new SScope(immutableBindings(), immutableBindings(map(sValue.name(), sValue)));
 
@@ -26,7 +26,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
 
   @Test
   void find_polymorphic_evaluable_fails() {
-    var value = sValue(sSchema(sArrayType(varA())), "myValue", sOrder(varA()));
+    var value = sValue(sSchema(sVarAArrayT()), "myValue", sOrder(varA()));
     var sScope = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
 
     var exprs = new FindValues().execute(sScope, list(value.name()));

@@ -194,13 +194,13 @@ public class BKindTest extends VmTestContext {
         arguments(test.bInvokeKind(test.bIntType()), BInvoke.class),
         arguments(test.bPersonType(), BTuple.class),
         arguments(test.bStringType(), BString.class),
-        arguments(test.bArrayType(test.bBlobType()), BArray.class),
-        arguments(test.bArrayType(test.bBoolType()), BArray.class),
+        arguments(test.bBlobArrayType(), BArray.class),
+        arguments(test.bBoolArrayType(), BArray.class),
         arguments(
             test.bArrayType(test.bLambdaType(test.bBoolType(), test.bBlobType())), BArray.class),
-        arguments(test.bArrayType(test.bIntType()), BArray.class),
+        arguments(test.bIntArrayType(), BArray.class),
         arguments(test.bArrayType(test.bPersonType()), BArray.class),
-        arguments(test.bArrayType(test.bStringType()), BArray.class),
+        arguments(test.bStringArrayType(), BArray.class),
         arguments(test.bCallKind(), BCall.class),
         arguments(test.bOrderKind(), BOrder.class),
         arguments(test.bCombineKind(test.bIntType(), test.bStringType()), BCombine.class),
@@ -299,25 +299,21 @@ public class BKindTest extends VmTestContext {
     tester.addEqualityGroup(bStringType(), bStringType());
     tester.addEqualityGroup(bPersonType(), bPersonType());
 
-    tester.addEqualityGroup(bArrayType(bBlobType()), bArrayType(bBlobType()));
-    tester.addEqualityGroup(bArrayType(bBoolType()), bArrayType(bBoolType()));
+    tester.addEqualityGroup(bBlobArrayType(), bBlobArrayType());
+    tester.addEqualityGroup(bBoolArrayType(), bBoolArrayType());
     tester.addEqualityGroup(
         bArrayType(bLambdaType(bBoolType(), bBlobType())),
         bArrayType(bLambdaType(bBoolType(), bBlobType())));
-    tester.addEqualityGroup(bArrayType(bIntType()), bArrayType(bIntType()));
-    tester.addEqualityGroup(bArrayType(bStringType()), bArrayType(bStringType()));
+    tester.addEqualityGroup(bIntArrayType(), bIntArrayType());
+    tester.addEqualityGroup(bStringArrayType(), bStringArrayType());
     tester.addEqualityGroup(bArrayType(bPersonType()), bArrayType(bPersonType()));
 
+    tester.addEqualityGroup(bArrayType(bBlobArrayType()), bArrayType(bBlobArrayType()));
+    tester.addEqualityGroup(bArrayType(bBoolArrayType()), bArrayType(bBoolArrayType()));
     tester.addEqualityGroup(
-        bArrayType(bArrayType(bBlobType())), bArrayType(bArrayType(bBlobType())));
-    tester.addEqualityGroup(
-        bArrayType(bArrayType(bBoolType())), bArrayType(bArrayType(bBoolType())));
-    tester.addEqualityGroup(
-        bArrayType(bArrayType(bLambdaType(bIntType()))),
-        bArrayType(bArrayType(bLambdaType(bIntType()))));
-    tester.addEqualityGroup(bArrayType(bArrayType(bIntType())), bArrayType(bArrayType(bIntType())));
-    tester.addEqualityGroup(
-        bArrayType(bArrayType(bStringType())), bArrayType(bArrayType(bStringType())));
+        bArrayType(bArrayType(bIntLambdaType())), bArrayType(bArrayType(bIntLambdaType())));
+    tester.addEqualityGroup(bArrayType(bIntArrayType()), bArrayType(bIntArrayType()));
+    tester.addEqualityGroup(bArrayType(bStringArrayType()), bArrayType(bStringArrayType()));
     tester.addEqualityGroup(
         bArrayType(bArrayType(bTupleType(bAnimalType()))),
         bArrayType(bArrayType(bTupleType(bAnimalType()))));

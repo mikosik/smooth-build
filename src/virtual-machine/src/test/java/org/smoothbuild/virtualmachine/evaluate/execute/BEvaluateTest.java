@@ -140,7 +140,7 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void job_for_unused_lambda_arg_is_created_but_not_jobs_for_its_dependencies()
           throws Exception {
-        var lambda = bLambda(list(bArrayType(bBoolType())), bInt(7));
+        var lambda = bLambda(list(bBoolArrayType()), bInt(7));
         var bBool = bBool();
         var call = bCall(lambda, bOrder(bBool));
 
@@ -153,7 +153,7 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void lambda_arg_used_twice_not_results_in_its_expression_being_evaluated_twice()
           throws Exception {
-        var boolArrayType = bArrayType(bBoolType());
+        var boolArrayType = bBoolArrayType();
         var argReference = bReference(boolArrayType, 0);
         var lambda = bLambda(list(boolArrayType), bOrder(argReference, argReference));
         var bool = bBool();
@@ -445,7 +445,7 @@ public class BEvaluateTest extends VmTestContext {
       }
 
       private BCall throwExceptionCall() throws Exception {
-        var lambdaType = bLambdaType(bStringType());
+        var lambdaType = bStringLambdaType();
         var invoke = bInvoke(lambdaType, ThrowException.class);
         return bCall(invoke);
       }

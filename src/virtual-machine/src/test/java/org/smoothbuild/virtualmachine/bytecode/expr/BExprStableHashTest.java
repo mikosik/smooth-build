@@ -109,7 +109,7 @@ public class BExprStableHashTest extends VmTestContext {
   class _lambda {
     @Test
     void with_zero_params() throws Exception {
-      var lambdaB = bLambda(bLambdaType(bIntType()), bInt(1));
+      var lambdaB = bLambda(bIntLambdaType(), bInt(1));
       assertThat(lambdaB.hash())
           .isEqualTo(
               Hash.decode("cbebb7b4c0262db1ee75678b2cf4f8d0b4d587e53c9d0167234d3f75b5c82e45"));
@@ -199,7 +199,7 @@ public class BExprStableHashTest extends VmTestContext {
   class _call {
     @Test
     void call_without_args() throws Exception {
-      var type = bLambdaType(bIntType());
+      var type = bIntLambdaType();
       var lambda = bLambda(type, bInt());
       assertThat(bCall(lambda).hash())
           .isEqualTo(

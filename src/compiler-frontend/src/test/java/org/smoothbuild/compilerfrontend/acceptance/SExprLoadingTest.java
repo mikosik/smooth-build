@@ -243,7 +243,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             result = myValue();
             """;
         var myReturnInt = returnIntSFunc();
-        var myValue = sValue(2, sFuncType(sIntType()), "myValue", sInstantiate(2, myReturnInt));
+        var myValue = sValue(2, sIntFuncType(), "myValue", sInstantiate(2, myReturnInt));
         var result = sValue(3, sIntType(), "result", sCall(3, sInstantiate(3, myValue)));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
@@ -305,8 +305,8 @@ public class SExprLoadingTest extends FrontendCompileTester {
                 1,
                 sStringType(),
                 "result",
-                nlist(sItem(1, sFuncType(sStringType()), "f")),
-                sCall(1, sParamRef(sFuncType(sStringType()), "f"))));
+                nlist(sItem(1, sStringFuncType(), "f")),
+                sCall(1, sParamRef(sStringFuncType(), "f"))));
       }
 
       @Test
@@ -350,12 +350,10 @@ public class SExprLoadingTest extends FrontendCompileTester {
             .loadsWithSuccess()
             .containsEvaluable(sValue(
                 2,
-                sArrayType(sIntType()),
+                sIntArrayT(),
                 "result",
                 sInstantiate(
-                    3,
-                    list(sIntType()),
-                    sValue(1, sArrayType(varA()), "myValue", sOrder(varA())))));
+                    3, list(sIntType()), sValue(1, sVarAArrayT(), "myValue", sOrder(varA())))));
       }
 
       @Test
@@ -367,7 +365,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
               myFunc;
             """;
         var myFunc = sFunc(1, "myFunc", nlist(), sString("abc"));
-        var result = sValue(2, sFuncType(sStringType()), "result", sInstantiate(3, myFunc));
+        var result = sValue(2, sStringFuncType(), "result", sInstantiate(3, myFunc));
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -414,10 +412,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """)
             .loadsWithSuccess()
             .containsEvaluable(sValue(
-                1,
-                sArrayType(sBlobType()),
-                "result",
-                sOrder(2, sBlobType(), sBlob(3, 7), sBlob(4, 8))));
+                1, sBlobArrayT(), "result", sOrder(2, sBlobType(), sBlob(3, 7), sBlob(4, 8))));
       }
 
       @Test
@@ -431,10 +426,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """)
             .loadsWithSuccess()
             .containsEvaluable(sValue(
-                1,
-                sArrayType(sBlobType()),
-                "result",
-                sOrder(2, sBlobType(), sBlob(1, 7), sBlob(3, 8))));
+                1, sBlobArrayT(), "result", sOrder(2, sBlobType(), sBlob(1, 7), sBlob(3, 8))));
       }
 
       @Test
@@ -508,7 +500,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluable(sValue(1, sArrayType(varA()), "myValue", sOrder(2, varA())));
+            .containsEvaluable(sValue(1, sVarAArrayT(), "myValue", sOrder(2, varA())));
       }
 
       @Test
@@ -551,7 +543,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
               [];
             """)
             .loadsWithSuccess()
-            .containsEvaluable(sFunc(1, sArrayType(varA()), "myFunc", nlist(), sOrder(2, varA())));
+            .containsEvaluable(sFunc(1, sVarAArrayT(), "myFunc", nlist(), sOrder(2, varA())));
       }
 
       @Test
@@ -784,7 +776,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """;
         var empty = sValue(5, "empty", sOrder(5, varA()));
         var defaultValue = sValue(2, "myFunc:param1", sInstantiate(3, list(varA()), empty));
-        var params = nlist(sItem(2, sArrayType(sIntType()), "param1", defaultValue));
+        var params = nlist(sItem(2, sIntArrayT(), "param1", defaultValue));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         module(code).loadsWithSuccess().containsEvaluable(func);
       }
@@ -801,7 +793,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """;
         var empty = sValue(5, "empty", sOrder(5, varA()));
         var defaultValue = sValue(2, "myFunc:param1", sInstantiate(3, list(varA()), empty));
-        var params = nlist(sItemPoly(2, sArrayType(varB()), "param1", some(defaultValue)));
+        var params = nlist(sItemPoly(2, sVarBArrayT(), "param1", some(defaultValue)));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         module(code).loadsWithSuccess().containsEvaluable(func);
       }
@@ -846,11 +838,8 @@ public class SExprLoadingTest extends FrontendCompileTester {
           ]);
           """)
           .loadsWithSuccess()
-          .containsEvaluable(sValue(
-              1,
-              sArrayType(sBlobType()),
-              "result",
-              sOrder(2, sBlobType(), sBlob(3, 7), sBlob(4, 8))));
+          .containsEvaluable(
+              sValue(1, sBlobArrayT(), "result", sOrder(2, sBlobType(), sBlob(3, 7), sBlob(4, 8))));
     }
   }
 }

@@ -166,7 +166,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void var_vs_array_fails() throws UnifierException {
-        assertUnifyFails(varA(), sArrayType(varA()));
+        assertUnifyFails(varA(), sVarAArrayT());
       }
 
       @Test
@@ -176,7 +176,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void var_vs_function_fails() throws UnifierException {
-        assertUnifyFails(varA(), sFuncType(varA()));
+        assertUnifyFails(varA(), sVarAFuncType());
       }
 
       @Test
@@ -191,7 +191,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void array_vs_itself_succeeds() throws UnifierException {
-        unifier.add(new Constraint(sArrayType(sIntType()), sArrayType(sIntType())));
+        unifier.add(new Constraint(sIntArrayT(), sIntArrayT()));
       }
 
       @Test
@@ -204,33 +204,32 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void array2_vs_itself_succeeds() throws UnifierException {
-        unifier.add(
-            new Constraint(sArrayType(sArrayType(sIntType())), sArrayType(sArrayType(sIntType()))));
+        unifier.add(new Constraint(sArrayType(sIntArrayT()), sArrayType(sIntArrayT())));
       }
 
       @Test
       void array_vs_array_with_different_element_fails() throws UnifierException {
-        assertUnifyFails(sArrayType(sIntType()), sArrayType(sBlobType()));
+        assertUnifyFails(sIntArrayT(), sBlobArrayT());
       }
 
       @Test
       void array_vs_tuple_fails() throws UnifierException {
-        assertUnifyFails(sArrayType(sIntType()), sTupleType(sIntType()));
+        assertUnifyFails(sIntArrayT(), sTupleType(sIntType()));
       }
 
       @Test
       void array_vs_function_fails() throws UnifierException {
-        assertUnifyFails(sArrayType(sIntType()), sFuncType(sIntType()));
+        assertUnifyFails(sIntArrayT(), sIntFuncType());
       }
 
       @Test
       void array_vs_struct_fails() throws UnifierException {
-        assertUnifyFails(sArrayType(sIntType()), sStructType("MyStruct", sIntType()));
+        assertUnifyFails(sIntArrayT(), sStructType("MyStruct", sIntType()));
       }
 
       @Test
       void array_vs_interface_fails() throws UnifierException {
-        assertUnifyFails(sArrayType(sIntType()), sInterfaceType(sIntType()));
+        assertUnifyFails(sIntArrayT(), sInterfaceType(sIntType()));
       }
 
       @Test
@@ -267,7 +266,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void tuple_vs_function_fails() throws UnifierException {
-        assertUnifyFails(sTupleType(sIntType()), sFuncType(sIntType()));
+        assertUnifyFails(sTupleType(sIntType()), sIntFuncType());
       }
 
       @Test
@@ -296,20 +295,18 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void function_with_result_being_function_vs_itself_succeeds() throws UnifierException {
-        unifier.add(
-            new Constraint(sFuncType(sFuncType(sIntType())), sFuncType(sFuncType(sIntType()))));
+        unifier.add(new Constraint(sFuncType(sIntFuncType()), sFuncType(sIntFuncType())));
       }
 
       @Test
       void function_with_parameter_being_function_vs_itself_succeeds() throws UnifierException {
         unifier.add(new Constraint(
-            sFuncType(sFuncType(sIntType()), sBlobType()),
-            sFuncType(sFuncType(sIntType()), sBlobType())));
+            sFuncType(sIntFuncType(), sBlobType()), sFuncType(sIntFuncType(), sBlobType())));
       }
 
       @Test
       void function_vs_function_with_different_result_type_fails() throws UnifierException {
-        assertUnifyFails(sFuncType(sIntType()), sFuncType(sBlobType()));
+        assertUnifyFails(sIntFuncType(), sBlobFuncType());
       }
 
       @Test
@@ -319,17 +316,17 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void function_vs_function_with_one_parameter_missing_fails() throws UnifierException {
-        assertUnifyFails(sFuncType(sBlobType(), sIntType()), sFuncType(sIntType()));
+        assertUnifyFails(sFuncType(sBlobType(), sIntType()), sIntFuncType());
       }
 
       @Test
       void function_vs_struct_fails() throws UnifierException {
-        assertUnifyFails(sFuncType(sIntType()), sStructType("MyStruct", sIntType()));
+        assertUnifyFails(sIntFuncType(), sStructType("MyStruct", sIntType()));
       }
 
       @Test
       void function_vs_interface_fails() throws UnifierException {
-        assertUnifyFails(sFuncType(sIntType()), sInterfaceType(sIntType()));
+        assertUnifyFails(sIntFuncType(), sInterfaceType(sIntType()));
       }
 
       @Test
@@ -725,7 +722,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
         var b = unifier.newFlexibleVar();
         var constraints = list(
             new Constraint(a, sFuncType(sIntType(), sIntType())),
-            new Constraint(b, sFuncType(sIntType())),
+            new Constraint(b, sIntFuncType()),
             new Constraint(a, b));
         assertExceptionThrownForLastConstraintForEachPermutation(constraints);
       }
@@ -734,7 +731,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       void join_array_vs_tuple_fails() throws UnifierException {
         var a = unifier.newFlexibleVar();
         var b = unifier.newFlexibleVar();
-        unifier.add(new Constraint(a, sArrayType(sIntType())));
+        unifier.add(new Constraint(a, sIntArrayT()));
         unifier.add(new Constraint(b, sTupleType(sIntType())));
         assertCall(() -> unifier.add(new Constraint(a, b))).throwsException(UnifierException.class);
       }
@@ -743,8 +740,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
       void join_array_vs_func_fails() throws UnifierException {
         var a = unifier.newFlexibleVar();
         var b = unifier.newFlexibleVar();
-        unifier.add(new Constraint(a, sArrayType(sIntType())));
-        unifier.add(new Constraint(b, sFuncType(sIntType())));
+        unifier.add(new Constraint(a, sIntArrayT()));
+        unifier.add(new Constraint(b, sIntFuncType()));
         assertCall(() -> unifier.add(new Constraint(a, b))).throwsException(UnifierException.class);
       }
 
@@ -753,7 +750,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
         var a = unifier.newFlexibleVar();
         var b = unifier.newFlexibleVar();
         unifier.add(new Constraint(a, sTupleType(sIntType())));
-        unifier.add(new Constraint(b, sFuncType(sIntType())));
+        unifier.add(new Constraint(b, sIntFuncType()));
         assertCall(() -> unifier.add(new Constraint(a, b))).throwsException(UnifierException.class);
       }
     }

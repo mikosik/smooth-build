@@ -54,7 +54,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
+            .containsEvaluableWithSchema("myValue", sSchema(sStringArrayT()));
       }
 
       @Test
@@ -112,7 +112,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(varA())));
+            .containsEvaluableWithSchema("myValue", sSchema(sVarAArrayT()));
       }
 
       @Test
@@ -124,7 +124,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(varA())));
+            .containsEvaluableWithSchema("myValue", sSchema(sVarAArrayT()));
       }
 
       @Test
@@ -200,7 +200,7 @@ public class InferenceTest extends FrontendCompileTester {
       class _array {
         @Test
         void mono_array() {
-          assertInferredFunctionType("", "[17]", sFuncSchema(sArrayType(sIntType())));
+          assertInferredFunctionType("", "[17]", sFuncSchema(sIntArrayT()));
         }
       }
 
@@ -216,8 +216,7 @@ public class InferenceTest extends FrontendCompileTester {
 
       @Test
       void param_function_call() {
-        assertInferredFunctionType(
-            "()->Int f", "f()", sFuncSchema(sFuncType(sIntType()), sIntType()));
+        assertInferredFunctionType("()->Int f", "f()", sFuncSchema(sIntFuncType(), sIntType()));
       }
 
       @Test
@@ -270,17 +269,17 @@ public class InferenceTest extends FrontendCompileTester {
       class _array {
         @Test
         void mono_array() {
-          assertInferredFunctionType("A a", "[7]", sFuncSchema(varA(), sArrayType(sIntType())));
+          assertInferredFunctionType("A a", "[7]", sFuncSchema(varA(), sIntArrayT()));
         }
 
         @Test
         void poly_array() {
-          assertInferredFunctionType("", "[]", sFuncSchema(sArrayType(varA())));
+          assertInferredFunctionType("", "[]", sFuncSchema(sVarAArrayT()));
         }
 
         @Test
         void poly_array_when_param_list_already_uses_A_as_var_name() {
-          assertInferredFunctionType("A a", "[]", sFuncSchema(varA(), sArrayType(varB())));
+          assertInferredFunctionType("A a", "[]", sFuncSchema(varA(), sVarBArrayT()));
         }
       }
 
@@ -294,13 +293,13 @@ public class InferenceTest extends FrontendCompileTester {
         @Test
         void poly_value_ref() {
           assertInferredFunctionType(
-              "[A] emptyArray = [];", "", "emptyArray", sFuncSchema(sArrayType(varA())));
+              "[A] emptyArray = [];", "", "emptyArray", sFuncSchema(sVarAArrayT()));
         }
 
         @Test
         void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
           assertInferredFunctionType(
-              "[A] emptyArray = [];", "A a", "emptyArray", sFuncSchema(varA(), sArrayType(varB())));
+              "[A] emptyArray = [];", "A a", "emptyArray", sFuncSchema(varA(), sVarBArrayT()));
         }
       }
 
@@ -335,13 +334,12 @@ public class InferenceTest extends FrontendCompileTester {
       class _call {
         @Test
         void call_to_mono_param() {
-          assertInferredFunctionType(
-              "()->Int f", "f()", sFuncSchema(sFuncType(sIntType()), sIntType()));
+          assertInferredFunctionType("()->Int f", "f()", sFuncSchema(sIntFuncType(), sIntType()));
         }
 
         @Test
         void call_to_poly_param() {
-          assertInferredFunctionType("()->A f", "f()", sFuncSchema(sFuncType(varA()), varA()));
+          assertInferredFunctionType("()->A f", "f()", sFuncSchema(sVarAFuncType(), varA()));
         }
 
         @Test
@@ -400,7 +398,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(varA())));
+            .containsEvaluableWithSchema("result", sSchema(sVarAArrayT()));
       }
     }
 
@@ -413,7 +411,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
+            .containsEvaluableWithSchema("result", sSchema(sStringArrayT()));
       }
 
       @Test
@@ -423,7 +421,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntType())));
+            .containsEvaluableWithSchema("result", sSchema(sIntArrayT()));
       }
 
       @Test
@@ -433,7 +431,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sBlobType())));
+            .containsEvaluableWithSchema("result", sSchema(sBlobArrayT()));
       }
 
       @Test
@@ -443,7 +441,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sArrayType(sIntType()))));
+            .containsEvaluableWithSchema("result", sSchema(sIntIntArrayT()));
       }
 
       @Test
@@ -454,7 +452,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntType())));
+            .containsEvaluableWithSchema("result", sSchema(sIntArrayT()));
       }
 
       @Test
@@ -491,7 +489,7 @@ public class InferenceTest extends FrontendCompileTester {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
+            .containsEvaluableWithSchema("result", sSchema(sStringArrayT()));
       }
 
       @Test
@@ -519,7 +517,7 @@ public class InferenceTest extends FrontendCompileTester {
                 """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", sSchema(sArrayType(sFuncType(sIntType()))));
+            .containsEvaluableWithSchema("result", sSchema(sArrayType(sIntFuncType())));
       }
 
       @Test
@@ -533,9 +531,7 @@ public class InferenceTest extends FrontendCompileTester {
                   secondFunc,
                 ];
                 """;
-        module(code)
-            .loadsWithError(
-                3, arrayTypeMessage(1, sFuncType(sStringType()), sFuncType(sBlobType())));
+        module(code).loadsWithError(3, arrayTypeMessage(1, sStringFuncType(), sBlobFuncType()));
       }
 
       @Test
@@ -626,8 +622,7 @@ public class InferenceTest extends FrontendCompileTester {
             .loadsWithError(
                 2,
                 illegalCallMessage(
-                    sFuncType(var1(), var1(), sStringType()),
-                    list(sIntType(), sArrayType(sIntType()))));
+                    sFuncType(var1(), var1(), sStringType()), list(sIntType(), sIntArrayT())));
       }
 
       @Test
@@ -642,7 +637,7 @@ public class InferenceTest extends FrontendCompileTester {
                 2,
                 illegalCallMessage(
                     sFuncType(var1(), var1(), sStringType()),
-                    list(sArrayType(sStringType()), sArrayType(sBlobType()))));
+                    list(sStringArrayT(), sBlobArrayT())));
       }
 
       @Test
@@ -688,7 +683,7 @@ public class InferenceTest extends FrontendCompileTester {
                 """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
+            .containsEvaluableWithSchema("myValue", sSchema(sStringArrayT()));
       }
 
       @Test
@@ -730,7 +725,7 @@ public class InferenceTest extends FrontendCompileTester {
                 """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
+            .containsEvaluableWithSchema("myValue", sSchema(sStringArrayT()));
       }
     }
 
@@ -745,7 +740,7 @@ public class InferenceTest extends FrontendCompileTester {
                 """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sStringType())));
+            .containsEvaluableWithSchema("myValue", sSchema(sStringArrayT()));
       }
 
       @Test
@@ -757,7 +752,7 @@ public class InferenceTest extends FrontendCompileTester {
                 """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", sSchema(sArrayType(sArrayType(sStringType()))));
+            .containsEvaluableWithSchema("myValue", sSchema(sStringStringArrayT()));
       }
 
       @Test
@@ -848,7 +843,7 @@ public class InferenceTest extends FrontendCompileTester {
               """;
       module(code)
           .loadsWithSuccess()
-          .containsEvaluableWithSchema("result", sSchema(sArrayType(sStringType())));
+          .containsEvaluableWithSchema("result", sSchema(sStringArrayT()));
     }
   }
 
