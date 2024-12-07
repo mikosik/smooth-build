@@ -15,6 +15,7 @@ import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import java.math.BigInteger;
@@ -232,6 +233,18 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SVar varX() {
     return sVar("X");
+  }
+
+  public default SVar var1() {
+    return flexibleVar(1);
+  }
+
+  public default SVar var2() {
+    return flexibleVar(2);
+  }
+
+  public default SVar var3() {
+    return flexibleVar(3);
   }
 
   public default SVar sVar(String name) {
