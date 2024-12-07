@@ -36,77 +36,77 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_bool_artifact() throws Exception {
-    var typeS = sBoolType();
-    var valueB = bBool(true);
+    var sType = sBoolType();
+    var bValue = bBool(true);
     var valueAsByteString = byteStringWithSingleByteEqualOne();
 
-    testValueStoring(typeS, valueB, valueAsByteString);
+    testValueStoring(sType, bValue, valueAsByteString);
   }
 
   @Test
   void store_int_artifact() throws Exception {
-    var typeS = sIntType();
-    var valueB = bInt(7);
+    var sType = sIntType();
+    var bValue = bInt(7);
     var valueAsByteString = ByteString.of((byte) 7);
 
-    testValueStoring(typeS, valueB, valueAsByteString);
+    testValueStoring(sType, bValue, valueAsByteString);
   }
 
   @Test
   void store_string_artifact() throws Exception {
-    var typeS = sStringType();
-    var valueB = bString("abc");
+    var sType = sStringType();
+    var bValue = bString("abc");
     var valueAsByteString = byteStringFrom("abc");
 
-    testValueStoring(typeS, valueB, valueAsByteString);
+    testValueStoring(sType, bValue, valueAsByteString);
   }
 
   @Test
   void store_blob_artifact() throws Exception {
-    var typeS = sBlobType();
+    var sType = sBlobType();
     var valueAsByteString = byteStringFrom("abc");
-    var valueB = bBlob(valueAsByteString);
+    var bValue = bBlob(valueAsByteString);
 
-    testValueStoring(typeS, valueB, valueAsByteString);
+    testValueStoring(sType, bValue, valueAsByteString);
   }
 
   @Test
   void store_file_artifact() throws Exception {
-    var typeS = fileTS();
+    var sType = sFileT();
     var string = "abc";
     var contentAsByteString = byteStringFrom(string);
-    var valueB = bFile(path("my/path"), contentAsByteString);
+    var bValue = bFile(path("my/path"), contentAsByteString);
     var artifactRelativePath = "myValue/my/path";
 
-    testValueStoring(typeS, valueB, contentAsByteString, artifactRelativePath);
+    testValueStoring(sType, bValue, contentAsByteString, artifactRelativePath);
   }
 
   @Test
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
-    var typeS = sStructType("NotAFile", sBlobType(), sStringType());
-    var valueB = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
-    var filePath = BYTECODE_DB_PATH.append(HashedDb.dbPathTo(valueB.dataHash()));
+    var sType = sStructType("NotAFile", sBlobType(), sStringType());
+    var bValue = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
+    var filePath = BYTECODE_DB_PATH.append(HashedDb.dbPathTo(bValue.dataHash()));
     var byteString = readFile(fileSystem(), filePath);
 
-    testValueStoring(typeS, valueB, byteString);
+    testValueStoring(sType, bValue, byteString);
   }
 
   @Test
   void store_empty_bool_array_artifact() throws Exception {
-    var typeS = sArrayType(sBoolType());
-    var valueB = bArray(bBoolType());
+    var sType = sArrayType(sBoolType());
+    var bValue = bArray(bBoolType());
 
-    testValueStoring(typeS, valueB, "myValue", Map.of());
+    testValueStoring(sType, bValue, "myValue", Map.of());
   }
 
   @Test
   void store_not_empty_bool_array_artifact() throws Exception {
-    var typeS = sArrayType(sBoolType());
-    var valueB = bArray(bBoolType(), bBool(true), bBool(false));
+    var sType = sArrayType(sBoolType());
+    var bValue = bArray(bBoolType(), bBool(true), bBool(false));
 
     testValueStoring(
-        typeS,
-        valueB,
+        sType,
+        bValue,
         "myValue",
         Map.of(
             path("myValue/0"),
@@ -117,40 +117,40 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_empty_string_array_artifact() throws Exception {
-    var typeS = sArrayType(sStringType());
-    var valueB = bArray(bStringType());
+    var sType = sArrayType(sStringType());
+    var bValue = bArray(bStringType());
 
-    testValueStoring(typeS, valueB, "myValue", Map.of());
+    testValueStoring(sType, bValue, "myValue", Map.of());
   }
 
   @Test
   void store_not_empty_string_array_artifact() throws Exception {
-    var typeS = sArrayType(sStringType());
-    var valueB = bArray(bStringType(), bString("abc"), bString("def"));
+    var sType = sArrayType(sStringType());
+    var bValue = bArray(bStringType(), bString("abc"), bString("def"));
 
     testValueStoring(
-        typeS,
-        valueB,
+        sType,
+        bValue,
         "myValue",
         Map.of(path("myValue/0"), byteStringFrom("abc"), path("myValue/1"), byteStringFrom("def")));
   }
 
   @Test
   void store_empty_blob_array_artifact() throws Exception {
-    var typeS = sArrayType(sBlobType());
-    var valueB = bArray(bBlobType());
+    var sType = sArrayType(sBlobType());
+    var bValue = bArray(bBlobType());
 
-    testValueStoring(typeS, valueB, "myValue", Map.of());
+    testValueStoring(sType, bValue, "myValue", Map.of());
   }
 
   @Test
   void store_not_empty_blob_array_artifact() throws Exception {
-    var typeS = sArrayType(sBlobType());
-    var valueB = bArray(bBlobType(), bBlob(7), bBlob(8));
+    var sType = sArrayType(sBlobType());
+    var bValue = bArray(bBlobType(), bBlob(7), bBlob(8));
 
     testValueStoring(
-        typeS,
-        valueB,
+        sType,
+        bValue,
         "myValue",
         Map.of(path("myValue/0"), ByteString.of((byte) 7), path("myValue/1"), ByteString.of((byte)
             8)));
@@ -158,35 +158,35 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void store_empty_file_array_artifact() throws Exception {
-    var typeS = sArrayType(fileTS());
-    var valueB = bArray(bFileType());
+    var sType = sArrayType(sFileT());
+    var bValue = bArray(bFileType());
 
-    testValueStoring(typeS, valueB, "myValue", Map.of());
+    testValueStoring(sType, bValue, "myValue", Map.of());
   }
 
   @Test
   void store_not_empty_file_array_artifact() throws Exception {
-    var typeS = sArrayType(fileTS());
+    var sType = sArrayType(sFileT());
     var content1 = byteStringFrom("abc");
     var content2 = byteStringFrom("def");
-    var valueB = bArray(bFileType(), bFile("dir1/file1", content1), bFile("dir2/file2", content2));
+    var bValue = bArray(bFileType(), bFile("dir1/file1", content1), bFile("dir2/file2", content2));
 
     testValueStoring(
-        typeS,
-        valueB,
+        sType,
+        bValue,
         "myValue",
         Map.of(path("myValue/dir1/file1"), content1, path("myValue/dir2/file2"), content2));
   }
 
   @Test
   void store_array_of_files_with_duplicated_paths_fails() throws Exception {
-    var typeS = sArrayType(fileTS());
+    var sType = sArrayType(sFileT());
     var content1 = byteStringFrom("abc");
     var content2 = byteStringFrom("def");
     var path = path("dir1/file1");
-    var valueB = bArray(bFileType(), bFile(path, content1), bFile(path, content2));
+    var bValue = bArray(bFileType(), bFile(path, content1), bFile(path, content2));
 
-    assertThat(saveArtifacts(typeS, valueB).report().logs())
+    assertThat(saveArtifacts(sType, bValue).report().logs())
         .isEqualTo(
             list(
                 error(
@@ -251,7 +251,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     return sInstantiate(list(), sAnnotatedValue(sNativeAnnotation(), sType, name, location()));
   }
 
-  public SStructType fileTS() {
+  public SStructType sFileT() {
     return sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
   }
 }
