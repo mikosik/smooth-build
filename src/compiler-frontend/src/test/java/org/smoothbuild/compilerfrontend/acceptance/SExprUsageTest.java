@@ -1,5 +1,9 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.missingField;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
@@ -49,7 +53,8 @@ public class SExprUsageTest extends FrontendCompileTester {
     void func_in_call_expression_fails() {
       module("""
           result = 0x01("abc");
-          """).loadsWithError(1, "Illegal call.");
+          """)
+          .loadsWithError(1, illegalCallMessage(sBlobType(), list(sStringType())));
     }
 
     @Test
@@ -57,7 +62,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = 0x01.accessedField;
           """)
-          .loadsWithError(1, "Illegal field access.");
+          .loadsWithError(1, missingField(sBlobType(), "accessedField"));
     }
 
     @Test
@@ -112,7 +117,8 @@ public class SExprUsageTest extends FrontendCompileTester {
     void func_in_call_expression_fails() {
       module("""
           result = 123("abc");
-          """).loadsWithError(1, "Illegal call.");
+          """)
+          .loadsWithError(1, illegalCallMessage(sIntType(), list(sStringType())));
     }
 
     @Test
@@ -120,7 +126,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = 123.accessedField;
           """)
-          .loadsWithError(1, "Illegal field access.");
+          .loadsWithError(1, missingField(sIntType(), "accessedField"));
     }
 
     @Test
@@ -177,7 +183,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = "text"("abc");
           """)
-          .loadsWithError(1, "Illegal call.");
+          .loadsWithError(1, illegalCallMessage(sStringType(), list(sStringType())));
     }
 
     @Test
@@ -185,7 +191,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = "abc".accessedField;
           """)
-          .loadsWithError(1, "Illegal field access.");
+          .loadsWithError(1, missingField(sStringType(), "accessedField"));
     }
 
     @Test
@@ -242,7 +248,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = ["text"]("abc");
           """)
-          .loadsWithError(1, "Illegal call.");
+          .loadsWithError(1, illegalCallMessage(sArrayType(sStringType()), list(sStringType())));
     }
 
     @Test
@@ -250,7 +256,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           result = ["abc"].accessedField;
           """)
-          .loadsWithError(1, "Illegal field access.");
+          .loadsWithError(1, missingField(sArrayType(sStringType()), "accessedField"));
     }
 
     @Test
@@ -351,7 +357,7 @@ public class SExprUsageTest extends FrontendCompileTester {
           }
           result = MyStruct("abc").myField();
           """)
-          .loadsWithError(4, "Illegal call.");
+          .loadsWithError(4, illegalCallMessage(sStringType(), list()));
     }
 
     @Test
@@ -378,7 +384,7 @@ public class SExprUsageTest extends FrontendCompileTester {
             }
             String result = MyStruct("abc").myField.otherField;
             """;
-      module(code).loadsWithError(4, "Illegal field access.");
+      module(code).loadsWithError(4, missingField(sStringType(), "otherField"));
     }
 
     @Test
@@ -642,7 +648,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       var code = """
           result = (() -> 7).myField;
           """;
-      module(code).loadsWithError(1, "Illegal field access.");
+      module(code).loadsWithError(1, missingField(sFuncType(sIntType()), "myField"));
     }
 
     @Test
@@ -721,7 +727,7 @@ public class SExprUsageTest extends FrontendCompileTester {
             myFunc() = "abc";
             result = myFunc.myField;
             """;
-      module(code).loadsWithError(2, "Illegal field access.");
+      module(code).loadsWithError(2, missingField(sFuncType(sStringType()), "myField"));
     }
 
     @Test
@@ -772,7 +778,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           myFunc(String param) = param();
           """)
-          .loadsWithError(1, "Illegal call.");
+          .loadsWithError(1, illegalCallMessage(sStringType(), list()));
     }
 
     @Test
@@ -792,7 +798,7 @@ public class SExprUsageTest extends FrontendCompileTester {
       String code = """
             myFunc(String param) = param.myField;
             """;
-      module(code).loadsWithError(1, "Illegal field access.");
+      module(code).loadsWithError(1, missingField(sStringType(), "myField"));
     }
 
     @Test
@@ -866,11 +872,12 @@ public class SExprUsageTest extends FrontendCompileTester {
 
     @Test
     void func_in_call_expression_fails_when_value_type_is_not_a_func() {
-      module("""
+      var code = """
           myValue = "abc";
           result = myValue();
-          """)
-          .loadsWithError(2, "Illegal call.");
+          """;
+      var called = sStringType();
+      module(code).loadsWithError(2, illegalCallMessage(called, list()));
     }
 
     @Test
@@ -892,7 +899,7 @@ public class SExprUsageTest extends FrontendCompileTester {
           myValue = "abc";
           result = myValue.someField;
           """)
-          .loadsWithError(2, "Illegal field access.");
+          .loadsWithError(2, missingField(sStringType(), "someField"));
     }
 
     @Test

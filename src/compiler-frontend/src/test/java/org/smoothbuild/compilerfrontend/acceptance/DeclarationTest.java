@@ -2,7 +2,9 @@ package org.smoothbuild.compilerfrontend.acceptance;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.base.Strings.unlines;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
 import static org.smoothbuild.compilerfrontend.testing.TestedTSF.TESTED_TYPES;
 
 import java.util.stream.Stream;
@@ -861,7 +863,9 @@ public class DeclarationTest extends FrontendCompileTester {
               myIdentity(String param) = param;
               result = myIdentity("abc", "def");
               """;
-          module(code).loadsWithError(2, "Illegal call.");
+          var called = sFuncType(sStringType(), sStringType());
+          var args = list(sStringType(), sStringType());
+          module(code).loadsWithError(2, illegalCallMessage(called, args));
         }
 
         @Test
@@ -882,8 +886,9 @@ public class DeclarationTest extends FrontendCompileTester {
               funcValue = returnFirst;
               result = funcValue("abc");
               """;
-          module(code).loadsWithError(3, "Illegal call.");
-          //              .loadsWithError(3, "Too few parameters. Expected 2 found 1.");
+          var called = sFuncType(sStringType(), sStringType(), sStringType());
+          var args = list(sStringType());
+          module(code).loadsWithError(3, illegalCallMessage(called, args));
         }
 
         @Test
@@ -997,7 +1002,8 @@ public class DeclarationTest extends FrontendCompileTester {
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc();
             """;
-          module(code).loadsWithError(3, "Illegal call.");
+          var called = sFuncType(sStringType(), sStringType());
+          module(code).loadsWithError(3, illegalCallMessage(called, list()));
         }
       }
 
@@ -1287,7 +1293,7 @@ public class DeclarationTest extends FrontendCompileTester {
             }
             result = MyStruct("abc").otherField;
             """;
-        module(code).loadsWithError(4, "Unknown field `otherField`.");
+        module(code).loadsWithError(4, "Struct `MyStruct` has no field `otherField`.");
       }
     }
 

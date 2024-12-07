@@ -12,7 +12,7 @@ public final class SVar extends SType {
     this.vars = SVarSet.varSetS(this);
   }
 
-  public static SVar newFlexibleVar(int i) {
+  public static SVar flexibleVar(int i) {
     return new SVar("T" + i);
   }
 

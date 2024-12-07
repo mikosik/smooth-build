@@ -1,5 +1,10 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.arrayTypeMessage;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.bodyTypeMessage;
+import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
@@ -20,7 +25,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           Blob result = "abc";
           """;
-      module(sourceCode).loadsWithError(1, "`result` body type is not equal to declared type.");
+      module(sourceCode).loadsWithError(1, bodyTypeMessage("result", sStringType(), sBlobType()));
     }
 
     @Test
@@ -28,7 +33,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           A result = 7;
           """;
-      module(sourceCode).loadsWithError(1, "`result` body type is not equal to declared type.");
+      module(sourceCode).loadsWithError(1, bodyTypeMessage("result", sIntType(), varA()));
     }
 
     @Test
@@ -44,7 +49,8 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           [Int] result = [[]];
           """;
-      module(sourceCode).loadsWithError(1, "`result` body type is not equal to declared type.");
+      module(sourceCode)
+          .loadsWithError(1, bodyTypeMessage("result", sArrayType(var1()), sArrayType(sIntType())));
     }
 
     @Test
@@ -60,7 +66,8 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           [A] result = [[]];
           """;
-      module(sourceCode).loadsWithError(1, "`result` body type is not equal to declared type.");
+      module(sourceCode)
+          .loadsWithError(1, bodyTypeMessage("result", sArrayType(var1()), sArrayType(varA())));
     }
   }
 
@@ -70,7 +77,10 @@ public class TypeCheckingTest extends FrontendCompileTester {
     class _param_type_and_arg_type extends _abstract_param_type_and_arg_type_suite {
       @Override
       public String buildSourceCode(String params, String argument) {
+        // empty space is added so error line number is the same as in the case of
+        // implementation of buildSourceCode method used in case of _expression_function
         return """
+
           result = ((%s) -> "abc")(%s);
           """
             .formatted(params, argument);
@@ -95,7 +105,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
         var sourceCode = """
           Blob myFunc() = "abc";
           """;
-        module(sourceCode).loadsWithError(1, "`myFunc` body type is not equal to declared type.");
+        module(sourceCode).loadsWithError(1, bodyTypeMessage("myFunc", sStringType(), sBlobType()));
       }
 
       @Test
@@ -103,7 +113,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
         var sourceCode = """
           A myFunc() = 7;
           """;
-        module(sourceCode).loadsWithError(1, "`myFunc` body type is not equal to declared type.");
+        module(sourceCode).loadsWithError(1, bodyTypeMessage("myFunc", sIntType(), varA()));
       }
 
       @Test
@@ -119,7 +129,9 @@ public class TypeCheckingTest extends FrontendCompileTester {
         var sourceCode = """
           [Int] myFunc() = [[]];
           """;
-        module(sourceCode).loadsWithError(1, "`myFunc` body type is not equal to declared type.");
+        module(sourceCode)
+            .loadsWithError(
+                1, bodyTypeMessage("myFunc", sArrayType(var1()), sArrayType(sIntType())));
       }
 
       @Test
@@ -135,7 +147,8 @@ public class TypeCheckingTest extends FrontendCompileTester {
         var sourceCode = """
           [A] myFunc() = [[]];
           """;
-        module(sourceCode).loadsWithError(1, "`myFunc` body type is not equal to declared type.");
+        module(sourceCode)
+            .loadsWithError(1, bodyTypeMessage("myFunc", sArrayType(var1()), sArrayType(varA())));
       }
     }
 
@@ -143,11 +156,14 @@ public class TypeCheckingTest extends FrontendCompileTester {
     class _param_type_and_arg_type extends _abstract_param_type_and_arg_type_suite {
       @Override
       public String buildSourceCode(String params, String argument) {
+        // Call to myFunc is wrapped inside lambda so typing error message we expect would
+        // use the same flexible Var names as in the case of implementation of buildSourceCode
+        // for lambda
         return """
-          result = myFunc(%s);
           String myFunc(%s) = "abc";
+          result = () -> myFunc(%s);
           """
-            .formatted(argument, params);
+            .formatted(params, argument);
       }
     }
 
@@ -170,7 +186,9 @@ public class TypeCheckingTest extends FrontendCompileTester {
           String myFunc(Blob blob) = "abc";
           result = myFunc(blob=7);
           """;
-        module(sourceCode).loadsWithError(2, "Illegal call.");
+        module(sourceCode)
+            .loadsWithError(
+                2, illegalCallMessage(sFuncType(sBlobType(), sStringType()), list(sIntType())));
       }
 
       @Test
@@ -190,7 +208,10 @@ public class TypeCheckingTest extends FrontendCompileTester {
           String myFunc([A] a) = "abc";
           result = myFunc(a=7);
           """;
-        module(sourceCode).loadsWithError(2, "Illegal call.");
+        module(sourceCode)
+            .loadsWithError(
+                2,
+                illegalCallMessage(sFuncType(sArrayType(var1()), sStringType()), list(sIntType())));
       }
 
       @Test
@@ -210,7 +231,12 @@ public class TypeCheckingTest extends FrontendCompileTester {
           String myFunc([Int] param) = "abc";
           result = myFunc(param=[[]]);
           """;
-        module(sourceCode).loadsWithError(2, "Illegal call.");
+        module(sourceCode)
+            .loadsWithError(
+                2,
+                illegalCallMessage(
+                    sFuncType(sArrayType(sIntType()), sStringType()),
+                    list(sArrayType(sArrayType(var1())))));
       }
 
       @Test
@@ -230,7 +256,11 @@ public class TypeCheckingTest extends FrontendCompileTester {
           String myFunc((A)->A param) = "abc";
           result = myFunc(param=[]);
           """;
-        module(sourceCode).loadsWithError(2, "Illegal call.");
+        module(sourceCode)
+            .loadsWithError(
+                2,
+                illegalCallMessage(
+                    sFuncType(sFuncType(var1(), var1()), sStringType()), list(sArrayType(var2()))));
       }
     }
 
@@ -358,7 +388,9 @@ public class TypeCheckingTest extends FrontendCompileTester {
     @Test
     void mono_to_mono_error() {
       var code = buildSourceCode("Blob blob", "7");
-      module(code).loadsWithError(1, "Illegal call.");
+      var called = sFuncType(sBlobType(), sStringType());
+      var args = list(sIntType());
+      module(code).loadsWithError(2, illegalCallMessage(called, args));
     }
 
     @Test
@@ -370,7 +402,10 @@ public class TypeCheckingTest extends FrontendCompileTester {
     @Test
     void mono_to_poly_error() {
       var code = buildSourceCode("[A] a", "7");
-      module(code).loadsWithError(1, "Illegal call.");
+      module(code)
+          .loadsWithError(
+              2,
+              illegalCallMessage(sFuncType(sArrayType(var2()), sStringType()), list(sIntType())));
     }
 
     @Test
@@ -382,7 +417,9 @@ public class TypeCheckingTest extends FrontendCompileTester {
     @Test
     void poly_to_mono_error() {
       var code = buildSourceCode("[Int] param", "[[]]");
-      module(code).loadsWithError(1, "Illegal call.");
+      var called = sFuncType(sArrayType(sIntType()), sStringType());
+      var args = list(sArrayType(sArrayType(var2())));
+      module(code).loadsWithError(2, illegalCallMessage(called, args));
     }
 
     @Test
@@ -394,7 +431,11 @@ public class TypeCheckingTest extends FrontendCompileTester {
     @Test
     void poly_to_poly_error() {
       var code = buildSourceCode("(A)->A param", "[]");
-      module(code).loadsWithError(1, "Illegal call.");
+      module(code)
+          .loadsWithError(
+              2,
+              illegalCallMessage(
+                  sFuncType(sFuncType(var2(), var2()), sStringType()), list(sArrayType(var3()))));
     }
   }
 
@@ -405,9 +446,7 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var sourceCode = """
           result = [1, "abc"];
           """;
-      module(sourceCode)
-          .loadsWithError(
-              1, "Cannot infer type for array literal. Its element types are not compatible.");
+      module(sourceCode).loadsWithError(1, arrayTypeMessage(1, sIntType(), sStringType()));
     }
 
     @Test
@@ -426,7 +465,8 @@ public class TypeCheckingTest extends FrontendCompileTester {
       var code = """
             f(String s, (A)->A id) = id(s);
             """;
-      module(code).loadsWithError(1, "Illegal call.");
+      module(code)
+          .loadsWithError(1, illegalCallMessage(sFuncType(varA(), varA()), list(sStringType())));
     }
   }
 
@@ -435,8 +475,6 @@ public class TypeCheckingTest extends FrontendCompileTester {
     var code = """
             f([String] param = [7, "abc"]) = 3;
             """;
-    module(code)
-        .loadsWithError(
-            1, "Cannot infer type for array literal. Its element types are not compatible.");
+    module(code).loadsWithError(1, arrayTypeMessage(1, sIntType(), sStringType()));
   }
 }

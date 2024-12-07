@@ -124,7 +124,10 @@ public class ExprTypeUnifier {
     } catch (UnifierException e) {
       throw new TypeException(
           compileError(
-              pEvaluable.location(), pEvaluable.q() + " body type is not equal to declared type."),
+              pEvaluable.location(),
+              pEvaluable.q() + " body type " + bodyType.q()
+                  + " is not equal to declared type " + evaluationType.q()
+                  + "."),
           e);
     }
   }
@@ -165,11 +168,19 @@ public class ExprTypeUnifier {
       throws TypeException {
     var resultType = unifier.newFlexibleVar();
     var funcType = new SFuncType(argTypes, resultType);
+    var resolvedCalleeType = unifier.resolve(calleeType);
+    var resolvedArgTypes = argTypes.map(unifier::resolve);
     try {
       unify(funcType, calleeType);
       return resultType;
     } catch (UnifierException e) {
-      throw new TypeException(compileError(location, "Illegal call."), e);
+      throw new TypeException(
+          compileError(
+              location,
+              "Illegal call: Instance of " + resolvedCalleeType.q()
+                  + " cannot be called with arguments `" + resolvedArgTypes.toString("(", ",", ")")
+                  + "`."),
+          e);
     }
   }
 
@@ -201,14 +212,19 @@ public class ExprTypeUnifier {
   private SArrayType unifyElementsWithArray(List<SType> elemTypes, Location location)
       throws TypeException {
     var elemVar = unifier.newFlexibleVar();
-    for (SType elemType : elemTypes) {
+    for (int i = 0; i < elemTypes.size(); i++) {
+      SType elemType = elemTypes.get(i);
       try {
         unify(elemVar, elemType);
       } catch (UnifierException e) {
         throw new TypeException(
             compileError(
                 location,
-                "Cannot infer type for array literal. Its element types are not compatible."),
+                "Cannot infer array type. After unifying first " + (i + 1)
+                    + " elements, array type is inferred as "
+                    + new SArrayType(unifier.resolve(elemVar)).q()
+                    + ". However type of element at index " + i + " is "
+                    + unifier.resolve(elemType).q() + "."),
             e);
       }
     }
@@ -221,16 +237,22 @@ public class ExprTypeUnifier {
 
   private SType unifySelect(PSelect pSelect) throws TypeException {
     var selectableType = unifyExpr(pSelect.selectable());
-    if (unifier.resolve(selectableType) instanceof SStructType sStructType) {
+    var resolvedSelectableType = unifier.resolve(selectableType);
+    if (resolvedSelectableType instanceof SStructType sStructType) {
       var itemSigS = sStructType.fields().get(pSelect.field());
       if (itemSigS == null) {
-        throw new TypeException(
-            compileError(pSelect.location(), "Unknown field `" + pSelect.field() + "`."));
+        throw new TypeException(compileError(
+            pSelect.location(),
+            "Struct " + sStructType.q() + " has no field `" + pSelect.field() + "`."));
       } else {
         return itemSigS.type();
       }
     } else {
-      throw new TypeException(compileError(pSelect.location(), "Illegal field access."));
+      throw new TypeException(compileError(
+          pSelect.location(),
+          "Instance of " + resolvedSelectableType.q()
+              + " has no field `" + pSelect.field()
+              + "`."));
     }
   }
 
