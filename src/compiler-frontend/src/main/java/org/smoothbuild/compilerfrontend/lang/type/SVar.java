@@ -5,7 +5,6 @@ package org.smoothbuild.compilerfrontend.lang.type;
  * This class is immutable.
  */
 public final class SVar extends SType {
-  private static final String FLEXIBLE_VAR_PREFIX = "_";
   private final SVarSet vars;
 
   public SVar(String name) {
@@ -14,7 +13,7 @@ public final class SVar extends SType {
   }
 
   public static SVar newFlexibleVar(int i) {
-    return new SVar(FLEXIBLE_VAR_PREFIX + i);
+    return new SVar("T" + i);
   }
 
   @Override
@@ -24,6 +23,6 @@ public final class SVar extends SType {
 
   @Override
   public boolean isFlexibleVar() {
-    return name().startsWith(FLEXIBLE_VAR_PREFIX);
+    return name().chars().anyMatch(Character::isDigit);
   }
 }

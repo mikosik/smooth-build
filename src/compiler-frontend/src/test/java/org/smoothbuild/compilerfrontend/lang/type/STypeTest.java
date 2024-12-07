@@ -134,6 +134,7 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   public List<Arguments> vars_test_data_non_static() {
     return list(
+        arguments(varA(), varSetS(varA())),
         arguments(sBlobType(), varSetS()),
         arguments(sBoolType(), varSetS()),
         arguments(sIntType(), varSetS()),
@@ -202,6 +203,43 @@ public class STypeTest extends FrontendCompilerTestContext {
             sInterfaceType(sInterfaceType(sVar("prefix.A")))));
   }
 
+  @ParameterizedTest
+  @MethodSource
+  void is_flexible_var(SType var, boolean isFlexible) {
+    assertThat(var.isFlexibleVar()).isEqualTo(isFlexible);
+  }
+
+  static List<Arguments> is_flexible_var() {
+    return new STypeTest().non_static_is_flexible_var();
+  }
+
+  List<Arguments> non_static_is_flexible_var() {
+    return list(
+        arguments(sBlobType(), false),
+        arguments(sBoolType(), false),
+        arguments(sIntType(), false),
+        arguments(sStringType(), false),
+        arguments(sTupleType(sIntType()), false),
+        arguments(sTupleType(varA(), varB()), false),
+        arguments(sArrayType(sIntType()), false),
+        arguments(sArrayType(varA()), false),
+        arguments(sFuncType(sBoolType(), sBlobType()), false),
+        arguments(sFuncType(sBoolType(), varA()), false),
+        arguments(sFuncType(varA(), sBlobType()), false),
+        arguments(sFuncType(varB(), varA()), false),
+        arguments(sStructType(sIntType()), false),
+        arguments(sStructType(sIntType(), varA()), false),
+        arguments(sStructType(varB(), varA()), false),
+        arguments(sInterfaceType(sIntType()), false),
+        arguments(sInterfaceType(sIntType(), varA()), false),
+        arguments(sInterfaceType(varB(), varA()), false),
+        arguments(var1(), true),
+        arguments(var2(), true),
+        arguments(var3(), true),
+        arguments(varA(), false),
+        arguments(varB(), false));
+  }
+
   @Nested
   class _array {
     @ParameterizedTest
@@ -234,7 +272,7 @@ public class STypeTest extends FrontendCompilerTestContext {
   }
 
   @Nested
-  public class _func {
+  class _func {
     @ParameterizedTest
     @MethodSource("func_result_cases")
     public void func_result(SFuncType type, SType expected) {
