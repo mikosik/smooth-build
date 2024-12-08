@@ -90,7 +90,7 @@ type
    ;
 
 NAME
-   : NON_DIGIT_CHAR NAME_CHAR*
+   : (LETTER | '_') (LETTER | '_' | DIGIT)*
    ;
 
 INT
@@ -110,25 +110,9 @@ fragment ESC
    | '\\\\'
    ;
 
-fragment NON_DIGIT_CHAR
-   : SMALL_LETTER
-   | LARGE_LETTER
-   | '_'
-   ;
-
-fragment NAME_CHAR
-   : SMALL_LETTER
-   | LARGE_LETTER
-   | DIGIT
-   | '_'
-   ;
-
-fragment SMALL_LETTER
+fragment LETTER
    : 'a' .. 'z'
-   ;
-
-fragment LARGE_LETTER
-   : 'A' .. 'Z'
+   | 'A' .. 'Z'
    ;
 
 fragment HEX_DIGIT
