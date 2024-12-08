@@ -20,12 +20,12 @@ import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnnotationContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgListContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArrayTContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArrayTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainHeadContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ExprContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.LambdaContext;
@@ -194,7 +194,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PItem createItem(String ownerName, ItemContext item) {
-      var type = createT(item.type());
+      var type = createType(item.type());
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
       var location = fileLocation(fullPath, nameNode);
@@ -358,32 +358,32 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PType createTypeSane(TypeContext type, Location location) {
-      return type == null ? new PImplicitType(location) : createT(type);
+      return type == null ? new PImplicitType(location) : createType(type);
     }
 
-    private PType createT(TypeContext type) {
+    private PType createType(TypeContext type) {
       return switch (type) {
-        case TypeNameContext name -> createT(name);
-        case ArrayTContext arrayT -> createArrayT(arrayT);
-        case FuncTContext funcT -> createFuncT(funcT);
+        case TypeNameContext name -> createType(name);
+        case ArrayTypeContext arrayType -> createArrayType(arrayType);
+        case FuncTypeContext funcType -> createFuncType(funcType);
         default -> throw unexpectedCaseException(type);
       };
     }
 
-    private PType createT(TypeNameContext type) {
+    private PType createType(TypeNameContext type) {
       return new PExplicitType(type.getText(), fileLocation(fullPath, type.NAME()));
     }
 
-    private PType createArrayT(ArrayTContext arrayT) {
-      var elemType = createT(arrayT.type());
-      return new PArrayType(elemType, fileLocation(fullPath, arrayT));
+    private PType createArrayType(ArrayTypeContext arrayType) {
+      var elemType = createType(arrayType.type());
+      return new PArrayType(elemType, fileLocation(fullPath, arrayType));
     }
 
-    private PType createFuncT(FuncTContext funcT) {
-      var types = listOfAll(funcT.type()).map(this::createT);
+    private PType createFuncType(FuncTypeContext funcType) {
+      var types = listOfAll(funcType.type()).map(this::createType);
       var resultType = types.get(types.size() - 1);
-      var paramTypesS = types.subList(0, types.size() - 1);
-      return new PFuncType(resultType, paramTypesS, fileLocation(fullPath, funcT));
+      var paramTypes = types.subList(0, types.size() - 1);
+      return new PFuncType(resultType, paramTypes, fileLocation(fullPath, funcType));
     }
 
     private String createFullName(String shortName) {
