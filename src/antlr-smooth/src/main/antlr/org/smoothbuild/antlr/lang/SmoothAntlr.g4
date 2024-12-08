@@ -85,8 +85,8 @@ lambda
 
 type
    : NAME # typeName
-   | '[' type ']' # arrayT
-   | '(' (type (',' type)*)? ')' '->' type # funcT
+   | '[' type ']' # arrayType
+   | '(' (type (',' type)*)? ')' '->' type # funcType
    ;
 
 NAME
