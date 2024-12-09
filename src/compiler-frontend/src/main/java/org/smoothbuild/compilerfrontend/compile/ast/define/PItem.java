@@ -13,13 +13,13 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class PItem extends NalImpl implements PReferenceable {
   private final PType type;
-  private final Maybe<PNamedValue> defaultValue;
+  private final Maybe<String> defaultValueFullName;
   private SType sType;
 
-  public PItem(PType type, String name, Maybe<PNamedValue> defaultValue, Location location) {
+  public PItem(PType type, String name, Maybe<String> defaultValueFullName, Location location) {
     super(name, location);
     this.type = type;
-    this.defaultValue = defaultValue;
+    this.defaultValueFullName = defaultValueFullName;
   }
 
   @Override
@@ -31,8 +31,8 @@ public final class PItem extends NalImpl implements PReferenceable {
     return type;
   }
 
-  public Maybe<PNamedValue> defaultValue() {
-    return defaultValue;
+  public Maybe<String> defaultValueFullName() {
+    return defaultValueFullName;
   }
 
   public SType sType() {
@@ -56,13 +56,13 @@ public final class PItem extends NalImpl implements PReferenceable {
     return object instanceof PItem that
         && Objects.equals(this.type, that.type)
         && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.defaultValue, that.defaultValue())
+        && Objects.equals(this.defaultValueFullName, that.defaultValueFullName())
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, name(), defaultValue, location());
+    return Objects.hash(type, name(), defaultValueFullName, location());
   }
 
   @Override
@@ -70,7 +70,7 @@ public final class PItem extends NalImpl implements PReferenceable {
     var fields = list(
             "type = " + type,
             "name = " + name(),
-            "defaultValue = " + defaultValue,
+            "defaultValueFullName = " + defaultValueFullName,
             "location = " + location())
         .toString("\n");
     return "ItemP(\n" + indent(fields) + "\n)";

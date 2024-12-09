@@ -504,31 +504,20 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name) {
-    return sItem(line, type, name, none());
+    return new SItem(type, name, none(), location(line));
   }
 
-  public default SItem sItem(int line, SType type, String name, SExpr body) {
-    return sItem(line, type, name, some(body));
+  public default SItem sItem(SType type, String name, String defaultValueFullName) {
+    return sItem(1, type, name, defaultValueFullName);
   }
 
-  public default SItem sItem(String name, SExpr body) {
-    return sItem(body.evaluationType(), name, some(body));
+  public default SItem sItem(int line, SType type, String name, String defaultValueFullName) {
+    return sItem(line, type, name, some(defaultValueFullName));
   }
 
-  public default SItem sItem(SType type, String name, Maybe<SExpr> body) {
-    return sItem(1, type, name, body);
-  }
-
-  public default SItem sItem(int line, SType type, String name, Maybe<SExpr> body) {
-    return sItemPoly(line, type, name, body.map(b -> sValue(line, name, b)));
-  }
-
-  public default SItem sItem(int line, SType type, String name, SNamedValue body) {
-    return sItemPoly(line, type, name, some(body));
-  }
-
-  public default SItem sItemPoly(int line, SType type, String name, Maybe<SNamedValue> body) {
-    return new SItem(type, name, body, location(line));
+  public default SItem sItem(
+      int line, SType type, String name, Maybe<String> defaultValueFullName) {
+    return new SItem(type, name, defaultValueFullName, location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {
@@ -758,27 +747,23 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PItem pItem() {
-    return pItem(some(pNamedValue()));
+    return pItem(some("func:param"));
   }
 
-  public default PItem pItem(Maybe<PNamedValue> defaultValue) {
-    return pItem("param1", defaultValue);
+  public default PItem pItem(Maybe<String> defaultValueFullName) {
+    return pItem("param1", defaultValueFullName);
   }
 
   public default PItem pItem(String name) {
     return pItem(name, none());
   }
 
-  public default PItem pItem(String name, PExpr defaultValue) {
-    return pItem(name, pNamedValue(defaultValue));
+  public default PItem pItem(String name, String defaultValueFullName) {
+    return pItem(name, some(defaultValueFullName));
   }
 
-  public default PItem pItem(String name, PNamedValue defaultValue) {
-    return pItem(name, some(defaultValue));
-  }
-
-  public default PItem pItem(String name, Maybe<PNamedValue> defaultValue) {
-    return new PItem(new PExplicitType("Int", location()), name, defaultValue, location());
+  public default PItem pItem(String name, Maybe<String> defaultValueFullName) {
+    return new PItem(new PExplicitType("Int", location()), name, defaultValueFullName, location());
   }
 
   public default PInt pInt() {

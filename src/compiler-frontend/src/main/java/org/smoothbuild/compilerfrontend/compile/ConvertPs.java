@@ -139,10 +139,8 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
     }
 
     public SItem convertParam(PItem paramP) {
-      var type = paramP.sType();
-      var name = paramP.name();
-      var body = paramP.defaultValue().map(this::convertNamedValue);
-      return new SItem(type, name, body, paramP.location());
+      return new SItem(
+          paramP.sType(), paramP.name(), paramP.defaultValueFullName(), paramP.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {

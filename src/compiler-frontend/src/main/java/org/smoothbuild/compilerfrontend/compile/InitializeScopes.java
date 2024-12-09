@@ -18,7 +18,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
@@ -93,14 +92,6 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
 
     private void addNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
       addReferenceable(pNamedEvaluable);
-      if (pNamedEvaluable instanceof PNamedFunc pNamedFunc) {
-        for (var param : pNamedFunc.params()) {
-          if (param.defaultValue().isSome()) {
-            var defaultValue = param.defaultValue().get();
-            addReferenceable(defaultValue);
-          }
-        }
-      }
     }
 
     private void addConstructor(PStruct pStruct) {

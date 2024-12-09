@@ -148,7 +148,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
       }
 
       private void logErrorIfDefaultValuePresent(PItem param) {
-        if (param.defaultValue().isSome()) {
+        if (param.defaultValueFullName().isSome()) {
           logger.log(compileError(
               param.location(),
               "Struct field `" + param.name()
@@ -167,7 +167,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
       }
 
       private void logErrorIfDefaultValuePresent(PItem param) {
-        if (param.defaultValue().isSome()) {
+        if (param.defaultValueFullName().isSome()) {
           logger.log(compileError(
               param.location(),
               "Parameter " + param.q() + " of lambda cannot have default value."));

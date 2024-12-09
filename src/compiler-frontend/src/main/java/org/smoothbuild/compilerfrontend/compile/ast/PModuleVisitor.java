@@ -109,7 +109,6 @@ public class PModuleVisitor<T extends Throwable> {
   public void visitItem(PItem pItem) throws T {
     visitType(pItem.type());
     visitNameOf(pItem);
-    pItem.defaultValue().ifPresent(this::visitNamedValue);
   }
 
   public void visitType(PType pType) throws T {}

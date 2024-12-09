@@ -16,7 +16,7 @@ public sealed interface SFunc extends SEvaluable permits SExprFunc, SNamedFunc {
   public SFuncSchema schema();
 
   public default boolean canBeCalledArgless() {
-    return params().stream().allMatch(p -> p.defaultValue().isSome());
+    return params().stream().allMatch(p -> p.defaultValueFullName().isSome());
   }
 
   public default String fieldsToString() {
