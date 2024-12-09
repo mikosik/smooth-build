@@ -75,10 +75,7 @@ public class DeclarationTest extends FrontendCompileTester {
         @Test
         void that_starts_with_small_letter_fails() {
           module("myStruct{}")
-              .loadsWithError(
-                  1,
-                  "`myStruct` is illegal struct name. "
-                      + "Struct name must start with uppercase letter.");
+              .loadsWithError(1, structWithLowercaseFirstCharacterError("myStruct"));
         }
 
         @Test
@@ -87,13 +84,21 @@ public class DeclarationTest extends FrontendCompileTester {
               .loadsWithError(
                   1,
                   "`A` is illegal struct name. "
-                      + "All-uppercase names are reserved for type variables in generic types.");
+                      + "All-uppercase names are reserved for type variables.");
         }
 
         @Test
-        void that_is_underscore_fails() {
+        void that_is_single_underscore_fails() {
           module("_{}")
               .loadsWithError(1, "`_` is illegal struct name. `_` is reserved for future use.");
+        }
+
+        @Test
+        void that_is_full_name_fails() {
+          var code = """
+              My:Struct{}
+              """;
+          module(code).loadsWithError(1, structNameWithIllegalCharacterError("My:Struct", ":"));
         }
 
         @Test
@@ -102,7 +107,7 @@ public class DeclarationTest extends FrontendCompileTester {
               .loadsWithError(
                   1,
                   "`ABC` is illegal struct name. "
-                      + "All-uppercase names are reserved for type variables in generic types.");
+                      + "All-uppercase names are reserved for type variables.");
         }
       }
 
@@ -262,9 +267,7 @@ public class DeclarationTest extends FrontendCompileTester {
                   String Field
                 }
                 """)
-                .loadsWithError(
-                    2,
-                    "`Field` is illegal identifier name. Identifiers should start with lowercase.");
+                .loadsWithError(2, identifierWithUppercaseFirstCharacterError("Field"));
           }
 
           @Test
@@ -275,20 +278,32 @@ public class DeclarationTest extends FrontendCompileTester {
                   String A
                 }
                 """)
-                .loadsWithError(
-                    2, "`A` is illegal identifier name. Identifiers should start with lowercase.");
+                .loadsWithError(2, identifierWithUppercaseFirstCharacterError("A"));
           }
 
           @Test
           void that_is_single_underscore_fails() {
-            module(
-                    """
+            var code =
+                """
                 MyStruct{
                   String _
                 }
-                """)
+                """;
+            module(code)
                 .loadsWithError(
                     2, "`_` is illegal identifier name. `_` is reserved for future use.");
+          }
+
+          @Test
+          void that_is_full_name_fails() {
+            var code =
+                """
+                MyStruct{
+                  String my:field
+                }
+                """;
+            module(code)
+                .loadsWithError(2, identifierNameWithIllegalCharacterError("my:field", ":"));
           }
         }
 
@@ -419,9 +434,7 @@ public class DeclarationTest extends FrontendCompileTester {
           module("""
               MyValue = "abc";
               """)
-              .loadsWithError(
-                  1,
-                  "`MyValue` is illegal identifier name. Identifiers should start with lowercase.");
+              .loadsWithError(1, identifierWithUppercaseFirstCharacterError("MyValue"));
         }
 
         @Test
@@ -429,8 +442,7 @@ public class DeclarationTest extends FrontendCompileTester {
           module("""
               A = "abc";
               """)
-              .loadsWithError(
-                  1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
+              .loadsWithError(1, identifierWithUppercaseFirstCharacterError("A"));
         }
 
         @Test
@@ -439,6 +451,14 @@ public class DeclarationTest extends FrontendCompileTester {
               _ = "abc";
               """)
               .loadsWithError(1, "`_` is illegal identifier name. `_` is reserved for future use.");
+        }
+
+        @Test
+        void that_is_full_name_fails() {
+          var code = """
+              my:name = "abc";
+              """;
+          module(code).loadsWithError(1, identifierNameWithIllegalCharacterError("my:name", ":"));
         }
       }
 
@@ -665,9 +685,7 @@ public class DeclarationTest extends FrontendCompileTester {
           module("""
               MyFunc() = "abc";
               """)
-              .loadsWithError(
-                  1,
-                  "`MyFunc` is illegal identifier name. Identifiers should start with lowercase.");
+              .loadsWithError(1, identifierWithUppercaseFirstCharacterError("MyFunc"));
         }
 
         @Test
@@ -676,7 +694,7 @@ public class DeclarationTest extends FrontendCompileTester {
               A() = "abc";
               """)
               .loadsWithError(
-                  1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
+                  1, "`A` is illegal identifier name. It must start with lowercase letter.");
         }
 
         @Test
@@ -685,6 +703,14 @@ public class DeclarationTest extends FrontendCompileTester {
               _() = "abc";
               """)
               .loadsWithError(1, "`_` is illegal identifier name. `_` is reserved for future use.");
+        }
+
+        @Test
+        void that_is_full_name_fails() {
+          var code = """
+              my:func() = "abc";
+              """;
+          module(code).loadsWithError(1, identifierNameWithIllegalCharacterError("my:func", ":"));
         }
       }
 
@@ -751,9 +777,7 @@ public class DeclarationTest extends FrontendCompileTester {
             module("""
                 Int myFunc(Int Name) = 7;
                 """)
-                .loadsWithError(
-                    1,
-                    "`Name` is illegal identifier name. Identifiers should start with lowercase.");
+                .loadsWithError(1, identifierWithUppercaseFirstCharacterError("Name"));
           }
 
           @Test
@@ -761,8 +785,7 @@ public class DeclarationTest extends FrontendCompileTester {
             module("""
                 Int myFunc(Int A) = 7;
                 """)
-                .loadsWithError(
-                    1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
+                .loadsWithError(1, identifierWithUppercaseFirstCharacterError("A"));
           }
 
           @Test
@@ -772,6 +795,15 @@ public class DeclarationTest extends FrontendCompileTester {
                 """)
                 .loadsWithError(
                     1, "`_` is illegal identifier name. `_` is reserved for future use.");
+          }
+
+          @Test
+          void that_is_full_name_fails() {
+            var code = """
+                Int myFunc(Int my:param) = 7;
+              """;
+            module(code)
+                .loadsWithError(1, identifierNameWithIllegalCharacterError("my:param", ":"));
           }
         }
 
@@ -1700,5 +1732,29 @@ public class DeclarationTest extends FrontendCompileTester {
               """
           .replace("PLACEHOLDER", string);
     }
+  }
+
+  private static String identifierNameWithIllegalCharacterError(String name, String character) {
+    return "`"
+        + name
+        + "` is illegal identifier name. It must not contain '"
+        + character
+        + "' character.";
+  }
+
+  private static String structNameWithIllegalCharacterError(String name, String character) {
+    return "`"
+        + name
+        + "` is illegal struct name. It must not contain '"
+        + character
+        + "' character.";
+  }
+
+  private static String identifierWithUppercaseFirstCharacterError(String name) {
+    return "`" + name + "` is illegal identifier name. It must start with lowercase letter.";
+  }
+
+  private static String structWithLowercaseFirstCharacterError(String name) {
+    return "`" + name + "` is illegal struct name. It must start with uppercase letter.";
   }
 }

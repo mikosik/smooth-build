@@ -1,16 +1,25 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.arrayTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectIdentifierNameErrors;
+import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectStructNameErrors;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.funcTypeName;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isLowerCase;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isUpperCase;
 import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isVarName;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.startsWithLowerCase;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.startsWithUpperCase;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class STypeNamesTest extends FrontendCompilerTestContext {
@@ -42,60 +51,44 @@ public class STypeNamesTest extends FrontendCompilerTestContext {
     assertThat(isLowerCase('_')).isFalse();
   }
 
-  @Nested
-  class _starts_with_upper_case {
-    @Test
-    void lower_case() {
-      assertThat(startsWithUpperCase("abc")).isFalse();
-    }
-
-    @Test
-    void upper_case() {
-      assertThat(startsWithUpperCase("Abc")).isTrue();
-    }
-
-    @Test
-    void empty_string_does_not_start_with_uppercase() {
-      assertThat(startsWithUpperCase("")).isFalse();
-    }
-
-    @Test
-    void digit() {
-      assertThat(startsWithUpperCase("3")).isFalse();
-    }
-
-    @Test
-    void underscore() {
-      assertThat(startsWithLowerCase("_")).isFalse();
-    }
+  @ParameterizedTest
+  @MethodSource
+  void detect_struct_name_errors(String name, Maybe<String> expected) {
+    assertThat(detectStructNameErrors(name)).isEqualTo(expected);
   }
 
-  @Nested
-  class _starts_with_lower_case {
-    @Test
-    void lower_case() {
-      assertThat(startsWithLowerCase("abc")).isTrue();
-    }
+  static List<Arguments> detect_struct_name_errors() {
+    return list(
+        arguments("Abc", none()),
+        arguments("A3", none()),
+        arguments("abc", some("It must start with uppercase letter.")),
+        arguments("aBC", some("It must start with uppercase letter.")),
+        arguments("ABC", some("All-uppercase names are reserved for type variables.")),
+        arguments("", some("It must not be empty string.")),
+        arguments("_", some("`_` is reserved for future use.")),
+        arguments("3", some("It must start with uppercase letter.")),
+        arguments("My:Struct", some("It must not contain ':' character.")),
+        arguments("My^Struct", some("It must not contain '^' character.")));
+  }
 
-    @Test
-    void upper_case() {
-      assertThat(startsWithLowerCase("Abc")).isFalse();
-    }
+  @ParameterizedTest
+  @MethodSource
+  void detect_identifier_name_errors(String name, Maybe<String> expected) {
+    assertThat(detectIdentifierNameErrors(name)).isEqualTo(expected);
+  }
 
-    @Test
-    void empty_string_does_not_start_with_lowercase() {
-      assertThat(startsWithLowerCase("")).isFalse();
-    }
-
-    @Test
-    void digit() {
-      assertThat(startsWithLowerCase("3")).isFalse();
-    }
-
-    @Test
-    void underscore() {
-      assertThat(startsWithLowerCase("_")).isFalse();
-    }
+  static List<Arguments> detect_identifier_name_errors() {
+    return list(
+        arguments("abc", none()),
+        arguments("aBC", none()),
+        arguments("a3", none()),
+        arguments("Abc", some("It must start with lowercase letter.")),
+        arguments("ABC", some("It must start with lowercase letter.")),
+        arguments("", some("It must not be empty string.")),
+        arguments("_", some("`_` is reserved for future use.")),
+        arguments("3", some("It must start with lowercase letter.")),
+        arguments("my:identifier", some("It must not contain ':' character.")),
+        arguments("my^identifier", some("It must not contain '^' character.")));
   }
 
   @Nested
