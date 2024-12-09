@@ -784,12 +784,16 @@ public class DeclarationTest extends FrontendCompileTester {
                 String default = "value",
                 String nonDefault);
               """;
+          var value = sValue(3, "myFunc:default", sString(3, "value"));
           var myFuncParams = nlist(
-              sItem(3, sStringType(), "default", sValue(3, "myFunc:default", sString(3, "value"))),
+              sItem(3, sStringType(), "default", "myFunc:default"),
               sItem(4, sStringType(), "nonDefault"));
           var ann = sNativeAnnotation(1, sString(1, "Impl.met"));
           var myFunc = sAnnotatedFunc(2, ann, sStringType(), "myFunc", myFuncParams);
-          module(code).loadsWithSuccess().containsEvaluable(myFunc);
+
+          var api = module(code).loadsWithSuccess();
+          api.containsEvaluable(myFunc);
+          api.containsEvaluable(value);
         }
 
         @Test

@@ -15,15 +15,15 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * This class is immutable.
  */
 public final class SItem extends Tanal implements SReferenceable {
-  private final Maybe<SNamedValue> defaultValue;
+  private final Maybe<String> defaultValueFullName;
 
-  public SItem(SType type, String name, Maybe<SNamedValue> defaultValue, Location location) {
+  public SItem(SType type, String name, Maybe<String> defaultValueFullName, Location location) {
     super(type, name, location);
-    this.defaultValue = defaultValue;
+    this.defaultValueFullName = defaultValueFullName;
   }
 
-  public Maybe<SNamedValue> defaultValue() {
-    return defaultValue;
+  public Maybe<String> defaultValueFullName() {
+    return defaultValueFullName;
   }
 
   public static List<SType> toTypes(List<? extends SItem> items) {
@@ -35,7 +35,7 @@ public final class SItem extends Tanal implements SReferenceable {
     var fields = list(
             "type = " + type().name(),
             "name = " + name(),
-            "defaultValue = " + defaultValue,
+            "defaultValueFullName = " + defaultValueFullName,
             "location = " + location())
         .toString("\n");
     return "SItem(\n" + indent(fields) + "\n)";
@@ -49,12 +49,12 @@ public final class SItem extends Tanal implements SReferenceable {
     return (o instanceof SItem that)
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.defaultValue, that.defaultValue)
+        && Objects.equals(this.defaultValueFullName, that.defaultValueFullName)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), defaultValue, location());
+    return Objects.hash(type(), name(), defaultValueFullName, location());
   }
 }

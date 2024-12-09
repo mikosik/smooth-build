@@ -3,7 +3,6 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 
@@ -32,11 +31,11 @@ public class SFuncTest extends FrontendCompilerTestContext {
   }
 
   private SItem paramWithDefault(String name) {
-    return sItem(sIntType(), name, some(sString()));
+    return sItem(sIntType(), name, "func:param");
   }
 
   private SItem paramWithoutDefault(String name) {
-    return sItem(sIntType(), name, none());
+    return sItem(1, sIntType(), name, none());
   }
 
   private SFunc myFunc(SType resultT, List<SItem> params) {

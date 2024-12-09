@@ -13,7 +13,10 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
   @Test
   void missing_call_argument_is_filled_with_reference_to_default_argument() {
-    var myFuncS = sFunc("myFunc", nlist(sItem("param", sInt(7))), sParamRef(sIntType(), "param"));
+    var myFuncS = sFunc(
+        "myFunc",
+        nlist(sItem(sIntType(), "param", "myFunc:param")),
+        sParamRef(sIntType(), "param"));
     var importedS = new SScope(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
     var callP = pCall(pReference("myFunc"), callLocation);
@@ -28,16 +31,17 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
   @Test
   void
       missing_call_argument_in_call_within_default_body_is_filled_with_reference_to_default_argument() {
-    var myFuncS = sFunc("myFunc", nlist(sItem("param", sInt(7))), sParamRef(sIntType(), "param"));
-    var importedS = new SScope(immutableBindings(), bindings(myFuncS));
+    var sImported = new SScope(immutableBindings(), bindings());
     var callLocation = location(9);
-    var callP = pCall(pReference("myFunc"), callLocation);
-    var namedValueP = pNamedFunc("value", nlist(pItem("p", callP)));
-    var moduleP = pModule(list(), list(namedValueP));
+    var pCall = pCall(pReference("myFunc"), callLocation);
+    var pValue = pNamedValue("result", pCall);
+    var pDefaultValue = pNamedValue("myFunc:param", pInt());
+    var pNamedFunc = pNamedFunc("myFunc", nlist(pItem("p", "myFunc:param")));
+    var pModule = pModule(list(), list(pDefaultValue, pNamedFunc, pValue));
 
-    callInjectDefaultArguments(importedS, moduleP);
+    callInjectDefaultArguments(sImported, pModule);
 
-    assertThat(callP.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
+    assertThat(pCall.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
 
   private static void callInjectDefaultArguments(SScope sImported, PModule pModule) {

@@ -22,6 +22,7 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
@@ -57,10 +58,10 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   private static TopologicalSortingRes<String, PNamedEvaluable, Location> sortEvaluablesByDeps(
       List<PNamedEvaluable> evaluables) {
     HashSet<String> names = new HashSet<>();
-    evaluables.forEach(r -> names.add(r.name()));
+    evaluables.forEach(e -> names.add(e.name()));
 
     HashSet<GraphNode<String, PNamedEvaluable, Location>> nodes = new HashSet<>();
-    nodes.addAll(evaluables.map(r -> evaluable(r, names)));
+    nodes.addAll(evaluables.map(e -> evaluable(e, names)));
     return sortTopologically(nodes);
   }
 
@@ -74,6 +75,14 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
         if (names.contains(pReference.referencedName())) {
           deps.add(new GraphEdge<>(pReference.location(), pReference.referencedName()));
         }
+      }
+
+      @Override
+      public void visitItem(PItem pItem) {
+        super.visitItem(pItem);
+        pItem.defaultValueFullName().ifPresent(fullName -> {
+          deps.add(new GraphEdge<>(pItem.location(), fullName));
+        });
       }
     }.visitNamedEvaluable(evaluable);
     return new GraphNode<>(evaluable.name(), evaluable, listOfAll(deps));

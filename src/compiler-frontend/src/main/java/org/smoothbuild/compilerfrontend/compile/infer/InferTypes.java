@@ -106,7 +106,6 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     @Override
     public void visitNamedFunc(PNamedFunc namedFunc) throws TypeException {
-      namedFunc.params().list().withEach(p -> p.defaultValue().ifPresent(this::visitNamedValue));
       var unifier = new Unifier();
       unifyFunc(unifier, typeTeller, namedFunc);
       convertFlexibleVarsToRigid(unifier, namedFunc);
@@ -120,20 +119,20 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
         var index = i;
-        param.defaultValue().ifPresent(defaultValue -> {
+        param.defaultValueFullName().ifPresent(defaultValueFullName -> {
           var funcSchema = namedFunc.sSchema();
           var unifier = new Unifier();
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
               replaceVarsWithFlexible(funcSchema.quantifiedVars(), resolvedParamType, unifier);
-          var sSchema = defaultValue.sSchema();
+          var sSchema = typeTeller.schemaFor(defaultValueFullName);
           var defaultValueType = replaceQuantifiedVarsWithFlexible(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
           } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(param.q(), resolvedParamType.q(), sSchema.type().q());
-            throw new TypeException(compileError(defaultValue.location(), message), e);
+            throw new TypeException(compileError(param.location(), message), e);
           }
         });
       }

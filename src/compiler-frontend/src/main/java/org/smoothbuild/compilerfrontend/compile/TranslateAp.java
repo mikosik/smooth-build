@@ -198,21 +198,19 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
       var location = fileLocation(fullPath, nameNode);
-      var defaultValue = createDefaultValue(ownerName, itemName, item, location);
-      return new PItem(type, itemName, defaultValue, location);
+      var defaultValueFullName = createDefaultValue(ownerName, itemName, item, location);
+      return new PItem(type, itemName, defaultValueFullName, location);
     }
 
-    private Maybe<PNamedValue> createDefaultValue(
+    private Maybe<String> createDefaultValue(
         String ownerName, String itemName, ItemContext item, Location location) {
-      return createExprSane(item.expr())
-          .map(e -> namedValueForDefaultArgument(ownerName, itemName, e, location));
-    }
-
-    private PNamedValue namedValueForDefaultArgument(
-        String ownerName, String itemName, PExpr body, Location location) {
-      var name = ownerName + ":" + itemName;
-      var type = new PImplicitType(location);
-      return new PNamedValue(type, name, itemName, some(body), none(), location);
+      return createExprSane(item.expr()).map(e -> {
+        var type = new PImplicitType(location);
+        var fullName = ownerName + ":" + itemName;
+        var pNamedValue = new PNamedValue(type, fullName, itemName, some(e), none(), location);
+        evaluables.add(pNamedValue);
+        return fullName;
+      });
     }
 
     private Maybe<PExpr> createPipeSane(PipeContext pipe) {

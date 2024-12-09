@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
@@ -30,7 +31,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
-import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
@@ -151,10 +151,11 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < result.size(); i++) {
         if (result.get(i) == null) {
           var param = params.get(i);
-          if (param.hasDefaultValue()) {
-            var name = STypeNames.fullName(nameOfReferencedCallee(pCall), param.name());
+          var defaultValueFullName = param.defaultValueFullName();
+          if (defaultValueFullName.isSome()) {
+            var fullName = defaultValueFullName.get();
             var location = pCall.location();
-            var element = new PInstantiate(new PReference(name, location), location);
+            var element = new PInstantiate(new PReference(fullName, location), location);
             result.set(i, element);
           } else {
             error = true;
@@ -163,10 +164,6 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
         }
       }
       return error ? null : listOfAll(result);
-    }
-
-    private static String nameOfReferencedCallee(PCall pCall) {
-      return ((PReference) ((PInstantiate) pCall.callee()).polymorphic()).referencedName();
     }
 
     private static List<Log> findPositionalArgAfterNamedArgError(PCall pCall) {
@@ -219,13 +216,13 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
   }
 
-  private static record Param(String name, boolean hasDefaultValue) {
+  private static record Param(String name, Maybe<String> defaultValueFullName) {
     public Param(SItem param) {
-      this(param.name(), param.defaultValue().isSome());
+      this(param.name(), param.defaultValueFullName());
     }
 
     public Param(PItem param) {
-      this(param.name(), param.defaultValue().isSome());
+      this(param.name(), param.defaultValueFullName());
     }
   }
 }

@@ -44,7 +44,7 @@ public class SItemTest extends FrontendCompilerTestContext {
             SItem(
               type = String
               name = name
-              defaultValue = None
+              defaultValueFullName = None
               location = {t-project}/module.smooth:11
             )""");
   }
