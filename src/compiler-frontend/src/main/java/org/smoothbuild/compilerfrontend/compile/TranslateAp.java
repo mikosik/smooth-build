@@ -148,7 +148,10 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var type = createTypeSane(namedFunc.type(), location);
       var name = nameNode.getText();
       var fullName = createFullName(name);
-      var body = createPipeSane(namedFunc.pipe());
+
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var body = visitor.createPipeSane(namedFunc.pipe());
+
       var annotation = createNativeSane(namedFunc.annotation());
       var params = createItems(name, namedFunc.itemList());
       evaluables.add(new PNamedFunc(type, fullName, name, params, body, annotation, location));
@@ -162,9 +165,13 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       visitChildren(namedValue);
       var type = createTypeSane(namedValue.type(), location);
       var name = nameNode.getText();
-      var expr = createPipeSane(namedValue.pipe());
+      var fullName = createFullName(name);
+
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var expr = visitor.createPipeSane(namedValue.pipe());
+
       var annotation = createNativeSane(namedValue.annotation());
-      evaluables.add(new PNamedValue(type, createFullName(name), name, expr, annotation, location));
+      evaluables.add(new PNamedValue(type, fullName, name, expr, annotation, location));
       return null;
     }
 
@@ -315,9 +322,10 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PInstantiate createLambda(LambdaContext lambdaFunc) {
-      var fullName = createFullName("^" + (++lambdaCount));
+      var fullName = createFullName("$lambda" + (++lambdaCount));
       var params = createItems(fullName, lambdaFunc.itemList());
-      var body = createExpr(lambdaFunc.expr());
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
       var lambdaFuncP = new PLambda(fullName, params, body, location);
       return new PInstantiate(lambdaFuncP, location);
@@ -385,7 +393,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private String createFullName(String shortName) {
-      return STypeNames.fullName(scopeName, shortName);
+      return scopeName == null ? shortName : STypeNames.fullName(scopeName, shortName);
     }
 
     private RuntimeException newRuntimeException(Class<?> clazz) {

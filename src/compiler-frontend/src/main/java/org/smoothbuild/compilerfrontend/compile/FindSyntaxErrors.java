@@ -3,6 +3,8 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectIdentifierNameErrors;
+import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectStructNameErrors;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
@@ -16,7 +18,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
 
 /**
@@ -43,37 +44,20 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
       @Override
       public void visitNameOf(PReferenceable pReferenceable) {
         var name = pReferenceable.shortName();
-        if (name.equals("_")) {
-          logger.log(compileError(
-              pReferenceable.location(),
-              "`" + name + "` is illegal identifier name. `_` is reserved for future use."));
-        } else if (!STypeNames.startsWithLowerCase(name)) {
-          logger.log(compileError(
-              pReferenceable.location(),
-              "`" + name
-                  + "` is illegal identifier name. Identifiers should start with lowercase."));
-        }
+        detectIdentifierNameErrors(name).ifPresent(error -> {
+          var message = "`" + name + "` is illegal identifier name. " + error;
+          logger.log(compileError(pReferenceable.location(), message));
+        });
       }
 
       @Override
       public void visitStruct(PStruct pStruct) {
         super.visitStruct(pStruct);
         var name = pStruct.name();
-        if (name.equals("_")) {
-          logger.log(compileError(
-              pStruct.location(),
-              "`" + name + "` is illegal struct name. " + "`_` is reserved for future use."));
-        } else if (STypeNames.isVarName(name)) {
-          logger.log(compileError(
-              pStruct.location(),
-              "`" + name + "` is illegal struct name."
-                  + " All-uppercase names are reserved for type variables in generic types."));
-        } else if (!STypeNames.startsWithUpperCase(name)) {
-          logger.log(compileError(
-              pStruct.location(),
-              "`" + name + "` is illegal struct name."
-                  + " Struct name must start with uppercase letter."));
-        }
+        detectStructNameErrors(name).ifPresent(error -> {
+          var message = "`" + name + "` is illegal struct name. " + error;
+          logger.log(compileError(pStruct.location(), message));
+        });
       }
     }.visitModule(pModule);
   }

@@ -268,7 +268,7 @@ public class EvaluateTest extends EvaluatorTestContext {
       @Nested
       class _default_value {
         @Nested
-        class _in_def_func {
+        class _in_expr_func {
           @Test
           void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
             createUserModule(
@@ -408,6 +408,18 @@ public class EvaluateTest extends EvaluatorTestContext {
             assertThat(artifact()).isEqualTo(bString("abc"));
           }
         }
+      }
+
+      @Test
+      void can_be_evaluated_by_referencing_it() throws Exception {
+        var code =
+            """
+            Int myFunc(Int param = 7) = param;
+            result = myFunc:param;
+            """;
+        createUserModule(code);
+        evaluate("result");
+        assertThat(artifact()).isEqualTo(bInt(7));
       }
     }
   }

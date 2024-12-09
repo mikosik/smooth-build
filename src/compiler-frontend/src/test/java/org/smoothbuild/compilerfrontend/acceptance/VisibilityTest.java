@@ -131,22 +131,6 @@ public class VisibilityTest extends FrontendCompileTester {
     @Nested
     class _param {
       @Nested
-      class default_value {
-        @Test
-        void is_not_visible_outside_function_body_via_function_name_prefixed_reference() {
-          // Despite internally CallsPreprocessor creates references to parameter default values
-          // that are further in processing handled correctly, for now it is not available
-          // in the language to simplify it.
-          var code =
-              """
-              myFunc(Int param = 7) = 8;
-              myResult = myFunc:param;
-              """;
-          module(code).loadsWithProblems();
-        }
-      }
-
-      @Nested
       class _of_named_function {
         @Test
         void is_visible_in_its_body() {
@@ -154,16 +138,6 @@ public class VisibilityTest extends FrontendCompileTester {
               myFunc(String param) = param;
               """;
           module(code).loadsWithSuccess();
-        }
-
-        @Test
-        void is_not_visible_outside_its_body() {
-          var code =
-              """
-              myFunc(String param) = "abc";
-              result = param;
-              """;
-          module(code).loadsWithError(2, "`param` is undefined.");
         }
 
         @Test
@@ -176,6 +150,17 @@ public class VisibilityTest extends FrontendCompileTester {
         void is_not_visible_in_default_value_of_other_param() {
           var code = "func(String param, String withDefault = param) = param;";
           module(code).loadsWithError(1, "`param` is undefined.");
+        }
+
+        @Test
+        void can_have_default_value_that_is_visible_outside_func() {
+          var code =
+              """
+              myFunc(Int param = 7) = 8;
+              result = myFunc:param;
+              """;
+          var ref = sInstantiate(sReference(2, sSchema(sIntType()), "myFunc:param"), location(2));
+          module(code).loadsWithSuccess().containsEvaluable(sValue(2, "result", ref));
         }
       }
 

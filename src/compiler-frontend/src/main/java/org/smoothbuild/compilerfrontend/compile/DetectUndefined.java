@@ -47,7 +47,7 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
     }
 
     @Override
-    protected PModuleVisitor createVisitorForScopeOf(PScoped pScoped) {
+    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
       return new Detector(imported, pScoped.scope(), log);
     }
 

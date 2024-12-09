@@ -1,9 +1,12 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
@@ -18,12 +21,49 @@ public class STypeNames {
     return !name.isEmpty() && name.chars().allMatch(STypeNames::isUpperCase);
   }
 
-  public static boolean startsWithLowerCase(String name) {
-    return !name.isEmpty() && isLowerCase(name.charAt(0));
+  public static Maybe<String> detectIdentifierNameErrors(String name) {
+    if (name.isEmpty()) {
+      return some("It must not be empty string.");
+    }
+    if (name.equals("_")) {
+      return some("`_` is reserved for future use.");
+    }
+    if (!isLowerCase(name.charAt(0))) {
+      return some("It must start with lowercase letter.");
+    }
+    for (int i = 0; i < name.length(); i++) {
+      var c = name.charAt(i);
+      if (!isValidIdentifierNameCharacter(c)) {
+        return some("It must not contain '" + c + "' character.");
+      }
+    }
+    return none();
   }
 
-  public static boolean startsWithUpperCase(String name) {
-    return !name.isEmpty() && isUpperCase(name.charAt(0));
+  private static boolean isValidIdentifierNameCharacter(char c) {
+    return isLowerCase(c) || isUpperCase(c) || isDigit(c) || c == '_';
+  }
+
+  public static Maybe<String> detectStructNameErrors(String name) {
+    if (name.isEmpty()) {
+      return some("It must not be empty string.");
+    }
+    if (name.equals("_")) {
+      return some("`_` is reserved for future use.");
+    }
+    if (!isUpperCase(name.charAt(0))) {
+      return some("It must start with uppercase letter.");
+    }
+    if (isVarName(name)) {
+      return some("All-uppercase names are reserved for type variables.");
+    }
+    for (int i = 0; i < name.length(); i++) {
+      var c = name.charAt(i);
+      if (!isValidIdentifierNameCharacter(c)) {
+        return some("It must not contain '" + c + "' character.");
+      }
+    }
+    return none();
   }
 
   public static boolean isLowerCase(int character) {
@@ -32,6 +72,10 @@ public class STypeNames {
 
   public static boolean isUpperCase(int character) {
     return 'A' <= character && character <= 'Z';
+  }
+
+  public static boolean isDigit(int character) {
+    return '0' <= character && character <= '9';
   }
 
   public static String arrayTypeName(SType elemT) {
@@ -54,11 +98,7 @@ public class STypeNames {
     return elemTs.map(SType::name).toString(",");
   }
 
-  public static String fullName(String scopeName, String shortName) {
-    if (scopeName == null) {
-      return shortName;
-    } else {
-      return scopeName + ":" + shortName;
-    }
+  public static String fullName(String ownerName, String shortName) {
+    return ownerName + ":" + shortName;
   }
 }
