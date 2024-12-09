@@ -80,9 +80,9 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     var apTranslatingVisitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
     apTranslatingVisitor.visit(moduleContext);
     var name = fullPath.withExtension("").path().lastPart().toString();
-    var moduleP = new PModule(name, listOfAll(structs), listOfAll(evaluables));
+    var pModule = new PModule(name, listOfAll(structs), listOfAll(evaluables));
     var label = COMPILER_FRONT_LABEL.append(":simplifyParseTree");
-    return output(moduleP, label, logger.toList());
+    return output(pModule, label, logger.toList());
   }
 
   private static String unquote(String quotedString) {
