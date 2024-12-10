@@ -13,7 +13,6 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.schedule.Task2;
-import org.smoothbuild.compilerfrontend.compile.ConvertPs;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
 import org.smoothbuild.compilerfrontend.compile.DetectUndefined;
 import org.smoothbuild.compilerfrontend.compile.FindSyntaxErrors;
@@ -24,6 +23,7 @@ import org.smoothbuild.compilerfrontend.compile.Parse;
 import org.smoothbuild.compilerfrontend.compile.ReadFileContent;
 import org.smoothbuild.compilerfrontend.compile.SortModuleMembersByDependency;
 import org.smoothbuild.compilerfrontend.compile.TranslateAp;
+import org.smoothbuild.compilerfrontend.compile.TranslatePs;
 import org.smoothbuild.compilerfrontend.compile.infer.InferTypes;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
@@ -69,7 +69,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
           scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, importedScope);
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = scheduler.submit(InferTypes.class, sorted, importedScope);
-      var sModule = scheduler.submit(ConvertPs.class, typesInferred, importedScope);
+      var sModule = scheduler.submit(TranslatePs.class, typesInferred, importedScope);
       var report = report(COMPILER_FRONT_LABEL.append(":schedule:module"), list());
       return schedulingOutput(sModule, report);
     }
