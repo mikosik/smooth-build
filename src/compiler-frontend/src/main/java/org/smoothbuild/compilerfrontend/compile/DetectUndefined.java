@@ -24,7 +24,7 @@ import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 /**
- * Detect undefined referencables and types.
+ * Detect undefined referenceables and types.
  */
 public class DetectUndefined implements Task2<PModule, SScope, PModule> {
   @Override
