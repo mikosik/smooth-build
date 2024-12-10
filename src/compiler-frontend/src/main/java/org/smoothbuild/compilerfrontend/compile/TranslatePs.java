@@ -63,7 +63,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 
-public class ConvertPs implements Task2<PModule, SScope, SModule> {
+public class TranslatePs implements Task2<PModule, SScope, SModule> {
   @Override
   public Output<SModule> execute(PModule pModule, SScope imported) {
     var typeTeller = new TypeTeller(imported, pModule.scope());
