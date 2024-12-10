@@ -3,13 +3,16 @@ package org.smoothbuild.common.collect;
 import static java.util.Objects.requireNonNull;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import org.smoothbuild.common.collect.Either.Left;
 import org.smoothbuild.common.collect.Either.Right;
+import org.smoothbuild.common.collect.Result.Error;
+import org.smoothbuild.common.collect.Result.Ok;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 
-public sealed interface Either<L, R> permits Left, Right {
+public sealed interface Either<L, R> permits Left, Right, Result {
   public static <L, R> Right<L, R> right(R right) {
     return new Right<>(right);
   }
@@ -44,7 +47,13 @@ public sealed interface Either<L, R> permits Left, Right {
   public <S, T extends Throwable> Either<S, R> flatMapLeft(Function1<L, Either<S, R>, T> mapper)
       throws T;
 
-  public record Right<L, R>(R right) implements Either<L, R> {
+  public static sealed class Right<L, R> implements Either<L, R> permits Ok {
+    private final R right;
+
+    public Right(R right) {
+      this.right = right;
+    }
+
     @Override
     public L left() {
       throw new NoSuchElementException();
@@ -105,9 +114,37 @@ public sealed interface Either<L, R> permits Left, Right {
       var cast = (Right<S, R>) this;
       return cast;
     }
+
+    @Override
+    public R right() {
+      return right;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return obj != null
+          && obj.getClass() == this.getClass()
+          && Objects.equals(this.right, ((Right) obj).right);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(right);
+    }
+
+    @Override
+    public String toString() {
+      return "Right[" + "right=" + right + ']';
+    }
   }
 
-  public record Left<L, R>(L left) implements Either<L, R> {
+  public static sealed class Left<L, R> implements Either<L, R> permits Error {
+    private final L left;
+
+    public Left(L left) {
+      this.left = left;
+    }
+
     @Override
     public R right() {
       throw new NoSuchElementException();
@@ -168,6 +205,28 @@ public sealed interface Either<L, R> permits Left, Right {
     public <S, T extends Throwable> Either<S, R> flatMapLeft(Function1<L, Either<S, R>, T> mapper)
         throws T {
       return requireNonNull(mapper.apply(left));
+    }
+
+    @Override
+    public L left() {
+      return left;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return obj != null
+          && obj.getClass() == this.getClass()
+          && Objects.equals(this.left, ((Left) obj).left);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(left);
+    }
+
+    @Override
+    public String toString() {
+      return "Left[" + "left=" + left + ']';
     }
   }
 }
