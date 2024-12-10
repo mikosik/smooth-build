@@ -134,8 +134,10 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     @Override
     public Void visitStruct(StructContext struct) {
       var name = struct.NAME().getText();
+      var fullName = createFullName(name);
       var location = fileLocation(fullPath, struct.NAME().getSymbol());
-      var fields = createItems(name, struct.itemList());
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var fields = visitor.createItems(struct.itemList());
       structs.add(new PStruct(name, fields, location));
       return null;
     }
@@ -152,7 +154,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var body = visitor.createPipeSane(namedFunc.pipe());
 
       var annotation = createNativeSane(namedFunc.annotation());
-      var params = createItems(name, namedFunc.itemList());
+      var params = visitor.createItems(namedFunc.itemList());
       evaluables.add(new PNamedFunc(type, fullName, name, params, body, annotation, location));
       return null;
     }
@@ -185,33 +187,32 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       }
     }
 
-    private NList<PItem> createItems(String ownerName, ItemListContext itemList) {
-      return nlistWithShadowing(createItemsList(ownerName, itemList));
+    private NList<PItem> createItems(ItemListContext itemList) {
+      return nlistWithShadowing(createItemsList(itemList));
     }
 
-    private List<PItem> createItemsList(String ownerName, ItemListContext itemList) {
+    private List<PItem> createItemsList(ItemListContext itemList) {
       if (itemList != null) {
         var items = itemList.item();
         List<ItemContext> saneItems = items == null ? list() : listOfAll(items);
-        return saneItems.map(i -> createItem(ownerName, i));
+        return saneItems.map(this::createItem);
       }
       return list();
     }
 
-    private PItem createItem(String ownerName, ItemContext item) {
+    private PItem createItem(ItemContext item) {
       var type = createType(item.type());
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
       var location = fileLocation(fullPath, nameNode);
-      var defaultValueFullName = createDefaultValue(ownerName, itemName, item, location);
+      var defaultValueFullName = createDefaultValue(itemName, item, location);
       return new PItem(type, itemName, defaultValueFullName, location);
     }
 
-    private Maybe<String> createDefaultValue(
-        String ownerName, String itemName, ItemContext item, Location location) {
+    private Maybe<String> createDefaultValue(String itemName, ItemContext item, Location location) {
       return createExprSane(item.expr()).map(e -> {
         var type = new PImplicitType(location);
-        var fullName = ownerName + ":" + itemName;
+        var fullName = createFullName(itemName);
         var pNamedValue = new PNamedValue(type, fullName, itemName, some(e), none(), location);
         evaluables.add(pNamedValue);
         return fullName;
@@ -321,8 +322,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
 
     private PInstantiate createLambda(LambdaContext lambdaFunc) {
       var fullName = createFullName("$lambda" + (++lambdaCount));
-      var params = createItems(fullName, lambdaFunc.itemList());
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var params = visitor.createItems(lambdaFunc.itemList());
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
       var lambdaFuncP = new PLambda(fullName, params, body, location);
