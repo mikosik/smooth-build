@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast;
 
-import java.util.List;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
@@ -45,7 +45,7 @@ public class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitStructSignature(PStruct pStruct) throws T {
-    visitItems(pStruct.fields());
+    visitItems(pStruct.fields().list());
   }
 
   public void visitNamedEvaluables(List<PNamedEvaluable> pNamedEvaluables) throws T {
@@ -84,7 +84,7 @@ public class PModuleVisitor<T extends Throwable> {
   public void visitNamedFuncSignature(PNamedFunc pNamedFunc) throws T {
     pNamedFunc.annotation().ifPresent(this::visitAnnotation);
     visitType(pNamedFunc.resultT());
-    visitItems(pNamedFunc.params());
+    visitItems(pNamedFunc.params().list());
     visitNameOf(pNamedFunc);
   }
 
@@ -133,7 +133,7 @@ public class PModuleVisitor<T extends Throwable> {
 
   public void visitLambdaSignature(PLambda pLambda) throws T {
     visitType(pLambda.resultT());
-    visitItems(pLambda.params());
+    visitItems(pLambda.params().list());
   }
 
   public void visitArgs(List<PExpr> args) throws T {
