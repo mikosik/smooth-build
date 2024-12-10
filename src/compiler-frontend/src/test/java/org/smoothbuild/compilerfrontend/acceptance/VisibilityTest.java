@@ -623,6 +623,22 @@ public class VisibilityTest extends FrontendCompileTester {
       }
 
       @Test
+      void param_default_value_to_value_to_func_that_owns_that_param() {
+        var code =
+            """
+            myFunc(Int param = myValue) = 5;
+            myValue = myFunc(3);
+            """;
+        var error =
+            """
+            Reference graph contains cycle:
+            {t-project}/module.smooth:1: myFunc:param ~> myValue
+            {t-project}/module.smooth:2: myValue ~> myFunc
+            {t-project}/module.smooth:1: myFunc ~> myFunc:param""";
+        module(code).loadsWithError(error);
+      }
+
+      @Test
       void struct_struct_struct_through_array() {
         var code =
             """
