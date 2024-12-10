@@ -267,8 +267,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PExpr createChainHead(AtomicReference<PExpr> pipedArg, ChainHeadContext chainHead) {
       var location = fileLocation(fullPath, chainHead);
       if (chainHead.NAME() != null) {
-        var referenceP = new PReference(chainHead.NAME().getText(), location);
-        return new PInstantiate(referenceP, location);
+        var pReference = new PReference(chainHead.NAME().getText(), location);
+        return new PInstantiate(pReference, location);
       }
       if (chainHead.array() != null) {
         var elems = listOfAll(chainHead.array().expr()).map(this::createExpr);
