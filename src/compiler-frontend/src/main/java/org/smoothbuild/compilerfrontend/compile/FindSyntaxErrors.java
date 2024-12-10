@@ -3,8 +3,8 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectIdentifierNameErrors;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectStructNameErrors;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.detectIdentifierNameErrors;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.detectStructNameErrors;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;

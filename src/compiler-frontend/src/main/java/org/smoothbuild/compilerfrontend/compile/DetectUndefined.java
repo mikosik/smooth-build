@@ -4,6 +4,7 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
 
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.base.Logger;
@@ -20,7 +21,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 /**
@@ -81,7 +81,7 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
     }
 
     private boolean isKnownTypeName(String name) {
-      return STypeNames.isVarName(name)
+      return isTypeVarName(name)
           || scope.types().contains(name)
           || imported.types().contains(name);
     }
