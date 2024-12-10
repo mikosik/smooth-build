@@ -72,6 +72,6 @@ public final class PModule implements PScoped {
             indent(evaluables().toString("\n")),
             "]")
         .toString("\n");
-    return "ModuleP(\n" + indent(fields) + "\n)";
+    return "PModule(\n" + indent(fields) + "\n)";
   }
 }

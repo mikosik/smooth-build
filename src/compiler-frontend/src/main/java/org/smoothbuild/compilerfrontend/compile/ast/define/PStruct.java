@@ -73,6 +73,6 @@ public final class PStruct extends NalImpl implements PScoped {
   public String toString() {
     var fields = list("name = " + name(), "fields = " + this.fields, "location = " + location())
         .toString("\n");
-    return "StructP(\n" + indent(fields) + "\n)";
+    return "PStruct(\n" + indent(fields) + "\n)";
   }
 }

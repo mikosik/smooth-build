@@ -118,7 +118,7 @@ public class PModuleVisitor<T extends Throwable> {
       case PBlob pBlob -> visitBlob(pBlob);
       case PCall pCall -> visitCall(pCall);
       case PInt pInt -> visitInt(pInt);
-      case PInstantiate pInstantiate -> visitInstantiateP(pInstantiate);
+      case PInstantiate pInstantiate -> visitInstantiate(pInstantiate);
       case PNamedArg pNamedArg -> visitNamedArg(pNamedArg);
       case POrder pOrder -> visitOrder(pOrder);
       case PSelect pSelect -> visitSelect(pSelect);
@@ -162,7 +162,7 @@ public class PModuleVisitor<T extends Throwable> {
     }
   }
 
-  public void visitInstantiateP(PInstantiate pInstantiate) throws T {
+  public void visitInstantiate(PInstantiate pInstantiate) throws T {
     visitPolymorphicP(pInstantiate.polymorphic());
   }
 

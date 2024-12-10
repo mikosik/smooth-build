@@ -49,6 +49,6 @@ public final class PNamedArg extends PExpr {
   public String toString() {
     var fields =
         list("name = " + name, "expr = " + expr, "location = " + location()).toString("\n");
-    return "NamedArgP(\n" + indent(fields) + "\n)";
+    return "PNamedArg(\n" + indent(fields) + "\n)";
   }
 }

@@ -35,10 +35,10 @@ public final class PCall extends PExpr {
    * matches position of parameter to which that arg is assigned.
    * Size of list is equal to callee parameter list size.
    * While {@link #args()} holds arguments expressions as they
-   * were ordered in source code where NamedArgP represents
+   * were ordered in source code where PNamedArg represents
    * explicit parameter name assignment, this method has argument
    * list that has been processed two ways:
-   * 1. All NamedArgP are replaced by #{@link PNamedArg#expr()}
+   * 1. All PNamedArg are replaced by #{@link PNamedArg#expr()}
    * and placed at position denoted by #{@link PNamedArg#name()}.
    * 2. Missing args are replaced with RefP pointing
    * to that parameter default value.
@@ -67,6 +67,6 @@ public final class PCall extends PExpr {
   public String toString() {
     var fields =
         list("callee = " + callee, "args = " + args, "location = " + location()).toString("\n");
-    return "CallP(\n" + indent(fields) + "\n)";
+    return "PCall(\n" + indent(fields) + "\n)";
   }
 }

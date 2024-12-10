@@ -73,6 +73,6 @@ public final class PItem extends NalImpl implements PReferenceable {
             "defaultValueFullName = " + defaultValueFullName,
             "location = " + location())
         .toString("\n");
-    return "ItemP(\n" + indent(fields) + "\n)";
+    return "PItem(\n" + indent(fields) + "\n)";
   }
 }
