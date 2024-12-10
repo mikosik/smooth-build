@@ -38,6 +38,6 @@ public final class POrder extends PExpr {
   @Override
   public String toString() {
     var fields = list("elems = " + elements, "location = " + location()).toString("\n");
-    return "OrderP(\n" + indent(fields) + "\n)";
+    return "POrder(\n" + indent(fields) + "\n)";
   }
 }

@@ -51,6 +51,6 @@ public final class PInstantiate extends PExpr {
   public String toString() {
     var fields =
         list("polymorphic = " + polymorphic, "location = " + location()).toString("\n");
-    return "InstantiateP(\n" + indent(fields) + "\n)";
+    return "PInstantiate(\n" + indent(fields) + "\n)";
   }
 }

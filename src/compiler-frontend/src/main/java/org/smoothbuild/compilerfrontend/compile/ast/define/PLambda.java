@@ -113,6 +113,6 @@ public final class PLambda extends PPolymorphic implements PFunc {
             "body = " + body,
             "location = " + location())
         .toString("\n");
-    return "LambdaP(\n" + indent(fields) + "\n)";
+    return "PLambda(\n" + indent(fields) + "\n)";
   }
 }

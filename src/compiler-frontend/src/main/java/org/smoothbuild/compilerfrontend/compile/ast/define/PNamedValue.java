@@ -79,6 +79,6 @@ public final class PNamedValue extends PNamedEvaluable {
             "annotation = " + annotation(),
             "location = " + location())
         .toString("\n");
-    return "NamedValueP(\n" + indent(fields) + "\n)";
+    return "PNamedValue(\n" + indent(fields) + "\n)";
   }
 }

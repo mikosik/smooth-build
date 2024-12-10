@@ -122,7 +122,7 @@ public class ConvertPs implements Task2<PModule, SScope, SModule> {
         var body = convertExpr(pNamedValue.body().get());
         return new SNamedExprValue(schema, name, body, location);
       } else {
-        throw new RuntimeException("Internal error: NamedValueP without annotation and body.");
+        throw new RuntimeException("Internal error: PNamedValue without annotation and body.");
       }
     }
 

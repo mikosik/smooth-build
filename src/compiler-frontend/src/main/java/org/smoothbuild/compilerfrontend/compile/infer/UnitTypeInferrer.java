@@ -27,7 +27,7 @@ public class UnitTypeInferrer extends PModuleVisitor<RuntimeException> {
   }
 
   @Override
-  public void visitInstantiateP(PInstantiate pInstantiate) {
+  public void visitInstantiate(PInstantiate pInstantiate) {
     for (var typeArg : pInstantiate.typeArgs()) {
       for (var var : unifier.resolve(typeArg).vars()) {
         if (var.isFlexibleVar()) {

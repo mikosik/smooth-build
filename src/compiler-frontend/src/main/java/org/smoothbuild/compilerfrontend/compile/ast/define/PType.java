@@ -24,6 +24,6 @@ public abstract sealed class PType extends NalImpl permits PExplicitType, PImpli
   @Override
   public String toString() {
     var fields = list("name = " + name(), "location = " + location()).toString("\n");
-    return "TypeP(\n" + indent(fields) + "\n)";
+    return "PType(\n" + indent(fields) + "\n)";
   }
 }

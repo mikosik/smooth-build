@@ -39,6 +39,6 @@ public final class PAnnotation extends NalImpl {
   public String toString() {
     var fields =
         list("name = " + name(), "value = " + value, "location = " + location()).toString("\n");
-    return "AnnotationP(\n" + indent(fields) + "\n)";
+    return "PAnnotation(\n" + indent(fields) + "\n)";
   }
 }

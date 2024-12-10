@@ -47,6 +47,6 @@ public final class PReference extends PPolymorphic {
   @Override
   public String toString() {
     var fields = list("name = " + referencedName, "location = " + location()).toString("\n");
-    return "ReferenceP(\n" + indent(fields) + "\n)";
+    return "PReference(\n" + indent(fields) + "\n)";
   }
 }

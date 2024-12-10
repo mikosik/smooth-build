@@ -44,6 +44,6 @@ public final class PSelect extends PExpr {
   public String toString() {
     var fields = list("selectable = " + selectable, "field = " + field, "location = " + location())
         .toString("\n");
-    return "SelectP(\n" + indent(fields) + "\n)";
+    return "PSelect(\n" + indent(fields) + "\n)";
   }
 }
