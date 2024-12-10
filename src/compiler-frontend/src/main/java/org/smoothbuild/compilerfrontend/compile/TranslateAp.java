@@ -144,7 +144,6 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     public Void visitNamedFunc(NamedFuncContext namedFunc) {
       var nameNode = namedFunc.NAME();
       var location = fileLocation(fullPath, nameNode);
-      visitChildren(namedFunc);
       var type = createTypeSane(namedFunc.type(), location);
       var name = nameNode.getText();
       var fullName = createFullName(name);
@@ -162,7 +161,6 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     public Void visitNamedValue(NamedValueContext namedValue) {
       var nameNode = namedValue.NAME();
       var location = fileLocation(fullPath, nameNode);
-      visitChildren(namedValue);
       var type = createTypeSane(namedValue.type(), location);
       var name = nameNode.getText();
       var fullName = createFullName(name);
