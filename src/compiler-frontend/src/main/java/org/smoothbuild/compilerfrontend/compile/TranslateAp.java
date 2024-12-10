@@ -10,6 +10,7 @@ import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.fullName;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -69,7 +70,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 
 public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
   @Override
@@ -391,7 +391,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private String createFullName(String shortName) {
-      return scopeName == null ? shortName : STypeNames.fullName(scopeName, shortName);
+      return scopeName == null ? shortName : fullName(scopeName, shortName);
     }
 
     private RuntimeException newRuntimeException(Class<?> clazz) {

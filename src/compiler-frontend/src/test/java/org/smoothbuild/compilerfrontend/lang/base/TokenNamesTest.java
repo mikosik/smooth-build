@@ -5,13 +5,13 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.arrayTypeName;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectIdentifierNameErrors;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.detectStructNameErrors;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.funcTypeName;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isLowerCase;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isUpperCase;
-import static org.smoothbuild.compilerfrontend.lang.base.STypeNames.isVarName;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.arrayTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.detectIdentifierNameErrors;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.detectStructNameErrors;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.funcTypeName;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isLowerCase;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isUpperCase;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class STypeNamesTest extends FrontendCompilerTestContext {
+public class TokenNamesTest extends FrontendCompilerTestContext {
   @Test
   void is_upper_case() {
     for (char i = 'A'; i <= 'Z'; i++) {
@@ -92,65 +92,65 @@ public class STypeNamesTest extends FrontendCompilerTestContext {
   }
 
   @Nested
-  class _var_name {
+  class _type_variable_name {
     @Test
     void uppercase_A_character_is_type_var_name() {
-      assertThat(isVarName("A")).isTrue();
+      assertThat(isTypeVarName("A")).isTrue();
     }
 
     @Test
     void lowercase_a_character_is_not_type_var_name() {
-      assertThat(isVarName("a")).isFalse();
+      assertThat(isTypeVarName("a")).isFalse();
     }
 
     @Test
     void uppercase_AA_character_is_type_var_name() {
-      assertThat(isVarName("AA")).isTrue();
+      assertThat(isTypeVarName("AA")).isTrue();
     }
 
     @Test
     void mixed_case_Aa_character_is_not_type_var_name() {
-      assertThat(isVarName("Aa")).isFalse();
+      assertThat(isTypeVarName("Aa")).isFalse();
     }
 
     @Test
     void uppercase_B_character_is_type_var_name() {
-      assertThat(isVarName("B")).isTrue();
+      assertThat(isTypeVarName("B")).isTrue();
     }
 
     @Test
     void lowercase_b_character_is_not_type_var_name() {
-      assertThat(isVarName("b")).isFalse();
+      assertThat(isTypeVarName("b")).isFalse();
     }
 
     @Test
     void empty_string_is_not_type_var_name() {
-      assertThat(isVarName("")).isFalse();
+      assertThat(isTypeVarName("")).isFalse();
     }
 
     @Test
     void underscore_character_is_not_type_var_name() {
-      assertThat(isVarName("_")).isFalse();
+      assertThat(isTypeVarName("_")).isFalse();
     }
 
     @Test
     void uppercase_A_with_underscore_character_is_not_type_var_name() {
-      assertThat(isVarName("A_")).isFalse();
+      assertThat(isTypeVarName("A_")).isFalse();
     }
 
     @Test
     void whitespace_string_is_not_type_var_name() {
-      assertThat(isVarName(" ")).isFalse();
+      assertThat(isTypeVarName(" ")).isFalse();
     }
 
     @Test
     void longer_string_starting_with_lowercase_is_not_type_var_name() {
-      assertThat(isVarName("alphabet")).isFalse();
+      assertThat(isTypeVarName("alphabet")).isFalse();
     }
 
     @Test
     void longer_string_starting_with_uppercase_is_not_type_var_name() {
-      assertThat(isVarName("Alphabet")).isFalse();
+      assertThat(isTypeVarName("Alphabet")).isFalse();
     }
   }
 

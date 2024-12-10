@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
@@ -11,7 +12,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -44,7 +44,7 @@ public class TypeTeller {
   }
 
   public SType translate(PType type) {
-    if (STypeNames.isVarName(type.name())) {
+    if (isTypeVarName(type.name())) {
       return new SVar(type.name());
     }
     return switch (type) {

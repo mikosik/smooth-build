@@ -1,8 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
-
-import org.smoothbuild.compilerfrontend.lang.base.STypeNames;
+import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.arrayTypeName;
 
 /**
  * This class is immutable.
@@ -11,7 +10,7 @@ public final class SArrayType extends SType {
   private final SType elem;
 
   public SArrayType(SType elem) {
-    super(STypeNames.arrayTypeName(elem), elem.vars());
+    super(arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
   }
 
