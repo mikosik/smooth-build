@@ -9,6 +9,7 @@ import static org.smoothbuild.common.collect.Either.left;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -86,6 +87,11 @@ public class EitherTest {
             throw exception;
           }))
           .throwsException(exception);
+    }
+
+    @Test
+    void rightOrThrow_returns_right() {
+      assertThat(right("a").rightOrThrow(r -> new RuntimeException("bug"))).isEqualTo("a");
     }
 
     @Test
@@ -219,6 +225,12 @@ public class EitherTest {
     @Test
     void leftOrGet_returns_left() {
       assertThat(left("a").leftOrGet(() -> "b")).isEqualTo("a");
+    }
+
+    @Test
+    void rightOrThrow_throws_exception() {
+      assertCall(() -> left("message").rightOrThrow(IOException::new))
+          .throwsException(new IOException("message"));
     }
 
     @Test
