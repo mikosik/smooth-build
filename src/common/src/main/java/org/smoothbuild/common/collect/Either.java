@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.Function;
 import org.smoothbuild.common.collect.Either.Left;
 import org.smoothbuild.common.collect.Either.Right;
 import org.smoothbuild.common.collect.Result.Error;
@@ -36,6 +37,8 @@ public sealed interface Either<L, R> permits Left, Right, Result {
   public <T extends Throwable> R rightOrGet(Function0<R, T> supplier) throws T;
 
   public <T extends Throwable> L leftOrGet(Function0<L, T> supplier) throws T;
+
+  public <E extends Throwable> R rightOrThrow(Function<L, E> supplier) throws E;
 
   public <S, T extends Throwable> Either<L, S> mapRight(Function1<R, S, T> mapper) throws T;
 
@@ -88,6 +91,11 @@ public sealed interface Either<L, R> permits Left, Right, Result {
     @Override
     public <T extends Throwable> L leftOrGet(Function0<L, T> supplier) throws T {
       return supplier.apply();
+    }
+
+    @Override
+    public <E extends Throwable> R rightOrThrow(Function<L, E> supplier) throws E {
+      return right;
     }
 
     @Override
@@ -179,6 +187,11 @@ public sealed interface Either<L, R> permits Left, Right, Result {
     @Override
     public <T extends Throwable> L leftOrGet(Function0<L, T> supplier) {
       return left;
+    }
+
+    @Override
+    public <E extends Throwable> R rightOrThrow(Function<L, E> supplier) throws E {
+      throw supplier.apply(left);
     }
 
     @Override
