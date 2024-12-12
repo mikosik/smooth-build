@@ -4,11 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
 import com.google.inject.AbstractModule;

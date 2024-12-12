@@ -1,6 +1,5 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
-import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.log.location.Located;
 
 /**

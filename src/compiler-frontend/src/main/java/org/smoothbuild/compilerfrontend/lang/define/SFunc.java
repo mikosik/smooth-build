@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
-import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 
 /**

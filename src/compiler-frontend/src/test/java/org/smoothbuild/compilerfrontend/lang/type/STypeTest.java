@@ -3,8 +3,8 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.NList;
+import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 

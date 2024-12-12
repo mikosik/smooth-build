@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

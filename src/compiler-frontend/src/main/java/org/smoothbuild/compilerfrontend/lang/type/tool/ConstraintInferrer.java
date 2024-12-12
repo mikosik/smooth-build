@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import static org.smoothbuild.common.collect.Map.mapOfAll;
-import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

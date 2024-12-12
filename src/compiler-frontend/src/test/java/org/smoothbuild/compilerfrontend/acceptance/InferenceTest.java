@@ -2,9 +2,9 @@ package org.smoothbuild.compilerfrontend.acceptance;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.arrayTypeMessage;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 
 import org.junit.jupiter.api.Nested;
