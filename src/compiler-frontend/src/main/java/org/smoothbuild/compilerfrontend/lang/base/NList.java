@@ -1,4 +1,4 @@
-package org.smoothbuild.common.collect;
+package org.smoothbuild.compilerfrontend.lang.base;
 
 import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -17,6 +17,8 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
 
 /**

@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;

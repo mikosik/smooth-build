@@ -1,4 +1,4 @@
-package org.smoothbuild.common.collect;
+package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.base.Strings;
 

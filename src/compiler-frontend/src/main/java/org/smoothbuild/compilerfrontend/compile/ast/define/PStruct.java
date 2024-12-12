@@ -2,12 +2,12 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
 
 import java.util.List;
 import java.util.Objects;
-import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
