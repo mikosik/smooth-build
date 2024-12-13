@@ -170,7 +170,7 @@ public sealed interface Either<L, R> permits Left, Right, Result {
 
     @Override
     public <T extends Throwable> Either<L, R> ifRight(Consumer1<R, T> consumer) {
-      return null;
+      return this;
     }
 
     @Override
