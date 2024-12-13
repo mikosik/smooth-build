@@ -26,14 +26,14 @@ import org.smoothbuild.common.function.Function1;
  *
  * This class is thread-safe.
  */
-public class NList<E extends Named> extends AbstractList<E> {
+public class NList<E extends Identifiable> extends AbstractList<E> {
   private static final NList<?> EMPTY = nlist(List.list());
 
   private final Supplier<List<E>> list;
-  private final Supplier<Map<String, E>> map;
-  private final Supplier<Map<String, Integer>> indexMap;
+  private final Supplier<Map<Id, E>> map;
+  private final Supplier<Map<Id, Integer>> indexMap;
 
-  public static <E extends Named> NList<E> nlist() {
+  public static <E extends Identifiable> NList<E> nlist() {
     // cast is safe as EMPTY is empty
     @SuppressWarnings("unchecked")
     NList<E> result = (NList<E>) EMPTY;
@@ -41,61 +41,58 @@ public class NList<E extends Named> extends AbstractList<E> {
   }
 
   @SafeVarargs
-  public static <E extends Named> NList<E> nlist(E... elems) {
+  public static <E extends Identifiable> NList<E> nlist(E... elems) {
     return nlist(List.list(elems));
   }
 
-  public static <E extends Named> NList<E> nlist(Collection<E> elements) {
+  public static <E extends Identifiable> NList<E> nlist(Collection<E> elements) {
     checkContainsNoDuplicatedNames(elements);
     return new NList<>(
         () -> listOfAll(elements), () -> calculateMap(elements), () -> calculateIndexMap(elements));
   }
 
-  private static <E extends Named> void checkContainsNoDuplicatedNames(
+  private static <E extends Identifiable> void checkContainsNoDuplicatedNames(
       Collection<? extends E> list) {
-    HashSet<String> names = new HashSet<>();
+    HashSet<Id> ids = new HashSet<>();
     for (E elem : list) {
-      String name = elem.name();
-      if (names.contains(name)) {
+      var name = elem.id();
+      if (ids.contains(name)) {
         throw new IllegalArgumentException(
             "List contains two elements with same name = \"" + name + "\".");
       } else {
-        names.add(name);
+        ids.add(name);
       }
     }
   }
 
-  public static <E extends Named> NList<E> nlist(Map<String, E> map) {
+  public static <E extends Identifiable> NList<E> nlist(Map<Id, E> map) {
     return new NList<>(
         () -> listOfAll(map.values()), () -> map, () -> calculateIndexMap(map.values()));
   }
 
   /**
-   * Creates nlist which allows elements with duplicated names. When {@link #get(String)}
+   * Creates nlist which allows elements with duplicated names. When {@link #get(Id)}
    * is called and more than one element has given name then the first one is returned.
    */
-  public static <E extends Named> NList<E> nlistWithShadowing(Collection<E> list) {
+  public static <E extends Identifiable> NList<E> nlistWithShadowing(Collection<E> list) {
     return new NList<>(
         () -> listOfAll(list), () -> calculateMap(list), () -> calculateIndexMap(list));
   }
 
   // visible for testing
-  NList(
-      Supplier<List<E>> list,
-      Supplier<Map<String, E>> map,
-      Supplier<Map<String, Integer>> indexMap) {
+  NList(Supplier<List<E>> list, Supplier<Map<Id, E>> map, Supplier<Map<Id, Integer>> indexMap) {
     this.list = memoize(list);
     this.map = memoize(map);
     this.indexMap = memoize(indexMap);
   }
 
-  private static <E extends Named> Map<String, Integer> calculateIndexMap(Iterable<E> nameds) {
-    HashMap<String, Integer> builder = new HashMap<>();
-    var names = new HashSet<String>();
+  private static <E extends Identifiable> Map<Id, Integer> calculateIndexMap(Iterable<E> nameds) {
+    HashMap<Id, Integer> builder = new HashMap<>();
+    var names = new HashSet<Id>();
     int i = 0;
     for (E named : nameds) {
       int index = i;
-      var name = named.name();
+      var name = named.id();
       if (!names.contains(name)) {
         builder.put(name, index);
         names.add(name);
@@ -105,11 +102,11 @@ public class NList<E extends Named> extends AbstractList<E> {
     return mapOfAll(builder);
   }
 
-  private static <E extends Named> Map<String, E> calculateMap(Iterable<E> nameds) {
-    HashMap<String, E> builder = new HashMap<>();
-    var names = new HashSet<String>();
+  private static <E extends Identifiable> Map<Id, E> calculateMap(Iterable<E> nameds) {
+    HashMap<Id, E> builder = new HashMap<>();
+    var names = new HashSet<Id>();
     for (E named : nameds) {
-      var name = named.name();
+      var name = named.id();
       if (!names.contains(name)) {
         builder.put(name, named);
         names.add(name);
@@ -118,21 +115,22 @@ public class NList<E extends Named> extends AbstractList<E> {
     return mapOfAll(builder);
   }
 
-  public <F extends Named, T extends Throwable> NList<F> map(Function1<E, F, T> mapping) throws T {
+  public <F extends Identifiable, T extends Throwable> NList<F> map(Function1<E, F, T> mapping)
+      throws T {
     return nlist(list().map(mapping));
   }
 
-  public Integer indexOf(String name) {
-    Map<String, Integer> stringIntegerImmutableMap = indexMap.get();
-    return stringIntegerImmutableMap.get(name);
+  public Integer indexOf(Id id) {
+    Map<Id, Integer> stringIntegerImmutableMap = indexMap.get();
+    return stringIntegerImmutableMap.get(id);
   }
 
-  public E get(String name) {
-    return map().get(name);
+  public E get(Id id) {
+    return map().get(id);
   }
 
-  public boolean containsName(String name) {
-    return map().containsKey(name);
+  public boolean containsName(Id id) {
+    return map().containsKey(id);
   }
 
   @Override
@@ -222,7 +220,7 @@ public class NList<E extends Named> extends AbstractList<E> {
     return list.get();
   }
 
-  public Map<String, E> map() {
+  public Map<Id, E> map() {
     return map.get();
   }
 }

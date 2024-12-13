@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.error;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseIdentifierDeclaration;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseReference;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseStructDeclaration;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.parseIdentifierDeclaration;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.parseReference;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.parseStructDeclaration;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +16,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 
-public class NameTest {
+public class IdTest {
   @Nested
   class _parse_identifier_declaration {
     @ParameterizedTest
@@ -181,8 +181,8 @@ public class NameTest {
 
   @Test
   void to_string() {
-    assertThat(parseIdentifierDeclaration("abc").right().toString()).isEqualTo("`abc`");
-    assertThat(parseStructDeclaration("Struct").right().toString()).isEqualTo("`Struct`");
-    assertThat(parseReference("name:abc").right().toString()).isEqualTo("`name:abc`");
+    assertThat(parseIdentifierDeclaration("abc").right().toString()).isEqualTo("abc");
+    assertThat(parseStructDeclaration("Struct").right().toString()).isEqualTo("Struct");
+    assertThat(parseReference("name:abc").right().toString()).isEqualTo("name:abc");
   }
 }

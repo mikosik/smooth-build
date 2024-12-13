@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.testing;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class TestedTSF {
   public static final TestedTS INT = new TestedTS(CONTEXT.sIntType());
   public static final TestedTS STRING = new TestedTS(CONTEXT.sStringType());
   public static final TestedTS STRUCT = new TestedTS(
-      CONTEXT.sStructType("Person", nlist(itemSigS(CONTEXT.sStringType(), "name"))),
+      CONTEXT.sStructType("Person", nlist(CONTEXT.sSig(CONTEXT.sStringType(), "name"))),
       Set.of("Person{String name}"),
       Set.of("Person{String name}"));
   public static final List<TestedTS> TESTED_TYPES = list(
@@ -123,7 +123,7 @@ public class TestedTSF {
   private static List<SItemSig> toSigs(List<TestedTS> paramTestedTs) {
     var builder = new ArrayList<SItemSig>();
     for (int i = 0; i < paramTestedTs.size(); i++) {
-      builder.add(new SItemSig(paramTestedTs.get(i).type(), "p" + i));
+      builder.add(new SItemSig(paramTestedTs.get(i).type(), id("p" + i)));
     }
     return listOfAll(builder);
   }

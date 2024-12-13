@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import java.util.Map;
 import java.util.Objects;
@@ -14,20 +15,12 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class SType
-    permits SArrayType,
-        SBlobType,
-        SBoolType,
-        SFieldSetType,
-        SFuncType,
-        SIntType,
-        SStringType,
-        STupleType,
-        SVar {
+    permits SBaseType, SArrayType, SFuncType, SInterfaceType, STupleType, SVar {
   private final SVarSet vars;
   private final String name;
 
   protected SType(String name) {
-    this(name, SVarSet.varSetS());
+    this(name, varSetS());
   }
 
   protected SType(String name, SVarSet vars) {
@@ -59,7 +52,7 @@ public abstract sealed class SType
   private static void forEachFlexibleVar(SType sType, Consumer<SVar> consumer) {
     switch (sType) {
       case SArrayType sArrayType -> forEachFlexibleVar(sArrayType.elem(), consumer);
-      case SFieldSetType sFieldSetType -> sFieldSetType
+      case SInterfaceType sFieldSetType -> sFieldSetType
           .fieldSet()
           .values()
           .forEach(f -> forEachFlexibleVar(f.type(), consumer));
@@ -94,8 +87,8 @@ public abstract sealed class SType
       return switch (this) {
         case SArrayType a -> mapVarsInArray(a, map);
         case SFuncType f -> mapVarsInFunc(f, map);
-        case SInterfaceType i -> mapVarsInInterface(i, map);
         case SStructType s -> mapVarsInStruct(s, map);
+        case SInterfaceType i -> mapVarsInInterface(i, map);
         case STupleType t -> mapVarsInTuple(t, map);
         case SVar v -> map.apply(v);
         default -> this;
@@ -124,11 +117,11 @@ public abstract sealed class SType
   private static SStructType mapVarsInStruct(
       SStructType sStructType, Function<? super SVar, SType> map) {
     var fields = sStructType.fields().map(f -> mapItemSigComponents(f, map));
-    return new SStructType(sStructType.name(), fields);
+    return new SStructType(sStructType.id(), fields);
   }
 
   private static SItemSig mapItemSigComponents(SItemSig f, Function<? super SVar, SType> map) {
-    return new SItemSig(f.type().mapVars(map), f.name());
+    return new SItemSig(f.type().mapVars(map), f.id());
   }
 
   private static STupleType mapVarsInTuple(

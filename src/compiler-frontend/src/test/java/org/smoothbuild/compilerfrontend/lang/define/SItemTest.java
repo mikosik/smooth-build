@@ -3,17 +3,19 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemTest extends FrontendCompilerTestContext {
-  private final String name = "name";
+  private final Id id = id("name");
   private SItem param;
 
   @Test
   void null_type_is_forbidden() {
-    assertCall(() -> new SItem(null, name, none(), location()))
+    assertCall(() -> new SItem(null, id, none(), location()))
         .throwsException(NullPointerException.class);
   }
 
@@ -25,26 +27,26 @@ public class SItemTest extends FrontendCompilerTestContext {
 
   @Test
   void type_getter() {
-    param = new SItem(sStringType(), name, none(), location());
+    param = new SItem(sStringType(), id, none(), location());
     assertThat(param.type()).isEqualTo(sStringType());
   }
 
   @Test
   void name_getter() {
-    param = new SItem(sStringType(), name, none(), location());
-    assertThat(param.name()).isEqualTo(name);
+    param = new SItem(sStringType(), id, none(), location());
+    assertThat(param.id()).isEqualTo(id);
   }
 
   @Test
   void to_string() {
-    param = new SItem(sStringType(), name, none(), location());
+    param = new SItem(sStringType(), id, none(), location());
     assertThat(param.toString())
         .isEqualTo(
             """
             SItem(
               type = String
               name = name
-              defaultValueFullName = None
+              defaultValueId = None
               location = {t-project}/module.smooth:11
             )""");
   }

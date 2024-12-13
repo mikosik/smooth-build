@@ -12,6 +12,7 @@ import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
+import org.smoothbuild.compilerfrontend.lang.type.SBaseType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 
@@ -27,7 +28,7 @@ public class LoadInternalModuleMembers implements Task0<SModule> {
     return output(sModule, report(label, logger.toList()));
   }
 
-  private static STypeDefinition baseTypeDefinitions(SType sBaseType) {
-    return new STypeDefinition(sBaseType, Locations.internalLocation());
+  private static STypeDefinition baseTypeDefinitions(SBaseType sBaseType) {
+    return new STypeDefinition(sBaseType.id(), sBaseType, Locations.internalLocation());
   }
 }

@@ -5,28 +5,33 @@ import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 
 public final class PModule implements PScoped {
-  private final String name;
+  private final String fileName;
   private final List<PStruct> structs;
   private final List<PNamedEvaluable> evaluables;
   private PScope scope;
 
-  public PModule(String name, List<PStruct> structs, List<PNamedEvaluable> evaluables) {
-    this(name, structs, evaluables, null);
+  public PModule(String fileName, List<PStruct> structs, List<PNamedEvaluable> evaluables) {
+    this(fileName, structs, evaluables, null);
   }
 
   public PModule(
-      String name, List<PStruct> structs, List<PNamedEvaluable> evaluables, PScope scope) {
-    this.name = name;
+      String fileName, List<PStruct> structs, List<PNamedEvaluable> evaluables, PScope scope) {
+    this.fileName = fileName;
     this.structs = structs;
     this.evaluables = evaluables;
     this.scope = scope;
   }
 
+  public String fileName() {
+    return fileName;
+  }
+
   @Override
-  public String name() {
-    return name;
+  public Id id() {
+    return null;
   }
 
   public List<PNamedEvaluable> evaluables() {

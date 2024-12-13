@@ -584,7 +584,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
                 0x07)
                 = "abc";
             """;
-        var value = sValue(2, "myFunc:param1", sBlob(3, 7));
+        var value = sValue(3, "myFunc:param1", sBlob(3, 7));
         var params = nlist(sItem(2, sBlobType(), "param1", "myFunc:param1"));
         var myFunc = sFunc(1, sStringType(), "myFunc", params, sString(4, "abc"));
         var api = module(code).loadsWithSuccess();
@@ -601,7 +601,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
                 7)
                 = a;
             """;
-        var value = sValue(2, "myFunc:a", sInt(3, 7));
+        var value = sValue(3, "myFunc:a", sInt(3, 7));
         var params = nlist(sItem(2, varA(), "a", "myFunc:a"));
         var myFunc = sFunc(1, varA(), "myFunc", params, sParamRef(4, varA(), "a"));
         var api = module(code).loadsWithSuccess();
@@ -671,7 +671,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
               Blob p1 =
                 0x07);
             """;
-        var value = sValue(3, "myFunc:p1", sBlob(4, 7));
+        var value = sValue(4, "myFunc:p1", sBlob(4, 7));
         var params = nlist(sItem(3, sBlobType(), "p1", "myFunc:p1"));
         var ann = sNativeAnnotation(1, sString(1, "Impl.met"), true);
         var myFunc = sAnnotatedFunc(2, ann, sStringType(), "myFunc", params);
@@ -689,7 +689,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
               Blob p1 =
                 0x07);
             """;
-        var value = sValue(3, "myFunc:p1", sBlob(4, 7));
+        var value = sValue(4, "myFunc:p1", sBlob(4, 7));
         var params = nlist(sItem(3, sBlobType(), "p1", "myFunc:p1"));
         var ann = sNativeAnnotation(1, sString(1, "Impl.met"), true);
         var myFunc = sAnnotatedFunc(2, ann, varA(), "myFunc", params);
@@ -727,7 +727,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
               Blob param1 =
                 0x07);
             """;
-        var value = sValue(3, "myFunc:param1", sBlob(4, 7));
+        var value = sValue(4, "myFunc:param1", sBlob(4, 7));
         var params = nlist(sItem(3, sBlobType(), "param1", "myFunc:param1"));
         var myFunc = sBytecodeFunc(2, "Impl.met", sStringType(), "myFunc", params);
         var api = module(code).loadsWithSuccess();
@@ -744,7 +744,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
               Blob param1 =
                 0x07);
             """;
-        var value = sValue(3, "myFunc:param1", sBlob(4, 7));
+        var value = sValue(4, "myFunc:param1", sBlob(4, 7));
         var params = nlist(sItem(3, sBlobType(), "param1", "myFunc:param1"));
         var myFunc = sBytecodeFunc(2, "Impl.met", varA(), "myFunc", params);
         var api = module(code).loadsWithSuccess();
@@ -790,7 +790,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             [A] empty = [];
             """;
         var empty = sValue(5, "empty", sOrder(5, varA()));
-        var value = sValue(2, "myFunc:param1", sInstantiate(3, list(varA()), empty));
+        var value = sValue(3, "myFunc:param1", sInstantiate(3, list(varA()), empty));
         var params = nlist(sItem(2, sIntArrayT(), "param1", "myFunc:param1"));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         var api = module(code).loadsWithSuccess();
@@ -809,7 +809,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             [A] empty = [];
             """;
         var empty = sValue(5, "empty", sOrder(5, varA()));
-        var defaultValue = sValue(2, "myFunc:param1", sInstantiate(3, list(varA()), empty));
+        var defaultValue = sValue(3, "myFunc:param1", sInstantiate(3, list(varA()), empty));
         var params = nlist(sItem(2, sVarBArrayT(), "param1", some("myFunc:param1")));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         var api = module(code).loadsWithSuccess();
@@ -826,7 +826,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
                 11)
                 = 7;
             """;
-        var value = sValue(2, "myFunc:param1", sInt(3, 11));
+        var value = sValue(3, "myFunc:param1", sInt(3, 11));
         var params = nlist(sItem(2, sIntType(), "param1", "myFunc:param1"));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         var api = module(code).loadsWithSuccess();

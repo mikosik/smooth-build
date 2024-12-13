@@ -15,15 +15,13 @@ public final class PLambda extends PPolymorphic implements PFunc {
   private final PImplicitType resultT;
   private final NList<PItem> params;
   private final PExpr body;
-  private final String name;
   private SFuncType typeS;
   private SFuncSchema sSchema;
   private PScope scope;
 
-  public PLambda(String name, NList<PItem> params, PExpr body, Location location) {
-    super(location);
+  public PLambda(String nameText, NList<PItem> params, PExpr body, Location location) {
+    super(nameText, location);
     this.resultT = new PImplicitType(location);
-    this.name = name;
     this.params = params;
     this.body = body;
   }
@@ -31,11 +29,6 @@ public final class PLambda extends PPolymorphic implements PFunc {
   @Override
   public PType resultT() {
     return resultT;
-  }
-
-  @Override
-  public String name() {
-    return name;
   }
 
   @Override
@@ -106,7 +99,7 @@ public final class PLambda extends PPolymorphic implements PFunc {
   @Override
   public String toString() {
     var fields = list(
-            "name = " + name,
+            "name = " + nameText(),
             "params = [",
             indent(params().list().toString("\n")),
             "]",

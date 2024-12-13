@@ -4,6 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
@@ -13,8 +14,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public final class SNamedExprValue extends SNamedValue {
   private final SExpr body;
 
-  public SNamedExprValue(SSchema schema, String name, SExpr body, Location location) {
-    super(schema, name, location);
+  public SNamedExprValue(SSchema schema, Id id, SExpr body, Location location) {
+    super(schema, id, location);
     this.body = body;
   }
 
@@ -29,14 +30,14 @@ public final class SNamedExprValue extends SNamedValue {
     }
     return object instanceof SNamedExprValue that
         && this.schema().equals(that.schema())
-        && this.name().equals(that.name())
+        && this.id().equals(that.id())
         && this.body().equals(that.body())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), name(), body(), location());
+    return Objects.hash(schema(), id(), body(), location());
   }
 
   @Override

@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
   void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
     var funcTS = sFuncSchema(params, sStringType());
-    var func = new SAnnotatedFunc(sNativeAnnotation(), funcTS, "myFunc", params, location(1));
+    var func = new SAnnotatedFunc(sNativeAnnotation(), funcTS, id("myFunc"), params, location(1));
     assertThat(func.toString())
         .isEqualTo(
             """
@@ -26,7 +27,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
                 SItem(
                   type = Int
                   name = myParam
-                  defaultValueFullName = None
+                  defaultValueId = None
                   location = {t-project}/module.smooth:1
                 )
               ]

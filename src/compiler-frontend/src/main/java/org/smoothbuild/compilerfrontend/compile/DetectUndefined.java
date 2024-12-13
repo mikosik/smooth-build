@@ -6,7 +6,6 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
 
-import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
@@ -53,9 +52,10 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
 
     @Override
     public void visitReference(PReference pReference) {
-      var name = pReference.referencedName();
-      if (!(imported.evaluables().contains(name) || scope.referencables().contains(name))) {
-        log.log(compileError(pReference, Strings.q(name) + " is undefined."));
+      var name = pReference.id();
+      if (!(imported.evaluables().contains(name.full())
+          || scope.referencables().contains(name.full()))) {
+        log.log(compileError(pReference, name.q() + " is undefined."));
       }
     }
 
@@ -70,7 +70,7 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
     }
 
     private void visitExplicitType(PExplicitType pExplicitType) {
-      if (!isKnownTypeName(pExplicitType.name())) {
+      if (!isKnownTypeName(pExplicitType.nameText())) {
         log.log(compileError(pExplicitType.location(), pExplicitType.q() + " type is undefined."));
       }
     }

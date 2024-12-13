@@ -1,11 +1,11 @@
 package org.smoothbuild.compilerfrontend.compile;
 
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.detectIdentifierNameErrors;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.detectStructNameErrors;
 
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
@@ -16,7 +16,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.type.AnnotationNames;
 
@@ -31,35 +30,11 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    detectIllegalNames(pModule, logger);
     detectIllegalAnnotations(pModule, logger);
     detectStructFieldWithDefaultValue(pModule, logger);
     detectLambdaParamWithDefaultValue(pModule, logger);
     var label = COMPILER_FRONT_LABEL.append(":findSyntaxErrors");
     return output(pModule, label, logger.toList());
-  }
-
-  private static void detectIllegalNames(PModule pModule, Logger logger) {
-    new PModuleVisitor<RuntimeException>() {
-      @Override
-      public void visitNameOf(PReferenceable pReferenceable) {
-        var name = pReferenceable.shortName();
-        detectIdentifierNameErrors(name).ifPresent(error -> {
-          var message = "`" + name + "` is illegal identifier name. " + error;
-          logger.log(compileError(pReferenceable.location(), message));
-        });
-      }
-
-      @Override
-      public void visitStruct(PStruct pStruct) {
-        super.visitStruct(pStruct);
-        var name = pStruct.name();
-        detectStructNameErrors(name).ifPresent(error -> {
-          var message = "`" + name + "` is illegal struct name. " + error;
-          logger.log(compileError(pStruct.location(), message));
-        });
-      }
-    }.visitModule(pModule);
   }
 
   private static void detectIllegalAnnotations(PModule pModule, Logger logger) {
@@ -69,7 +44,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
         super.visitNamedFunc(pNamedFunc);
         if (pNamedFunc.annotation().isSome()) {
           var ann = pNamedFunc.annotation().get();
-          var annName = ann.name();
+          var annName = ann.nameText();
           if (AnnotationNames.ANNOTATION_NAMES.contains(annName)) {
             if (pNamedFunc.body().isSome()) {
               logger.log(compileError(
@@ -84,7 +59,8 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
                       + " annotation must declare result type."));
             }
           } else {
-            logger.log(compileError(ann.location(), "Unknown annotation " + ann.q() + "."));
+            logger.log(
+                compileError(ann.location(), "Unknown annotation " + q(ann.nameText()) + "."));
           }
         } else if (pNamedFunc.body().isNone()) {
           logger.log(compileError(pNamedFunc, "Function body is missing."));
@@ -96,7 +72,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
         super.visitNamedValue(pNamedValue);
         if (pNamedValue.annotation().isSome()) {
           var ann = pNamedValue.annotation().get();
-          var annName = ann.name();
+          var annName = ann.nameText();
           switch (annName) {
             case AnnotationNames.BYTECODE -> {
               if (pNamedValue.body().isSome()) {
@@ -114,7 +90,8 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
                 compileError(
                     pNamedValue.annotation().get(),
                     "Value cannot have @" + annName + " annotation."));
-            default -> logger.log(compileError(ann, "Unknown annotation " + ann.q() + "."));
+            default -> logger.log(
+                compileError(ann, "Unknown annotation " + Strings.q(ann.nameText()) + "."));
           }
         } else if (pNamedValue.body().isNone()) {
           logger.log(compileError(pNamedValue, "Value cannot have empty body."));
@@ -132,11 +109,11 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
       }
 
       private void logErrorIfDefaultValuePresent(PItem param) {
-        if (param.defaultValueFullName().isSome()) {
+        if (param.defaultValue().isSome()) {
           logger.log(compileError(
               param.location(),
-              "Struct field `" + param.name()
-                  + "` has default value. Only function parameters can have default value."));
+              "Struct field " + param.id().q()
+                  + " has default value. Only function parameters can have default value."));
         }
       }
     }.visitModule(pModule);
@@ -151,7 +128,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
       }
 
       private void logErrorIfDefaultValuePresent(PItem param) {
-        if (param.defaultValueFullName().isSome()) {
+        if (param.defaultValue().isSome()) {
           logger.log(compileError(
               param.location(),
               "Parameter " + param.q() + " of lambda cannot have default value."));

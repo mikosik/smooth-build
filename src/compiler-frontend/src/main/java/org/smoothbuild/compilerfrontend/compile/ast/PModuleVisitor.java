@@ -46,6 +46,7 @@ public class PModuleVisitor<T extends Throwable> {
 
   public void visitStructSignature(PStruct pStruct) throws T {
     visitItems(pStruct.fields().list());
+    visitNameOf(pStruct);
   }
 
   public void visitNamedEvaluables(List<PNamedEvaluable> pNamedEvaluables) throws T {
@@ -134,6 +135,7 @@ public class PModuleVisitor<T extends Throwable> {
   public void visitLambdaSignature(PLambda pLambda) throws T {
     visitType(pLambda.resultT());
     visitItems(pLambda.params().list());
+    visitNameOf(pLambda);
   }
 
   public void visitArgs(List<PExpr> args) throws T {
@@ -183,4 +185,8 @@ public class PModuleVisitor<T extends Throwable> {
   public void visitString(PString pString) throws T {}
 
   public void visitNameOf(PReferenceable pReferenceable) throws T {}
+
+  public void visitNameOf(PLambda pLambda) throws T {}
+
+  public void visitNameOf(PStruct pStruct) throws T {}
 }

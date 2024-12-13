@@ -9,9 +9,9 @@ import java.util.Queue;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function2;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
-import org.smoothbuild.compilerfrontend.lang.type.SFieldSetType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -32,7 +32,7 @@ public class ConstraintInferrer {
     }
     return switch (type1) {
       case SArrayType array1 -> unifyArrayAndType(array1, type2, constraints);
-      case SFieldSetType fieldSet1 -> unifyFieldSetAndType(fieldSet1, type2, constraints);
+      case SInterfaceType fieldSet1 -> unifyFieldSetAndType(fieldSet1, type2, constraints);
       case SFuncType func1 -> unifyFunctionAndType(func1, type2, constraints);
       case STupleType tuple1 -> unifyTupleAndType(tuple1, type2, constraints);
       case SVar sVar -> assertTypesAreEqual(sVar, type2);
@@ -57,23 +57,23 @@ public class ConstraintInferrer {
     }
   }
 
-  private static SFieldSetType unifyFieldSetAndType(
-      SFieldSetType fieldSet, SType type, Queue<Constraint> constraints) throws UnifierException {
+  private static SInterfaceType unifyFieldSetAndType(
+      SInterfaceType inter, SType type, Queue<Constraint> constraints) throws UnifierException {
     return switch (type) {
+      case SStructType sStructType -> unifyFieldSetAndStruct(inter, sStructType, constraints);
       case SInterfaceType sInterfaceType -> unifyFieldSetAndInterface(
-          fieldSet, sInterfaceType, constraints);
-      case SStructType sStructType -> unifyFieldSetAndStruct(fieldSet, sStructType, constraints);
+          inter, sInterfaceType, constraints);
       default -> throw new UnifierException();
     };
   }
 
-  private static SFieldSetType unifyFieldSetAndInterface(
-      SFieldSetType fieldSet, SInterfaceType interface2, Queue<Constraint> constraints)
+  private static SInterfaceType unifyFieldSetAndInterface(
+      SInterfaceType fieldSet, SInterfaceType interface2, Queue<Constraint> constraints)
       throws UnifierException {
     return switch (fieldSet) {
+      case SStructType struct1 -> unifyStructAndInterface(struct1, interface2, constraints);
       case SInterfaceType interface1 -> unifyInterfaceAndInterface(
           interface1, interface2, constraints);
-      case SStructType struct1 -> unifyStructAndInterface(struct1, interface2, constraints);
     };
   }
 
@@ -84,11 +84,11 @@ public class ConstraintInferrer {
   }
 
   private static SStructType unifyFieldSetAndStruct(
-      SFieldSetType fieldSet, SStructType struct2, Queue<Constraint> constraints)
+      SInterfaceType fieldSet, SStructType struct2, Queue<Constraint> constraints)
       throws UnifierException {
     return switch (fieldSet) {
-      case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, constraints);
       case SStructType struct1 -> unifyStructAndStruct(struct1, struct2, constraints);
+      case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, constraints);
     };
   }
 
@@ -103,13 +103,13 @@ public class ConstraintInferrer {
     }
   }
 
-  private static Map<String, SItemSig> unifyFieldSetAndFieldSet(
-      SFieldSetType fieldSet1, SFieldSetType fieldSet2, Queue<Constraint> constraints)
+  private static Map<Id, SItemSig> unifyFieldSetAndFieldSet(
+      SInterfaceType fieldSet1, SInterfaceType fieldSet2, Queue<Constraint> constraints)
       throws UnifierException {
     var fields1 = fieldSet1.fieldSet();
     var fields2 = fieldSet2.fieldSet();
     var mergedFields = new HashMap<>(fields1);
-    for (Entry<String, SItemSig> field2 : fields2.entrySet()) {
+    for (Entry<Id, SItemSig> field2 : fields2.entrySet()) {
       var name = field2.getKey();
       var field1 = mergedFields.get(name);
       if (field1 == null) {
@@ -133,13 +133,13 @@ public class ConstraintInferrer {
         struct1.fields().list(),
         struct2.fields().list(),
         (itemSig1, itemSig2) -> unifyItemSigAndItemSig(itemSig1, itemSig2, constraints));
-    return new SStructType(struct1.name(), nlist(itemSigs));
+    return new SStructType(struct1.id(), nlist(itemSigs));
   }
 
   private static SItemSig unifyItemSigAndItemSig(
       SItemSig itemSig1, SItemSig itemSig2, Queue<Constraint> constraints) throws UnifierException {
-    var name1 = itemSig1.name();
-    var name2 = itemSig2.name();
+    var name1 = itemSig1.id();
+    var name2 = itemSig2.id();
     if (!name1.equals(name2)) {
       throw new UnifierException();
     }

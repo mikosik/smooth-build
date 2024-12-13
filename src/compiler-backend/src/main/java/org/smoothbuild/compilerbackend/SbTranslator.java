@@ -29,8 +29,9 @@ import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.log.report.BExprAttributes;
+import org.smoothbuild.compilerfrontend.lang.base.Ial;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
-import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -195,28 +196,29 @@ public class SbTranslator {
   }
 
   private BExpr translateReference(SReference sReference) throws SbTranslatorException {
-    var itemS = lexicalEnvironment.get(sReference.referencedName());
+    var itemS = lexicalEnvironment.get(sReference.referencedId());
     if (itemS == null) {
-      Maybe<SNamedEvaluable> namedEvaluableS = evaluables.getMaybe(sReference.referencedName());
+      Maybe<SNamedEvaluable> namedEvaluableS =
+          evaluables.getMaybe(sReference.referencedId().full());
       if (namedEvaluableS.isSome()) {
         return switch (namedEvaluableS.get()) {
           case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
           case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
         };
       } else {
-        throw new SbTranslatorException("Cannot resolve `" + sReference.referencedName() + "` at "
-            + sReference.location() + ".");
+        throw new SbTranslatorException(
+            "Cannot resolve `" + sReference.referencedId() + "` at " + sReference.location() + ".");
       }
     } else {
       var evaluationType = typeF.translate(itemS.type());
-      var index = BigInteger.valueOf(lexicalEnvironment.indexOf(sReference.referencedName()));
+      var index = BigInteger.valueOf(lexicalEnvironment.indexOf(sReference.referencedId()));
       return saveNalAndReturn(
-          sReference.referencedName(), sReference, bytecodeF.reference(evaluationType, index));
+          sReference.referencedId().full(), sReference, bytecodeF.reference(evaluationType, index));
     }
   }
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {
-    var key = new CacheKey(sNamedFunc.name(), typeF.varMap());
+    var key = new CacheKey(sNamedFunc.id(), typeF.varMap());
     return computeIfAbsent(cache, key, k -> translateNamedFunc(sNamedFunc));
   }
 
@@ -323,7 +325,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
-    var key = new CacheKey(sNamedValue.name(), typeF.varMap());
+    var key = new CacheKey(sNamedValue.id(), typeF.varMap());
     return computeIfAbsent(cache, key, k -> translateNamedValue(sNamedValue));
   }
 
@@ -353,19 +355,19 @@ public class SbTranslator {
 
   private BExpr fetchValBytecode(SAnnotatedValue sAnnotatedValue) throws SbTranslatorException {
     var bType = typeF.translate(sAnnotatedValue.schema().type());
-    return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.name());
+    return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.id());
   }
 
   private BExpr fetchFuncBytecode(SAnnotatedFunc sAnnotatedFunc) throws SbTranslatorException {
     var bType = typeF.translate(sAnnotatedFunc.schema().type());
-    return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.name());
+    return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.id());
   }
 
-  private BExpr fetchBytecode(SAnnotation annotation, BType bType, String name)
+  private BExpr fetchBytecode(SAnnotation annotation, BType bType, Id id)
       throws SbTranslatorException {
     var varNameToTypeMap = typeF.varMap().mapKeys(SVar::name);
     var jar = readNativeJar(annotation.location());
-    var bytecode = loadBytecode(name, jar, annotation.path().string(), varNameToTypeMap);
+    var bytecode = loadBytecode(id, jar, annotation.path().string(), varNameToTypeMap);
     if (bytecode.isLeft()) {
       throw new SbTranslatorException(annotation.location() + ": " + bytecode.left());
     }
@@ -374,19 +376,19 @@ public class SbTranslator {
       throw new SbTranslatorException(annotation.location()
           + ": Bytecode provider returned expression of wrong type "
           + bExpr.evaluationType().q()
-          + " when " + q(name) + " is declared as " + bType.q() + ".");
+          + " when " + id.q() + " is declared as " + bType.q() + ".");
     }
     return bExpr;
   }
 
   private Either<String, BExpr> loadBytecode(
-      String name, BBlob jar, String classBinaryName, Map<String, BType> varNameToTypeMap)
+      Id id, BBlob jar, String classBinaryName, Map<String, BType> varNameToTypeMap)
       throws SbTranslatorException {
     try {
       var bClassBinaryName = bytecodeF.string(classBinaryName);
       var bMethodName = bytecodeF.string(BYTECODE_METHOD_NAME);
       var bMethod = bytecodeF.method(jar, bClassBinaryName, bMethodName);
-      return bytecodeLoader.load(name, bMethod, varNameToTypeMap);
+      return bytecodeLoader.load(id.full(), bMethod, varNameToTypeMap);
     } catch (IOException e) {
       throw new SbTranslatorException(e);
     }
@@ -414,8 +416,8 @@ public class SbTranslator {
 
   // helpers for saving names and locations
 
-  private BExpr saveNalAndReturn(Nal nal, BExpr bExpr) {
-    saveNal(bExpr, nal);
+  private BExpr saveNalAndReturn(Ial ial, BExpr bExpr) {
+    saveNal(bExpr, ial);
     return bExpr;
   }
 
@@ -429,8 +431,8 @@ public class SbTranslator {
     return bExpr;
   }
 
-  private void saveNal(BExpr bExpr, Nal nal) {
-    saveNal(bExpr, nal.name(), nal);
+  private void saveNal(BExpr bExpr, Ial ial) {
+    saveNal(bExpr, ial.id().full(), ial);
   }
 
   private void saveNal(BExpr bExpr, String name, Located located) {
@@ -446,5 +448,5 @@ public class SbTranslator {
     locations.put(bExpr.hash(), location);
   }
 
-  private static record CacheKey(String name, Map<SVar, BType> varMap) {}
+  private static record CacheKey(Id id, Map<SVar, BType> varMap) {}
 }

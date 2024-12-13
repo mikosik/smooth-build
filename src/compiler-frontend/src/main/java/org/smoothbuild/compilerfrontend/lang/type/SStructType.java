@@ -3,18 +3,25 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.interfaceTypeName;
 
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 
 /**
  * This class is immutable.
  */
-public final class SStructType extends SFieldSetType {
+public final class SStructType extends SInterfaceType {
+  private final Id id;
   private final NList<SItemSig> fields;
 
-  public SStructType(String name, NList<SItemSig> fields) {
-    super(name, calculateFieldSetVars(fields.list()));
+  public SStructType(Id id, NList<SItemSig> fields) {
+    super(id.full(), fields.map());
+    this.id = id;
     this.fields = fields;
+  }
+
+  public Id id() {
+    return id;
   }
 
   public NList<SItemSig> fields() {
@@ -22,7 +29,7 @@ public final class SStructType extends SFieldSetType {
   }
 
   @Override
-  public Map<String, SItemSig> fieldSet() {
+  public Map<Id, SItemSig> fieldSet() {
     return fields.map();
   }
 

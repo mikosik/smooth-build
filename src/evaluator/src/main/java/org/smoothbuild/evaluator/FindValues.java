@@ -45,6 +45,6 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   }
 
   private static SReference referenceTo(SNamedValue sNamedValue) {
-    return new SReference(sNamedValue.schema(), sNamedValue.name(), commandLineLocation());
+    return new SReference(sNamedValue.schema(), sNamedValue.id(), commandLineLocation());
   }
 }

@@ -10,6 +10,6 @@ public class PStructTest {
   @Test
   void constructor_name_is_equal_to_struct_name() {
     var structP = new PStruct("MyType", list(), internalLocation());
-    assertThat(structP.constructor().name()).isEqualTo("MyType");
+    assertThat(structP.constructor().nameText()).isEqualTo("MyType");
   }
 }

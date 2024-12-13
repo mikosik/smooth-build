@@ -7,11 +7,12 @@ import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowin
 import java.util.List;
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
-import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
+import org.smoothbuild.compilerfrontend.lang.base.PBase;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct extends NalImpl implements PScoped {
+public final class PStruct extends PBase implements PScoped {
   private final NList<PItem> fields;
   private final PNamedFunc constructor;
   private PScope scope;
@@ -25,6 +26,12 @@ public final class PStruct extends NalImpl implements PScoped {
     super(name, location);
     this.fields = fields;
     this.constructor = new PConstructor(this);
+  }
+
+  @Override
+  public void setId(Id id) {
+    super.setId(id);
+    constructor.setId(id);
   }
 
   public NList<PItem> fields() {
@@ -59,19 +66,19 @@ public final class PStruct extends NalImpl implements PScoped {
       return true;
     }
     return object instanceof PStruct that
-        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.id(), that.id())
         && Objects.equals(this.fields, that.fields)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name(), fields, location());
+    return Objects.hash(id(), fields, location());
   }
 
   @Override
   public String toString() {
-    var fields = list("name = " + name(), "fields = " + this.fields, "location = " + location())
+    var fields = list("name = " + id(), "fields = " + this.fields, "location = " + location())
         .toString("\n");
     return "PStruct(\n" + indent(fields) + "\n)";
   }

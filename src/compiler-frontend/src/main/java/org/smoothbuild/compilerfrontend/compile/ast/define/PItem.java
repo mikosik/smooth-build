@@ -7,32 +7,37 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
-import org.smoothbuild.compilerfrontend.lang.base.NalImpl;
+import org.smoothbuild.compilerfrontend.lang.base.PBase;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem extends NalImpl implements PReferenceable {
+public final class PItem extends PBase implements PReferenceable {
   private final PType type;
-  private final Maybe<String> defaultValueFullName;
+  private final Maybe<PExpr> defaultValue;
+  private Maybe<Id> defaultValueId;
   private SType sType;
 
-  public PItem(PType type, String name, Maybe<String> defaultValueFullName, Location location) {
+  public PItem(PType type, String name, Maybe<PExpr> defaultValue, Location location) {
     super(name, location);
     this.type = type;
-    this.defaultValueFullName = defaultValueFullName;
-  }
-
-  @Override
-  public String shortName() {
-    return name();
+    this.defaultValue = defaultValue;
   }
 
   public PType type() {
     return type;
   }
 
-  public Maybe<String> defaultValueFullName() {
-    return defaultValueFullName;
+  public Maybe<PExpr> defaultValue() {
+    return defaultValue;
+  }
+
+  public Maybe<Id> defaultValueId() {
+    return defaultValueId;
+  }
+
+  public void setDefaultValueId(Maybe<Id> defaultValueId) {
+    this.defaultValueId = defaultValueId;
   }
 
   public SType sType() {
@@ -55,22 +60,24 @@ public final class PItem extends NalImpl implements PReferenceable {
     }
     return object instanceof PItem that
         && Objects.equals(this.type, that.type)
-        && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.defaultValueFullName, that.defaultValueFullName())
+        && Objects.equals(this.nameText(), that.nameText())
+        && Objects.equals(this.defaultValue, that.defaultValue())
+        && Objects.equals(this.defaultValueId, that.defaultValueId())
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, name(), defaultValueFullName, location());
+    return Objects.hash(type, nameText(), defaultValue, location());
   }
 
   @Override
   public String toString() {
     var fields = list(
             "type = " + type,
-            "name = " + name(),
-            "defaultValueFullName = " + defaultValueFullName,
+            "name = " + nameText(),
+            "defaultValue = " + defaultValue,
+            "defaultValueId = " + defaultValueId,
             "location = " + location())
         .toString("\n");
     return "PItem(\n" + indent(fields) + "\n)";

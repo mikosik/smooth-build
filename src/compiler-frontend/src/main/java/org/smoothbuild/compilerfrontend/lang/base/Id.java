@@ -7,13 +7,13 @@ import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.Result;
 
-public class Name {
+public class Id {
   private static final char SEPARATOR = ':';
   private static final String DOUBLE_SEPARATOR = "::";
   private final String full;
   private final String last;
 
-  private Name(String full) {
+  private Id(String full) {
     this.full = full;
     this.last = full.substring(full.lastIndexOf(SEPARATOR) + 1);
   }
@@ -26,17 +26,17 @@ public class Name {
     return last;
   }
 
-  public Name append(Name name) {
-    return new Name(full + SEPARATOR + name.full);
+  public Id append(Id id) {
+    return new Id(full + SEPARATOR + id.full);
   }
 
-  public static Name name(String name) {
+  public static Id id(String name) {
     return parseReference(name).rightOrThrow(error -> {
       throw new IllegalArgumentException(error);
     });
   }
 
-  public static Result<Name> parseIdentifierDeclaration(String name) {
+  public static Result<Id> parseIdentifierDeclaration(String name) {
     var error = parseShort(name);
     if (error != null) {
       return error;
@@ -45,10 +45,10 @@ public class Name {
       return error("It must start with lowercase letter.");
     }
 
-    return ok(new Name(name));
+    return ok(new Id(name));
   }
 
-  public static Result<Name> parseStructDeclaration(String name) {
+  public static Result<Id> parseStructDeclaration(String name) {
     var error = parseShort(name);
     if (error != null) {
       return error;
@@ -59,10 +59,10 @@ public class Name {
     if (isTypeVarName(name)) {
       return error("All-uppercase names are reserved for type variables.");
     }
-    return ok(new Name(name));
+    return ok(new Id(name));
   }
 
-  public static Result<Name> parseReference(String name) {
+  public static Result<Id> parseReference(String name) {
     if (name.isEmpty()) {
       return error("It must not be empty string.");
     }
@@ -87,14 +87,14 @@ public class Name {
       return error("It must not contain \"" + DOUBLE_SEPARATOR + "\" substring.");
     }
 
-    return ok(new Name(name));
+    return ok(new Id(name));
   }
 
   private static boolean isTypeVarName(String name) {
     return !name.isEmpty() && name.chars().allMatch(TokenNames::isUpperCase);
   }
 
-  private static Result<Name> parseShort(String name) {
+  private static Result<Id> parseShort(String name) {
     if (name.isEmpty()) {
       return error("It must not be empty string.");
     }
@@ -130,9 +130,13 @@ public class Name {
     return '0' <= character && character <= '9';
   }
 
+  public String q() {
+    return Strings.q(full);
+  }
+
   @Override
   public boolean equals(Object object) {
-    return object instanceof Name name && Objects.equals(full, name.full);
+    return object instanceof Id id && Objects.equals(full, id.full);
   }
 
   @Override
@@ -142,6 +146,6 @@ public class Name {
 
   @Override
   public String toString() {
-    return Strings.q(full);
+    return full;
   }
 }

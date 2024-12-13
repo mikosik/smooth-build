@@ -3,12 +3,12 @@ package org.smoothbuild.compilerfrontend.compile;
 import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -31,6 +31,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
@@ -70,12 +71,12 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
-        var name = pReference.referencedName();
-        var optional = referenceables.getMaybe(name);
+        var name = pReference.id();
+        var optional = referenceables.getMaybe(name.full());
         if (optional.isSome()) {
           return inferPositionedArgs(pCall, optional.get());
         } else {
-          return inferPositionedArgs(pCall, imported.evaluables().get(name));
+          return inferPositionedArgs(pCall, imported.evaluables().get(name.full()));
         }
       } else {
         return inferPositionedArgs(pCall, logger);
@@ -132,7 +133,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
 
     private static List<PExpr> positionedArgs(
         PCall pCall, List<Param> params, int positionalArgsCount, Logger logBuffer) {
-      var names = params.map(Param::name);
+      var names = params.map(Param::id);
       var args = pCall.args();
       // Case where positional args count exceeds function params count is reported as error
       // during call unification. Here we silently ignore it by creating list that is big enough
@@ -142,7 +143,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < args.size(); i++) {
         var arg = args.get(i);
         if (arg instanceof PNamedArg pNamedArg) {
-          result.set(names.indexOf(pNamedArg.name()), pNamedArg.expr());
+          result.set(names.indexOf(id(pNamedArg.name())), pNamedArg.expr());
         } else {
           result.set(i, arg);
         }
@@ -151,11 +152,13 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < result.size(); i++) {
         if (result.get(i) == null) {
           var param = params.get(i);
-          var defaultValueFullName = param.defaultValueFullName();
-          if (defaultValueFullName.isSome()) {
-            var fullName = defaultValueFullName.get();
+          var defaultValueId = param.defaultValueId();
+          if (defaultValueId.isSome()) {
+            var fullName = defaultValueId.get();
             var location = pCall.location();
-            var element = new PInstantiate(new PReference(fullName, location), location);
+            var pReference = new PReference(fullName.full(), location);
+            pReference.setId(fullName);
+            var element = new PInstantiate(pReference, location);
             result.set(i, element);
           } else {
             error = true;
@@ -175,12 +178,12 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private static List<Log> findUnknownParamNameErrors(PCall pCall, List<Param> params) {
-      var names = params.map(Param::name).toSet();
+      var names = params.map(Param::id).toSet();
       return pCall
           .args()
           .filter(a -> a instanceof PNamedArg)
           .map(a -> (PNamedArg) a)
-          .filter(a -> !names.contains(a.name()))
+          .filter(a -> !names.contains(id(a.name())))
           .map(Visitor::unknownParameterError);
     }
 
@@ -196,11 +199,14 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private static Set<String> positionalArgNames(List<PExpr> positionalArgs, List<Param> params) {
-      return params.stream().limit(positionalArgs.size()).map(Param::name).collect(toSet());
+      return params.stream()
+          .limit(positionalArgs.size())
+          .map(param -> param.id().full())
+          .collect(toSet());
     }
 
     private static Log paramsMustBeSpecifiedError(PCall pCall, int i, List<Param> params) {
-      return compileError(pCall, "Parameter " + q(params.get(i).name()) + " must be specified.");
+      return compileError(pCall, "Parameter " + params.get(i).id().q() + " must be specified.");
     }
 
     private static Log unknownParameterError(PNamedArg pNamedArg) {
@@ -216,13 +222,13 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
   }
 
-  private static record Param(String name, Maybe<String> defaultValueFullName) {
+  private static record Param(Id id, Maybe<Id> defaultValueId) {
     public Param(SItem param) {
-      this(param.name(), param.defaultValueFullName());
+      this(param.id(), param.defaultValueId());
     }
 
     public Param(PItem param) {
-      this(param.name(), param.defaultValueFullName());
+      this(param.id(), param.defaultValueId());
     }
   }
 }

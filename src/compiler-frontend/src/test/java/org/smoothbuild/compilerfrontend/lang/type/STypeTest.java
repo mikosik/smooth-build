@@ -5,7 +5,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import com.google.common.testing.EqualsTester;
@@ -53,7 +52,7 @@ public class STypeTest extends FrontendCompilerTestContext {
     return name_or_to_string()
         .appendAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct"),
-            arguments(sStructType("MyStruct", nlist(itemSigS(sIntType(), "field"))), "MyStruct")));
+            arguments(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))), "MyStruct")));
   }
 
   public static List<Arguments> to_string() {
@@ -65,8 +64,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         .appendAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct{}"),
             arguments(
-                sStructType("MyStruct", nlist(itemSigS(sIntType(), "field"))),
-                "MyStruct{Int field}")));
+                sStructType("MyStruct", nlist(sSig(sIntType(), "field"))), "MyStruct{Int field}")));
   }
 
   public List<Arguments> name_or_to_string() {
@@ -92,8 +90,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sArrayType(sTupleType(varA(), varB())), "[{A,B}]"),
         arguments(sArrayType(sStructType("MyStruct", nlist())), "[MyStruct]"),
         arguments(
-            sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "field")))),
-            "[MyStruct]"),
+            sArrayType(sStructType("MyStruct", nlist(sSig(sIntType(), "field")))), "[MyStruct]"),
         arguments(sVarAArrayT(), "[A]"),
         arguments(sArrayType(sVarAArrayT()), "[[A]]"),
         arguments(sArrayType(sBlobArrayT()), "[[Blob]]"),
@@ -106,7 +103,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sArrayType(sArrayType(sTupleType(varA(), varB()))), "[[{A,B}]]"),
         arguments(sArrayType(sArrayType(sStructType("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(
-            sArrayType(sArrayType(sStructType("MyStruct", nlist(itemSigS(sIntType(), "filed"))))),
+            sArrayType(sArrayType(sStructType("MyStruct", nlist(sSig(sIntType(), "filed"))))),
             "[[MyStruct]]"),
         arguments(sArrayType(sStringArrayT()), "[[String]]"),
         arguments(sFuncType(sVarAArrayT(), varA()), "([A])->A"),
@@ -343,12 +340,11 @@ public class STypeTest extends FrontendCompilerTestContext {
     return list(
         arguments(sStructType("Person", nlist()), nlist()),
         arguments(
-            sStructType("Person", nlist(itemSigS(sStringType(), "field"))),
-            nlist(itemSigS(sStringType(), "field"))),
+            sStructType("Person", nlist(sSig(sStringType(), "field"))),
+            nlist(sSig(sStringType(), "field"))),
         arguments(
-            sStructType(
-                "Person", nlist(itemSigS(sStringType(), "field"), itemSigS(sIntType(), "field2"))),
-            nlist(itemSigS(sStringType(), "field"), itemSigS(sIntType(), "field2"))));
+            sStructType("Person", nlist(sSig(sStringType(), "field"), sSig(sIntType(), "field2"))),
+            nlist(sSig(sStringType(), "field"), sSig(sIntType(), "field2"))));
   }
 
   @Test
@@ -362,7 +358,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         sTupleType(),
         sTupleType(sIntType(), sBoolType()),
         sStructType("MyStruct", nlist()),
-        sStructType("MyStruct", nlist(itemSigS(sIntType(), "field"))),
+        sStructType("MyStruct", nlist(sSig(sIntType(), "field"))),
         varA(),
         varB(),
         varC(),

@@ -15,7 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.type.SFieldSetType;
+import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
@@ -419,7 +419,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       }
 
       public static List<SType> typesToTest() {
-        return STypes.baseTypes().append(new SVar("A"));
+        return List.<SType>list().appendAll(STypes.baseTypes()).append(new SVar("A"));
       }
     }
   }
@@ -430,28 +430,28 @@ public class UnifierTest extends FrontendCompilerTestContext {
     class _legal_field_set_merges {
       @ParameterizedTest
       @MethodSource("legalFieldSetMerges")
-      public void array_element(SFieldSetType type1, SFieldSetType type2, SType expected)
+      public void array_element(SInterfaceType type1, SInterfaceType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sArrayType(type1), sArrayType(type2), sArrayType(expected));
       }
 
       @ParameterizedTest
       @MethodSource("legalFieldSetMerges")
-      public void tuple_element(SFieldSetType type1, SFieldSetType type2, SType expected)
+      public void tuple_element(SInterfaceType type1, SInterfaceType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sTupleType(type1), sTupleType(type2), sTupleType(expected));
       }
 
       @ParameterizedTest
       @MethodSource("legalFieldSetMerges")
-      public void func_result(SFieldSetType type1, SFieldSetType type2, SType expected)
+      public void func_result(SInterfaceType type1, SInterfaceType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sFuncType(type1), sFuncType(type2), sFuncType(expected));
       }
 
       @ParameterizedTest
       @MethodSource("legalFieldSetMerges")
-      public void func_param(SFieldSetType type1, SFieldSetType type2, SType expected)
+      public void func_param(SInterfaceType type1, SInterfaceType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(
             sFuncType(type1, sIntType()),
@@ -461,14 +461,14 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @ParameterizedTest
       @MethodSource("legalFieldSetMerges")
-      public void struct_field(SFieldSetType type1, SFieldSetType type2, SType expected)
+      public void struct_field(SInterfaceType type1, SInterfaceType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(sStructType(type1), sStructType(type2), sStructType(expected));
       }
 
       @ParameterizedTest
       @MethodSource("legalFieldSetMerges")
-      public void interface_field(SFieldSetType type1, SFieldSetType type2, SType expected)
+      public void interface_field(SInterfaceType type1, SInterfaceType type2, SType expected)
           throws UnifierException {
         assertUnifyThroughTempImpl(
             sInterfaceType(type1), sInterfaceType(type2), sInterfaceType(expected));
@@ -483,37 +483,39 @@ public class UnifierTest extends FrontendCompilerTestContext {
     class _illegal_field_set_merges {
       @ParameterizedTest
       @MethodSource("illegalFieldSetMerges")
-      public void array_element(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
+      public void array_element(SInterfaceType type1, SInterfaceType type2)
+          throws UnifierException {
         assertUnifyFails(sArrayType(type1), sArrayType(type2));
       }
 
       @ParameterizedTest
       @MethodSource("illegalFieldSetMerges")
-      public void tuple_element(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
+      public void tuple_element(SInterfaceType type1, SInterfaceType type2)
+          throws UnifierException {
         assertUnifyFails(sTupleType(type1), sTupleType(type2));
       }
 
       @ParameterizedTest
       @MethodSource("illegalFieldSetMerges")
-      public void func_result(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
+      public void func_result(SInterfaceType type1, SInterfaceType type2) throws UnifierException {
         assertUnifyFails(sFuncType(type1), sFuncType(type2));
       }
 
       @ParameterizedTest
       @MethodSource("illegalFieldSetMerges")
-      public void func_param(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
+      public void func_param(SInterfaceType type1, SInterfaceType type2) throws UnifierException {
         assertUnifyFails(sFuncType(type1, sIntType()), sFuncType(type2, sIntType()));
       }
 
       @ParameterizedTest
       @MethodSource("illegalFieldSetMerges")
-      public void struct_field(SFieldSetType type1, SFieldSetType type2) throws UnifierException {
+      public void struct_field(SInterfaceType type1, SInterfaceType type2) throws UnifierException {
         assertUnifyFails(sStructType(type1), sStructType(type2));
       }
 
       @ParameterizedTest
       @MethodSource("illegalFieldSetMerges")
-      public void interface_field(SFieldSetType type1, SFieldSetType type2)
+      public void interface_field(SInterfaceType type1, SInterfaceType type2)
           throws UnifierException {
         assertUnifyFails(sInterfaceType(type1), sInterfaceType(type2));
       }

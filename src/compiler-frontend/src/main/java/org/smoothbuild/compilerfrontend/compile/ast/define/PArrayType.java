@@ -6,7 +6,7 @@ public final class PArrayType extends PExplicitType {
   private final PType elemT;
 
   public PArrayType(PType elemT, Location location) {
-    super("[" + elemT.name() + "]", location);
+    super("[" + elemT.nameText() + "]", location);
     this.elemT = elemT;
   }
 

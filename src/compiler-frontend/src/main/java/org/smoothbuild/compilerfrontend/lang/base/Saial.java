@@ -6,13 +6,13 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
- * SANAL = Schema and Name and Loc.
+ * SaIaL = Schema and Identifiable and Located.
  */
-public abstract class Sanal extends NalImpl {
+public abstract class Saial extends IalImpl {
   private final SSchema schema;
 
-  public Sanal(SSchema schema, String name, Location location) {
-    super(name, location);
+  public Saial(SSchema schema, Id id, Location location) {
+    super(id, location);
     this.schema = requireNonNull(schema);
   }
 

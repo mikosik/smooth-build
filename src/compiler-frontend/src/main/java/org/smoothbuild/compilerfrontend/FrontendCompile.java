@@ -16,6 +16,8 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.DecodeLiterals;
 import org.smoothbuild.compilerfrontend.compile.DetectUndefined;
 import org.smoothbuild.compilerfrontend.compile.FindSyntaxErrors;
+import org.smoothbuild.compilerfrontend.compile.GenerateDefaultValues;
+import org.smoothbuild.compilerfrontend.compile.GenerateIds;
 import org.smoothbuild.compilerfrontend.compile.InitializeScopes;
 import org.smoothbuild.compilerfrontend.compile.InjectDefaultArguments;
 import org.smoothbuild.compilerfrontend.compile.LoadInternalModuleMembers;
@@ -60,7 +62,9 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var fileContent = scheduler.submit(ReadFileContent.class, path);
       var moduleContext = scheduler.submit(Parse.class, fileContent, path);
       var pModule = scheduler.submit(TranslateAp.class, moduleContext, path);
-      var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, pModule);
+      var withVerifiedIds = scheduler.submit(GenerateIds.class, pModule);
+      var withGeneratedDefaults = scheduler.submit(GenerateDefaultValues.class, withVerifiedIds);
+      var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, withGeneratedDefaults);
       var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
       var withInitializedScopes = scheduler.submit(InitializeScopes.class, withDecodedLiterals);
       var withUndefinedDetected =

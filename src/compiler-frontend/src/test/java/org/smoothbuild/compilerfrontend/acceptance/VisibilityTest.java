@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -159,7 +160,8 @@ public class VisibilityTest extends FrontendCompileTester {
               myFunc(Int param = 7) = 8;
               result = myFunc:param;
               """;
-          var ref = sInstantiate(sReference(2, sSchema(sIntType()), "myFunc:param"), location(2));
+          var ref =
+              sInstantiate(sReference(2, sSchema(sIntType()), id("myFunc:param")), location(2));
           module(code).loadsWithSuccess().containsEvaluable(sValue(2, "result", ref));
         }
       }
@@ -632,9 +634,9 @@ public class VisibilityTest extends FrontendCompileTester {
         var error =
             """
             Reference graph contains cycle:
+            {t-project}/module.smooth:1: myFunc ~> myFunc:param
             {t-project}/module.smooth:1: myFunc:param ~> myValue
-            {t-project}/module.smooth:2: myValue ~> myFunc
-            {t-project}/module.smooth:1: myFunc ~> myFunc:param""";
+            {t-project}/module.smooth:2: myValue ~> myFunc""";
         module(code).loadsWithError(error);
       }
 

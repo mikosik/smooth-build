@@ -21,7 +21,6 @@ import org.smoothbuild.common.schedule.Task0;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
-import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
@@ -47,7 +46,7 @@ public class ScheduleList implements Task0<Tuple0> {
     public Output<Tuple0> execute(SModule sModule) {
       var oneValuePerLineString = sModule.fullScope().evaluables().toMap().values().stream()
           .filter(ScheduleList::isNoArgNotGenericValue)
-          .map(Nal::name)
+          .map(sNamedEvaluable -> sNamedEvaluable.id().full())
           .sorted()
           .collect(joining("\n"));
       var info = info("Values that can be evaluated:\n" + oneValuePerLineString);

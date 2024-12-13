@@ -5,9 +5,8 @@ import static org.smoothbuild.common.collect.Maybe.none;
 public final class PConstructor extends PNamedFunc {
   public PConstructor(PStruct pStruct) {
     super(
-        new PExplicitType(pStruct.name(), pStruct.location()),
-        pStruct.name(),
-        pStruct.name(),
+        new PExplicitType(pStruct.nameText(), pStruct.location()),
+        pStruct.nameText(),
         pStruct.fields(),
         none(),
         none(),
