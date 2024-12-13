@@ -71,6 +71,12 @@ public class EitherTest {
     }
 
     @Test
+    void ifLeft_returns_same_instance() {
+      var right = right("a");
+      assertThat(right.ifLeft(x -> {})).isSameInstanceAs(right);
+    }
+
+    @Test
     void rightOrGet_returns_right() {
       assertThat(right("a").rightOrGet(() -> "b")).isEqualTo("a");
     }
@@ -183,6 +189,12 @@ public class EitherTest {
       Either<String, String> right = left("a");
       right.ifRight(consumer);
       verifyNoInteractions(consumer);
+    }
+
+    @Test
+    void ifRight_returns_same_instance() {
+      var left = left("a");
+      assertThat(left.ifRight(x -> {})).isSameInstanceAs(left);
     }
 
     @Test
