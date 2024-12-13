@@ -8,9 +8,13 @@ public final class PFuncType extends PExplicitType {
   private final List<PType> params;
 
   public PFuncType(PType result, List<PType> params, Location location) {
-    super("[" + result.name() + "]", location);
+    super(createName(result, params), location);
     this.result = result;
     this.params = params;
+  }
+
+  private static String createName(PType result, List<PType> params) {
+    return "(" + params.map(PType::nameText).toString(",") + ")->" + result.nameText();
   }
 
   public PType result() {

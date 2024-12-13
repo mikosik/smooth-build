@@ -3,6 +3,6 @@ package org.smoothbuild.compilerfrontend.lang.base;
 import org.smoothbuild.common.log.location.Located;
 
 /**
- * NaL = Name and loc.
+ * Ial = Identifiable and located.
  */
-public interface Nal extends Named, Located {}
+public interface Ial extends Identifiable, Located {}

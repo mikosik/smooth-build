@@ -23,7 +23,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.Nal;
+import org.smoothbuild.compilerfrontend.lang.base.Ial;
 
 /**
  * For each syntactic construct that implements WithScope
@@ -54,7 +54,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
     }
 
     @Override
-    protected PModuleVisitor createVisitorForScopeOf(PScoped pScoped) {
+    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
       var scopeFiller = new ScopeCreator(scope, logger);
       var newScope = scopeFiller.createScopeFor(pScoped);
       pScoped.setScope(newScope);
@@ -80,8 +80,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
         case PNamedValue pNamedValue -> initializeScopeFor(pNamedValue);
         case PFunc pFunc -> initializeScopeFor(pFunc);
       }
-      return scope.newInnerScope(
-          pScoped.name(), referenceables.toFlatImmutable(), types.toFlatImmutable());
+      return scope.newInnerScope(referenceables.toFlatImmutable(), types.toFlatImmutable());
     }
 
     private void initializeScopeFor(PModule pModule) {
@@ -100,7 +99,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
       // Constructor name starts with capital letter, so it can collide only
       // with other constructor name. This can only happen when other structure
       // with same name is declared which will be reported when adding struct type.
-      referenceables.add(constructor.name(), constructor);
+      referenceables.add(constructor.id().last(), constructor);
     }
 
     private void initializeScopeFor(PStruct pStruct) {
@@ -121,17 +120,29 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
       addBinding(referenceables, pReferenceable);
     }
 
-    private <T extends Nal> void addBinding(MutableBindings<T> bindings, T binding) {
-      var previousBinding = bindings.add(binding.name(), binding);
-      if (previousBinding != null) {
-        log.log(alreadyDefinedError(binding, previousBinding.location()));
+    private <T extends Ial> void addBinding(MutableBindings<T> bindings, T binding) {
+      if (binding instanceof PNamedEvaluable) {
+        var full = binding.id().full();
+        addBinding(bindings, binding, full);
+      } else {
+        var last = binding.id().last();
+        addBinding(bindings, binding, last);
       }
     }
 
-    private static Log alreadyDefinedError(Nal nal, Location location) {
+    private <T extends Ial> void addBinding(
+        MutableBindings<T> bindings, T binding, String shortName) {
+      var previousBinding = bindings.add(shortName, binding);
+      if (previousBinding != null) {
+        log.log(alreadyDefinedError(
+            binding.location(), previousBinding.location().description(), shortName));
+      }
+    }
+
+    private static Log alreadyDefinedError(
+        Location location, String previousLocation, String name) {
       return compileError(
-          nal.location(),
-          "`" + nal.name() + "` is already defined at " + location.description() + ".");
+          location, "`" + name + "` is already defined at " + previousLocation + ".");
     }
   }
 }

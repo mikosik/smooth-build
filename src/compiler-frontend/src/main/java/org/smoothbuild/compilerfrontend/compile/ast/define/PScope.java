@@ -5,24 +5,15 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 
 public record PScope(
-    String name,
-    ImmutableBindings<PReferenceable> referencables,
-    ImmutableBindings<PStruct> types) {
+    ImmutableBindings<PReferenceable> referencables, ImmutableBindings<PStruct> types) {
   public static PScope emptyScope() {
-    return new PScope("", immutableBindings(), immutableBindings());
-  }
-
-  @Override
-  public String name() {
-    return name;
+    return new PScope(immutableBindings(), immutableBindings());
   }
 
   public PScope newInnerScope(
-      String name,
       ImmutableBindings<PReferenceable> innerReferenceables,
       ImmutableBindings<PStruct> innerTypes) {
     return new PScope(
-        name,
         immutableBindings(referencables, innerReferenceables),
         immutableBindings(types, innerTypes));
   }

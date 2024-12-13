@@ -8,16 +8,10 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 public final class PReference extends PPolymorphic {
-  private final String referencedName;
   private SSchema sSchema;
 
-  public PReference(String referencedName, Location location) {
-    super(location);
-    this.referencedName = referencedName;
-  }
-
-  public String referencedName() {
-    return referencedName;
+  public PReference(String nameText, Location location) {
+    super(nameText, location);
   }
 
   @Override
@@ -35,18 +29,18 @@ public final class PReference extends PPolymorphic {
       return true;
     }
     return object instanceof PReference that
-        && Objects.equals(this.referencedName, that.referencedName)
+        && Objects.equals(this.id(), that.id())
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(referencedName, location());
+    return Objects.hash(id(), location());
   }
 
   @Override
   public String toString() {
-    var fields = list("name = " + referencedName, "location = " + location()).toString("\n");
+    var fields = list("name = " + id(), "location = " + location()).toString("\n");
     return "PReference(\n" + indent(fields) + "\n)";
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
@@ -11,12 +12,12 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  */
 public abstract sealed class SNamedValue extends SNamedEvaluable
     permits SAnnotatedValue, SNamedExprValue {
-  public SNamedValue(SSchema schema, String name, Location location) {
-    super(schema, name, location);
+  public SNamedValue(SSchema schema, Id id, Location location) {
+    super(schema, id, location);
   }
 
   protected String fieldsToString() {
-    return list("schema = " + schema(), "name = " + name(), "location = " + location())
+    return list("schema = " + schema(), "name = " + id(), "location = " + location())
         .toString("\n");
   }
 }

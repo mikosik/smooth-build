@@ -4,6 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.Tanal;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
@@ -11,8 +12,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Type definition.
  */
 public class STypeDefinition extends Tanal {
-  public STypeDefinition(SType sType, Location location) {
-    super(sType, sType.name(), location);
+  public STypeDefinition(Id id, SType sType, Location location) {
+    super(sType, id, location);
   }
 
   @Override

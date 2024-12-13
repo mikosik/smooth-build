@@ -10,7 +10,6 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.fullName;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -79,8 +78,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     var evaluables = new ArrayList<PNamedEvaluable>();
     var apTranslatingVisitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
     apTranslatingVisitor.visit(moduleContext);
-    var name = fullPath.withExtension("").path().lastPart().toString();
-    var pModule = new PModule(name, listOfAll(structs), listOfAll(evaluables));
+    var fileName = fullPath.withExtension("").path().lastPart().toString();
+    var pModule = new PModule(fileName, listOfAll(structs), listOfAll(evaluables));
     var label = COMPILER_FRONT_LABEL.append(":simplifyParseTree");
     return output(pModule, label, logger.toList());
   }
@@ -134,9 +133,8 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     @Override
     public Void visitStruct(StructContext struct) {
       var name = struct.NAME().getText();
-      var fullName = createFullName(name);
       var location = fileLocation(fullPath, struct.NAME().getSymbol());
-      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var fields = visitor.createItems(struct.itemList());
       structs.add(new PStruct(name, fields, location));
       return null;
@@ -148,14 +146,13 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var location = fileLocation(fullPath, nameNode);
       var type = createTypeSane(namedFunc.type(), location);
       var name = nameNode.getText();
-      var fullName = createFullName(name);
 
-      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var body = visitor.createPipeSane(namedFunc.pipe());
 
       var annotation = createNativeSane(namedFunc.annotation());
       var params = visitor.createItems(namedFunc.itemList());
-      evaluables.add(new PNamedFunc(type, fullName, name, params, body, annotation, location));
+      evaluables.add(new PNamedFunc(type, name, params, body, annotation, location));
       return null;
     }
 
@@ -165,13 +162,12 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var location = fileLocation(fullPath, nameNode);
       var type = createTypeSane(namedValue.type(), location);
       var name = nameNode.getText();
-      var fullName = createFullName(name);
 
-      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var expr = visitor.createPipeSane(namedValue.pipe());
 
       var annotation = createNativeSane(namedValue.annotation());
-      evaluables.add(new PNamedValue(type, fullName, name, expr, annotation, location));
+      evaluables.add(new PNamedValue(type, name, expr, annotation, location));
       return null;
     }
 
@@ -205,18 +201,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
       var location = fileLocation(fullPath, nameNode);
-      var defaultValueFullName = createDefaultValue(itemName, item, location);
-      return new PItem(type, itemName, defaultValueFullName, location);
-    }
-
-    private Maybe<String> createDefaultValue(String itemName, ItemContext item, Location location) {
-      return createExprSane(item.expr()).map(e -> {
-        var type = new PImplicitType(location);
-        var fullName = createFullName(itemName);
-        var pNamedValue = new PNamedValue(type, fullName, itemName, some(e), none(), location);
-        evaluables.add(pNamedValue);
-        return fullName;
-      });
+      return new PItem(type, itemName, createExprSane(item.expr()), location);
     }
 
     private Maybe<PExpr> createPipeSane(PipeContext pipe) {
@@ -321,12 +306,12 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PInstantiate createLambda(LambdaContext lambdaFunc) {
-      var fullName = createFullName("$lambda" + (++lambdaCount));
-      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger, fullName);
+      var name = "lambda_" + (++lambdaCount);
+      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var params = visitor.createItems(lambdaFunc.itemList());
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
-      var lambdaFuncP = new PLambda(fullName, params, body, location);
+      var lambdaFuncP = new PLambda(name, params, body, location);
       return new PInstantiate(lambdaFuncP, location);
     }
 
@@ -345,13 +330,12 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private List<PExpr> createArgList(ArgListContext argList) {
       ArrayList<PExpr> result = new ArrayList<>();
       for (ArgContext arg : argList.arg()) {
-        ExprContext expr = arg.expr();
         TerminalNode nameNode = arg.NAME();
-        PExpr pExpr = createExpr(expr);
+        var expr = createExpr(arg.expr());
         if (nameNode == null) {
-          result.add(pExpr);
+          result.add(expr);
         } else {
-          result.add(new PNamedArg(nameNode.getText(), pExpr, fileLocation(fullPath, arg)));
+          result.add(new PNamedArg(nameNode.getText(), expr, fileLocation(fullPath, arg)));
         }
       }
       return listOfAll(result);
@@ -389,10 +373,6 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var resultType = types.get(types.size() - 1);
       var paramTypes = types.subList(0, types.size() - 1);
       return new PFuncType(resultType, paramTypes, fileLocation(fullPath, funcType));
-    }
-
-    private String createFullName(String shortName) {
-      return scopeName == null ? shortName : fullName(scopeName, shortName);
     }
 
     private RuntimeException newRuntimeException(Class<?> clazz) {

@@ -44,13 +44,13 @@ public class TypeTeller {
   }
 
   public SType translate(PType type) {
-    if (isTypeVarName(type.name())) {
-      return new SVar(type.name());
+    if (isTypeVarName(type.nameText())) {
+      return new SVar(type.nameText());
     }
     return switch (type) {
       case PArrayType a -> new SArrayType(translate(a.elemT()));
       case PFuncType f -> new SFuncType(f.params().map(this::translate), translate(f.result()));
-      default -> typeWithName(type.name());
+      default -> typeWithName(type.nameText());
     };
   }
 

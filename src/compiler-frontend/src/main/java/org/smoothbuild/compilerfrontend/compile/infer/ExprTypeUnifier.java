@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;
@@ -232,18 +233,18 @@ public class ExprTypeUnifier {
   }
 
   private void unifyReference(PReference pReference) {
-    pReference.setSSchema(typeTeller.schemaFor(pReference.referencedName()));
+    pReference.setSSchema(typeTeller.schemaFor(pReference.id().full()));
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {
     var selectableType = unifyExpr(pSelect.selectable());
     var resolvedSelectableType = unifier.resolve(selectableType);
     if (resolvedSelectableType instanceof SStructType sStructType) {
-      var itemSigS = sStructType.fields().get(pSelect.field());
+      var itemSigS = sStructType.fields().get(id(pSelect.field()));
       if (itemSigS == null) {
         throw new TypeException(compileError(
             pSelect.location(),
-            "Struct " + sStructType.q() + " has no field `" + pSelect.field() + "`."));
+            "Struct " + sStructType.id().q() + " has no field `" + pSelect.field() + "`."));
       } else {
         return itemSigS.type();
       }

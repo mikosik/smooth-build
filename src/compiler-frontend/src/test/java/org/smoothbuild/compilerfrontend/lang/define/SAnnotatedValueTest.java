@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -10,7 +11,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
   void to_string() {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     var annotatedValueS =
-        new SAnnotatedValue(annotationS, sSchema(sStringType()), "myVal", location(7));
+        new SAnnotatedValue(annotationS, sSchema(sStringType()), id("myVal"), location(7));
     assertThat(annotatedValueS.toString())
         .isEqualTo(
             """

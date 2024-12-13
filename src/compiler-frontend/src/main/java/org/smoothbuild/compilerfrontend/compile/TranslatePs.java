@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.schedule.Output;
@@ -91,15 +92,15 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private STypeDefinition convertStruct(PStruct pStruct) {
-      return new STypeDefinition(pStruct.sType(), pStruct.location());
+      return new STypeDefinition(pStruct.sType().id(), pStruct.sType(), pStruct.location());
     }
 
     private SConstructor convertConstructor(PConstructor pConstructor) {
       var fields = pConstructor.params();
       var params =
-          fields.map(f -> new SItem(fields.get(f.name()).sType(), f.name(), none(), f.location()));
+          fields.map(f -> new SItem(fields.get(f.id()).sType(), f.id(), none(), f.location()));
       return new SConstructor(
-          pConstructor.sSchema(), pConstructor.name(), params, pConstructor.location());
+          pConstructor.sSchema(), pConstructor.id(), params, pConstructor.location());
     }
 
     private SNamedEvaluable convertReferenceableP(PReferenceable pReferenceable) {
@@ -113,7 +114,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
       var schema = pNamedValue.sSchema();
-      var name = pNamedValue.name();
+      var name = pNamedValue.id();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
         var ann = convertAnnotation(pNamedValue.annotation().get());
@@ -139,13 +140,12 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     public SItem convertParam(PItem paramP) {
-      return new SItem(
-          paramP.sType(), paramP.name(), paramP.defaultValueFullName(), paramP.location());
+      return new SItem(paramP.sType(), paramP.id(), paramP.defaultValueId(), paramP.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
       var schema = pNamedFunc.sSchema();
-      var name = pNamedFunc.name();
+      var name = pNamedFunc.id();
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
         var annotationS = convertAnnotation(pNamedFunc.annotation().get());
@@ -160,7 +160,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SAnnotation convertAnnotation(PAnnotation pAnnotation) {
       var path = convertString(pAnnotation.value());
-      return new SAnnotation(pAnnotation.name(), path, pAnnotation.location());
+      return new SAnnotation(pAnnotation.nameText(), path, pAnnotation.location());
     }
 
     private List<SExpr> convertExprs(List<PExpr> positionedArgs) {
@@ -229,16 +229,17 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SReference convertReference(PReference pReference) {
-      return convertReference(pReference, typeTeller.schemaFor(pReference.referencedName()));
+      return convertReference(pReference, typeTeller.schemaFor(pReference.id().full()));
     }
 
     private SReference convertReference(PReference pReference, SSchema sSchema) {
-      return new SReference(sSchema, pReference.referencedName(), pReference.location());
+      return new SReference(sSchema, pReference.id(), pReference.location());
     }
 
     private SExpr convertSelect(PSelect pSelect) {
       var selectable = convertExpr(pSelect.selectable());
-      return new SSelect(selectable, pSelect.field(), pSelect.location());
+      // TODO do not use name(), pSelect should have fieldName()
+      return new SSelect(selectable, id(pSelect.field()), pSelect.location());
     }
 
     private SString convertString(PString string) {

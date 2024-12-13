@@ -4,24 +4,25 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
-import org.smoothbuild.compilerfrontend.lang.base.Named;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Item signature.
  * This class is immutable.
  */
-public class SItemSig implements Named {
+public class SItemSig implements Identifiable {
   private final SType type;
-  private final String name;
+  private final Id id;
 
-  public SItemSig(SType type, String name) {
+  public SItemSig(SType type, Id id) {
     this.type = requireNonNull(type);
-    this.name = requireNonNull(name);
+    this.id = requireNonNull(id);
   }
 
-  public static SItemSig itemSigS(SType type, String name) {
-    return new SItemSig(type, name);
+  public static SItemSig itemSigS(SType type, Id id) {
+    return new SItemSig(type, id);
   }
 
   public SType type() {
@@ -29,13 +30,13 @@ public class SItemSig implements Named {
   }
 
   @Override
-  public String name() {
-    return name;
+  public Id id() {
+    return id;
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(name, minNameLength, ' ');
+    String namePart = padEnd(id.full(), minNameLength, ' ');
     return typePart + namePart;
   }
 
@@ -46,16 +47,16 @@ public class SItemSig implements Named {
     }
     return object instanceof SItemSig that
         && Objects.equals(this.type, that.type)
-        && Objects.equals(this.name, that.name);
+        && Objects.equals(this.id, that.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, name);
+    return Objects.hash(type, id);
   }
 
   @Override
   public String toString() {
-    return type().name() + " " + name;
+    return type().name() + " " + id;
   }
 }

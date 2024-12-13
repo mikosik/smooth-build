@@ -16,12 +16,11 @@ public final class PNamedValue extends PNamedEvaluable {
 
   public PNamedValue(
       PType type,
-      String fullName,
-      String shortName,
+      String nameText,
       Maybe<PExpr> body,
       Maybe<PAnnotation> annotation,
       Location location) {
-    super(fullName, shortName, body, annotation, location);
+    super(nameText, body, annotation, location);
     this.type = type;
   }
 
@@ -59,7 +58,7 @@ public final class PNamedValue extends PNamedEvaluable {
     }
     return object instanceof PNamedValue that
         && Objects.equals(this.type, that.type)
-        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.nameText(), that.nameText())
         && Objects.equals(this.body(), that.body())
         && Objects.equals(this.annotation(), that.annotation())
         && Objects.equals(this.location(), that.location());
@@ -67,14 +66,14 @@ public final class PNamedValue extends PNamedEvaluable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, name(), body(), annotation(), location());
+    return Objects.hash(type, nameText(), body(), annotation(), location());
   }
 
   @Override
   public String toString() {
     var fields = list(
             "type = " + type,
-            "name = " + name(),
+            "name = " + nameText(),
             "body = " + body(),
             "annotation = " + annotation(),
             "location = " + location())

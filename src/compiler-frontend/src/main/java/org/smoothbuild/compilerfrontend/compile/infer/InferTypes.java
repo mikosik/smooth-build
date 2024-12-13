@@ -66,7 +66,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       var params = pStruct
           .fields()
           .list()
-          .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
+          .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.id(), none(), f.location()));
       var sFuncType = new SFuncType(SItem.toTypes(params), structT);
       var schema = new SFuncSchema(varSetS(), sFuncType);
       pConstructor.setSSchema(schema);
@@ -75,7 +75,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     private SStructType inferStructType(PStruct struct) throws TypeException {
       NList<SItemSig> sItemSigs = struct.fields().map(this::inferFieldSig);
-      var sStructType = new SStructType(struct.name(), sItemSigs);
+      var sStructType = new SStructType(struct.id(), sItemSigs);
       struct.setSType(sStructType);
       return sStructType;
     }
@@ -84,7 +84,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       var type = typeTeller.translate(field.type());
       if (type.vars().isEmpty()) {
         field.setSType(type);
-        return new SItemSig(type, field.name());
+        return new SItemSig(type, field.id());
       } else {
         var message = "Field type cannot be polymorphic. Found field %s with type %s."
             .formatted(field.q(), type.q());
@@ -119,13 +119,13 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
         var index = i;
-        param.defaultValueFullName().ifPresent(defaultValueFullName -> {
+        param.defaultValueId().ifPresent(defaultValueId -> {
           var funcSchema = namedFunc.sSchema();
           var unifier = new Unifier();
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
               replaceVarsWithFlexible(funcSchema.quantifiedVars(), resolvedParamType, unifier);
-          var sSchema = typeTeller.schemaFor(defaultValueFullName);
+          var sSchema = typeTeller.schemaFor(defaultValueId.full());
           var defaultValueType = replaceQuantifiedVarsWithFlexible(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));

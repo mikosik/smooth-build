@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
@@ -16,20 +17,22 @@ public class FindValuesTest extends FrontendCompilerTestContext {
   void find_evaluable() {
     var sSchema = sSchema(sIntArrayT());
     var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
-    var sScope = new SScope(immutableBindings(), immutableBindings(map(sValue.name(), sValue)));
+    var sScope =
+        new SScope(immutableBindings(), immutableBindings(map(sValue.id().full(), sValue)));
 
-    var exprs = new FindValues().execute(sScope, list(sValue.name()));
+    var exprs = new FindValues().execute(sScope, list(sValue.id().full()));
 
-    var sReference = sReference(sSchema, "myValue", commandLineLocation());
+    var sReference = sReference(sSchema, id("myValue"), commandLineLocation());
     assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
   }
 
   @Test
   void find_polymorphic_evaluable_fails() {
     var value = sValue(sSchema(sVarAArrayT()), "myValue", sOrder(varA()));
-    var sScope = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
+    var sScope =
+        new SScope(immutableBindings(), immutableBindings(map(value.id().full(), value)));
 
-    var exprs = new FindValues().execute(sScope, list(value.name()));
+    var exprs = new FindValues().execute(sScope, list(value.id().full()));
 
     assertThat(exprs.report().logs())
         .containsExactly(error("`myValue` cannot be calculated as it is a polymorphic value."));

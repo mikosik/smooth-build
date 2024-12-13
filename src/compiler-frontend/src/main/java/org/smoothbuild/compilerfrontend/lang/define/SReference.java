@@ -5,17 +5,18 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
  * Reference to {@link SNamedEvaluable} or {@link SItem}.
  */
-public record SReference(SSchema schema, String referencedName, Location location)
+public record SReference(SSchema schema, Id referencedId, Location location)
     implements SPolymorphic, Located {
   @Override
   public String toString() {
     var fields = list(
-            "schema = " + schema, "referencedName = " + referencedName, "location = " + location)
+            "schema = " + schema, "referencedName = " + referencedId, "location = " + location)
         .toString("\n");
     return "SReference(\n" + indent(fields) + "\n)";
   }

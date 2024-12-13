@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -9,7 +10,7 @@ public class SNamedExprValueTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var namedExprValueS =
-        new SNamedExprValue(sSchema(sStringType()), "myVal", sInt(9), location(7));
+        new SNamedExprValue(sSchema(sStringType()), id("myVal"), sInt(9), location(7));
     assertThat(namedExprValueS.toString())
         .isEqualTo(
             """

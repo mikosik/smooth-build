@@ -10,6 +10,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.log.base.Log.error;
+import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -41,8 +42,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
-import org.smoothbuild.compilerfrontend.lang.base.Named;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -219,7 +221,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sInterfaceType(itemSigsToMap(fieldTypes));
   }
 
-  public default SInterfaceType sInterfaceType(Map<String, SItemSig> fieldSignatures) {
+  public default SInterfaceType sInterfaceType(Map<Id, SItemSig> fieldSignatures) {
     return new SInterfaceType(fieldSignatures);
   }
 
@@ -255,16 +257,16 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return listOfAll(builder);
   }
 
-  public default Map<String, SItemSig> typesToItemSigsMap(SType... types) {
+  public default Map<Id, SItemSig> typesToItemSigsMap(SType... types) {
     return itemSigsToMap(sTypesToSSigs(types));
   }
 
-  public default Map<String, SItemSig> itemSigsToMap(SItemSig... itemSigs) {
+  public default Map<Id, SItemSig> itemSigsToMap(SItemSig... itemSigs) {
     return itemSigsToMap(list(itemSigs));
   }
 
-  public default Map<String, SItemSig> itemSigsToMap(List<SItemSig> sigs) {
-    return sigs.toMap(SItemSig::name, f -> f);
+  public default Map<Id, SItemSig> itemSigsToMap(List<SItemSig> sigs) {
+    return sigs.toMap(SItemSig::id, f -> f);
   }
 
   public default List<SItemSig> sTypesToSSigs(SType... types) {
@@ -276,7 +278,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SStructType sStructType(String name, NList<SItemSig> fields) {
-    return new SStructType(name, fields);
+    return new SStructType(id(name), fields);
   }
 
   public default SVar varA() {
@@ -368,7 +370,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SInstantiate sInstantiate(
       int line, List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
     var location = location(line);
-    var referenceS = new SReference(namedEvaluable.schema(), namedEvaluable.name(), location);
+    var referenceS = new SReference(namedEvaluable.schema(), namedEvaluable.id(), location);
     return sInstantiate(typeArgs, referenceS, location);
   }
 
@@ -418,19 +420,19 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sReference(line, new SSchema(varSetS(), type), name));
+    return sInstantiate(line, sReference(line, new SSchema(varSetS(), type), id(name)));
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
-    return sReference(line, namedEvaluable.schema(), namedEvaluable.name());
+    return sReference(line, namedEvaluable.schema(), namedEvaluable.id());
   }
 
-  public default SReference sReference(int line, SSchema schema, String name) {
-    return sReference(schema, name, location(line));
+  public default SReference sReference(int line, SSchema schema, Id id) {
+    return sReference(schema, id, location(line));
   }
 
-  public default SReference sReference(SSchema schema, String name, Location location) {
-    return new SReference(schema, name, location);
+  public default SReference sReference(SSchema schema, Id id, Location location) {
+    return new SReference(schema, id, location);
   }
 
   public default SSelect sSelect(SExpr selectable, String field) {
@@ -438,7 +440,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SSelect sSelect(int line, SExpr selectable, String field) {
-    return new SSelect(selectable, field, location(line));
+    return new SSelect(selectable, id(field), location(line));
   }
 
   public default SString sString() {
@@ -504,7 +506,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name) {
-    return new SItem(type, name, none(), location(line));
+    return new SItem(type, id(name), none(), location(line));
   }
 
   public default SItem sItem(SType type, String name, String defaultValueFullName) {
@@ -515,9 +517,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sItem(line, type, name, some(defaultValueFullName));
   }
 
-  public default SItem sItem(
-      int line, SType type, String name, Maybe<String> defaultValueFullName) {
-    return new SItem(type, name, defaultValueFullName, location(line));
+  public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueId) {
+    return new SItem(type, id(name), defaultValueId.map(Id::id), location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {
@@ -531,7 +532,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SAnnotatedValue sAnnotatedValue(
       SAnnotation annotation, SType type, String name, Location location) {
-    return new SAnnotatedValue(annotation, sSchema(type), name, location);
+    return new SAnnotatedValue(annotation, sSchema(type), id(name), location);
   }
 
   public default SNamedExprValue sValue(String name, SExpr body) {
@@ -551,7 +552,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedExprValue sValue(int line, SSchema schema, String name, SExpr body) {
-    return new SNamedExprValue(schema, name, body, location(line));
+    return new SNamedExprValue(schema, id(name), body, location(line));
   }
 
   public default SNamedValue emptySArrayValue() {
@@ -572,8 +573,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SConstructor sConstructor(int line, SStructType structType, String name) {
     var fields = structType.fields();
-    var params = fields.map(f -> new SItem(f.type(), f.name(), none(), location(2)));
-    return new SConstructor(sFuncSchema(params, structType), name, params, location(line));
+    var params = fields.map(f -> new SItem(f.type(), f.id(), none(), location(2)));
+    return new SConstructor(sFuncSchema(params, structType), id(name), params, location(line));
   }
 
   public default SAnnotatedFunc sBytecodeFunc(
@@ -607,7 +608,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SAnnotatedFunc sAnnotatedFunc(
       SAnnotation ann, SType resultType, String name, NList<SItem> params, Location location) {
-    return new SAnnotatedFunc(ann, sFuncSchema(params, resultType), name, params, location);
+    return new SAnnotatedFunc(ann, sFuncSchema(params, resultType), id(name), params, location);
   }
 
   public default SNamedExprFunc sFunc(int line, String name, NList<SItem> params, SExpr body) {
@@ -626,7 +627,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SNamedExprFunc sFunc(
       int line, SType resultType, String name, NList<SItem> params, SExpr body) {
     var schema = sFuncSchema(params, resultType);
-    return new SNamedExprFunc(schema, name, params, body, location(line));
+    return new SNamedExprFunc(schema, id(name), params, body, location(line));
   }
 
   public default SLambda sLambda(SVarSet quantifiedVars, SExpr body) {
@@ -671,15 +672,17 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItemSig sSig(SType type, String name) {
-    return new SItemSig(type, name);
+    return new SItemSig(type, id(name));
   }
 
   public default PModule pModule(List<PStruct> structs, List<PNamedEvaluable> evaluables) {
-    return new PModule("", structs, evaluables);
+    return new PModule("Module.smooth", structs, evaluables);
   }
 
   public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
-    return pInstantiate(new PLambda("^1", params, body, location()));
+    var pLambda = new PLambda("lambda_1", params, body, location());
+    pLambda.setId(id("lambda_1"));
+    return pInstantiate(pLambda);
   }
 
   public default PCall pCall(PExpr callee) {
@@ -725,7 +728,9 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default PNamedFunc pNamedFunc(
       String name, NList<PItem> params, Maybe<PExpr> body, Location location) {
     var resultT = new PImplicitType(location);
-    return new PNamedFunc(resultT, name, shortName(name), params, body, none(), location);
+    var pNamedFunc = new PNamedFunc(resultT, name, params, body, none(), location);
+    pNamedFunc.setId(id(name));
+    return pNamedFunc;
   }
 
   public default PNamedValue pNamedValue() {
@@ -743,27 +748,36 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default PNamedValue pNamedValue(String name, PExpr body) {
     var location = location();
     var type = new PImplicitType(location);
-    return new PNamedValue(type, name, shortName(name), some(body), none(), location);
+    return pNamedValue(name, body, type, location);
+  }
+
+  private static PNamedValue pNamedValue(
+      String name, PExpr body, PImplicitType type, Location location) {
+    var pNamedValue = new PNamedValue(type, name, some(body), none(), location);
+    pNamedValue.setId(id(name));
+    return pNamedValue;
   }
 
   public default PItem pItem() {
-    return pItem(some("func:param"));
+    return pItem(some(pInt()));
   }
 
-  public default PItem pItem(Maybe<String> defaultValueFullName) {
-    return pItem("param1", defaultValueFullName);
+  public default PItem pItem(Maybe<PExpr> defaultValue) {
+    return pItem("param1", defaultValue);
   }
 
   public default PItem pItem(String name) {
     return pItem(name, none());
   }
 
-  public default PItem pItem(String name, String defaultValueFullName) {
-    return pItem(name, some(defaultValueFullName));
+  public default PItem pItem(String name, PExpr defaultValue) {
+    return pItem(name, some(defaultValue));
   }
 
-  public default PItem pItem(String name, Maybe<String> defaultValueFullName) {
-    return new PItem(new PExplicitType("Int", location()), name, defaultValueFullName, location());
+  public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
+    var pItem = new PItem(new PExplicitType("Int", location()), name, defaultValue, location());
+    pItem.setId(id(name));
+    return pItem;
   }
 
   public default PInt pInt() {
@@ -775,16 +789,18 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PInstantiate pReference(String name, Location location) {
-    return pInstantiate(new PReference(name, location));
+    return pInstantiate(getPReference(name, location));
   }
 
-  public default String shortName(String fullName) {
-    return fullName.substring(Math.max(0, fullName.lastIndexOf(':')));
+  private static PReference getPReference(String name, Location location) {
+    var pReference = new PReference(name, location);
+    pReference.setId(id(name));
+    return pReference;
   }
 
   @SuppressWarnings("unchecked")
-  public default <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(list(nameds).toMap(Named::name, v -> v));
+  public default <T extends Identifiable> ImmutableBindings<T> bindings(T... nameds) {
+    return immutableBindings(list(nameds).toMap(t -> t.id().full(), v -> v));
   }
 
   public default Log err(int line, String message) {

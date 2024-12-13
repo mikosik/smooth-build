@@ -1,10 +1,12 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
+import org.smoothbuild.compilerfrontend.lang.base.Id;
+
 /**
  * This class is immutable.
  */
-public final class SIntType extends SType {
+public final class SIntType extends SBaseType {
   public SIntType() {
-    super("Int");
+    super(Id.id("Int"));
   }
 }

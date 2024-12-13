@@ -24,6 +24,7 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuples;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
@@ -64,7 +65,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     var artifacts = referenceSs.zip(evaluatedExprs.bValues(), Tuples::tuple);
     var logger = new Logger();
     artifacts
-        .sortUsing(comparing(a -> a.element1().referencedName()))
+        .sortUsing(comparing(a -> a.element1().referencedId().full()))
         .forEach(t -> save(t.element1(), t.element2(), logger));
     return output(label, logger.toList());
   }
@@ -74,7 +75,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private void save(SReference valueS, BValue value, Logger logger) {
-    String name = valueS.referencedName();
+    var name = valueS.referencedId();
     try {
       var path = write(valueS, value);
       logger.info(name + " -> " + path.path().q());
@@ -88,7 +89,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
 
   private FullPath write(SReference sReference, BValue value)
       throws IOException, DuplicatedPathsException {
-    FullPath artifactPath = artifactPath(sReference.referencedName());
+    FullPath artifactPath = artifactPath(sReference.referencedId());
     if (sReference.schema().type() instanceof SArrayType sArrayType) {
       return saveArray(sArrayType, artifactPath, (BArray) value);
     } else if (sReference.schema().type().name().equals(FILE_STRUCT_NAME)) {
@@ -176,7 +177,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     return bytecodeDbPath.appendPart(dbPathTo(value.dataHash()).toString());
   }
 
-  private FullPath artifactPath(String name) {
-    return artifactsPath.appendPart(name);
+  private FullPath artifactPath(Id id) {
+    return artifactsPath.appendPart(id.full());
   }
 }

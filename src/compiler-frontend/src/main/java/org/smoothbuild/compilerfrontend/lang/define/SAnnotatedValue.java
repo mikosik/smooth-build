@@ -4,6 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
@@ -13,8 +14,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public final class SAnnotatedValue extends SNamedValue {
   private final SAnnotation annotation;
 
-  public SAnnotatedValue(SAnnotation annotation, SSchema schema, String name, Location location) {
-    super(schema, name, location);
+  public SAnnotatedValue(SAnnotation annotation, SSchema schema, Id id, Location location) {
+    super(schema, id, location);
     this.annotation = annotation;
   }
 
@@ -30,13 +31,13 @@ public final class SAnnotatedValue extends SNamedValue {
     return object instanceof SAnnotatedValue that
         && this.annotation().equals(that.annotation())
         && this.schema().equals(that.schema())
-        && this.name().equals(that.name())
+        && this.id().equals(that.id())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation(), schema(), name(), location());
+    return Objects.hash(annotation(), schema(), id(), location());
   }
 
   @Override

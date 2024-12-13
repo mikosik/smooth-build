@@ -18,13 +18,12 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
 
   public PNamedFunc(
       PType resultT,
-      String fullName,
-      String shortName,
+      String nameText,
       NList<PItem> params,
       Maybe<PExpr> body,
       Maybe<PAnnotation> annotation,
       Location location) {
-    super(fullName, shortName, body, annotation, location);
+    super(nameText, body, annotation, location);
     this.resultT = resultT;
     this.params = params;
   }
@@ -71,7 +70,7 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
     }
     return object instanceof PNamedFunc that
         && Objects.equals(this.resultT, that.resultT)
-        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.id(), that.id())
         && Objects.equals(this.params, that.params)
         && Objects.equals(this.body(), that.body())
         && Objects.equals(this.annotation(), that.annotation())
@@ -80,7 +79,7 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultT, name(), params, body(), annotation(), location());
+    return Objects.hash(resultT, id(), params, body(), annotation(), location());
   }
 
   @Override
@@ -88,7 +87,7 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
     var paramsString = params().list().toString("\n");
     var fields = list(
             "resulT = " + resultT,
-            "name = " + name(),
+            "name = " + id(),
             "params = [",
             indent(paramsString),
             "]",

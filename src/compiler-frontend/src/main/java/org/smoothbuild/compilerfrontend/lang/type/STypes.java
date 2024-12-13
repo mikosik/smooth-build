@@ -13,7 +13,7 @@ public class STypes {
   /**
    * Base types that are legal in smooth language.
    */
-  public static List<SType> baseTypes() {
+  public static List<SBaseType> baseTypes() {
     return list(BLOB, BOOL, INT, STRING);
   }
 }

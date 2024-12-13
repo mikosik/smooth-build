@@ -5,20 +5,20 @@ import static java.util.Objects.requireNonNull;
 import org.smoothbuild.common.log.location.Location;
 
 /**
- * Default Nal implementation.
+ * Default Ial implementation.
  */
-public class NalImpl implements Nal {
-  private final String name;
+public class IalImpl implements Ial {
+  private final Id id;
   private final Location location;
 
-  public NalImpl(String name, Location location) {
-    this.name = requireNonNull(name);
-    this.location = location;
+  public IalImpl(Id id, Location location) {
+    this.id = requireNonNull(id);
+    this.location = requireNonNull(location);
   }
 
   @Override
-  public String name() {
-    return name;
+  public Id id() {
+    return id;
   }
 
   @Override

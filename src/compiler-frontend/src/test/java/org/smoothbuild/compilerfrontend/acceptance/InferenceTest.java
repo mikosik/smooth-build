@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.arrayTypeMessage;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.define.SItemSig.itemSigS;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -653,8 +652,8 @@ public class InferenceTest extends FrontendCompileTester {
                 A myEqual(A a1, A a2) = a1;
                 result = myEqual(MyStruct1("aaa"), MyStruct2("aaa"));
                 """;
-        var arg1 = sStructType("MyStruct1", itemSigS(sStringType(), "x"));
-        var arg2 = sStructType("MyStruct2", itemSigS(sStringType(), "a"));
+        var arg1 = sStructType("MyStruct1", sSig(sStringType(), "x"));
+        var arg2 = sStructType("MyStruct2", sSig(sStringType(), "a"));
         var called = sFuncType(var1(), var1(), var1());
         module(code).loadsWithError(8, illegalCallMessage(called, list(arg1, arg2)));
       }
