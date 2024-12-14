@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -161,7 +161,7 @@ public class VisibilityTest extends FrontendCompileTester {
               result = myFunc:param;
               """;
           var ref =
-              sInstantiate(sReference(2, sSchema(sIntType()), id("myFunc:param")), location(2));
+              sInstantiate(sReference(2, sSchema(sIntType()), fqn("myFunc:param")), location(2));
           module(code).loadsWithSuccess().containsEvaluable(sValue(2, "result", ref));
         }
       }

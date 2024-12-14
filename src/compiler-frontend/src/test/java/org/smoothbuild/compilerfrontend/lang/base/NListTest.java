@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
 
@@ -86,14 +86,15 @@ public class NListTest {
     @Test
     void map_related_methods_dont_call_list_and_indexMap_suppliers() {
       var nlist = new NList<>(this::throwException, () -> map(n1.id(), n1), this::throwException);
-      nlist.containsName(id("name"));
-      nlist.get(id("name"));
+      nlist.containsName(fqn("name"));
+      nlist.get(fqn("name"));
     }
 
     @Test
     void index_of_method_doesnt_call_list_and_map_suppliers() {
-      var nlist = new NList<>(this::throwException, this::throwException, () -> map(id("name"), 1));
-      nlist.indexOf(id("name"));
+      var nlist =
+          new NList<>(this::throwException, this::throwException, () -> map(fqn("name"), 1));
+      nlist.indexOf(fqn("name"));
     }
 
     private <T> T throwException() {
@@ -148,7 +149,7 @@ public class NListTest {
     @Test
     void returns_null_when_element_with_given_name_doesnt_exist() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.get(id("seven"))).isNull();
+      assertThat(nlist.get(fqn("seven"))).isNull();
     }
 
     @Test
@@ -169,7 +170,7 @@ public class NListTest {
     @Test
     void returns_false_when_element_with_given_name_doesnt_exist() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.containsName(id("seven"))).isFalse();
+      assertThat(nlist.containsName(fqn("seven"))).isFalse();
     }
   }
 
@@ -253,7 +254,7 @@ public class NListTest {
 
   private static record MyNamed(Id id) implements Identifiable {
     public MyNamed(String name) {
-      this(Id.id(name));
+      this(Fqn.fqn(name));
     }
 
     @Override

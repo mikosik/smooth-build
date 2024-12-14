@@ -4,9 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.error;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.parseIdentifierDeclaration;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.parseReference;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.parseStructDeclaration;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.parseReference;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.parseReferenceableName;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.parseStructName;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
@@ -18,11 +19,11 @@ import org.smoothbuild.common.collect.List;
 
 public class IdTest {
   @Nested
-  class _parse_identifier_declaration {
+  class _parse_referenceable_name {
     @ParameterizedTest
     @MethodSource
     void legal(String string, String full, String last) {
-      var name = parseIdentifierDeclaration(string).right();
+      var name = parseReferenceableName(string).right();
       assertThat(name.full()).isEqualTo(full);
       assertThat(name.last()).isEqualTo(last);
     }
@@ -38,7 +39,7 @@ public class IdTest {
     @ParameterizedTest
     @MethodSource
     void illegal(String string, String expectedErrorMessage) {
-      assertThat(parseIdentifierDeclaration(string)).isEqualTo(error(expectedErrorMessage));
+      assertThat(parseReferenceableName(string)).isEqualTo(error(expectedErrorMessage));
     }
 
     static List<Arguments> illegal() {
@@ -61,11 +62,11 @@ public class IdTest {
   }
 
   @Nested
-  class _parse_struct_declaration {
+  class _parse_struct_name {
     @ParameterizedTest
     @MethodSource
     void legal(String string, String expected) {
-      var name = parseStructDeclaration(string).right();
+      var name = parseStructName(string).right();
       assertThat(name.last()).isEqualTo(expected);
       assertThat(name.full()).isEqualTo(expected);
     }
@@ -81,7 +82,7 @@ public class IdTest {
     @ParameterizedTest
     @MethodSource
     void illegal(String string, String expectedErrorMessage) {
-      assertThat(parseStructDeclaration(string)).isEqualTo(error(expectedErrorMessage));
+      assertThat(parseStructName(string)).isEqualTo(error(expectedErrorMessage));
     }
 
     static List<Arguments> illegal() {
@@ -163,9 +164,23 @@ public class IdTest {
 
   @Test
   void append() {
-    var name1 = parseIdentifierDeclaration("abc").right();
-    var name2 = parseIdentifierDeclaration("def").right();
+    var name1 = parseReferenceableName("abc").right();
+    var name2 = parseReferenceableName("def").right();
     assertThat(name1.append(name2)).isEqualTo(parseReference("abc:def").right());
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  void parts(Id id, List<Name> expected) {
+    assertThat(id.parts()).isEqualTo(expected);
+  }
+
+  public static List<Arguments> parts() {
+    return list(
+        arguments(fqn("abc"), list(name("abc"))),
+        arguments(fqn("abc:def"), list(name("abc"), name("def"))),
+        arguments(fqn("abc:def:ghi"), list(name("abc"), name("def"), name("ghi"))),
+        arguments(fqn("abc:_"), list(name("abc"), name("_"))));
   }
 
   @Test
@@ -181,8 +196,12 @@ public class IdTest {
 
   @Test
   void to_string() {
-    assertThat(parseIdentifierDeclaration("abc").right().toString()).isEqualTo("abc");
-    assertThat(parseStructDeclaration("Struct").right().toString()).isEqualTo("Struct");
+    assertThat(parseReferenceableName("abc").right().toString()).isEqualTo("abc");
+    assertThat(parseStructName("Struct").right().toString()).isEqualTo("Struct");
     assertThat(parseReference("name:abc").right().toString()).isEqualTo("name:abc");
+  }
+
+  private static Name name(String name) {
+    return new Name(name);
   }
 }

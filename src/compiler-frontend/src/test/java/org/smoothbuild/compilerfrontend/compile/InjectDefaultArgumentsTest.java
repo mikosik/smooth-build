@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
     var pValue = pNamedValue("result", pCall);
     var pDefaultValue = pNamedValue("myFunc:param", pInt());
     var pItem = pItem("p", pInt());
-    pItem.setDefaultValueId(some(id("myFunc:param")));
+    pItem.setDefaultValueId(some(fqn("myFunc:param")));
     var pNamedFunc = pNamedFunc("myFunc", nlist(pItem));
     var pModule = pModule(list(), list(pDefaultValue, pNamedFunc, pValue));
 

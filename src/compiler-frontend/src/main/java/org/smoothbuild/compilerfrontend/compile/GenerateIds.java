@@ -3,9 +3,9 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.parseIdentifierDeclaration;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.parseReference;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.parseStructDeclaration;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.parseReference;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.parseReferenceableName;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.parseStructName;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
@@ -41,7 +41,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
     @Override
     public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
       var nameText = pNamedEvaluable.nameText();
-      parseIdentifierDeclaration(nameText)
+      parseReferenceableName(nameText)
           .ifLeft(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
           .mapRight(this::fullId)
           .ifRight(id -> {
@@ -53,7 +53,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
     @Override
     public void visitItem(PItem pItem) throws RuntimeException {
       var nameText = pItem.nameText();
-      parseIdentifierDeclaration(nameText)
+      parseReferenceableName(nameText)
           .ifLeft(e -> logIllegalIdentifier(nameText, pItem.location(), e))
           .ifRight(id -> {
             pItem.setId(id);
@@ -66,7 +66,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
     @Override
     public void visitLambda(PLambda pLambda) throws RuntimeException {
       var nameText = pLambda.nameText();
-      parseIdentifierDeclaration(nameText)
+      parseReferenceableName(nameText)
           .ifLeft(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
           .mapRight(this::fullId)
           .ifRight(id -> {
@@ -82,7 +82,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
     @Override
     public void visitStruct(PStruct pStruct) {
       var nameText = pStruct.nameText();
-      parseStructDeclaration(nameText)
+      parseStructName(nameText)
           .ifLeft(e -> logIllegalStructName(pStruct, e, pStruct.nameText()))
           .ifRight(id -> {
             pStruct.setId(id);

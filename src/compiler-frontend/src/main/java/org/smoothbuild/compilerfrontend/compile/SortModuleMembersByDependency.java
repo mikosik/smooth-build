@@ -7,7 +7,7 @@ import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -113,7 +113,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
           }
           default -> {
             if (structNames.contains(pType.nameText())) {
-              deps.add(new GraphEdge<>(pType.location(), id(pType.nameText())));
+              deps.add(new GraphEdge<>(pType.location(), fqn(pType.nameText())));
             }
           }
         }

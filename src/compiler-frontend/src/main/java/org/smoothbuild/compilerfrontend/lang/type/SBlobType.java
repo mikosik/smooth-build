@@ -1,12 +1,12 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Fqn;
 
 /**
  * This class is immutable.
  */
 public final class SBlobType extends SBaseType {
   public SBlobType() {
-    super(Id.id("Blob"));
+    super(Fqn.fqn("Blob"));
   }
 }
