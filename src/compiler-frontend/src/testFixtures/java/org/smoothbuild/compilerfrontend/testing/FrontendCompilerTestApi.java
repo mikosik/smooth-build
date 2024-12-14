@@ -10,7 +10,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -42,6 +42,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.lang.base.Fqn;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
@@ -278,7 +279,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SStructType sStructType(String name, NList<SItemSig> fields) {
-    return new SStructType(id(name), fields);
+    return new SStructType(fqn(name), fields);
   }
 
   public default SVar varA() {
@@ -420,7 +421,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sReference(line, new SSchema(varSetS(), type), id(name)));
+    return sInstantiate(line, sReference(line, new SSchema(varSetS(), type), fqn(name)));
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
@@ -440,7 +441,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SSelect sSelect(int line, SExpr selectable, String field) {
-    return new SSelect(selectable, id(field), location(line));
+    return new SSelect(selectable, fqn(field), location(line));
   }
 
   public default SString sString() {
@@ -506,7 +507,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name) {
-    return new SItem(type, id(name), none(), location(line));
+    return new SItem(type, fqn(name), none(), location(line));
   }
 
   public default SItem sItem(SType type, String name, String defaultValueFullName) {
@@ -518,7 +519,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueId) {
-    return new SItem(type, id(name), defaultValueId.map(Id::id), location(line));
+    return new SItem(type, fqn(name), defaultValueId.map(Fqn::fqn), location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {
@@ -532,7 +533,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SAnnotatedValue sAnnotatedValue(
       SAnnotation annotation, SType type, String name, Location location) {
-    return new SAnnotatedValue(annotation, sSchema(type), id(name), location);
+    return new SAnnotatedValue(annotation, sSchema(type), fqn(name), location);
   }
 
   public default SNamedExprValue sValue(String name, SExpr body) {
@@ -552,7 +553,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedExprValue sValue(int line, SSchema schema, String name, SExpr body) {
-    return new SNamedExprValue(schema, id(name), body, location(line));
+    return new SNamedExprValue(schema, fqn(name), body, location(line));
   }
 
   public default SNamedValue emptySArrayValue() {
@@ -574,7 +575,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SConstructor sConstructor(int line, SStructType structType, String name) {
     var fields = structType.fields();
     var params = fields.map(f -> new SItem(f.type(), f.id(), none(), location(2)));
-    return new SConstructor(sFuncSchema(params, structType), id(name), params, location(line));
+    return new SConstructor(sFuncSchema(params, structType), fqn(name), params, location(line));
   }
 
   public default SAnnotatedFunc sBytecodeFunc(
@@ -608,7 +609,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SAnnotatedFunc sAnnotatedFunc(
       SAnnotation ann, SType resultType, String name, NList<SItem> params, Location location) {
-    return new SAnnotatedFunc(ann, sFuncSchema(params, resultType), id(name), params, location);
+    return new SAnnotatedFunc(ann, sFuncSchema(params, resultType), fqn(name), params, location);
   }
 
   public default SNamedExprFunc sFunc(int line, String name, NList<SItem> params, SExpr body) {
@@ -627,7 +628,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SNamedExprFunc sFunc(
       int line, SType resultType, String name, NList<SItem> params, SExpr body) {
     var schema = sFuncSchema(params, resultType);
-    return new SNamedExprFunc(schema, id(name), params, body, location(line));
+    return new SNamedExprFunc(schema, fqn(name), params, body, location(line));
   }
 
   public default SLambda sLambda(SVarSet quantifiedVars, SExpr body) {
@@ -672,7 +673,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItemSig sSig(SType type, String name) {
-    return new SItemSig(type, id(name));
+    return new SItemSig(type, fqn(name));
   }
 
   public default PModule pModule(List<PStruct> structs, List<PNamedEvaluable> evaluables) {
@@ -681,7 +682,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
     var pLambda = new PLambda("lambda_1", params, body, location());
-    pLambda.setId(id("lambda_1"));
+    pLambda.setId(fqn("lambda_1"));
     return pInstantiate(pLambda);
   }
 
@@ -729,7 +730,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
       String name, NList<PItem> params, Maybe<PExpr> body, Location location) {
     var resultT = new PImplicitType(location);
     var pNamedFunc = new PNamedFunc(resultT, name, params, body, none(), location);
-    pNamedFunc.setId(id(name));
+    pNamedFunc.setId(fqn(name));
     return pNamedFunc;
   }
 
@@ -754,7 +755,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   private static PNamedValue pNamedValue(
       String name, PExpr body, PImplicitType type, Location location) {
     var pNamedValue = new PNamedValue(type, name, some(body), none(), location);
-    pNamedValue.setId(id(name));
+    pNamedValue.setId(fqn(name));
     return pNamedValue;
   }
 
@@ -776,7 +777,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
     var pItem = new PItem(new PExplicitType("Int", location()), name, defaultValue, location());
-    pItem.setId(id(name));
+    pItem.setId(fqn(name));
     return pItem;
   }
 
@@ -794,7 +795,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   private static PReference getPReference(String name, Location location) {
     var pReference = new PReference(name, location);
-    pReference.setId(id(name));
+    pReference.setId(fqn(name));
     return pReference;
   }
 

@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
@@ -22,7 +22,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
 
     var exprs = new FindValues().execute(sScope, list(sValue.id().full()));
 
-    var sReference = sReference(sSchema, id("myValue"), commandLineLocation());
+    var sReference = sReference(sSchema, fqn("myValue"), commandLineLocation());
     assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
   }
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -9,7 +9,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SReferenceTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
-    var refS = new SReference(sSchema(sIntType()), id("referenced"), location(7));
+    var refS = new SReference(sSchema(sIntType()), fqn("referenced"), location(7));
     assertThat(refS.toString())
         .isEqualTo(
             """

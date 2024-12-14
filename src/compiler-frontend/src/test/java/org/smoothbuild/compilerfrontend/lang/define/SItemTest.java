@@ -3,14 +3,14 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.Id.id;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemTest extends FrontendCompilerTestContext {
-  private final Id id = id("name");
+  private final Id id = fqn("name");
   private SItem param;
 
   @Test

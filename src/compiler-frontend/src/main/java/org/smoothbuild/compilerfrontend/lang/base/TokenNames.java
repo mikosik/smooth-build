@@ -10,15 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class TokenNames {
   public static boolean isTypeVarName(String name) {
-    return !name.isEmpty() && name.chars().allMatch(TokenNames::isUpperCase);
-  }
-
-  public static boolean isLowerCase(int character) {
-    return 'a' <= character && character <= 'z';
-  }
-
-  public static boolean isUpperCase(int character) {
-    return 'A' <= character && character <= 'Z';
+    return !name.isEmpty() && name.chars().allMatch(CharUtils::isUpperCase);
   }
 
   public static String arrayTypeName(SType elemT) {
