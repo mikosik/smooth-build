@@ -10,10 +10,10 @@ import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 /**
  * TaNaL = Type and Identifiable and Located.
  */
-public abstract class Tanal extends IalImpl {
+public abstract class Taial extends IalImpl {
   private final SType type;
 
-  public Tanal(SType type, Id id, Location location) {
+  public Taial(SType type, Id id, Location location) {
     super(id, location);
     this.type = requireNonNull(type);
   }

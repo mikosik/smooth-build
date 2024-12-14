@@ -5,13 +5,13 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
-import org.smoothbuild.compilerfrontend.lang.base.Tanal;
+import org.smoothbuild.compilerfrontend.lang.base.Taial;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Type definition.
  */
-public class STypeDefinition extends Tanal {
+public class STypeDefinition extends Taial {
   public STypeDefinition(Id id, SType sType, Location location) {
     super(sType, id, location);
   }
