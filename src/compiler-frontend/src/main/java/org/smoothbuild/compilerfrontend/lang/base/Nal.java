@@ -1,13 +1,14 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
+import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.common.log.location.Location;
 
-public class PBase implements Ial {
+public class Nal implements Located {
   private final String nameText;
-  private Id id;
   private final Location location;
 
-  public PBase(String nameText, Location location) {
+  public Nal(String nameText, Location location) {
     this.nameText = nameText;
     this.location = location;
   }
@@ -16,13 +17,8 @@ public class PBase implements Ial {
     return nameText;
   }
 
-  public void setId(Id id) {
-    this.id = id;
-  }
-
-  @Override
-  public Id id() {
-    return id;
+  public String q() {
+    return Strings.q(nameText);
   }
 
   @Override

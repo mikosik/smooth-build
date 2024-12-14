@@ -2,12 +2,12 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.PBase;
+import org.smoothbuild.compilerfrontend.lang.base.Ianal;
 
 /**
  * Evaluable that has fully qualified name.
  */
-public abstract sealed class PNamedEvaluable extends PBase implements PReferenceable, PEvaluable
+public abstract sealed class PNamedEvaluable extends Ianal implements PReferenceable, PEvaluable
     permits PNamedFunc, PNamedValue {
   private final Maybe<PExpr> body;
   private final Maybe<PAnnotation> annotation;

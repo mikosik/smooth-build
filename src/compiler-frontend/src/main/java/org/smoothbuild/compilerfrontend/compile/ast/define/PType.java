@@ -3,30 +3,12 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
-import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.common.log.location.Located;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Nal;
 
-public abstract sealed class PType implements Located permits PExplicitType, PImplicitType {
-  private final String nameText;
-  private final Location location;
-
+public abstract sealed class PType extends Nal permits PExplicitType, PImplicitType {
   protected PType(String nameText, Location location) {
-    this.nameText = nameText;
-    this.location = location;
-  }
-
-  public String nameText() {
-    return nameText;
-  }
-
-  public String q() {
-    return Strings.q(nameText);
-  }
-
-  @Override
-  public Location location() {
-    return location;
+    super(nameText, location);
   }
 
   @Override
