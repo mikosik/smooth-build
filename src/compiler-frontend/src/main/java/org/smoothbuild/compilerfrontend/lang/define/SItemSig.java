@@ -4,7 +4,7 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
@@ -12,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Item signature.
  * This class is immutable.
  */
-public class SItemSig implements Identifiable {
+public class SItemSig implements HasName {
   private final SType type;
   private final Name name;
 
@@ -25,11 +25,11 @@ public class SItemSig implements Identifiable {
     return type;
   }
 
-  @Override
   public Name id() {
     return name();
   }
 
+  @Override
   public Name name() {
     return name;
   }

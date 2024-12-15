@@ -9,6 +9,7 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -143,7 +144,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < args.size(); i++) {
         var arg = args.get(i);
         if (arg instanceof PNamedArg pNamedArg) {
-          result.set(names.indexOf(fqn(pNamedArg.name())), pNamedArg.expr());
+          result.set(names.indexOf(referenceableName(pNamedArg.name())), pNamedArg.expr());
         } else {
           result.set(i, arg);
         }

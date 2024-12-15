@@ -7,13 +7,14 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.base.Nal;
 import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem extends Nal implements PReferenceable {
+public final class PItem extends Nal implements PReferenceable, HasName {
   private final PType type;
   private Name name;
   private final Maybe<PExpr> defaultValue;
@@ -34,6 +35,7 @@ public final class PItem extends Nal implements PReferenceable {
     this.name = name;
   }
 
+  @Override
   public Name name() {
     return name;
   }

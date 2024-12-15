@@ -206,8 +206,8 @@ public class SbTranslator {
           case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
         };
       } else {
-        throw new SbTranslatorException(
-            "Cannot resolve `" + sReference.referencedId() + "` at " + sReference.location() + ".");
+        throw new SbTranslatorException("Cannot resolve "
+            + sReference.referencedId().q() + " at " + sReference.location() + ".");
       }
     } else {
       var evaluationType = typeF.translate(itemS.type());

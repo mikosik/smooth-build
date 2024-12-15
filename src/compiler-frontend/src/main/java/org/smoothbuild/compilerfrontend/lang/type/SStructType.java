@@ -16,7 +16,7 @@ public final class SStructType extends SInterfaceType {
   private final NList<SItemSig> fields;
 
   public SStructType(Id id, NList<SItemSig> fields) {
-    super(id.full(), (Map<Name, SItemSig>) (Object) fields.map());
+    super(id.full(), fields.map());
     this.id = id;
     this.fields = fields;
   }
@@ -30,9 +30,8 @@ public final class SStructType extends SInterfaceType {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Map<Name, SItemSig> fieldSet() {
-    return (Map<Name, SItemSig>) (Object) fields.map();
+    return fields.map();
   }
 
   @Override

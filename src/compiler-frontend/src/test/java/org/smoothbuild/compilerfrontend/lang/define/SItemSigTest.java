@@ -32,7 +32,7 @@ public class SItemSigTest extends FrontendCompilerTestContext {
   @Test
   void name_getter() {
     item = new SItemSig(sStringType(), name);
-    assertThat(item.id()).isEqualTo(name);
+    assertThat(item.name()).isEqualTo(name);
   }
 
   @Test

@@ -138,8 +138,8 @@ public class ConstraintInferrer {
 
   private static SItemSig unifyItemSigAndItemSig(
       SItemSig itemSig1, SItemSig itemSig2, Queue<Constraint> constraints) throws UnifierException {
-    var name1 = itemSig1.id();
-    var name2 = itemSig2.id();
+    var name1 = itemSig1.name();
+    var name2 = itemSig2.name();
     if (!name1.equals(name2)) {
       throw new UnifierException();
     }
