@@ -269,7 +269,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default Map<Name, SItemSig> itemSigsToMap(List<SItemSig> sigs) {
-    return sigs.toMap(SItemSig::id, f -> f);
+    return sigs.toMap(SItemSig::name, f -> f);
   }
 
   public default List<SItemSig> sTypesToSSigs(SType... types) {
@@ -443,7 +443,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SSelect sSelect(int line, SExpr selectable, String field) {
-    return new SSelect(selectable, fqn(field), location(line));
+    return new SSelect(selectable, referenceableName(field), location(line));
   }
 
   public default SString sString() {

@@ -4,18 +4,18 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class NListTest {
-  private static final Identifiable n0 = named("zero");
-  private static final Identifiable n1 = named("one");
-  private static final Identifiable n2 = named("two");
+  private static final HasName n0 = hasName("zero");
+  private static final HasName n1 = hasName("one");
+  private static final HasName n2 = hasName("two");
 
   @Nested
   class _constructing {
@@ -36,7 +36,7 @@ public class NListTest {
 
     @Test
     void from_map() {
-      assertThat(nlist(list(n0, n1, n2).toMap(Identifiable::id, v -> v)))
+      assertThat(nlist(list(n0, n1, n2).toMap(HasName::name, v -> v)))
           .containsExactly(n0, n1, n2)
           .inOrder();
     }
@@ -45,14 +45,14 @@ public class NListTest {
     class _from_list_with_shadowing {
       @Test
       void using_non_unique_names_factory_method() {
-        assertThat(nlistWithShadowing(list(n0, n1, n2, named(n0.id()))))
-            .containsExactly(n0, n1, n2, named(n0.id()))
+        assertThat(nlistWithShadowing(list(n0, n1, n2, hasName(n0))))
+            .containsExactly(n0, n1, n2, hasName(n0))
             .inOrder();
       }
 
       @Test
       void using_normal_factory_method_fails() {
-        assertCall(() -> nlist(list(n0, n1, n2, named(n0.id()))))
+        assertCall(() -> nlist(list(n0, n1, n2, hasName(n0))))
             .throwsException(new IllegalArgumentException(
                 "List contains two elements with same name = \"zero\"."));
       }
@@ -85,16 +85,16 @@ public class NListTest {
 
     @Test
     void map_related_methods_dont_call_list_and_indexMap_suppliers() {
-      var nlist = new NList<>(this::throwException, () -> map(n1.id(), n1), this::throwException);
-      nlist.containsName(fqn("name"));
-      nlist.get(fqn("name"));
+      var nlist = new NList<>(this::throwException, () -> map(n1.name(), n1), this::throwException);
+      nlist.containsName(name("name"));
+      nlist.get(name("name"));
     }
 
     @Test
     void index_of_method_doesnt_call_list_and_map_suppliers() {
       var nlist =
-          new NList<>(this::throwException, this::throwException, () -> map(fqn("name"), 1));
-      nlist.indexOf(fqn("name"));
+          new NList<>(this::throwException, this::throwException, () -> map(name("name"), 1));
+      nlist.indexOf(name("name"));
     }
 
     private <T> T throwException() {
@@ -103,7 +103,6 @@ public class NListTest {
   }
 
   @Nested
-  @SuppressWarnings("deprecation")
   class _mutable_methods_throw_exception {
     @Test
     void removeIf() {
@@ -132,8 +131,8 @@ public class NListTest {
     @Test
     void maps_elements() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.map(v -> named(v.id().full().concat(":x"))))
-          .containsExactly(named("zero:x"), named("one:x"), named("two:x"))
+      assertThat(nlist.map(v -> hasName(v.name().toString() + "X")))
+          .containsExactly(hasName("zeroX"), hasName("oneX"), hasName("twoX"))
           .inOrder();
     }
   }
@@ -143,19 +142,19 @@ public class NListTest {
     @Test
     void returns_element_with_given_name() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.get(n0.id())).isEqualTo(n0);
+      assertThat(nlist.get(n0.name())).isEqualTo(n0);
     }
 
     @Test
     void returns_null_when_element_with_given_name_doesnt_exist() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.get(fqn("seven"))).isNull();
+      assertThat(nlist.get(name("seven"))).isNull();
     }
 
     @Test
     void returns_first_occurrence_when_more_than_one_element_has_given_name() {
-      var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.id())));
-      assertThat(nlist.get(n0.id())).isSameInstanceAs(n0);
+      var nlist = nlistWithShadowing(list(n0, n1, n2, hasName(n0)));
+      assertThat(nlist.get(n0.name())).isSameInstanceAs(n0);
     }
   }
 
@@ -164,13 +163,13 @@ public class NListTest {
     @Test
     void returns_true_when_element_with_given_name_exists() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.containsName(n0.id())).isTrue();
+      assertThat(nlist.containsName(n0.name())).isTrue();
     }
 
     @Test
     void returns_false_when_element_with_given_name_doesnt_exist() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.containsName(fqn("seven"))).isFalse();
+      assertThat(nlist.containsName(name("seven"))).isFalse();
     }
   }
 
@@ -225,13 +224,13 @@ public class NListTest {
     @Test
     void unique_names() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.indexOf(n0)).isEqualTo(0);
+      assertThat(nlist.indexOf(n0.name())).isEqualTo(0);
     }
 
     @Test
     void non_unique_names() {
-      var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.id())));
-      assertThat(nlist.indexOf(n0)).isEqualTo(0);
+      var nlist = nlistWithShadowing(list(n0, n1, n2, hasName(n0)));
+      assertThat(nlist.indexOf(n0.name())).isEqualTo(0);
     }
   }
 
@@ -239,32 +238,31 @@ public class NListTest {
   void equals_and_hash_code() {
     new EqualsTester()
         .addEqualityGroup(nlist(), nlist())
-        .addEqualityGroup(nlist(named("a")), nlist(named("a")))
-        .addEqualityGroup(nlist(named("b")), nlist(named("b")))
-        .addEqualityGroup(nlist(named("a"), named("b")), nlist(named("a"), named("b")));
+        .addEqualityGroup(nlist(hasName("a")), nlist(hasName("a")))
+        .addEqualityGroup(nlist(hasName("b")), nlist(hasName("b")))
+        .addEqualityGroup(nlist(hasName("a"), hasName("b")), nlist(hasName("a"), hasName("b")));
   }
 
-  private static Identifiable named(String name) {
-    return new MyNamed(name);
+  private static HasName hasName(String name) {
+    return new MyHasName(name);
   }
 
-  private static Identifiable named(Id id) {
-    return new MyNamed(id);
+  private static HasName hasName(HasName hasName) {
+    return new MyHasName(hasName.name());
   }
 
-  private static record MyNamed(Id id) implements Identifiable {
-    public MyNamed(String name) {
-      this(Fqn.fqn(name));
+  private static record MyHasName(Name name) implements HasName {
+    public MyHasName(String name) {
+      this(referenceableName(name));
     }
 
     @Override
     public String toString() {
-      return id.toString();
+      return name.toString();
     }
+  }
 
-    @Override
-    public Id id() {
-      return id;
-    }
+  private static Name name(String name) {
+    return referenceableName(name);
   }
 }

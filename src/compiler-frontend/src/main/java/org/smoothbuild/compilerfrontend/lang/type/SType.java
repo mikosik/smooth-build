@@ -121,7 +121,7 @@ public abstract sealed class SType
   }
 
   private static SItemSig mapItemSigComponents(SItemSig f, Function<? super SVar, SType> map) {
-    return new SItemSig(f.type().mapVars(map), f.id());
+    return new SItemSig(f.type().mapVars(map), f.name());
   }
 
   private static STupleType mapVarsInTuple(

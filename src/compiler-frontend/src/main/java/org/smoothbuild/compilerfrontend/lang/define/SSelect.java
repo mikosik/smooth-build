@@ -5,11 +5,11 @@ import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public record SSelect(SExpr selectable, Id field, Location location) implements SExpr {
+public record SSelect(SExpr selectable, Name field, Location location) implements SExpr {
   public SSelect {
     checkArgument(selectable.evaluationType() instanceof SStructType);
   }
