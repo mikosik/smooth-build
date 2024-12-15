@@ -4,8 +4,8 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
@@ -14,15 +14,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  */
 public class SItemSig implements Identifiable {
   private final SType type;
-  private final Id id;
+  private final Name name;
 
-  public SItemSig(SType type, Id id) {
+  public SItemSig(SType type, Name name) {
     this.type = requireNonNull(type);
-    this.id = requireNonNull(id);
-  }
-
-  public static SItemSig itemSigS(SType type, Id id) {
-    return new SItemSig(type, id);
+    this.name = requireNonNull(name);
   }
 
   public SType type() {
@@ -30,13 +26,17 @@ public class SItemSig implements Identifiable {
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Name id() {
+    return name();
+  }
+
+  public Name name() {
+    return name;
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(id.full(), minNameLength, ' ');
+    String namePart = padEnd(name.full(), minNameLength, ' ');
     return typePart + namePart;
   }
 
@@ -47,16 +47,16 @@ public class SItemSig implements Identifiable {
     }
     return object instanceof SItemSig that
         && Objects.equals(this.type, that.type)
-        && Objects.equals(this.id, that.id);
+        && Objects.equals(this.name, that.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, id);
+    return Objects.hash(type, name);
   }
 
   @Override
   public String toString() {
-    return type().name() + " " + id;
+    return type().name() + " " + name;
   }
 }

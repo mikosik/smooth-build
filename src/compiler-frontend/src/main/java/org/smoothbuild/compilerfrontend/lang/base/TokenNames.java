@@ -25,7 +25,7 @@ public class TokenNames {
     return "{" + commaSeparatedTypeNames(elemTypes) + "}";
   }
 
-  public static String interfaceTypeName(Map<Id, SItemSig> fields) {
+  public static String interfaceTypeName(Map<Name, SItemSig> fields) {
     return listOfAll(fields.values()).toString("{", ",", "}");
   }
 

@@ -9,7 +9,7 @@ import java.util.Queue;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function2;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -103,13 +103,13 @@ public class ConstraintInferrer {
     }
   }
 
-  private static Map<Id, SItemSig> unifyFieldSetAndFieldSet(
+  private static Map<Name, SItemSig> unifyFieldSetAndFieldSet(
       SInterfaceType fieldSet1, SInterfaceType fieldSet2, Queue<Constraint> constraints)
       throws UnifierException {
     var fields1 = fieldSet1.fieldSet();
     var fields2 = fieldSet2.fieldSet();
     var mergedFields = new HashMap<>(fields1);
-    for (Entry<Id, SItemSig> field2 : fields2.entrySet()) {
+    for (Entry<Name, SItemSig> field2 : fields2.entrySet()) {
       var name = field2.getKey();
       var field1 = mergedFields.get(name);
       if (field1 == null) {

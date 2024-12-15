@@ -5,6 +5,7 @@ import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.interfaceTyp
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 
 /**
@@ -15,7 +16,7 @@ public final class SStructType extends SInterfaceType {
   private final NList<SItemSig> fields;
 
   public SStructType(Id id, NList<SItemSig> fields) {
-    super(id.full(), fields.map());
+    super(id.full(), (Map<Name, SItemSig>) (Object) fields.map());
     this.id = id;
     this.fields = fields;
   }
@@ -29,8 +30,9 @@ public final class SStructType extends SInterfaceType {
   }
 
   @Override
-  public Map<Id, SItemSig> fieldSet() {
-    return fields.map();
+  @SuppressWarnings("unchecked")
+  public Map<Name, SItemSig> fieldSet() {
+    return (Map<Name, SItemSig>) (Object) fields.map();
   }
 
   @Override
