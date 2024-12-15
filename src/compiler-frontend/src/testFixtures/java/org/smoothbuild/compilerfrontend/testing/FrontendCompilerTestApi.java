@@ -12,6 +12,7 @@ import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
@@ -777,7 +778,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
     var pItem = new PItem(new PExplicitType("Int", location()), name, defaultValue, location());
-    pItem.setId(fqn(name));
+    pItem.setName(referenceableName(name));
     return pItem;
   }
 

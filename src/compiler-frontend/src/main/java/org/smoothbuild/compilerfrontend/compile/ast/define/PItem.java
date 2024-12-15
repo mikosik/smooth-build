@@ -7,13 +7,15 @@ import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Ianal;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
+import org.smoothbuild.compilerfrontend.lang.base.Nal;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem extends Ianal implements PReferenceable {
+public final class PItem extends Nal implements PReferenceable {
   private final PType type;
+  private Name name;
   private final Maybe<PExpr> defaultValue;
   private Maybe<Id> defaultValueId;
   private SType sType;
@@ -26,6 +28,19 @@ public final class PItem extends Ianal implements PReferenceable {
 
   public PType type() {
     return type;
+  }
+
+  public void setName(Name name) {
+    this.name = name;
+  }
+
+  private Name name() {
+    return name;
+  }
+
+  @Override
+  public Name id() {
+    return name();
   }
 
   public Maybe<PExpr> defaultValue() {
