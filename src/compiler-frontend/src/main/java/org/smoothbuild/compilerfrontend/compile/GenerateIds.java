@@ -56,7 +56,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
       parseReferenceableName(nameText)
           .ifLeft(e -> logIllegalIdentifier(nameText, pItem.location(), e))
           .ifRight(id -> {
-            pItem.setId(id);
+            pItem.setName(id);
             var fullId = fullId(id);
             pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fullId));
           });
