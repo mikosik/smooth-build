@@ -7,20 +7,20 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 
 /**
  * This class is immutable.
  */
 public sealed class SInterfaceType extends SType permits SStructType {
-  private final Map<Id, SItemSig> fields;
+  private final Map<Name, SItemSig> fields;
 
-  public SInterfaceType(Map<Id, SItemSig> fields) {
+  public SInterfaceType(Map<Name, SItemSig> fields) {
     this(interfaceTypeName(fields), fields);
   }
 
-  protected SInterfaceType(String name, Map<Id, SItemSig> fields) {
+  protected SInterfaceType(String name, Map<Name, SItemSig> fields) {
     super(name, calculateFieldSetVars(listOfAll(fields.values())));
     this.fields = mapOfAll(fields);
   }
@@ -29,7 +29,7 @@ public sealed class SInterfaceType extends SType permits SStructType {
     return varSetS(fields.map(SItemSig::type));
   }
 
-  public Map<Id, SItemSig> fieldSet() {
+  public Map<Name, SItemSig> fieldSet() {
     return fields;
   }
 

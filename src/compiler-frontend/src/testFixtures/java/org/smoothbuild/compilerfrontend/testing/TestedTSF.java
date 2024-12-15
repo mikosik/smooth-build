@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.testing;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class TestedTSF {
   private static List<SItemSig> toSigs(List<TestedTS> paramTestedTs) {
     var builder = new ArrayList<SItemSig>();
     for (int i = 0; i < paramTestedTs.size(); i++) {
-      builder.add(new SItemSig(paramTestedTs.get(i).type(), fqn("p" + i)));
+      builder.add(new SItemSig(paramTestedTs.get(i).type(), referenceableName("p" + i)));
     }
     return listOfAll(builder);
   }

@@ -47,6 +47,7 @@ import org.smoothbuild.compilerfrontend.lang.base.Fqn;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -223,7 +224,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sInterfaceType(itemSigsToMap(fieldTypes));
   }
 
-  public default SInterfaceType sInterfaceType(Map<Id, SItemSig> fieldSignatures) {
+  public default SInterfaceType sInterfaceType(Map<Name, SItemSig> fieldSignatures) {
     return new SInterfaceType(fieldSignatures);
   }
 
@@ -259,15 +260,15 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return listOfAll(builder);
   }
 
-  public default Map<Id, SItemSig> typesToItemSigsMap(SType... types) {
+  public default Map<Name, SItemSig> typesToItemSigsMap(SType... types) {
     return itemSigsToMap(sTypesToSSigs(types));
   }
 
-  public default Map<Id, SItemSig> itemSigsToMap(SItemSig... itemSigs) {
+  public default Map<Name, SItemSig> itemSigsToMap(SItemSig... itemSigs) {
     return itemSigsToMap(list(itemSigs));
   }
 
-  public default Map<Id, SItemSig> itemSigsToMap(List<SItemSig> sigs) {
+  public default Map<Name, SItemSig> itemSigsToMap(List<SItemSig> sigs) {
     return sigs.toMap(SItemSig::id, f -> f);
   }
 
@@ -508,7 +509,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name) {
-    return new SItem(type, fqn(name), none(), location(line));
+    return new SItem(type, referenceableName(name), none(), location(line));
   }
 
   public default SItem sItem(SType type, String name, String defaultValueFullName) {
@@ -520,7 +521,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueId) {
-    return new SItem(type, fqn(name), defaultValueId.map(Fqn::fqn), location(line));
+    return new SItem(type, referenceableName(name), defaultValueId.map(Fqn::fqn), location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {
@@ -575,7 +576,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SConstructor sConstructor(int line, SStructType structType, String name) {
     var fields = structType.fields();
-    var params = fields.map(f -> new SItem(f.type(), f.id(), none(), location(2)));
+    var params = fields.map(f -> new SItem(f.type(), f.name(), none(), location(2)));
     return new SConstructor(sFuncSchema(params, structType), fqn(name), params, location(line));
   }
 
@@ -674,7 +675,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItemSig sSig(SType type, String name) {
-    return new SItemSig(type, fqn(name));
+    return new SItemSig(type, referenceableName(name));
   }
 
   public default PModule pModule(List<PStruct> structs, List<PNamedEvaluable> evaluables) {

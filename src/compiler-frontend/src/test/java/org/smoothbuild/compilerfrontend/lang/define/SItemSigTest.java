@@ -2,20 +2,20 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemSigTest extends FrontendCompilerTestContext {
-  private final Id id = fqn("name");
+  private final Name name = referenceableName("name");
   private SItemSig item;
 
   @Test
   void null_type_is_forbidden() {
-    assertCall(() -> new SItemSig(null, id)).throwsException(NullPointerException.class);
+    assertCall(() -> new SItemSig(null, name)).throwsException(NullPointerException.class);
   }
 
   @Test
@@ -25,40 +25,40 @@ public class SItemSigTest extends FrontendCompilerTestContext {
 
   @Test
   void type_getter() {
-    item = new SItemSig(sStringType(), id);
+    item = new SItemSig(sStringType(), name);
     assertThat(item.type()).isEqualTo(sStringType());
   }
 
   @Test
   void name_getter() {
-    item = new SItemSig(sStringType(), id);
-    assertThat(item.id()).isEqualTo(id);
+    item = new SItemSig(sStringType(), name);
+    assertThat(item.id()).isEqualTo(name);
   }
 
   @Test
   void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(new SItemSig(sStringType(), fqn("name")));
-    tester.addEqualityGroup(new SItemSig(sStringType(), fqn("name2")));
-    tester.addEqualityGroup(new SItemSig(sBlobType(), fqn("name")));
+    tester.addEqualityGroup(new SItemSig(sStringType(), referenceableName("name")));
+    tester.addEqualityGroup(new SItemSig(sStringType(), referenceableName("name2")));
+    tester.addEqualityGroup(new SItemSig(sBlobType(), referenceableName("name")));
     tester.testEquals();
   }
 
   @Test
   void to_padded_string() {
-    item = new SItemSig(sStringType(), fqn("myName"));
+    item = new SItemSig(sStringType(), referenceableName("myName"));
     assertThat(item.toPaddedString(10, 13)).isEqualTo("String    : myName       ");
   }
 
   @Test
   void to_padded_string_for_short_limits() {
-    item = new SItemSig(sStringType(), fqn("myName"));
+    item = new SItemSig(sStringType(), referenceableName("myName"));
     assertThat(item.toPaddedString(1, 1)).isEqualTo("String: myName");
   }
 
   @Test
   void to_string() {
-    item = new SItemSig(sStringType(), fqn("myName"));
+    item = new SItemSig(sStringType(), referenceableName("myName"));
     assertThat(item.toString()).isEqualTo("String myName");
   }
 }

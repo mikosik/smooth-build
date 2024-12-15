@@ -34,7 +34,7 @@ public final class PItem extends Nal implements PReferenceable {
     this.name = name;
   }
 
-  private Name name() {
+  public Name name() {
     return name;
   }
 

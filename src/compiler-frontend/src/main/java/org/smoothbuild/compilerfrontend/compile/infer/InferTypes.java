@@ -66,7 +66,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
       var params = pStruct
           .fields()
           .list()
-          .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.id(), none(), f.location()));
+          .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.name(), none(), f.location()));
       var sFuncType = new SFuncType(SItem.toTypes(params), structT);
       var schema = new SFuncSchema(varSetS(), sFuncType);
       pConstructor.setSSchema(schema);
