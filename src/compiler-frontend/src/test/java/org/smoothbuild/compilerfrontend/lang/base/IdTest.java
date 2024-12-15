@@ -4,10 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.Fqn.parseReference;
 import static org.smoothbuild.compilerfrontend.lang.base.Name.parseReferenceableName;
 import static org.smoothbuild.compilerfrontend.lang.base.Name.parseStructName;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.base.Name.structName;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
@@ -19,16 +22,59 @@ import org.smoothbuild.common.collect.List;
 
 public class IdTest {
   @Nested
-  class _parse_referenceable_name {
-    @ParameterizedTest
-    @MethodSource
-    void legal(String string, String full, String last) {
-      var name = parseReferenceableName(string).right();
-      assertThat(name.full()).isEqualTo(full);
-      assertThat(name.last()).isEqualTo(last);
+  class _name {
+    @Nested
+    class _parse_referenceable_name {
+      @ParameterizedTest
+      @MethodSource
+      void legal(String string, String full, String last) {
+        var name = parseReferenceableName(string).right();
+        assertThat(name.full()).isEqualTo(full);
+        assertThat(name.last()).isEqualTo(last);
+      }
+
+      static List<Arguments> legal() {
+        return legal_referenceable_names();
+      }
+
+      @ParameterizedTest
+      @MethodSource
+      void illegal(String string, String expectedErrorMessage) {
+        assertThat(parseReferenceableName(string)).isEqualTo(error(expectedErrorMessage));
+      }
+
+      public static List<Arguments> illegal() {
+        return illegal_referenceable_names();
+      }
     }
 
-    static List<Arguments> legal() {
+    @Nested
+    class _referenceable_name {
+      @ParameterizedTest
+      @MethodSource
+      void legal(String string, String full, String last) {
+        var name = referenceableName(string);
+        assertThat(name.full()).isEqualTo(full);
+        assertThat(name.last()).isEqualTo(last);
+      }
+
+      static List<Arguments> legal() {
+        return legal_referenceable_names();
+      }
+
+      @ParameterizedTest
+      @MethodSource
+      void illegal(String string, String expectedErrorMessage) {
+        assertCall(() -> referenceableName(string))
+            .throwsException(new IllegalArgumentException(expectedErrorMessage));
+      }
+
+      public static List<Arguments> illegal() {
+        return illegal_referenceable_names();
+      }
+    }
+
+    static List<Arguments> legal_referenceable_names() {
       return list(
           arguments("name", "name", "name"),
           arguments("name_", "name_", "name_"),
@@ -36,13 +82,7 @@ public class IdTest {
           arguments("name123", "name123", "name123"));
     }
 
-    @ParameterizedTest
-    @MethodSource
-    void illegal(String string, String expectedErrorMessage) {
-      assertThat(parseReferenceableName(string)).isEqualTo(error(expectedErrorMessage));
-    }
-
-    static List<Arguments> illegal() {
+    static List<Arguments> illegal_referenceable_names() {
       return list(
           arguments("", "It must not be empty string."),
           arguments("a^", "It must not contain '^' character."),
@@ -59,19 +99,59 @@ public class IdTest {
           arguments(":", "It must not contain ':' character."),
           arguments("a:a", "It must not contain ':' character."));
     }
-  }
 
-  @Nested
-  class _parse_struct_name {
-    @ParameterizedTest
-    @MethodSource
-    void legal(String string, String expected) {
-      var name = parseStructName(string).right();
-      assertThat(name.last()).isEqualTo(expected);
-      assertThat(name.full()).isEqualTo(expected);
+    @Nested
+    class _parse_struct_name {
+      @ParameterizedTest
+      @MethodSource
+      void legal(String string, String expected) {
+        var name = parseStructName(string).right();
+        assertThat(name.last()).isEqualTo(expected);
+        assertThat(name.full()).isEqualTo(expected);
+      }
+
+      static List<Arguments> legal() {
+        return legal_struct_names();
+      }
+
+      @ParameterizedTest
+      @MethodSource
+      void illegal(String string, String expectedErrorMessage) {
+        assertThat(parseStructName(string)).isEqualTo(error(expectedErrorMessage));
+      }
+
+      static List<Arguments> illegal() {
+        return illegal_struct_names();
+      }
     }
 
-    static List<Arguments> legal() {
+    @Nested
+    class _struct_name {
+      @ParameterizedTest
+      @MethodSource
+      void legal(String string, String expected) {
+        var name = structName(string);
+        assertThat(name.last()).isEqualTo(expected);
+        assertThat(name.full()).isEqualTo(expected);
+      }
+
+      static List<Arguments> legal() {
+        return legal_struct_names();
+      }
+
+      @ParameterizedTest
+      @MethodSource
+      void illegal(String string, String expectedErrorMessage) {
+        assertCall(() -> structName(string))
+            .throwsException(new IllegalArgumentException(expectedErrorMessage));
+      }
+
+      static List<Arguments> illegal() {
+        return illegal_struct_names();
+      }
+    }
+
+    static List<Arguments> legal_struct_names() {
       return list(
           arguments("Name", "Name"),
           arguments("Name_", "Name_"),
@@ -79,13 +159,7 @@ public class IdTest {
           arguments("Name123", "Name123"));
     }
 
-    @ParameterizedTest
-    @MethodSource
-    void illegal(String string, String expectedErrorMessage) {
-      assertThat(parseStructName(string)).isEqualTo(error(expectedErrorMessage));
-    }
-
-    static List<Arguments> illegal() {
+    static List<Arguments> illegal_struct_names() {
       return list(
           arguments("", "It must not be empty string."),
           arguments("Abc^", "It must not contain '^' character."),

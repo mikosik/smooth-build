@@ -11,34 +11,67 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;
 
 public final class Name extends Id {
+  public static Name structName(String name) {
+    var errorMessage = findStructNameErrors(name);
+    if (errorMessage != null) {
+      throw new IllegalArgumentException(errorMessage);
+    }
+    return new Name(name);
+  }
+
+  public static Name referenceableName(String name) {
+    var errorMessage = findReferenceableNameErrors(name);
+    if (errorMessage != null) {
+      throw new IllegalArgumentException(errorMessage);
+    }
+    return new Name(name);
+  }
+
   Name(String name) {
     super(name);
   }
 
   public static Result<Name> parseReferenceableName(String name) {
-    var errorMessage = findNameErrors(name);
+    var errorMessage = findReferenceableNameErrors(name);
     if (errorMessage != null) {
       return error(errorMessage);
-    }
-    if (!isLowerCase(name.charAt(0))) {
-      return error("It must start with lowercase letter.");
     }
 
     return ok(new Name(name));
   }
 
-  public static Result<Name> parseStructName(String name) {
+  private static String findReferenceableNameErrors(String name) {
     var errorMessage = findNameErrors(name);
+    if (errorMessage != null) {
+      return errorMessage;
+    }
+    if (!isLowerCase(name.charAt(0))) {
+      return "It must start with lowercase letter.";
+    }
+    return null;
+  }
+
+  public static Result<Name> parseStructName(String name) {
+    var errorMessage = findStructNameErrors(name);
     if (errorMessage != null) {
       return error(errorMessage);
     }
+
+    return ok(new Name(name));
+  }
+
+  public static String findStructNameErrors(String name) {
+    var errorMessage = findNameErrors(name);
+    if (errorMessage != null) {
+      return errorMessage;
+    }
     if (!isUpperCase(name.charAt(0))) {
-      return error("It must start with uppercase letter.");
+      return "It must start with uppercase letter.";
     }
     if (isTypeVarName(name)) {
-      return error("All-uppercase names are reserved for type variables.");
+      return "All-uppercase names are reserved for type variables.";
     }
-    return ok(new Name(name));
+    return null;
   }
 
   private static boolean isTypeVarName(String name) {
