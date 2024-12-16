@@ -36,7 +36,7 @@ public class SItemSig implements HasName {
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(name.full(), minNameLength, ' ');
+    String namePart = padEnd(name.toString(), minNameLength, ' ');
     return typePart + namePart;
   }
 

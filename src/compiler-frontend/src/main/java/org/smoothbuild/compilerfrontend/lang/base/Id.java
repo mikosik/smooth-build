@@ -21,10 +21,6 @@ public abstract class Id {
 
   protected abstract List<Name> splitToParts();
 
-  public String full() {
-    return string;
-  }
-
   public abstract String last();
 
   public Id append(Id id) {

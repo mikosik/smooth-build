@@ -199,7 +199,7 @@ public class SbTranslator {
     var itemS = lexicalEnvironment.get(sReference.referencedId());
     if (itemS == null) {
       Maybe<SNamedEvaluable> namedEvaluableS =
-          evaluables.getMaybe(sReference.referencedId().full());
+          evaluables.getMaybe(sReference.referencedId().toString());
       if (namedEvaluableS.isSome()) {
         return switch (namedEvaluableS.get()) {
           case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
@@ -213,7 +213,9 @@ public class SbTranslator {
       var evaluationType = typeF.translate(itemS.type());
       var index = BigInteger.valueOf(lexicalEnvironment.indexOf(sReference.referencedId()));
       return saveNalAndReturn(
-          sReference.referencedId().full(), sReference, bytecodeF.reference(evaluationType, index));
+          sReference.referencedId().toString(),
+          sReference,
+          bytecodeF.reference(evaluationType, index));
     }
   }
 
@@ -388,7 +390,7 @@ public class SbTranslator {
       var bClassBinaryName = bytecodeF.string(classBinaryName);
       var bMethodName = bytecodeF.string(BYTECODE_METHOD_NAME);
       var bMethod = bytecodeF.method(jar, bClassBinaryName, bMethodName);
-      return bytecodeLoader.load(id.full(), bMethod, varNameToTypeMap);
+      return bytecodeLoader.load(id.toString(), bMethod, varNameToTypeMap);
     } catch (IOException e) {
       throw new SbTranslatorException(e);
     }
@@ -432,7 +434,7 @@ public class SbTranslator {
   }
 
   private void saveNal(BExpr bExpr, Ial ial) {
-    saveNal(bExpr, ial.id().full(), ial);
+    saveNal(bExpr, ial.id().toString(), ial);
   }
 
   private void saveNal(BExpr bExpr, String name, Located located) {

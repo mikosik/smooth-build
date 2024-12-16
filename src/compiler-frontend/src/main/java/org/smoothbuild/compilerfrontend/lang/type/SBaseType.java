@@ -13,7 +13,7 @@ public abstract sealed class SBaseType extends SType
   }
 
   protected SBaseType(Id id, SVarSet vars) {
-    super(id.full(), vars);
+    super(id.toString(), vars);
     this.id = id;
   }
 

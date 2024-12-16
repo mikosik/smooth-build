@@ -229,7 +229,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SReference convertReference(PReference pReference) {
-      return convertReference(pReference, typeTeller.schemaFor(pReference.id().full()));
+      return convertReference(pReference, typeTeller.schemaFor(pReference.id().toString()));
     }
 
     private SReference convertReference(PReference pReference, SSchema sSchema) {

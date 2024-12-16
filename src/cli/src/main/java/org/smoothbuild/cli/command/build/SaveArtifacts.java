@@ -65,7 +65,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     var artifacts = referenceSs.zip(evaluatedExprs.bValues(), Tuples::tuple);
     var logger = new Logger();
     artifacts
-        .sortUsing(comparing(a -> a.element1().referencedId().full()))
+        .sortUsing(comparing(a -> a.element1().referencedId().toString()))
         .forEach(t -> save(t.element1(), t.element2(), logger));
     return output(label, logger.toList());
   }
@@ -178,6 +178,6 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private FullPath artifactPath(Id id) {
-    return artifactsPath.appendPart(id.full());
+    return artifactsPath.appendPart(id.toString());
   }
 }

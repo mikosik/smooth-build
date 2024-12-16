@@ -16,7 +16,7 @@ public final class SStructType extends SInterfaceType {
   private final NList<SItemSig> fields;
 
   public SStructType(Id id, NList<SItemSig> fields) {
-    super(id.full(), fields.map());
+    super(id.toString(), fields.map());
     this.id = id;
     this.fields = fields;
   }
