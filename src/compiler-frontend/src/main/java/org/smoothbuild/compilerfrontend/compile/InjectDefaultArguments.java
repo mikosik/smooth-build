@@ -144,7 +144,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       for (int i = 0; i < args.size(); i++) {
         var arg = args.get(i);
         if (arg instanceof PNamedArg pNamedArg) {
-          result.set(names.indexOf(referenceableName(pNamedArg.name())), pNamedArg.expr());
+          result.set(names.indexOf(referenceableName(pNamedArg.nameText())), pNamedArg.expr());
         } else {
           result.set(i, arg);
         }
@@ -184,7 +184,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
           .args()
           .filter(a -> a instanceof PNamedArg)
           .map(a -> (PNamedArg) a)
-          .filter(a -> !names.contains(fqn(a.name())))
+          .filter(a -> !names.contains(fqn(a.nameText())))
           .map(Visitor::unknownParameterError);
     }
 
@@ -195,7 +195,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
           .args()
           .filter(a -> a instanceof PNamedArg)
           .map(a -> (PNamedArg) a)
-          .filter(a -> !names.add(a.name()))
+          .filter(a -> !names.add(a.nameText()))
           .map(Visitor::paramIsAlreadyAssignedError);
     }
 
