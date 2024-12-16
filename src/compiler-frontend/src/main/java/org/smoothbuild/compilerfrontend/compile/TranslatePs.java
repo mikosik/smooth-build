@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.schedule.Output;
@@ -238,8 +237,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SExpr convertSelect(PSelect pSelect) {
       var selectable = convertExpr(pSelect.selectable());
-      // TODO do not use name(), pSelect should have fieldName()
-      return new SSelect(selectable, referenceableName(pSelect.field()), pSelect.location());
+      return new SSelect(selectable, pSelect.fieldName(), pSelect.location());
     }
 
     private SString convertString(PString string) {

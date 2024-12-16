@@ -1342,6 +1342,20 @@ public class DeclarationTest extends FrontendCompileTester {
             """;
         module(code).loadsWithError(4, "Struct `MyStruct` has no field `otherField`.");
       }
+
+      @Test
+      void specifying_field_name_that_is_illegal_causes_error() {
+        var code =
+            """
+            MyStruct{
+              String field,
+            }
+            result = MyStruct("abc").Field;
+            """;
+        module(code)
+            .loadsWithError(
+                4, "`Field` is illegal field name. It must start with lowercase letter.");
+      }
     }
 
     @Nested

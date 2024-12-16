@@ -18,6 +18,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 
@@ -119,6 +120,19 @@ public class GenerateIds implements Task1<PModule, PModule> {
     private void logIllegalParamName(PNamedArg pNamedArg, String e) {
       logger.log(compileError(
           pNamedArg.location(), "`" + pNamedArg.nameText() + "` is illegal parameter name. " + e));
+    }
+
+    @Override
+    public void visitSelect(PSelect pSelect) throws RuntimeException {
+      super.visitSelect(pSelect);
+      parseReferenceableName(pSelect.fieldNameText())
+          .ifRight(pSelect::setFieldName)
+          .ifLeft(e -> logIllegalFieldName(pSelect, e));
+    }
+
+    private void logIllegalFieldName(PSelect pSelect, String e) {
+      var message = "`" + pSelect.fieldNameText() + "` is illegal field name. " + e;
+      logger.log(compileError(pSelect.location(), message));
     }
 
     private void runWithScopeId(Id id, Runnable runnable) {
