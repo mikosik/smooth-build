@@ -7,12 +7,12 @@ import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowin
 import java.util.List;
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Ianal;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndNameTextAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct extends Ianal implements PScoped {
+public final class PStruct extends HasIdAndNameTextAndLocation implements PScoped {
   private final NList<PItem> fields;
   private final PNamedFunc constructor;
   private PScope scope;

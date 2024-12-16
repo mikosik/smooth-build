@@ -7,13 +7,10 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
-/**
- * TaNaL = Type and Identifiable and Located.
- */
-public abstract class Taial extends IalImpl {
+public abstract class HasTypeAndIdAndLocation extends HasIdAndLocationImpl {
   private final SType type;
 
-  public Taial(SType type, Id id, Location location) {
+  public HasTypeAndIdAndLocation(SType type, Id id, Location location) {
     super(id, location);
     this.type = requireNonNull(type);
   }

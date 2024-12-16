@@ -5,4 +5,4 @@ import org.smoothbuild.common.log.location.HasLocation;
 /**
  * Interface marking classes that have Id and Location.
  */
-public interface Ial extends HasId, HasLocation {}
+public interface HasIdAndLocation extends HasId, HasLocation {}
