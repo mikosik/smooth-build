@@ -5,13 +5,10 @@ import static java.util.Objects.requireNonNull;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
-/**
- * SaIaL = Schema and Identifiable and Located.
- */
-public abstract class Saial extends IalImpl {
+public abstract class HasSchemaAndIdAndLocation extends HasIdAndLocationImpl {
   private final SSchema schema;
 
-  public Saial(SSchema schema, Id id, Location location) {
+  public HasSchemaAndIdAndLocation(SSchema schema, Id id, Location location) {
     super(id, location);
     this.schema = requireNonNull(schema);
   }

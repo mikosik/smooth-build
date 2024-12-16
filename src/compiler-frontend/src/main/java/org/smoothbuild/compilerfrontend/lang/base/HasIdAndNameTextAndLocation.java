@@ -2,10 +2,11 @@ package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.log.location.Location;
 
-public class Ianal extends HasNameTextAndLocationImpl implements Ial {
+public class HasIdAndNameTextAndLocation extends HasNameTextAndLocationImpl
+    implements HasIdAndLocation {
   private Id id;
 
-  public Ianal(String nameText, Location location) {
+  public HasIdAndNameTextAndLocation(String nameText, Location location) {
     super(nameText, location);
   }
 

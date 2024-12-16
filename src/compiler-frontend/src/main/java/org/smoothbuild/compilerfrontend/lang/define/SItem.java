@@ -8,16 +8,16 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
+import org.smoothbuild.compilerfrontend.lang.base.HasTypeAndIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.Name;
-import org.smoothbuild.compilerfrontend.lang.base.Taial;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Item is a func param or a struct field.
  * This class is immutable.
  */
-public final class SItem extends Taial implements SReferenceable, HasName {
+public final class SItem extends HasTypeAndIdAndLocation implements SReferenceable, HasName {
   private final Maybe<Id> defaultValueId;
 
   public SItem(SType type, Name name, Maybe<Id> defaultValueId, Location location) {

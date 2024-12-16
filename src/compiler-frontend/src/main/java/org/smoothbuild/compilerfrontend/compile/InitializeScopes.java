@@ -23,7 +23,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.Ial;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 
 /**
  * For each syntactic construct that implements WithScope
@@ -120,7 +120,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
       addBinding(referenceables, pReferenceable);
     }
 
-    private <T extends Ial> void addBinding(MutableBindings<T> bindings, T binding) {
+    private <T extends HasIdAndLocation> void addBinding(MutableBindings<T> bindings, T binding) {
       if (binding instanceof PNamedEvaluable) {
         var full = binding.id().toString();
         addBinding(bindings, binding, full);
@@ -130,7 +130,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
       }
     }
 
-    private <T extends Ial> void addBinding(
+    private <T extends HasIdAndLocation> void addBinding(
         MutableBindings<T> bindings, T binding, String shortName) {
       var previousBinding = bindings.add(shortName, binding);
       if (previousBinding != null) {
