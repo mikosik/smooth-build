@@ -89,7 +89,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
 
   private static TopologicalSortingRes<Id, PStruct, Location> sortStructsByDeps(
       List<PStruct> structs) {
-    var structNames = structs.map(pStruct -> pStruct.id().full()).toSet();
+    var structNames = structs.map(pStruct -> pStruct.id().toString()).toSet();
     var nodes = structs.map(struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }

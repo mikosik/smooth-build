@@ -54,7 +54,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     public void containsEvaluable(SNamedEvaluable expected) {
-      var name = expected.id().full();
+      var name = expected.id().toString();
       var actual = assertContainsEvaluable(name);
       assertThat(actual).isEqualTo(expected);
     }

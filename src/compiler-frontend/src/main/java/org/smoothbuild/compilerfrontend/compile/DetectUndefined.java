@@ -52,10 +52,10 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
 
     @Override
     public void visitReference(PReference pReference) {
-      var name = pReference.id();
-      if (!(imported.evaluables().contains(name.full())
-          || scope.referencables().contains(name.full()))) {
-        log.log(compileError(pReference, name.q() + " is undefined."));
+      var id = pReference.id();
+      if (!(imported.evaluables().contains(id.toString())
+          || scope.referencables().contains(id.toString()))) {
+        log.log(compileError(pReference, id.q() + " is undefined."));
       }
     }
 

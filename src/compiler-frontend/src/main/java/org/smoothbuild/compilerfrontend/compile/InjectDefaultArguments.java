@@ -73,11 +73,11 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
         var name = pReference.id();
-        var optional = referenceables.getMaybe(name.full());
+        var optional = referenceables.getMaybe(name.toString());
         if (optional.isSome()) {
           return inferPositionedArgs(pCall, optional.get());
         } else {
-          return inferPositionedArgs(pCall, imported.evaluables().get(name.full()));
+          return inferPositionedArgs(pCall, imported.evaluables().get(name.toString()));
         }
       } else {
         return inferPositionedArgs(pCall, logger);
@@ -155,10 +155,10 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
           var param = params.get(i);
           var defaultValueId = param.defaultValueId();
           if (defaultValueId.isSome()) {
-            var fullName = defaultValueId.get();
+            var id = defaultValueId.get();
             var location = pCall.location();
-            var pReference = new PReference(fullName.full(), location);
-            pReference.setId(fullName);
+            var pReference = new PReference(id.toString(), location);
+            pReference.setId(id);
             var element = new PInstantiate(pReference, location);
             result.set(i, element);
           } else {
@@ -202,7 +202,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     private static Set<String> positionalArgNames(List<PExpr> positionalArgs, List<Param> params) {
       return params.stream()
           .limit(positionalArgs.size())
-          .map(param -> param.id().full())
+          .map(param -> param.id().toString())
           .collect(toSet());
     }
 

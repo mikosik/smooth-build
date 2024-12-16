@@ -122,7 +122,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
 
     private <T extends Ial> void addBinding(MutableBindings<T> bindings, T binding) {
       if (binding instanceof PNamedEvaluable) {
-        var full = binding.id().full();
+        var full = binding.id().toString();
         addBinding(bindings, binding, full);
       } else {
         var last = binding.id().last();

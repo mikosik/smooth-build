@@ -101,6 +101,6 @@ public final class Name extends Id {
 
   @Override
   public String last() {
-    return full();
+    return toString();
   }
 }

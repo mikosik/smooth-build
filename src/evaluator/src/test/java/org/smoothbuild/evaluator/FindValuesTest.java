@@ -18,9 +18,9 @@ public class FindValuesTest extends FrontendCompilerTestContext {
     var sSchema = sSchema(sIntArrayT());
     var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
     var sScope =
-        new SScope(immutableBindings(), immutableBindings(map(sValue.id().full(), sValue)));
+        new SScope(immutableBindings(), immutableBindings(map(sValue.id().toString(), sValue)));
 
-    var exprs = new FindValues().execute(sScope, list(sValue.id().full()));
+    var exprs = new FindValues().execute(sScope, list(sValue.id().toString()));
 
     var sReference = sReference(sSchema, fqn("myValue"), commandLineLocation());
     assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
@@ -30,9 +30,9 @@ public class FindValuesTest extends FrontendCompilerTestContext {
   void find_polymorphic_evaluable_fails() {
     var value = sValue(sSchema(sVarAArrayT()), "myValue", sOrder(varA()));
     var sScope =
-        new SScope(immutableBindings(), immutableBindings(map(value.id().full(), value)));
+        new SScope(immutableBindings(), immutableBindings(map(value.id().toString(), value)));
 
-    var exprs = new FindValues().execute(sScope, list(value.id().full()));
+    var exprs = new FindValues().execute(sScope, list(value.id().toString()));
 
     assertThat(exprs.report().logs())
         .containsExactly(error("`myValue` cannot be calculated as it is a polymorphic value."));

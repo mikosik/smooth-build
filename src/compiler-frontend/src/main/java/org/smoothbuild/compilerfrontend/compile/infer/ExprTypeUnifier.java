@@ -233,7 +233,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyReference(PReference pReference) {
-    pReference.setSSchema(typeTeller.schemaFor(pReference.id().full()));
+    pReference.setSSchema(typeTeller.schemaFor(pReference.id().toString()));
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {
