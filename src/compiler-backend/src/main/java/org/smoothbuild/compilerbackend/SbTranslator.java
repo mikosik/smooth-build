@@ -26,7 +26,7 @@ import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
-import org.smoothbuild.common.log.location.Located;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.compilerfrontend.lang.base.Ial;
@@ -423,13 +423,13 @@ public class SbTranslator {
     return bExpr;
   }
 
-  private BExpr saveNalAndReturn(String name, Located located, BExpr bExpr) {
-    saveNal(bExpr, name, located);
+  private BExpr saveNalAndReturn(String name, HasLocation hasLocation, BExpr bExpr) {
+    saveNal(bExpr, name, hasLocation);
     return bExpr;
   }
 
-  private BExpr saveLocAndReturn(Located located, BExpr bExpr) {
-    saveLoc(bExpr, located);
+  private BExpr saveLocAndReturn(HasLocation hasLocation, BExpr bExpr) {
+    saveLoc(bExpr, hasLocation);
     return bExpr;
   }
 
@@ -437,13 +437,13 @@ public class SbTranslator {
     saveNal(bExpr, ial.id().toString(), ial);
   }
 
-  private void saveNal(BExpr bExpr, String name, Located located) {
+  private void saveNal(BExpr bExpr, String name, HasLocation hasLocation) {
     names.put(bExpr.hash(), name);
-    saveLoc(bExpr, located);
+    saveLoc(bExpr, hasLocation);
   }
 
-  private void saveLoc(BExpr bExpr, Located located) {
-    saveLoc(bExpr, located.location());
+  private void saveLoc(BExpr bExpr, HasLocation hasLocation) {
+    saveLoc(bExpr, hasLocation.location());
   }
 
   private void saveLoc(BExpr bExpr, Location location) {

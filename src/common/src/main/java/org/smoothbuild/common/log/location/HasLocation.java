@@ -1,5 +1,5 @@
 package org.smoothbuild.common.log.location;
 
-public interface Located {
+public interface HasLocation {
   public Location location();
 }
