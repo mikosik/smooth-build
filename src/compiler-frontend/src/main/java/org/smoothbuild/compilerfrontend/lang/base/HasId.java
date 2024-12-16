@@ -1,6 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
-public interface Identifiable {
+/**
+ * Interface for classes that have Id.
+ */
+public interface HasId {
   public Id id();
 
   public default String q() {

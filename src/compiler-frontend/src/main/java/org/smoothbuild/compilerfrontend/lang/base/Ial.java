@@ -3,6 +3,6 @@ package org.smoothbuild.compilerfrontend.lang.base;
 import org.smoothbuild.common.log.location.HasLocation;
 
 /**
- * Ial = Identifiable and located.
+ * Interface marking classes that have Id and Location.
  */
-public interface Ial extends Identifiable, HasLocation {}
+public interface Ial extends HasId, HasLocation {}
