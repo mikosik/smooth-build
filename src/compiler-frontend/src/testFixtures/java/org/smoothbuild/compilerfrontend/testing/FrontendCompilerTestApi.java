@@ -44,8 +44,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.Fqn;
+import org.smoothbuild.compilerfrontend.lang.base.HasId;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
@@ -802,7 +802,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   @SuppressWarnings("unchecked")
-  public default <T extends Identifiable> ImmutableBindings<T> bindings(T... nameds) {
+  public default <T extends HasId> ImmutableBindings<T> bindings(T... nameds) {
     return immutableBindings(list(nameds).toMap(t -> t.id().toString(), v -> v));
   }
 
