@@ -8,7 +8,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
@@ -134,7 +134,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
 
     private static List<PExpr> positionedArgs(
         PCall pCall, List<Param> params, int positionalArgsCount, Logger logBuffer) {
-      var names = params.map(Param::id);
+      var names = params.map(Param::name);
       var args = pCall.args();
       // Case where positional args count exceeds function params count is reported as error
       // during call unification. Here we silently ignore it by creating list that is big enough
@@ -179,12 +179,12 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private static List<Log> findUnknownParamNameErrors(PCall pCall, List<Param> params) {
-      var names = params.map(Param::id).toSet();
+      var names = params.map(Param::name).toSet();
       return pCall
           .args()
           .filter(a -> a instanceof PNamedArg)
           .map(a -> (PNamedArg) a)
-          .filter(a -> !names.contains(fqn(a.nameText())))
+          .filter(a -> !names.contains(a.name()))
           .map(Visitor::unknownParameterError);
     }
 
@@ -195,19 +195,16 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
           .args()
           .filter(a -> a instanceof PNamedArg)
           .map(a -> (PNamedArg) a)
-          .filter(a -> !names.add(a.nameText()))
+          .filter(a -> !names.add(a.name()))
           .map(Visitor::paramIsAlreadyAssignedError);
     }
 
-    private static Set<String> positionalArgNames(List<PExpr> positionalArgs, List<Param> params) {
-      return params.stream()
-          .limit(positionalArgs.size())
-          .map(param -> param.id().toString())
-          .collect(toSet());
+    private static Set<Name> positionalArgNames(List<PExpr> positionalArgs, List<Param> params) {
+      return params.stream().limit(positionalArgs.size()).map(Param::name).collect(toSet());
     }
 
     private static Log paramsMustBeSpecifiedError(PCall pCall, int i, List<Param> params) {
-      return compileError(pCall, "Parameter " + params.get(i).id().q() + " must be specified.");
+      return compileError(pCall, "Parameter " + params.get(i).name().q() + " must be specified.");
     }
 
     private static Log unknownParameterError(PNamedArg pNamedArg) {
@@ -223,13 +220,13 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
   }
 
-  private static record Param(Id id, Maybe<Id> defaultValueId) {
+  private static record Param(Name name, Maybe<Id> defaultValueId) {
     public Param(SItem param) {
-      this(param.id(), param.defaultValueId());
+      this(param.name(), param.defaultValueId());
     }
 
     public Param(PItem param) {
-      this(param.id(), param.defaultValueId());
+      this(param.name(), param.defaultValueId());
     }
   }
 }
