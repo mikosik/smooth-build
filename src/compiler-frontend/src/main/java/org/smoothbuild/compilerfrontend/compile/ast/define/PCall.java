@@ -39,7 +39,7 @@ public final class PCall extends PExpr {
    * explicit parameter name assignment, this method has argument
    * list that has been processed two ways:
    * 1. All PNamedArg are replaced by #{@link PNamedArg#expr()}
-   * and placed at position denoted by #{@link PNamedArg#name()}.
+   * and placed at position denoted by #{@link PNamedArg#nameText()}.
    * 2. Missing args are replaced with RefP pointing
    * to that parameter default value.
    */
