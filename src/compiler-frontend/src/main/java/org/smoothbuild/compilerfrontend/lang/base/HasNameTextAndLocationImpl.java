@@ -4,14 +4,15 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.location.HasLocationImpl;
 import org.smoothbuild.common.log.location.Location;
 
-public class Nal extends HasLocationImpl {
+public class HasNameTextAndLocationImpl extends HasLocationImpl implements HasNameText {
   private final String nameText;
 
-  public Nal(String nameText, Location location) {
+  public HasNameTextAndLocationImpl(String nameText, Location location) {
     super(location);
     this.nameText = nameText;
   }
 
+  @Override
   public String nameText() {
     return nameText;
   }
