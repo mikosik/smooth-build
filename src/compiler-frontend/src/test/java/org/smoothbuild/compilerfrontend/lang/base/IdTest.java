@@ -64,7 +64,8 @@ public class IdTest {
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
         assertCall(() -> referenceableName(string))
-            .throwsException(new IllegalArgumentException(expectedErrorMessage));
+            .throwsException(new IllegalArgumentException(
+                "Illegal referenceable name. " + expectedErrorMessage));
       }
 
       public static List<Arguments> illegal() {
@@ -135,7 +136,8 @@ public class IdTest {
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
         assertCall(() -> structName(string))
-            .throwsException(new IllegalArgumentException(expectedErrorMessage));
+            .throwsException(
+                new IllegalArgumentException("Illegal struct name. " + expectedErrorMessage));
       }
 
       static List<Arguments> illegal() {
@@ -169,15 +171,57 @@ public class IdTest {
   }
 
   @Nested
-  class _parse_reference {
-    @ParameterizedTest
-    @MethodSource
-    void legal(String string) {
-      var name = parseReference(string).right();
-      assertThat(name.toString()).isEqualTo(string);
+  class _fqn {
+    @Nested
+    class _parse_reference {
+      @ParameterizedTest
+      @MethodSource
+      void legal(String string) {
+        var name = parseReference(string).right();
+        assertThat(name.toString()).isEqualTo(string);
+      }
+
+      static List<Arguments> legal() {
+        return legal_references();
+      }
+
+      @ParameterizedTest
+      @MethodSource
+      void illegal(String string, String expectedErrorMessage) {
+        assertThat(parseReference(string)).isEqualTo(error(expectedErrorMessage));
+      }
+
+      static List<Arguments> illegal() {
+        return illegal_references();
+      }
     }
 
-    static List<Arguments> legal() {
+    @Nested
+    class _fqn_ {
+      @ParameterizedTest
+      @MethodSource
+      void legal(String string) {
+        assertThat(fqn(string).toString()).isEqualTo(string);
+      }
+
+      static List<Arguments> legal() {
+        return legal_references();
+      }
+
+      @ParameterizedTest
+      @MethodSource
+      void illegal(String string, String expectedErrorMessage) {
+        assertCall(() -> fqn(string))
+            .throwsException(
+                new IllegalArgumentException("Illegal reference. " + expectedErrorMessage));
+      }
+
+      static List<Arguments> illegal() {
+        return illegal_references();
+      }
+    }
+
+    private static List<Arguments> legal_references() {
       return list(
           arguments("name"),
           arguments("name_"),
@@ -198,13 +242,7 @@ public class IdTest {
           arguments("Abc"));
     }
 
-    @ParameterizedTest
-    @MethodSource
-    void illegal(String string, String expectedErrorMessage) {
-      assertThat(parseReference(string)).isEqualTo(error(expectedErrorMessage));
-    }
-
-    static List<Arguments> illegal() {
+    static List<Arguments> illegal_references() {
       return list(
           arguments("", "It must not be empty string."),
           arguments("a^", "It must not contain '^' character."),
