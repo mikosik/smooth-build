@@ -6,11 +6,14 @@ import static org.smoothbuild.common.collect.List.list;
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
+import org.smoothbuild.compilerfrontend.lang.base.Name;
 
-public final class PNamedArg extends PExpr implements HasNameText {
+public final class PNamedArg extends PExpr implements HasNameText, HasName {
   private final String nameText;
   private final PExpr expr;
+  private Name name;
 
   public PNamedArg(String nameText, PExpr expr, Location location) {
     super(location);
@@ -21,6 +24,15 @@ public final class PNamedArg extends PExpr implements HasNameText {
   @Override
   public String nameText() {
     return nameText;
+  }
+
+  @Override
+  public Name name() {
+    return name;
+  }
+
+  public void setName(Name name) {
+    this.name = name;
   }
 
   public String q() {

@@ -15,6 +15,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
@@ -105,6 +106,19 @@ public class GenerateIds implements Task1<PModule, PModule> {
 
     private void logIllegalReference(PReference pReference, String e, String nameText) {
       logger.log(compileError(pReference.location(), "Illegal reference `" + nameText + "`. " + e));
+    }
+
+    @Override
+    public void visitNamedArg(PNamedArg pNamedArg) throws RuntimeException {
+      super.visitNamedArg(pNamedArg);
+      parseReferenceableName(pNamedArg.nameText())
+          .ifRight(pNamedArg::setName)
+          .ifLeft(e -> logIllegalParamName(pNamedArg, e));
+    }
+
+    private void logIllegalParamName(PNamedArg pNamedArg, String e) {
+      logger.log(compileError(
+          pNamedArg.location(), "`" + pNamedArg.nameText() + "` is illegal parameter name. " + e));
     }
 
     private void runWithScopeId(Id id, Runnable runnable) {
