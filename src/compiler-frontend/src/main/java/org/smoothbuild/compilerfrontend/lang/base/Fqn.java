@@ -24,7 +24,7 @@ public final class Fqn extends Id {
 
   public static Fqn fqn(String name) {
     return parseReference(name).rightOrThrow(error -> {
-      throw new IllegalArgumentException(error);
+      throw new IllegalArgumentException("Illegal reference. " + error);
     });
   }
 

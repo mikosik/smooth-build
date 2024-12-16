@@ -14,7 +14,7 @@ public final class Name extends Id {
   public static Name structName(String name) {
     var errorMessage = findStructNameErrors(name);
     if (errorMessage != null) {
-      throw new IllegalArgumentException(errorMessage);
+      throw new IllegalArgumentException("Illegal struct name. " + errorMessage);
     }
     return new Name(name);
   }
@@ -22,7 +22,7 @@ public final class Name extends Id {
   public static Name referenceableName(String name) {
     var errorMessage = findReferenceableNameErrors(name);
     if (errorMessage != null) {
-      throw new IllegalArgumentException(errorMessage);
+      throw new IllegalArgumentException("Illegal referenceable name. " + errorMessage);
     }
     return new Name(name);
   }
