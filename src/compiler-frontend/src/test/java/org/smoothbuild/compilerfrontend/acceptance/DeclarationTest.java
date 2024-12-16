@@ -1083,6 +1083,17 @@ public class DeclarationTest extends FrontendCompileTester {
       @Nested
       class _arg_list {
         @Test
+        void named_arg_that_is_illegal_fails() {
+          module(
+                  """
+                String myFunc(String name) = "abc";
+                result = myFunc(Name="abc");
+                """)
+              .loadsWithError(
+                  2, "`Name` is illegal parameter name. It must start with lowercase letter.");
+        }
+
+        @Test
         void can_have_trailing_comma() {
           module(funcCall("7,"))
               .loadsWithSuccess()
