@@ -1,16 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.common.log.location.HasLocation;
+import org.smoothbuild.common.log.location.HasLocationImpl;
 import org.smoothbuild.common.log.location.Location;
 
-public class Nal implements HasLocation {
+public class Nal extends HasLocationImpl {
   private final String nameText;
-  private final Location location;
 
   public Nal(String nameText, Location location) {
+    super(location);
     this.nameText = nameText;
-    this.location = location;
   }
 
   public String nameText() {
@@ -19,10 +18,5 @@ public class Nal implements HasLocation {
 
   public String q() {
     return Strings.q(nameText);
-  }
-
-  @Override
-  public Location location() {
-    return location;
   }
 }
