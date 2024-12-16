@@ -5,12 +5,12 @@ import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.base.Objects;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Nal;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
 
 /**
  * Annotation.
  */
-public final class PAnnotation extends Nal {
+public final class PAnnotation extends HasNameTextAndLocationImpl {
   private final PString value;
 
   public PAnnotation(String nameText, PString value, Location location) {

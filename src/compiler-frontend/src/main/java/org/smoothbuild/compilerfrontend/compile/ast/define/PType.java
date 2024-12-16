@@ -4,9 +4,10 @@ import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Nal;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
 
-public abstract sealed class PType extends Nal permits PExplicitType, PImplicitType {
+public abstract sealed class PType extends HasNameTextAndLocationImpl
+    permits PExplicitType, PImplicitType {
   protected PType(String nameText, Location location) {
     super(nameText, location);
   }
