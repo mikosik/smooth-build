@@ -1,10 +1,10 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.common.log.location.Located;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 
-public class Nal implements Located {
+public class Nal implements HasLocation {
   private final String nameText;
   private final Location location;
 

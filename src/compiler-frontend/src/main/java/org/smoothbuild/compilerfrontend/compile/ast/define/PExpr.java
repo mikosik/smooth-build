@@ -1,13 +1,13 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import org.smoothbuild.common.log.location.Located;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Expression in smooth language.
  */
-public abstract sealed class PExpr implements Located
+public abstract sealed class PExpr implements HasLocation
     permits PCall, PInstantiate, PLiteral, PNamedArg, POrder, PSelect {
   private SType type;
   private final Location location;
