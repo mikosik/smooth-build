@@ -21,8 +21,6 @@ public abstract class Id {
 
   protected abstract List<Name> splitToParts();
 
-  public abstract String last();
-
   public Id append(Id id) {
     return new Fqn(string + CharUtils.SEPARATOR + id.string);
   }

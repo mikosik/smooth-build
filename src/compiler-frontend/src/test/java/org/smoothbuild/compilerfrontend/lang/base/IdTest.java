@@ -27,10 +27,9 @@ public class IdTest {
     class _parse_referenceable_name {
       @ParameterizedTest
       @MethodSource
-      void legal(String string, String last) {
+      void legal(String string) {
         var name = parseReferenceableName(string).right();
         assertThat(name.toString()).isEqualTo(string);
-        assertThat(name.last()).isEqualTo(last);
       }
 
       static List<Arguments> legal() {
@@ -52,10 +51,9 @@ public class IdTest {
     class _referenceable_name {
       @ParameterizedTest
       @MethodSource
-      void legal(String string, String last) {
+      void legal(String string) {
         var name = referenceableName(string);
         assertThat(name.toString()).isEqualTo(string);
-        assertThat(name.last()).isEqualTo(last);
       }
 
       static List<Arguments> legal() {
@@ -75,11 +73,7 @@ public class IdTest {
     }
 
     static List<Arguments> legal_referenceable_names() {
-      return list(
-          arguments("name", "name"),
-          arguments("name_", "name_"),
-          arguments("a_name", "a_name"),
-          arguments("name123", "name123"));
+      return list(arguments("name"), arguments("name_"), arguments("a_name"), arguments("name123"));
     }
 
     static List<Arguments> illegal_referenceable_names() {
@@ -178,31 +172,30 @@ public class IdTest {
   class _parse_reference {
     @ParameterizedTest
     @MethodSource
-    void legal(String string, String last) {
+    void legal(String string) {
       var name = parseReference(string).right();
       assertThat(name.toString()).isEqualTo(string);
-      assertThat(name.last()).isEqualTo(last);
     }
 
     static List<Arguments> legal() {
       return list(
-          arguments("name", "name"),
-          arguments("name_", "name_"),
-          arguments("a_name", "a_name"),
-          arguments("a3", "a3"),
-          arguments("name123", "name123"),
-          arguments("_", "_"),
-          arguments("namespace:_", "_"),
-          arguments("namespace:_:name", "name"),
-          arguments("namespace:name", "name"),
-          arguments("name_space:name", "name"),
-          arguments("name_:name_", "name_"),
-          arguments("namespace:a_name", "a_name"),
-          arguments("name123:name456", "name456"),
-          arguments("Struct:name", "name"),
-          arguments("name:Struct", "Struct"),
-          arguments("_abc", "_abc"),
-          arguments("Abc", "Abc"));
+          arguments("name"),
+          arguments("name_"),
+          arguments("a_name"),
+          arguments("a3"),
+          arguments("name123"),
+          arguments("_"),
+          arguments("namespace:_"),
+          arguments("namespace:_:name"),
+          arguments("namespace:name"),
+          arguments("name_space:name"),
+          arguments("name_:name_"),
+          arguments("namespace:a_name"),
+          arguments("name123:name456"),
+          arguments("Struct:name"),
+          arguments("name:Struct"),
+          arguments("_abc"),
+          arguments("Abc"));
     }
 
     @ParameterizedTest

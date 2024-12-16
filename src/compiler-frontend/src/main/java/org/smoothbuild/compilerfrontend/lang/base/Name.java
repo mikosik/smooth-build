@@ -98,9 +98,4 @@ public final class Name extends Id {
   protected List<Name> splitToParts() {
     return list(this);
   }
-
-  @Override
-  public String last() {
-    return toString();
-  }
 }

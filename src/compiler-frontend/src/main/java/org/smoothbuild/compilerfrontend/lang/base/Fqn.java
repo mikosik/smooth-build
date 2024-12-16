@@ -60,9 +60,4 @@ public final class Fqn extends Id {
     return listOfAll(
         Splitter.on(SEPARATOR).splitToStream(toString()).map(Name::new).toList());
   }
-
-  @Override
-  public String last() {
-    return parts().getLast().toString();
-  }
 }

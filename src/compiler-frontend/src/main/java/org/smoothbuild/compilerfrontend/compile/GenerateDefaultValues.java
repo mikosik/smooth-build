@@ -60,7 +60,8 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
 
       private Id createNamedDefaultValue(PExpr expr, Id id) {
         var type = new PImplicitType(expr.location());
-        var pNamedValue = new PNamedValue(type, id.last(), some(expr), none(), expr.location());
+        var name = id.parts().getLast().toString();
+        var pNamedValue = new PNamedValue(type, name, some(expr), none(), expr.location());
         pNamedValue.setId(id);
         namedDefaultValues.add(pNamedValue);
         return id;
