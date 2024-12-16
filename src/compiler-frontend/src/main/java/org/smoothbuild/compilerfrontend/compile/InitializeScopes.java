@@ -99,7 +99,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
       // Constructor name starts with capital letter, so it can collide only
       // with other constructor name. This can only happen when other structure
       // with same name is declared which will be reported when adding struct type.
-      referenceables.add(constructor.id().last(), constructor);
+      referenceables.add(constructor.id().parts().getLast().toString(), constructor);
     }
 
     private void initializeScopeFor(PStruct pStruct) {
@@ -125,7 +125,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
         var full = binding.id().toString();
         addBinding(bindings, binding, full);
       } else {
-        var last = binding.id().last();
+        var last = binding.id().parts().getLast().toString();
         addBinding(bindings, binding, last);
       }
     }
