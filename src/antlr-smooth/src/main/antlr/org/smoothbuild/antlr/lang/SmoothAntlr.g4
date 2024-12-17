@@ -90,11 +90,7 @@ type
    ;
 
 NAME
-   : SHORT_NAME (':' SHORT_NAME)*
-   ;
-
-fragment SHORT_NAME
-   : (LETTER | '_') (LETTER | '_' | DIGIT)*
+   : (LETTER | '_' | ':') (LETTER | '_' | ':' | DIGIT)*
    ;
 
 INT
