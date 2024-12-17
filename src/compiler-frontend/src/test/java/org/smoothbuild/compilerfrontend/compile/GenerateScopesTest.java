@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.compile.InitializeScopes.initializeScopes;
+import static org.smoothbuild.compilerfrontend.compile.GenerateScopes.initializeScopes;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -11,7 +11,7 @@ import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class InitializeScopesTest extends FrontendCompilerTestContext {
+public class GenerateScopesTest extends FrontendCompilerTestContext {
   @Nested
   class _module {
     @Test

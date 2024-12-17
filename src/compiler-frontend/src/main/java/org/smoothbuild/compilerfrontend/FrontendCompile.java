@@ -19,7 +19,7 @@ import org.smoothbuild.compilerfrontend.compile.FindSyntaxErrors;
 import org.smoothbuild.compilerfrontend.compile.GenerateConstructors;
 import org.smoothbuild.compilerfrontend.compile.GenerateDefaultValues;
 import org.smoothbuild.compilerfrontend.compile.GenerateIds;
-import org.smoothbuild.compilerfrontend.compile.InitializeScopes;
+import org.smoothbuild.compilerfrontend.compile.GenerateScopes;
 import org.smoothbuild.compilerfrontend.compile.InjectDefaultArguments;
 import org.smoothbuild.compilerfrontend.compile.LoadInternalModuleMembers;
 import org.smoothbuild.compilerfrontend.compile.Parse;
@@ -69,8 +69,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
       var withGeneratedConstructors =
           scheduler.submit(GenerateConstructors.class, withDecodedLiterals);
-      var withInitializedScopes =
-          scheduler.submit(InitializeScopes.class, withGeneratedConstructors);
+      var withInitializedScopes = scheduler.submit(GenerateScopes.class, withGeneratedConstructors);
       var withUndefinedDetected =
           scheduler.submit(DetectUndefined.class, withInitializedScopes, importedScope);
       var withInjected =

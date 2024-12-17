@@ -30,7 +30,7 @@ import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends PModuleVisitor<RuntimeException>
+public class GenerateScopes extends PModuleVisitor<RuntimeException>
     implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
