@@ -14,7 +14,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
 public final class PStruct extends HasIdAndNameTextAndLocation implements PScoped {
   private final NList<PItem> fields;
-  private final PNamedFunc constructor;
   private PScope scope;
   private SStructType sStructType;
 
@@ -25,21 +24,15 @@ public final class PStruct extends HasIdAndNameTextAndLocation implements PScope
   private PStruct(String name, NList<PItem> fields, Location location) {
     super(name, location);
     this.fields = fields;
-    this.constructor = new PConstructor(this);
   }
 
   @Override
   public void setId(Id id) {
     super.setId(id);
-    constructor.setId(id);
   }
 
   public NList<PItem> fields() {
     return fields;
-  }
-
-  public PNamedFunc constructor() {
-    return constructor;
   }
 
   @Override

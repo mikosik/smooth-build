@@ -15,6 +15,7 @@ import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
@@ -57,21 +58,6 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
     @Override
     public void visitStruct(PStruct pStruct) throws TypeException {
       inferStructType(pStruct);
-      visitConstructor(pStruct);
-    }
-
-    private void visitConstructor(PStruct pStruct) {
-      var pConstructor = pStruct.constructor();
-      var sStructType = pStruct.sType();
-      var fieldSigs = sStructType.fields();
-      var params = pStruct
-          .fields()
-          .list()
-          .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.name(), none(), f.location()));
-      var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
-      var schema = new SFuncSchema(varSetS(), sFuncType);
-      pConstructor.setSSchema(schema);
-      pConstructor.setSType(sFuncType);
     }
 
     private void inferStructType(PStruct struct) throws TypeException {
@@ -106,11 +92,29 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     @Override
     public void visitNamedFunc(PNamedFunc namedFunc) throws TypeException {
-      var unifier = new Unifier();
-      unifyFunc(unifier, typeTeller, namedFunc);
-      convertFlexibleVarsToRigid(unifier, namedFunc);
-      resolveFunc(unifier, namedFunc);
-      detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
+      if (namedFunc instanceof PConstructor constructor) {
+        visitConstructor(constructor);
+      } else {
+        var unifier = new Unifier();
+        unifyFunc(unifier, typeTeller, namedFunc);
+        convertFlexibleVarsToRigid(unifier, namedFunc);
+        resolveFunc(unifier, namedFunc);
+        detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
+      }
+    }
+
+    private static void visitConstructor(PConstructor pConstructor) {
+      var pStruct = pConstructor.pStruct();
+      var sStructType = pStruct.sType();
+      var fieldSigs = sStructType.fields();
+      var params = pStruct
+          .fields()
+          .list()
+          .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.name(), none(), f.location()));
+      var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
+      var schema = new SFuncSchema(varSetS(), sFuncType);
+      pConstructor.setSSchema(schema);
+      pConstructor.setSType(sFuncType);
     }
 
     private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc)
