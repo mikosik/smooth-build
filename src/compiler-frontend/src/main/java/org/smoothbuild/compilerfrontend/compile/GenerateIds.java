@@ -12,6 +12,10 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
@@ -20,6 +24,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 
 public class GenerateIds implements Task1<PModule, PModule> {
@@ -50,6 +55,26 @@ public class GenerateIds implements Task1<PModule, PModule> {
             pNamedEvaluable.setId(id);
             runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable));
           });
+    }
+
+    @Override
+    public void visitType(PType pType) throws RuntimeException {
+      switch (pType) {
+        case PArrayType pArrayType -> visitType(pArrayType.elemT());
+        case PFuncType pFuncType -> {
+          visitType(pFuncType.result());
+          pFuncType.params().forEach(this::visitType);
+        }
+        case PIdType pIdType -> parseReference(pIdType.nameText())
+            .ifLeft(e -> logIllegalTypeReference(pIdType, e))
+            .ifRight(pIdType::setId);
+        case PImplicitType pImplicitType -> {}
+      }
+    }
+
+    private void logIllegalTypeReference(PIdType id, String e) {
+      logger.log(
+          compileError(id.location(), "Illegal type reference `" + id.nameText() + "`. " + e));
     }
 
     @Override

@@ -29,8 +29,8 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
@@ -778,7 +778,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
-    var pItem = new PItem(new PExplicitType("Int", location()), name, defaultValue, location());
+    var pItem = new PItem(new PIdType("Int", location()), name, defaultValue, location());
     pItem.setName(referenceableName(name));
     return pItem;
   }
