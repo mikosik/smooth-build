@@ -12,6 +12,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -32,15 +33,16 @@ public class TypeTeller {
     return new TypeTeller(imported, pScope);
   }
 
-  public SSchema schemaFor(String name) {
+  public SSchema schemaFor(Id id) {
+    var idString = id.toString();
     return currentScope
         .referencables()
-        .getMaybe(name)
+        .getMaybe(idString)
         .map(r -> switch (r) {
           case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.sSchema();
           case PItem pItem -> new SSchema(varSetS(), requireNonNull(pItem.sType()));
         })
-        .getOrGet(() -> imported.evaluables().get(name).schema());
+        .getOrGet(() -> imported.evaluables().get(idString).schema());
   }
 
   public SType translate(PType type) {
