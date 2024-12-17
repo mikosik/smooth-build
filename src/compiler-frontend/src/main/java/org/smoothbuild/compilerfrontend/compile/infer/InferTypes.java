@@ -56,28 +56,28 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     @Override
     public void visitStruct(PStruct pStruct) throws TypeException {
-      var sStructType = inferStructType(pStruct);
-      visitConstructor(pStruct, sStructType);
+      inferStructType(pStruct);
+      visitConstructor(pStruct);
     }
 
-    private void visitConstructor(PStruct pStruct, SStructType structT) {
+    private void visitConstructor(PStruct pStruct) {
       var pConstructor = pStruct.constructor();
-      var fieldSigs = structT.fields();
+      var sStructType = pStruct.sType();
+      var fieldSigs = sStructType.fields();
       var params = pStruct
           .fields()
           .list()
           .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.name(), none(), f.location()));
-      var sFuncType = new SFuncType(SItem.toTypes(params), structT);
+      var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
       var schema = new SFuncSchema(varSetS(), sFuncType);
       pConstructor.setSSchema(schema);
       pConstructor.setSType(sFuncType);
     }
 
-    private SStructType inferStructType(PStruct struct) throws TypeException {
+    private void inferStructType(PStruct struct) throws TypeException {
       NList<SItemSig> sItemSigs = struct.fields().map(this::inferFieldSig);
       var sStructType = new SStructType(struct.id(), sItemSigs);
       struct.setSType(sStructType);
-      return sStructType;
     }
 
     private SItemSig inferFieldSig(PItem field) throws TypeException {
