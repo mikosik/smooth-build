@@ -889,6 +889,19 @@ public class DeclarationTest extends FrontendCompileTester {
   @Nested
   class _expressions {
     @Nested
+    class _reference {
+      @Test
+      void illegal_reference_causes_error() {
+        var code = """
+            myValue = abc::def;
+            """;
+        module(code)
+            .loadsWithError(
+                1, "Illegal reference `abc::def`. It must not contain \"::\" substring.");
+      }
+    }
+
+    @Nested
     class _call {
       @Nested
       class _func {
