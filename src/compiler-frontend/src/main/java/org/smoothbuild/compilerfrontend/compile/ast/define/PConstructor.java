@@ -7,7 +7,7 @@ public final class PConstructor extends PNamedFunc {
 
   public PConstructor(PStruct pStruct) {
     super(
-        new PExplicitType(pStruct.nameText(), pStruct.location()),
+        new PIdType(pStruct.nameText(), pStruct.location()),
         pStruct.nameText(),
         pStruct.fields(),
         none(),

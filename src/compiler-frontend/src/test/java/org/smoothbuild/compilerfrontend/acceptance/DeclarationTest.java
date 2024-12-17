@@ -1742,33 +1742,48 @@ public class DeclarationTest extends FrontendCompileTester {
   }
 
   @Nested
-  class _func_type_literal {
-    @Test
-    void cannot_have_trailing_comma() {
-      module(funcTDeclaration("String,")).loadsWithProblems();
+  class _type_literal {
+    @Nested
+    class _reference_to_struct {
+      @Test
+      void cannot_be_illegal() {
+        module("""
+          [abc::def] result = "";
+          """)
+            .loadsWithError(
+                1, "Illegal type reference `abc::def`. It must not contain \"::\" substring.");
+      }
     }
 
-    @Test
-    void cannot_have_only_comma() {
-      module(funcTDeclaration(",")).loadsWithProblems();
-    }
+    @Nested
+    class _func_type {
+      @Test
+      void cannot_have_trailing_comma() {
+        module(funcTDeclaration("String,")).loadsWithProblems();
+      }
 
-    @Test
-    void cannot_have_leading_comma() {
-      module(funcTDeclaration(",String")).loadsWithProblems();
-    }
+      @Test
+      void cannot_have_only_comma() {
+        module(funcTDeclaration(",")).loadsWithProblems();
+      }
 
-    @Test
-    void cannot_have_two_trailing_commas() {
-      module(funcTDeclaration("String,,")).loadsWithProblems();
-    }
+      @Test
+      void cannot_have_leading_comma() {
+        module(funcTDeclaration(",String")).loadsWithProblems();
+      }
 
-    private String funcTDeclaration(String string) {
-      return """
+      @Test
+      void cannot_have_two_trailing_commas() {
+        module(funcTDeclaration("String,,")).loadsWithProblems();
+      }
+
+      private String funcTDeclaration(String string) {
+        return """
               @Native("Impl.met")
               (PLACEHOLDER)->Blob myFunc();
               """
-          .replace("PLACEHOLDER", string);
+            .replace("PLACEHOLDER", string);
+      }
     }
   }
 
