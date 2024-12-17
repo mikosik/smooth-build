@@ -15,6 +15,7 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
@@ -78,6 +79,7 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
         case PModule pModule -> initializeScopeFor(pModule);
         case PStruct pStruct -> initializeScopeFor(pStruct);
         case PNamedValue pNamedValue -> initializeScopeFor(pNamedValue);
+        case PConstructor pConstructor -> initializeScopeFor(pConstructor);
         case PFunc pFunc -> initializeScopeFor(pFunc);
       }
       return scope.newInnerScope(referenceables.toFlatImmutable(), types.toFlatImmutable());
@@ -85,21 +87,15 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
 
     private void initializeScopeFor(PModule pModule) {
       pModule.structs().forEach(this::addType);
-      pModule.structs().forEach(this::addConstructor);
       pModule.evaluables().forEach(this::addNamedEvaluable);
     }
 
     private void addNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
-      addReferenceable(pNamedEvaluable);
-    }
-
-    private void addConstructor(PStruct pStruct) {
-      var constructor = pStruct.constructor();
-      // No need to report error when other referenceable with same name is already defined.
-      // Constructor name starts with capital letter, so it can collide only
-      // with other constructor name. This can only happen when other structure
-      // with same name is declared which will be reported when adding struct type.
-      referenceables.add(constructor.id().parts().getLast().toString(), constructor);
+      // Do not report duplicate constructor names. As constructor names starts uppercase then the
+      // only way duplicate constructor name can occur is when struct with duplicate names exists
+      // which is reported as struct error so we don't want to duplicate that error here.
+      var reportErrors = !(pNamedEvaluable instanceof PConstructor);
+      addReferenceable(pNamedEvaluable, reportErrors);
     }
 
     private void initializeScopeFor(PStruct pStruct) {
@@ -108,32 +104,48 @@ public class InitializeScopes extends PModuleVisitor<RuntimeException>
 
     private void initializeScopeFor(PNamedValue pNamedValue) {}
 
+    private void initializeScopeFor(PConstructor pConstructor) {
+      // Do not report errors as duplicate parameters in constructor means there are duplicate
+      // fields in its struct which is reported as Struct error.
+      pConstructor.params().forEach(pReferenceable -> addReferenceable(pReferenceable, false));
+    }
+
     private void initializeScopeFor(PFunc pFunc) {
       pFunc.params().forEach(this::addReferenceable);
     }
 
     private void addType(PStruct type) {
-      addBinding(types, type);
+      addBinding(types, type, true);
     }
 
     private void addReferenceable(PReferenceable pReferenceable) {
-      addBinding(referenceables, pReferenceable);
+      addReferenceable(pReferenceable, true);
     }
 
-    private <T extends HasIdAndLocation> void addBinding(MutableBindings<T> bindings, T binding) {
-      if (binding instanceof PNamedEvaluable) {
-        var full = binding.id().toString();
-        addBinding(bindings, binding, full);
-      } else {
-        var last = binding.id().parts().getLast().toString();
-        addBinding(bindings, binding, last);
-      }
+    private void addReferenceable(PReferenceable pReferenceable, boolean reportErrors) {
+      addBinding(referenceables, pReferenceable, reportErrors);
     }
 
     private <T extends HasIdAndLocation> void addBinding(
-        MutableBindings<T> bindings, T binding, String shortName) {
+        MutableBindings<T> bindings, T binding, boolean reportErrors) {
+      if (binding instanceof PNamedEvaluable) {
+        var full = binding.id().toString();
+        addBinding(bindings, binding, full, reportErrors);
+      } else {
+        var last = binding.id().parts().getLast().toString();
+        addBinding(bindings, binding, last, reportErrors);
+      }
+    }
+
+    // No need to report error when other constructor with same name is already defined.
+    // Constructor name starts with capital letter, so it can collide only
+    // with other constructor name. This can only happen when other structure
+    // with same name is declared which will be reported when detecting duplicate struct name.
+
+    private <T extends HasIdAndLocation> void addBinding(
+        MutableBindings<T> bindings, T binding, String shortName, boolean reportErrors) {
       var previousBinding = bindings.add(shortName, binding);
-      if (previousBinding != null) {
+      if (previousBinding != null && reportErrors) {
         log.log(alreadyDefinedError(
             binding.location(), previousBinding.location().description(), shortName));
       }

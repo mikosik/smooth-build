@@ -6,16 +6,19 @@ import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
 import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
 
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
@@ -43,6 +46,17 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
       this.scope = scope;
       this.imported = imported;
       this.log = log;
+    }
+
+    @Override
+    public void visitNamedEvaluables(List<PNamedEvaluable> pNamedEvaluables) {
+      for (var pNamedEvaluable : pNamedEvaluables) {
+        // Do not check generated constructor as any problem it can have is caused by problem
+        // in its struct which is reported separately.
+        if (!(pNamedEvaluable instanceof PConstructor)) {
+          visitNamedEvaluable(pNamedEvaluable);
+        }
+      }
     }
 
     @Override
