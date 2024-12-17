@@ -49,7 +49,7 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
   }
 
   private static void callInjectDefaultArguments(SScope sImported, PModule pModule) {
-    new InitializeScopes().execute(pModule);
+    new GenerateScopes().execute(pModule);
     new InjectDefaultArguments().execute(pModule, sImported);
   }
 }
