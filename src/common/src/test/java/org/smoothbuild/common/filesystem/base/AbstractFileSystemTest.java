@@ -103,12 +103,12 @@ public abstract class AbstractFileSystemTest {
               + "Unknown alias 'unknown'. Known aliases = ['alias-1']"));
     }
 
-    private static HashSet<Path> toSet(PathIterator iterator) throws IOException {
+    private static Set<Path> toSet(PathIterator iterator) throws IOException {
       var files = new HashSet<Path>();
       while (iterator.hasNext()) {
         files.add(iterator.next());
       }
-      return files;
+      return Set.setOfAll(files);
     }
   }
 

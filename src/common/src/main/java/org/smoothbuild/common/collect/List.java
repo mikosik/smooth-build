@@ -4,23 +4,29 @@ import static java.util.Arrays.fill;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.collect.Set.setOfAll;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
-import org.smoothbuild.common.function.Consumer1;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.tuple.Tuple2;
 
-public final class List<E> extends AbstractList<E> {
+/**
+ * Immutable list.
+ */
+public final class List<E> implements Collection<E> {
   private final E[] array;
 
   @SafeVarargs
@@ -29,15 +35,29 @@ public final class List<E> extends AbstractList<E> {
   }
 
   public static <R> List<R> listOfAll(Collection<? extends R> collection) {
-    if (collection instanceof List<? extends R> list) {
-      @SuppressWarnings("unchecked")
-      var cast = (List<R>) list;
-      return cast;
-    } else {
-      @SuppressWarnings("unchecked")
-      R[] array1 = (R[]) collection.toArray();
-      return new List<>(array1);
-    }
+    return switch (collection) {
+      case List<? extends R> list -> upCast(list);
+      case Set<? extends R> set -> {
+        @SuppressWarnings("unchecked")
+        List<R> newList = (List<R>) set.toList();
+        yield newList;
+      }
+    };
+  }
+
+  /**
+   * Upcast List which is always safe because List is immutable.
+   */
+  private static <R> List<R> upCast(List<? extends R> list) {
+    @SuppressWarnings("unchecked")
+    var cast = (List<R>) list;
+    return cast;
+  }
+
+  public static <R> List<R> listOfAll(java.util.Collection<? extends R> jdkCollection) {
+    @SuppressWarnings("unchecked")
+    R[] array1 = (R[]) jdkCollection.toArray();
+    return new List<>(array1);
   }
 
   public static <E> List<E> nCopiesList(int size, E element) {
@@ -67,24 +87,102 @@ public final class List<E> extends AbstractList<E> {
   }
 
   @Override
-  public E get(int index) {
-    return array[index];
+  public boolean isEmpty() {
+    return array.length == 0;
   }
 
   @Override
+  public boolean contains(Object object) {
+    for (var element : array) {
+      if (Objects.equals(element, object)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public E[] toArray() {
+    return array.clone();
+  }
+
+  @Override
+  public Iterator<E> iterator() {
+    return Iterators.forArray(array);
+  }
+
+  @Override
+  public Spliterator<E> spliterator() {
+    return Arrays.spliterator(array);
+  }
+
+  @Override
+  public void forEach(Consumer<? super E> consumer) {
+    foreach(consumer::accept);
+  }
+
+  public E get(int index) {
+    if (index < 0 || array.length <= index) {
+      throw new NoSuchElementException("index = " + index + ", array.length = " + array.length);
+    }
+    return array[index];
+  }
+
+  public E getLast() {
+    if (array.length == 0) {
+      throw new NoSuchElementException();
+    }
+    return array[array.length - 1];
+  }
+
+  public int indexOf(E element) {
+    for (int i = 0, arrayLength = array.length; i < arrayLength; i++) {
+      if (Objects.equals(array[i], element)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   public int size() {
     return array.length;
   }
 
-  @Override
   public List<E> subList(int fromIndex, int toIndex) {
     return list(Arrays.copyOfRange(array, fromIndex, toIndex));
   }
 
-  public List<E> appendAll(Collection<? extends E> list) {
-    @SuppressWarnings("unchecked")
-    E[] toAppend = (E[]) list.toArray();
-    return append(toAppend);
+  public List<E> appendAll(java.util.Collection<? extends E> collection) {
+    int size = collection.size();
+    var appended = Arrays.copyOf(array, array.length + size);
+    int i = array.length;
+    for (var element : collection) {
+      appended[i] = element;
+      i++;
+    }
+    return new List<>(appended);
+  }
+
+  public List<E> appendAll(Collection<? extends E> collection) {
+    return switch (collection) {
+      case List<? extends E> l -> appendAll(collection);
+      case Set<? extends E> s -> appendAll(s);
+    };
+  }
+
+  public List<E> appendAll(Set<? extends E> set) {
+    int size = set.size();
+    var appended = Arrays.copyOf(array, array.length + size);
+    int i = array.length;
+    for (var element : set) {
+      appended[i] = element;
+      i++;
+    }
+    return new List<>(appended);
+  }
+
+  public List<E> appendAll(List<? extends E> list) {
+    return append(list.array);
   }
 
   @SafeVarargs
@@ -92,12 +190,6 @@ public final class List<E> extends AbstractList<E> {
     var appended = Arrays.copyOf(array, array.length + toAppend.length);
     System.arraycopy(toAppend, 0, appended, array.length, toAppend.length);
     return new List<>(appended);
-  }
-
-  public <T extends Throwable> void withEach(Consumer1<? super E, T> consumer1) throws T {
-    for (E e : array) {
-      consumer1.accept(e);
-    }
   }
 
   public List<E> reverse() {
@@ -131,7 +223,7 @@ public final class List<E> extends AbstractList<E> {
   }
 
   public List<E> sortUsing(Comparator<? super E> comparator) {
-    var copy = array.clone();
+    var copy = toArray();
     Arrays.sort(copy, comparator);
     return new List<>(copy);
   }
@@ -223,15 +315,6 @@ public final class List<E> extends AbstractList<E> {
     return new List<>(zipped);
   }
 
-  public <T extends Throwable> boolean anyMatches(Function1<E, Boolean, T> predicate) throws T {
-    for (E element : array) {
-      if (predicate.apply(element)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public boolean startsWith(List<E> prefix) {
     var thatArray = prefix.array;
     if (this.array.length < thatArray.length) {
@@ -243,10 +326,6 @@ public final class List<E> extends AbstractList<E> {
       }
     }
     return true;
-  }
-
-  public Set<E> toSet() {
-    return Set.set(array);
   }
 
   public <V, T extends Throwable> Map<E, V> toMap(Function1<? super E, V, T> valueMapper) throws T {
@@ -265,6 +344,35 @@ public final class List<E> extends AbstractList<E> {
     } else {
       return some(list.map(Maybe::get));
     }
+  }
+
+  @Override
+  public List<E> toList() {
+    return this;
+  }
+
+  @Override
+  public Set<E> toSet() {
+    return setOfAll(this);
+  }
+
+  @Override
+  public Stream<E> stream() {
+    return Arrays.stream(array);
+  }
+
+  public java.util.List<E> toJdkList() {
+    return Arrays.asList(toArray());
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    return object instanceof List<?> that && Arrays.equals(this.array, that.array);
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(array);
   }
 
   public String toString(String prefix, String delimiter, String suffix) {

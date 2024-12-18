@@ -1,9 +1,9 @@
 package org.smoothbuild.common.filesystem.mem;
 
 import java.io.IOException;
-import java.util.List;
 import okio.Sink;
 import okio.Source;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Path;
 
 public sealed interface MemoryElement permits MemoryDir, MemoryFile, MemoryLink {

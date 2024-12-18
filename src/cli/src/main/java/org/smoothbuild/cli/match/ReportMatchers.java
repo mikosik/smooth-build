@@ -73,6 +73,6 @@ public class ReportMatchers {
   }
 
   private static Predicate<Report> logLevelMatcher(Level level) {
-    return (report) -> report.logs().stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
+    return (report) -> report.logs().anyMatches(l -> l.level().hasPriorityAtLeast(level));
   }
 }

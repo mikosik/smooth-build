@@ -10,6 +10,7 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import java.util.Iterator;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -209,8 +210,8 @@ public class MapTest {
       }
     }
 
-    public static List<Arguments> maps() {
-      return list(
+    public static Stream<Arguments> maps() {
+      return Stream.of(
           arguments(map()),
           arguments(map(1, "one")),
           arguments(map(1, "one", 2, "two")),

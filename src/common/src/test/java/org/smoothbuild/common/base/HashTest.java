@@ -1,7 +1,7 @@
 package org.smoothbuild.common.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.Arrays.asList;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.io.Files;
@@ -49,14 +49,14 @@ public class HashTest {
 
   @Test
   void hash_of_given_array_of_hashes_is_always_the_same() {
-    assertThat(Hash.of(asList(Hash.of(1), Hash.of(2))))
-        .isEqualTo(Hash.of(asList(Hash.of(1), Hash.of(2))));
+    assertThat(Hash.of(list(Hash.of(1), Hash.of(2))))
+        .isEqualTo(Hash.of(list(Hash.of(1), Hash.of(2))));
   }
 
   @Test
   void hash_of_different_array_of_hashes_are_different() {
-    assertThat(Hash.of(asList(Hash.of(1), Hash.of(2))))
-        .isNotEqualTo(Hash.of(asList(Hash.of(1), Hash.of(3))));
+    assertThat(Hash.of(list(Hash.of(1), Hash.of(2))))
+        .isNotEqualTo(Hash.of(list(Hash.of(1), Hash.of(3))));
   }
 
   @Test

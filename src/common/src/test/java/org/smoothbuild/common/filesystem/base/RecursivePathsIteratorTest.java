@@ -9,8 +9,8 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class RecursivePathsIteratorTest {
@@ -78,7 +78,7 @@ public class RecursivePathsIteratorTest {
 
     FullPath dir = alias().append(expectedRootDir);
     PathIterator iterator = new RecursivePathsIterator(fileSystem, dir);
-    List<String> created = new ArrayList<>();
+    java.util.List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
       created.add(iterator.next().toString());
     }

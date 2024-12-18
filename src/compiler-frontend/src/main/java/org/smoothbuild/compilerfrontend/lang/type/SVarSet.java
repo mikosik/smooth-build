@@ -1,14 +1,12 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.common.collect.Set.setOfAll;
 
-import com.google.common.collect.Streams;
-import java.util.Collection;
 import java.util.Iterator;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
@@ -21,9 +19,8 @@ public final class SVarSet extends java.util.AbstractSet<SVar> {
     return newSortedVarSetS(set);
   }
 
-  public static SVarSet varSetS(Iterable<? extends SType> types) {
-    return newSortedVarSetS(
-        setOfAll(Streams.stream(types).flatMap(t -> t.vars().stream()).collect(toSet())));
+  public static SVarSet varSetS(Collection<? extends SType> types) {
+    return newSortedVarSetS(setOfAll(types.toList().flatMap(SType::vars)));
   }
 
   private static SVarSet newSortedVarSetS(Set<SVar> set) {

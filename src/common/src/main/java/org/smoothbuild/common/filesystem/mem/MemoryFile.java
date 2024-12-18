@@ -1,12 +1,12 @@
 package org.smoothbuild.common.filesystem.mem;
 
 import java.io.IOException;
-import java.util.List;
 import okio.Buffer;
 import okio.ByteString;
 import okio.ForwardingSink;
 import okio.Sink;
 import okio.Source;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.Path;
 
 public final class MemoryFile implements MemoryElement {

@@ -2,9 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
 
-import java.util.List;
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndNameTextAndLocation;
@@ -17,11 +15,7 @@ public final class PStruct extends HasIdAndNameTextAndLocation implements PScope
   private PScope scope;
   private SStructType sStructType;
 
-  public PStruct(String name, List<PItem> fields, Location location) {
-    this(name, nlistWithShadowing(fields), location);
-  }
-
-  private PStruct(String name, NList<PItem> fields, Location location) {
+  public PStruct(String name, NList<PItem> fields, Location location) {
     super(name, location);
     this.fields = fields;
   }

@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.step;
 
-import static java.util.Arrays.asList;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -37,10 +37,10 @@ public class StepHashes {
   }
 
   private static Hash hash(int id, Hash hash) {
-    return Hash.of(asList(Hash.of(id), hash));
+    return Hash.of(list(Hash.of(id), hash));
   }
 
   private static Hash hash(int id) {
-    return Hash.of(asList(Hash.of(id)));
+    return Hash.of(list(Hash.of(id)));
   }
 }

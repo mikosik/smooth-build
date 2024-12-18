@@ -58,8 +58,7 @@ public class TypeResolver {
   }
 
   private SVarSet resolveQuantifiedVars(SSchema sSchema) {
-    return varSetS(
-        sSchema.quantifiedVars().stream().map(v -> (SVar) unifier.resolve(v)).toList());
+    return varSetS(sSchema.quantifiedVars().map(v -> (SVar) unifier.resolve(v)).toList());
   }
 
   private SType resolveType(SSchema sSchema) {
@@ -90,7 +89,7 @@ public class TypeResolver {
 
   private void resolveCall(PCall pCall) throws TypeException {
     resolveExpr(pCall.callee());
-    pCall.positionedArgs().withEach(this::resolveExpr);
+    pCall.positionedArgs().foreach(this::resolveExpr);
     resolveExprType(pCall);
   }
 
@@ -121,7 +120,7 @@ public class TypeResolver {
   }
 
   private void resolveOrder(POrder pOrder) throws TypeException {
-    pOrder.elements().withEach(this::resolveExpr);
+    pOrder.elements().foreach(this::resolveExpr);
     resolveExprType(pOrder);
   }
 

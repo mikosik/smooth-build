@@ -35,9 +35,7 @@ public class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitStructs(List<PStruct> pStructs) throws T {
-    for (var pStruct : pStructs) {
-      visitStruct(pStruct);
-    }
+    pStructs.foreach(this::visitStruct);
   }
 
   public void visitStruct(PStruct pStruct) throws T {
@@ -50,9 +48,7 @@ public class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitNamedEvaluables(List<PNamedEvaluable> pNamedEvaluables) throws T {
-    for (var pNamedEvaluable : pNamedEvaluables) {
-      visitNamedEvaluable(pNamedEvaluable);
-    }
+    pNamedEvaluables.foreach(this::visitNamedEvaluable);
   }
 
   public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws T {
@@ -102,9 +98,7 @@ public class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitItems(List<PItem> pItems) throws T {
-    for (var pItem : pItems) {
-      visitItem(pItem);
-    }
+    pItems.foreach(this::visitItem);
   }
 
   public void visitItem(PItem pItem) throws T {
@@ -139,9 +133,7 @@ public class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitArgs(List<PExpr> args) throws T {
-    for (var arg : args) {
-      visitArg(arg);
-    }
+    args.foreach(this::visitArg);
   }
 
   public void visitArg(PExpr arg) throws T {
@@ -173,7 +165,7 @@ public class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitOrder(POrder pOrder) throws T {
-    pOrder.elements().withEach(this::visitExpr);
+    pOrder.elements().foreach(this::visitExpr);
   }
 
   public void visitReference(PReference pReference) throws T {}

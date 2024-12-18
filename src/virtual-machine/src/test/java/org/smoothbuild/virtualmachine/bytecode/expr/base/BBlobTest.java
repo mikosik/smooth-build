@@ -4,10 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.collect.List.list;
 
-import java.util.List;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 

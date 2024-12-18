@@ -1,13 +1,12 @@
 package org.smoothbuild.common.log.base;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Level.INFO;
 import static org.smoothbuild.common.log.base.Level.WARNING;
-
-import java.util.Collection;
 
 public record Log(Level level, String message) {
   public Log(Level level, String message) {
@@ -35,8 +34,8 @@ public record Log(Level level, String message) {
     return new Log(INFO, log);
   }
 
-  public static boolean containsFailure(Collection<Log> list) {
-    return list.stream().anyMatch(l -> l.level().hasPriorityAtLeast(ERROR));
+  public static boolean containsFailure(Iterable<? extends Log> iterable) {
+    return stream(iterable).anyMatch(l -> l.level().hasPriorityAtLeast(ERROR));
   }
 
   public String toPrettyString() {

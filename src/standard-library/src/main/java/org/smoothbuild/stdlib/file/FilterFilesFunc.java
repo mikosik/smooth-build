@@ -30,11 +30,9 @@ public class FilterFilesFunc {
     BArrayBuilder builder =
         nativeApi.factory().arrayBuilderWithElements(nativeApi.factory().fileType());
 
-    for (BTuple file : files.elements(BTuple.class)) {
-      if (filter.test(path(filePath(file).toJavaString()))) {
-        builder.add(file);
-      }
-    }
+    builder.addAll(files
+        .elements(BTuple.class)
+        .filter(file -> filter.test(path(filePath(file).toJavaString()))));
 
     return builder.build();
   }

@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.common.testing.EqualsTester;
-import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
@@ -16,7 +16,7 @@ public abstract class AbstractBExprTestSuite<T extends BExpr> extends VmTestCont
 
   @Test
   void test_equals_and_hashcode_of_equal_exprs() throws Exception {
-    new EqualsTester().addEqualityGroup(equalExprs().toArray()).testEquals();
+    new EqualsTester().addEqualityGroup((Object[]) equalExprs().toArray()).testEquals();
   }
 
   @Test

@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import com.google.common.testing.EqualsTester;
@@ -51,19 +52,19 @@ public class SVarSetTest extends FrontendCompilerTestContext {
     @Test
     void empty_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemovedAll(varSetS())).isEqualTo(varSetS(varA()));
+      assertThat(varSet.withRemovedAll(set())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     void other_non_overlapping_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemovedAll(varSetS(varB()))).isEqualTo(varSetS(varA()));
+      assertThat(varSet.withRemovedAll(set(varB()))).isEqualTo(varSetS(varA()));
     }
 
     @Test
     void other_overlapping_set() {
       var varSet = varSetS(varA(), varB(), varC());
-      assertThat(varSet.withRemovedAll(varSetS(varB()))).isEqualTo(varSetS(varA(), varC()));
+      assertThat(varSet.withRemovedAll(set(varB()))).isEqualTo(varSetS(varA(), varC()));
     }
   }
 

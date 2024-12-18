@@ -6,6 +6,7 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
@@ -37,12 +38,12 @@ public class BOrderTest extends VmTestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BOrder> {
     @Override
-    protected java.util.List<BOrder> equalExprs() throws BytecodeException {
+    protected List<BOrder> equalExprs() throws BytecodeException {
       return list(bOrder(bInt(1), bInt(2)), bOrder(bInt(1), bInt(2)));
     }
 
     @Override
-    protected java.util.List<BOrder> nonEqualExprs() throws BytecodeException {
+    protected List<BOrder> nonEqualExprs() throws BytecodeException {
       return list(
           bOrder(bIntType()),
           bOrder(bStringType()),

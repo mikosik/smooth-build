@@ -11,8 +11,8 @@ import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
 import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
@@ -60,15 +60,12 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
       List<PNamedEvaluable> evaluables) {
     HashSet<Id> ids = new HashSet<>();
     evaluables.forEach(e -> ids.add(e.id()));
-
-    HashSet<GraphNode<Id, PNamedEvaluable, Location>> nodes = new HashSet<>();
-    nodes.addAll(evaluables.map(e -> evaluable(e, ids)));
-    return sortTopologically(nodes);
+    return sortTopologically(evaluables.map(e -> evaluable(e, ids)));
   }
 
   private static GraphNode<Id, PNamedEvaluable, Location> evaluable(
-      PNamedEvaluable evaluable, Set<Id> ids) {
-    Set<GraphEdge<Location, Id>> deps = new HashSet<>();
+      PNamedEvaluable evaluable, HashSet<Id> ids) {
+    HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
     new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitReference(PReference pReference) {
@@ -96,7 +93,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
 
   private static GraphNode<Id, PStruct, Location> structToGraphNode(
       PStruct struct, Set<String> structNames) {
-    Set<GraphEdge<Location, Id>> deps = new HashSet<>();
+    HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
     new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitStructSignature(PStruct pStruct) {

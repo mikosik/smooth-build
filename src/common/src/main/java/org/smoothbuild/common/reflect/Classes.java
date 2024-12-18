@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 import okio.ByteString;
 import okio.Sink;
+import org.smoothbuild.common.collect.List;
 
 public class Classes {
   public static final String CLASS_FILE_EXTENSION = ".class";

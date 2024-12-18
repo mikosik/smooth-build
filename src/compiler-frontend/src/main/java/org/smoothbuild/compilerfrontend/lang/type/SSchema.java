@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 
-import java.util.List;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 
 /**
  * Polymorphic type (aka type schema).

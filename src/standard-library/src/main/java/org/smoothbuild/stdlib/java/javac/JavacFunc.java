@@ -6,11 +6,10 @@ import static org.smoothbuild.stdlib.file.FileHelper.fileArrayArrayToMap;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipException;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
@@ -66,7 +65,8 @@ public class JavacFunc {
         return null;
       }
       try (var sandboxedJFM = new SandboxedJavaFileManager(standardJFM, nativeApi, libsClasses)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(BTuple.class));
+        Iterable<InputSourceFile> inputSourceFiles =
+            files.elements(BTuple.class).map(InputSourceFile::new);
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -112,15 +112,6 @@ public class JavacFunc {
 
     private List<String> options() throws BytecodeException {
       return options.elements(BString.class).map(BString::toJavaString);
-    }
-
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<BTuple> sourceFiles)
-        throws BytecodeException {
-      ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (BTuple file : sourceFiles) {
-        result.add(new InputSourceFile(file));
-      }
-      return result;
     }
   }
 

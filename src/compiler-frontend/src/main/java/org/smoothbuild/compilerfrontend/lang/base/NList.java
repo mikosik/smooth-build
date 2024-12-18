@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.Map.mapOfAll;
 
 import com.google.common.base.Supplier;
 import java.util.AbstractList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +16,7 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
@@ -71,7 +71,7 @@ public class NList<E extends HasName> extends AbstractList<E> {
   }
 
   /**
-   * Creates nlist which allows elements with duplicated names. When {@link #get(Object)}
+   * Creates nlist which allows elements with duplicated names. When {@link #get(Id)}
    * is called and more than one element has given name then the first one is returned.
    */
   public static <E extends HasName> NList<E> nlistWithShadowing(Collection<E> list) {
@@ -187,30 +187,30 @@ public class NList<E extends HasName> extends AbstractList<E> {
 
   @Override
   public Stream<E> parallelStream() {
-    return list().parallelStream();
+    return list().stream().parallel();
   }
 
   @Override
   public <A> A[] toArray(IntFunction<A[]> generator) {
-    return list().toArray(generator);
+    throw new UnsupportedOperationException();
   }
 
   @Deprecated
   @Override
   public boolean removeIf(Predicate<? super E> filter) {
-    return list().removeIf(filter);
+    throw new UnsupportedOperationException();
   }
 
   @Deprecated
   @Override
   public void replaceAll(UnaryOperator<E> operator) {
-    list().replaceAll(operator);
+    throw new UnsupportedOperationException();
   }
 
   @Deprecated
   @Override
   public void sort(Comparator<? super E> c) {
-    list().sort(c);
+    throw new UnsupportedOperationException();
   }
 
   // helper methods

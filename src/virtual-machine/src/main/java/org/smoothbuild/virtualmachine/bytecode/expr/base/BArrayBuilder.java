@@ -1,6 +1,5 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
-import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class BArrayBuilder {
   }
 
   public BArrayBuilder addAll(Iterable<? extends BValue> elems) {
-    stream(elems).forEach(this::add);
+    elems.forEach(this::add);
     return this;
   }
 

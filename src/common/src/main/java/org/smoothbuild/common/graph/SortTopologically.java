@@ -8,8 +8,8 @@ import static org.smoothbuild.common.graph.SortTopologically.Node.State.NOT_VISI
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSED;
 
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.LinkedList;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
 
@@ -67,7 +67,7 @@ public class SortTopologically {
 
     var rootKeys = findRootNodes(nodes);
     if (rootKeys.isEmpty()) {
-      rootKeys = set(nodes.getFirst().key());
+      rootKeys = set(nodes.get(0).key());
     }
 
     var keyToNode = nodes.toMap(Node::key, n -> n);

@@ -191,12 +191,12 @@ public class SortTopologicallyTest {
         List<GraphNode<Integer, String, String>> expectedCycle) {
       var permutations = permutations(nodes);
       for (List<GraphNode<Integer, String, String>> permutation : permutations) {
-        var actual = sortTopologically(permutation).cycle();
+        var actual = sortTopologically(permutation).cycle().toJdkList();
 
         List<GraphEdge<String, Integer>> cycle = buildCycle(expectedCycle);
+        var rotated = cycle.toJdkList();
         for (int i = 0; i < cycle.size(); i++) {
-          var rotated = new ArrayList<>(cycle);
-          Collections.rotate(rotated, i);
+          Collections.rotate(rotated, 1);
           if (actual.equals(rotated)) {
             return;
           }
@@ -247,14 +247,14 @@ public class SortTopologicallyTest {
   @Test
   void sorting_algorithm_has_linear_complexity() {
     AtomicInteger key = new AtomicInteger();
-    var topLayer = createLayer(key, list());
-    var nodes = new ArrayList<>(topLayer);
+    List<GraphNode<Integer, String, String>> topLayer = createLayer(key, list());
+    var nodes = new ArrayList<>(topLayer.toJdkList());
     int layerCount = 100;
     for (int i = 0; i < layerCount; i++) {
       topLayer = createLayer(key, topLayer.map(GraphNode::key));
-      nodes.addAll(topLayer);
+      nodes.addAll(topLayer.toJdkList());
     }
-    assertTimeoutPreemptively(Duration.ofSeconds(5), () -> sortTopologically(nodes));
+    assertTimeoutPreemptively(Duration.ofSeconds(5), () -> sortTopologically(listOfAll(nodes)));
   }
 
   private List<GraphNode<Integer, String, String>> createLayer(
@@ -293,7 +293,9 @@ public class SortTopologicallyTest {
     return new GraphNode<>(key, "node" + key, edges);
   }
 
-  public static <E> Collection<List<E>> permutations(Collection<E> elements) {
-    return Collections2.permutations(elements).stream().map(List::listOfAll).toList();
+  public static <E> Collection<List<E>> permutations(List<E> elements) {
+    return Collections2.permutations(elements.toJdkList()).stream()
+        .map(List::listOfAll)
+        .toList();
   }
 }

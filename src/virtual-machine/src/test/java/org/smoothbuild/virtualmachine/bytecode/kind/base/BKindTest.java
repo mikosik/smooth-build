@@ -6,6 +6,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.testing.EqualsTester;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -182,9 +183,9 @@ public class BKindTest extends VmTestContext {
     assertThat(type.javaType()).isEqualTo(expected);
   }
 
-  public static java.util.List<Arguments> typeJ_test_data() throws BytecodeException {
+  public static Stream<Arguments> typeJ_test_data() throws BytecodeException {
     var test = new VmTestContext();
-    return list(
+    return Stream.of(
         arguments(test.bBlobType(), BBlob.class),
         arguments(test.bBoolType(), BBool.class),
         arguments(test.bLambdaType(test.bBoolType(), test.bBlobType()), BLambda.class),
@@ -228,14 +229,14 @@ public class BKindTest extends VmTestContext {
 
     @ParameterizedTest
     @MethodSource("combine_cases")
-    public void combine(BCombineKind type, BTupleType expected) throws Exception {
+    public void combine(BCombineKind type, BTupleType expected) {
       assertThat(type.evaluationType()).isEqualTo(expected);
     }
 
-    public static java.util.List<Arguments> combine_cases() throws BytecodeException {
+    public static Stream<Arguments> combine_cases() throws BytecodeException {
       var test = new VmTestContext();
       BKindDb db = test.kindDb();
-      return list(
+      return Stream.of(
           arguments(db.combine(db.tuple()), db.tuple()),
           arguments(db.combine(db.tuple(test.bStringType())), db.tuple(test.bStringType())));
     }
