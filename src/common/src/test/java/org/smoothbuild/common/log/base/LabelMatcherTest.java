@@ -2,11 +2,10 @@ package org.smoothbuild.common.log.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Label.label;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
-import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,8 +21,8 @@ public class LabelMatcherTest {
     }
   }
 
-  static List<Arguments> test_pattern_validation() {
-    return list(
+  static Stream<Arguments> test_pattern_validation() {
+    return Stream.of(
         arguments(".", false),
         arguments("^", false),
         arguments("!", false),
@@ -52,8 +51,8 @@ public class LabelMatcherTest {
     assertThat(labelMatcher.test(label)).isEqualTo(expected);
   }
 
-  static List<Arguments> test_matcher() {
-    return list(
+  static Stream<Arguments> test_matcher() {
+    return Stream.of(
         arguments("**", ":abc", true),
         arguments("**", ":abc:def", true),
         arguments("**", ":abc:def:ghi", true),

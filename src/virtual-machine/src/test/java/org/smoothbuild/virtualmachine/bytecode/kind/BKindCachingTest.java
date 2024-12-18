@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.kind;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.function.Function1;
@@ -29,8 +30,8 @@ public class BKindCachingTest extends VmTestContext {
     assertThat(kindDb.get(hash)).isSameInstanceAs(kindDb.get(hash));
   }
 
-  private static java.util.List<Function1<BKindDb, BKind, BytecodeException>> factories() {
-    return list(
+  private static Stream<Function1<BKindDb, BKind, BytecodeException>> factories() {
+    return Stream.of(
         BKindDb::blob,
         BKindDb::bool,
         BKindCachingTest::lambdaType,

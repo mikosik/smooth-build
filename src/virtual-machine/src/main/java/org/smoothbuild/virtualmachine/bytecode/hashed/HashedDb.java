@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.bytecode.hashed;
 import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
-import static java.util.Arrays.asList;
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 
@@ -123,15 +123,11 @@ public class HashedDb {
   }
 
   public Hash writeHashChain(Hash... hashes) throws HashedDbException {
-    return writeHashChain(asList(hashes));
+    return writeHashChain(list(hashes));
   }
 
-  public Hash writeHashChain(Iterable<Hash> hashes) throws HashedDbException {
-    return writeData(bufferedSink -> {
-      for (Hash hash : hashes) {
-        bufferedSink.write(hash.toByteString());
-      }
-    });
+  public Hash writeHashChain(List<Hash> hashes) throws HashedDbException {
+    return writeData(bufferedSink -> hashes.foreach(h -> bufferedSink.write(h.toByteString())));
   }
 
   public Hash writeData(Consumer1<BufferedSink, IOException> writer) throws HashedDbException {

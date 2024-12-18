@@ -1,11 +1,10 @@
 package org.smoothbuild.common.collect;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -13,20 +12,20 @@ import static org.smoothbuild.common.collect.List.nCopiesList;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.common.tuple.Tuples.tuple;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
 
@@ -58,12 +57,12 @@ public class ListTest {
   class _generateList_function0 {
     @Test
     void with_no_elements() {
-      assertThat(generateList(0, () -> "a")).isEmpty();
+      assertThat(generateList(0, () -> 1)).isEmpty();
     }
 
     @Test
     void with_one_element() {
-      assertThat(generateList(1, () -> "a")).isEqualTo(list("a"));
+      assertThat(generateList(1, () -> 1)).isEqualTo(list(1));
     }
 
     @Test
@@ -86,7 +85,7 @@ public class ListTest {
   class _generateList_function1 {
     @Test
     void with_no_elements() {
-      assertThat(generateList(0, (i) -> "a")).isEmpty();
+      assertThat(generateList(0, (i) -> 1)).isEmpty();
     }
 
     @Test
@@ -113,34 +112,252 @@ public class ListTest {
   class _nCopiesList {
     @Test
     void with_no_elements() {
-      assertThat(nCopiesList(0, "a")).isEmpty();
+      assertThat(nCopiesList(0, 1)).isEmpty();
     }
 
     @Test
     void with_one_element() {
-      assertThat(nCopiesList(1, "a")).isEqualTo(list("a"));
+      assertThat(nCopiesList(1, 1)).isEqualTo(list(1));
     }
 
     @Test
     void with_many_elements() {
-      assertThat(nCopiesList(5, "a")).isEqualTo(list("a", "a", "a", "a", "a"));
+      assertThat(nCopiesList(5, 1)).isEqualTo(list(1, 1, 1, 1, 1));
     }
   }
 
   @Nested
   class _listOfAll {
+    @Nested
+    class _with_collection_param {
+      @Nested
+      class _passing_list_argument {
+        @Test
+        void returns_same_instance() {
+          var list = list(1, 2, 3);
+          assertThat(listOfAll(list)).isSameInstanceAs(list);
+        }
+
+        @Test
+        void returns_same_instance_for_empty_list() {
+          var list = list();
+          assertThat(listOfAll(list)).isSameInstanceAs(list);
+        }
+      }
+
+      @Nested
+      class _passing_set_argument {
+        @Test
+        void returns_list_with_same_elements() {
+          var set = set(1, 2, 3);
+          var list = listOfAll(set);
+          assertThat(list).containsExactlyElementsIn(set);
+        }
+
+        @Test
+        void returns_same_instance_for_empty_list() {
+          var set = set();
+          var list = listOfAll(set);
+          assertThat(list).containsExactlyElementsIn(set);
+        }
+      }
+    }
+
+    @Nested
+    class _with_jdk_collection_param {
+      @Nested
+      class _passing_jdk_list_argument {
+        @Test
+        void returns_list_with_same_elements() {
+          var jdkList = java.util.List.of(1, 2, 3);
+          var list = listOfAll(jdkList);
+          assertThat(list).containsExactlyElementsIn(jdkList);
+        }
+
+        @Test
+        void returns_empty_list_for_empty_list_argument() {
+          var jdkList = java.util.List.of();
+          var list = listOfAll(jdkList);
+          assertThat(list).containsExactlyElementsIn(jdkList);
+        }
+      }
+
+      @Nested
+      class _passing_jdk_set_argument {
+        @Test
+        void returns_list_with_same_elements() {
+          var jdkSet = java.util.Set.of(1, 2, 3);
+          var list = listOfAll(jdkSet);
+          assertThat(list).containsExactlyElementsIn(jdkSet);
+        }
+
+        @Test
+        void returns_empty_list_for_empty_list_argument() {
+          var jdkSet = java.util.Set.of();
+          var list = listOfAll(jdkSet);
+          assertThat(list).containsExactlyElementsIn(jdkSet);
+        }
+      }
+    }
+  }
+
+  @Nested
+  class _isEmpty {
     @Test
-    void as_copy_of_other_list() {
-      var list = asList("a", "b", "c");
-      var copy = listOfAll(list);
-      assertThat(copy).isEqualTo(list);
-      assertThat(copy).isNotSameInstanceAs(list);
+    void returns_true_for_empty_list() {
+      var list = list();
+      assertThat(list.isEmpty()).isTrue();
     }
 
     @Test
-    void as_copy_returns_argument_when_it_is_instance_of_this_class() {
-      var list = list("a", "b", "c");
-      assertThat(listOfAll(list)).isSameInstanceAs(list);
+    void returns_false_for_non_empty_list() {
+      var list = list(1);
+      assertThat(list.isEmpty()).isFalse();
+    }
+  }
+
+  @Nested
+  class _contains {
+    @Test
+    void returns_true_when_list_contains_element() {
+      var list = list(1, 2, 3);
+      assertThat(list.contains(2)).isTrue();
+    }
+
+    @Test
+    void returns_false_whne_list_not_contains_element() {
+      var list = list(1, 2, 3);
+      assertThat(list.contains(4)).isFalse();
+    }
+  }
+
+  @Nested
+  class _toArray {
+    @Test
+    void returns_array_with_all_elements() {
+      var list = list(1, 2, 3);
+      assertThat(list.toArray()).asList().containsExactly(1, 2, 3);
+    }
+
+    @Test
+    void returns_empty_array_for_empty_list() {
+      var list = list();
+      assertThat(list.toArray()).asList().isEmpty();
+    }
+
+    @Test
+    void returns_array_which_modification_does_not_affect_list() {
+      var list = list(1, 2, 3);
+      var array = list.toArray();
+      array[0] = 7;
+      assertThat(list).isEqualTo(list(1, 2, 3));
+    }
+  }
+
+  @Nested
+  class _iterator {
+    @Test
+    void returns_iterator_with_all_elements() {
+      var list = list(1, 2, 3);
+      assertThat(newArrayList(list.iterator())).containsExactly(1, 2, 3);
+    }
+
+    @Test
+    void returns_empty_iterator_for_empty_list() {
+      var list = list();
+      assertThat(newArrayList(list.iterator())).isEmpty();
+    }
+
+    @Test
+    void returns_iterator_which_remove_method_fails_with_exception() {
+      var list = list(1, 2, 3);
+      assertCall(() -> list.iterator().remove())
+          .throwsException(UnsupportedOperationException.class);
+    }
+  }
+
+  @Nested
+  class _size {
+    @ParameterizedTest
+    @MethodSource
+    void of_empty_list_is_zero(List<?> list, int expectedSize) {
+      assertThat(list.size()).isEqualTo(expectedSize);
+    }
+
+    static Stream<Arguments> of_empty_list_is_zero() {
+      return Stream.of(
+          arguments(list(), 0),
+          arguments(list(1), 1),
+          arguments(list(1, 2), 2),
+          arguments(list(1, 2, 3), 3),
+          arguments(list(1, 2, 3, 4), 4),
+          arguments(list(1, 2, 3, 2), 4));
+    }
+  }
+
+  @Nested
+  class _toList {
+    @Test
+    void returns_this() {
+      var list = list(1, 2, 3);
+      assertThat(list.toList()).isSameInstanceAs(list);
+    }
+  }
+
+  @Nested
+  class _toSet {
+    @Test
+    void on_empty_list_returns_empty_set() {
+      assertThat(list().toSet()).isEqualTo(set());
+    }
+
+    @Test
+    void removes_duplicates() {
+      assertThat(list(1, 2, 3, 2).toSet()).isEqualTo(set(1, 2, 3));
+    }
+
+    @Test
+    void keeps_order_unchanged() {
+      assertThat(list(3, 2, 1, 4, 7, 6).toSet())
+          .containsExactly(3, 2, 1, 4, 7, 6)
+          .inOrder();
+    }
+
+    @Test
+    void returns_instance_of_custom_set() {
+      assertThat(list(1).toSet()).isInstanceOf(Set.class);
+    }
+  }
+
+  @Nested
+  class _stream {
+    @Test
+    void provides_all_list_elements() {
+      var list = list(1, 2, 3);
+      assertThat(list.stream().toList()).containsExactly(1, 2, 3);
+    }
+
+    @Test
+    void provides_no_elements_for_empty_list() {
+      var list = list();
+      assertThat(list.stream().toList()).isEmpty();
+    }
+  }
+
+  @Nested
+  class _toJdkList {
+    @Test
+    void on_empty_list_returns_empty_jdk_list() {
+      var jdkList = list().toJdkList();
+      assertThat(jdkList).isInstanceOf(java.util.List.class);
+      assertThat(jdkList).isEqualTo(asList());
+    }
+
+    @Test
+    void returns_jdk_list_with_same_elements() {
+      var jdkList = list(1, 2, 3).toJdkList();
+      assertThat(jdkList).isInstanceOf(java.util.List.class);
+      assertThat(jdkList).isEqualTo(asList(1, 2, 3));
     }
   }
 
@@ -148,124 +365,28 @@ public class ListTest {
   class _immutability {
     @Test
     void list_created_from_varargs_makes_defensive_copy_of_an_array() {
-      var array = new String[] {"a", "b", "c"};
+      var array = new Integer[] {1, 2, 3};
       var list = list(array);
 
-      array[0] = "x";
+      array[0] = 7;
 
-      assertThat(list).containsExactly("a", "b", "c").inOrder();
+      assertThat(list).containsExactly(1, 2, 3).inOrder();
     }
 
     @Test
     void as_copy_of_other_list_makes_defensive_copy() {
-      var original = asList("a", "b", "c");
+      var original = asList(1, 2, 3);
 
       var copy = listOfAll(original);
-      original.set(0, "x");
+      original.set(0, 7);
 
-      assertThat(copy).containsExactly("a", "b", "c").inOrder();
+      assertThat(copy).containsExactly(1, 2, 3).inOrder();
     }
 
     @Test
     void as_copy_of_other_list_creates_different_instance() {
-      var list = asList("a", "b", "c");
+      var list = asList(1, 2, 3);
       assertThat(listOfAll(list)).isNotSameInstanceAs(list);
-    }
-
-    @Test
-    void iterator_remove_fails() {
-      var list = list("a", "b", "c");
-      var iterator = list.iterator();
-      iterator.next();
-      assertCall(iterator::remove).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void set_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.set(0, "x")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void add_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.add("x")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void add_with_index_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.add(0, "x")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void addAll_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.addAll(asList("d", "e")))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void addAll_with_index_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.addAll(2, asList("d", "e")))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void clear_fails() {
-      var list = list("a", "b", "c");
-      assertCall(list::clear).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void sort_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.sort(Comparator.naturalOrder()))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void addFirst_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.addFirst("x")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void addLast_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.addLast("x")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void remove_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.remove("a")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void remove_with_index_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.remove(0)).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void removeFirst_fails() {
-      var list = list("a", "b", "c");
-      assertCall(list::removeFirst).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void removeLast_fails() {
-      var list = list("a", "b", "c");
-      assertCall(list::removeFirst).throwsException(UnsupportedOperationException.class);
-    }
-
-    @Test
-    void removeIf_fails() {
-      var list = list("a", "b", "c");
-      assertCall(() -> list.removeIf(e -> true))
-          .throwsException(UnsupportedOperationException.class);
     }
   }
 
@@ -273,13 +394,13 @@ public class ListTest {
   class _sublist {
     @Test
     void returns_sublist() {
-      var list = list("a", "b", "c");
-      assertThat(list.subList(1, 2)).isEqualTo(list("b"));
+      var list = list(1, 2, 3);
+      assertThat(list.subList(1, 2)).isEqualTo(list(2));
     }
 
     @Test
     void is_covariant() {
-      var list = list("a", "b", "c");
+      var list = list(1, 2, 3);
       assertThat(list.subList(1, 2)).isInstanceOf(List.class);
     }
   }
@@ -293,12 +414,12 @@ public class ListTest {
 
     @Test
     void list_with_one_element() {
-      assertThat(list("a").reverse()).isEqualTo(list("a"));
+      assertThat(list(1).reverse()).isEqualTo(list(1));
     }
 
     @Test
     void list_with_many_elements() {
-      assertThat(list("a", "b", "c", "d").reverse()).isEqualTo(list("d", "c", "b", "a"));
+      assertThat(list(1, 2, 3, 4).reverse()).isEqualTo(list(4, 3, 2, 1));
     }
   }
 
@@ -312,44 +433,102 @@ public class ListTest {
     @ParameterizedTest
     @ValueSource(ints = {-9, -6, -3, 0, 3, 6, 9})
     void rotated_by_zero_or_full_cycle_returns_same_instance(int distance) {
-      var list = list("a", "b", "c");
+      var list = list(1, 2, 3);
       assertThat(list.rotate(distance)).isSameInstanceAs(list);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-7, -4, -1, 2, 5, 8, 11})
     void rotated_not_full_cycle(int distance) {
-      var list = list("a", "b", "c");
-      assertThat(list.rotate(distance)).isEqualTo(list("b", "c", "a"));
+      var list = list(1, 2, 3);
+      assertThat(list.rotate(distance)).isEqualTo(list(2, 3, 1));
     }
   }
 
   @Nested
   class _appendAll {
-    @Test
-    void two_empty_lists() {
-      assertThat(list().appendAll(asList())).isEqualTo(list());
+    @Nested
+    class _jdk_collection {
+      @Test
+      void two_empty_lists() {
+        assertThat(list().appendAll(asList())).isEqualTo(list());
+      }
+
+      @Test
+      void empty_list() {
+        assertThat(list(1).appendAll(asList())).isEqualTo(list(1));
+      }
+
+      @Test
+      void to_empty_list() {
+        assertThat(list().appendAll(asList(2))).isEqualTo(list(2));
+      }
+
+      @Test
+      void two_one_element_lists() {
+        assertThat(list(1).appendAll(asList(2))).isEqualTo(list(1, 2));
+      }
+
+      @Test
+      void element_lists() {
+        assertThat(list(1, 2, 3).appendAll(asList(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
+      }
     }
 
-    @Test
-    void empty_list() {
-      assertThat(list("a").appendAll(asList())).isEqualTo(list("a"));
+    @Nested
+    class _custom_list {
+      @Test
+      void two_empty_lists() {
+        assertThat(list().appendAll(list())).isEqualTo(list());
+      }
+
+      @Test
+      void empty_list() {
+        assertThat(list(1).appendAll(list())).isEqualTo(list(1));
+      }
+
+      @Test
+      void to_empty_list() {
+        assertThat(list().appendAll(list(2))).isEqualTo(list(2));
+      }
+
+      @Test
+      void two_one_element_lists() {
+        assertThat(list(1).appendAll(list(2))).isEqualTo(list(1, 2));
+      }
+
+      @Test
+      void element_lists() {
+        assertThat(list(1, 2, 3).appendAll(list(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
+      }
     }
 
-    @Test
-    void to_empty_list() {
-      assertThat(list().appendAll(asList("b"))).isEqualTo(list("b"));
-    }
+    @Nested
+    class _custom_set {
+      @Test
+      void both_empty() {
+        assertThat(list().appendAll(set())).isEqualTo(list());
+      }
 
-    @Test
-    void two_one_element_lists() {
-      assertThat(list("a").appendAll(asList("b"))).isEqualTo(list("a", "b"));
-    }
+      @Test
+      void empty_set() {
+        assertThat(list(1).appendAll(set())).isEqualTo(list(1));
+      }
 
-    @Test
-    void element_lists() {
-      assertThat(list("a", "b", "c").appendAll(asList("d", "e", "f")))
-          .isEqualTo(list("a", "b", "c", "d", "e", "f"));
+      @Test
+      void to_empty_list() {
+        assertThat(list().appendAll(set(2))).isEqualTo(list(2));
+      }
+
+      @Test
+      void two_one_element_lists() {
+        assertThat(list(1).appendAll(set(2))).isEqualTo(list(1, 2));
+      }
+
+      @Test
+      void with_many_elements() {
+        assertThat(list(1, 2, 3).appendAll(set(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
+      }
     }
   }
 
@@ -362,40 +541,75 @@ public class ListTest {
 
     @Test
     void nothing_to_list() {
-      assertThat(list("a").append()).isEqualTo(list("a"));
+      assertThat(list(1).append()).isEqualTo(list(1));
     }
 
     @Test
     void one_element_to_empty_list() {
-      assertThat(list().append("b")).isEqualTo(list("b"));
+      assertThat(list().append(2)).isEqualTo(list(2));
     }
 
     @Test
     void one_element_to_one_element_list() {
-      assertThat(list("a").append("b")).isEqualTo(list("a", "b"));
+      assertThat(list(1).append(2)).isEqualTo(list(1, 2));
     }
 
     @Test
     void many_elements_to_many_element_list() {
-      assertThat(list("a", "b", "c").append("d", "e", "f"))
-          .isEqualTo(list("a", "b", "c", "d", "e", "f"));
+      assertThat(list(1, 2, 3).append(4, 5, 6)).isEqualTo(list(1, 2, 3, 4, 5, 6));
     }
   }
 
   @Nested
-  class _forEach {
+  class _collection_methods extends AbstractCollectionTestSuite {
+    @SafeVarargs
+    @Override
+    public final <E> Collection<E> createCollection(E... elements) {
+      return list(elements);
+    }
+  }
+
+  @Nested
+  class _get {
     @Test
-    void empty_list() throws Exception {
-      Consumer1<Object, Exception> consumer1 = mock();
-      list().withEach(consumer1::accept);
-      verifyNoInteractions(consumer1);
+    void returns_element_at_given_index() {
+      assertThat(list(1, 2, 3, 4).get(2)).isEqualTo(3);
     }
 
     @Test
-    void consumes_elements_in_order() {
-      var collected = new ArrayList<Integer>();
-      list(1, 2, 3, 4).forEach(collected::add);
-      assertThat(collected).containsExactly(1, 2, 3, 4).inOrder();
+    void throws_exception_for_negative_index() {
+      assertCall(() -> list(1, 2, 3, 4).get(-1)).throwsException(NoSuchElementException.class);
+    }
+
+    @Test
+    void throws_exception_for_index_equal_to_list_size() {
+      assertCall(() -> list(1, 2, 3, 4).get(4)).throwsException(NoSuchElementException.class);
+    }
+  }
+
+  @Nested
+  class _getLast {
+    @Test
+    void returns_last_element() {
+      assertThat(list(1, 2, 3, 4).getLast()).isEqualTo(4);
+    }
+
+    @Test
+    void throws_exception_for_empty_list() {
+      assertCall(() -> list().getLast()).throwsException(NoSuchElementException.class);
+    }
+  }
+
+  @Nested
+  class _indexOf {
+    @Test
+    void returns_index_of_given_element() {
+      assertThat(list(1, 2, 3, 4).indexOf(3)).isEqualTo(2);
+    }
+
+    @Test
+    void returns_negative_one_when_element_not_exists() {
+      assertThat(list(1, 2, 3, 4).indexOf(5)).isEqualTo(-1);
     }
   }
 
@@ -408,18 +622,18 @@ public class ListTest {
 
     @Test
     void single_element_list() {
-      assertThat(list("a").sortUsing(comparing(Object::toString))).isEqualTo(list("a"));
+      assertThat(list(1).sortUsing(comparing(Object::toString))).isEqualTo(list(1));
     }
 
     @Test
     void two_elements_list() {
-      assertThat(list("b", "a").sortUsing(comparing(Object::toString))).isEqualTo(list("a", "b"));
+      assertThat(list(2, 1).sortUsing(comparing(Object::toString))).isEqualTo(list(1, 2));
     }
 
     @Test
     void many_elements_list() {
-      assertThat(list("b", "a", "e", "f", "c", "d", "g").sortUsing(comparing(Object::toString)))
-          .isEqualTo(list("a", "b", "c", "d", "e", "f", "g"));
+      assertThat(list(2, 1, 5, 6, 3, 4, 7).sortUsing(comparing(Object::toString)))
+          .isEqualTo(list(1, 2, 3, 4, 5, 6, 7));
     }
   }
 
@@ -531,32 +745,32 @@ public class ListTest {
 
     @Test
     void for_list_with_all_elements_matching_returns_empty_list() {
-      var list = list("a", "b", "c");
+      var list = list(1, 2, 3);
       assertThat(list.dropWhile(s -> true)).isEqualTo(list());
     }
 
     @Test
     void for_list_with_none_elements_matching_returns_copy_of_that_list() {
-      var list = list("a", "b", "c");
+      var list = list(1, 2, 3);
       assertThat(list.dropWhile(s -> false)).isEqualTo(list);
     }
 
     @Test
     void removes_leading_matches() {
-      var list = list("a", "a", "b", "c");
-      assertThat(list.dropWhile(s -> s.equals("a"))).isEqualTo(list("b", "c"));
+      var list = list(1, 1, 2, 3);
+      assertThat(list.dropWhile(s -> s.equals(1))).isEqualTo(list(2, 3));
     }
 
     @Test
     void not_removes_non_leading_matches() {
-      var list = list("a", "b", "c");
-      assertThat(list.dropWhile(s -> s.equals("b"))).isEqualTo(list);
+      var list = list(1, 2, 3);
+      assertThat(list.dropWhile(s -> s.equals(2))).isEqualTo(list);
     }
 
     @Test
     void exception_from_predicate_is_propagated() {
       var exception = new Exception("message");
-      assertCall(() -> list("a").dropWhile(e -> {
+      assertCall(() -> list(1).dropWhile(e -> {
             throw exception;
           }))
           .throwsException(exception);
@@ -572,32 +786,32 @@ public class ListTest {
 
     @Test
     void for_list_with_all_elements_matching_returns_copy_of_that_list() {
-      var list = list("a", "b", "c");
-      assertThat(list.takeWhile(s -> true)).isEqualTo(list("a", "b", "c"));
+      var list = list(1, 2, 3);
+      assertThat(list.takeWhile(s -> true)).isEqualTo(list(1, 2, 3));
     }
 
     @Test
     void for_list_with_none_elements_matching_returns_empty_list() {
-      var list = list("a", "b", "c");
+      var list = list(1, 2, 3);
       assertThat(list.takeWhile(s -> false)).isEqualTo(list());
     }
 
     @Test
     void takes_leading_matches() {
-      var list = list("a", "a", "b", "c");
-      assertThat(list.takeWhile(s -> s.equals("a"))).isEqualTo(list("a", "a"));
+      var list = list(1, 1, 2, 3);
+      assertThat(list.takeWhile(s -> s.equals(1))).isEqualTo(list(1, 1));
     }
 
     @Test
     void not_takes_non_leading_matches() {
-      var list = list("a", "b", "c");
-      assertThat(list.takeWhile(s -> s.equals("a"))).isEqualTo(list("a"));
+      var list = list(1, 2, 3);
+      assertThat(list.takeWhile(s -> s.equals(1))).isEqualTo(list(1));
     }
 
     @Test
     void exception_from_predicate_is_propagated() {
       var exception = new Exception("message");
-      assertCall(() -> list("a").takeWhile(e -> {
+      assertCall(() -> list(1).takeWhile(e -> {
             throw exception;
           }))
           .throwsException(exception);
@@ -608,9 +822,9 @@ public class ListTest {
   class _zip {
     @Test
     void with_empty_iterable_fails() {
-      var list1 = list("a");
+      var list1 = list(1);
       var list2 = list();
-      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+      assertCall(() -> list1.zip(list2, (x, y) -> 7))
           .throwsException(new IllegalArgumentException(
               "Cannot zip with Iterable of different size: expected 1, got 0"));
     }
@@ -618,22 +832,22 @@ public class ListTest {
     @Test
     void empty_with_non_empty_iterable_fails() {
       var list1 = list();
-      var list2 = list("a");
-      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+      var list2 = list(1);
+      assertCall(() -> list1.zip(list2, (x, y) -> 7))
           .throwsException(new IllegalArgumentException(
               "Cannot zip with Iterable of different size: expected 0, got 1"));
     }
 
     @Test
     void with_iterable_of_equal_size() {
-      assertThat(list("a", "b").zip(list("1", "2"), (x, y) -> x + y))
-          .containsExactly("a1", "b2")
+      assertThat(list(1, 2).zip(list(10, 20), Integer::sum))
+          .containsExactly(11, 22)
           .inOrder();
     }
 
     @Test
     void throwable_thrown_from_function_is_propagated() {
-      assertCall(() -> list("a", "b").zip(list("1", "2"), (x, y) -> {
+      assertCall(() -> list(1, 2).zip(list(1, 2), (x, y) -> {
             throw new Exception();
           }))
           .throwsException(Exception.class);
@@ -641,17 +855,17 @@ public class ListTest {
 
     @Test
     void with_shorter_iterable_fails() {
-      var list1 = list("a", "b");
-      var list2 = list("c");
-      assertCall(() -> list1.zip(list2, (x, y) -> x + y))
+      var list1 = list(1, 2);
+      var list2 = list(3);
+      assertCall(() -> list1.zip(list2, Integer::sum))
           .throwsException(new IllegalArgumentException(
               "Cannot zip with Iterable of different size: expected 2, got 1"));
     }
 
     @Test
     void with_longer_iterable_fails() {
-      var list1 = list("c");
-      var list2 = list("a", "b");
+      var list1 = list(3);
+      var list2 = list(1, 2);
       assertCall(() -> list1.zip(list2, (x, y) -> x + y))
           .throwsException(new IllegalArgumentException(
               "Cannot zip with Iterable of different size: expected 1, got 2"));
@@ -667,35 +881,12 @@ public class ListTest {
 
     @Test
     void one_element_list() {
-      assertThat(list("a").zipWithIndex()).isEqualTo(list(tuple("a", 0)));
+      assertThat(list(1).zipWithIndex()).isEqualTo(list(tuple(1, 0)));
     }
 
     @Test
     void two_elements_list() {
-      assertThat(list("a", "b").zipWithIndex()).isEqualTo(list(tuple("a", 0), tuple("b", 1)));
-    }
-  }
-
-  @Nested
-  class _any_matches {
-    @Test
-    void returns_true_when_one_matches() {
-      assertThat(list("a", "b").anyMatches(x -> x.equals("b"))).isTrue();
-    }
-
-    @Test
-    void returns_true_when_all_matches() {
-      assertThat(list("b", "b").anyMatches(x -> x.equals("b"))).isTrue();
-    }
-
-    @Test
-    void returns_false_when_none_matches() {
-      assertThat(list("b", "b").anyMatches(x -> x.equals("c"))).isFalse();
-    }
-
-    @Test
-    void returns_false_for_empty_list_even_when_predicate_returns_always_true() {
-      assertThat(list().anyMatches(x -> true)).isFalse();
+      assertThat(list(1, 2).zipWithIndex()).isEqualTo(list(tuple(1, 0), tuple(2, 1)));
     }
   }
 
@@ -708,42 +899,17 @@ public class ListTest {
   public static java.util.List<Arguments> startsWith() {
     return java.util.List.of(
         arguments(list(), list(), true),
-        arguments(list(), list("a"), false),
-        arguments(list("a"), list(), true),
-        arguments(list("a"), list("a"), true),
-        arguments(list("a"), list("b"), false),
-        arguments(list("a"), list("a", "b"), false),
-        arguments(list("a", "b"), list(), true),
-        arguments(list("a", "b"), list("a"), true),
-        arguments(list("a", "b"), list("b"), false),
-        arguments(list("a", "b"), list("a", "b"), true),
-        arguments(list("a", "b"), list("a", "c"), false),
-        arguments(list("a", "b"), list("a", "b", "c"), false));
-  }
-
-  @Nested
-  class _toSet {
-    @Test
-    void on_empty_list_returns_empty_set() {
-      assertThat(list().toSet()).isEqualTo(java.util.Set.of());
-    }
-
-    @Test
-    void removes_duplicates() {
-      assertThat(list("a", "b", "c", "b").toSet()).isEqualTo(java.util.Set.of("a", "b", "c"));
-    }
-
-    @Test
-    void keeps_order_unchanged() {
-      assertThat(list("c", "b", "a", "d", "g", "f").toSet())
-          .containsExactly("c", "b", "a", "d", "g", "f")
-          .inOrder();
-    }
-
-    @Test
-    void returns_instance_of_custom_set() {
-      assertThat(list("a").toSet()).isInstanceOf(Set.class);
-    }
+        arguments(list(), list(1), false),
+        arguments(list(1), list(), true),
+        arguments(list(1), list(1), true),
+        arguments(list(1), list(2), false),
+        arguments(list(1), list(1, 2), false),
+        arguments(list(1, 2), list(), true),
+        arguments(list(1, 2), list(1), true),
+        arguments(list(1, 2), list(2), false),
+        arguments(list(1, 2), list(1, 2), true),
+        arguments(list(1, 2), list(1, 3), false),
+        arguments(list(1, 2), list(1, 2, 3), false));
   }
 
   @Nested
@@ -755,14 +921,13 @@ public class ListTest {
 
     @Test
     void returns_map_with_calculated_values() {
-      assertThat(list("a", "b").toMap(String::toUpperCase))
-          .isEqualTo(java.util.Map.of("a", "A", "b", "B"));
+      assertThat(list(1, 2).toMap(x -> -x)).isEqualTo(java.util.Map.of(1, -1, 2, -2));
     }
 
     @Test
     void propagates_exception_from_value_mapper() {
       var exception = new Exception("message");
-      assertCall(() -> list("a").toMap(e -> {
+      assertCall(() -> list(1).toMap(e -> {
             throw exception;
           }))
           .throwsException(exception);
@@ -770,10 +935,10 @@ public class ListTest {
 
     @Test
     void returns_map_with_order_unchanged() {
-      var list = list("c", "b", "a", "d", "g", "f");
-      var map = list.toMap(String::toUpperCase);
-      assertThat(map.keySet()).containsExactly("c", "b", "a", "d", "g", "f").inOrder();
-      assertThat(map.values()).containsExactly("C", "B", "A", "D", "G", "F").inOrder();
+      var list = list(3, 2, 1, 4, 7, 6);
+      var map = list.toMap(x -> -x);
+      assertThat(map.keySet()).containsExactly(3, 2, 1, 4, 7, 6).inOrder();
+      assertThat(map.values()).containsExactly(-3, -2, -1, -4, -7, -6).inOrder();
     }
   }
 
@@ -787,39 +952,34 @@ public class ListTest {
 
     @Test
     void returns_map_with_calculated_values() {
-      assertThat(list("a", "b").toMap(e -> e + e, String::toUpperCase))
-          .isEqualTo(java.util.Map.of("aa", "A", "bb", "B"));
+      assertThat(list(1, 2).toMap(e -> -e, Object::toString))
+          .isEqualTo(java.util.Map.of(-1, "1", -2, "2"));
     }
 
     @Test
     void propagates_exception_from_value_mapper() {
       var exception = new Exception("message");
-      assertCall(() -> list("a")
-              .toMap(
-                  e -> {
-                    throw exception;
-                  },
-                  String::toUpperCase))
-          .throwsException(exception);
+      Function1<Integer, Object, Exception> thrower = e -> {
+        throw exception;
+      };
+      assertCall(() -> list(1).toMap(thrower, Object::toString)).throwsException(exception);
     }
 
     @Test
     void propagates_exception_from_key_mapper() {
       var exception = new Exception("message");
-      assertCall(() -> list("a").toMap(String::toUpperCase, e -> {
-            throw exception;
-          }))
-          .throwsException(exception);
+      Function1<Integer, Object, Exception> thrower = e -> {
+        throw exception;
+      };
+      assertCall(() -> list(1).toMap(Object::toString, thrower)).throwsException(exception);
     }
 
     @Test
     void returns_map_with_order_unchanged() {
-      var list = list("c", "b", "a", "d", "g", "f");
-      var map = list.toMap(e -> e + e, String::toUpperCase);
-      assertThat(map.keySet())
-          .containsExactly("cc", "bb", "aa", "dd", "gg", "ff")
-          .inOrder();
-      assertThat(map.values()).containsExactly("C", "B", "A", "D", "G", "F").inOrder();
+      var list = list(3, 2, 1, 4, 7, 6);
+      var map = list.toMap(e -> -e, Object::toString);
+      assertThat(map.keySet()).containsExactly(-3, -2, -1, -4, -7, -6).inOrder();
+      assertThat(map.values()).containsExactly("3", "2", "1", "4", "7", "6").inOrder();
     }
   }
 
@@ -863,10 +1023,10 @@ public class ListTest {
   void equals_and_hashcode_test() {
     new EqualsTester()
         .addEqualityGroup(list(), list())
-        .addEqualityGroup(list("a"), list("a"))
+        .addEqualityGroup(list(1), list(1))
         .addEqualityGroup(list("x"), List.<Object>list("x"))
-        .addEqualityGroup(list("a", "b"), list("a", "b"))
-        .addEqualityGroup(list("a", "b", "c"), list("a", "b", "c"))
+        .addEqualityGroup(list(1, 2), list(1, 2))
+        .addEqualityGroup(list(1, 2, 3), list(1, 2, 3))
         .testEquals();
   }
 }

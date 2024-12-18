@@ -496,7 +496,7 @@ public interface VmTestApi extends CommonTestApi {
     return bBlobWith(list(classes));
   }
 
-  private BBlob bBlobWith(java.util.List<Class<?>> list) throws IOException {
+  private BBlob bBlobWith(List<Class<?>> list) throws IOException {
     try (var blobBBuilder = bytecodeF().blobBuilder()) {
       Classes.saveBytecodeInJar(blobBBuilder, list);
       return blobBBuilder.build();

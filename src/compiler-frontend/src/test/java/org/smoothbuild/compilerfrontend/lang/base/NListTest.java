@@ -9,6 +9,7 @@ import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowin
 import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -80,7 +81,6 @@ public class NListTest {
       nlist.spliterator();
       nlist.stream();
       nlist.parallelStream();
-      nlist.toArray(Object[]::new);
     }
 
     @Test
@@ -106,21 +106,21 @@ public class NListTest {
   class _mutable_methods_throw_exception {
     @Test
     void removeIf() {
-      var nlist = list(n0, n1, n2);
+      var nlist = nlist(n0, n1, n2);
       assertCall(() -> nlist.removeIf(n -> true))
           .throwsException(UnsupportedOperationException.class);
     }
 
     @Test
     void replaceAll() {
-      var nlist = list(n0, n1, n2);
+      var nlist = nlist(n0, n1, n2);
       assertCall(() -> nlist.replaceAll(n -> n))
           .throwsException(UnsupportedOperationException.class);
     }
 
     @Test
     void sort() {
-      var nlist = list(n0, n1, n2);
+      var nlist = nlist(n0, n1, n2);
       assertCall(() -> nlist.sort((a, b) -> 0))
           .throwsException(UnsupportedOperationException.class);
     }
@@ -215,7 +215,7 @@ public class NListTest {
     @Test
     void throws_exception_when_index_out_of_bounds() {
       var nlist = nlist(n0, n1, n2);
-      assertCall(() -> nlist.get(3)).throwsException(ArrayIndexOutOfBoundsException.class);
+      assertCall(() -> nlist.get(3)).throwsException(NoSuchElementException.class);
     }
   }
 

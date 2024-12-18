@@ -5,6 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
@@ -24,12 +25,12 @@ public class BCombineTest extends VmTestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BCombine> {
     @Override
-    protected java.util.List<BCombine> equalExprs() throws BytecodeException {
+    protected List<BCombine> equalExprs() throws BytecodeException {
       return list(bCombine(bInt(1), bString("abc")), bCombine(bInt(1), bString("abc")));
     }
 
     @Override
-    protected java.util.List<BCombine> nonEqualExprs() throws BytecodeException {
+    protected List<BCombine> nonEqualExprs() throws BytecodeException {
       return list(
           bCombine(bInt(1)),
           bCombine(bInt(2)),

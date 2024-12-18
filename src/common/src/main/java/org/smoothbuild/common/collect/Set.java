@@ -6,18 +6,17 @@ import static org.smoothbuild.common.collect.Map.zipToMap;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.NotNull;
 import org.smoothbuild.common.function.Function1;
 
-public class Set<E> implements java.util.Set<E> {
+/**
+ * Immutable set.
+ */
+public final class Set<E> implements Collection<E> {
   private final ImmutableSet<E> set;
 
   @SafeVarargs
@@ -26,6 +25,9 @@ public class Set<E> implements java.util.Set<E> {
   }
 
   public static <E> Set<E> setOfAll(Iterable<E> iterable) {
+    if (iterable instanceof Set<E> set) {
+      return set;
+    }
     return new Set<>(ImmutableSet.copyOf(iterable));
   }
 
@@ -55,7 +57,7 @@ public class Set<E> implements java.util.Set<E> {
         builder.add(element);
       }
     }
-    return setOfAll(builder.build());
+    return new Set<>(builder.build());
   }
 
   public Set<E> withRemovedAll(Collection<?> toRemove) {
@@ -65,107 +67,18 @@ public class Set<E> implements java.util.Set<E> {
         builder.add(element);
       }
     }
-    return setOfAll(builder.build());
+    return new Set<>(builder.build());
   }
 
   public Set<E> sort(Comparator<? super E> comparator) {
     return new Set<>(set.stream().collect(toImmutableSortedSet(comparator)));
   }
 
-  public List<E> toList() {
-    return listOfAll(set);
-  }
-
   public <V, T extends Throwable> Map<E, V> toMap(Function1<E, V, T> mapper) throws T {
     return zipToMap(this, this.map(mapper));
   }
 
-  // Methods from java.util.Set
-
-  @Override
-  public Iterator<E> iterator() {
-    return set.iterator();
-  }
-
-  @Override
-  public void forEach(Consumer<? super E> consumer) {
-    set.forEach(consumer);
-  }
-
-  @Override
-  public Object[] toArray() {
-    return set.toArray();
-  }
-
-  @Override
-  public <A> A[] toArray(@NotNull A[] array) {
-    return set.toArray(array);
-  }
-
-  @Override
-  public <A> A[] toArray(IntFunction<A[]> generator) {
-    return set.toArray(generator);
-  }
-
-  @Override
-  public boolean add(E element) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean remove(Object element) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean containsAll(@NotNull Collection<?> collection) {
-    return set.containsAll(collection);
-  }
-
-  @Override
-  public boolean addAll(@NotNull Collection<? extends E> collection) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean retainAll(@NotNull Collection<?> collection) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean removeAll(@NotNull Collection<?> collection) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean removeIf(Predicate<? super E> filter) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void clear() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Spliterator<E> spliterator() {
-    return set.spliterator();
-  }
-
-  @Override
-  public Stream<E> stream() {
-    return set.stream();
-  }
-
-  @Override
-  public Stream<E> parallelStream() {
-    return set.parallelStream();
-  }
-
-  @Override
-  public int size() {
-    return set.size();
-  }
+  // methods from Collection interface
 
   @Override
   public boolean isEmpty() {
@@ -178,8 +91,61 @@ public class Set<E> implements java.util.Set<E> {
   }
 
   @Override
+  public Stream<E> stream() {
+    return set.stream();
+  }
+
+  @Override
+  public Object[] toArray() {
+    return set.toArray();
+  }
+
+  @Override
+  public Iterator<E> iterator() {
+    return set.iterator();
+  }
+
+  @Override
+  public void forEach(Consumer<? super E> consumer) {
+    set.forEach(consumer);
+  }
+
+  @Override
+  public Spliterator<E> spliterator() {
+    return set.spliterator();
+  }
+
+  public int size() {
+    return set.size();
+  }
+
+  @Override
+  public List<E> toList() {
+    return listOfAll(set);
+  }
+
+  @Override
+  public Set<E> toSet() {
+    return this;
+  }
+
+  @Override
   public boolean equals(Object object) {
-    return set.equals(object);
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Set<?> that)) {
+      return false;
+    }
+    if (this.size() != that.size()) {
+      return false;
+    }
+    for (var element : that) {
+      if (!this.contains(element)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override

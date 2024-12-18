@@ -49,9 +49,7 @@ public class RecursivePathsIterator implements PathIterator {
     while (!pathStack.isEmpty() || !dirStack.isEmpty()) {
       if (pathStack.isEmpty()) {
         var path = dirStack.remove();
-        for (Path name : fileSystem.files(baseDir.append(path))) {
-          pathStack.push(path.append(name));
-        }
+        fileSystem.files(baseDir.append(path)).forEach(name -> pathStack.push(path.append(name)));
       } else {
         var path = pathStack.remove();
         switch (fileSystem.pathState(baseDir.append(path))) {

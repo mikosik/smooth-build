@@ -14,9 +14,7 @@ public class ConcatFunc {
     var elementType = ((BArrayType) array.evaluationType().element()).element();
     var resultBuilder = factory.arrayBuilderWithElements(elementType);
     var elements = array.elements(BArray.class);
-    for (BArray element : elements) {
-      resultBuilder.addAll(element.elements(BValue.class));
-    }
+    elements.foreach(innerArray -> resultBuilder.addAll(innerArray.elements(BValue.class)));
     return resultBuilder.build();
   }
 }

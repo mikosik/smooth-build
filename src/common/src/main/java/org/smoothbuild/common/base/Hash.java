@@ -11,13 +11,13 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.HashingSink;
 import okio.HashingSource;
 import okio.Sink;
 import okio.Source;
+import org.smoothbuild.common.collect.List;
 
 public class Hash {
   private final ByteString byteString;
@@ -70,9 +70,7 @@ public class Hash {
 
   public static Hash of(List<Hash> hashes) {
     Hasher hasher = func().newHasher();
-    for (Hash hash : hashes) {
-      hasher.putBytes(hash.byteString.toByteArray());
-    }
+    hashes.forEach(hash -> hasher.putBytes(hash.byteString.toByteArray()));
     return convert(hasher.hash());
   }
 

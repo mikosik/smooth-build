@@ -1,6 +1,6 @@
 package org.smoothbuild.virtualmachine.evaluate.compute;
 
-import static java.util.Arrays.asList;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.virtualmachine.evaluate.step.StepHashes.stepHash;
 
 import jakarta.inject.Inject;
@@ -18,6 +18,6 @@ public class ComputationHashFactory {
   }
 
   public Hash create(Step step, BTuple args) {
-    return Hash.of(asList(sandboxHash, stepHash(step), args.hash()));
+    return Hash.of(list(sandboxHash, stepHash(step), args.hash()));
   }
 }

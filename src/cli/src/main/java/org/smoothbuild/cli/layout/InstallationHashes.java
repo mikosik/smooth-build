@@ -1,6 +1,5 @@
 package org.smoothbuild.cli.layout;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.cli.layout.Layout.STD_LIB_MODULES;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -43,7 +42,7 @@ public class InstallationHashes {
 
   // visible for testing
   static Hash calculateJavaPlatformHash(Properties properties) {
-    return Hash.of(asList(
+    return Hash.of(list(
         hash(properties, "java.vendor"),
         hash(properties, "java.version"),
         hash(properties, "java.runtime.name"),
