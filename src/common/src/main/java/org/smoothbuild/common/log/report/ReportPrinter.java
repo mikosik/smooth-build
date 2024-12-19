@@ -31,7 +31,8 @@ public class ReportPrinter {
       builder.append("\n");
       builder.append(formatLog(log));
     }
-    printWriter.println(builder);
+    builder.append("\n");
+    printWriter.print(builder);
 
     // We need to flush here. Otherwise, Junit test run from intellij won't show any output
     // when it fails. That's because junit doesn't flush System.out.
