@@ -48,7 +48,7 @@ public final class SVarSet extends java.util.AbstractSet<SVar> {
   }
 
   public SVarSet withRemovedAll(Collection<?> toRemove) {
-    return new SVarSet(elements.withRemovedAll(toRemove));
+    return new SVarSet(elements.removeAll(toRemove));
   }
 
   @Override

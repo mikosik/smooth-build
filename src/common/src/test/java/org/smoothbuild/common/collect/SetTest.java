@@ -151,17 +151,17 @@ public class SetTest {
   }
 
   @Nested
-  class _withRemovedAll {
+  class _removeAll {
     @Test
     void on_empty_set_returns_empty_set() {
       var set = set();
-      assertThat(set.withRemovedAll(set(1, 2))).isEmpty();
+      assertThat(set.removeAll(set(1, 2))).isEmpty();
     }
 
     @Test
     void removes_elements() {
       var set = set(1, 2, 3, 4, 5, 6);
-      assertThat(set.withRemovedAll(set(2, 3))).containsExactly(1, 4, 5, 6).inOrder();
+      assertThat(set.removeAll(set(2, 3))).containsExactly(1, 4, 5, 6).inOrder();
     }
   }
 
