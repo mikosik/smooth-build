@@ -25,9 +25,8 @@ public final class SVarSet extends Set<SVar> {
     super(ImmutableSet.copyOf(elements));
   }
 
-  @Override
-  public <R, T extends Throwable> Set<R> map(Function1<? super SVar, R, T> filter) throws T {
-    return super.map(filter);
+  public <T extends Throwable> SVarSet mapVars(Function1<? super SVar, SVar, T> filter) throws T {
+    return new SVarSet(super.map(filter));
   }
 
   @Override
