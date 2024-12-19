@@ -55,7 +55,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
       return NOTHING;
     } catch (FileSystemException e) {
       if (e.getMessage().endsWith("Not a directory")) {
-        throw new IOException(error.get() + "One of parents exists and is a file.", e);
+        throw noParentDirIOException(error, e);
       } else {
         throw e;
       }
@@ -140,7 +140,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
       }
     } catch (FileSystemException e) {
       if (e.getMessage().endsWith("Not a directory")) {
-        throw new IOException(error.get() + "One of parents exists and is a file.", e);
+        throw noParentDirIOException(error, e);
       } else {
         throw e;
       }
@@ -148,8 +148,12 @@ public class DiskFileSystem implements FileSystem<FullPath> {
     try {
       return Okio.sink(pathJdk);
     } catch (NoSuchFileException e) {
-      throw new IOException(error.get() + "No such dir " + path.parent().q() + ".", e);
+      throw noParentDirIOException(error, e);
     }
+  }
+
+  private static IOException noParentDirIOException(Supplier<String> error, FileSystemException e) {
+    return new IOException(error.get() + "Parent dir does not exist.", e);
   }
 
   @Override
@@ -168,7 +172,7 @@ public class DiskFileSystem implements FileSystem<FullPath> {
     try {
       Files.createSymbolicLink(linkJdk, targetRelativeJdk);
     } catch (NoSuchFileException e) {
-      throw new IOException(error.get() + "No such dir " + link.parent().q() + ".", e);
+      throw noParentDirIOException(error, e);
     } catch (UnsupportedOperationException e) {
       // On Filesystems that do not support symbolic link just copy target file.
       Files.copy(linkJdk, targetJdk, REPLACE_EXISTING);
