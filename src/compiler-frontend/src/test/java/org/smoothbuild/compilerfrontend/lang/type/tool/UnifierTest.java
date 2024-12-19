@@ -419,7 +419,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       }
 
       public static List<SType> typesToTest() {
-        return List.<SType>list().appendAll(STypes.baseTypes()).append(new SVar("A"));
+        return List.<SType>list().addAll(STypes.baseTypes()).add(new SVar("A"));
       }
     }
   }

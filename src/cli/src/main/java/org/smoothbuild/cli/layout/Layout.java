@@ -23,7 +23,7 @@ public class Layout {
   public static final FullPath DEFAULT_MODULE_FILE_PATH = PROJECT_ALIAS.append(DEFAULT_MODULE_PATH);
   public static final FullPath STD_LIB_MODULE_PATH = LIBRARY_ALIAS.append(path("std_lib.smooth"));
   public static final List<FullPath> STD_LIB_MODULES = list(STD_LIB_MODULE_PATH);
-  public static final List<FullPath> MODULES = STD_LIB_MODULES.append(DEFAULT_MODULE_FILE_PATH);
+  public static final List<FullPath> MODULES = STD_LIB_MODULES.add(DEFAULT_MODULE_FILE_PATH);
   public static final FullPath SMOOTH_JAR_FILE_PATH = fullPath(INSTALL_ALIAS, path("smooth.jar"));
   public static final String STANDARD_LIBRARY_DIR_NAME = "lib";
   public static final String BIN_DIR_NAME = "bin";

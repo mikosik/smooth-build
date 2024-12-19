@@ -446,32 +446,32 @@ public class ListTest {
   }
 
   @Nested
-  class _appendAll {
+  class _addAll {
     @Nested
     class _jdk_collection {
       @Test
       void two_empty_lists() {
-        assertThat(list().appendAll(asList())).isEqualTo(list());
+        assertThat(list().addAll(asList())).isEqualTo(list());
       }
 
       @Test
       void empty_list() {
-        assertThat(list(1).appendAll(asList())).isEqualTo(list(1));
+        assertThat(list(1).addAll(asList())).isEqualTo(list(1));
       }
 
       @Test
       void to_empty_list() {
-        assertThat(list().appendAll(asList(2))).isEqualTo(list(2));
+        assertThat(list().addAll(asList(2))).isEqualTo(list(2));
       }
 
       @Test
       void two_one_element_lists() {
-        assertThat(list(1).appendAll(asList(2))).isEqualTo(list(1, 2));
+        assertThat(list(1).addAll(asList(2))).isEqualTo(list(1, 2));
       }
 
       @Test
       void element_lists() {
-        assertThat(list(1, 2, 3).appendAll(asList(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
+        assertThat(list(1, 2, 3).addAll(asList(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
       }
     }
 
@@ -479,27 +479,27 @@ public class ListTest {
     class _custom_list {
       @Test
       void two_empty_lists() {
-        assertThat(list().appendAll(list())).isEqualTo(list());
+        assertThat(list().addAll(list())).isEqualTo(list());
       }
 
       @Test
       void empty_list() {
-        assertThat(list(1).appendAll(list())).isEqualTo(list(1));
+        assertThat(list(1).addAll(list())).isEqualTo(list(1));
       }
 
       @Test
       void to_empty_list() {
-        assertThat(list().appendAll(list(2))).isEqualTo(list(2));
+        assertThat(list().addAll(list(2))).isEqualTo(list(2));
       }
 
       @Test
       void two_one_element_lists() {
-        assertThat(list(1).appendAll(list(2))).isEqualTo(list(1, 2));
+        assertThat(list(1).addAll(list(2))).isEqualTo(list(1, 2));
       }
 
       @Test
       void element_lists() {
-        assertThat(list(1, 2, 3).appendAll(list(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
+        assertThat(list(1, 2, 3).addAll(list(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
       }
     }
 
@@ -507,56 +507,56 @@ public class ListTest {
     class _custom_set {
       @Test
       void both_empty() {
-        assertThat(list().appendAll(set())).isEqualTo(list());
+        assertThat(list().addAll(set())).isEqualTo(list());
       }
 
       @Test
       void empty_set() {
-        assertThat(list(1).appendAll(set())).isEqualTo(list(1));
+        assertThat(list(1).addAll(set())).isEqualTo(list(1));
       }
 
       @Test
       void to_empty_list() {
-        assertThat(list().appendAll(set(2))).isEqualTo(list(2));
+        assertThat(list().addAll(set(2))).isEqualTo(list(2));
       }
 
       @Test
       void two_one_element_lists() {
-        assertThat(list(1).appendAll(set(2))).isEqualTo(list(1, 2));
+        assertThat(list(1).addAll(set(2))).isEqualTo(list(1, 2));
       }
 
       @Test
       void with_many_elements() {
-        assertThat(list(1, 2, 3).appendAll(set(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
+        assertThat(list(1, 2, 3).addAll(set(4, 5, 6))).isEqualTo(list(1, 2, 3, 4, 5, 6));
       }
     }
   }
 
   @Nested
-  class _append {
+  class _add {
     @Test
     void nothing_to_empty_lists() {
-      assertThat(list().append()).isEqualTo(list());
+      assertThat(list().add()).isEqualTo(list());
     }
 
     @Test
     void nothing_to_list() {
-      assertThat(list(1).append()).isEqualTo(list(1));
+      assertThat(list(1).add()).isEqualTo(list(1));
     }
 
     @Test
     void one_element_to_empty_list() {
-      assertThat(list().append(2)).isEqualTo(list(2));
+      assertThat(list().add(2)).isEqualTo(list(2));
     }
 
     @Test
     void one_element_to_one_element_list() {
-      assertThat(list(1).append(2)).isEqualTo(list(1, 2));
+      assertThat(list(1).add(2)).isEqualTo(list(1, 2));
     }
 
     @Test
     void many_elements_to_many_element_list() {
-      assertThat(list(1, 2, 3).append(4, 5, 6)).isEqualTo(list(1, 2, 3, 4, 5, 6));
+      assertThat(list(1, 2, 3).add(4, 5, 6)).isEqualTo(list(1, 2, 3, 4, 5, 6));
     }
   }
 

@@ -152,44 +152,44 @@ public final class List<E> implements Collection<E> {
     return list(Arrays.copyOfRange(array, fromIndex, toIndex));
   }
 
-  public List<E> appendAll(java.util.Collection<? extends E> collection) {
+  public List<E> addAll(java.util.Collection<? extends E> collection) {
     int size = collection.size();
-    var appended = Arrays.copyOf(array, array.length + size);
+    var resultArray = Arrays.copyOf(array, array.length + size);
     int i = array.length;
     for (var element : collection) {
-      appended[i] = element;
+      resultArray[i] = element;
       i++;
     }
-    return new List<>(appended);
+    return new List<>(resultArray);
   }
 
-  public List<E> appendAll(Collection<? extends E> collection) {
+  public List<E> addAll(Collection<? extends E> collection) {
     return switch (collection) {
-      case List<? extends E> l -> appendAll(collection);
-      case Set<? extends E> s -> appendAll(s);
+      case List<? extends E> l -> addAll(collection);
+      case Set<? extends E> s -> addAll(s);
     };
   }
 
-  public List<E> appendAll(Set<? extends E> set) {
+  public List<E> addAll(Set<? extends E> set) {
     int size = set.size();
-    var appended = Arrays.copyOf(array, array.length + size);
+    var resultArray = Arrays.copyOf(array, array.length + size);
     int i = array.length;
     for (var element : set) {
-      appended[i] = element;
+      resultArray[i] = element;
       i++;
     }
-    return new List<>(appended);
+    return new List<>(resultArray);
   }
 
-  public List<E> appendAll(List<? extends E> list) {
-    return append(list.array);
+  public List<E> addAll(List<? extends E> list) {
+    return add(list.array);
   }
 
   @SafeVarargs
-  public final List<E> append(E... toAppend) {
-    var appended = Arrays.copyOf(array, array.length + toAppend.length);
-    System.arraycopy(toAppend, 0, appended, array.length, toAppend.length);
-    return new List<>(appended);
+  public final List<E> add(E... toAdd) {
+    var resultArray = Arrays.copyOf(array, array.length + toAdd.length);
+    System.arraycopy(toAdd, 0, resultArray, array.length, toAdd.length);
+    return new List<>(resultArray);
   }
 
   public List<E> reverse() {

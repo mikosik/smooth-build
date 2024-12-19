@@ -26,7 +26,7 @@ public final class SFuncType extends SType {
   }
 
   public static SVarSet calculateFuncVars(STupleType paramTs, SType resultT) {
-    return varSetS(list(resultT).appendAll(paramTs.elements()));
+    return varSetS(list(resultT).addAll(paramTs.elements()));
   }
 
   public STupleType params() {

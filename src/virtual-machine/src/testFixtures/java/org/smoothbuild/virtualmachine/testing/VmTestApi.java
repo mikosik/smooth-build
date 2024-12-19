@@ -482,7 +482,7 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BBlob blobBJarWithPluginApi(Class<?>... classes) throws IOException {
     return bBlobWith(list(classes)
-        .append(
+        .add(
             BBlob.class,
             NativeApi.class,
             BExpr.class,

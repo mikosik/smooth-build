@@ -50,7 +50,7 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   public List<Arguments> names_non_static() {
     return name_or_to_string()
-        .appendAll(list(
+        .addAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct"),
             arguments(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))), "MyStruct")));
   }
@@ -61,7 +61,7 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   public List<Arguments> to_string_non_static() {
     return name_or_to_string()
-        .appendAll(list(
+        .addAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct{}"),
             arguments(
                 sStructType("MyStruct", nlist(sSig(sIntType(), "field"))), "MyStruct{Int field}")));

@@ -74,7 +74,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     try (var source = buffer(source(code))) {
       createFile(fileSystem, fullPath, source.readUtf8());
     }
-    modules = modules.append(fullPath);
+    modules = modules.add(fullPath);
   }
 
   protected void createUserModule(String code, Class<?>... classes) throws IOException {
@@ -84,7 +84,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
       }
     }
     createFile(fileSystem, moduleFullPath(), code);
-    modules = modules.append(moduleFullPath());
+    modules = modules.add(moduleFullPath());
   }
 
   protected void createProjectFile(String path, String content) throws IOException {

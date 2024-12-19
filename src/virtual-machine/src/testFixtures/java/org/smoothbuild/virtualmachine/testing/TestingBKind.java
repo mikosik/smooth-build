@@ -36,7 +36,7 @@ public class TestingBKind {
       array(array(CONTEXT.bStringType())),
       array(array(CONTEXT.bPersonType()))));
 
-  public static final List<BKind> KINDS_TO_TEST = ARRAY_CATS_TO_TEST.appendAll(BASE_KINDS_TO_TEST);
+  public static final List<BKind> KINDS_TO_TEST = ARRAY_CATS_TO_TEST.addAll(BASE_KINDS_TO_TEST);
 
   public static final List<BKind> ALL_KINDS_TO_TEST = wrapException(TestingBKind::createAllKinds);
 
@@ -63,7 +63,7 @@ public class TestingBKind {
         tuple(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
         tuple(CONTEXT.bStringType()));
     var arrayKinds = baseKinds.map(CONTEXT::bArrayType);
-    var valueKinds = baseKinds.appendAll(arrayKinds);
+    var valueKinds = baseKinds.addAll(arrayKinds);
     List<BKind> exprKinds = list(
         CONTEXT.bCallKind(CONTEXT.bBlobType()),
         CONTEXT.bCallKind(CONTEXT.bStringType()),
@@ -84,7 +84,7 @@ public class TestingBKind {
         CONTEXT.bInvokeKind(CONTEXT.bBlobType()),
         CONTEXT.bInvokeKind(CONTEXT.bStringType()));
 
-    return exprKinds.appendAll(valueKinds);
+    return exprKinds.addAll(valueKinds);
   }
 
   private static BArrayType array(BType elementType) throws BytecodeException {

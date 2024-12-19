@@ -21,7 +21,7 @@ public class GenerateConstructors extends PModuleVisitor<RuntimeException>
     var constructors = new ArrayList<PConstructor>();
     new ScopeCreator(constructors).visitModule(pModule);
     var label = COMPILER_FRONT_LABEL.append(":generateConstructors");
-    var newEvaluables = pModule.evaluables().appendAll(constructors);
+    var newEvaluables = pModule.evaluables().addAll(constructors);
     var newModule = new PModule(pModule.fileName(), pModule.structs(), newEvaluables);
     return output(newModule, label, logger.toList());
   }

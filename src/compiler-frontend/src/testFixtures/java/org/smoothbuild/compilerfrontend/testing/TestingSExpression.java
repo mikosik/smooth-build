@@ -15,7 +15,7 @@ public class TestingSExpression {
   }
 
   public static List<SType> nonCompositeTypes() {
-    return List.<SType>list(new SVar("A")).appendAll(STypes.baseTypes().append());
+    return List.<SType>list(new SVar("A")).addAll(STypes.baseTypes().add());
   }
 
   public static java.util.List<Function<SType, SType>> compositeTypeSFactories() {
