@@ -43,7 +43,7 @@ public class ExprTypeUnifier {
   private final TypeTeller typeTeller;
   private final SVarSet outerScopeVars;
 
-  private ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller) throws TypeException {
+  private ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller) {
     this(unifier, typeTeller, varSetS());
   }
 
