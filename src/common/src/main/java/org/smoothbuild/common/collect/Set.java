@@ -60,7 +60,7 @@ public final class Set<E> implements Collection<E> {
     return new Set<>(builder.build());
   }
 
-  public Set<E> withRemovedAll(Collection<?> toRemove) {
+  public Set<E> removeAll(Collection<?> toRemove) {
     Builder<E> builder = ImmutableSet.builder();
     for (E element : set) {
       if (!toRemove.contains(element)) {

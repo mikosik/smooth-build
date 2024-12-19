@@ -111,7 +111,7 @@ public class SortTopologically {
   private static <K, N, E> Set<K> findRootNodes(List<Node<K, N, E>> nodes) {
     var result = nodes.map(Node::key).toSet();
     for (var node : nodes) {
-      result = result.withRemovedAll(node.edges().map(GraphEdge::targetKey));
+      result = result.removeAll(node.edges().map(GraphEdge::targetKey));
     }
     return result;
   }
