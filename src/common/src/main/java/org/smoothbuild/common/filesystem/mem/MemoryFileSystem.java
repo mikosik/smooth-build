@@ -129,7 +129,7 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
       throws IOException {
     var parent = findElement(parentPath, error);
     if (parent == null) {
-      throw new IOException(error.get() + "No such dir " + parentPath.q() + ".");
+      throw new IOException(error.get() + "Parent dir does not exist.");
     }
     MemoryElement resolvedParent = parent;
     while (true) {
@@ -138,8 +138,7 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
         case MemoryDir dir -> {
           return creator.apply(dir);
         }
-        case MemoryFile f -> throw new IOException(
-            error.get() + "One of parents exists and is a file.");
+        case MemoryFile f -> throw new IOException(error.get() + "Parent dir does not exist.");
       }
     }
   }

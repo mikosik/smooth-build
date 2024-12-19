@@ -509,7 +509,7 @@ public abstract class AbstractFileSystemTest {
 
       assertCall(() -> fileSystem.sink(file))
           .throwsException(new IOException(
-              "Cannot create sink for '{alias-1}/dir/myFile'. No such dir '{alias-1}/dir'."));
+              "Cannot create sink for '{alias-1}/dir/myFile'. Parent dir does not exist."));
     }
 
     @Test
@@ -565,7 +565,7 @@ public abstract class AbstractFileSystemTest {
       assertCall(() -> writeFile(fileSystem, path))
           .throwsException(
               new IOException("Cannot create sink for '{alias-1}/dir/myFile/otherFile'. "
-                  + "One of parents exists and is a file."));
+                  + "Parent dir does not exist."));
     }
   }
 
@@ -582,7 +582,7 @@ public abstract class AbstractFileSystemTest {
       assertCall(() -> fileSystem.createLink(link, file))
           .throwsException(
               new IOException("Cannot create link '{alias-1}/missing_directory/myLink' ->"
-                  + " '{alias-1}/some/dir/myFile'. No such dir '{alias-1}/missing_directory'."));
+                  + " '{alias-1}/some/dir/myFile'. Parent dir does not exist."));
     }
 
     @Test
