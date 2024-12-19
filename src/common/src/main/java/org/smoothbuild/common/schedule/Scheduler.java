@@ -248,7 +248,7 @@ public class Scheduler {
   private static List<Promise<? extends Maybe<?>>> concatenate(
       List<? extends Promise<? extends Maybe<?>>> predecessors,
       List<? extends Promise<? extends Maybe<?>>> args) {
-    return List.<Promise<? extends Maybe<?>>>list().appendAll(predecessors).appendAll(args);
+    return List.<Promise<? extends Maybe<?>>>list().addAll(predecessors).addAll(args);
   }
 
   private class Execution<R> implements Runnable {

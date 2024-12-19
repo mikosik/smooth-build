@@ -139,7 +139,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         var bLambda = (BLambda) lambdaValue;
         try {
           var argJobs = combine.subExprs().items().map(e -> newJob(e, callJob));
-          var bodyEnvironmentJobs = argJobs.appendAll(callJob.environment());
+          var bodyEnvironmentJobs = argJobs.addAll(callJob.environment());
           var bodyTrace = newTrace(call, bLambda, callJob.trace());
           var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
           return successOutput(scheduleJob(bodyJob), SCHEDULE_CALL_LABEL, callJob.trace());
@@ -193,7 +193,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple, BLambda bLambda)
         throws BytecodeException {
       var argumentJobs = tuple.elements().map(BEvaluate.this::newJob);
-      var bodyEnvironmentJobs = argumentJobs.appendAll(callJob.environment());
+      var bodyEnvironmentJobs = argumentJobs.addAll(callJob.environment());
       var bodyTrace = newTrace(bCall, lambdaExpr, callJob.trace());
       var bodyJob = newJob(bLambda.body(), bodyEnvironmentJobs, bodyTrace);
       return scheduleJob(bodyJob);

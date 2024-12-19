@@ -230,7 +230,7 @@ public class SbTranslator {
   }
 
   private SbTranslator funcBodySbTranslator(SFunc sFunc) {
-    var newEnvironment = nlistWithShadowing(sFunc.params().list().appendAll(lexicalEnvironment));
+    var newEnvironment = nlistWithShadowing(sFunc.params().list().addAll(lexicalEnvironment));
     return new SbTranslator(
         bytecodeF,
         typeF,

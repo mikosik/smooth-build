@@ -43,7 +43,7 @@ public class Version implements Task0<Tuple0> {
   private static List<String> hashNodeTreeLines(String indent, HashNode hashNode) {
     var header = indent + hashNode.toPrettyString();
     var children = hashNodeChildrenToLines(indent + "  ", hashNode.children());
-    return list(header).appendAll(children);
+    return list(header).addAll(children);
   }
 
   private static List<String> hashNodeChildrenToLines(String indent, List<HashNode> hashNodes) {

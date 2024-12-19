@@ -406,7 +406,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SOrder sOrder(int line, SExpr headElement, SExpr... tailElements) {
     return new SOrder(
         sArrayType(headElement.evaluationType()),
-        list(headElement).append(tailElements),
+        list(headElement).add(tailElements),
         location(line));
   }
 

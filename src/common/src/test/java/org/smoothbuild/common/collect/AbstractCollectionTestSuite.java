@@ -51,8 +51,10 @@ public abstract class AbstractCollectionTestSuite {
     @Test
     void propagates_exception_from_consumer() {
       var collection = createCollection(1, 2, 3, 4);
-      assertCall(() -> collection.foreach(e -> {throw new IOException();})).throwsException(
-          IOException.class);
+      assertCall(() -> collection.foreach(e -> {
+            throw new IOException();
+          }))
+          .throwsException(IOException.class);
     }
   }
 

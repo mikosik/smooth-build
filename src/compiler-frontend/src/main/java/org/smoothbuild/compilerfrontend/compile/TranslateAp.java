@@ -264,7 +264,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       if (chainHead.array() != null) {
         var elems = listOfAll(chainHead.array().expr()).map(this::createExpr);
         if (pipedArg.get() != null) {
-          elems = list(pipedArg.get()).appendAll(elems);
+          elems = list(pipedArg.get()).addAll(elems);
           pipedArg.set(null);
         }
         return new POrder(elems, location);
@@ -292,7 +292,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
         if (argList != null) {
           var args = createArgList(argList);
           if (pipedArg.get() != null) {
-            args = list(pipedArg.get()).appendAll(args);
+            args = list(pipedArg.get()).addAll(args);
             pipedArg.set(null);
           }
           result = createCall(result, args, argList);

@@ -35,7 +35,7 @@ public class ReportTest {
   @Test
   void map_logs() {
     var report = report(label(":name"), new Trace(), DISK, list(error("error")));
-    assertThat(report.mapLogs(logs -> logs.append(info("info"))))
+    assertThat(report.mapLogs(logs -> logs.add(info("info"))))
         .isEqualTo(report(label(":name"), new Trace(), DISK, list(error("error"), info("info"))));
   }
 }
