@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
@@ -58,7 +57,7 @@ public class TypeResolver {
   }
 
   private SVarSet resolveQuantifiedVars(SSchema sSchema) {
-    return varSetS(sSchema.quantifiedVars().map(v -> (SVar) unifier.resolve(v)).toList());
+    return sSchema.quantifiedVars().mapVars(v -> (SVar) unifier.resolve(v));
   }
 
   private SType resolveType(SSchema sSchema) {
