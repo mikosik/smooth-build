@@ -16,7 +16,7 @@ public abstract class AbstractBExprTestSuite<T extends BExpr> extends VmTestCont
 
   @Test
   void test_equals_and_hashcode_of_equal_exprs() throws Exception {
-    new EqualsTester().addEqualityGroup((Object[]) equalExprs().toArray()).testEquals();
+    new EqualsTester().addEqualityGroup(equalExprs().stream().toArray()).testEquals();
   }
 
   @Test

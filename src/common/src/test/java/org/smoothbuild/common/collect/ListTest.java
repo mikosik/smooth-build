@@ -232,29 +232,6 @@ public class ListTest {
   }
 
   @Nested
-  class _toArray {
-    @Test
-    void returns_array_with_all_elements() {
-      var list = list(1, 2, 3);
-      assertThat(list.toArray()).asList().containsExactly(1, 2, 3);
-    }
-
-    @Test
-    void returns_empty_array_for_empty_list() {
-      var list = list();
-      assertThat(list.toArray()).asList().isEmpty();
-    }
-
-    @Test
-    void returns_array_which_modification_does_not_affect_list() {
-      var list = list(1, 2, 3);
-      var array = list.toArray();
-      array[0] = 7;
-      assertThat(list).isEqualTo(list(1, 2, 3));
-    }
-  }
-
-  @Nested
   class _iterator {
     @Test
     void returns_iterator_with_all_elements() {

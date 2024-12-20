@@ -285,29 +285,6 @@ public class SetTest {
   }
 
   @Nested
-  class _toArray {
-    @Test
-    void returns_array_with_all_elements() {
-      var set = set(1, 2, 3);
-      assertThat(set.toArray()).asList().containsExactly(1, 2, 3);
-    }
-
-    @Test
-    void returns_empty_array_for_empty_set() {
-      var set = set();
-      assertThat(set.toArray()).asList().isEmpty();
-    }
-
-    @Test
-    void returns_array_which_modification_does_not_affect_set() {
-      var set = set(1, 2, 3);
-      var array = set.toArray();
-      array[0] = 7;
-      assertThat(set).isEqualTo(set(1, 2, 3));
-    }
-  }
-
-  @Nested
   class _iterator {
     @Test
     void returns_iterator_with_all_elements() {
