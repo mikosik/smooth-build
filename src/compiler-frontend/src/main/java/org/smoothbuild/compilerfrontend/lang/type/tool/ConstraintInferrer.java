@@ -31,10 +31,10 @@ public class ConstraintInferrer {
       return type2;
     }
     return switch (type1) {
-      case SArrayType array1 -> unifyArrayAndType(array1, type2, constraints);
-      case SInterfaceType fieldSet1 -> unifyFieldSetAndType(fieldSet1, type2, constraints);
-      case SFuncType func1 -> unifyFunctionAndType(func1, type2, constraints);
-      case STupleType tuple1 -> unifyTupleAndType(tuple1, type2, constraints);
+      case SArrayType array1 -> unifyArray(array1, type2, constraints);
+      case SInterfaceType fieldSet1 -> unifyInterface(fieldSet1, type2, constraints);
+      case SFuncType func1 -> unifyFunction(func1, type2, constraints);
+      case STupleType tuple1 -> unifyTuple(tuple1, type2, constraints);
       case SVar sVar -> assertTypesAreEqual(sVar, type2);
       default -> assertTypesAreEqual(type1, type2);
     };
@@ -48,7 +48,7 @@ public class ConstraintInferrer {
     }
   }
 
-  private static SArrayType unifyArrayAndType(
+  private static SArrayType unifyArray(
       SArrayType array1, SType type2, Queue<Constraint> constraints) throws UnifierException {
     if (type2 instanceof SArrayType array2) {
       return new SArrayType(unifyAndInferConstraints(array1.elem(), array2.elem(), constraints));
@@ -57,7 +57,7 @@ public class ConstraintInferrer {
     }
   }
 
-  private static SInterfaceType unifyFieldSetAndType(
+  private static SInterfaceType unifyInterface(
       SInterfaceType inter, SType type, Queue<Constraint> constraints) throws UnifierException {
     return switch (type) {
       case SStructType sStructType -> unifyFieldSetAndStruct(inter, sStructType, constraints);
@@ -148,8 +148,8 @@ public class ConstraintInferrer {
     return new SItemSig(unifyAndInferConstraints(type1, type2, constraints), name1);
   }
 
-  private static SFuncType unifyFunctionAndType(
-      SFuncType func1, SType type, Queue<Constraint> constraints) throws UnifierException {
+  private static SFuncType unifyFunction(SFuncType func1, SType type, Queue<Constraint> constraints)
+      throws UnifierException {
     if (type instanceof SFuncType func2) {
       var result1 = func1.result();
       var result2 = func2.result();
@@ -163,8 +163,8 @@ public class ConstraintInferrer {
     }
   }
 
-  private static STupleType unifyTupleAndType(
-      STupleType tuple1, SType type, Queue<Constraint> constraints) throws UnifierException {
+  private static STupleType unifyTuple(STupleType tuple1, SType type, Queue<Constraint> constraints)
+      throws UnifierException {
     if (type instanceof STupleType tuple2) {
       return unifyTupleAndTuple(tuple1, tuple2, constraints);
     } else {
