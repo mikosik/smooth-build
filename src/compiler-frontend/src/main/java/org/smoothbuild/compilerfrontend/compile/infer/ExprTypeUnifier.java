@@ -84,7 +84,7 @@ public class ExprTypeUnifier {
   }
 
   private SVarSet resolveQuantifiedVars(SType sType) {
-    return sType.vars().withRemovedAll(outerScopeVars.map(unifier::resolve));
+    return sType.vars().removeAll(outerScopeVars.map(unifier::resolve));
   }
 
   private SType resolveType(PEvaluable pEvaluable) {
@@ -100,7 +100,7 @@ public class ExprTypeUnifier {
   private void unifyEvaluableBody(
       PEvaluable pEvaluable, SType evaluationType, SType type, TypeTeller typeTeller)
       throws TypeException {
-    var vars = outerScopeVars.withAddedAll(type.vars());
+    var vars = outerScopeVars.addAll(type.vars());
     new ExprTypeUnifier(unifier, typeTeller, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 

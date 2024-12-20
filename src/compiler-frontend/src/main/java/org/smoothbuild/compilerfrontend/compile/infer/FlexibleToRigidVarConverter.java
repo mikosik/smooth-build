@@ -41,14 +41,14 @@ public class FlexibleToRigidVarConverter extends PModuleVisitor<RuntimeException
   private void nameVarsInBody(PEvaluable evaluable, PExpr body) {
     var resolvedType = unifier.resolve(evaluable.sType());
     var rigidVars = resolvedType.vars().filter(var -> !var.isFlexibleVar());
-    var reservedVars = outerScopeVars.withAddedAll(rigidVars);
+    var reservedVars = outerScopeVars.addAll(rigidVars);
     new FlexibleToRigidVarConverter(unifier, reservedVars).visitExpr(body);
   }
 
   private static SType renameFlexibleVarsToRigid(SType sType, SVarSet reservedVars) {
     var vars = sType.vars();
     var rigidVars = vars.filter(var -> !var.isFlexibleVar());
-    var varGenerator = new UnusedVarsGenerator(reservedVars.withAddedAll(rigidVars));
+    var varGenerator = new UnusedVarsGenerator(reservedVars.addAll(rigidVars));
     var flexibleVars = vars.filter(SVar::isFlexibleVar);
     var mapping = flexibleVars.toList().toMap(v -> (SType) varGenerator.next());
     return sType.mapVars(mapping);
