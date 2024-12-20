@@ -16,7 +16,7 @@ import org.smoothbuild.common.function.Function1;
 /**
  * Immutable set.
  */
-public final class Set<E> implements Collection<E> {
+public non-sealed class Set<E> implements Collection<E> {
   private final ImmutableSet<E> set;
 
   @SafeVarargs
@@ -31,7 +31,7 @@ public final class Set<E> implements Collection<E> {
     return new Set<>(ImmutableSet.copyOf(iterable));
   }
 
-  private Set(ImmutableSet<E> set) {
+  protected Set(ImmutableSet<E> set) {
     this.set = set;
   }
 

@@ -9,6 +9,15 @@ public abstract sealed interface Collection<E> extends Iterable<E> permits List,
 
   public boolean contains(Object object);
 
+  public default boolean containsAll(Collection<E> collection) {
+    for (var element : collection) {
+      if (!contains(element)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public default <T extends Throwable> void foreach(Consumer1<? super E, T> consumer) throws T {
     for (E e : this) {
       consumer.accept(e);

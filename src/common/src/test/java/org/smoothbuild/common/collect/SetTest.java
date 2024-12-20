@@ -333,7 +333,7 @@ public class SetTest {
   class _collection_methods extends AbstractCollectionTestSuite {
     @SafeVarargs
     @Override
-    public final <E> Collection<E> createCollection(E... elements) {
+    public final <E> Collection<E> newCollection(E... elements) {
       return set(elements);
     }
   }
