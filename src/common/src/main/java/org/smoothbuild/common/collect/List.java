@@ -139,6 +139,7 @@ public final class List<E> implements Collection<E> {
     return -1;
   }
 
+  @Override
   public int size() {
     return array.length;
   }

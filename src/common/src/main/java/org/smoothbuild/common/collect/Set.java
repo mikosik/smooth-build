@@ -110,6 +110,7 @@ public non-sealed class Set<E> implements Collection<E> {
     return set.spliterator();
   }
 
+  @Override
   public int size() {
     return set.size();
   }
