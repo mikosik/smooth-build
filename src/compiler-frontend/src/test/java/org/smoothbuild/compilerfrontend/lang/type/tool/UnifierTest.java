@@ -840,7 +840,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
   private static void assertForEachPermutation(
       List<Constraint> constraints, Consumer<Unifier> assertion) throws UnifierException {
-    var permutations = permutations(constraints.toJdkList());
+    var permutations = permutations(constraints.asJdkList());
     for (java.util.List<Constraint> permutation : permutations) {
       assertPermutation(listOfAll(permutation), assertion);
     }
@@ -860,7 +860,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
   private static void assertExceptionThrownForLastConstraintForEachPermutation(
       List<Constraint> constraints) throws UnifierException {
-    var permutations = permutations(constraints.toJdkList());
+    var permutations = permutations(constraints.asJdkList());
     for (java.util.List<Constraint> permutation : permutations) {
       assertExceptionThrownForPermutation(listOfAll(permutation));
     }

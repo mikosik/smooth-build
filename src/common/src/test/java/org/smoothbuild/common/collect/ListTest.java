@@ -345,19 +345,53 @@ public class ListTest {
   }
 
   @Nested
-  class _toJdkList {
+  class _asJdkList {
     @Test
     void on_empty_list_returns_empty_jdk_list() {
-      var jdkList = list().toJdkList();
+      var jdkList = list().asJdkList();
       assertThat(jdkList).isInstanceOf(java.util.List.class);
       assertThat(jdkList).isEqualTo(asList());
     }
 
     @Test
     void returns_jdk_list_with_same_elements() {
-      var jdkList = list(1, 2, 3).toJdkList();
+      var jdkList = list(1, 2, 3).asJdkList();
       assertThat(jdkList).isInstanceOf(java.util.List.class);
       assertThat(jdkList).isEqualTo(asList(1, 2, 3));
+    }
+
+    @Test
+    void jdk_list_size_is_correct() {
+      var jdkList = list(1, 2, 3).asJdkList();
+      assertThat(jdkList.size()).isEqualTo(3);
+    }
+
+    @Test
+    void jdk_list_get_returns_correct_element() {
+      var jdkList = list(1, 2, 3).asJdkList();
+      assertThat(jdkList.get(1)).isEqualTo(2);
+    }
+
+    @Test
+    void jdk_list_get_throws_exception_for_invalid_index() {
+      var jdkList = list(1, 2, 3).asJdkList();
+      assertCall(() -> jdkList.get(3))
+          .throwsException(new NoSuchElementException("index = 3, list.size() = 3"));
+    }
+
+    @Test
+    void jdk_list_is_immutable() {
+      var jdkList = list(1, 2, 3).asJdkList();
+      assertCall(() -> jdkList.add(1)).throwsException(UnsupportedOperationException.class);
+      assertCall(() -> jdkList.set(0, 2)).throwsException(UnsupportedOperationException.class);
+      assertCall(() -> jdkList.remove(1)).throwsException(UnsupportedOperationException.class);
+      assertCall(() -> jdkList.clear()).throwsException(UnsupportedOperationException.class);
+      assertCall(() -> jdkList.addAll(asList(4, 5)))
+          .throwsException(UnsupportedOperationException.class);
+      assertCall(() -> jdkList.removeAll(asList(1, 2)))
+          .throwsException(UnsupportedOperationException.class);
+      assertCall(() -> jdkList.retainAll(asList(1, 2)))
+          .throwsException(UnsupportedOperationException.class);
     }
   }
 
