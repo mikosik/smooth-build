@@ -58,44 +58,30 @@ public class ConstraintInferrer {
   }
 
   private static SInterfaceType unifyInterface(
-      SInterfaceType inter, SType type, Queue<Constraint> constraints) throws UnifierException {
-    return switch (type) {
-      case SStructType sStructType -> unifyFieldSetAndStruct(inter, sStructType, constraints);
-      case SInterfaceType sInterfaceType -> unifyFieldSetAndInterface(
-          inter, sInterfaceType, constraints);
+      SInterfaceType type1, SType type2, Queue<Constraint> c) throws UnifierException {
+    return switch (type2) {
+      case SStructType struct2 -> switch (type1) {
+        case SStructType struct1 -> unifyStructAndStruct(struct1, struct2, c);
+        case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, c);
+      };
+      case SInterfaceType interface2 -> switch (type1) {
+        case SStructType struct1 -> unifyStructAndInterface(struct1, interface2, c);
+        case SInterfaceType interface1 -> unifyInterfaceAndInterface(interface1, interface2, c);
+      };
       default -> throw new UnifierException();
-    };
-  }
-
-  private static SInterfaceType unifyFieldSetAndInterface(
-      SInterfaceType fieldSet, SInterfaceType interface2, Queue<Constraint> constraints)
-      throws UnifierException {
-    return switch (fieldSet) {
-      case SStructType struct1 -> unifyStructAndInterface(struct1, interface2, constraints);
-      case SInterfaceType interface1 -> unifyInterfaceAndInterface(
-          interface1, interface2, constraints);
     };
   }
 
   private static SInterfaceType unifyInterfaceAndInterface(
       SInterfaceType interface1, SInterfaceType interface2, Queue<Constraint> constraints)
       throws UnifierException {
-    return new SInterfaceType(unifyFieldSetAndFieldSet(interface1, interface2, constraints));
-  }
-
-  private static SStructType unifyFieldSetAndStruct(
-      SInterfaceType fieldSet, SStructType struct2, Queue<Constraint> constraints)
-      throws UnifierException {
-    return switch (fieldSet) {
-      case SStructType struct1 -> unifyStructAndStruct(struct1, struct2, constraints);
-      case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, constraints);
-    };
+    return new SInterfaceType(unifyInterfaceFields(interface1, interface2, constraints));
   }
 
   private static SStructType unifyStructAndInterface(
       SStructType struct, SInterfaceType interface_, Queue<Constraint> constraints)
       throws UnifierException {
-    var unifiedFields = unifyFieldSetAndFieldSet(struct, interface_, constraints);
+    var unifiedFields = unifyInterfaceFields(struct, interface_, constraints);
     if (unifiedFields.size() != struct.fields().size()) {
       throw new UnifierException();
     } else {
@@ -103,11 +89,11 @@ public class ConstraintInferrer {
     }
   }
 
-  private static Map<Name, SItemSig> unifyFieldSetAndFieldSet(
-      SInterfaceType fieldSet1, SInterfaceType fieldSet2, Queue<Constraint> constraints)
+  private static Map<Name, SItemSig> unifyInterfaceFields(
+      SInterfaceType interface1, SInterfaceType interface2, Queue<Constraint> constraints)
       throws UnifierException {
-    var fields1 = fieldSet1.fieldSet();
-    var fields2 = fieldSet2.fieldSet();
+    var fields1 = interface1.fieldSet();
+    var fields2 = interface2.fieldSet();
     var mergedFields = new HashMap<>(fields1);
     for (Entry<Name, SItemSig> field2 : fields2.entrySet()) {
       var name = field2.getKey();
