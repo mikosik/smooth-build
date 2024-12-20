@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function1;
@@ -109,11 +108,6 @@ public final class List<E> implements Collection<E> {
   @Override
   public Spliterator<E> spliterator() {
     return Arrays.spliterator(array);
-  }
-
-  @Override
-  public void forEach(Consumer<? super E> consumer) {
-    foreach(consumer::accept);
   }
 
   public E get(int index) {

@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableSet.Builder;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.smoothbuild.common.function.Function1;
 
@@ -98,11 +97,6 @@ public non-sealed class Set<E> implements Collection<E> {
   @Override
   public Iterator<E> iterator() {
     return set.iterator();
-  }
-
-  @Override
-  public void forEach(Consumer<? super E> consumer) {
-    set.forEach(consumer);
   }
 
   @Override
