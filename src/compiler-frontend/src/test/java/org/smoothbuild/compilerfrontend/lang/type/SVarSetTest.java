@@ -31,19 +31,19 @@ public class SVarSetTest extends FrontendCompilerTestContext {
     @Test
     void empty_set_is_not_changed() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAddedAll(varSetS())).isEqualTo(varSetS(varA()));
+      assertThat(varSet.addAll(varSetS())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     void itself() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAddedAll(varSet)).isEqualTo(varSetS(varA()));
+      assertThat(varSet.addAll(varSet)).isEqualTo(varSetS(varA()));
     }
 
     @Test
     void other_varset() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAddedAll(varSetS(varB()))).isEqualTo(varSetS(varA(), varB()));
+      assertThat(varSet.addAll(varSetS(varB()))).isEqualTo(varSetS(varA(), varB()));
     }
   }
 
@@ -52,19 +52,19 @@ public class SVarSetTest extends FrontendCompilerTestContext {
     @Test
     void empty_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemovedAll(set())).isEqualTo(varSetS(varA()));
+      assertThat(varSet.removeAll(set())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     void other_non_overlapping_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemovedAll(set(varB()))).isEqualTo(varSetS(varA()));
+      assertThat(varSet.removeAll(set(varB()))).isEqualTo(varSetS(varA()));
     }
 
     @Test
     void other_overlapping_set() {
       var varSet = varSetS(varA(), varB(), varC());
-      assertThat(varSet.withRemovedAll(set(varB()))).isEqualTo(varSetS(varA(), varC()));
+      assertThat(varSet.removeAll(set(varB()))).isEqualTo(varSetS(varA(), varC()));
     }
   }
 

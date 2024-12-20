@@ -1,19 +1,13 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Set.set;
-import static org.smoothbuild.common.collect.Set.setOfAll;
 
-import java.util.Iterator;
+import com.google.common.collect.ImmutableSet;
 import org.smoothbuild.common.collect.Collection;
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
 
-public final class SVarSet extends java.util.AbstractSet<SVar> {
-  private final Set<SVar> elements;
-
+public final class SVarSet extends Set<SVar> {
   public static SVarSet varSetS(SVar... vars) {
     var set = set(vars);
     return newSortedVarSetS(set);
@@ -28,41 +22,30 @@ public final class SVarSet extends java.util.AbstractSet<SVar> {
   }
 
   private SVarSet(Set<SVar> elements) {
-    this.elements = elements;
+    super(ImmutableSet.copyOf(elements));
   }
 
+  @Override
   public <R, T extends Throwable> Set<R> map(Function1<? super SVar, R, T> filter) throws T {
-    return elements.map(filter);
+    return super.map(filter);
   }
 
+  @Override
   public <T extends Throwable> SVarSet filter(Function1<SVar, Boolean, T> predicate) throws T {
-    return new SVarSet(elements.filter(predicate));
+    return new SVarSet(super.filter(predicate));
   }
 
-  public List<SVar> toList() {
-    return elements.toList();
-  }
-
-  public SVarSet withAddedAll(Iterable<? extends SVar> toAdd) {
-    return new SVarSet(elements.unionWith(toAdd));
-  }
-
-  public SVarSet withRemovedAll(Collection<?> toRemove) {
-    return new SVarSet(elements.removeAll(toRemove));
+  public SVarSet addAll(Iterable<? extends SVar> toAdd) {
+    return new SVarSet(unionWith(toAdd));
   }
 
   @Override
-  public Iterator<SVar> iterator() {
-    return elements.iterator();
-  }
-
-  @Override
-  public int size() {
-    return elements.size();
+  public SVarSet removeAll(Collection<?> toRemove) {
+    return new SVarSet(super.removeAll(toRemove));
   }
 
   @Override
   public String toString() {
-    return listOfAll(elements).map(SVar::name).toString("<", ",", ">");
+    return map(SVar::name).toString("<", ",", ">");
   }
 }
