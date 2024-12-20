@@ -102,11 +102,6 @@ public final class List<E> implements Collection<E> {
   }
 
   @Override
-  public E[] toArray() {
-    return array.clone();
-  }
-
-  @Override
   public Iterator<E> iterator() {
     return Iterators.forArray(array);
   }
@@ -223,7 +218,7 @@ public final class List<E> implements Collection<E> {
   }
 
   public List<E> sortUsing(Comparator<? super E> comparator) {
-    var copy = toArray();
+    var copy = array.clone();
     Arrays.sort(copy, comparator);
     return new List<>(copy);
   }

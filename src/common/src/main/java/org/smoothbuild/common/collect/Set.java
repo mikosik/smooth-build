@@ -96,11 +96,6 @@ public non-sealed class Set<E> implements Collection<E> {
   }
 
   @Override
-  public Object[] toArray() {
-    return set.toArray();
-  }
-
-  @Override
   public Iterator<E> iterator() {
     return set.iterator();
   }

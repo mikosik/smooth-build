@@ -39,6 +39,4 @@ public abstract sealed interface Collection<E> extends Iterable<E> permits List,
   public Set<E> toSet();
 
   public Stream<E> stream();
-
-  public Object[] toArray();
 }
