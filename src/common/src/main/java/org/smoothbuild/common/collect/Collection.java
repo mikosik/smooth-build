@@ -5,6 +5,8 @@ import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function1;
 
 public abstract sealed interface Collection<E> extends Iterable<E> permits List, Set {
+  public int size();
+
   public boolean isEmpty();
 
   public boolean contains(Object object);
