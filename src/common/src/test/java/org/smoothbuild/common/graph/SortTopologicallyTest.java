@@ -191,10 +191,10 @@ public class SortTopologicallyTest {
         List<GraphNode<Integer, String, String>> expectedCycle) {
       var permutations = permutations(nodes);
       for (List<GraphNode<Integer, String, String>> permutation : permutations) {
-        var actual = sortTopologically(permutation).cycle().toJdkList();
+        var actual = sortTopologically(permutation).cycle().asJdkList();
 
         List<GraphEdge<String, Integer>> cycle = buildCycle(expectedCycle);
-        var rotated = cycle.toJdkList();
+        var rotated = new ArrayList<>(cycle.asJdkList());
         for (int i = 0; i < cycle.size(); i++) {
           Collections.rotate(rotated, 1);
           if (actual.equals(rotated)) {
@@ -248,11 +248,11 @@ public class SortTopologicallyTest {
   void sorting_algorithm_has_linear_complexity() {
     AtomicInteger key = new AtomicInteger();
     List<GraphNode<Integer, String, String>> topLayer = createLayer(key, list());
-    var nodes = new ArrayList<>(topLayer.toJdkList());
+    var nodes = new ArrayList<>(topLayer.asJdkList());
     int layerCount = 100;
     for (int i = 0; i < layerCount; i++) {
       topLayer = createLayer(key, topLayer.map(GraphNode::key));
-      nodes.addAll(topLayer.toJdkList());
+      nodes.addAll(topLayer.asJdkList());
     }
     assertTimeoutPreemptively(Duration.ofSeconds(5), () -> sortTopologically(listOfAll(nodes)));
   }
@@ -294,7 +294,7 @@ public class SortTopologicallyTest {
   }
 
   public static <E> Collection<List<E>> permutations(List<E> elements) {
-    return Collections2.permutations(elements.toJdkList()).stream()
+    return Collections2.permutations(elements.asJdkList()).stream()
         .map(List::listOfAll)
         .toList();
   }

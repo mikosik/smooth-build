@@ -123,7 +123,7 @@ public final class List<E> implements Collection<E> {
 
   public E get(int index) {
     if (index < 0 || array.length <= index) {
-      throw new NoSuchElementException("index = " + index + ", array.length = " + array.length);
+      throw new NoSuchElementException("index = " + index + ", list.size() = " + array.length);
     }
     return array[index];
   }
@@ -361,8 +361,18 @@ public final class List<E> implements Collection<E> {
     return Arrays.stream(array);
   }
 
-  public java.util.List<E> toJdkList() {
-    return Arrays.asList(toArray());
+  public java.util.List<E> asJdkList() {
+    return new java.util.AbstractList<>() {
+      @Override
+      public E get(int index) {
+        return List.this.get(index);
+      }
+
+      @Override
+      public int size() {
+        return List.this.size();
+      }
+    };
   }
 
   @Override
