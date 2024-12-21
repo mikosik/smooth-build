@@ -4,6 +4,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocationImpl;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
@@ -11,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class SAnnotatedValue extends SNamedValue {
+public final class SAnnotatedValue extends HasSchemaAndIdAndLocationImpl implements SNamedValue {
   private final SAnnotation annotation;
 
   public SAnnotatedValue(SAnnotation annotation, SSchema schema, Id id, Location location) {
