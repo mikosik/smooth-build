@@ -25,6 +25,10 @@ public class Strings {
   }
 
   public static String indent(String string) {
+    return indent("  ", string);
+  }
+
+  public static String indent(String indentation, String string) {
     // JDK's String.indent() adds new-line at the end of string and it uses internally
     // String.lines() which doesn't handle correctly multiple new-lines at the end of string.
     var stringBuilder = new StringBuilder();
@@ -35,7 +39,7 @@ public class Strings {
         stringBuilder.append(c);
         empty = true;
       } else if (empty) {
-        stringBuilder.append("  ");
+        stringBuilder.append(indentation);
         stringBuilder.append(c);
         empty = false;
       } else {
