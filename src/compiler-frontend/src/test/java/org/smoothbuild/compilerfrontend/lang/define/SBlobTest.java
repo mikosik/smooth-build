@@ -8,6 +8,13 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SBlobTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
-    assertThat(sBlob(7, 16).toString()).isEqualTo("SBlob(Blob, 0x10, {t-project}/module.smooth:7)");
+    assertThat(sBlob(7, 16).toString())
+        .isEqualTo(
+            """
+        SBlob(
+          type = Blob
+          byteString = 0x10
+          location = {t-project}/module.smooth:7
+        )""");
   }
 }

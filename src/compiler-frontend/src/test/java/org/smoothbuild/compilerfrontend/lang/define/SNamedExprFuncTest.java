@@ -28,7 +28,11 @@ public class SNamedExprFuncTest extends FrontendCompilerTestContext {
                 )
               ]
               location = {t-project}/module.smooth:1
-              body = SInt(Int, 17, {t-project}/module.smooth:1)
+              body = SInt(
+                type = Int
+                bigInteger = 17
+                location = {t-project}/module.smooth:1
+              )
             )""");
   }
 }

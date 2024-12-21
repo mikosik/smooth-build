@@ -1,9 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -22,8 +21,10 @@ public record SSelect(SExpr selectable, Name field, Location location) implement
 
   @Override
   public String toString() {
-    var fields = list("selectable = " + selectable, "field = " + field, "location = " + location)
-        .toString("\n");
-    return "SSelect(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SSelect")
+        .addField("selectable", selectable)
+        .addField("field", field)
+        .addField("location", location)
+        .toString();
   }
 }

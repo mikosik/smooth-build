@@ -9,6 +9,12 @@ public class SStringTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     assertThat(sString(7, "abc").toString())
-        .isEqualTo("SString(String, \"abc\", {t-project}/module.smooth:7)");
+        .isEqualTo(
+            """
+            SString(
+              type = String
+              string = abc
+              location = {t-project}/module.smooth:7
+            )""");
   }
 }

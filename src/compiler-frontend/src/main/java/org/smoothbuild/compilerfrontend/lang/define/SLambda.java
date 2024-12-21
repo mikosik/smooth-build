@@ -1,8 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
@@ -64,7 +63,11 @@ public final class SLambda implements SExprFunc, SPolymorphic {
 
   @Override
   public String toString() {
-    var fields = fieldsToString() + "\nbody = " + body;
-    return "SLambda(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SLambda")
+        .addField("schema", schema())
+        .addListField("params", params().list())
+        .addField("location", location())
+        .addField("body", body)
+        .toString();
   }
 }

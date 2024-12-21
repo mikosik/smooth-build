@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 
 public abstract sealed class PLiteral extends PExpr permits PBlob, PInt, PString {
@@ -36,7 +34,9 @@ public abstract sealed class PLiteral extends PExpr permits PBlob, PInt, PString
 
   @Override
   public String toString() {
-    var fields = list("literal = " + literal, "location = " + location()).toString("\n");
-    return getClass().getName() + "(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder(getClass().getName())
+        .addField("literal", literal)
+        .addField("location", location())
+        .toString();
   }
 }

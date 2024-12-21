@@ -1,10 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
@@ -98,14 +97,11 @@ public final class PLambda extends PPolymorphic implements PFunc {
 
   @Override
   public String toString() {
-    var fields = list(
-            "name = " + nameText(),
-            "params = [",
-            indent(params().list().toString("\n")),
-            "]",
-            "body = " + body,
-            "location = " + location())
-        .toString("\n");
-    return "PLambda(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PLambda")
+        .addField("name", nameText())
+        .addListField("params", params().list())
+        .addField("body", body)
+        .addField("location", location())
+        .toString();
   }
 }

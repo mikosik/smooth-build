@@ -1,8 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 
 /**
@@ -11,8 +9,10 @@ import org.smoothbuild.common.log.location.Location;
 public record SAnnotation(String name, SString path, Location location) {
   @Override
   public String toString() {
-    var fields =
-        list("name = " + name, "path = " + path, "location = " + location).toString("\n");
-    return "SAnnotation(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SAnnotation")
+        .addField("name", name)
+        .addField("path", path)
+        .addField("location", location)
+        .toString();
   }
 }

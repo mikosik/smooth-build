@@ -17,7 +17,7 @@ public class SCallTest extends FrontendCompilerTestContext {
             SCall(
               callee = SInstantiate(
                 typeArgs = <Int>
-                polymorphicS = SReference(
+                polymorphic = SReference(
                   schema = <A>(A)->A
                   referencedName = myId
                   location = {t-project}/module.smooth:4
@@ -28,7 +28,11 @@ public class SCallTest extends FrontendCompilerTestContext {
               args = SCombine(
                 evaluationType = {Int}
                 elements = [
-                  SInt(Int, 7, {t-project}/module.smooth:3)
+                  SInt(
+                    type = Int
+                    bigInteger = 7
+                    location = {t-project}/module.smooth:3
+                  )
                 ]
                 location = {t-project}/module.smooth:3
               )

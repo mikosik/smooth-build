@@ -16,22 +16,26 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
     assertThat(func.toString())
         .isEqualTo(
             """
-            SAnnotatedFunc(
-              SAnnotation(
-                name = Native
-                path = SString(String, "impl", {t-project}/module.smooth:1)
-                location = {t-project}/module.smooth:1
-              )
-              schema = <>(Int)->String
-              params = [
-                SItem(
-                  type = Int
-                  name = myParam
-                  defaultValueId = None
+                SAnnotatedFunc(
+                  annotation = SAnnotation(
+                    name = Native
+                    path = SString(
+                      type = String
+                      string = impl
+                      location = {t-project}/module.smooth:1
+                    )
+                    location = {t-project}/module.smooth:1
+                  )
+                  schema = <>(Int)->String
+                  params = [
+                    SItem(
+                      type = Int
+                      name = myParam
+                      defaultValueId = None
+                      location = {t-project}/module.smooth:1
+                    )
+                  ]
                   location = {t-project}/module.smooth:1
-                )
-              ]
-              location = {t-project}/module.smooth:1
-            )""");
+                )""");
   }
 }

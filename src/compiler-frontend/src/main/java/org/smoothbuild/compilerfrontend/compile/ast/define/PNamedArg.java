@@ -1,10 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
@@ -61,8 +59,10 @@ public final class PNamedArg extends PExpr implements HasNameText, HasName {
 
   @Override
   public String toString() {
-    var fields =
-        list("name = " + nameText, "expr = " + expr, "location = " + location()).toString("\n");
-    return "PNamedArg(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PNamedArg")
+        .addField("name", nameText)
+        .addField("expr", expr)
+        .addField("location", location())
+        .toString();
   }
 }

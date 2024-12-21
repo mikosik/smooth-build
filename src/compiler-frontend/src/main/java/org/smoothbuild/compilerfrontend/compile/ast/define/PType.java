@@ -1,8 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
 
@@ -24,7 +22,9 @@ public abstract sealed class PType extends HasNameTextAndLocationImpl
 
   @Override
   public String toString() {
-    var fields = list("nameText = " + nameText(), "location = " + location()).toString("\n");
-    return "PType(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PType")
+        .addField("nameText", nameText())
+        .addField("location", location())
+        .toString();
   }
 }

@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
@@ -47,7 +45,12 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
 
   @Override
   public String toString() {
-    var fields = list("name = " + id(), fieldsToString(), "body = " + body).toString("\n");
-    return "SNamedExprFunc(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SNamedExprFunc")
+        .addField("name", id())
+        .addField("schema", schema())
+        .addListField("params", params().list())
+        .addField("location", location())
+        .addField("body", body)
+        .toString();
   }
 }

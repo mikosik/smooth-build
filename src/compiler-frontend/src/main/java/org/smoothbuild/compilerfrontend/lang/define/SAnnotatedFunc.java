@@ -1,8 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
@@ -45,7 +44,11 @@ public final class SAnnotatedFunc extends SNamedFunc {
 
   @Override
   public String toString() {
-    var fields = annotation.toString() + "\n" + fieldsToString();
-    return "SAnnotatedFunc(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SAnnotatedFunc")
+        .addField("annotation", annotation)
+        .addField("schema", schema())
+        .addListField("params", params().list())
+        .addField("location", location())
+        .toString();
   }
 }

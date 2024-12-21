@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
@@ -90,13 +88,12 @@ public final class PItem extends HasNameTextAndLocationImpl implements PReferenc
 
   @Override
   public String toString() {
-    var fields = list(
-            "type = " + type,
-            "name = " + nameText(),
-            "defaultValue = " + defaultValue,
-            "defaultValueId = " + defaultValueId,
-            "location = " + location())
-        .toString("\n");
-    return "PItem(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PItem")
+        .addField("type", type)
+        .addField("name", nameText())
+        .addField("defaultValue", defaultValue)
+        .addField("defaultValueId", defaultValueId)
+        .addField("location", location())
+        .toString();
   }
 }

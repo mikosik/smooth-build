@@ -18,7 +18,11 @@ public class SNamedExprValueTest extends FrontendCompilerTestContext {
               schema = <>String
               name = myVal
               location = {t-project}/module.smooth:7
-              body = SInt(Int, 9, {t-project}/module.smooth:1)
+              body = SInt(
+                type = Int
+                bigInteger = 9
+                location = {t-project}/module.smooth:1
+              )
             )""");
   }
 }
