@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
 
@@ -69,14 +67,11 @@ public final class PModule implements PScoped {
 
   @Override
   public String toString() {
-    var fields = list(
-            "structs = [",
-            indent(structs().toString("\n")),
-            "]",
-            "evaluables = [",
-            indent(evaluables().toString("\n")),
-            "]")
-        .toString("\n");
-    return "PModule(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PModule")
+        .addField("fileName", fileName)
+        .addListField("structs", structs)
+        .addListField("evaluables", evaluables)
+        .addField("scope", scope)
+        .toString();
   }
 }

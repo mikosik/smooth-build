@@ -1,8 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
@@ -15,9 +13,10 @@ public record SReference(SSchema schema, Id referencedId, Location location)
     implements SPolymorphic, HasLocation {
   @Override
   public String toString() {
-    var fields = list(
-            "schema = " + schema, "referencedName = " + referencedId, "location = " + location)
-        .toString("\n");
-    return "SReference(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SReference")
+        .addField("schema", schema)
+        .addField("referencedName", referencedId)
+        .addField("location", location)
+        .toString();
   }
 }

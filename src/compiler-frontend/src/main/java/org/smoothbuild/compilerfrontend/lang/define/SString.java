@@ -1,14 +1,16 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.qq;
-import static org.smoothbuild.common.collect.List.list;
-
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 
 public record SString(SStringType type, String string, Location location) implements SConstant {
   @Override
   public String toString() {
-    return "SString(" + list(type, qq(string), location).toString(", ") + ")";
+    return new ToStringBuilder("SString")
+        .addField("type", type)
+        .addField("string", string)
+        .addField("location", location)
+        .toString();
   }
 }

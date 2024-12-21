@@ -14,7 +14,11 @@ public class SAnnotationTest extends FrontendCompilerTestContext {
             """
             SAnnotation(
               name = myAnnotation
-              path = SString(String, "myPath", {t-project}/module.smooth:7)
+              path = SString(
+                type = String
+                string = myPath
+                location = {t-project}/module.smooth:7
+              )
               location = {t-project}/module.smooth:17
             )""");
   }

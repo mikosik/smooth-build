@@ -16,9 +16,13 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
         .isEqualTo(
             """
             SAnnotatedValue(
-              SAnnotation(
+              annotation = SAnnotation(
                 name = myAnnotation
-                path = SString(String, "myPath", {t-project}/module.smooth:7)
+                path = SString(
+                  type = String
+                  string = myPath
+                  location = {t-project}/module.smooth:7
+                )
                 location = {t-project}/module.smooth:17
               )
               schema = <>String

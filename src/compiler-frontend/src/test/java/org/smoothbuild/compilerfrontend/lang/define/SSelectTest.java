@@ -19,7 +19,7 @@ public class SSelectTest extends FrontendCompilerTestContext {
             SSelect(
               selectable = SInstantiate(
                 typeArgs = <>
-                polymorphicS = SReference(
+                polymorphic = SReference(
                   schema = <>MyStruct
                   referencedName = structValue
                   location = {t-project}/module.smooth:12

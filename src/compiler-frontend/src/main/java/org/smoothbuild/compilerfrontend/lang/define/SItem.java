@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
@@ -44,17 +42,6 @@ public final class SItem extends HasTypeAndIdAndLocation implements SReferenceab
   }
 
   @Override
-  public String toString() {
-    var fields = list(
-            "type = " + type().name(),
-            "name = " + id(),
-            "defaultValueId = " + defaultValueId,
-            "location = " + location())
-        .toString("\n");
-    return "SItem(\n" + indent(fields) + "\n)";
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -69,5 +56,15 @@ public final class SItem extends HasTypeAndIdAndLocation implements SReferenceab
   @Override
   public int hashCode() {
     return Objects.hash(type(), id(), defaultValueId, location());
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder("SItem")
+        .addField("type", type().name())
+        .addField("name", id())
+        .addField("defaultValueId", defaultValueId)
+        .addField("location", location())
+        .toString();
   }
 }

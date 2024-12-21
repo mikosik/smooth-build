@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
@@ -71,13 +69,12 @@ public final class PNamedValue extends PNamedEvaluable {
 
   @Override
   public String toString() {
-    var fields = list(
-            "type = " + type,
-            "name = " + nameText(),
-            "body = " + body(),
-            "annotation = " + annotation(),
-            "location = " + location())
-        .toString("\n");
-    return "PNamedValue(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PNamedValue")
+        .addField("type", type)
+        .addField("name", nameText())
+        .addField("body", body())
+        .addField("annotation", annotation())
+        .addField("location", location())
+        .toString();
   }
 }

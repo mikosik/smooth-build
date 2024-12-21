@@ -1,10 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 
@@ -37,7 +36,9 @@ public final class POrder extends PExpr {
 
   @Override
   public String toString() {
-    var fields = list("elems = " + elements, "location = " + location()).toString("\n");
-    return "POrder(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("POrder")
+        .addField("elems", elements)
+        .addField("location", location())
+        .toString();
   }
 }

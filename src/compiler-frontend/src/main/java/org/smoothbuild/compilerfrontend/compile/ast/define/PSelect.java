@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Name;
 
@@ -52,9 +50,10 @@ public final class PSelect extends PExpr {
 
   @Override
   public String toString() {
-    var fields = list(
-            "selectable = " + selectable, "field = " + fieldNameText, "location = " + location())
-        .toString("\n");
-    return "PSelect(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PSelect")
+        .addField("selectable", selectable)
+        .addField("field", fieldNameText)
+        .addField("location", location())
+        .toString();
   }
 }

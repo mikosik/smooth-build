@@ -1,8 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
@@ -35,8 +33,10 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
 
   @Override
   public String toString() {
-    var fields =
-        list("callee = " + callee, "args = " + args, "location = " + location).toString("\n");
-    return "SCall(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SCall")
+        .addField("callee", callee)
+        .addField("args", args)
+        .addField("location", location)
+        .toString();
   }
 }

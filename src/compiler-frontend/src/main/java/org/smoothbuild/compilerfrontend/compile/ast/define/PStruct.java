@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndNameTextAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
@@ -65,8 +63,10 @@ public final class PStruct extends HasIdAndNameTextAndLocation implements PScope
 
   @Override
   public String toString() {
-    var fields = list("name = " + id(), "fields = " + this.fields, "location = " + location())
-        .toString("\n");
-    return "PStruct(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PStruct")
+        .addField("id", id())
+        .addField("fields", fields)
+        .addField("location", location())
+        .toString();
   }
 }

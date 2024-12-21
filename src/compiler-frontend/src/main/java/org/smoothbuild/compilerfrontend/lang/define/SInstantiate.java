@@ -1,9 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.common.base.Strings.indent;
 import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
@@ -26,12 +26,11 @@ public record SInstantiate(
 
   @Override
   public String toString() {
-    var fields = list(
-            "typeArgs = " + "<" + typeArgs.toString(",") + ">",
-            "polymorphicS = " + sPolymorphic,
-            "evaluationType = " + evaluationType,
-            "location = " + location)
-        .toString("\n");
-    return "SInstantiate(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("SInstantiate")
+        .addField("typeArgs", typeArgs.toString("<", ",", ">"))
+        .addField("polymorphic", sPolymorphic)
+        .addField("evaluationType", evaluationType)
+        .addField("location", location)
+        .toString();
   }
 }

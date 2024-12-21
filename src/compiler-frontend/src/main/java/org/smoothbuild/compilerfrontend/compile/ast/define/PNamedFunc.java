@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NList;
@@ -84,17 +82,13 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
 
   @Override
   public String toString() {
-    var paramsString = params().list().toString("\n");
-    var fields = list(
-            "resulT = " + resultT,
-            "name = " + id(),
-            "params = [",
-            indent(paramsString),
-            "]",
-            "body = " + body(),
-            "annotation = " + annotation(),
-            "location = " + location())
-        .toString("\n");
-    return "NamedFuncP(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PNamedFuncP")
+        .addField("resulT", resultT)
+        .addField("name", id())
+        .addListField("params", params().list())
+        .addField("body", body())
+        .addField("annotation", annotation())
+        .addField("location", location())
+        .toString();
   }
 }

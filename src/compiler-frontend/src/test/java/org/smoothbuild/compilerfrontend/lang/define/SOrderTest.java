@@ -15,8 +15,16 @@ public class SOrderTest extends FrontendCompilerTestContext {
             SOrder(
               evaluationType = [Int]
               elements = [
-                SInt(Int, 44, {t-project}/module.smooth:4)
-                SInt(Int, 55, {t-project}/module.smooth:5)
+                SInt(
+                  type = Int
+                  bigInteger = 44
+                  location = {t-project}/module.smooth:4
+                )
+                SInt(
+                  type = Int
+                  bigInteger = 55
+                  location = {t-project}/module.smooth:5
+                )
               ]
               location = {t-project}/module.smooth:3
             )""");

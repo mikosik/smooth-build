@@ -1,8 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocationImpl;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
@@ -43,7 +42,11 @@ public final class SAnnotatedValue extends HasSchemaAndIdAndLocationImpl impleme
 
   @Override
   public String toString() {
-    var fieldsString = annotation().toString() + "\n" + fieldsToString();
-    return "SAnnotatedValue(\n" + indent(fieldsString) + "\n)";
+    return new ToStringBuilder("SAnnotatedValue")
+        .addField("annotation", annotation)
+        .addField("schema", schema())
+        .addField("name", id())
+        .addField("location", location())
+        .toString();
   }
 }

@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import com.google.common.base.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
 
@@ -37,8 +35,10 @@ public final class PAnnotation extends HasNameTextAndLocationImpl {
 
   @Override
   public String toString() {
-    var fields = list("name = " + nameText(), "value = " + value, "location = " + location())
-        .toString("\n");
-    return "PAnnotation(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PAnnotation")
+        .addField("name", nameText())
+        .addField("value", value)
+        .addField("location", location())
+        .toString();
   }
 }

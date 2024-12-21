@@ -1,9 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 
@@ -65,8 +63,10 @@ public final class PCall extends PExpr {
 
   @Override
   public String toString() {
-    var fields =
-        list("callee = " + callee, "args = " + args, "location = " + location()).toString("\n");
-    return "PCall(\n" + indent(fields) + "\n)";
+    return new ToStringBuilder("PCall")
+        .addField("callee", callee)
+        .addField("args", args)
+        .addField("location", location())
+        .toString();
   }
 }

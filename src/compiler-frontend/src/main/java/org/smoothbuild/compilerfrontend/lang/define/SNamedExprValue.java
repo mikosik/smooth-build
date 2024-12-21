@@ -1,8 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.base.Strings.indent;
-
 import java.util.Objects;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocationImpl;
 import org.smoothbuild.compilerfrontend.lang.base.Id;
@@ -43,7 +42,11 @@ public final class SNamedExprValue extends HasSchemaAndIdAndLocationImpl impleme
 
   @Override
   public String toString() {
-    var fieldsString = fieldsToString() + "\nbody = " + body;
-    return "SNamedExprValue(\n" + indent(fieldsString) + "\n)";
+    return new ToStringBuilder("SNamedExprValue")
+        .addField("schema", schema())
+        .addField("name", id())
+        .addField("location", location())
+        .addField("body", body)
+        .toString();
   }
 }
