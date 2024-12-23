@@ -1,4 +1,4 @@
-package org.smoothbuild.common.bindings;
+package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Maybe;

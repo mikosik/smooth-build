@@ -1,11 +1,11 @@
 package org.smoothbuild.compilerfrontend.compile;
 
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.schedule.Output;

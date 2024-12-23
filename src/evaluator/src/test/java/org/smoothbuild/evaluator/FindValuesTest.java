@@ -1,11 +1,11 @@
 package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;

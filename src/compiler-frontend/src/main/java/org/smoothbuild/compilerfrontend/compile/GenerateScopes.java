@@ -1,13 +1,12 @@
 package org.smoothbuild.compilerfrontend.compile;
 
-import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.smoothbuild.common.bindings.MutableBindings;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
@@ -25,6 +24,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
 
 /**
  * For each syntactic construct that implements WithScope
