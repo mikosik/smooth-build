@@ -128,13 +128,12 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
 
     private <T extends HasIdAndLocation> void addBinding(
         MutableBindings<T> bindings, T binding, boolean reportErrors) {
-      if (binding instanceof PNamedEvaluable) {
-        var full = binding.id().toString();
-        addBinding(bindings, binding, full, reportErrors);
-      } else {
-        var last = binding.id().parts().getLast().toString();
-        addBinding(bindings, binding, last, reportErrors);
-      }
+      // For now, we don't have anything (function or value) that can be enclosed inside other
+      // function or value and have fully qualified name that contains enclosing name.
+      // Everything is flat in the global scope. Parameter default values have workaround of
+      // gluing function name and parameter name using '~' into a name.
+      var last = binding.id().parts().getLast().toString();
+      addBinding(bindings, binding, last, reportErrors);
     }
 
     // No need to report error when other constructor with same name is already defined.

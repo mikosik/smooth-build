@@ -409,18 +409,6 @@ public class EvaluateTest extends EvaluatorTestContext {
           }
         }
       }
-
-      @Test
-      void can_be_evaluated_by_referencing_it() throws Exception {
-        var code =
-            """
-            Int myFunc(Int param = 7) = param;
-            result = myFunc:param;
-            """;
-        createUserModule(code);
-        evaluate("result");
-        assertThat(artifact()).isEqualTo(bInt(7));
-      }
     }
   }
 }

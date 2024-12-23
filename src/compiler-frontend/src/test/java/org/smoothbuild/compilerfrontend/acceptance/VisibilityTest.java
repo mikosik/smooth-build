@@ -1,6 +1,5 @@
 package org.smoothbuild.compilerfrontend.acceptance;
 
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -151,18 +150,6 @@ public class VisibilityTest extends FrontendCompileTester {
         void is_not_visible_in_default_value_of_other_param() {
           var code = "func(String param, String withDefault = param) = param;";
           module(code).loadsWithError(1, "`param` is undefined.");
-        }
-
-        @Test
-        void can_have_default_value_that_is_visible_outside_func() {
-          var code =
-              """
-              myFunc(Int param = 7) = 8;
-              result = myFunc:param;
-              """;
-          var ref =
-              sInstantiate(sReference(2, sSchema(sIntType()), fqn("myFunc:param")), location(2));
-          module(code).loadsWithSuccess().containsEvaluable(sValue(2, "result", ref));
         }
       }
 
@@ -634,8 +621,8 @@ public class VisibilityTest extends FrontendCompileTester {
         var error =
             """
             Reference graph contains cycle:
-            {t-project}/module.smooth:1: myFunc ~> myFunc:param
-            {t-project}/module.smooth:1: myFunc:param ~> myValue
+            {t-project}/module.smooth:1: myFunc ~> myFunc~param
+            {t-project}/module.smooth:1: myFunc~param ~> myValue
             {t-project}/module.smooth:2: myValue ~> myFunc""";
         module(code).loadsWithError(error);
       }
