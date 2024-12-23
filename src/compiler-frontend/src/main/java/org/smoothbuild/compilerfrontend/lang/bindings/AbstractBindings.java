@@ -1,6 +1,6 @@
-package org.smoothbuild.common.bindings;
+package org.smoothbuild.compilerfrontend.lang.bindings;
 
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 
 import java.util.NoSuchElementException;
 

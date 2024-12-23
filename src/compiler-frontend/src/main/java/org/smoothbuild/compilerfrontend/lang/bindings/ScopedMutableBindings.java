@@ -1,4 +1,4 @@
-package org.smoothbuild.common.bindings;
+package org.smoothbuild.compilerfrontend.lang.bindings;
 
 public final class ScopedMutableBindings<E> extends ScopedBindings<E>
     implements MutableBindings<E> {

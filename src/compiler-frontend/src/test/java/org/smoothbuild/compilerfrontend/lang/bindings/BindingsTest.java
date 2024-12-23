@@ -1,13 +1,13 @@
-package org.smoothbuild.common.bindings;
+package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
 
 import com.google.common.testing.EqualsTester;
 import java.util.NoSuchElementException;
@@ -305,5 +305,5 @@ public class BindingsTest {
     return new Element(name, value);
   }
 
-  protected static record Element(String name, Integer value) {}
+  public static record Element(String name, Integer value) {}
 }

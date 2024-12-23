@@ -6,10 +6,10 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerbackend.BackendCompilerConstants.COMPILER_BACK_LABEL;
 
 import jakarta.inject.Inject;
-import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 

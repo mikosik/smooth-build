@@ -1,4 +1,4 @@
-package org.smoothbuild.common.bindings;
+package org.smoothbuild.compilerfrontend.lang.bindings;
 
 public sealed interface MutableBindings<E> extends Bindings<E>
     permits FlatMutableBindings, ScopedMutableBindings {

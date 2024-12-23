@@ -1,9 +1,9 @@
 package org.smoothbuild.compilerfrontend.compile;
 
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Locations;

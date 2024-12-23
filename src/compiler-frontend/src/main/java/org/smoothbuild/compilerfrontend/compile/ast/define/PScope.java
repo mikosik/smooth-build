@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 
-import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 
 public record PScope(
     ImmutableBindings<PReferenceable> referencables, ImmutableBindings<PStruct> types) {

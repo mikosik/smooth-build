@@ -11,7 +11,6 @@ import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
-import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
@@ -24,6 +23,7 @@ import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compilerbackend.BackendCompile;
 import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
+import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;

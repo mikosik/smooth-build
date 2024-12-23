@@ -1,4 +1,4 @@
-package org.smoothbuild.common.bindings;
+package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import java.util.HashMap;
 
