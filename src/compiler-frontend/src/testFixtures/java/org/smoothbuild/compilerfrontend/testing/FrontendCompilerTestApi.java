@@ -683,8 +683,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
-    var pLambda = new PLambda("lambda_1", params, body, location());
-    pLambda.setId(fqn("lambda_1"));
+    var pLambda = new PLambda("lambda~1", params, body, location());
+    pLambda.setId(fqn("lambda~1"));
     return pInstantiate(pLambda);
   }
 
