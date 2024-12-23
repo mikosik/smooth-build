@@ -143,11 +143,11 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
     // with same name is declared which will be reported when detecting duplicate struct name.
 
     private <T extends HasIdAndLocation> void addBinding(
-        MutableBindings<T> bindings, T binding, String shortName, boolean reportErrors) {
-      var previousBinding = bindings.add(shortName, binding);
+        MutableBindings<T> bindings, T binding, String name, boolean reportErrors) {
+      var previousBinding = bindings.add(name, binding);
       if (previousBinding != null && reportErrors) {
         log.log(alreadyDefinedError(
-            binding.location(), previousBinding.location().description(), shortName));
+            binding.location(), previousBinding.location().description(), name));
       }
     }
 
