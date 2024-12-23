@@ -5,9 +5,13 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
 import java.util.NoSuchElementException;
@@ -98,8 +102,8 @@ public class BindingsTest {
 
   @Test
   void equals_and_hashcode() {
-    var elem1 = elements("1", 1);
-    var elem2 = elements("2", 2);
+    var elem1 = element("1", 1);
+    var elem2 = element("2", 2);
 
     var equalsTester = new EqualsTester();
     // flat bindings with no elements
@@ -136,21 +140,41 @@ public class BindingsTest {
 
   public abstract static class AbstractBindingsTestSuite {
     @Test
-    void getting_element() {
-      var bindings = newBindings(elements("name", 7));
-      assertThat(bindings.get("name")).isEqualTo(elements("name", 7));
+    void find_element() {
+      var bindings = newBindings(element("name", 7));
+      assertThat(bindings.find(referenceableName("name"))).isEqualTo(ok(element("name", 7)));
     }
 
     @Test
-    void getting_missing_element_throws_exception() {
+    void find_missing_element_returns_error() {
+      var bindings = newBindings();
+      assertThat(bindings.find(referenceableName("name")))
+          .isEqualTo(error("Cannot resolve `name`."));
+    }
+
+    @Test
+    void find_missing_nested_element_returns_error() {
+      var bindings = newBindings(element("name", 7));
+      assertThat(bindings.find(fqn("name:nested")))
+          .isEqualTo(error("Cannot resolve `name:nested`."));
+    }
+
+    @Test
+    void getting_element_by_string_name() {
+      var bindings = newBindings(element("name", 7));
+      assertThat(bindings.get("name")).isEqualTo(element("name", 7));
+    }
+
+    @Test
+    void getting_by_string_name_when_it_is_missing_throws_exception() {
       var bindings = newBindings();
       assertCall(() -> bindings.get("name")).throwsException(new NoSuchElementException("name"));
     }
 
     @Test
     void getMaybe_element() {
-      var bindings = newBindings(elements("name", 7));
-      assertThat(bindings.getMaybe("name")).isEqualTo(some(elements("name", 7)));
+      var bindings = newBindings(element("name", 7));
+      assertThat(bindings.getMaybe("name")).isEqualTo(some(element("name", 7)));
     }
 
     @Test
@@ -161,7 +185,7 @@ public class BindingsTest {
 
     @Test
     void contains_present_element() {
-      var bindings = newBindings(elements("name", 7));
+      var bindings = newBindings(element("name", 7));
       assertThat(bindings.contains("name")).isTrue();
     }
 
@@ -173,15 +197,15 @@ public class BindingsTest {
 
     @Test
     void map() {
-      var bindings = newBindings(elements("name", 7), elements("other", 5));
+      var bindings = newBindings(element("name", 7), element("other", 5));
       var mapped = bindings.map(element -> element.value);
       assertThat(mapped.get("name")).isEqualTo(7);
     }
 
     @Test
     void asMap() {
-      var first = elements("name", 7);
-      var second = elements("other", 5);
+      var first = element("name", 7);
+      var second = element("other", 5);
       var bindings = newBindings(first, second);
       assertThat(bindings.toMap()).isEqualTo(Map.map("name", first, "other", second));
     }
@@ -242,31 +266,31 @@ public class BindingsTest {
     class _to_map {
       @Test
       void contains_elements_from_outer_and_inner_scope() {
-        var outer = immutableBindings(mapOfElems(elements("1", 1)));
-        var bindings = newBindings(outer, elements("2", 2));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(elements("1", 1), elements("2", 2)));
+        var outer = immutableBindings(mapOfElems(element("1", 1)));
+        var bindings = newBindings(outer, element("2", 2));
+        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("1", 1), element("2", 2)));
       }
 
       @Test
       void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
-        var outer = immutableBindings(mapOfElems(elements("1", 1)));
-        var bindings = newBindings(outer, elements("1", 11));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(elements("1", 11)));
+        var outer = immutableBindings(mapOfElems(element("1", 1)));
+        var bindings = newBindings(outer, element("1", 11));
+        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("1", 11)));
       }
     }
 
     @Test
     void element_in_inner_bounds_shadows_element_from_outer_bounds() {
-      var outer = immutableBindings(mapOfElems(elements("value-a", 7)));
-      var shadowing = elements("value-a", 9);
+      var outer = immutableBindings(mapOfElems(element("value-a", 7)));
+      var shadowing = element("value-a", 9);
       var inner = newBindings(outer, shadowing);
       assertThat(inner.get(shadowing.name())).isEqualTo(shadowing);
     }
 
     @Test
     void to_string() {
-      var outer = immutableBindings(mapOfElems(elements("value-a", 7), elements("value-b", 8)));
-      var inner = newBindings(outer, elements("value-c", 9));
+      var outer = immutableBindings(mapOfElems(element("value-a", 7), element("value-b", 8)));
+      var inner = newBindings(outer, element("value-c", 9));
       assertThat(inner.toString())
           .isEqualTo(
               """
@@ -301,7 +325,7 @@ public class BindingsTest {
     return list(nameables).toMap(Element::name, e -> e);
   }
 
-  public static Element elements(String name, int value) {
+  public static Element element(String name, int value) {
     return new Element(name, value);
   }
 
