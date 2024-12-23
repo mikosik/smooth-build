@@ -4,7 +4,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import static org.smoothbuild.compilerfrontend.testing.TestedTSF.TESTED_TYPES;
 
 import java.util.stream.Stream;

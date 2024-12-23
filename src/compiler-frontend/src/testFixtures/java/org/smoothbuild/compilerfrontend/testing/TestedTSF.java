@@ -2,8 +2,8 @@ package org.smoothbuild.compilerfrontend.testing;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;

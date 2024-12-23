@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;

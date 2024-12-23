@@ -1,17 +1,18 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 
 public class NListTest {
   private static final HasName n0 = hasName("zero");

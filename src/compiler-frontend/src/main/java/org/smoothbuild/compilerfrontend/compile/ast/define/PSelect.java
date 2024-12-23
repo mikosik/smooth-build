@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public final class PSelect extends PExpr {
   private final PExpr selectable;

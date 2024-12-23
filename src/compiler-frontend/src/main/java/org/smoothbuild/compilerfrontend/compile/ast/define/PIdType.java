@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public final class PIdType extends PExplicitType implements HasIdAndLocation {
   private Id id;

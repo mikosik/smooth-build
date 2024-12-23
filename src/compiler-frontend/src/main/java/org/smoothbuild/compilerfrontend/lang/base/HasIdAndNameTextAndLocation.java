@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public class HasIdAndNameTextAndLocation extends HasNameTextAndLocationImpl
     implements HasIdAndLocation {

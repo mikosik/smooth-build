@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import static org.smoothbuild.common.collect.Map.mapOfAll;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -9,8 +9,8 @@ import java.util.Queue;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function2;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;

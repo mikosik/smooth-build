@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import org.smoothbuild.compilerfrontend.lang.base.Fqn;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 /**
  * This class is immutable.

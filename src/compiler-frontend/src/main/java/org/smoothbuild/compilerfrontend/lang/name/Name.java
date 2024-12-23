@@ -1,11 +1,11 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isLowerCase;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isUpperCase;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isValidNameCharacter;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isLowerCase;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isUpperCase;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isValidNameCharacter;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;

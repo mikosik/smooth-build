@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.tupleTypeName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.tupleTypeName;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;

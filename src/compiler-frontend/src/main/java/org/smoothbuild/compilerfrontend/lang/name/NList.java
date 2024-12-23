@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.collect.List.listOfAll;
@@ -20,6 +20,7 @@ import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.function.Function1;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 
 /**
  * List of Named.

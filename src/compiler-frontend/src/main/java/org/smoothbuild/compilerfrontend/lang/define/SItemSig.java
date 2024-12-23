@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**

@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -31,12 +31,12 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
   @Override

@@ -9,7 +9,7 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -68,7 +68,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.NList;
+import org.smoothbuild.compilerfrontend.lang.name.NList;
 
 public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
   @Override

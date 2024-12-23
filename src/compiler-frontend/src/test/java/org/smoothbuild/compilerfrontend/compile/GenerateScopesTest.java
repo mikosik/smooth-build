@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.compile.GenerateScopes.initializeScopes;
-import static org.smoothbuild.compilerfrontend.lang.base.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

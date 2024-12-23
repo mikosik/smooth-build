@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public sealed interface PScoped permits PEvaluable, PModule, PStruct {
   public void setScope(PScope scope);
