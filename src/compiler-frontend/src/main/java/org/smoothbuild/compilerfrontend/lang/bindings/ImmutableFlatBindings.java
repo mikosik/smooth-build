@@ -8,9 +8,9 @@ import org.smoothbuild.common.collect.Maybe;
 /**
  * Immutable bindings with single scope.
  */
-public final class FlatImmutableBindings<E> extends FlatBindings<E>
+public final class ImmutableFlatBindings<E> extends FlatBindings<E>
     implements ImmutableBindings<E> {
-  FlatImmutableBindings(Map<String, E> map) {
+  ImmutableFlatBindings(Map<String, E> map) {
     super(map);
   }
 

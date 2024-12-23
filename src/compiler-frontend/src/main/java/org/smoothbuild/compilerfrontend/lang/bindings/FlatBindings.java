@@ -11,7 +11,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function1;
 
 public sealed class FlatBindings<E> extends AbstractBindings<E>
-    permits FlatImmutableBindings, FlatMutableBindings {
+    permits ImmutableFlatBindings, MutableFlatBindings {
   protected final java.util.Map<String, E> map;
 
   protected FlatBindings(java.util.Map<String, E> map) {

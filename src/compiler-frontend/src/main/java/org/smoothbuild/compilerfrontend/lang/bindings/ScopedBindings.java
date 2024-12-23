@@ -9,7 +9,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function1;
 
 public sealed class ScopedBindings<E> extends AbstractBindings<E>
-    permits ScopedImmutableBindings, ScopedMutableBindings {
+    permits ImmutableScopedBindings, MutableScopedBindings {
   private final Bindings<? extends E> outerScopeBindings;
   private final Bindings<? extends E> innerScopeBindings;
 

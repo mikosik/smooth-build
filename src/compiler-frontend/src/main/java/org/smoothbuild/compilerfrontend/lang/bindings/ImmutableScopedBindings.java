@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.bindings;
 
-public final class ScopedImmutableBindings<E> extends ScopedBindings<E>
+public final class ImmutableScopedBindings<E> extends ScopedBindings<E>
     implements ImmutableBindings<E> {
-  ScopedImmutableBindings(
+  ImmutableScopedBindings(
       ImmutableBindings<? extends E> outerScopeBindings,
       ImmutableBindings<? extends E> innerScopeBindings) {
     super(outerScopeBindings, innerScopeBindings);

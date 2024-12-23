@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.bindings;
 
 public sealed interface MutableBindings<E> extends Bindings<E>
-    permits FlatMutableBindings, ScopedMutableBindings {
+    permits MutableFlatBindings, MutableScopedBindings {
   /**
    * @return element that has been overwritten. For ScopedBindings,
    * when element is present in outer scoped, adding element with same
