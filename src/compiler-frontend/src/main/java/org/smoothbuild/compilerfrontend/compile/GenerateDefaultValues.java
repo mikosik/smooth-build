@@ -54,8 +54,9 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
-        pItem.setDefaultValueId(
-            pItem.defaultValue().map(e -> createNamedDefaultValue(e, scopeId.append(pItem.id()))));
+        pItem.setDefaultValueId(pItem
+            .defaultValue()
+            .map(e -> createNamedDefaultValue(e, scopeId.append(pItem.name()))));
       }
 
       private Id createNamedDefaultValue(PExpr expr, Id id) {
