@@ -8,7 +8,10 @@ public class CharUtils {
   }
 
   static boolean isValidNameCharacter(char c) {
-    return isLowerCase(c) || isUpperCase(c) || isDigit(c) || c == '_';
+    // We allow '~' character internally even though it is forbidden by antlr grammar.
+    // This way we can easily generate names for lambda that are unique and do not collide
+    // with user defined names. It is also used to generate names for parameter default values.
+    return isLowerCase(c) || isUpperCase(c) || isDigit(c) || c == '_' || c == '~';
   }
 
   static boolean isLowerCase(int character) {
