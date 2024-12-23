@@ -2,6 +2,8 @@ package org.smoothbuild.common.collect;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.ok;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -58,6 +60,9 @@ public abstract sealed class Maybe<E> permits Some, None {
 
   public abstract List<E> toList();
 
+  public abstract <T extends Throwable> Result<E> toResult(Function0<String, T> errorSupplier)
+      throws T;
+
   public static final class Some<E> extends Maybe<E> {
     private final E element;
 
@@ -110,6 +115,11 @@ public abstract sealed class Maybe<E> permits Some, None {
     @Override
     public boolean isNone() {
       return false;
+    }
+
+    @Override
+    public <T extends Throwable> Result<E> toResult(Function0<String, T> errorSupplier) {
+      return ok(element);
     }
 
     @Override
@@ -189,6 +199,11 @@ public abstract sealed class Maybe<E> permits Some, None {
     @Override
     public boolean isNone() {
       return true;
+    }
+
+    @Override
+    public <T extends Throwable> Result<E> toResult(Function0<String, T> errorSupplier) throws T {
+      return error(errorSupplier.apply());
     }
 
     @Override

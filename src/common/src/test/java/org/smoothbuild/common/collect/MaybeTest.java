@@ -9,6 +9,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Maybe.None;
 import org.smoothbuild.common.function.Consumer1;
+import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.function.Function2;
 
 public class MaybeTest {
@@ -149,6 +152,18 @@ public class MaybeTest {
     }
 
     @Test
+    void toResult_returns_ok_with_element() {
+      assertThat(some("a").toResult(() -> "message")).isEqualTo(ok("a"));
+    }
+
+    @Test
+    void toResult_not_calls_error_provider() {
+      Function0<String, RuntimeException> errorSupplier = mock();
+      some("a").toResult(errorSupplier);
+      verifyNoInteractions(errorSupplier);
+    }
+
+    @Test
     void toList_returns_single_element_list() {
       assertThat(some("a").toList()).isEqualTo(list("a"));
     }
@@ -250,6 +265,11 @@ public class MaybeTest {
             throw new Exception();
           }))
           .isEqualTo(none());
+    }
+
+    @Test
+    void toResult_returns_ok_with_element() {
+      assertThat(none().toResult(() -> "message")).isEqualTo(error("message"));
     }
 
     @Test
