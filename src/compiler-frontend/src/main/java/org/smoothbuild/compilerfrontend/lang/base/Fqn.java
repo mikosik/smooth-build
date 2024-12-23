@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.SEPARATOR;
 import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isDigit;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isValidFullNameCharacter;
+import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isValidFullQualifiedNameCharacter;
 
 import com.google.common.base.Splitter;
 import org.smoothbuild.common.collect.List;
@@ -35,7 +35,7 @@ public final class Fqn extends Id {
     boolean startOfPart = true;
     for (int i = 0; i < string.length(); i++) {
       var c = string.charAt(i);
-      if (!isValidFullNameCharacter(c)) {
+      if (!isValidFullQualifiedNameCharacter(c)) {
         return error("It must not contain '" + c + "' character.");
       }
       if (isDigit(c) && startOfPart) {

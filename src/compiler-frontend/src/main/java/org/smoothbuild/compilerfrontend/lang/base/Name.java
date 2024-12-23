@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isLowerCase;
 import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isUpperCase;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isValidShortNameCharacter;
+import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isValidNameCharacter;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;
@@ -84,7 +84,7 @@ public final class Name extends Id {
     }
     for (int i = 0; i < name.length(); i++) {
       var c = name.charAt(i);
-      if (!isValidShortNameCharacter(c)) {
+      if (!isValidNameCharacter(c)) {
         return "It must not contain '" + c + "' character.";
       }
     }
