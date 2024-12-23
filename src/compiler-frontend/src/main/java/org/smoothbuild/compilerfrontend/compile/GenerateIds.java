@@ -32,7 +32,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     new CreateIdVisitor(null, logger).visitModule(pModule);
-    var label = COMPILER_FRONT_LABEL.append(":verifyIds");
+    var label = COMPILER_FRONT_LABEL.append(":generateIds");
     return output(pModule, label, logger.toList());
   }
 

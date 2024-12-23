@@ -25,7 +25,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
   public Output<PModule> execute(PModule pModule) {
     var namedDefaultValues = new ArrayList<PNamedEvaluable>();
     generateDefaultValues(pModule, namedDefaultValues);
-    var label = COMPILER_FRONT_LABEL.append(":verifyIds");
+    var label = COMPILER_FRONT_LABEL.append(":generateDefaultValues");
     var newModule = new PModule(
         pModule.fileName(), pModule.structs(), pModule.evaluables().addAll(namedDefaultValues));
     return output(newModule, label, list());
