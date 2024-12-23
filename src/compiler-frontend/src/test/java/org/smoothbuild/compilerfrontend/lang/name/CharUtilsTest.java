@@ -1,8 +1,8 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isLowerCase;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isUpperCase;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isLowerCase;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isUpperCase;
 
 import org.junit.jupiter.api.Test;
 

@@ -3,10 +3,10 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemTest extends FrontendCompilerTestContext {

@@ -4,8 +4,8 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndNameTextAndLocation;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
-import org.smoothbuild.compilerfrontend.lang.base.NList;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
 public final class PStruct extends HasIdAndNameTextAndLocation implements PScoped {

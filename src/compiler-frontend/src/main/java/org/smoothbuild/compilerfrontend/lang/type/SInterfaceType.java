@@ -2,13 +2,13 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.interfaceTypeName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.interfaceTypeName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 /**
  * This class is immutable.

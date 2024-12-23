@@ -1,11 +1,11 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.SEPARATOR;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isDigit;
-import static org.smoothbuild.compilerfrontend.lang.base.CharUtils.isValidFullQualifiedNameCharacter;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.SEPARATOR;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isDigit;
+import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isValidFullQualifiedNameCharacter;
 
 import com.google.common.base.Splitter;
 import org.smoothbuild.common.collect.List;

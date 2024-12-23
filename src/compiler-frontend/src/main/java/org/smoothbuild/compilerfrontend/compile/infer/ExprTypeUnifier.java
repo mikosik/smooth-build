@@ -25,7 +25,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.NList;
+import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;

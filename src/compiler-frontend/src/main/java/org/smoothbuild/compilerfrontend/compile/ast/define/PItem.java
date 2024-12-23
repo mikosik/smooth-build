@@ -7,9 +7,9 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
-import org.smoothbuild.compilerfrontend.lang.base.NList;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.NList;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class PItem extends HasNameTextAndLocationImpl implements PReferenceable, HasName {

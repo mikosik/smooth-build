@@ -3,9 +3,9 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.parseReference;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseReferenceableName;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseStructName;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.parseReferenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.parseStructName;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
@@ -25,7 +25,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public class GenerateIds implements Task1<PModule, PModule> {
   @Override

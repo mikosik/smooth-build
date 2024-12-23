@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.base;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;

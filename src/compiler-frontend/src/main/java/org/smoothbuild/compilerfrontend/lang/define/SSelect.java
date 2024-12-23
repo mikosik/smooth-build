@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 

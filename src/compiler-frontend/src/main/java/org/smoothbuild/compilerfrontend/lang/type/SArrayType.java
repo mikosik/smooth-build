@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.arrayTypeName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.arrayTypeName;
 
 /**
  * This class is immutable.

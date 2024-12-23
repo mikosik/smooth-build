@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndLocation;
+
 /**
  * Evaluable (function or value).
  */

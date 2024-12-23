@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.schedule.Output;
@@ -19,7 +19,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public class GenerateDefaultValues implements Task1<PModule, PModule> {
   @Override

@@ -7,7 +7,7 @@ import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 /**
  * Sort module Evaluables and Structs based on dependencies between them.

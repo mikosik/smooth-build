@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.base.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public final class PModule implements PScoped {
   private final String fileName;

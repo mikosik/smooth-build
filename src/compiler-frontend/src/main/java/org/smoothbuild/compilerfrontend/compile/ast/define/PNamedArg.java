@@ -6,7 +6,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
-import org.smoothbuild.compilerfrontend.lang.base.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public final class PNamedArg extends PExpr implements HasNameText, HasName {
   private final String nameText;

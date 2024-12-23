@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.base.Suppliers.memoize;
 

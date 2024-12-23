@@ -1,9 +1,9 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.arrayTypeName;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.funcTypeName;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.arrayTypeName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.funcTypeName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

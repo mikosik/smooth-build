@@ -4,7 +4,7 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
-import static org.smoothbuild.compilerfrontend.lang.base.TokenNames.isTypeVarName;
+import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Logger;

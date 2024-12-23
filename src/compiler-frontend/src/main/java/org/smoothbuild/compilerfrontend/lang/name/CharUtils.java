@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 public class CharUtils {
   static final char SEPARATOR = ':';

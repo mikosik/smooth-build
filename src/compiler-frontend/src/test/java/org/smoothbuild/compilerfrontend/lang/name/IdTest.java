@@ -1,16 +1,16 @@
-package org.smoothbuild.compilerfrontend.lang.base;
+package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
-import static org.smoothbuild.compilerfrontend.lang.base.Fqn.parseReference;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseReferenceableName;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.parseStructName;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.referenceableName;
-import static org.smoothbuild.compilerfrontend.lang.base.Name.structName;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.parseReferenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.parseStructName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.structName;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
