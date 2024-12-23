@@ -5,6 +5,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
+import static org.smoothbuild.compilerfrontend.lang.base.Fqn.fqn;
 
 import java.util.ArrayList;
 import org.smoothbuild.common.schedule.Output;
@@ -54,9 +55,8 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
-        pItem.setDefaultValueId(pItem
-            .defaultValue()
-            .map(e -> createNamedDefaultValue(e, scopeId.append(pItem.name()))));
+        var id = fqn(scopeId.toString() + "~" + pItem.name().toString());
+        pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, id)));
       }
 
       private Id createNamedDefaultValue(PExpr expr, Id id) {
