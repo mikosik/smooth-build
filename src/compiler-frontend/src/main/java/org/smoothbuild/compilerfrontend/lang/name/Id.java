@@ -7,6 +7,9 @@ import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 
+/**
+ * Identifier.
+ */
 public abstract class Id {
   private final String string;
   private final Supplier<List<Name>> parts = memoize(this::splitToParts);
