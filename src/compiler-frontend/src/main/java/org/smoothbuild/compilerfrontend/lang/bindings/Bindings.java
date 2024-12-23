@@ -5,31 +5,31 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function1;
 
 public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings, MutableBindings {
-  public static <E> FlatImmutableBindings<E> immutableBindings() {
-    return new FlatImmutableBindings<>(Map.map());
+  public static <E> ImmutableFlatBindings<E> immutableBindings() {
+    return new ImmutableFlatBindings<>(Map.map());
   }
 
-  public static <E> FlatImmutableBindings<E> immutableBindings(Map<String, E> innerScopeMap) {
-    return new FlatImmutableBindings<>(innerScopeMap);
+  public static <E> ImmutableFlatBindings<E> immutableBindings(Map<String, E> innerScopeMap) {
+    return new ImmutableFlatBindings<>(innerScopeMap);
   }
 
-  public static <E> ScopedImmutableBindings<E> immutableBindings(
+  public static <E> ImmutableScopedBindings<E> immutableBindings(
       ImmutableBindings<? extends E> outerScopeBindings, Map<String, ? extends E> innerScopeMap) {
     return immutableBindings(outerScopeBindings, immutableBindings(innerScopeMap));
   }
 
-  public static <E> ScopedImmutableBindings<E> immutableBindings(
+  public static <E> ImmutableScopedBindings<E> immutableBindings(
       ImmutableBindings<? extends E> outerScopeBindings,
       ImmutableBindings<? extends E> innerScopeBindings) {
-    return new ScopedImmutableBindings<>(outerScopeBindings, innerScopeBindings);
+    return new ImmutableScopedBindings<>(outerScopeBindings, innerScopeBindings);
   }
 
-  public static <E> FlatMutableBindings<E> mutableBindings() {
-    return new FlatMutableBindings<>();
+  public static <E> MutableFlatBindings<E> mutableBindings() {
+    return new MutableFlatBindings<>();
   }
 
-  public static <E> ScopedMutableBindings<E> mutableBindings(Bindings<E> outerScopeBindings) {
-    return new ScopedMutableBindings<>(outerScopeBindings);
+  public static <E> MutableScopedBindings<E> mutableBindings(Bindings<E> outerScopeBindings) {
+    return new MutableScopedBindings<>(outerScopeBindings);
   }
 
   public boolean contains(String name);
@@ -42,5 +42,5 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
 
   public Map<String, E> toMap();
 
-  public FlatImmutableBindings<E> toFlatImmutable();
+  public ImmutableFlatBindings<E> toFlatImmutable();
 }

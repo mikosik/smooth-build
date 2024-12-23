@@ -5,8 +5,8 @@ import java.util.HashMap;
 /**
  * Immutable bindings with single scope.
  */
-public final class FlatMutableBindings<E> extends FlatBindings<E> implements MutableBindings<E> {
-  FlatMutableBindings() {
+public final class MutableFlatBindings<E> extends FlatBindings<E> implements MutableBindings<E> {
+  MutableFlatBindings() {
     super(new HashMap<>());
   }
 

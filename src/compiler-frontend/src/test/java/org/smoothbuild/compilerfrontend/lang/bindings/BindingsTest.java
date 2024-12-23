@@ -17,7 +17,7 @@ import org.smoothbuild.common.collect.Map;
 
 public class BindingsTest {
   @Nested
-  class _flat_immutable_bindings {
+  class _immutable_flat_bindings {
     @Nested
     class _bindings_tests extends AbstractBindingsTestSuite {
       @Override
@@ -28,7 +28,7 @@ public class BindingsTest {
   }
 
   @Nested
-  class _flat_mutable_bindings {
+  class _mutable_flat_bindings {
     @Nested
     class _bindings_tests extends AbstractBindingsTestSuite {
       @Override
@@ -47,7 +47,7 @@ public class BindingsTest {
   }
 
   @Nested
-  class _scoped_immutable_bindings {
+  class _immutable_scoped_bindings {
     @Nested
     class _scoped_bindings_tests extends AbstractScopedBindingsTestSuite {
       @Override
@@ -68,7 +68,7 @@ public class BindingsTest {
   }
 
   @Nested
-  class _scoped_mutable_bindings {
+  class _mutable_scoped_bindings {
     @Nested
     class _scoped_bindings_tests extends AbstractScopedBindingsTestSuite {
       @Override
@@ -281,7 +281,7 @@ public class BindingsTest {
   }
 
   private static Bindings<Element> mutableBindingsWith(Element... elements) {
-    FlatMutableBindings<Element> bindings = mutableBindings();
+    MutableFlatBindings<Element> bindings = mutableBindings();
     for (Element element : elements) {
       bindings.add(element.name(), element);
     }
