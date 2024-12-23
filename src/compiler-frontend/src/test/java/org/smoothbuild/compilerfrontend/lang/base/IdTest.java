@@ -74,7 +74,13 @@ public class IdTest {
     }
 
     static List<Arguments> legal_referenceable_names() {
-      return list(arguments("name"), arguments("name_"), arguments("a_name"), arguments("name123"));
+      return list(
+          arguments("name"),
+          arguments("name_"),
+          arguments("a_name"),
+          arguments("name123"),
+          arguments("name~"),
+          arguments("name~name"));
     }
 
     static List<Arguments> illegal_referenceable_names() {
@@ -89,6 +95,8 @@ public class IdTest {
           arguments("123", "It must start with lowercase letter."),
           arguments("3abc", "It must start with lowercase letter."),
           arguments("Abc", "It must start with lowercase letter."),
+          arguments("~", "It must start with lowercase letter."),
+          arguments("~name", "It must start with lowercase letter."),
           arguments("a:", "It must not contain ':' character."),
           arguments(":a", "It must not contain ':' character."),
           arguments(":", "It must not contain ':' character."),
@@ -146,7 +154,13 @@ public class IdTest {
     }
 
     static List<Arguments> legal_struct_names() {
-      return list(arguments("Name"), arguments("Name_"), arguments("A_name"), arguments("Name123"));
+      return list(
+          arguments("Name"),
+          arguments("Name_"),
+          arguments("A_name"),
+          arguments("Name123"),
+          arguments("Name~"),
+          arguments("Name~1"));
     }
 
     static List<Arguments> illegal_struct_names() {
@@ -166,6 +180,8 @@ public class IdTest {
           arguments("3", "It must start with uppercase letter."),
           arguments("123", "It must start with uppercase letter."),
           arguments("3abc", "It must start with uppercase letter."),
+          arguments("~abc", "It must start with uppercase letter."),
+          arguments("~", "It must start with uppercase letter."),
           arguments("abc", "It must start with uppercase letter."));
     }
   }
@@ -239,7 +255,11 @@ public class IdTest {
           arguments("Struct:name"),
           arguments("name:Struct"),
           arguments("_abc"),
-          arguments("Abc"));
+          arguments("Abc"),
+          arguments("~"),
+          arguments("~1"),
+          arguments("name~"),
+          arguments("name~:~"));
     }
 
     static List<Arguments> illegal_references() {
