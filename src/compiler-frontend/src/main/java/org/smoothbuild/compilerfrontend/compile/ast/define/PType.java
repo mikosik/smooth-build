@@ -2,17 +2,18 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.log.location.HasLocationImpl;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 
-public abstract sealed class PType extends HasLocationImpl implements HasNameText
+public abstract sealed class PType implements HasNameText, HasLocation
     permits PExplicitType, PImplicitType {
   private final String nameText;
+  private final Location location;
 
   protected PType(String nameText, Location location) {
-    super(location);
     this.nameText = nameText;
+    this.location = location;
   }
 
   @Override
@@ -40,5 +41,10 @@ public abstract sealed class PType extends HasLocationImpl implements HasNameTex
         .addField("nameText", nameText())
         .addField("location", location())
         .toString();
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 }

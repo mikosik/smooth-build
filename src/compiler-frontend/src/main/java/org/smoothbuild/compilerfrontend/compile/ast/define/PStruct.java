@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.log.location.HasLocationImpl;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
@@ -11,18 +11,18 @@ import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct extends HasLocationImpl
-    implements PScoped, HasIdAndLocation, HasNameText {
+public final class PStruct implements PScoped, HasIdAndLocation, HasNameText, HasLocation {
   private final String nameText;
   private final NList<PItem> fields;
+  private final Location location;
   private Id id;
   private PScope scope;
   private SStructType sStructType;
 
   public PStruct(String nameText, NList<PItem> fields, Location location) {
-    super(location);
     this.nameText = nameText;
     this.fields = fields;
+    this.location = location;
   }
 
   @Override
@@ -90,5 +90,10 @@ public final class PStruct extends HasLocationImpl
         .addField("fields", fields)
         .addField("location", location())
         .toString();
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 }
