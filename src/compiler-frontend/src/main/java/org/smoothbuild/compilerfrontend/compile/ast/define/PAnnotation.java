@@ -1,19 +1,32 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import com.google.common.base.Objects;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocationImpl;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 
 /**
  * Annotation.
  */
-public final class PAnnotation extends HasNameTextAndLocationImpl {
+public final class PAnnotation extends HasLocationImpl implements HasNameText {
+  private final String nameText;
   private final PString value;
 
   public PAnnotation(String nameText, PString value, Location location) {
-    super(nameText, location);
+    super(location);
+    this.nameText = nameText;
     this.value = value;
+  }
+
+  @Override
+  public String nameText() {
+    return nameText;
+  }
+
+  public String q() {
+    return Strings.q(nameText);
   }
 
   public PString value() {

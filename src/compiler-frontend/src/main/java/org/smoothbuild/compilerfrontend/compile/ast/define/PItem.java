@@ -1,32 +1,45 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import java.util.Objects;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.location.HasLocationImpl;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem extends HasNameTextAndLocationImpl implements PReferenceable, HasName {
+public final class PItem extends HasLocationImpl implements PReferenceable, HasName, HasNameText {
   private final PType type;
+  private final String nameText;
   private Name name;
   private final Maybe<PExpr> defaultValue;
   private Maybe<Id> defaultValueId;
   private SType sType;
 
-  public PItem(PType type, String name, Maybe<PExpr> defaultValue, Location location) {
-    super(name, location);
+  public PItem(PType type, String nameText, Maybe<PExpr> defaultValue, Location location) {
+    super(location);
     this.type = type;
+    this.nameText = nameText;
     this.defaultValue = defaultValue;
   }
 
   public PType type() {
     return type;
+  }
+
+  @Override
+  public String nameText() {
+    return nameText;
+  }
+
+  public String q() {
+    return Strings.q(nameText);
   }
 
   public void setName(Name name) {
