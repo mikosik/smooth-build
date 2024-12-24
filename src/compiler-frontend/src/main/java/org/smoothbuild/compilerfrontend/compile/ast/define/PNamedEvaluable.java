@@ -2,16 +2,19 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasIdAndNameTextAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 /**
  * Evaluable that has fully qualified name.
  */
-public abstract sealed class PNamedEvaluable extends HasIdAndNameTextAndLocation
-    implements PReferenceable, PEvaluable permits PNamedFunc, PNamedValue {
+public abstract sealed class PNamedEvaluable extends HasNameTextAndLocationImpl
+    implements PReferenceable, PEvaluable, HasIdAndLocation permits PNamedFunc, PNamedValue {
   private final Maybe<PExpr> body;
   private final Maybe<PAnnotation> annotation;
   private PScope scope;
+  private Id id;
 
   protected PNamedEvaluable(
       String nameText, Maybe<PExpr> body, Maybe<PAnnotation> annotation, Location location) {
@@ -44,5 +47,14 @@ public abstract sealed class PNamedEvaluable extends HasIdAndNameTextAndLocation
   @Override
   public String q() {
     return super.q();
+  }
+
+  public void setId(Id id) {
+    this.id = id;
+  }
+
+  @Override
+  public Id id() {
+    return id;
   }
 }
