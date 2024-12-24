@@ -72,12 +72,17 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
-        var name = pReference.id();
-        var optional = referenceables.getMaybe(name.toString());
+        var id = pReference.id();
+        var optional = referenceables.getMaybe(id.toString());
         if (optional.isSome()) {
           return inferPositionedArgs(pCall, optional.get());
         } else {
-          return inferPositionedArgs(pCall, imported.evaluables().get(name.toString()));
+          var sNamedEvaluable = imported.evaluables().find(id);
+          if (sNamedEvaluable.isRight()) {
+            return inferPositionedArgs(pCall, sNamedEvaluable.right());
+          } else {
+            throw new RuntimeException("Could not find " + id.q() + ".");
+          }
         }
       } else {
         return inferPositionedArgs(pCall, logger);

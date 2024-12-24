@@ -54,8 +54,6 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
     return "Cannot resolve " + q(parts.subList(0, toIndex).toString(":")) + ".";
   }
 
-  public E get(String name);
-
   public Maybe<E> getMaybe(String name);
 
   public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T;
