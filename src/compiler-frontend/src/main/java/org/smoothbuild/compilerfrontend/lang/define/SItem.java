@@ -4,27 +4,49 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
-import org.smoothbuild.compilerfrontend.lang.base.HasTypeAndIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 /**
  * Item is a func param or a struct field.
  * This class is immutable.
  */
-public final class SItem extends HasTypeAndIdAndLocation implements SReferenceable, HasName {
+public final class SItem implements SReferenceable, HasName, HasIdAndLocation, HasLocation {
   private final Maybe<Id> defaultValueId;
+  private final SType type;
+  private final Name name;
+  private final Location location;
 
   public SItem(SType type, Name name, Maybe<Id> defaultValueId, Location location) {
-    super(type, name, location);
+    this.type = type;
+    this.name = name;
     this.defaultValueId = defaultValueId;
+    this.location = location;
+  }
+
+  public SType type() {
+    return type;
+  }
+
+  @Override
+  public SSchema schema() {
+    return new SSchema(SVarSet.varSetS(), type);
   }
 
   public Maybe<Id> defaultValueId() {
     return defaultValueId;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   @Override
@@ -34,7 +56,7 @@ public final class SItem extends HasTypeAndIdAndLocation implements SReferenceab
 
   @Override
   public Name name() {
-    return (Name) super.id();
+    return name;
   }
 
   public static List<SType> toTypes(List<? extends SItem> items) {
