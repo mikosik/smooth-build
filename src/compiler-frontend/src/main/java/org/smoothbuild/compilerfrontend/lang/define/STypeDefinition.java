@@ -1,17 +1,38 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasTypeAndIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Type definition.
  */
-public class STypeDefinition extends HasTypeAndIdAndLocation {
-  public STypeDefinition(SType sType, Id id, Location location) {
-    super(sType, id, location);
+public class STypeDefinition implements HasIdAndLocation, HasLocation {
+  private final SType type;
+  private final Id id;
+  private final Location location;
+
+  public STypeDefinition(SType type, Id id, Location location) {
+    this.type = type;
+    this.id = id;
+    this.location = location;
+  }
+
+  public SType type() {
+    return type;
+  }
+
+  @Override
+  public Id id() {
+    return id;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   @Override
