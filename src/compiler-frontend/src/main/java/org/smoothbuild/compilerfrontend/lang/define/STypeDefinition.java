@@ -10,7 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Type definition.
  */
 public class STypeDefinition extends HasTypeAndIdAndLocation {
-  public STypeDefinition(Id id, SType sType, Location location) {
+  public STypeDefinition(SType sType, Id id, Location location) {
     super(sType, id, location);
   }
 
