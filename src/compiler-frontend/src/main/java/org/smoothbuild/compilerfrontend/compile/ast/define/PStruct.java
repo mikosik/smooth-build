@@ -3,12 +3,14 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasIdAndNameTextAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct extends HasIdAndNameTextAndLocation implements PScoped {
+public final class PStruct extends HasNameTextAndLocationImpl implements PScoped, HasIdAndLocation {
+  private Id id;
   private final NList<PItem> fields;
   private PScope scope;
   private SStructType sStructType;
@@ -18,9 +20,8 @@ public final class PStruct extends HasIdAndNameTextAndLocation implements PScope
     this.fields = fields;
   }
 
-  @Override
   public void setId(Id id) {
-    super.setId(id);
+    this.id = id;
   }
 
   public NList<PItem> fields() {
@@ -68,5 +69,10 @@ public final class PStruct extends HasIdAndNameTextAndLocation implements PScope
         .addField("fields", fields)
         .addField("location", location())
         .toString();
+  }
+
+  @Override
+  public Id id() {
+    return id;
   }
 }
