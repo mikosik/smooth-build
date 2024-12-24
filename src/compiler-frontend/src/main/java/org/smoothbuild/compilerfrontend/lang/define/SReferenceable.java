@@ -1,11 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocation;
 
 /**
  * Referencable.
  */
-public sealed interface SReferenceable extends HasIdAndLocation permits SItem, SNamedEvaluable {
-  public SSchema schema();
-}
+public sealed interface SReferenceable extends HasSchemaAndIdAndLocation
+    permits SItem, SNamedEvaluable {}
