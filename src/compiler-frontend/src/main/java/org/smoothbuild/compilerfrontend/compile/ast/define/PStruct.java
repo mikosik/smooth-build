@@ -1,27 +1,42 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import java.util.Objects;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocationImpl;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameTextAndLocationImpl;
+import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct extends HasNameTextAndLocationImpl implements PScoped, HasIdAndLocation {
-  private Id id;
+public final class PStruct extends HasLocationImpl
+    implements PScoped, HasIdAndLocation, HasNameText {
+  private final String nameText;
   private final NList<PItem> fields;
+  private Id id;
   private PScope scope;
   private SStructType sStructType;
 
-  public PStruct(String name, NList<PItem> fields, Location location) {
-    super(name, location);
+  public PStruct(String nameText, NList<PItem> fields, Location location) {
+    super(location);
+    this.nameText = nameText;
     this.fields = fields;
+  }
+
+  @Override
+  public String nameText() {
+    return nameText;
   }
 
   public void setId(Id id) {
     this.id = id;
+  }
+
+  @Override
+  public Id id() {
+    return id;
   }
 
   public NList<PItem> fields() {
@@ -47,11 +62,17 @@ public final class PStruct extends HasNameTextAndLocationImpl implements PScoped
   }
 
   @Override
+  public String q() {
+    return Strings.q(nameText);
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;
     }
     return object instanceof PStruct that
+        && Objects.equals(this.nameText(), that.nameText())
         && Objects.equals(this.id(), that.id())
         && Objects.equals(this.fields, that.fields)
         && Objects.equals(this.location(), that.location());
@@ -59,7 +80,7 @@ public final class PStruct extends HasNameTextAndLocationImpl implements PScoped
 
   @Override
   public int hashCode() {
-    return Objects.hash(id(), fields, location());
+    return Objects.hash(nameText, id(), fields, location());
   }
 
   @Override
@@ -69,10 +90,5 @@ public final class PStruct extends HasNameTextAndLocationImpl implements PScoped
         .addField("fields", fields)
         .addField("location", location())
         .toString();
-  }
-
-  @Override
-  public Id id() {
-    return id;
   }
 }
