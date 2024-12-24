@@ -91,7 +91,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private STypeDefinition convertStruct(PStruct pStruct) {
-      return new STypeDefinition(pStruct.sType().id(), pStruct.sType(), pStruct.location());
+      return new STypeDefinition(pStruct.sType(), pStruct.sType().id(), pStruct.location());
     }
 
     private SConstructor convertConstructor(PConstructor pConstructor) {

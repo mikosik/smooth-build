@@ -29,6 +29,6 @@ public class LoadInternalModuleMembers implements Task0<SModule> {
   }
 
   private static STypeDefinition baseTypeDefinitions(SBaseType sBaseType) {
-    return new STypeDefinition(sBaseType.id(), sBaseType, Locations.internalLocation());
+    return new STypeDefinition(sBaseType, sBaseType.id(), Locations.internalLocation());
   }
 }
