@@ -3,21 +3,22 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import com.google.common.base.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.log.location.HasLocationImpl;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 
 /**
  * Annotation.
  */
-public final class PAnnotation extends HasLocationImpl implements HasNameText {
+public final class PAnnotation implements HasNameText, HasLocation {
   private final String nameText;
   private final PString value;
+  private final Location location;
 
   public PAnnotation(String nameText, PString value, Location location) {
-    super(location);
     this.nameText = nameText;
     this.value = value;
+    this.location = location;
   }
 
   @Override
@@ -53,5 +54,10 @@ public final class PAnnotation extends HasLocationImpl implements HasNameText {
         .addField("value", value)
         .addField("location", location())
         .toString();
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 }

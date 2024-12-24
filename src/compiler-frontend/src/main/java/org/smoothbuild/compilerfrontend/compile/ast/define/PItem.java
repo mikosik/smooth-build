@@ -5,7 +5,7 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.location.HasLocationImpl;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
@@ -14,19 +14,20 @@ import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem extends HasLocationImpl implements PReferenceable, HasName, HasNameText {
+public final class PItem implements PReferenceable, HasName, HasNameText, HasLocation {
   private final PType type;
   private final String nameText;
-  private Name name;
   private final Maybe<PExpr> defaultValue;
+  private final Location location;
+  private Name name;
   private Maybe<Id> defaultValueId;
   private SType sType;
 
   public PItem(PType type, String nameText, Maybe<PExpr> defaultValue, Location location) {
-    super(location);
     this.type = type;
     this.nameText = nameText;
     this.defaultValue = defaultValue;
+    this.location = location;
   }
 
   public PType type() {
@@ -38,6 +39,7 @@ public final class PItem extends HasLocationImpl implements PReferenceable, HasN
     return nameText;
   }
 
+  @Override
   public String q() {
     return Strings.q(nameText);
   }
@@ -108,5 +110,10 @@ public final class PItem extends HasLocationImpl implements PReferenceable, HasN
         .addField("defaultValueId", defaultValueId)
         .addField("location", location())
         .toString();
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 }
