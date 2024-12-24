@@ -4,13 +4,13 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
@@ -35,14 +35,20 @@ public class TypeTeller {
 
   public SSchema schemaFor(Id id) {
     var idString = id.toString();
-    return currentScope
-        .referencables()
-        .getMaybe(idString)
-        .map(r -> switch (r) {
-          case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.sSchema();
-          case PItem pItem -> new SSchema(varSetS(), requireNonNull(pItem.sType()));
-        })
-        .getOrGet(() -> imported.evaluables().get(idString).schema());
+    var sSchema = currentScope.referencables().getMaybe(idString).map(r -> switch (r) {
+      case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.sSchema();
+      case PItem pItem -> new SSchema(varSetS(), requireNonNull(pItem.sType()));
+    });
+    return sSchema.getOrGet(() -> importedSchemaFor(id));
+  }
+
+  private SSchema importedSchemaFor(Id id) {
+    var sNamedEvaluable = imported.evaluables().find(id);
+    if (sNamedEvaluable.isRight()) {
+      return sNamedEvaluable.right().schema();
+    } else {
+      throw new RuntimeException("Internal error: " + sNamedEvaluable.left());
+    }
   }
 
   public SType translate(PType type) {
@@ -52,16 +58,23 @@ public class TypeTeller {
     return switch (type) {
       case PArrayType a -> new SArrayType(translate(a.elemT()));
       case PFuncType f -> new SFuncType(f.params().map(this::translate), translate(f.result()));
-      default -> typeWithName(type.nameText());
+      case PIdType i -> typeWithId(i.id());
+      case PImplicitType im -> throw new RuntimeException(
+          "Internal error: Did not expect implicit type.");
     };
   }
 
-  private SType typeWithName(String typeName) {
-    Maybe<PStruct> structP = currentScope.types().getMaybe(typeName);
-    if (structP.isSome()) {
-      return requireNonNull(structP.get().sType());
+  private SType typeWithId(Id id) {
+    var structP = currentScope.types().find(id);
+    if (structP.isRight()) {
+      return requireNonNull(structP.right().sType());
     } else {
-      return imported.types().get(typeName).type();
+      var sTypeDefinition = imported.types().find(id);
+      if (sTypeDefinition.isRight()) {
+        return sTypeDefinition.right().type();
+      } else {
+        throw new RuntimeException("Internal error: " + sTypeDefinition.left());
+      }
     }
   }
 }

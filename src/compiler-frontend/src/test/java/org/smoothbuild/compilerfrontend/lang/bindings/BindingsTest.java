@@ -7,17 +7,16 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
-import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public class BindingsTest {
   @Nested
@@ -142,14 +141,13 @@ public class BindingsTest {
     @Test
     void find_element() {
       var bindings = newBindings(element("name", 7));
-      assertThat(bindings.find(referenceableName("name"))).isEqualTo(ok(element("name", 7)));
+      assertThat(bindings.find(name("name"))).isEqualTo(ok(element("name", 7)));
     }
 
     @Test
     void find_missing_element_returns_error() {
       var bindings = newBindings();
-      assertThat(bindings.find(referenceableName("name")))
-          .isEqualTo(error("Cannot resolve `name`."));
+      assertThat(bindings.find(name("name"))).isEqualTo(error("Cannot resolve `name`."));
     }
 
     @Test
@@ -157,18 +155,6 @@ public class BindingsTest {
       var bindings = newBindings(element("name", 7));
       assertThat(bindings.find(fqn("name:nested")))
           .isEqualTo(error("Cannot resolve `name:nested`."));
-    }
-
-    @Test
-    void getting_element_by_string_name() {
-      var bindings = newBindings(element("name", 7));
-      assertThat(bindings.get("name")).isEqualTo(element("name", 7));
-    }
-
-    @Test
-    void getting_by_string_name_when_it_is_missing_throws_exception() {
-      var bindings = newBindings();
-      assertCall(() -> bindings.get("name")).throwsException(new NoSuchElementException("name"));
     }
 
     @Test
@@ -199,7 +185,7 @@ public class BindingsTest {
     void map() {
       var bindings = newBindings(element("name", 7), element("other", 5));
       var mapped = bindings.map(element -> element.value);
-      assertThat(mapped.get("name")).isEqualTo(7);
+      assertThat(mapped.find(name("name"))).isEqualTo(ok(7));
     }
 
     @Test
@@ -227,7 +213,7 @@ public class BindingsTest {
       var mutableBindings = newBindings();
       mutableBindings.add("name", 1);
       mutableBindings.add("name", 2);
-      assertThat(mutableBindings.get("name")).isEqualTo(2);
+      assertThat(mutableBindings.find(name("name"))).isEqualTo(ok(2));
     }
 
     @Test
@@ -281,10 +267,10 @@ public class BindingsTest {
 
     @Test
     void element_in_inner_bounds_shadows_element_from_outer_bounds() {
-      var outer = immutableBindings(mapOfElems(element("value-a", 7)));
-      var shadowing = element("value-a", 9);
+      var outer = immutableBindings(mapOfElems(element("valueA", 7)));
+      var shadowing = element("valueA", 9);
       var inner = newBindings(outer, shadowing);
-      assertThat(inner.get(shadowing.name())).isEqualTo(shadowing);
+      assertThat(inner.find(name(shadowing.name()))).isEqualTo(ok(shadowing));
     }
 
     @Test
@@ -330,4 +316,8 @@ public class BindingsTest {
   }
 
   public static record Element(String name, Integer value) {}
+
+  private static Name name(String name) {
+    return referenceableName(name);
+  }
 }

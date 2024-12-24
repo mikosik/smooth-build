@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.arrayTypeMessage;
 import static org.smoothbuild.compilerfrontend.acceptance.Util.illegalCallMessage;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -160,8 +161,8 @@ public class InferenceTest extends FrontendCompileTester {
           .getLoadedModule()
           .localScope()
           .evaluables()
-          .get("myValue");
-      var myValueBody = ((SNamedExprValue) myValue).body();
+          .find(fqn("myValue"));
+      var myValueBody = ((SNamedExprValue) myValue.right()).body();
       var lambda = ((SInstantiate) myValueBody).sPolymorphic();
       assertThat(lambda.schema()).isEqualTo(expected);
     }

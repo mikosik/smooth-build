@@ -88,6 +88,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
             pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fullId));
           });
       pItem.defaultValue().ifPresent(this::visitExpr);
+      visitType(pItem.type());
     }
 
     @Override

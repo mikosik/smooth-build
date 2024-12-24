@@ -9,6 +9,8 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.structName;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -69,7 +71,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       assertWithMessage("Module doesn't contain '" + name + "'.")
           .that(evaluables.contains(name))
           .isTrue();
-      return evaluables.get(name);
+      return evaluables.find(fqn(name)).right();
     }
 
     public void containsType(SType expected) {
@@ -78,7 +80,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       assertWithMessage("Module doesn't contain value with '" + name + "' type.")
           .that(types.contains(name))
           .isTrue();
-      SType actual = types.get(name).type();
+      SType actual = types.find(structName(name)).right().type();
       assertWithMessage("Module contains type '" + name + "', but")
           .that(actual)
           .isEqualTo(expected);

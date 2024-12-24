@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.acceptance;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.type.STypes.INT;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
@@ -10,7 +11,6 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
-import org.smoothbuild.compilerfrontend.lang.define.SEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
@@ -155,14 +155,16 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """
                   .replace("$$$", bodyCode);
 
-          SEvaluable result = module(code)
+          var result = module(code)
               .loadsWithSuccess()
               .getLoadedModule()
               .localScope()
               .evaluables()
-              .get("result");
-          SExpr actualDefArg =
-              ((SCall) ((SNamedExprValue) result).body()).args().elements().get(0);
+              .find(fqn("result"));
+          SExpr actualDefArg = ((SCall) ((SNamedExprValue) result.right()).body())
+              .args()
+              .elements()
+              .get(0);
           assertThat(actualDefArg).isEqualTo(expected);
         }
       }
