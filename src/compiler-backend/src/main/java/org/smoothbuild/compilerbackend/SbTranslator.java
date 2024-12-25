@@ -22,7 +22,8 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.collect.Maybe.None;
+import org.smoothbuild.common.collect.Maybe.Some;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.HasLocation;
@@ -197,17 +198,13 @@ public class SbTranslator {
   private BExpr translateReference(SReference sReference) throws SbTranslatorException {
     var itemS = lexicalEnvironment.get(sReference.referencedId());
     if (itemS == null) {
-      Maybe<SNamedEvaluable> namedEvaluableS =
-          evaluables.getMaybe(sReference.referencedId().toString());
-      if (namedEvaluableS.isSome()) {
-        return switch (namedEvaluableS.get()) {
+      return switch (evaluables.getMaybe(sReference.referencedId().toString())) {
+        case Some<SNamedEvaluable> evaluable -> switch (evaluable.get()) {
           case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
           case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
         };
-      } else {
-        throw new SbTranslatorException("Cannot resolve "
-            + sReference.referencedId().q() + " at " + sReference.location() + ".");
-      }
+        case None<SNamedEvaluable> none -> throw cannotResolveReferenceException(sReference);
+      };
     } else {
       var evaluationType = typeF.translate(itemS.type());
       var index = BigInteger.valueOf(lexicalEnvironment.indexOf(sReference.referencedId()));
@@ -216,6 +213,11 @@ public class SbTranslator {
           sReference,
           bytecodeF.reference(evaluationType, index));
     }
+  }
+
+  private static SbTranslatorException cannotResolveReferenceException(SReference sReference) {
+    return new SbTranslatorException(
+        "Cannot resolve " + sReference.referencedId().q() + " at " + sReference.location() + ".");
   }
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {
