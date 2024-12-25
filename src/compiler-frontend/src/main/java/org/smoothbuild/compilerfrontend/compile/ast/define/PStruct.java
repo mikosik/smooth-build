@@ -3,14 +3,13 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct implements PScoped, HasIdAndLocation, HasLocation {
+public final class PStruct implements PScoped, HasIdAndLocation {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;
