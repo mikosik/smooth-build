@@ -5,12 +5,11 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 
 /**
  * Annotation.
  */
-public final class PAnnotation implements HasNameText, HasLocation {
+public final class PAnnotation implements HasLocation {
   private final String nameText;
   private final PString value;
   private final Location location;
@@ -21,7 +20,6 @@ public final class PAnnotation implements HasNameText, HasLocation {
     this.location = location;
   }
 
-  @Override
   public String nameText() {
     return nameText;
   }

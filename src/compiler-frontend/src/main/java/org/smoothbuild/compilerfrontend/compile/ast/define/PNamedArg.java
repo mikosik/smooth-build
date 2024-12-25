@@ -5,10 +5,9 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
-public final class PNamedArg extends PExpr implements HasNameText, HasName {
+public final class PNamedArg extends PExpr implements HasName {
   private final String nameText;
   private final PExpr expr;
   private Name name;
@@ -19,7 +18,6 @@ public final class PNamedArg extends PExpr implements HasNameText, HasName {
     this.expr = expr;
   }
 
-  @Override
   public String nameText() {
     return nameText;
   }

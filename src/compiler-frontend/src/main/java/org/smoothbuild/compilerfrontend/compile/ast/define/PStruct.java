@@ -6,12 +6,11 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct implements PScoped, HasIdAndLocation, HasNameText, HasLocation {
+public final class PStruct implements PScoped, HasIdAndLocation, HasLocation {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;
@@ -25,7 +24,6 @@ public final class PStruct implements PScoped, HasIdAndLocation, HasNameText, Ha
     this.location = location;
   }
 
-  @Override
   public String nameText() {
     return nameText;
   }

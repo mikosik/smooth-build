@@ -4,10 +4,8 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 
-public abstract sealed class PType implements HasNameText, HasLocation
-    permits PExplicitType, PImplicitType {
+public abstract sealed class PType implements HasLocation permits PExplicitType, PImplicitType {
   private final String nameText;
   private final Location location;
 
@@ -16,7 +14,6 @@ public abstract sealed class PType implements HasNameText, HasLocation
     this.location = location;
   }
 
-  @Override
   public String nameText() {
     return nameText;
   }
