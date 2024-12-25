@@ -2,8 +2,10 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocationImpl;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
@@ -11,12 +13,18 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Named Expression Value (one that has a body).
  * This class is immutable.
  */
-public final class SNamedExprValue extends HasSchemaAndIdAndLocationImpl implements SNamedValue {
+public final class SNamedExprValue
+    implements SNamedValue, HasSchemaAndIdAndLocation, HasIdAndLocation, HasLocation {
   private final SExpr body;
+  private final SSchema schema;
+  private final Id id;
+  private final Location location;
 
   public SNamedExprValue(SSchema schema, Id id, SExpr body, Location location) {
-    super(schema, id, location);
+    this.schema = schema;
+    this.id = id;
     this.body = body;
+    this.location = location;
   }
 
   public SExpr body() {
@@ -48,5 +56,20 @@ public final class SNamedExprValue extends HasSchemaAndIdAndLocationImpl impleme
         .addField("location", location())
         .addField("body", body)
         .toString();
+  }
+
+  @Override
+  public SSchema schema() {
+    return schema;
+  }
+
+  @Override
+  public Id id() {
+    return id;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 }
