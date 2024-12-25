@@ -5,7 +5,6 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
-import org.smoothbuild.compilerfrontend.lang.base.HasSchema;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
@@ -13,8 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Named Expression Value (one that has a body).
  * This class is immutable.
  */
-public final class SNamedExprValue
-    implements SNamedValue, HasSchema, HasIdAndLocation, HasLocation {
+public final class SNamedExprValue implements SNamedValue, HasIdAndLocation, HasLocation {
   private final SExpr body;
   private final SSchema schema;
   private final Id id;

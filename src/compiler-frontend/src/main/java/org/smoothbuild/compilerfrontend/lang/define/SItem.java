@@ -10,9 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 /**
  * Item is a func param or a struct field.
@@ -33,11 +31,6 @@ public final class SItem implements SReferenceable, HasName, HasIdAndLocation, H
 
   public SType type() {
     return type;
-  }
-
-  @Override
-  public SSchema schema() {
-    return new SSchema(SVarSet.varSetS(), type);
   }
 
   public Maybe<Id> defaultValueId() {
