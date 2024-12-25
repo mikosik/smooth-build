@@ -5,14 +5,13 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
-import org.smoothbuild.compilerfrontend.lang.base.HasNameText;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 /**
  * Evaluable that has fully qualified name.
  */
 public abstract sealed class PNamedEvaluable
-    implements PReferenceable, PEvaluable, HasIdAndLocation, HasNameText, HasLocation
+    implements PReferenceable, PEvaluable, HasIdAndLocation, HasLocation
     permits PNamedFunc, PNamedValue {
   private final String nameText;
   private final Maybe<PExpr> body;
@@ -39,7 +38,6 @@ public abstract sealed class PNamedEvaluable
     this.scope = scope;
   }
 
-  @Override
   public String nameText() {
     return nameText;
   }
