@@ -2,8 +2,10 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocationImpl;
+import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.HasSchemaAndIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
@@ -11,12 +13,18 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class SAnnotatedValue extends HasSchemaAndIdAndLocationImpl implements SNamedValue {
+public final class SAnnotatedValue
+    implements SNamedValue, HasSchemaAndIdAndLocation, HasIdAndLocation, HasLocation {
   private final SAnnotation annotation;
+  private final SSchema schema;
+  private final Id id;
+  private final Location location;
 
   public SAnnotatedValue(SAnnotation annotation, SSchema schema, Id id, Location location) {
-    super(schema, id, location);
     this.annotation = annotation;
+    this.schema = schema;
+    this.id = id;
+    this.location = location;
   }
 
   public SAnnotation annotation() {
@@ -48,5 +56,20 @@ public final class SAnnotatedValue extends HasSchemaAndIdAndLocationImpl impleme
         .addField("name", id())
         .addField("location", location())
         .toString();
+  }
+
+  @Override
+  public SSchema schema() {
+    return schema;
+  }
+
+  @Override
+  public Id id() {
+    return id;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 }
