@@ -28,7 +28,6 @@ import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.log.report.BExprAttributes;
-import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
@@ -418,8 +417,8 @@ public class SbTranslator {
 
   // helpers for saving names and locations
 
-  private BExpr saveNalAndReturn(HasIdAndLocation hasIdAndLocation, BExpr bExpr) {
-    saveNal(bExpr, hasIdAndLocation);
+  private BExpr saveNalAndReturn(SNamedEvaluable sNamedEvaluable, BExpr bExpr) {
+    saveNal(bExpr, sNamedEvaluable);
     return bExpr;
   }
 
@@ -433,8 +432,8 @@ public class SbTranslator {
     return bExpr;
   }
 
-  private void saveNal(BExpr bExpr, HasIdAndLocation hasIdAndLocation) {
-    saveNal(bExpr, hasIdAndLocation.id().toString(), hasIdAndLocation);
+  private void saveNal(BExpr bExpr, SNamedEvaluable sNamedEvaluable) {
+    saveNal(bExpr, sNamedEvaluable.id().toString(), sNamedEvaluable);
   }
 
   private void saveNal(BExpr bExpr, String name, HasLocation hasLocation) {
