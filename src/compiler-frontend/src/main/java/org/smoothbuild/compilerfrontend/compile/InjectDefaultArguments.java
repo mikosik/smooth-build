@@ -7,60 +7,52 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import java.util.ArrayList;
 import java.util.Set;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
-import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
+import org.smoothbuild.compilerfrontend.lang.base.Item;
+import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.bindings.Bindings;
-import org.smoothbuild.compilerfrontend.lang.define.SItem;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
-import org.smoothbuild.compilerfrontend.lang.define.SScope;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
-public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
+public class InjectDefaultArguments implements Task1<PModule, PModule> {
   @Override
-  public Output<PModule> execute(PModule pModule, SScope environment) {
+  public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    new Visitor(environment, immutableBindings(), logger).visitModule(pModule);
+    new Visitor(null, logger).visitModule(pModule);
     var label = COMPILER_FRONT_LABEL.append(":injectDefaultArguments");
     return output(pModule, label, logger.toList());
   }
 
   private static class Visitor extends PScopingModuleVisitor<RuntimeException> {
-    private final SScope imported;
-    private final Bindings<Referenceable> referenceables;
+    private final Bindings<? extends Referenceable> referenceables;
     private final Logger logger;
 
-    public Visitor(SScope imported, Bindings<Referenceable> referenceables, Logger logger) {
-      this.imported = imported;
+    public Visitor(Bindings<? extends Referenceable> referenceables, Logger logger) {
       this.referenceables = referenceables;
       this.logger = logger;
     }
 
     @Override
     protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
-      return new Visitor(imported, pScoped.scope().referencables(), logger);
+      return new Visitor(pScoped.scope().referencables(), logger);
     }
 
     @Override
@@ -77,12 +69,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
         if (pReferenceable.isSome()) {
           return inferPositionedArgs(pCall, pReferenceable.get());
         } else {
-          var sNamedEvaluable = imported.evaluables().find(id);
-          if (sNamedEvaluable.isRight()) {
-            return inferPositionedArgs(pCall, sNamedEvaluable.right());
-          } else {
-            throw new RuntimeException("Could not find " + id.q() + ".");
-          }
+          throw new RuntimeException("Could not find " + id.q() + ".");
         }
       } else {
         return inferPositionedArgs(pCall, logger);
@@ -90,17 +77,8 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private List<PExpr> inferPositionedArgs(PCall pCall, Referenceable referenceable) {
-      if (referenceable instanceof PNamedFunc pNamedFunc) {
-        var mappedParams = pNamedFunc.params().list().map(Param::new);
-        return inferPositionedArgs(pCall, mappedParams, logger);
-      } else {
-        return inferPositionedArgs(pCall, logger);
-      }
-    }
-
-    private List<PExpr> inferPositionedArgs(PCall pCall, SNamedEvaluable sNamedEvaluable) {
-      if (sNamedEvaluable instanceof SNamedFunc sNamedFunc) {
-        var mappedParams = sNamedFunc.params().list().map(Param::new);
+      if (referenceable instanceof NamedFunc namedFunc) {
+        var mappedParams = namedFunc.params();
         return inferPositionedArgs(pCall, mappedParams, logger);
       } else {
         return inferPositionedArgs(pCall, logger);
@@ -120,7 +98,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private static List<PExpr> inferPositionedArgs(
-        PCall pCall, List<Param> params, Logger mainLogger) {
+        PCall pCall, NList<? extends Item> params, Logger mainLogger) {
       var logger = new Logger();
       var positionalArgs = leadingPositionalArgs(pCall);
       logger.logAll(findPositionalArgAfterNamedArgError(pCall));
@@ -138,8 +116,8 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private static List<PExpr> positionedArgs(
-        PCall pCall, List<Param> params, int positionalArgsCount, Logger logBuffer) {
-      var names = params.map(Param::name);
+        PCall pCall, NList<? extends Item> params, int positionalArgsCount, Logger logBuffer) {
+      var names = params.list().map(Item::name);
       var args = pCall.args();
       // Case where positional args count exceeds function params count is reported as error
       // during call unification. Here we silently ignore it by creating list that is big enough
@@ -183,8 +161,8 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
           .map(Visitor::positionalArgumentsMustBePlacedBeforeNamedArguments);
     }
 
-    private static List<Log> findUnknownParamNameErrors(PCall pCall, List<Param> params) {
-      var names = params.map(Param::name).toSet();
+    private static List<Log> findUnknownParamNameErrors(PCall pCall, NList<? extends Item> params) {
+      var names = params.list().map(Item::name).toSet();
       return pCall
           .args()
           .filter(a -> a instanceof PNamedArg)
@@ -194,7 +172,7 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
     }
 
     private static List<Log> findDuplicateAssignmentErrors(
-        PCall pCall, List<PExpr> positionalArgs, List<Param> params) {
+        PCall pCall, List<PExpr> positionalArgs, NList<? extends Item> params) {
       var names = positionalArgNames(positionalArgs, params);
       return pCall
           .args()
@@ -204,11 +182,13 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
           .map(Visitor::paramIsAlreadyAssignedError);
     }
 
-    private static Set<Name> positionalArgNames(List<PExpr> positionalArgs, List<Param> params) {
-      return params.stream().limit(positionalArgs.size()).map(Param::name).collect(toSet());
+    private static Set<Name> positionalArgNames(
+        List<PExpr> positionalArgs, NList<? extends Item> params) {
+      return params.stream().limit(positionalArgs.size()).map(Item::name).collect(toSet());
     }
 
-    private static Log paramsMustBeSpecifiedError(PCall pCall, int i, List<Param> params) {
+    private static Log paramsMustBeSpecifiedError(
+        PCall pCall, int i, NList<? extends Item> params) {
       return compileError(pCall, "Parameter " + params.get(i).name().q() + " must be specified.");
     }
 
@@ -222,16 +202,6 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
 
     private static Log positionalArgumentsMustBePlacedBeforeNamedArguments(PExpr argument) {
       return compileError(argument, "Positional arguments must be placed before named arguments.");
-    }
-  }
-
-  private static record Param(Name name, Maybe<Id> defaultValueId) {
-    public Param(SItem param) {
-      this(param.name(), param.defaultValueId());
-    }
-
-    public Param(PItem param) {
-      this(param.name(), param.defaultValueId());
     }
   }
 }

@@ -4,11 +4,13 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
-public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits PConstructor {
+public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFunc
+    permits PConstructor {
   private final PType resultT;
   private final NList<PItem> params;
   private SFuncType typeS;

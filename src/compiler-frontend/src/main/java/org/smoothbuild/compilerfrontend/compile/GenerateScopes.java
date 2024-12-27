@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.compile.ast.define.PScope.emptyScope;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -11,7 +11,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
-import org.smoothbuild.common.schedule.Task1;
+import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
@@ -25,24 +25,26 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 /**
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
 public class GenerateScopes extends PModuleVisitor<RuntimeException>
-    implements Task1<PModule, PModule> {
+    implements Task2<SScope, PModule, PModule> {
   @Override
-  public Output<PModule> execute(PModule pModule) {
+  public Output<PModule> execute(SScope importedScope, PModule pModule) {
     var logger = new Logger();
-    initializeScopes(pModule, logger);
+    initializeScopes(importedScope, pModule, logger);
     var label = COMPILER_FRONT_LABEL.append(":initializeScopes");
     return output(pModule, label, logger.toList());
   }
 
   @VisibleForTesting
-  static void initializeScopes(PModule pModule, Logger logger) {
-    new Initializer(emptyScope(), logger).visitModule(pModule);
+  static void initializeScopes(SScope importedScope, PModule pModule, Logger logger) {
+    var pScope = new PScope(importedScope.evaluables(), immutableBindings());
+    new Initializer(pScope, logger).visitModule(pModule);
   }
 
   private static class Initializer extends PScopingModuleVisitor<RuntimeException> {

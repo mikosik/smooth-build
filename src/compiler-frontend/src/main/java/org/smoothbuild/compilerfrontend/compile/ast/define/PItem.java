@@ -11,13 +11,14 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
+import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem implements PReferenceable, HasName, HasLocation {
+public final class PItem implements Item, PReferenceable, HasName, HasLocation {
   private final PType type;
   private final String nameText;
   private final Maybe<PExpr> defaultValue;
@@ -68,6 +69,7 @@ public final class PItem implements PReferenceable, HasName, HasLocation {
     return location;
   }
 
+  @Override
   public Maybe<Id> defaultValueId() {
     return defaultValueId;
   }
