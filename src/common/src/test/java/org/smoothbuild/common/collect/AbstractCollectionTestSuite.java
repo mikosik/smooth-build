@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.function.Consumer1;
 
 public abstract class AbstractCollectionTestSuite {
+  @SuppressWarnings("unchecked")
   public abstract <E> Collection<E> newCollection(E... elements);
 
   @Test
