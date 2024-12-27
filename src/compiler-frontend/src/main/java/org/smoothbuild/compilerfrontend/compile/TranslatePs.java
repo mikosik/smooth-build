@@ -15,7 +15,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -31,7 +30,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.compile.infer.TypeTeller;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -66,18 +64,15 @@ import org.smoothbuild.compilerfrontend.lang.type.STypes;
 public class TranslatePs implements Task2<PModule, SScope, SModule> {
   @Override
   public Output<SModule> execute(PModule pModule, SScope imported) {
-    var typeTeller = new TypeTeller(imported, pModule.scope());
     var label = COMPILER_FRONT_LABEL.append(":buildIr");
-    var sModule = new Worker(typeTeller, imported).convertModule(pModule);
+    var sModule = new Worker(imported).convertModule(pModule);
     return output(sModule, label, list());
   }
 
   public static class Worker {
-    private final TypeTeller typeTeller;
     private final SScope imported;
 
-    private Worker(TypeTeller typeTeller, SScope imported) {
-      this.typeTeller = typeTeller;
+    private Worker(SScope imported) {
       this.imported = imported;
     }
 
@@ -152,7 +147,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
         var annotationS = convertAnnotation(pNamedFunc.annotation().get());
         return new SAnnotatedFunc(annotationS, schema, name, params, loc);
       } else if (pNamedFunc.body().isSome()) {
-        var body = convertFuncBody(pNamedFunc, pNamedFunc.body().get());
+        var body = convertFuncBody(pNamedFunc.body().get());
         return new SNamedExprFunc(schema, name, params, body, loc);
       } else {
         throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
@@ -183,7 +178,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
-      var body = convertFuncBody(pLambda, pLambda.bodyGet());
+      var body = convertFuncBody(pLambda.bodyGet());
       return new SLambda(pLambda.schema(), params, body, pLambda.location());
     }
 
@@ -203,9 +198,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return new SCombine(evaluationType, args, call.location());
     }
 
-    private SExpr convertFuncBody(PFunc pFunc, PExpr body) {
-      var typeTellerForBody = typeTeller.withScope(pFunc.scope());
-      return new Worker(typeTellerForBody, imported).convertExpr(body);
+    private SExpr convertFuncBody(PExpr body) {
+      return new Worker(imported).convertExpr(body);
     }
 
     private SInt convertInt(PInt int_) {
@@ -230,7 +224,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SReference convertReference(PReference pReference) {
-      return convertReference(pReference, typeTeller.schemaFor(pReference.id()));
+      return convertReference(pReference, pReference.schema());
     }
 
     private SReference convertReference(PReference pReference, SSchema sSchema) {
