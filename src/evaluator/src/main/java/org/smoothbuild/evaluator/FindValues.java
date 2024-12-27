@@ -20,17 +20,17 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   @Override
   public Output<List<SExpr>> execute(SScope environment, List<String> valueNames) {
     var logger = new Logger();
-    var namedEvaluables = new ArrayList<SNamedValue>();
-    var evaluables = environment.evaluables();
+    var result = new ArrayList<SNamedValue>();
+    var namedEvaluables = environment.evaluables();
     for (var name : valueNames) {
-      var topEvaluable = evaluables.getMaybe(name);
-      if (topEvaluable.isNone()) {
+      var namedEvaluable = namedEvaluables.getMaybe(name);
+      if (namedEvaluable.isNone()) {
         logger.error("Unknown value `" + name + "`.\n"
             + "Try 'smooth list' to see all available values that can be calculated.");
-      } else if (!(topEvaluable.get() instanceof SNamedValue namedValue)) {
+      } else if (!(namedEvaluable.get() instanceof SNamedValue namedValue)) {
         logger.error("`" + name + "` cannot be calculated as it is not a value but a function.");
       } else if (namedValue.schema().quantifiedVars().isEmpty()) {
-        namedEvaluables.add(namedValue);
+        result.add(namedValue);
       } else {
         logger.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
       }
@@ -39,8 +39,8 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
     if (logger.containsFailure()) {
       return output(label, logger.toList());
     }
-    List<SExpr> exprs = listOfAll(namedEvaluables)
-        .map(v -> new SInstantiate(referenceTo(v), commandLineLocation()));
+    List<SExpr> exprs =
+        listOfAll(result).map(v -> new SInstantiate(referenceTo(v), commandLineLocation()));
     return output(exprs, label, logger.toList());
   }
 
