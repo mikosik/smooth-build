@@ -73,9 +73,9 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
         var id = pReference.id();
-        var optional = referenceables.getMaybe(id.toString());
-        if (optional.isSome()) {
-          return inferPositionedArgs(pCall, optional.get());
+        var pReferenceable = referenceables.getMaybe(id.toString());
+        if (pReferenceable.isSome()) {
+          return inferPositionedArgs(pCall, pReferenceable.get());
         } else {
           var sNamedEvaluable = imported.evaluables().find(id);
           if (sNamedEvaluable.isRight()) {
