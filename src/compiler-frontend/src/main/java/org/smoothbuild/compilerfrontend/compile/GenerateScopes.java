@@ -63,7 +63,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
     }
   }
 
-  private static class ScopeCreator extends PModuleVisitor<RuntimeException> {
+  private static class ScopeCreator {
     private final PScope scope;
     private final Logger log;
     private final MutableBindings<PReferenceable> referenceables = mutableBindings();
