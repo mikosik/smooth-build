@@ -104,6 +104,7 @@ public class NListTest {
   }
 
   @Nested
+  @SuppressWarnings("deprecation")
   class _mutable_methods_throw_exception {
     @Test
     void removeIf() {
@@ -113,6 +114,7 @@ public class NListTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void replaceAll() {
       var nlist = nlist(n0, n1, n2);
       assertCall(() -> nlist.replaceAll(n -> n))
@@ -120,6 +122,7 @@ public class NListTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void sort() {
       var nlist = nlist(n0, n1, n2);
       assertCall(() -> nlist.sort((a, b) -> 0))
