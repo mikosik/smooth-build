@@ -40,15 +40,15 @@ public sealed interface Either<L, R> permits Left, Right, Result {
 
   public <E extends Throwable> R rightOrThrow(Function<L, E> supplier) throws E;
 
-  public <S, T extends Throwable> Either<L, S> mapRight(Function1<R, S, T> mapper) throws T;
+  public <S, T extends Throwable> Either<L, S> mapRight(Function1<? super R, S, T> mapper) throws T;
 
-  public <S, T extends Throwable> Either<S, R> mapLeft(Function1<L, S, T> mapper) throws T;
+  public <S, T extends Throwable> Either<S, R> mapLeft(Function1<? super L, S, T> mapper) throws T;
 
-  public <S, T extends Throwable> Either<L, S> flatMapRight(Function1<R, Either<L, S>, T> mapper)
-      throws T;
+  public <S, T extends Throwable> Either<L, S> flatMapRight(
+      Function1<? super R, Either<L, S>, T> mapper) throws T;
 
-  public <S, T extends Throwable> Either<S, R> flatMapLeft(Function1<L, Either<S, R>, T> mapper)
-      throws T;
+  public <S, T extends Throwable> Either<S, R> flatMapLeft(
+      Function1<? super L, Either<S, R>, T> mapper) throws T;
 
   public static sealed class Right<L, R> implements Either<L, R> permits Ok {
     private final R right;
@@ -99,25 +99,27 @@ public sealed interface Either<L, R> permits Left, Right, Result {
     }
 
     @Override
-    public <S, T extends Throwable> Right<L, S> mapRight(Function1<R, S, T> mapper) throws T {
+    public <S, T extends Throwable> Right<L, S> mapRight(Function1<? super R, S, T> mapper)
+        throws T {
       return new Right<>(mapper.apply(right));
     }
 
     @Override
-    public <S, T extends Throwable> Right<S, R> mapLeft(Function1<L, S, T> mapper) {
+    public <S, T extends Throwable> Right<S, R> mapLeft(Function1<? super L, S, T> mapper) {
       @SuppressWarnings("unchecked")
       var cast = (Right<S, R>) this;
       return cast;
     }
 
     @Override
-    public <S, T extends Throwable> Either<L, S> flatMapRight(Function1<R, Either<L, S>, T> mapper)
-        throws T {
+    public <S, T extends Throwable> Either<L, S> flatMapRight(
+        Function1<? super R, Either<L, S>, T> mapper) throws T {
       return requireNonNull(mapper.apply(right));
     }
 
     @Override
-    public <S, T extends Throwable> Either<S, R> flatMapLeft(Function1<L, Either<S, R>, T> mapper) {
+    public <S, T extends Throwable> Either<S, R> flatMapLeft(
+        Function1<? super L, Either<S, R>, T> mapper) {
       @SuppressWarnings("unchecked")
       var cast = (Right<S, R>) this;
       return cast;
@@ -195,28 +197,28 @@ public sealed interface Either<L, R> permits Left, Right, Result {
     }
 
     @Override
-    public <S, T extends Throwable> Either<L, S> mapRight(Function1<R, S, T> mapper) {
+    public <S, T extends Throwable> Either<L, S> mapRight(Function1<? super R, S, T> mapper) {
       @SuppressWarnings("unchecked")
       var left = (Either<L, S>) this;
       return left;
     }
 
     @Override
-    public <S, T extends Throwable> Left<S, R> mapLeft(Function1<L, S, T> mapper) throws T {
+    public <S, T extends Throwable> Left<S, R> mapLeft(Function1<? super L, S, T> mapper) throws T {
       return new Left<>(mapper.apply(left));
     }
 
     @Override
     public <S, T extends Throwable> Either<L, S> flatMapRight(
-        Function1<R, Either<L, S>, T> mapper) {
+        Function1<? super R, Either<L, S>, T> mapper) {
       @SuppressWarnings("unchecked")
       var left = (Either<L, S>) this;
       return left;
     }
 
     @Override
-    public <S, T extends Throwable> Either<S, R> flatMapLeft(Function1<L, Either<S, R>, T> mapper)
-        throws T {
+    public <S, T extends Throwable> Either<S, R> flatMapLeft(
+        Function1<? super L, Either<S, R>, T> mapper) throws T {
       return requireNonNull(mapper.apply(left));
     }
 
