@@ -34,7 +34,6 @@ public abstract sealed class PPolymorphic implements HasIdAndLocation permits PL
     return id;
   }
 
-  @Override
   public String q() {
     return Strings.q(nameText);
   }

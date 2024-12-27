@@ -37,7 +37,6 @@ public final class PItem implements PReferenceable, HasName, HasLocation {
     return nameText;
   }
 
-  @Override
   public String q() {
     return Strings.q(nameText);
   }

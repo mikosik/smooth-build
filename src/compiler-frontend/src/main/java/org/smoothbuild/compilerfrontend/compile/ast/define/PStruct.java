@@ -58,7 +58,6 @@ public final class PStruct implements PScoped, HasIdAndLocation {
     this.sStructType = sStructType;
   }
 
-  @Override
   public String q() {
     return Strings.q(nameText);
   }

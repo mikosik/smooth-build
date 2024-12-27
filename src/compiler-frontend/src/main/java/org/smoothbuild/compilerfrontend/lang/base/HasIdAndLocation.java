@@ -8,8 +8,4 @@ import org.smoothbuild.compilerfrontend.lang.name.Id;
  */
 public interface HasIdAndLocation extends HasLocation {
   public Id id();
-
-  public default String q() {
-    return id().q();
-  }
 }
