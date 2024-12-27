@@ -52,12 +52,12 @@ public sealed class PNamedFunc extends PNamedEvaluable implements PFunc permits 
   }
 
   @Override
-  public SFuncSchema sSchema() {
+  public SFuncSchema schema() {
     return sFuncSchema;
   }
 
   @Override
-  public void setSSchema(SFuncSchema sFuncSchema) {
+  public void setSchema(SFuncSchema sFuncSchema) {
     this.sFuncSchema = sFuncSchema;
   }
 

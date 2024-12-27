@@ -41,11 +41,11 @@ public final class PNamedValue extends PNamedEvaluable {
   }
 
   @Override
-  public SSchema sSchema() {
+  public SSchema schema() {
     return sSchema;
   }
 
-  public void setSSchema(SSchema schema) {
+  public void setSchema(SSchema schema) {
     this.sSchema = schema;
   }
 

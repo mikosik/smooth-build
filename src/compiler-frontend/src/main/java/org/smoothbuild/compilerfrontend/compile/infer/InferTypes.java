@@ -113,7 +113,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
           .map(f -> new SItem(fieldSigs.get(f.id()).type(), f.name(), none(), f.location()));
       var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
       var schema = new SFuncSchema(varSetS(), sFuncType);
-      pConstructor.setSSchema(schema);
+      pConstructor.setSchema(schema);
       pConstructor.setSType(sFuncType);
     }
 
@@ -124,7 +124,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
         var param = params.get(i);
         var index = i;
         param.defaultValueId().ifPresent(defaultValueId -> {
-          var funcSchema = namedFunc.sSchema();
+          var funcSchema = namedFunc.schema();
           var unifier = new Unifier();
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =

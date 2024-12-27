@@ -64,7 +64,7 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, typeTeller);
     var resolvedType = resolveType(pNamedValue);
     var vars = resolveQuantifiedVars(resolvedType);
-    pNamedValue.setSSchema(new SSchema(vars, resolvedType));
+    pNamedValue.setSchema(new SSchema(vars, resolvedType));
   }
 
   public static void unifyFunc(Unifier unifier, TypeTeller typeTeller, PFunc namedFunc)
@@ -80,7 +80,7 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pFunc, resultType, funcTS, typeTeller.withScope(pFunc.scope()));
     var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
-    pFunc.setSSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
+    pFunc.setSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
   }
 
   private SVarSet resolveQuantifiedVars(SType sType) {
@@ -187,7 +187,7 @@ public class ExprTypeUnifier {
   private SType unifyInstantiate(PInstantiate pInstantiate) throws TypeException {
     var polymorphicP = pInstantiate.polymorphic();
     unifyPolymorphic(polymorphicP);
-    var schema = polymorphicP.sSchema();
+    var schema = polymorphicP.schema();
     pInstantiate.setTypeArgs(generateList(schema.quantifiedVars().size(), unifier::newFlexibleVar));
     return schema.instantiate(pInstantiate.typeArgs());
   }

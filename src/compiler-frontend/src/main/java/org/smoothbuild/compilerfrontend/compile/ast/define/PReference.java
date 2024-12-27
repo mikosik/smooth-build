@@ -13,7 +13,7 @@ public final class PReference extends PPolymorphic {
   }
 
   @Override
-  public SSchema sSchema() {
+  public SSchema schema() {
     return sSchema;
   }
 

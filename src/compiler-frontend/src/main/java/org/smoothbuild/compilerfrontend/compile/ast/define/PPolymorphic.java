@@ -23,7 +23,7 @@ public abstract sealed class PPolymorphic implements HasIdAndLocation permits PL
     return nameText;
   }
 
-  public abstract SSchema sSchema();
+  public abstract SSchema schema();
 
   public void setId(Id id) {
     this.id = id;

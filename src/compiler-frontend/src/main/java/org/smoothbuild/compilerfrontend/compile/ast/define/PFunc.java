@@ -21,7 +21,7 @@ public sealed interface PFunc extends PEvaluable permits PLambda, PNamedFunc {
   public void setSType(SFuncType sFuncType);
 
   @Override
-  public SFuncSchema sSchema();
+  public SFuncSchema schema();
 
-  public void setSSchema(SFuncSchema sFuncSchema);
+  public void setSchema(SFuncSchema sFuncSchema);
 }
