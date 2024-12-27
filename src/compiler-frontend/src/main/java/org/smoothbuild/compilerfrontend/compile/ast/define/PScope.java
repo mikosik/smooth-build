@@ -6,7 +6,7 @@ import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 
 public record PScope(
-    ImmutableBindings<Referenceable> referencables, ImmutableBindings<PStruct> types) {
+    ImmutableBindings<? extends Referenceable> referencables, ImmutableBindings<PStruct> types) {
   public static PScope emptyScope() {
     return new PScope(immutableBindings(), immutableBindings());
   }

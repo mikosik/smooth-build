@@ -69,11 +69,11 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
       var withGeneratedConstructors =
           scheduler.submit(GenerateConstructors.class, withDecodedLiterals);
-      var withInitializedScopes = scheduler.submit(GenerateScopes.class, withGeneratedConstructors);
+      var withInitializedScopes =
+          scheduler.submit(GenerateScopes.class, importedScope, withGeneratedConstructors);
       var withUndefinedDetected =
           scheduler.submit(DetectUndefined.class, withInitializedScopes, importedScope);
-      var withInjected =
-          scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected, importedScope);
+      var withInjected = scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected);
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
       var typesInferred = scheduler.submit(InferTypes.class, sorted, importedScope);
       var sModule = scheduler.submit(TranslatePs.class, typesInferred, importedScope);

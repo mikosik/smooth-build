@@ -12,6 +12,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
+import org.smoothbuild.compilerfrontend.lang.define.SReferenceable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
@@ -34,29 +35,22 @@ public class TypeTeller {
   }
 
   public SSchema schemaFor(Id id) {
-    var sSchema = currentScope.referencables().find(id).mapRight((Referenceable r) -> switch (r) {
+    return currentScope
+        .referencables()
+        .find(id)
+        .mapRight(TypeTeller::schemaFor)
+        .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
+  }
+
+  private static SSchema schemaFor(Referenceable referenceable) {
+    return switch (referenceable) {
       case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.schema();
       case PItem pItem -> pItem.schema();
-        // TODO uncomment once PScope is correctly initialized by InitializeScopes and contains
-        // imported bindings
-        // case SReferenceable sReferenceable -> sReferenceable.schema();
+      case SReferenceable sReferenceable -> sReferenceable.schema();
         // TODO this won't be needed once we introduce java modules and make Referenceable class
         // sealed
       case Referenceable p -> throw new RuntimeException();
-    });
-    if (sSchema.isRight()) {
-      return sSchema.right();
-    }
-    return importedSchemaFor(id);
-  }
-
-  private SSchema importedSchemaFor(Id id) {
-    var sNamedEvaluable = imported.evaluables().find(id);
-    if (sNamedEvaluable.isRight()) {
-      return sNamedEvaluable.right().schema();
-    } else {
-      throw new RuntimeException("Internal error: " + sNamedEvaluable.left());
-    }
+    };
   }
 
   public SType translate(PType type) {

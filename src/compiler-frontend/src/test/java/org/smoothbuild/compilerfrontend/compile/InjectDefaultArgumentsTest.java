@@ -9,6 +9,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
@@ -19,13 +20,14 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
         "myFunc",
         nlist(sItem(sIntType(), "param", "myFunc:param")),
         sParamRef(sIntType(), "param"));
-    var importedS = new SScope(immutableBindings(), bindings(myFuncS));
+    var importedScope = new SScope(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
     var callP = pCall(pReference("myFunc"), callLocation);
     var namedValueP = pNamedValue("value", callP);
     var moduleP = pModule(list(), list(namedValueP));
+    moduleP.setScope(new PScope(importedScope.evaluables(), immutableBindings()));
 
-    callInjectDefaultArguments(importedS, moduleP);
+    callInjectDefaultArguments(moduleP, importedScope);
 
     assertThat(callP.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
@@ -43,13 +45,13 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
     var pNamedFunc = pNamedFunc("myFunc", nlist(pItem));
     var pModule = pModule(list(), list(pDefaultValue, pNamedFunc, pValue));
 
-    callInjectDefaultArguments(sImported, pModule);
+    callInjectDefaultArguments(pModule, sImported);
 
     assertThat(pCall.positionedArgs()).isEqualTo(list(pReference("myFunc:param", callLocation)));
   }
 
-  private static void callInjectDefaultArguments(SScope sImported, PModule pModule) {
-    new GenerateScopes().execute(pModule);
-    new InjectDefaultArguments().execute(pModule, sImported);
+  private static void callInjectDefaultArguments(PModule pModule, SScope importedScope) {
+    new GenerateScopes().execute(importedScope, pModule);
+    new InjectDefaultArguments().execute(pModule);
   }
 }

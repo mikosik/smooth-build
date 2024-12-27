@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.compile.GenerateScopes.initializeScopes;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
+import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class GenerateScopesTest extends FrontendCompilerTestContext {
@@ -21,7 +23,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedFunc = pNamedFunc("myFunc");
       var pModule = pModule(list(), list(pNamedFunc));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       assertThat(pModule.scope().referencables().find(fqn("myFunc"))).isEqualTo(ok(pNamedFunc));
     }
@@ -31,7 +33,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedValue = pNamedValue("myValue");
       var pModule = pModule(list(), list(pNamedValue));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       assertThat(pModule.scope().referencables().find(fqn("myValue"))).isEqualTo(ok(pNamedValue));
     }
@@ -45,7 +47,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedFunc = pNamedFunc("myFunc", nlist(param));
       var pModule = pModule(list(), list(pNamedFunc));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       assertThat(pNamedFunc.scope().referencables().find(fqn("param"))).isEqualTo(ok(param));
     }
@@ -57,7 +59,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedFunc = pNamedFunc("myFunc", nlist(param));
       var pModule = pModule(list(), list(pNamedFunc, pNamedValue));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       assertThat(pNamedFunc.scope().referencables().find(fqn("myValue")))
           .isEqualTo(ok(pNamedValue));
@@ -70,7 +72,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedFunc = pNamedFunc("myFunc", nlist(param));
       var pModule = pModule(list(), list(pNamedFunc, otherFunc));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       assertThat(pNamedFunc.scope().referencables().find(fqn("otherFunc")))
           .isEqualTo(ok(otherFunc));
@@ -86,7 +88,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedValue = pNamedValue("myValue", pLambda);
       var pModule = pModule(list(), list(pNamedValue));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       var cast = ((PLambda) pLambda.polymorphic());
       assertThat(cast.scope().referencables().find(fqn("myValue"))).isEqualTo(ok(pNamedValue));
@@ -99,7 +101,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pNamedValue = pNamedFunc("myFunc", pLambda);
       var pModule = pModule(list(), list(pNamedValue));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       var cast = ((PLambda) pLambda.polymorphic());
       assertThat(cast.scope().referencables().find(fqn("myFunc"))).isEqualTo(ok(pNamedValue));
@@ -111,10 +113,14 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
       var pLambda = pLambda(nlist(param), pInt());
       var pModule = pModule(list(), list(pNamedValue(pLambda)));
 
-      initializeScopes(pModule, new Logger());
+      initializeScopes(emptyImportedScope(), pModule, new Logger());
 
       var cast = ((PLambda) pLambda.polymorphic());
       assertThat(cast.scope().referencables().find(fqn("param"))).isEqualTo(ok(param));
     }
+  }
+
+  private static SScope emptyImportedScope() {
+    return new SScope(immutableBindings(), immutableBindings());
   }
 }
