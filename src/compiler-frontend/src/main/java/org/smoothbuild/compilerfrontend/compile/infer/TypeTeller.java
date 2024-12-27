@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
@@ -12,6 +11,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
@@ -34,12 +34,20 @@ public class TypeTeller {
   }
 
   public SSchema schemaFor(Id id) {
-    var idString = id.toString();
-    var sSchema = currentScope.referencables().getMaybe(idString).map(r -> switch (r) {
-      case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.sSchema();
-      case PItem pItem -> new SSchema(varSetS(), requireNonNull(pItem.sType()));
+    var sSchema = currentScope.referencables().find(id).mapRight((Referenceable r) -> switch (r) {
+      case PNamedEvaluable pNamedEvaluable -> pNamedEvaluable.schema();
+      case PItem pItem -> pItem.schema();
+        // TODO uncomment once PScope is correctly initialized by InitializeScopes and contains
+        // imported bindings
+        // case SReferenceable sReferenceable -> sReferenceable.schema();
+        // TODO this won't be needed once we introduce java modules and make Referenceable class
+        // sealed
+      case Referenceable p -> throw new RuntimeException();
     });
-    return sSchema.getOrGet(() -> importedSchemaFor(id));
+    if (sSchema.isRight()) {
+      return sSchema.right();
+    }
+    return importedSchemaFor(id);
   }
 
   private SSchema importedSchemaFor(Id id) {

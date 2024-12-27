@@ -1,5 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
@@ -11,6 +14,7 @@ import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class PItem implements PReferenceable, HasName, HasLocation {
@@ -59,6 +63,11 @@ public final class PItem implements PReferenceable, HasName, HasLocation {
     return defaultValue;
   }
 
+  @Override
+  public Location location() {
+    return location;
+  }
+
   public Maybe<Id> defaultValueId() {
     return defaultValueId;
   }
@@ -78,6 +87,11 @@ public final class PItem implements PReferenceable, HasName, HasLocation {
 
   public static List<SType> toSType(NList<PItem> params) {
     return params.list().map(PItem::sType);
+  }
+
+  @Override
+  public SSchema schema() {
+    return new SSchema(varSetS(), requireNonNull(sType()));
   }
 
   @Override
@@ -107,10 +121,5 @@ public final class PItem implements PReferenceable, HasName, HasLocation {
         .addField("defaultValueId", defaultValueId)
         .addField("location", location())
         .toString();
-  }
-
-  @Override
-  public Location location() {
-    return location;
   }
 }

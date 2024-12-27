@@ -8,7 +8,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 public sealed interface PEvaluable extends HasLocation, PScoped permits PFunc, PNamedEvaluable {
   public SType sType();
 
-  public SSchema sSchema();
+  public SSchema schema();
 
   public Maybe<PExpr> body();
 

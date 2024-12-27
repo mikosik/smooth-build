@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
@@ -9,6 +11,7 @@ import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
+import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
@@ -30,6 +33,11 @@ public final class SItem implements SReferenceable, HasName, HasIdAndLocation {
 
   public SType type() {
     return type;
+  }
+
+  @Override
+  public SSchema schema() {
+    return new SSchema(varSetS(), type);
   }
 
   public Maybe<Id> defaultValueId() {

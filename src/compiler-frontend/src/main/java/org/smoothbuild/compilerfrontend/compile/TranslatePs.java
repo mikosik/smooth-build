@@ -84,8 +84,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SModule convertModule(PModule pModule) {
       var pScope = pModule.scope();
       var structs = pScope.types().toMap().mapValues(this::convertStruct);
-      var evaluables = pScope.referencables().toMap().mapValues(this::convertReferenceableP);
-      var members = new SScope(immutableBindings(structs), immutableBindings(evaluables));
+      var evaluables = pModule.evaluables().map(this::convertReferenceableP);
+      var members = new SScope(
+          immutableBindings(structs),
+          immutableBindings(evaluables.toMap(b -> b.id().toString(), v -> v)));
       var sScope = SScope.sScope(imported, members);
       return new SModule(members, sScope);
     }
@@ -99,7 +101,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var params =
           fields.map(f -> new SItem(fields.get(f.id()).sType(), f.name(), none(), f.location()));
       return new SConstructor(
-          pConstructor.sSchema(), pConstructor.id(), params, pConstructor.location());
+          pConstructor.schema(), pConstructor.id(), params, pConstructor.location());
     }
 
     private SNamedEvaluable convertReferenceableP(PReferenceable pReferenceable) {
@@ -112,7 +114,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
-      var schema = pNamedValue.sSchema();
+      var schema = pNamedValue.schema();
       var name = pNamedValue.id();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
@@ -143,7 +145,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
-      var schema = pNamedFunc.sSchema();
+      var schema = pNamedFunc.schema();
       var name = pNamedFunc.id();
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
@@ -182,7 +184,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda, pLambda.bodyGet());
-      return new SLambda(pLambda.sSchema(), params, body, pLambda.location());
+      return new SLambda(pLambda.schema(), params, body, pLambda.location());
     }
 
     private SBlob convertBlob(PBlob blob) {

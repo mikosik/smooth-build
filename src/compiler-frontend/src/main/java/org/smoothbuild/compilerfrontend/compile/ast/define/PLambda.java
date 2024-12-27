@@ -55,12 +55,12 @@ public final class PLambda extends PPolymorphic implements PFunc {
   }
 
   @Override
-  public SFuncSchema sSchema() {
+  public SFuncSchema schema() {
     return sSchema;
   }
 
   @Override
-  public void setSSchema(SFuncSchema sSchema) {
+  public void setSchema(SFuncSchema sSchema) {
     this.sSchema = sSchema;
   }
 

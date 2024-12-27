@@ -28,8 +28,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
+import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.bindings.Bindings;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
@@ -49,10 +49,10 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
 
   private static class Visitor extends PScopingModuleVisitor<RuntimeException> {
     private final SScope imported;
-    private final Bindings<PReferenceable> referenceables;
+    private final Bindings<Referenceable> referenceables;
     private final Logger logger;
 
-    public Visitor(SScope imported, Bindings<PReferenceable> referenceables, Logger logger) {
+    public Visitor(SScope imported, Bindings<Referenceable> referenceables, Logger logger) {
       this.imported = imported;
       this.referenceables = referenceables;
       this.logger = logger;
@@ -89,8 +89,8 @@ public class InjectDefaultArguments implements Task2<PModule, SScope, PModule> {
       }
     }
 
-    private List<PExpr> inferPositionedArgs(PCall pCall, PReferenceable pReferenceable) {
-      if (pReferenceable instanceof PNamedFunc pNamedFunc) {
+    private List<PExpr> inferPositionedArgs(PCall pCall, Referenceable referenceable) {
+      if (referenceable instanceof PNamedFunc pNamedFunc) {
         var mappedParams = pNamedFunc.params().list().map(Param::new);
         return inferPositionedArgs(pCall, mappedParams, logger);
       } else {
