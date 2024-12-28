@@ -1,6 +1,5 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
@@ -12,8 +11,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
+import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.define.SReferenceable;
-import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -22,20 +21,18 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class TypeTeller {
-  private final SScope imported;
-  private final PScope currentScope;
+  private final PScope scope;
 
-  public TypeTeller(SScope imported, PScope currentScope) {
-    this.imported = imported;
-    this.currentScope = currentScope;
+  public TypeTeller(PScope scope) {
+    this.scope = scope;
   }
 
   public TypeTeller withScope(PScope pScope) {
-    return new TypeTeller(imported, pScope);
+    return new TypeTeller(pScope);
   }
 
   public SSchema schemaFor(Id id) {
-    return currentScope
+    return scope
         .referencables()
         .find(id)
         .mapRight(TypeTeller::schemaFor)
@@ -67,16 +64,10 @@ public class TypeTeller {
   }
 
   private SType typeWithId(Id id) {
-    var structP = currentScope.types().find(id);
-    if (structP.isRight()) {
-      return requireNonNull(structP.right().type());
-    } else {
-      var sTypeDefinition = imported.types().find(id);
-      if (sTypeDefinition.isRight()) {
-        return sTypeDefinition.right().type();
-      } else {
-        throw new RuntimeException("Internal error: " + sTypeDefinition.left());
-      }
-    }
+    return scope
+        .types()
+        .find(id)
+        .mapRight(TypeDefinition::type)
+        .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
   }
 }

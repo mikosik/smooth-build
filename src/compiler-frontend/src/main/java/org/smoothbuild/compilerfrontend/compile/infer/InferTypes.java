@@ -13,7 +13,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
-import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -23,7 +23,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
-import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -35,11 +34,11 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
-public class InferTypes implements Task2<PModule, SScope, PModule> {
+public class InferTypes implements Task1<PModule, PModule> {
   @Override
-  public Output<PModule> execute(PModule pModule, SScope imported) {
+  public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    var typeTeller = new TypeTeller(imported, pModule.scope());
+    var typeTeller = new TypeTeller(pModule.scope());
     try {
       new Worker(typeTeller).visitModule(pModule);
     } catch (TypeException e) {
