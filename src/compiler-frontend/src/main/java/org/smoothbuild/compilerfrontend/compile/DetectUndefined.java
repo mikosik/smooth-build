@@ -9,13 +9,13 @@ import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarNam
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
-import org.smoothbuild.common.schedule.Task2;
+import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
@@ -23,28 +23,25 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.define.SScope;
 
 /**
  * Detect undefined referenceables and types.
  */
-public class DetectUndefined implements Task2<PModule, SScope, PModule> {
+public class DetectUndefined implements Task1<PModule, PModule> {
   @Override
-  public Output<PModule> execute(PModule pModule, SScope imported) {
+  public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    new Detector(imported, emptyScope(), logger).visitModule(pModule);
+    new Detector(emptyScope(), logger).visitModule(pModule);
     var label = COMPILER_FRONT_LABEL.append(":detectUndefined");
     return output(pModule, label, logger.toList());
   }
 
   private static class Detector extends PScopingModuleVisitor<RuntimeException> {
-    private final SScope imported;
     private final PScope scope;
     private final Logger log;
 
-    public Detector(SScope imported, PScope scope, Logger log) {
+    public Detector(PScope scope, Logger log) {
       this.scope = scope;
-      this.imported = imported;
       this.log = log;
     }
 
@@ -61,16 +58,16 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
 
     @Override
     protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
-      return new Detector(imported, pScoped.scope(), log);
+      return new Detector(pScoped.scope(), log);
     }
 
     @Override
     public void visitReference(PReference pReference) {
       var id = pReference.id();
-      if (!(imported.evaluables().contains(id.toString())
-          || scope.referencables().contains(id.toString()))) {
-        log.log(compileError(pReference, id.q() + " is undefined."));
-      }
+      scope
+          .referencables()
+          .find(id)
+          .ifLeft(e -> log.log(compileError(pReference, id.q() + " is undefined.")));
     }
 
     @Override
@@ -78,26 +75,24 @@ public class DetectUndefined implements Task2<PModule, SScope, PModule> {
       switch (pType) {
         case PArrayType array -> visitType(array.elemT());
         case PFuncType func -> visitFuncType(func);
-        case PExplicitType pExplicitType -> visitExplicitType(pExplicitType);
+        case PIdType pIdType -> visitExplicitType(pIdType);
         case PImplicitType pImplicitType -> {}
       }
     }
 
-    private void visitExplicitType(PExplicitType pExplicitType) {
-      if (!isKnownTypeName(pExplicitType.nameText())) {
-        log.log(compileError(pExplicitType.location(), pExplicitType.q() + " type is undefined."));
+    private void visitExplicitType(PIdType pIdType) {
+      if (!isTypeVarName(pIdType.nameText())) {
+        scope
+            .types()
+            .find(pIdType.id())
+            .ifLeft(e ->
+                log.log(compileError(pIdType.location(), pIdType.q() + " type is undefined.")));
       }
     }
 
     private void visitFuncType(PFuncType func) {
       visitType(func.result());
       func.params().forEach(this::visitType);
-    }
-
-    private boolean isKnownTypeName(String name) {
-      return isTypeVarName(name)
-          || scope.types().contains(name)
-          || imported.types().contains(name);
     }
   }
 }
