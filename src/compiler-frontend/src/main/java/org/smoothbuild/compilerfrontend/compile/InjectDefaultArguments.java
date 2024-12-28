@@ -64,13 +64,10 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
-        var id = pReference.id();
-        var pReferenceable = referenceables.getMaybe(id.toString());
-        if (pReferenceable.isSome()) {
-          return inferPositionedArgs(pCall, pReferenceable.get());
-        } else {
-          throw new RuntimeException("Could not find " + id.q() + ".");
-        }
+        return referenceables
+            .find(pReference.id())
+            .mapRight(r -> inferPositionedArgs(pCall, r))
+            .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
       } else {
         return inferPositionedArgs(pCall, logger);
       }
