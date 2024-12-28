@@ -5,6 +5,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
+import static org.smoothbuild.compilerfrontend.compile.CompileError.compileErrorMessage;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
@@ -22,8 +23,6 @@ import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Maybe.None;
-import org.smoothbuild.common.collect.Maybe.Some;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.HasLocation;
@@ -198,13 +197,11 @@ public class SbTranslator {
   private BExpr translateReference(SReference sReference) throws SbTranslatorException {
     var itemS = lexicalEnvironment.get(sReference.referencedId());
     if (itemS == null) {
-      return switch (evaluables.getMaybe(sReference.referencedId().toString())) {
-        case Some<SNamedEvaluable> evaluable -> switch (evaluable.get()) {
-          case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
-          case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
-        };
-        case None<SNamedEvaluable> none -> throw cannotResolveReferenceException(sReference);
-      };
+      return evaluables
+          .find(sReference.referencedId())
+          .mapRight(this::translateNamedEvaluable)
+          .rightOrThrow(
+              e -> new SbTranslatorException(compileErrorMessage(sReference.location(), e)));
     } else {
       var evaluationType = typeF.translate(itemS.type());
       var index = BigInteger.valueOf(lexicalEnvironment.indexOf(sReference.referencedId()));
@@ -215,9 +212,11 @@ public class SbTranslator {
     }
   }
 
-  private static SbTranslatorException cannotResolveReferenceException(SReference sReference) {
-    return new SbTranslatorException(
-        "Cannot resolve " + sReference.referencedId().q() + " at " + sReference.location() + ".");
+  private BExpr translateNamedEvaluable(SNamedEvaluable evaluable) throws SbTranslatorException {
+    return switch (evaluable) {
+      case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
+      case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
+    };
   }
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {

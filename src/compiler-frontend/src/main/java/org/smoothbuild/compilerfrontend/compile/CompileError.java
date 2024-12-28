@@ -12,6 +12,10 @@ public class CompileError {
   }
 
   public static Log compileError(Location location, String message) {
-    return error(location.toString() + ": " + message);
+    return error(compileErrorMessage(location, message));
+  }
+
+  public static String compileErrorMessage(Location location, String message) {
+    return location.toString() + ": " + message;
   }
 }

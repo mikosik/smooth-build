@@ -318,7 +318,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(sInstantiate(funcS)))
             .throwsException(
-                new SbTranslatorException("Cannot resolve `p2` at {t-project}/module.smooth:1."));
+                new SbTranslatorException("{t-project}/module.smooth:1: Cannot resolve `p2`."));
       }
 
       @Test
