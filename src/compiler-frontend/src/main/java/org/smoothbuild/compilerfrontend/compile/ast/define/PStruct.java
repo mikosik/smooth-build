@@ -5,11 +5,12 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
+import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct implements PScoped, HasIdAndLocation {
+public final class PStruct implements TypeDefinition, PScoped, HasIdAndLocation {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;
@@ -50,7 +51,8 @@ public final class PStruct implements PScoped, HasIdAndLocation {
     this.scope = scope;
   }
 
-  public SStructType sType() {
+  @Override
+  public SStructType type() {
     return sStructType;
   }
 

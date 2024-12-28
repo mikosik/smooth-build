@@ -69,7 +69,7 @@ public class TypeTeller {
   private SType typeWithId(Id id) {
     var structP = currentScope.types().find(id);
     if (structP.isRight()) {
-      return requireNonNull(structP.right().sType());
+      return requireNonNull(structP.right().type());
     } else {
       var sTypeDefinition = imported.types().find(id);
       if (sTypeDefinition.isRight()) {

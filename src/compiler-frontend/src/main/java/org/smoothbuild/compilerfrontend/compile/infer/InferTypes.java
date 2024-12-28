@@ -105,7 +105,7 @@ public class InferTypes implements Task2<PModule, SScope, PModule> {
 
     private static void visitConstructor(PConstructor pConstructor) {
       var pStruct = pConstructor.pStruct();
-      var sStructType = pStruct.sType();
+      var sStructType = pStruct.type();
       var fieldSigs = sStructType.fields();
       var params = pStruct
           .fields()
