@@ -74,7 +74,7 @@ public class FrontendCompile implements Task1<List<FullPath>, SModule> {
       var withUndefinedDetected = scheduler.submit(DetectUndefined.class, withInitializedScopes);
       var withInjected = scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected);
       var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
-      var typesInferred = scheduler.submit(InferTypes.class, sorted, importedScope);
+      var typesInferred = scheduler.submit(InferTypes.class, sorted);
       var sModule = scheduler.submit(TranslatePs.class, typesInferred, importedScope);
       var report = report(COMPILER_FRONT_LABEL.append(":schedule:module"), list());
       return schedulingOutput(sModule, report);
