@@ -143,13 +143,13 @@ public class VisibilityTest extends FrontendCompileTester {
         @Test
         void is_not_visible_in_its_default_value() {
           var code = "func(String withDefault = withDefault) = withDefault;";
-          module(code).loadsWithError(1, "`withDefault` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `withDefault`.");
         }
 
         @Test
         void is_not_visible_in_default_value_of_other_param() {
           var code = "func(String param, String withDefault = param) = param;";
-          module(code).loadsWithError(1, "`param` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `param`.");
         }
       }
 
@@ -170,7 +170,7 @@ public class VisibilityTest extends FrontendCompileTester {
               myValue = (String param) -> "abc";
               result = param;
               """;
-          module(code).loadsWithError(2, "`param` is undefined.");
+          module(code).loadsWithError(2, "Cannot resolve `param`.");
         }
       }
     }
@@ -184,7 +184,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               myValue = ((Int int) -> int)(undefined);
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -192,7 +192,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               myValue = () -> undefined;
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -202,7 +202,7 @@ public class VisibilityTest extends FrontendCompileTester {
               String myFunc(Blob b) = "abc";
               result = myFunc(undefined);
               """;
-          module(code).loadsWithError(2, "`undefined` is undefined.");
+          module(code).loadsWithError(2, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -210,7 +210,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               result() = undefined;
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -218,7 +218,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               result = undefined();
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -226,7 +226,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               result = undefined;
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -234,7 +234,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               result = [undefined];
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
 
         @Test
@@ -242,7 +242,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               String myFunc(Blob b = undefined) = "abc";
               """;
-          module(code).loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `undefined`.");
         }
       }
 
@@ -255,7 +255,7 @@ public class VisibilityTest extends FrontendCompileTester {
               @Bytecode("Impl.met")
               Undefined myValue;
               """;
-          module(code).loadsWithError(2, "`Undefined` type is undefined.");
+          module(code).loadsWithError(2, "Cannot resolve `Undefined`.");
         }
 
         @Test
@@ -265,7 +265,7 @@ public class VisibilityTest extends FrontendCompileTester {
               @Native("Impl.met")
               Undefined myFunc();
               """;
-          module(code).loadsWithError(2, "`Undefined` type is undefined.");
+          module(code).loadsWithError(2, "Cannot resolve `Undefined`.");
         }
 
         @Test
@@ -273,7 +273,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               [Undefined] myFunc() = [];
               """;
-          module(code).loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `Undefined`.");
         }
 
         @Test
@@ -281,7 +281,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               String myFunc(Undefined param) = "abc";
               """;
-          module(code).loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `Undefined`.");
         }
 
         @Test
@@ -290,7 +290,7 @@ public class VisibilityTest extends FrontendCompileTester {
               """
               Int myFunc((A)->Int param = (Undefined x) -> 7) = 7;
               """;
-          module(code).loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `Undefined`.");
         }
 
         @Test
@@ -298,7 +298,7 @@ public class VisibilityTest extends FrontendCompileTester {
           var code = """
               myValue = (Undefined param) -> 7;
               """;
-          module(code).loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "Cannot resolve `Undefined`.");
         }
 
         @Test
@@ -309,7 +309,7 @@ public class VisibilityTest extends FrontendCompileTester {
                 UndefinedType field
               }
               """;
-          module(code).loadsWithError(2, "`UndefinedType` type is undefined.");
+          module(code).loadsWithError(2, "Cannot resolve `UndefinedType`.");
         }
       }
     }
