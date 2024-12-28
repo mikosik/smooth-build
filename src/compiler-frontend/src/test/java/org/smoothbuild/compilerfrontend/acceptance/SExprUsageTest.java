@@ -1013,28 +1013,28 @@ public class SExprUsageTest extends FrontendCompileTester {
           String myFunc(String param) = "abc";
           result = myFunc(A);
           """)
-          .loadsWithError(2, "`A` is undefined.");
+          .loadsWithError(2, "Cannot resolve `A`.");
     }
 
     @Test
     void func_body_fails() {
       module("""
           result() = A;
-          """).loadsWithError(1, "`A` is undefined.");
+          """).loadsWithError(1, "Cannot resolve `A`.");
     }
 
     @Test
     void value_body_fails() {
       module("""
           result = A;
-          """).loadsWithError(1, "`A` is undefined.");
+          """).loadsWithError(1, "Cannot resolve `A`.");
     }
 
     @Test
     void array_elem_fails() {
       module("""
           result = [A];
-          """).loadsWithError(1, "`A` is undefined.");
+          """).loadsWithError(1, "Cannot resolve `A`.");
     }
 
     @Test
@@ -1042,14 +1042,14 @@ public class SExprUsageTest extends FrontendCompileTester {
       module("""
           String myFunc(String value = A) = "abc";
           """)
-          .loadsWithError(1, "`A` is undefined.");
+          .loadsWithError(1, "Cannot resolve `A`.");
     }
 
     @Test
     void func_in_call_expression_fails() {
       module("""
           result = A();
-          """).loadsWith(err(1, "`A` is undefined."));
+          """).loadsWith(err(1, "Cannot resolve `A`."));
     }
 
     @Test
@@ -1057,14 +1057,14 @@ public class SExprUsageTest extends FrontendCompileTester {
       String code = """
             result = A.myField;
             """;
-      module(code).loadsWithError(1, "`A` is undefined.");
+      module(code).loadsWithError(1, "Cannot resolve `A`.");
     }
 
     @Test
     void parens_content() {
       module("""
           result = (A);
-          """).loadsWithError(1, "`A` is undefined.");
+          """).loadsWithError(1, "Cannot resolve `A`.");
     }
   }
 
