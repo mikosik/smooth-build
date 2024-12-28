@@ -3,7 +3,6 @@ package org.smoothbuild.compilerfrontend.compile;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -43,7 +42,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
 
   @VisibleForTesting
   static void initializeScopes(SScope importedScope, PModule pModule, Logger logger) {
-    var pScope = new PScope(importedScope.evaluables(), immutableBindings());
+    var pScope = new PScope(importedScope.evaluables(), importedScope.types());
     new Initializer(pScope, logger).visitModule(pModule);
   }
 
