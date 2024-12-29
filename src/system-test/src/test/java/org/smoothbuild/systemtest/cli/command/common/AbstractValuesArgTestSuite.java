@@ -46,7 +46,8 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal-name"));
     assertFinishedWithError();
-    assertSystemOutContains("[ERROR] Unknown value `illegal-name`.\n");
+    assertSystemOutContains(
+        "[ERROR] Illegal reference `illegal-name`. It must not contain '-' character.\n");
   }
 
   @Test
@@ -56,8 +57,10 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestContext {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal-name", "other-name"));
     assertFinishedWithError();
-    assertSystemOutContains("[ERROR] Unknown value `illegal-name`.\n");
-    assertSystemOutContains("[ERROR] Unknown value `other-name`.\n");
+    assertSystemOutContains(
+        "[ERROR] Illegal reference `illegal-name`. It must not contain '-' character.\n");
+    assertSystemOutContains(
+        "[ERROR] Illegal reference `other-name`. It must not contain '-' character.\n");
   }
 
   @Test
