@@ -11,7 +11,8 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
-public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings, MutableBindings {
+public sealed interface Bindings<E>
+    permits FlatBindings, ImmutableBindings, MutableBindings, ScopedBindings {
   public static <E> ImmutableFlatBindings<E> immutableBindings() {
     return new ImmutableFlatBindings<>(Map.map());
   }
@@ -52,11 +53,13 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
     return "Cannot resolve " + q(parts.subList(0, toIndex).toString(":")) + ".";
   }
 
+  public default ImmutableFlatBindings<E> toFlatImmutable() {
+    return immutableBindings(toMap());
+  }
+
   public Maybe<E> getMaybe(String name);
 
   public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T;
 
   public Map<String, E> toMap();
-
-  public ImmutableFlatBindings<E> toFlatImmutable();
 }
