@@ -39,8 +39,6 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
     return new MutableScopedBindings<>(outerScopeBindings);
   }
 
-  public boolean contains(String name);
-
   public default Result<E> find(Id id) {
     var parts = id.parts();
     if (parts.size() == 1) {

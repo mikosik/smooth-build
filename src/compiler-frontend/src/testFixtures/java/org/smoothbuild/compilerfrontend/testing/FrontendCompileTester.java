@@ -27,6 +27,7 @@ import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
@@ -69,7 +70,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     private SNamedEvaluable assertContainsEvaluable(String name) {
       var evaluables = moduleS.get().localScope().evaluables();
       assertWithMessage("Module doesn't contain '" + name + "'.")
-          .that(evaluables.contains(name))
+          .that(evaluables.find(fqn(name)).isRight())
           .isTrue();
       return evaluables.find(fqn(name)).right();
     }
@@ -78,7 +79,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       var name = expected.name();
       var types = moduleS.get().localScope().types();
       assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-          .that(types.contains(name))
+          .that(types.find(Fqn.fqn(name)).isRight())
           .isTrue();
       SType actual = types.find(structName(name)).right().type();
       assertWithMessage("Module contains type '" + name + "', but")
