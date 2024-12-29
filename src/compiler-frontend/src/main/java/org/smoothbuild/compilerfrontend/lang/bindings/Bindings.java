@@ -1,11 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import static org.smoothbuild.common.base.Strings.q;
+import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Result.error;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
@@ -43,8 +43,8 @@ public sealed interface Bindings<E>
   public default Result<E> find(Id id) {
     var parts = id.parts();
     if (parts.size() == 1) {
-      var result = getMaybe(parts.get(0).toString());
-      return result.toResult(() -> cannotResolveErrorMessage(parts, 1));
+      return maybe(get(parts.get(0).toString()))
+          .toResult(() -> cannotResolveErrorMessage(parts, 1));
     }
     return error(cannotResolveErrorMessage(parts, 2));
   }
@@ -57,7 +57,7 @@ public sealed interface Bindings<E>
     return immutableBindings(toMap());
   }
 
-  public Maybe<E> getMaybe(String name);
+  public E get(String name);
 
   public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T;
 

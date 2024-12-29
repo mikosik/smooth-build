@@ -3,11 +3,9 @@ package org.smoothbuild.compilerfrontend.lang.bindings;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
-import static org.smoothbuild.common.collect.Maybe.maybe;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function1;
 
 public sealed class FlatBindings<E> implements Bindings<E>
@@ -19,8 +17,8 @@ public sealed class FlatBindings<E> implements Bindings<E>
   }
 
   @Override
-  public Maybe<E> getMaybe(String name) {
-    return maybe(map.get(name));
+  public E get(String name) {
+    return map.get(name);
   }
 
   @Override
