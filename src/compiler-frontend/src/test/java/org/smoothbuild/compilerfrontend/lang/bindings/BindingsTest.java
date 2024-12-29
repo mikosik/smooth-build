@@ -170,18 +170,6 @@ public class BindingsTest {
     }
 
     @Test
-    void contains_present_element() {
-      var bindings = newBindings(element("name", 7));
-      assertThat(bindings.contains("name")).isTrue();
-    }
-
-    @Test
-    void contains_missing_element_returns_false() {
-      var bindings = newBindings();
-      assertThat(bindings.contains("name")).isFalse();
-    }
-
-    @Test
     void map() {
       var bindings = newBindings(element("name", 7), element("other", 5));
       var mapped = bindings.map(element -> element.value);
