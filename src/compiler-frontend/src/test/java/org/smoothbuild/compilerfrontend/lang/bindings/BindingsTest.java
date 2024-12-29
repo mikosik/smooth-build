@@ -3,8 +3,6 @@ package org.smoothbuild.compilerfrontend.lang.bindings;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.collect.Maybe.none;
-import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
@@ -158,15 +156,15 @@ public class BindingsTest {
     }
 
     @Test
-    void getMaybe_element() {
+    void get_element() {
       var bindings = newBindings(element("name", 7));
-      assertThat(bindings.getMaybe("name")).isEqualTo(some(element("name", 7)));
+      assertThat(bindings.get("name")).isEqualTo(element("name", 7));
     }
 
     @Test
-    void getMaybe_missing_element_returns_empty() {
+    void get_missing_element_returns_null() {
       var bindings = newBindings();
-      assertThat(bindings.getMaybe("name")).isEqualTo(none());
+      assertThat(bindings.get("name")).isNull();
     }
 
     @Test

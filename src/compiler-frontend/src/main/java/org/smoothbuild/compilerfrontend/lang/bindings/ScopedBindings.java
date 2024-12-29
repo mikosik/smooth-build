@@ -5,7 +5,6 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.function.Function1;
 
 public sealed class ScopedBindings<E> implements Bindings<E>
@@ -20,13 +19,9 @@ public sealed class ScopedBindings<E> implements Bindings<E>
   }
 
   @Override
-  public Maybe<E> getMaybe(String name) {
-    Maybe<E> element = innerScopeBindings.getMaybe(name).map(e -> e);
-    if (element.isSome()) {
-      return element;
-    } else {
-      return outerScopeBindings.getMaybe(name).map(e -> e);
-    }
+  public E get(String name) {
+    E element = innerScopeBindings.get(name);
+    return element != null ? element : outerScopeBindings.get(name);
   }
 
   @Override
