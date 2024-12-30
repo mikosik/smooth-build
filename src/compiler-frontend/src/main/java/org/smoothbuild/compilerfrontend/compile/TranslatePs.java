@@ -178,7 +178,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda.bodyGet());
-      return new SLambda(pLambda.schema(), params, body, pLambda.location());
+      return new SLambda(pLambda.schema(), pLambda.id(), params, body, pLambda.location());
     }
 
     private SBlob convertBlob(PBlob blob) {

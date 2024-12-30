@@ -644,7 +644,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
       int line, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
     var funcTS = sFuncType(toTypes(params.list()), body.evaluationType());
     var funcSSchema = sFuncSchema(quantifiedVars, funcTS);
-    return new SLambda(funcSSchema, params, body, location(line));
+    return new SLambda(funcSSchema, fqn("lambda"), params, body, location(line));
   }
 
   public default SLambda sLambda(SExpr body) {
@@ -657,7 +657,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SLambda sLambda(int line, NList<SItem> params, SExpr body) {
     var funcSSchema = sFuncSchema(toTypes(params.list()), body.evaluationType());
-    return new SLambda(funcSSchema, params, body, location(line));
+    return new SLambda(funcSSchema, fqn("lambda"), params, body, location(line));
   }
 
   public default SNamedExprFunc idSFunc() {
