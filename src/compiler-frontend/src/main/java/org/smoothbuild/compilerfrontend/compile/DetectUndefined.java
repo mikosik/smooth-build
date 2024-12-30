@@ -14,6 +14,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
@@ -21,7 +22,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 
 /**
@@ -57,8 +57,8 @@ public class DetectUndefined implements Task1<PModule, PModule> {
     }
 
     @Override
-    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
-      return new Detector(pScoped.scope(), log);
+    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PContainer pContainer) {
+      return new Detector(pContainer.scope(), log);
     }
 
     @Override
