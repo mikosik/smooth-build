@@ -38,9 +38,9 @@ public class InferTypes implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    var typeTeller = new TypeTeller(pModule.scope());
+    var typeFinder = new TypeFinder(pModule.scope());
     try {
-      new Worker(typeTeller).visitModule(pModule);
+      new Worker(typeFinder).visitModule(pModule);
     } catch (TypeException e) {
       logger.log(e.log());
     }
@@ -48,10 +48,10 @@ public class InferTypes implements Task1<PModule, PModule> {
   }
 
   public static class Worker extends PModuleVisitor<TypeException> {
-    private final TypeTeller typeTeller;
+    private final TypeFinder typeFinder;
 
-    private Worker(TypeTeller typeTeller) {
-      this.typeTeller = typeTeller;
+    private Worker(TypeFinder typeFinder) {
+      this.typeFinder = typeFinder;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private SItemSig inferFieldSig(PItem field) throws TypeException {
-      var type = typeTeller.translate(field.type());
+      var type = typeFinder.translate(field.type());
       if (type.vars().isEmpty()) {
         field.setSType(type);
         return new SItemSig(type, field.id());
@@ -82,7 +82,7 @@ public class InferTypes implements Task1<PModule, PModule> {
     @Override
     public void visitNamedValue(PNamedValue namedValue) throws TypeException {
       var unifier = new Unifier();
-      unifyNamedValue(unifier, typeTeller, namedValue);
+      unifyNamedValue(unifier, typeFinder, namedValue);
       convertFlexibleVarsToRigid(unifier, namedValue);
       resolveNamedValue(unifier, namedValue);
     }
@@ -95,7 +95,7 @@ public class InferTypes implements Task1<PModule, PModule> {
         visitConstructor(constructor);
       } else {
         var unifier = new Unifier();
-        unifyFunc(unifier, typeTeller, namedFunc);
+        unifyFunc(unifier, typeFinder, namedFunc);
         convertFlexibleVarsToRigid(unifier, namedFunc);
         resolveFunc(unifier, namedFunc);
         detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
@@ -128,7 +128,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
               replaceVarsWithFlexible(funcSchema.quantifiedVars(), resolvedParamType, unifier);
-          var sSchema = typeTeller.schemaFor(defaultValueId);
+          var sSchema = typeFinder.schemaFor(defaultValueId);
           var defaultValueType = replaceQuantifiedVarsWithFlexible(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));

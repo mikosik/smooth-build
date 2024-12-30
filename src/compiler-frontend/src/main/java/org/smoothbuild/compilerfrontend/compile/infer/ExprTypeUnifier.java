@@ -40,36 +40,36 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
 public class ExprTypeUnifier {
   private final Unifier unifier;
-  private final TypeTeller typeTeller;
+  private final TypeFinder typeFinder;
   private final SVarSet outerScopeVars;
 
-  private ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller) {
-    this(unifier, typeTeller, varSetS());
+  private ExprTypeUnifier(Unifier unifier, TypeFinder typeFinder) {
+    this(unifier, typeFinder, varSetS());
   }
 
-  private ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller, SVarSet outerScopeVars) {
+  private ExprTypeUnifier(Unifier unifier, TypeFinder typeFinder, SVarSet outerScopeVars) {
     this.unifier = unifier;
-    this.typeTeller = typeTeller;
+    this.typeFinder = typeFinder;
     this.outerScopeVars = outerScopeVars;
   }
 
   public static void unifyNamedValue(
-      Unifier unifier, TypeTeller typeTeller, PNamedValue pNamedValue) throws TypeException {
-    new ExprTypeUnifier(unifier, typeTeller).unifyNamedValue(pNamedValue);
+      Unifier unifier, TypeFinder typeFinder, PNamedValue pNamedValue) throws TypeException {
+    new ExprTypeUnifier(unifier, typeFinder).unifyNamedValue(pNamedValue);
   }
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
     var evaluationType = translateOrGenerateFlexibleVar(pNamedValue.evaluationType());
     pNamedValue.setSType(evaluationType);
-    unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, typeTeller);
+    unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, typeFinder);
     var resolvedType = resolveType(pNamedValue);
     var vars = resolveQuantifiedVars(resolvedType);
     pNamedValue.setSchema(new SSchema(vars, resolvedType));
   }
 
-  public static void unifyFunc(Unifier unifier, TypeTeller typeTeller, PFunc namedFunc)
+  public static void unifyFunc(Unifier unifier, TypeFinder typeFinder, PFunc namedFunc)
       throws TypeException {
-    new ExprTypeUnifier(unifier, typeTeller).unifyFunc(namedFunc);
+    new ExprTypeUnifier(unifier, typeFinder).unifyFunc(namedFunc);
   }
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
@@ -77,7 +77,7 @@ public class ExprTypeUnifier {
     var resultType = translateOrGenerateFlexibleVar(pFunc.resultT());
     var funcTS = new SFuncType(paramTypes, resultType);
     pFunc.setSType(funcTS);
-    unifyEvaluableBody(pFunc, resultType, funcTS, typeTeller.withScope(pFunc.scope()));
+    unifyEvaluableBody(pFunc, resultType, funcTS, typeFinder.withScope(pFunc.scope()));
     var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
     pFunc.setSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
@@ -92,16 +92,16 @@ public class ExprTypeUnifier {
   }
 
   private List<SType> inferParamTypes(NList<PItem> params) {
-    var paramTypes = params.list().map(p -> typeTeller.translate(p.type()));
+    var paramTypes = params.list().map(p -> typeFinder.translate(p.type()));
     params.list().zip(paramTypes, PItem::setSType);
     return paramTypes;
   }
 
   private void unifyEvaluableBody(
-      PEvaluable pEvaluable, SType evaluationType, SType type, TypeTeller typeTeller)
+      PEvaluable pEvaluable, SType evaluationType, SType type, TypeFinder typeFinder)
       throws TypeException {
     var vars = outerScopeVars.addAll(type.vars());
-    new ExprTypeUnifier(unifier, typeTeller, vars).unifyEvaluableBody(pEvaluable, evaluationType);
+    new ExprTypeUnifier(unifier, typeFinder, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType)
@@ -232,7 +232,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyReference(PReference pReference) {
-    pReference.setSSchema(typeTeller.schemaFor(pReference.id()));
+    pReference.setSSchema(typeFinder.schemaFor(pReference.id()));
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {
@@ -265,7 +265,7 @@ public class ExprTypeUnifier {
     if (pType instanceof PImplicitType) {
       return unifier.newFlexibleVar();
     } else {
-      return typeTeller.translate(pType);
+      return typeFinder.translate(pType);
     }
   }
 }
