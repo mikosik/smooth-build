@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.Map.mapOfAll;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.function.Function1;
 
 public sealed class FlatBindings<E> implements Bindings<E>
     permits ImmutableFlatBindings, MutableFlatBindings {
@@ -19,11 +18,6 @@ public sealed class FlatBindings<E> implements Bindings<E>
   @Override
   public E get(String name) {
     return map.get(name);
-  }
-
-  @Override
-  public <F, T extends Throwable> FlatBindings<F> map(Function1<? super E, F, T> mapper) throws T {
-    return new FlatBindings<>(mapOfAll(map).mapValues(mapper));
   }
 
   @Override
