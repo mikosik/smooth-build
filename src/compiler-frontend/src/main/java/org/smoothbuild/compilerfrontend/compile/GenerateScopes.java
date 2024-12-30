@@ -14,13 +14,13 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
@@ -57,10 +57,10 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
     }
 
     @Override
-    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
+    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PContainer pContainer) {
       var scopeFiller = new ScopeCreator(scope, logger);
-      var newScope = scopeFiller.createScopeFor(pScoped);
-      pScoped.setScope(newScope);
+      var newScope = scopeFiller.createScopeFor(pContainer);
+      pContainer.setScope(newScope);
       return new Initializer(newScope, logger);
     }
   }
@@ -76,8 +76,8 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
       this.log = log;
     }
 
-    private PScope createScopeFor(PScoped pScoped) {
-      switch (pScoped) {
+    private PScope createScopeFor(PContainer pContainer) {
+      switch (pContainer) {
         case PModule pModule -> initializeScopeFor(pModule);
         case PStruct pStruct -> initializeScopeFor(pStruct);
         case PNamedValue pNamedValue -> initializeScopeFor(pNamedValue);

@@ -10,7 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct implements TypeDefinition, PScoped, HasIdAndLocation {
+public final class PStruct implements TypeDefinition, PContainer, HasIdAndLocation {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;

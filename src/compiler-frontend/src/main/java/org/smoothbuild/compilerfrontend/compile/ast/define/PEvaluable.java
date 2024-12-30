@@ -5,7 +5,7 @@ import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public sealed interface PEvaluable extends HasLocation, PScoped permits PFunc, PNamedEvaluable {
+public sealed interface PEvaluable extends HasLocation, PContainer permits PFunc, PNamedEvaluable {
   public String nameText();
 
   public SType sType();

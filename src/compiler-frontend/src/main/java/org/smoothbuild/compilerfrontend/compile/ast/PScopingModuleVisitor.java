@@ -1,14 +1,14 @@
 package org.smoothbuild.compilerfrontend.compile.ast;
 
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 
 public abstract class PScopingModuleVisitor<T extends Throwable> extends PModuleVisitor<T> {
-  protected abstract PModuleVisitor<T> createVisitorForScopeOf(PScoped pScoped);
+  protected abstract PModuleVisitor<T> createVisitorForScopeOf(PContainer pContainer);
 
   @Override
   public final void visitModule(PModule pModule) throws T {

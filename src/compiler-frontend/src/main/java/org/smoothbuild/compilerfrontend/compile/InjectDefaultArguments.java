@@ -19,12 +19,12 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PScoped;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
@@ -51,8 +51,8 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     }
 
     @Override
-    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PScoped pScoped) {
-      return new Visitor(pScoped.scope().referencables(), logger);
+    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PContainer pContainer) {
+      return new Visitor(pContainer.scope().referencables(), logger);
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
-public final class PModule implements PScoped {
+public final class PModule implements PContainer {
   private final String fileName;
   private final List<PStruct> structs;
   private final List<PNamedEvaluable> evaluables;
