@@ -46,18 +46,6 @@ public class GenerateIds implements Task1<PModule, PModule> {
     }
 
     @Override
-    public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
-      var nameText = pNamedEvaluable.nameText();
-      parseReferenceableName(nameText)
-          .ifLeft(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
-          .mapRight(this::fullId)
-          .ifRight(id -> {
-            pNamedEvaluable.setId(id);
-            runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable));
-          });
-    }
-
-    @Override
     public void visitType(PType pType) throws RuntimeException {
       switch (pType) {
         case PArrayType pArrayType -> visitType(pArrayType.elemT());
@@ -72,6 +60,26 @@ public class GenerateIds implements Task1<PModule, PModule> {
       }
     }
 
+    @Override
+    public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
+      var nameText = pNamedEvaluable.nameText();
+      parseReferenceableName(nameText)
+          .ifLeft(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
+          .mapRight(this::fullId)
+          .ifRight(pNamedEvaluable::setId)
+          .ifRight(id -> runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable)));
+    }
+
+    @Override
+    public void visitLambda(PLambda pLambda) throws RuntimeException {
+      var nameText = pLambda.nameText();
+      parseReferenceableName(nameText)
+          .ifLeft(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
+          .mapRight(this::fullId)
+          .ifRight(pLambda::setId)
+          .ifRight(id -> runWithScopeId(id, () -> super.visitLambda(pLambda)));
+    }
+
     private void logIllegalTypeReference(PIdType id, String e) {
       logger.log(
           compileError(id.location(), "Illegal type reference `" + id.nameText() + "`. " + e));
@@ -83,24 +91,12 @@ public class GenerateIds implements Task1<PModule, PModule> {
       parseReferenceableName(nameText)
           .ifLeft(e -> logIllegalIdentifier(nameText, pItem.location(), e))
           .ifRight(id -> {
-            pItem.setName(id);
             var fullId = fullId(id);
+            pItem.setName(id);
             pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fullId));
           });
       pItem.defaultValue().ifPresent(this::visitExpr);
       visitType(pItem.type());
-    }
-
-    @Override
-    public void visitLambda(PLambda pLambda) throws RuntimeException {
-      var nameText = pLambda.nameText();
-      parseReferenceableName(nameText)
-          .ifLeft(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
-          .mapRight(this::fullId)
-          .ifRight(id -> {
-            pLambda.setId(id);
-            runWithScopeId(id, () -> super.visitLambda(pLambda));
-          });
     }
 
     private void logIllegalIdentifier(String nameText, Location location, String e) {
