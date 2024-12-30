@@ -5,6 +5,7 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public sealed class ScopedBindings<E> implements Bindings<E>
     permits ImmutableScopedBindings, MutableScopedBindings {
@@ -18,15 +19,15 @@ public sealed class ScopedBindings<E> implements Bindings<E>
   }
 
   @Override
-  public E get(String name) {
+  public E get(Name name) {
     E element = innerScopeBindings.get(name);
     return element != null ? element : outerScopeBindings.get(name);
   }
 
   @Override
-  public Map<String, E> toMap() {
+  public Map<Name, E> toMap() {
     @SuppressWarnings("unchecked")
-    Map<String, E> map = (Map<String, E>) outerScopeBindings.toMap();
+    Map<Name, E> map = (Map<Name, E>) outerScopeBindings.toMap();
     return map.overrideWith(innerScopeBindings.toMap());
   }
 

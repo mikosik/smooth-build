@@ -25,6 +25,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 /**
  * For each syntactic construct that implements WithScope
@@ -133,7 +134,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
       // function or value and have fully qualified name that contains enclosing name.
       // Everything is flat in the global scope. Parameter default values have workaround of
       // gluing function name and parameter name using '~' into a name.
-      var last = binding.id().parts().getLast().toString();
+      var last = binding.id().parts().getLast();
       addBinding(bindings, binding, last, reportErrors);
     }
 
@@ -143,7 +144,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
     // with same name is declared which will be reported when detecting duplicate struct name.
 
     private <T extends HasIdAndLocation> void addBinding(
-        MutableBindings<T> bindings, T binding, String name, boolean reportErrors) {
+        MutableBindings<T> bindings, T binding, Name name, boolean reportErrors) {
       var previousBinding = bindings.add(name, binding);
       if (previousBinding != null && reportErrors) {
         log.log(alreadyDefinedError(
@@ -151,10 +152,8 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
       }
     }
 
-    private static Log alreadyDefinedError(
-        Location location, String previousLocation, String name) {
-      return compileError(
-          location, "`" + name + "` is already defined at " + previousLocation + ".");
+    private static Log alreadyDefinedError(Location location, String previousLocation, Name name) {
+      return compileError(location, name.q() + " is already defined at " + previousLocation + ".");
     }
   }
 }

@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.bindings;
 
+import org.smoothbuild.compilerfrontend.lang.name.Name;
+
 public final class MutableScopedBindings<E> extends ScopedBindings<E>
     implements MutableBindings<E> {
   MutableScopedBindings(Bindings<? extends E> outerScopeBindings) {
@@ -7,7 +9,7 @@ public final class MutableScopedBindings<E> extends ScopedBindings<E>
   }
 
   @Override
-  public E add(String name, E elem) {
+  public E add(Name name, E elem) {
     return innerScopeBindings().add(name, elem);
   }
 

@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import java.util.HashMap;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 /**
  * Immutable bindings with single scope.
@@ -11,7 +12,7 @@ public final class MutableFlatBindings<E> extends FlatBindings<E> implements Mut
   }
 
   @Override
-  public E add(String name, E elem) {
+  public E add(Name name, E elem) {
     return map.put(name, elem);
   }
 }
