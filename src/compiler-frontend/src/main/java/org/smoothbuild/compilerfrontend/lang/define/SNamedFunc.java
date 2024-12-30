@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
@@ -11,8 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 /**
  * Named function.
  */
-public abstract sealed class SNamedFunc
-    implements NamedFunc, SFunc, SNamedEvaluable, HasIdAndLocation
+public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvaluable
     permits SAnnotatedFunc, SNamedExprFunc, SConstructor {
   private final NList<SItem> params;
   private final SSchema schema;

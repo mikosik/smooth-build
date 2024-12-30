@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 
@@ -13,12 +14,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
  */
 public final class SLambda implements SExprFunc, SPolymorphic {
   private final SFuncSchema schema;
+  private final Id id;
   private final NList<SItem> params;
   private final SExpr body;
   private final Location location;
 
-  public SLambda(SFuncSchema schema, NList<SItem> params, SExpr body, Location location) {
+  public SLambda(SFuncSchema schema, Id id, NList<SItem> params, SExpr body, Location location) {
     this.schema = schema;
+    this.id = id;
     this.params = params;
     this.body = body;
     this.location = location;
@@ -27,6 +30,11 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   @Override
   public SFuncSchema schema() {
     return schema;
+  }
+
+  @Override
+  public Id id() {
+    return id;
   }
 
   @Override
