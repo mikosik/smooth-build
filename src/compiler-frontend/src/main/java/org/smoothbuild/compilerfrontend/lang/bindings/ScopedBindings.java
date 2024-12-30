@@ -5,7 +5,6 @@ import static org.smoothbuild.common.base.Strings.indent;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;
-import org.smoothbuild.common.function.Function1;
 
 public sealed class ScopedBindings<E> implements Bindings<E>
     permits ImmutableScopedBindings, MutableScopedBindings {
@@ -22,11 +21,6 @@ public sealed class ScopedBindings<E> implements Bindings<E>
   public E get(String name) {
     E element = innerScopeBindings.get(name);
     return element != null ? element : outerScopeBindings.get(name);
-  }
-
-  @Override
-  public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T {
-    return new ScopedBindings<>(outerScopeBindings.map(mapper), innerScopeBindings.map(mapper));
   }
 
   @Override

@@ -168,13 +168,6 @@ public class BindingsTest {
     }
 
     @Test
-    void map() {
-      var bindings = newBindings(element("name", 7), element("other", 5));
-      var mapped = bindings.map(element -> element.value);
-      assertThat(mapped.find(name("name"))).isEqualTo(ok(7));
-    }
-
-    @Test
     void asMap() {
       var first = element("name", 7);
       var second = element("other", 5);

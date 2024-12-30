@@ -7,7 +7,6 @@ import static org.smoothbuild.common.collect.Result.error;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Result;
-import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
@@ -58,8 +57,6 @@ public sealed interface Bindings<E>
   }
 
   public E get(String name);
-
-  public <F, T extends Throwable> Bindings<F> map(Function1<? super E, F, T> mapper) throws T;
 
   public Map<String, E> toMap();
 }
