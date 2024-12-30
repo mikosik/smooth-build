@@ -7,8 +7,8 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasIdAndLocation;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
+import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
@@ -19,7 +19,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Item is a func param or a struct field.
  * This class is immutable.
  */
-public final class SItem implements Item, SReferenceable, HasName, HasIdAndLocation {
+public final class SItem implements Item, SReferenceable, HasName, Identifiable {
   private final Maybe<Id> defaultValueId;
   private final SType type;
   private final Name name;

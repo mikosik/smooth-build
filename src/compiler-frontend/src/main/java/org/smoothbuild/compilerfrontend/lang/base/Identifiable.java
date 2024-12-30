@@ -6,6 +6,6 @@ import org.smoothbuild.compilerfrontend.lang.name.Id;
 /**
  * Interface marking classes that have Id and Location.
  */
-public interface HasIdAndLocation extends HasLocation {
+public interface Identifiable extends HasLocation {
   public Id id();
 }
