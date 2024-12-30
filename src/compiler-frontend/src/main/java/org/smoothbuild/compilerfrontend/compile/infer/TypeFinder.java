@@ -20,22 +20,22 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
-public class TypeTeller {
+public class TypeFinder {
   private final PScope scope;
 
-  public TypeTeller(PScope scope) {
+  public TypeFinder(PScope scope) {
     this.scope = scope;
   }
 
-  public TypeTeller withScope(PScope pScope) {
-    return new TypeTeller(pScope);
+  public TypeFinder withScope(PScope pScope) {
+    return new TypeFinder(pScope);
   }
 
   public SSchema schemaFor(Id id) {
     return scope
         .referencables()
         .find(id)
-        .mapRight(TypeTeller::schemaFor)
+        .mapRight(TypeFinder::schemaFor)
         .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
   }
 
