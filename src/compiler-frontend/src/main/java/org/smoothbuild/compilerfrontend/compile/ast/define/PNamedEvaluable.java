@@ -36,6 +36,7 @@ public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluab
     this.scope = scope;
   }
 
+  @Override
   public String nameText() {
     return nameText;
   }
