@@ -6,22 +6,23 @@ import static org.smoothbuild.common.collect.Map.mapOfAll;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public sealed class FlatBindings<E> implements Bindings<E>
     permits ImmutableFlatBindings, MutableFlatBindings {
-  protected final java.util.Map<String, E> map;
+  protected final java.util.Map<Name, E> map;
 
-  protected FlatBindings(java.util.Map<String, E> map) {
+  protected FlatBindings(java.util.Map<Name, E> map) {
     this.map = requireNonNull(map);
   }
 
   @Override
-  public E get(String name) {
+  public E get(Name name) {
     return map.get(name);
   }
 
   @Override
-  public Map<String, E> toMap() {
+  public Map<Name, E> toMap() {
     return mapOfAll(map);
   }
 

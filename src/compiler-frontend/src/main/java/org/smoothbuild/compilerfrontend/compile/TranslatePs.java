@@ -80,8 +80,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var structs = pModule.structs().map(this::convertStruct);
       var evaluables = pModule.evaluables().map(this::convertReferenceableP);
       var members = new SScope(
-          immutableBindings(structs.toMap(b -> b.id().toString(), v -> v)),
-          immutableBindings(evaluables.toMap(b -> b.id().toString(), v -> v)));
+          immutableBindings(structs.toMap(b -> b.id().parts().getLast(), v -> v)),
+          immutableBindings(evaluables.toMap(b -> b.id().parts().getLast(), v -> v)));
       var sScope = SScope.sScope(imported, members);
       return new SModule(members, sScope);
     }

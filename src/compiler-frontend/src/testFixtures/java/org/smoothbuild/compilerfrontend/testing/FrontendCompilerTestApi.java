@@ -802,7 +802,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   @SuppressWarnings("unchecked")
   public default <T extends SNamedEvaluable> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(list(nameds).toMap(t -> t.id().toString(), v -> v));
+    return immutableBindings(list(nameds).toMap(t -> t.id().parts().getLast(), v -> v));
   }
 
   public default Log err(int line, String message) {

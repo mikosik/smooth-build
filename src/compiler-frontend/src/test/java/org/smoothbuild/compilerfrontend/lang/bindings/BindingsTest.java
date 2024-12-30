@@ -99,8 +99,8 @@ public class BindingsTest {
 
   @Test
   void equals_and_hashcode() {
-    var elem1 = element("1", 1);
-    var elem2 = element("2", 2);
+    var elem1 = element("name1", 1);
+    var elem2 = element("name2", 2);
 
     var equalsTester = new EqualsTester();
     // flat bindings with no elements
@@ -158,13 +158,13 @@ public class BindingsTest {
     @Test
     void get_element() {
       var bindings = newBindings(element("name", 7));
-      assertThat(bindings.get("name")).isEqualTo(element("name", 7));
+      assertThat(bindings.get(name("name"))).isEqualTo(element("name", 7));
     }
 
     @Test
     void get_missing_element_returns_null() {
       var bindings = newBindings();
-      assertThat(bindings.get("name")).isNull();
+      assertThat(bindings.get(name("name"))).isNull();
     }
 
     @Test
@@ -172,7 +172,7 @@ public class BindingsTest {
       var first = element("name", 7);
       var second = element("other", 5);
       var bindings = newBindings(first, second);
-      assertThat(bindings.toMap()).isEqualTo(Map.map("name", first, "other", second));
+      assertThat(bindings.toMap()).isEqualTo(Map.map(name("name"), first, name("other"), second));
     }
 
     public abstract Bindings<Element> newBindings(Element... elements);
@@ -184,22 +184,22 @@ public class BindingsTest {
     @Test
     void add_return_null_if_binding_is_not_already_present() {
       var mutableBindings = newBindings();
-      assertThat(mutableBindings.add("one", 1)).isEqualTo(null);
+      assertThat(mutableBindings.add(name("one"), 1)).isEqualTo(null);
     }
 
     @Test
     void add_overwrites_previous_binding_if_present() {
       var mutableBindings = newBindings();
-      mutableBindings.add("name", 1);
-      mutableBindings.add("name", 2);
+      mutableBindings.add(name("name"), 1);
+      mutableBindings.add(name("name"), 2);
       assertThat(mutableBindings.find(name("name"))).isEqualTo(ok(2));
     }
 
     @Test
     void add_return_previous_binding_if_present() {
       var mutableBindings = newBindings();
-      mutableBindings.add("name", 1);
-      assertThat(mutableBindings.add("name", 2)).isEqualTo(1);
+      mutableBindings.add(name("name"), 1);
+      assertThat(mutableBindings.add(name("name"), 2)).isEqualTo(1);
     }
   }
 
@@ -231,16 +231,16 @@ public class BindingsTest {
     class _to_map {
       @Test
       void contains_elements_from_outer_and_inner_scope() {
-        var outer = immutableBindings(mapOfElems(element("1", 1)));
-        var bindings = newBindings(outer, element("2", 2));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("1", 1), element("2", 2)));
+        var outer = immutableBindings(mapOfElems(element("n1", 1)));
+        var bindings = newBindings(outer, element("n2", 2));
+        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("n1", 1), element("n2", 2)));
       }
 
       @Test
       void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
-        var outer = immutableBindings(mapOfElems(element("1", 1)));
-        var bindings = newBindings(outer, element("1", 11));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("1", 11)));
+        var outer = immutableBindings(mapOfElems(element("n1", 1)));
+        var bindings = newBindings(outer, element("n1", 11));
+        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("n1", 11)));
       }
     }
 
@@ -249,19 +249,19 @@ public class BindingsTest {
       var outer = immutableBindings(mapOfElems(element("valueA", 7)));
       var shadowing = element("valueA", 9);
       var inner = newBindings(outer, shadowing);
-      assertThat(inner.find(name(shadowing.name()))).isEqualTo(ok(shadowing));
+      assertThat(inner.find(shadowing.name())).isEqualTo(ok(shadowing));
     }
 
     @Test
     void to_string() {
-      var outer = immutableBindings(mapOfElems(element("value-a", 7), element("value-b", 8)));
-      var inner = newBindings(outer, element("value-c", 9));
+      var outer = immutableBindings(mapOfElems(element("valueA", 7), element("valueB", 8)));
+      var inner = newBindings(outer, element("valueC", 9));
       assertThat(inner.toString())
           .isEqualTo(
               """
-            value-a -> Element[name=value-a, value=7]
-            value-b -> Element[name=value-b, value=8]
-              value-c -> Element[name=value-c, value=9]""");
+            valueA -> Element[name=valueA, value=7]
+            valueB -> Element[name=valueB, value=8]
+              valueC -> Element[name=valueC, value=9]""");
     }
   }
 
@@ -286,7 +286,7 @@ public class BindingsTest {
     return mutableBindings;
   }
 
-  public static Map<String, Element> mapOfElems(Element... nameables) {
+  public static Map<Name, Element> mapOfElems(Element... nameables) {
     return list(nameables).toMap(Element::name, e -> e);
   }
 
@@ -294,7 +294,11 @@ public class BindingsTest {
     return new Element(name, value);
   }
 
-  public static record Element(String name, Integer value) {}
+  public static record Element(Name name, Integer value) {
+    public Element(String name, Integer value) {
+      this(BindingsTest.name(name), value);
+    }
+  }
 
   private static Name name(String name) {
     return referenceableName(name);

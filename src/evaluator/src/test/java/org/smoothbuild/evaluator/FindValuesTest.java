@@ -17,8 +17,8 @@ public class FindValuesTest extends FrontendCompilerTestContext {
   void find_evaluable() {
     var sSchema = sSchema(sIntArrayT());
     var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
-    var sScope =
-        new SScope(immutableBindings(), immutableBindings(map(sValue.id().toString(), sValue)));
+    var sScope = new SScope(
+        immutableBindings(), immutableBindings(map(sValue.id().parts().getLast(), sValue)));
 
     var exprs = new FindValues().execute(sScope, list(sValue.id().toString()));
 
@@ -29,8 +29,8 @@ public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_polymorphic_evaluable_fails() {
     var value = sValue(sSchema(sVarAArrayT()), "myValue", sOrder(varA()));
-    var sScope =
-        new SScope(immutableBindings(), immutableBindings(map(value.id().toString(), value)));
+    var sScope = new SScope(
+        immutableBindings(), immutableBindings(map(value.id().parts().getLast(), value)));
 
     var exprs = new FindValues().execute(sScope, list(value.id().toString()));
 

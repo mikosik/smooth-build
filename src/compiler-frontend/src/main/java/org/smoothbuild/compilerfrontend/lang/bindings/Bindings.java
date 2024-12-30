@@ -16,12 +16,12 @@ public sealed interface Bindings<E>
     return new ImmutableFlatBindings<>(Map.map());
   }
 
-  public static <E> ImmutableFlatBindings<E> immutableBindings(Map<String, E> innerScopeMap) {
+  public static <E> ImmutableFlatBindings<E> immutableBindings(Map<Name, E> innerScopeMap) {
     return new ImmutableFlatBindings<>(innerScopeMap);
   }
 
   public static <E> ImmutableScopedBindings<E> immutableBindings(
-      ImmutableBindings<? extends E> outerScopeBindings, Map<String, ? extends E> innerScopeMap) {
+      ImmutableBindings<? extends E> outerScopeBindings, Map<Name, ? extends E> innerScopeMap) {
     return immutableBindings(outerScopeBindings, immutableBindings(innerScopeMap));
   }
 
@@ -42,8 +42,7 @@ public sealed interface Bindings<E>
   public default Result<E> find(Id id) {
     var parts = id.parts();
     if (parts.size() == 1) {
-      return maybe(get(parts.get(0).toString()))
-          .toResult(() -> cannotResolveErrorMessage(parts, 1));
+      return maybe(get(parts.get(0))).toResult(() -> cannotResolveErrorMessage(parts, 1));
     }
     return error(cannotResolveErrorMessage(parts, 2));
   }
@@ -56,7 +55,7 @@ public sealed interface Bindings<E>
     return immutableBindings(toMap());
   }
 
-  public E get(String name);
+  public E get(Name name);
 
-  public Map<String, E> toMap();
+  public Map<Name, E> toMap();
 }
