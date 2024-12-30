@@ -3,13 +3,36 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
-public final class PReference extends PPolymorphic {
+public final class PReference implements PPolymorphic {
+  private final String nameText;
+  private final Location location;
+  private Id id;
   private SSchema sSchema;
 
   public PReference(String nameText, Location location) {
-    super(nameText, location);
+    this.nameText = nameText;
+    this.location = location;
+  }
+
+  public String nameText() {
+    return nameText;
+  }
+
+  public void setId(Id id) {
+    this.id = id;
+  }
+
+  @Override
+  public Id id() {
+    return id;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   @Override
