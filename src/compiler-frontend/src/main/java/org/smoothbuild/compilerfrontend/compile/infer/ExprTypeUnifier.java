@@ -77,7 +77,7 @@ public class ExprTypeUnifier {
     var resultType = translateOrGenerateFlexibleVar(pFunc.resultT());
     var funcTS = new SFuncType(paramTypes, resultType);
     pFunc.setSType(funcTS);
-    unifyEvaluableBody(pFunc, resultType, funcTS, typeFinder.withScope(pFunc.scope()));
+    unifyEvaluableBody(pFunc, resultType, funcTS, new TypeFinder(pFunc.scope()));
     var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
     pFunc.setSchema(new SFuncSchema(vars, (SFuncType) resolvedT));

@@ -27,10 +27,6 @@ public class TypeFinder {
     this.scope = scope;
   }
 
-  public TypeFinder withScope(PScope pScope) {
-    return new TypeFinder(pScope);
-  }
-
   public SSchema schemaFor(Id id) {
     return scope
         .referencables()
