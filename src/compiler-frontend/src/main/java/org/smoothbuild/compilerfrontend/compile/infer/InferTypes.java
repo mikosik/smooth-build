@@ -20,6 +20,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
@@ -38,9 +39,8 @@ public class InferTypes implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    var typeFinder = new TypeFinder(pModule.scope());
     try {
-      new Worker(typeFinder).visitModule(pModule);
+      new Worker(pModule.scope()).visitModule(pModule);
     } catch (TypeException e) {
       logger.log(e.log());
     }
@@ -48,10 +48,10 @@ public class InferTypes implements Task1<PModule, PModule> {
   }
 
   public static class Worker extends PModuleVisitor<TypeException> {
-    private final TypeFinder typeFinder;
+    private final PScope scope;
 
-    private Worker(TypeFinder typeFinder) {
-      this.typeFinder = typeFinder;
+    private Worker(PScope scope) {
+      this.scope = scope;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private SItemSig inferFieldSig(PItem field) throws TypeException {
-      var type = typeFinder.translate(field.type());
+      var type = scope.translate(field.type());
       if (type.vars().isEmpty()) {
         field.setSType(type);
         return new SItemSig(type, field.id());
@@ -82,7 +82,7 @@ public class InferTypes implements Task1<PModule, PModule> {
     @Override
     public void visitNamedValue(PNamedValue namedValue) throws TypeException {
       var unifier = new Unifier();
-      unifyNamedValue(unifier, typeFinder, namedValue);
+      unifyNamedValue(unifier, scope, namedValue);
       convertFlexibleVarsToRigid(unifier, namedValue);
       resolveNamedValue(unifier, namedValue);
     }
@@ -95,7 +95,7 @@ public class InferTypes implements Task1<PModule, PModule> {
         visitConstructor(constructor);
       } else {
         var unifier = new Unifier();
-        unifyFunc(unifier, typeFinder, namedFunc);
+        unifyFunc(unifier, scope, namedFunc);
         convertFlexibleVarsToRigid(unifier, namedFunc);
         resolveFunc(unifier, namedFunc);
         detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
@@ -128,7 +128,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
               replaceVarsWithFlexible(funcSchema.quantifiedVars(), resolvedParamType, unifier);
-          var sSchema = typeFinder.schemaFor(defaultValueId);
+          var sSchema = scope.schemaFor(defaultValueId);
           var defaultValueType = replaceQuantifiedVarsWithFlexible(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));

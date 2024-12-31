@@ -22,6 +22,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
@@ -40,36 +41,36 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
 public class ExprTypeUnifier {
   private final Unifier unifier;
-  private final TypeFinder typeFinder;
+  private final PScope scope;
   private final SVarSet outerScopeVars;
 
-  private ExprTypeUnifier(Unifier unifier, TypeFinder typeFinder) {
-    this(unifier, typeFinder, varSetS());
+  private ExprTypeUnifier(Unifier unifier, PScope scope) {
+    this(unifier, scope, varSetS());
   }
 
-  private ExprTypeUnifier(Unifier unifier, TypeFinder typeFinder, SVarSet outerScopeVars) {
+  private ExprTypeUnifier(Unifier unifier, PScope scope, SVarSet outerScopeVars) {
     this.unifier = unifier;
-    this.typeFinder = typeFinder;
+    this.scope = scope;
     this.outerScopeVars = outerScopeVars;
   }
 
-  public static void unifyNamedValue(
-      Unifier unifier, TypeFinder typeFinder, PNamedValue pNamedValue) throws TypeException {
-    new ExprTypeUnifier(unifier, typeFinder).unifyNamedValue(pNamedValue);
+  public static void unifyNamedValue(Unifier unifier, PScope scope, PNamedValue pNamedValue)
+      throws TypeException {
+    new ExprTypeUnifier(unifier, scope).unifyNamedValue(pNamedValue);
   }
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
     var evaluationType = translateOrGenerateFlexibleVar(pNamedValue.evaluationType());
     pNamedValue.setSType(evaluationType);
-    unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, typeFinder);
+    unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, scope);
     var resolvedType = resolveType(pNamedValue);
     var vars = resolveQuantifiedVars(resolvedType);
     pNamedValue.setSchema(new SSchema(vars, resolvedType));
   }
 
-  public static void unifyFunc(Unifier unifier, TypeFinder typeFinder, PFunc namedFunc)
+  public static void unifyFunc(Unifier unifier, PScope scope, PFunc namedFunc)
       throws TypeException {
-    new ExprTypeUnifier(unifier, typeFinder).unifyFunc(namedFunc);
+    new ExprTypeUnifier(unifier, scope).unifyFunc(namedFunc);
   }
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
@@ -77,7 +78,7 @@ public class ExprTypeUnifier {
     var resultType = translateOrGenerateFlexibleVar(pFunc.resultT());
     var funcTS = new SFuncType(paramTypes, resultType);
     pFunc.setSType(funcTS);
-    unifyEvaluableBody(pFunc, resultType, funcTS, new TypeFinder(pFunc.scope()));
+    unifyEvaluableBody(pFunc, resultType, funcTS, pFunc.scope());
     var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
     pFunc.setSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
@@ -92,16 +93,16 @@ public class ExprTypeUnifier {
   }
 
   private List<SType> inferParamTypes(NList<PItem> params) {
-    var paramTypes = params.list().map(p -> typeFinder.translate(p.type()));
+    var paramTypes = params.list().map(p -> scope.translate(p.type()));
     params.list().zip(paramTypes, PItem::setSType);
     return paramTypes;
   }
 
   private void unifyEvaluableBody(
-      PEvaluable pEvaluable, SType evaluationType, SType type, TypeFinder typeFinder)
+      PEvaluable pEvaluable, SType evaluationType, SType type, PScope bodyScope)
       throws TypeException {
     var vars = outerScopeVars.addAll(type.vars());
-    new ExprTypeUnifier(unifier, typeFinder, vars).unifyEvaluableBody(pEvaluable, evaluationType);
+    new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType)
@@ -232,7 +233,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyReference(PReference pReference) {
-    pReference.setSSchema(typeFinder.schemaFor(pReference.id()));
+    pReference.setSSchema(scope.schemaFor(pReference.id()));
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {
@@ -265,7 +266,7 @@ public class ExprTypeUnifier {
     if (pType instanceof PImplicitType) {
       return unifier.newFlexibleVar();
     } else {
-      return typeFinder.translate(pType);
+      return scope.translate(pType);
     }
   }
 }
