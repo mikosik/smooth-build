@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;

@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.compilerfrontend.compile.task;
 
 import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import java.util.ArrayList;

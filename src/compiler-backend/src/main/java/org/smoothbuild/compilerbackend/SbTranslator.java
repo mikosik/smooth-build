@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileErrorMessage;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileErrorMessage;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;

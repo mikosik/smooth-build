@@ -1,8 +1,8 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.compilerfrontend.compile.task;
 
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
 import org.smoothbuild.common.base.DecodeHexException;
 import org.smoothbuild.common.base.UnescapeFailedException;

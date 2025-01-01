@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.compilerfrontend.compile.task;
 
 import static okio.Okio.buffer;
 import static org.smoothbuild.common.Constants.CHARSET;
