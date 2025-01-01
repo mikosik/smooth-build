@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.compilerfrontend.compile.task;
 
 import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
@@ -6,7 +6,7 @@ import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.base.Strings.unlines;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
 import java.util.BitSet;
 import org.antlr.v4.runtime.ANTLRErrorListener;

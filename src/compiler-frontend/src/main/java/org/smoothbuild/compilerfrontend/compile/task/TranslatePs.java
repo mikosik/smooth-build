@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.compilerfrontend.compile.task;
 
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.list;

@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.generateList;
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;

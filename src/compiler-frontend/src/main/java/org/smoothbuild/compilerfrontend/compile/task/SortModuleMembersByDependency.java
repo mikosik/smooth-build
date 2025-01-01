@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.compile;
+package org.smoothbuild.compilerfrontend.compile.task;
 
 import static java.lang.String.join;
 import static org.smoothbuild.common.collect.List.list;

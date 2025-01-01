@@ -3,12 +3,12 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.compile.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyNamedValue;
 import static org.smoothbuild.compilerfrontend.compile.infer.FlexibleToRigidVarConverter.convertFlexibleVarsToRigid;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveNamedValue;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.log.base.Logger;
