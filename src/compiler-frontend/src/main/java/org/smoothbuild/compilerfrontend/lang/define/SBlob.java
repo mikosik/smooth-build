@@ -7,6 +7,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SBlobType;
 
 public record SBlob(SBlobType type, ByteString byteString, Location location) implements SConstant {
   @Override
+  public String toSourceCode() {
+    return "0x" + byteString.hex();
+  }
+
+  @Override
   public String toString() {
     return new ToStringBuilder("SBlob")
         .addField("type", type)

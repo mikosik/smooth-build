@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import static org.smoothbuild.compilerfrontend.lang.define.SNamedValue.valueHeaderToSourceCode;
+
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
@@ -26,6 +28,11 @@ public final class SNamedExprValue implements SNamedValue, Identifiable {
 
   public SExpr body() {
     return body;
+  }
+
+  @Override
+  public String toSourceCode() {
+    return valueHeaderToSourceCode(this) + " = " + body.toSourceCode() + ";";
   }
 
   @Override

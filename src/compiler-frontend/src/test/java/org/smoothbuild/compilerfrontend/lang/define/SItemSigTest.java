@@ -11,7 +11,6 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemSigTest extends FrontendCompilerTestContext {
   private final Name name = referenceableName("name");
-  private SItemSig item;
 
   @Test
   void null_type_is_forbidden() {
@@ -25,14 +24,20 @@ public class SItemSigTest extends FrontendCompilerTestContext {
 
   @Test
   void type_getter() {
-    item = new SItemSig(sStringType(), name);
+    var item = new SItemSig(sStringType(), name);
     assertThat(item.type()).isEqualTo(sStringType());
   }
 
   @Test
   void name_getter() {
-    item = new SItemSig(sStringType(), name);
+    var item = new SItemSig(sStringType(), name);
     assertThat(item.name()).isEqualTo(name);
+  }
+
+  @Test
+  void to_source_code() {
+    var item = new SItemSig(sStringType(), referenceableName("myName"));
+    assertThat(item.toSourceCode()).isEqualTo("String myName");
   }
 
   @Test
@@ -46,19 +51,19 @@ public class SItemSigTest extends FrontendCompilerTestContext {
 
   @Test
   void to_padded_string() {
-    item = new SItemSig(sStringType(), referenceableName("myName"));
+    var item = new SItemSig(sStringType(), referenceableName("myName"));
     assertThat(item.toPaddedString(10, 13)).isEqualTo("String    : myName       ");
   }
 
   @Test
   void to_padded_string_for_short_limits() {
-    item = new SItemSig(sStringType(), referenceableName("myName"));
+    var item = new SItemSig(sStringType(), referenceableName("myName"));
     assertThat(item.toPaddedString(1, 1)).isEqualTo("String: myName");
   }
 
   @Test
   void to_string() {
-    item = new SItemSig(sStringType(), referenceableName("myName"));
+    var item = new SItemSig(sStringType(), referenceableName("myName"));
     assertThat(item.toString()).isEqualTo("String myName");
   }
 }

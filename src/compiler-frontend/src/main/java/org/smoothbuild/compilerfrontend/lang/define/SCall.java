@@ -32,6 +32,12 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
   }
 
   @Override
+  public String toSourceCode() {
+    return callee.toSourceCode() + "("
+        + args.elements().map(SExpr::toSourceCode).toString(",") + ")";
+  }
+
+  @Override
   public String toString() {
     return new ToStringBuilder("SCall")
         .addField("callee", callee)

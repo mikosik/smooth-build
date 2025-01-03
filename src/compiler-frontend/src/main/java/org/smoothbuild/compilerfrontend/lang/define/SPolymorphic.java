@@ -7,5 +7,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Polymorphic entity.
  */
 public sealed interface SPolymorphic extends HasLocation permits SLambda, SReference {
+  public String toSourceCode();
+
   public SSchema schema();
 }

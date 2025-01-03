@@ -43,6 +43,10 @@ public final class SVarSet extends Set<SVar> {
     return new SVarSet(super.removeAll(toRemove));
   }
 
+  public String toSourceCode() {
+    return toString();
+  }
+
   @Override
   public String toString() {
     return map(SVar::name).toString("<", ",", ">");

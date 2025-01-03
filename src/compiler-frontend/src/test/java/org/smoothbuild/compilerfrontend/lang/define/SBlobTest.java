@@ -7,6 +7,11 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SBlobTest extends FrontendCompilerTestContext {
   @Test
+  void to_source_code() {
+    assertThat(sBlob(16).toSourceCode()).isEqualTo("0x10");
+  }
+
+  @Test
   void to_string() {
     assertThat(sBlob(7, 16).toString())
         .isEqualTo(

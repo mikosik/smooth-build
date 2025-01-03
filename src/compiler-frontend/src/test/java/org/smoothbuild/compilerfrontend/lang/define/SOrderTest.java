@@ -7,6 +7,12 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SOrderTest extends FrontendCompilerTestContext {
   @Test
+  void to_source_code() {
+    var orderS = sOrder(sInt(7), sInt(8));
+    assertThat(orderS.toSourceCode()).isEqualTo("[7, 8]");
+  }
+
+  @Test
   void to_string() {
     var orderS = sOrder(3, sInt(4, 44), sInt(5, 55));
     assertThat(orderS.toString())

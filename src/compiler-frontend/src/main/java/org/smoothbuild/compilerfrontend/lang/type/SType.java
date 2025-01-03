@@ -130,6 +130,10 @@ public abstract sealed class SType
     return new STupleType(items);
   }
 
+  public String toSourceCode() {
+    return name();
+  }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {

@@ -65,6 +65,11 @@ public final class SItem implements Item, SReferenceable, HasName, Identifiable 
     return items.map(SItem::type);
   }
 
+  public String toSourceCode() {
+    return type.toSourceCode() + " " + name.toString()
+        + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

@@ -40,6 +40,10 @@ public class SItemSig implements HasName {
     return typePart + namePart;
   }
 
+  public String toSourceCode() {
+    return type().toSourceCode() + " " + name;
+  }
+
   @Override
   public boolean equals(Object object) {
     if (object == this) {

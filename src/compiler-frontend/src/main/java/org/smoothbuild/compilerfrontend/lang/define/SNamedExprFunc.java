@@ -26,6 +26,11 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
   }
 
   @Override
+  public String toSourceCode() {
+    return funcHeaderToSourceCode() + "\n  = " + body.toSourceCode() + ";";
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;
