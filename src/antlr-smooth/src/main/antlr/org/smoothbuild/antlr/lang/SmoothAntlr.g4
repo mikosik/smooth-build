@@ -5,19 +5,19 @@ grammar SmoothAntlr;
 package org.smoothbuild.antlr.lang;
 }
 module
-   : (struct | namedFunc | namedValue)* EOF
+   : (struct | evaluable)* EOF
    ;
 
 struct
    : NAME '{' itemList '}'
    ;
 
-namedFunc
-   : annotation? type? NAME '(' itemList ')' ('=' pipe)? ';'
+evaluable
+   : annotation? type? NAME params? ('=' pipe)? ';'
    ;
 
-namedValue
-   : annotation? type? NAME ('=' pipe)? ';'
+params
+   : ('(' itemList ')')
    ;
 
 itemList
