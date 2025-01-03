@@ -24,14 +24,13 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArrayTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainHeadContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainPartContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.EvaluableContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.LambdaContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedFuncContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedValueContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
@@ -105,7 +104,6 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private final ArrayList<PStruct> structs;
     private final ArrayList<PNamedEvaluable> evaluables;
     private final Logger logger;
-    private final String scopeName;
     private int lambdaCount;
 
     public ApTranslatingVisitor(
@@ -113,20 +111,10 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
         ArrayList<PStruct> structs,
         ArrayList<PNamedEvaluable> evaluables,
         Logger logger) {
-      this(fullPath, structs, evaluables, logger, null);
-    }
-
-    public ApTranslatingVisitor(
-        FullPath fullPath,
-        ArrayList<PStruct> structs,
-        ArrayList<PNamedEvaluable> evaluables,
-        Logger logger,
-        String scopeName) {
       this.fullPath = fullPath;
       this.structs = structs;
       this.evaluables = evaluables;
       this.logger = logger;
-      this.scopeName = scopeName;
       this.lambdaCount = 0;
     }
 
@@ -141,33 +129,23 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     @Override
-    public Void visitNamedFunc(NamedFuncContext namedFunc) {
-      var nameNode = namedFunc.NAME();
+    public Void visitEvaluable(EvaluableContext evaluable) {
+      var nameNode = evaluable.NAME();
       var location = fileLocation(fullPath, nameNode);
-      var type = createTypeSane(namedFunc.type(), location);
+      var type = createTypeSane(evaluable.type(), location);
       var name = nameNode.getText();
 
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
-      var body = visitor.createPipeSane(namedFunc.pipe());
+      var body = visitor.createPipeSane(evaluable.pipe());
 
-      var annotation = createNativeSane(namedFunc.annotation());
-      var params = visitor.createItems(namedFunc.itemList());
-      evaluables.add(new PNamedFunc(type, name, params, body, annotation, location));
-      return null;
-    }
+      var annotation = createNativeSane(evaluable.annotation());
 
-    @Override
-    public Void visitNamedValue(NamedValueContext namedValue) {
-      var nameNode = namedValue.NAME();
-      var location = fileLocation(fullPath, nameNode);
-      var type = createTypeSane(namedValue.type(), location);
-      var name = nameNode.getText();
-
-      var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
-      var expr = visitor.createPipeSane(namedValue.pipe());
-
-      var annotation = createNativeSane(namedValue.annotation());
-      evaluables.add(new PNamedValue(type, name, expr, annotation, location));
+      if (evaluable.params() == null) {
+        evaluables.add(new PNamedValue(type, name, body, annotation, location));
+      } else {
+        var params = visitor.createItems(evaluable.params().itemList());
+        evaluables.add(new PNamedFunc(type, name, params, body, annotation, location));
+      }
       return null;
     }
 
