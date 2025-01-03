@@ -42,4 +42,9 @@ public final class SConstructor extends SNamedFunc {
         .addField("location", location())
         .toString();
   }
+
+  @Override
+  public String toSourceCode() {
+    return funcHeaderToSourceCode() + "\n  = <generated>;";
+  }
 }

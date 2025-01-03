@@ -7,6 +7,13 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SAnnotationTest extends FrontendCompilerTestContext {
   @Test
+  void toSourceCode() {
+    var annotation = new SAnnotation("MyAnnotation", sString(7, "myPath"), location(17));
+    assertThat(annotation.toSourceCode()).isEqualTo("""
+            @MyAnnotation("myPath")""");
+  }
+
+  @Test
   void to_string() {
     var annS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     assertThat(annS.toString())

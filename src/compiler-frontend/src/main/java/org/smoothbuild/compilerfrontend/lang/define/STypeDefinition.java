@@ -4,35 +4,23 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 /**
  * Type definition.
  */
-public class STypeDefinition implements TypeDefinition {
-  private final SType type;
-  private final Id id;
-  private final Location location;
-
-  public STypeDefinition(SType type, Id id, Location location) {
-    this.type = type;
-    this.id = id;
-    this.location = location;
+public record STypeDefinition(SType type, Id id, Location location) implements TypeDefinition {
+  public String toSourceCode() {
+    return switch (type) {
+      case SStructType struct -> structToSourceCode(struct);
+      default -> throw new RuntimeException();
+    };
   }
 
-  @Override
-  public SType type() {
-    return type;
-  }
-
-  @Override
-  public Id id() {
-    return id;
-  }
-
-  @Override
-  public Location location() {
-    return location;
+  private static String structToSourceCode(SStructType struct) {
+    return struct.name() + " {\n  "
+        + struct.fields().list().map(SItemSig::toSourceCode).toString(",\n  ") + ",\n}";
   }
 
   @Override

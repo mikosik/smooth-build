@@ -8,12 +8,13 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SSelectTest extends FrontendCompilerTestContext {
   @Test
+  void to_source_code() {
+    assertThat(createSSelect().toSourceCode()).isEqualTo("structValue<>.field");
+  }
+
+  @Test
   void to_string() {
-    var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
-    var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
-    var structValue = sAnnotatedValue(11, annotationS, structTS, "structValue");
-    var selectS = sSelect(3, sInstantiate(12, structValue), "field");
-    assertThat(selectS.toString())
+    assertThat(createSSelect().toString())
         .isEqualTo(
             """
             SSelect(
@@ -30,5 +31,12 @@ public class SSelectTest extends FrontendCompilerTestContext {
               field = field
               location = {t-project}/module.smooth:3
             )""");
+  }
+
+  private SSelect createSSelect() {
+    var annotation = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
+    var structType = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
+    var structValue = sAnnotatedValue(11, annotation, structType, "structValue");
+    return sSelect(3, sInstantiate(12, structValue), "field");
   }
 }

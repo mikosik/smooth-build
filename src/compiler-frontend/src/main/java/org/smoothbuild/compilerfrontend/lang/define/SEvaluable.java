@@ -9,4 +9,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public abstract sealed interface SEvaluable extends Identifiable
     permits SFunc, SNamedEvaluable, SValue {
   public SSchema schema();
+
+  public String toSourceCode();
 }

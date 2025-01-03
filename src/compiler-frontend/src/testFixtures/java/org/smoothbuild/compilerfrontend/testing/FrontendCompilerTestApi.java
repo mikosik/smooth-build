@@ -228,7 +228,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SSchema sSchema(SType type) {
-    return new SSchema(type.vars(), type);
+    return sSchema(type.vars(), type);
+  }
+
+  public default SSchema sSchema(SVarSet vars, SType type) {
+    return new SSchema(vars, type);
   }
 
   public default SStringType sStringType() {
@@ -402,6 +406,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SInstantiate(typeArgs, polymorphic, location);
   }
 
+  public default SOrder sOrder(SExpr headElement, SExpr... tailElements) {
+    return new SOrder(
+        sArrayType(headElement.evaluationType()), list(headElement).add(tailElements), location(7));
+  }
+
   public default SOrder sOrder(int line, SExpr headElement, SExpr... tailElements) {
     return new SOrder(
         sArrayType(headElement.evaluationType()),
@@ -427,6 +436,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
     return sReference(line, namedEvaluable.schema(), namedEvaluable.id());
+  }
+
+  public default SReference sReference(SSchema schema, Id id) {
+    return sReference(7, schema, id);
   }
 
   public default SReference sReference(int line, SSchema schema, Id id) {
@@ -478,7 +491,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SAnnotation sNativeAnnotation() {
-    return sNativeAnnotation(1, sString("impl"));
+    return sNativeAnnotation("impl");
+  }
+
+  public default SAnnotation sNativeAnnotation(String path) {
+    return sNativeAnnotation(1, sString(path));
   }
 
   public default SAnnotation sNativeAnnotation(int line, SString classBinaryName) {

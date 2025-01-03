@@ -53,6 +53,13 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   }
 
   @Override
+  public String toSourceCode() {
+    return schema().quantifiedVars().toSourceCode()
+        + params().list().map(SItem::toSourceCode).toString("(", ", ", ")")
+        + " -> " + body().toSourceCode();
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

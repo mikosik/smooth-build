@@ -314,6 +314,12 @@ public class IdTest {
   }
 
   @Test
+  void to_source_code() {
+    assertThat(fqn("abc:def:ghi").toSourceCode()).isEqualTo("abc:def:ghi");
+    assertThat(name("abc").toSourceCode()).isEqualTo("abc");
+  }
+
+  @Test
   void to_string() {
     assertThat(parseReferenceableName("abc").right().toString()).isEqualTo("abc");
     assertThat(parseStructName("Struct").right().toString()).isEqualTo("Struct");

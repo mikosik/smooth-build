@@ -11,6 +11,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public record SReference(SSchema schema, Id referencedId, Location location)
     implements SPolymorphic {
   @Override
+  public String toSourceCode() {
+    return referencedId.toString();
+  }
+
+  @Override
   public String toString() {
     return new ToStringBuilder("SReference")
         .addField("schema", schema)

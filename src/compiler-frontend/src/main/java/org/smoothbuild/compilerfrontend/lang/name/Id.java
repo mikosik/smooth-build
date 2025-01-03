@@ -32,6 +32,10 @@ public abstract class Id {
     return Strings.q(string);
   }
 
+  public String toSourceCode() {
+    return string;
+  }
+
   @Override
   public boolean equals(Object object) {
     return object instanceof Id that && Objects.equals(this.string, that.string);

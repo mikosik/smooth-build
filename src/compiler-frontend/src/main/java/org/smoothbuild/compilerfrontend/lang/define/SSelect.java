@@ -20,6 +20,11 @@ public record SSelect(SExpr selectable, Name field, Location location) implement
   }
 
   @Override
+  public String toSourceCode() {
+    return selectable.toSourceCode() + "." + field;
+  }
+
+  @Override
   public String toString() {
     return new ToStringBuilder("SSelect")
         .addField("selectable", selectable)

@@ -6,6 +6,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 
 public record SString(SStringType type, String string, Location location) implements SConstant {
   @Override
+  public String toSourceCode() {
+    return "\"" + string + "\"";
+  }
+
+  @Override
   public String toString() {
     return new ToStringBuilder("SString")
         .addField("type", type)

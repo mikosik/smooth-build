@@ -7,6 +7,11 @@ import org.smoothbuild.compilerfrontend.lang.type.SIntType;
 
 public record SInt(SIntType type, BigInteger bigInteger, Location location) implements SConstant {
   @Override
+  public String toSourceCode() {
+    return bigInteger.toString();
+  }
+
+  @Override
   public String toString() {
     return new ToStringBuilder("SInt")
         .addField("type", type)

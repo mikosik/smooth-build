@@ -9,6 +9,19 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
   @Test
+  void to_source_code() {
+    var params = nlist(sItem(varA(), "p1"), sItem(sIntType(), "p2", "default:value"));
+    var funcTS = sFuncSchema(params, sStringType());
+    var func =
+        new SAnnotatedFunc(sNativeAnnotation("path"), funcTS, fqn("myFunc"), params, location(1));
+    assertThat(func.toSourceCode())
+        .isEqualTo(
+            """
+        @Native("path")
+        String myFunc<A>(A p1, Int p2 = default:value);""");
+  }
+
+  @Test
   void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
     var funcTS = sFuncSchema(params, sStringType());

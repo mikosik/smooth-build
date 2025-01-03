@@ -43,4 +43,10 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
   public Location location() {
     return location;
   }
+
+  protected String funcHeaderToSourceCode() {
+    return schema().type().result().toSourceCode() + " " + id().parts().getLast()
+        + schema().quantifiedVars().toSourceCode()
+        + params().list().map(SItem::toSourceCode).toString("(", ", ", ")");
+  }
 }

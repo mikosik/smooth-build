@@ -25,6 +25,11 @@ public final class SAnnotatedFunc extends SNamedFunc {
   }
 
   @Override
+  public String toSourceCode() {
+    return annotation.toSourceCode() + "\n" + funcHeaderToSourceCode() + ";";
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

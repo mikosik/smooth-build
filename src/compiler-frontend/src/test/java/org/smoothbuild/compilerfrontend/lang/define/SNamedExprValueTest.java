@@ -8,6 +8,13 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SNamedExprValueTest extends FrontendCompilerTestContext {
   @Test
+  void to_source_code() {
+    var value = new SNamedExprValue(sSchema(varA()), fqn("module:myValue"), sInt(9), location(7));
+    assertThat(value.toSourceCode()).isEqualTo("""
+        A myValue<A> = 9;""");
+  }
+
+  @Test
   void to_string() {
     var namedExprValueS =
         new SNamedExprValue(sSchema(sStringType()), fqn("myVal"), sInt(9), location(7));

@@ -7,6 +7,11 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SIntTest extends FrontendCompilerTestContext {
   @Test
+  void to_source_code() {
+    assertThat(sInt(16).toSourceCode()).isEqualTo("16");
+  }
+
+  @Test
   void to_string() {
     assertThat(sInt(7, 16).toString())
         .isEqualTo(
