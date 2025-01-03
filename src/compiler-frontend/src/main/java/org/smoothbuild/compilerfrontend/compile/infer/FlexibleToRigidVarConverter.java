@@ -23,24 +23,23 @@ public class FlexibleToRigidVarConverter extends PModuleVisitor<RuntimeException
   }
 
   public static void convertFlexibleVarsToRigid(Unifier unifier, PEvaluable pEvaluable) {
-    new FlexibleToRigidVarConverter(unifier, varSetS()).nameVarsInEvaluable(pEvaluable);
+    new FlexibleToRigidVarConverter(unifier, varSetS()).renameFlexibleVarsToRigid(pEvaluable);
   }
 
   @Override
   public void visitLambda(PLambda pLambda) {
-    nameVarsInEvaluable(pLambda);
+    renameFlexibleVarsToRigid(pLambda);
   }
 
-  private void nameVarsInEvaluable(PEvaluable evaluable) {
-    evaluable.body().ifPresent(b -> nameVarsInBody(evaluable, b));
+  private void renameFlexibleVarsToRigid(PEvaluable evaluable) {
     var resolvedType = unifier.resolve(evaluable.sType());
+    evaluable.body().ifPresent(b -> nameVarsInBody(resolvedType, b));
     var renamedVarsType = renameFlexibleVarsToRigid(resolvedType, outerScopeVars);
     unifier.addOrFailWithRuntimeException(new Constraint(renamedVarsType, resolvedType));
   }
 
-  private void nameVarsInBody(PEvaluable evaluable, PExpr body) {
-    var resolvedType = unifier.resolve(evaluable.sType());
-    var rigidVars = resolvedType.vars().filter(var -> !var.isFlexibleVar());
+  private void nameVarsInBody(SType evaluableResolvedType, PExpr body) {
+    var rigidVars = evaluableResolvedType.vars().filter(var -> !var.isFlexibleVar());
     var reservedVars = outerScopeVars.addAll(rigidVars);
     new FlexibleToRigidVarConverter(unifier, reservedVars).visitExpr(body);
   }
