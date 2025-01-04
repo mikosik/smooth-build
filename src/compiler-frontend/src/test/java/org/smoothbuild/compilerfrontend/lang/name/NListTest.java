@@ -75,7 +75,6 @@ public class NListTest {
       nlist.equals(nlist);
       nlist.hashCode();
       nlist.toString();
-      nlist.valuesToString();
       nlist.get(0);
       nlist.size();
       nlist.forEach(e -> {});
@@ -183,28 +182,6 @@ public class NListTest {
     void to_string() {
       var nlist = nlist(n0, n1, n2);
       assertThat(nlist.toString()).isEqualTo("NList(zero,one,two)");
-    }
-  }
-
-  @Nested
-  class _values_to_string {
-    @Test
-    void values_to_string() {
-      var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.valuesToString()).isEqualTo("zero,one,two");
-    }
-  }
-
-  @Nested
-  class _values_to_pretty_string {
-    @Test
-    void values_to_string() {
-      var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.valuesToPrettyString())
-          .isEqualTo("""
-              zero
-              one
-              two""");
     }
   }
 
