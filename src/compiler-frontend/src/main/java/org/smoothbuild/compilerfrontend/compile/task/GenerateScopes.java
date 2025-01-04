@@ -134,7 +134,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
       // function or value and have fully qualified name that contains enclosing name.
       // Everything is flat in the global scope. Parameter default values have workaround of
       // gluing function name and parameter name using '~' into a name.
-      var last = binding.id().parts().getLast();
+      var last = binding.name();
       addBinding(bindings, binding, last, reportErrors);
     }
 
