@@ -148,15 +148,7 @@ public class NList<E extends HasName> extends AbstractList<E> {
 
   @Override
   public String toString() {
-    return "NList(" + valuesToString() + ")";
-  }
-
-  public String valuesToString() {
-    return list().toString(",");
-  }
-
-  public String valuesToPrettyString() {
-    return list().toString("\n");
+    return "NList(" + list().toString(",") + ")";
   }
 
   // overridden methods from java.util.List
