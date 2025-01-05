@@ -10,6 +10,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.nCopiesList;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.Set.set;
@@ -927,12 +928,12 @@ public class ListTest {
   class _toMap_with_value_mapper {
     @Test
     void on_empty_list_returns_empty_map() {
-      assertThat(list().toMap(Object::toString)).isEqualTo(java.util.Map.of());
+      assertThat(list().toMap(Object::toString)).isEqualTo(map());
     }
 
     @Test
     void returns_map_with_calculated_values() {
-      assertThat(list(1, 2).toMap(x -> -x)).isEqualTo(java.util.Map.of(1, -1, 2, -2));
+      assertThat(list(1, 2).toMap(x -> -x)).isEqualTo(map(1, -1, 2, -2));
     }
 
     @Test
@@ -958,13 +959,12 @@ public class ListTest {
     @Test
     void on_empty_list_returns_empty_map() {
       List<String> list = list();
-      assertThat(list.toMap(e -> e + e, String::toUpperCase)).isEqualTo(java.util.Map.of());
+      assertThat(list.toMap(e -> e + e, String::toUpperCase)).isEqualTo(map());
     }
 
     @Test
     void returns_map_with_calculated_values() {
-      assertThat(list(1, 2).toMap(e -> -e, Object::toString))
-          .isEqualTo(java.util.Map.of(-1, "1", -2, "2"));
+      assertThat(list(1, 2).toMap(e -> -e, Object::toString)).isEqualTo(map(-1, "1", -2, "2"));
     }
 
     @Test

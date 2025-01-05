@@ -1,62 +1,76 @@
 package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.collect.Map.zipToMap;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
-import java.util.Iterator;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 public class MapTest {
   @Nested
-  class _factory_method {
+  class _mapOfAll {
     @Test
-    void with_no_arguments() {
-      var map = map();
-      assertThat(map).isEqualTo(java.util.Map.of());
+    void with_empty_map() {
+      var map = mapOfAll(java.util.Map.of());
+      assertThat(map).isEqualTo(map());
     }
 
     @Test
-    void with_one_argument() {
-      var map = map(1, "one");
-      assertThat(map).isEqualTo(java.util.Map.of(1, "one"));
+    void with_non_empty_map() {
+      var map = mapOfAll(java.util.Map.of(1, "one", 2, "two"));
+      assertThat(map).isEqualTo(map(1, "one", 2, "two"));
+    }
+  }
+
+  @Nested
+  class _entrySet {
+    @Test
+    void empty() {
+      Map<Integer, String> map = map();
+      assertThat(map.entrySet()).isEqualTo(set());
     }
 
     @Test
-    void with_two_arguments() {
+    void non_empty() {
       var map = map(1, "one", 2, "two");
-      assertThat(map).isEqualTo(java.util.Map.of(1, "one", 2, "two"));
+      var expectedSet = set(java.util.Map.entry(1, "one"), java.util.Map.entry(2, "two"));
+      assertThat(map.entrySet()).isEqualTo(expectedSet);
+    }
+  }
+
+  @Nested
+  class _keySet {
+    @Test
+    void empty() {
+      Map<Integer, String> map = map();
+      assertThat(map.keySet()).isEqualTo(set());
     }
 
     @Test
-    void with_three_arguments() {
-      var map = map(1, "one", 2, "two", 3, "three");
-      assertThat(map).isEqualTo(java.util.Map.of(1, "one", 2, "two", 3, "three"));
+    void non_empty() {
+      var map = map(1, "one", 2, "two");
+      assertThat(map.keySet()).isEqualTo(set(1, 2));
+    }
+  }
+
+  @Nested
+  class _values {
+    @Test
+    void empty() {
+      var map = map();
+      assertThat(map.values()).isEmpty();
     }
 
     @Test
-    void mapOfAllCopiesDataFromJavaUtilMap() {
-      var javaUtilMap = java.util.Map.of(1, "one", 2, "two", 3, "three");
-      var map = mapOfAll(javaUtilMap);
-      assertThat(map).isEqualTo(javaUtilMap);
-      assertThat(map).isNotSameInstanceAs(javaUtilMap);
-    }
-
-    @Test
-    void mapOfAllReturnsArgumentIfItIsInstanceOfCustomMap() {
-      var customMap = map(1, "1", 2, "2");
-      var map = mapOfAll(customMap);
-      assertThat(map).isSameInstanceAs(customMap);
+    void no_empty() {
+      var map = map(1, "one", 2, "two");
+      assertThat(map.values()).containsExactly("one", "two");
     }
   }
 
@@ -64,7 +78,8 @@ public class MapTest {
   class _zipToMap {
     @Test
     void for_empty_iterables_returns_empty_map() {
-      assertThat(zipToMap(java.util.List.of(), java.util.List.of())).isEmpty();
+      var map = zipToMap(java.util.List.of(), java.util.List.of());
+      assertThat(map).isEqualTo(map());
     }
 
     @Test
@@ -83,142 +98,6 @@ public class MapTest {
     void fails_when_values_have_more_elements_than_keys() {
       assertCall(() -> zipToMap(java.util.List.of(1, 2), java.util.List.of("1", "2", "3")))
           .throwsException(new IllegalArgumentException("values have more elements than keys"));
-    }
-  }
-
-  @Nested
-  class _modifying_map_by_calling {
-    @ParameterizedTest
-    @MethodSource("maps")
-    void remove_fails(Map<Integer, String> map) {
-      assertCall(() -> map.remove(1)).throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void remove2_fails(Map<Integer, String> map) {
-      assertCall(() -> map.remove(1, "one")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void clear_fails(Map<Integer, String> map) {
-      assertCall(map::clear).throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void put_fails(Map<Integer, String> map) {
-      assertCall(() -> map.put(-1, "minus")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void putIfAbsent_fails(Map<Integer, String> map) {
-      assertCall(() -> map.putIfAbsent(-1, "minus"))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void putAll_fails(Map<Integer, String> map) {
-      assertCall(() -> map.putAll(java.util.Map.of(-1, "-1")))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void replace_fails(Map<Integer, String> map) {
-      assertCall(() -> map.replace(1, "1")).throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void replace2_fails(Map<Integer, String> map) {
-      assertCall(() -> map.replace(1, "one", "1"))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void replaceAll_fails(Map<Integer, String> map) {
-      assertCall(() -> map.replaceAll((k, v) -> v))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void merge_fails(Map<Integer, String> map) {
-      assertCall(() -> map.merge(1, "one", (s1, s2) -> s1 + s2))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void modifying_entrySet_fails(Map<Integer, String> map) {
-      assertCall(() -> map.entrySet().clear()).throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void compute_fails(Map<Integer, String> map) {
-      assertCall(() -> map.compute(1, (k, v) -> v))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void computeIfAbsent_fails(Map<Integer, String> map) {
-      assertCall(() -> map.computeIfAbsent(7, k -> "7"))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void computeIfPresent_fails(Map<Integer, String> map) {
-      assertCall(() -> map.computeIfPresent(1, (k, v) -> v))
-          .throwsException(UnsupportedOperationException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void entrySet_iterator_remove_fails(Map<Integer, String> map) {
-      var iterator = map.entrySet().iterator();
-      if (iterator.hasNext()) {
-        iterator.next();
-        assertCall(iterator::remove).throwsException(UnsupportedOperationException.class);
-      }
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void values_iterator_remove_fails(Map<Integer, String> map) {
-      Iterator<String> iterator = map.values().iterator();
-      if (iterator.hasNext()) {
-        iterator.next();
-        assertCall(iterator::remove).throwsException(UnsupportedOperationException.class);
-      }
-    }
-
-    @ParameterizedTest
-    @MethodSource("maps")
-    void keys_iterator_remove_fails(Map<Integer, String> map) {
-      Iterator<Integer> iterator = map.keySet().iterator();
-      if (iterator.hasNext()) {
-        iterator.next();
-        assertCall(iterator::remove).throwsException(UnsupportedOperationException.class);
-      }
-    }
-
-    public static Stream<Arguments> maps() {
-      return Stream.of(
-          arguments(map()),
-          arguments(map(1, "one")),
-          arguments(map(1, "one", 2, "two")),
-          arguments(map(1, "one", 2, "two", 3, "three")),
-          arguments(map(1, "one", 2, "two", 3, "three", 4, "four")),
-          arguments(mapOfAll(java.util.Map.of(1, "one", 2, "two"))),
-          arguments(map(1, "one").mapValues(String::toUpperCase)));
     }
   }
 
@@ -330,28 +209,27 @@ public class MapTest {
   class _overrideWith {
     @Test
     void empty_overridden_with_empty() {
-      assertThat(map().overrideWith(java.util.Map.of())).isEqualTo(java.util.Map.of());
+      assertThat(map().overrideWith(map())).isEqualTo(map());
     }
 
     @Test
     void empty_overridden_with_non_empty() {
-      assertThat(map().overrideWith(java.util.Map.of(1, "one"))).isEqualTo(map(1, "one"));
+      assertThat(map().overrideWith(map(1, "one"))).isEqualTo(map(1, "one"));
     }
 
     @Test
     void non_empty_overridden_with_empty() {
-      assertThat(map(1, "one").overrideWith(java.util.Map.of())).isEqualTo(map(1, "one"));
+      assertThat(map(1, "one").overrideWith(map())).isEqualTo(map(1, "one"));
     }
 
     @Test
     void map_overridden_with_map_without_overlapping_keys() {
-      assertThat(map(1, "one").overrideWith(java.util.Map.of(2, "two")))
-          .isEqualTo(map(1, "one", 2, "two"));
+      assertThat(map(1, "one").overrideWith(map(2, "two"))).isEqualTo(map(1, "one", 2, "two"));
     }
 
     @Test
     void map_overridden_with_map_with_overlapping_keys_take_entries_from_overriding() {
-      assertThat(map(1, "one", 2, "two").overrideWith(java.util.Map.of(2, "TWO")))
+      assertThat(map(1, "one", 2, "two").overrideWith(map(2, "TWO")))
           .isEqualTo(map(1, "one", 2, "TWO"));
     }
   }

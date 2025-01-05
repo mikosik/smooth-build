@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.interfaceTypeName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
@@ -22,7 +21,7 @@ public sealed class SInterfaceType extends SType permits SStructType {
 
   protected SInterfaceType(String name, Map<Name, SItemSig> fields) {
     super(name, calculateFieldSetVars(listOfAll(fields.values())));
-    this.fields = mapOfAll(fields);
+    this.fields = fields;
   }
 
   public static SVarSet calculateFieldSetVars(List<SItemSig> fields) {

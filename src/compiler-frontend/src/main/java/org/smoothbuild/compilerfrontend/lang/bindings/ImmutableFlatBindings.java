@@ -9,6 +9,6 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
 public final class ImmutableFlatBindings<E> extends FlatBindings<E>
     implements ImmutableBindings<E> {
   ImmutableFlatBindings(Map<Name, E> map) {
-    super(map);
+    super(map.asJdkMap());
   }
 }

@@ -3,11 +3,11 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 
 /**

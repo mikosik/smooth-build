@@ -6,6 +6,7 @@ import static java.util.Arrays.asList;
 import static java.util.Comparator.naturalOrder;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.common.collect.Set.setOfAll;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
@@ -215,15 +216,13 @@ public class SetTest {
     @Test
     void on_empty_set_returns_empty_map() {
       var set = set();
-      assertThat(set.toMap(x -> x)).isEmpty();
+      assertThat(set.toMap(x -> x)).isEqualTo(map());
     }
 
     @Test
     void on_non_empty_set_returns_map_with_values_calculated_by_mapper() {
       var set = set(1, 2, 3);
-      assertThat(set.toMap(Object::toString))
-          .containsExactly(1, "1", 2, "2", 3, "3")
-          .inOrder();
+      assertThat(set.toMap(Object::toString)).isEqualTo(map(1, "1", 2, "2", 3, "3"));
     }
 
     @Test

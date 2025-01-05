@@ -3,7 +3,6 @@ package org.smoothbuild.evaluator;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.saveBytecodeInJar;
@@ -15,6 +14,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
@@ -224,7 +224,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var binaryName = ReturnIdFunc.class.getName();
           var bytecodeFuncS = sBytecodeFunc(binaryName, varA(), "f", nlist(sItem(varA(), "p")));
           var sExpr = sInstantiate(list(sIntType()), bytecodeFuncS);
-          var expected = ReturnIdFunc.bytecode(bytecodeF(), map("A", bIntType()));
+          var expected = ReturnIdFunc.bytecode(bytecodeF(), Map.of("A", bIntType()));
           assertEvaluation(injector, bindings(bytecodeFuncS), sExpr, expected);
         }
 
