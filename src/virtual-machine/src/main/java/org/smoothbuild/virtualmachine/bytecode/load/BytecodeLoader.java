@@ -8,8 +8,8 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
@@ -39,7 +39,7 @@ public class BytecodeLoader {
 
   private Either<String, BExpr> invoke(Method method, Map<String, BType> varMap) {
     try {
-      return right((BExpr) method.invoke(null, bytecodeFactory, varMap));
+      return right((BExpr) method.invoke(null, bytecodeFactory, varMap.asJdkMap()));
     } catch (IllegalAccessException e) {
       return left("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {

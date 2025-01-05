@@ -94,7 +94,7 @@ public class ConstraintInferrer {
       throws UnifierException {
     var fields1 = interface1.fieldSet();
     var fields2 = interface2.fieldSet();
-    var mergedFields = new HashMap<>(fields1);
+    var mergedFields = new HashMap<>(fields1.asJdkMap());
     for (Entry<Name, SItemSig> field2 : fields2.entrySet()) {
       var name = field2.getKey();
       var field1 = mergedFields.get(name);
