@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.define.SScope.sScope;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.schedule.Output;
@@ -30,7 +31,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -80,10 +80,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SModule convertModule(PModule pModule) {
       var structs = pModule.structs().map(this::convertStruct);
       var evaluables = pModule.evaluables().map(this::convertReferenceableP);
-      var members = new SScope(
-          immutableBindings(structs.toMap(Identifiable::name, v -> v)),
-          immutableBindings(evaluables.toMap(Identifiable::name, v -> v)));
-      var sScope = SScope.sScope(imported, members);
+      var members = new SScope(immutableBindings(structs), immutableBindings(evaluables));
+      var sScope = sScope(imported, members);
       return new SModule(members, sScope);
     }
 

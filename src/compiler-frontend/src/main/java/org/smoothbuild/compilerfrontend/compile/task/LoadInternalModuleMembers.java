@@ -9,8 +9,6 @@ import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Locations;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task0;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableFlatBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
@@ -22,8 +20,7 @@ public class LoadInternalModuleMembers implements Task0<SModule> {
   public Output<SModule> execute() {
     var label = COMPILER_FRONT_LABEL.append(":loadInternalModule");
     var logger = new Logger();
-    ImmutableFlatBindings<STypeDefinition> types = immutableBindings(
-        STypes.baseTypes().map(this::toTypeDefinition).toMap(Identifiable::name, t -> t));
+    var types = immutableBindings(STypes.baseTypes().map(this::toTypeDefinition));
     var members = new SScope(types, immutableBindings());
     var sModule = new SModule(members, members);
     return output(sModule, report(label, logger.toList()));

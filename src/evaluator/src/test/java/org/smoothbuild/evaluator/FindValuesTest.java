@@ -2,7 +2,6 @@ package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
@@ -17,7 +16,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
   void find_evaluable() {
     var sSchema = sSchema(sIntArrayT());
     var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
-    var sScope = new SScope(immutableBindings(), immutableBindings(map(sValue.name(), sValue)));
+    var sScope = new SScope(immutableBindings(), immutableBindings(list(sValue)));
 
     var exprs = new FindValues().execute(sScope, list(sValue.id().toString()));
 
@@ -28,7 +27,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_polymorphic_evaluable_fails() {
     var value = sValue(sSchema(sVarAArrayT()), "myValue", sOrder(varA()));
-    var sScope = new SScope(immutableBindings(), immutableBindings(map(value.name(), value)));
+    var sScope = new SScope(immutableBindings(), immutableBindings(list(value)));
 
     var exprs = new FindValues().execute(sScope, list(value.id().toString()));
 

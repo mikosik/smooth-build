@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.common.collect.Result.error;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
@@ -14,6 +13,7 @@ import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public class BindingsTest {
@@ -23,7 +23,7 @@ public class BindingsTest {
     class _bindings_tests extends AbstractBindingsTestSuite {
       @Override
       public Bindings<Element> newBindings(Element... elements) {
-        return immutableBindings(mapOfElems(elements));
+        return immutableBindings(list(elements));
       }
     }
   }
@@ -58,12 +58,12 @@ public class BindingsTest {
 
       @Override
       protected Bindings<Element> newBindingsWithInnerScopeWith(Element... elements) {
-        return immutableBindings(immutableBindings(), mapOfElems(elements));
+        return immutableBindings(immutableBindings(), immutableBindings(list(elements)));
       }
 
       @Override
       protected Bindings<Element> newBindingsWithOuterScopeWith(Element... elements) {
-        return immutableBindings(immutableBindings(mapOfElems(elements)), mapOfElems());
+        return immutableBindings(immutableBindings(list(elements)), immutableBindings());
       }
     }
   }
@@ -84,7 +84,7 @@ public class BindingsTest {
 
       @Override
       protected Bindings<Element> newBindingsWithOuterScopeWith(Element... elements) {
-        return mutableBindingsWith(immutableBindings(mapOfElems(elements)));
+        return mutableBindingsWith(immutableBindings(list(elements)));
       }
     }
 
@@ -104,33 +104,34 @@ public class BindingsTest {
 
     var equalsTester = new EqualsTester();
     // flat bindings with no elements
-    equalsTester.addEqualityGroup(immutableBindings(), immutableBindings(map()), mutableBindings());
+    equalsTester.addEqualityGroup(
+        immutableBindings(), immutableBindings(list()), mutableBindings());
 
     // flat bindings with elem1
-    equalsTester.addEqualityGroup(immutableBindingsWith(elem1), mutableBindingsWith(elem1));
+    equalsTester.addEqualityGroup(immutableBindings(list(elem1)), mutableBindingsWith(elem1));
 
     // flat bindings with elem2
-    equalsTester.addEqualityGroup(immutableBindingsWith(elem2), mutableBindingsWith(elem2));
+    equalsTester.addEqualityGroup(immutableBindings(list(elem2)), mutableBindingsWith(elem2));
 
     // scoped bindings with elem1 in outer scope
     equalsTester.addEqualityGroup(
-        immutableBindings(immutableBindingsWith(elem1), map()),
-        mutableBindings(immutableBindingsWith(elem1)));
+        immutableBindings(immutableBindings(list(elem1)), immutableBindings()),
+        mutableBindings(immutableBindings(list(elem1))));
 
     // scoped bindings with elem1 in inner scope
     equalsTester.addEqualityGroup(
-        immutableBindings(immutableBindings(), mapOfElems(elem1)),
+        immutableBindings(immutableBindings(), immutableBindings(list(elem1))),
         mutableBindingsWith(immutableBindings(), elem1));
 
     // scoped bindings with elem1 in outer and inner scope
     equalsTester.addEqualityGroup(
-        immutableBindings(immutableBindingsWith(elem1), mapOfElems(elem1)),
-        mutableBindingsWith(immutableBindingsWith(elem1), elem1));
+        immutableBindings(immutableBindings(list(elem1)), immutableBindings(list(elem1))),
+        mutableBindingsWith(immutableBindings(list(elem1)), elem1));
 
     // element-1 in outer scope and element-2 in inner scope
     equalsTester.addEqualityGroup(
-        immutableBindings(immutableBindingsWith(elem1), mapOfElems(elem2)),
-        mutableBindingsWith(immutableBindingsWith(elem1), elem2));
+        immutableBindings(immutableBindings(list(elem1)), immutableBindings(list(elem2))),
+        mutableBindingsWith(immutableBindings(list(elem1)), elem2));
 
     equalsTester.testEquals();
   }
@@ -231,14 +232,14 @@ public class BindingsTest {
     class _to_map {
       @Test
       void contains_elements_from_outer_and_inner_scope() {
-        var outer = immutableBindings(mapOfElems(element("n1", 1)));
+        var outer = immutableBindings(list(element("n1", 1)));
         var bindings = newBindings(outer, element("n2", 2));
         assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("n1", 1), element("n2", 2)));
       }
 
       @Test
       void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
-        var outer = immutableBindings(mapOfElems(element("n1", 1)));
+        var outer = immutableBindings(list(element("n1", 1)));
         var bindings = newBindings(outer, element("n1", 11));
         assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("n1", 11)));
       }
@@ -246,7 +247,7 @@ public class BindingsTest {
 
     @Test
     void element_in_inner_bounds_shadows_element_from_outer_bounds() {
-      var outer = immutableBindings(mapOfElems(element("valueA", 7)));
+      var outer = immutableBindings(list(element("valueA", 7)));
       var shadowing = element("valueA", 9);
       var inner = newBindings(outer, shadowing);
       assertThat(inner.find(shadowing.name())).isEqualTo(ok(shadowing));
@@ -254,7 +255,7 @@ public class BindingsTest {
 
     @Test
     void to_string() {
-      var outer = immutableBindings(mapOfElems(element("valueA", 7), element("valueB", 8)));
+      var outer = immutableBindings(list(element("valueA", 7), element("valueB", 8)));
       var inner = newBindings(outer, element("valueC", 9));
       assertThat(inner.toString())
           .isEqualTo(
@@ -263,10 +264,6 @@ public class BindingsTest {
             valueB -> Element[name=valueB, value=8]
               valueC -> Element[name=valueC, value=9]""");
     }
-  }
-
-  private static ImmutableBindings<Element> immutableBindingsWith(Element element) {
-    return immutableBindings(map(element.name(), element));
   }
 
   private static Bindings<Element> mutableBindingsWith(Element... elements) {
@@ -294,7 +291,7 @@ public class BindingsTest {
     return new Element(name, value);
   }
 
-  public static record Element(Name name, Integer value) {
+  public static record Element(Name name, Integer value) implements HasName {
     public Element(String name, Integer value) {
       this(BindingsTest.name(name), value);
     }
