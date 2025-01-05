@@ -7,6 +7,7 @@ import static org.smoothbuild.common.collect.Result.error;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Result;
+import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
@@ -16,13 +17,8 @@ public sealed interface Bindings<E>
     return new ImmutableFlatBindings<>(Map.map());
   }
 
-  public static <E> ImmutableFlatBindings<E> immutableBindings(Map<Name, E> innerScopeMap) {
-    return new ImmutableFlatBindings<>(innerScopeMap);
-  }
-
-  public static <E> ImmutableScopedBindings<E> immutableBindings(
-      ImmutableBindings<? extends E> outerScopeBindings, Map<Name, ? extends E> innerScopeMap) {
-    return immutableBindings(outerScopeBindings, immutableBindings(innerScopeMap));
+  public static <E extends HasName> ImmutableFlatBindings<E> immutableBindings(List<E> elements) {
+    return new ImmutableFlatBindings<>(elements.toMap(HasName::name, e -> e));
   }
 
   public static <E> ImmutableScopedBindings<E> immutableBindings(
@@ -52,7 +48,7 @@ public sealed interface Bindings<E>
   }
 
   public default ImmutableFlatBindings<E> toFlatImmutable() {
-    return immutableBindings(toMap());
+    return new ImmutableFlatBindings<>(toMap());
   }
 
   public E get(Name name);

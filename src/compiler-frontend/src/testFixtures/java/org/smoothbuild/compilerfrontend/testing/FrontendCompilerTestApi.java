@@ -820,7 +820,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   @SuppressWarnings("unchecked")
   public default <T extends HasName> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(list(nameds).toMap(HasName::name, v -> v));
+    return immutableBindings(list(nameds));
   }
 
   public default Log err(int line, String message) {
