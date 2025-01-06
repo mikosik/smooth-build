@@ -72,7 +72,7 @@ public class NList<E extends HasName> extends AbstractList<E> {
   }
 
   /**
-   * Creates nlist which allows elements with duplicated names. When {@link #get(Id)}
+   * Creates nlist which allows elements with duplicated names. When {@link #get(Name)}
    * is called and more than one element has given name then the first one is returned.
    */
   public static <E extends HasName> NList<E> nlistWithShadowing(Collection<E> list) {
@@ -121,12 +121,12 @@ public class NList<E extends HasName> extends AbstractList<E> {
     return nlist(list().map(mapping));
   }
 
-  public int indexOf(Id object) {
-    return indexMap.get().get(object);
+  public int indexOf(Name name) {
+    return indexMap.get().get(name);
   }
 
-  public E get(Id id) {
-    return map().get(id);
+  public E get(Name name) {
+    return map().get(name);
   }
 
   public boolean containsName(Name name) {

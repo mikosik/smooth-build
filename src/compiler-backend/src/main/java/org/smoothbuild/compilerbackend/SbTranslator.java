@@ -195,21 +195,23 @@ public class SbTranslator {
   }
 
   private BExpr translateReference(SReference sReference) throws SbTranslatorException {
-    var itemS = lexicalEnvironment.get(sReference.referencedId());
-    if (itemS == null) {
-      return evaluables
-          .find(sReference.referencedId())
-          .mapRight(this::translateNamedEvaluable)
-          .rightOrThrow(
-              e -> new SbTranslatorException(compileErrorMessage(sReference.location(), e)));
-    } else {
-      var evaluationType = typeF.translate(itemS.type());
-      var index = BigInteger.valueOf(lexicalEnvironment.indexOf(sReference.referencedId()));
-      return saveNalAndReturn(
-          sReference.referencedId().toString(),
-          sReference,
-          bytecodeF.reference(evaluationType, index));
+    var id = sReference.referencedId();
+    var parts = id.parts();
+    if (parts.size() == 1) {
+      var name = parts.get(0);
+      var itemS = lexicalEnvironment.get(name);
+      if (itemS != null) {
+        var evaluationType = typeF.translate(itemS.type());
+        var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
+        return saveNalAndReturn(
+            name.toString(), sReference, bytecodeF.reference(evaluationType, index));
+      }
     }
+    return evaluables
+        .find(id)
+        .mapRight(this::translateNamedEvaluable)
+        .rightOrThrow(
+            e -> new SbTranslatorException(compileErrorMessage(sReference.location(), e)));
   }
 
   private BExpr translateNamedEvaluable(SNamedEvaluable evaluable) throws SbTranslatorException {
