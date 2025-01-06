@@ -70,18 +70,18 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     private SNamedEvaluable assertContainsEvaluable(String name) {
       var evaluables = moduleS.get().localScope().evaluables();
       assertWithMessage("Module doesn't contain '" + name + "'.")
-          .that(evaluables.find(fqn(name)).isRight())
+          .that(evaluables.find(fqn(name)).isOk())
           .isTrue();
-      return evaluables.find(fqn(name)).right();
+      return evaluables.find(fqn(name)).ok();
     }
 
     public void containsType(SType expected) {
       var name = expected.name();
       var types = moduleS.get().localScope().types();
       assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-          .that(types.find(Fqn.fqn(name)).isRight())
+          .that(types.find(Fqn.fqn(name)).isOk())
           .isTrue();
-      SType actual = types.find(structName(name)).right().type();
+      SType actual = types.find(structName(name)).ok().type();
       assertWithMessage("Module contains type '" + name + "', but")
           .that(actual)
           .isEqualTo(expected);

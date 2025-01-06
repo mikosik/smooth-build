@@ -1,15 +1,15 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.common.function.Function1.memoizer;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
@@ -22,7 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
 @Singleton
 public class MethodLoader {
   private final JarClassLoaderFactory jarClassLoaderFactory;
-  private final Function1<BMethod, Either<String, Method>, IOException> memoizer;
+  private final Function1<BMethod, Result<Method>, IOException> memoizer;
 
   @Inject
   public MethodLoader(JarClassLoaderFactory jarClassLoaderFactory) {
@@ -30,38 +30,38 @@ public class MethodLoader {
     this.memoizer = memoizer(this::findMethod);
   }
 
-  public Either<String, Method> load(BMethod bMethod) throws IOException {
+  public Result<Method> load(BMethod bMethod) throws IOException {
     return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> findMethod(BMethod bMethod) throws IOException {
-    return findClass(bMethod).flatMapRight(c -> findMethodInClass(bMethod, c));
+  private Result<Method> findMethod(BMethod bMethod) throws IOException {
+    return findClass(bMethod).flatMapOk(c -> findMethodInClass(bMethod, c));
   }
 
-  private Either<String, Class<?>> findClass(BMethod bMethod) throws IOException {
+  private Result<Class<?>> findClass(BMethod bMethod) throws IOException {
     return jarClassLoaderFactory
         .classLoaderFor(bMethod.jar())
-        .flatMapRight(classLoader -> loadClass(classLoader, bMethod));
+        .flatMapOk(classLoader -> loadClass(classLoader, bMethod));
   }
 
-  private Either<String, Class<?>> loadClass(ClassLoader classLoader, BMethod bMethod)
+  private Result<Class<?>> loadClass(ClassLoader classLoader, BMethod bMethod)
       throws BytecodeException {
     try {
-      return right(classLoader.loadClass(bMethod.classBinaryName().toJavaString()));
+      return ok(classLoader.loadClass(bMethod.classBinaryName().toJavaString()));
     } catch (ClassNotFoundException e) {
-      return left("Class not found in jar.");
+      return err("Class not found in jar.");
     }
   }
 
-  private static Either<String, Method> findMethodInClass(BMethod bMethod, Class<?> clazz)
+  private static Result<Method> findMethodInClass(BMethod bMethod, Class<?> clazz)
       throws BytecodeException {
     var declaredMethods = list(clazz.getDeclaredMethods());
     var methods =
         declaredMethods.filter(m -> m.getName().equals(bMethod.methodName().toJavaString()));
     return switch (methods.size()) {
-      case 0 -> left(missingMethodError(bMethod));
-      case 1 -> right(methods.get(0));
-      default -> left(overloadedMethodError(bMethod));
+      case 0 -> err(missingMethodError(bMethod));
+      case 1 -> ok(methods.get(0));
+      default -> err(overloadedMethodError(bMethod));
     };
   }
 

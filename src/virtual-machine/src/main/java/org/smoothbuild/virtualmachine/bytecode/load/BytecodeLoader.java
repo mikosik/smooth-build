@@ -1,15 +1,15 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
 import static org.smoothbuild.common.base.Strings.q;
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
@@ -29,21 +29,21 @@ public class BytecodeLoader {
     this.bytecodeFactory = bytecodeFactory;
   }
 
-  public Either<String, BExpr> load(String name, BMethod bMethod, Map<String, BType> varMap)
+  public Result<BExpr> load(String name, BMethod bMethod, Map<String, BType> varMap)
       throws IOException {
     return methodLoader
         .load(bMethod)
-        .flatMapRight(jMethod -> invoke(jMethod, varMap))
-        .mapLeft(e -> loadingError(name, bMethod.classBinaryName().toJavaString(), e));
+        .flatMapOk(jMethod -> invoke(jMethod, varMap))
+        .mapErr(e -> loadingError(name, bMethod.classBinaryName().toJavaString(), e));
   }
 
-  private Either<String, BExpr> invoke(Method method, Map<String, BType> varMap) {
+  private Result<BExpr> invoke(Method method, Map<String, BType> varMap) {
     try {
-      return right((BExpr) method.invoke(null, bytecodeFactory, varMap.asJdkMap()));
+      return ok((BExpr) method.invoke(null, bytecodeFactory, varMap.asJdkMap()));
     } catch (IllegalAccessException e) {
-      return left("Cannot access provider method: " + e);
+      return err("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {
-      return left("Providing method thrown exception: " + e.getCause());
+      return err("Providing method thrown exception: " + e.getCause());
     }
   }
 

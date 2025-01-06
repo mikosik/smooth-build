@@ -161,10 +161,8 @@ public class SExprLoadingTest extends FrontendCompileTester {
               .localScope()
               .evaluables()
               .find(fqn("result"));
-          SExpr actualDefArg = ((SCall) ((SNamedExprValue) result.right()).body())
-              .args()
-              .elements()
-              .get(0);
+          SExpr actualDefArg =
+              ((SCall) ((SNamedExprValue) result.ok()).body()).args().elements().get(0);
           assertThat(actualDefArg).isEqualTo(expected);
         }
       }

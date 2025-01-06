@@ -6,13 +6,13 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.MissingMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
@@ -25,7 +25,7 @@ public class MethodLoaderTest extends VmTestContext {
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var bBlob = blobBJarWithJavaByteCode();
     var bMethod = bMethod(bBlob, "com.missing.Class", "methodName");
-    assertThat(methodLoader.load(bMethod)).isEqualTo(left("Class not found in jar."));
+    assertThat(methodLoader.load(bMethod)).isEqualTo(err("Class not found in jar."));
   }
 
   @Test
@@ -46,8 +46,8 @@ public class MethodLoaderTest extends VmTestContext {
         .isEqualTo(loadingError(clazz, "does not have 'func' method."));
   }
 
-  private Either<String, Object> loadingError(Class<?> clazz, String message) {
-    return left("Class '" + clazz.getCanonicalName() + "' " + message);
+  private Result<Object> loadingError(Class<?> clazz, String message) {
+    return err("Class '" + clazz.getCanonicalName() + "' " + message);
   }
 
   private MethodLoader methodLoaderWithPlatformClassLoader() {
@@ -74,12 +74,12 @@ public class MethodLoaderTest extends VmTestContext {
       var classLoader = mock(ClassLoader.class);
       doReturn(clazz).when(classLoader).loadClass(className);
       var classLoaderFactory = mock(JarClassLoaderFactory.class);
-      doReturn(right(classLoader)).when(classLoaderFactory).classLoaderFor(jar);
+      doReturn(ok(classLoader)).when(classLoaderFactory).classLoaderFor(jar);
 
       var methodLoader = new MethodLoader(classLoaderFactory);
-      Either<String, Method> methodEither1 = methodLoader.load(bMethod);
-      Either<String, Method> methodEither2 = methodLoader.load(bMethod);
-      assertThat(methodEither1).isSameInstanceAs(methodEither2);
+      Result<Method> method1 = methodLoader.load(bMethod);
+      Result<Method> method2 = methodLoader.load(bMethod);
+      assertThat(method1).isSameInstanceAs(method2);
       verify(classLoader, times(1)).loadClass(className);
     }
   }

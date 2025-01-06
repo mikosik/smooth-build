@@ -1,7 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.common.function.Function1.memoizer;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -26,7 +26,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 public class BytecodeMethodLoader {
   public static final String BYTECODE_METHOD_NAME = "bytecode";
   private final MethodLoader methodLoader;
-  private final Function1<BMethod, Either<String, Method>, IOException> memoizer;
+  private final Function1<BMethod, Result<Method>, IOException> memoizer;
 
   @Inject
   public BytecodeMethodLoader(MethodLoader methodLoader) {
@@ -34,32 +34,32 @@ public class BytecodeMethodLoader {
     this.memoizer = memoizer(this::loadImpl);
   }
 
-  public Either<String, Method> load(BMethod bMethod) throws IOException {
+  public Result<Method> load(BMethod bMethod) throws IOException {
     return memoizer.apply(bMethod);
   }
 
-  private Either<String, Method> loadImpl(BMethod bMethod) throws IOException {
-    return methodLoader.load(bMethod).flatMapRight(this::validateSignature);
+  private Result<Method> loadImpl(BMethod bMethod) throws IOException {
+    return methodLoader.load(bMethod).flatMapOk(this::validateSignature);
   }
 
-  private Either<String, Method> validateSignature(Method method) {
+  private Result<Method> validateSignature(Method method) {
     if (!isPublic(method)) {
-      return left("Providing method is not public.");
+      return err("Providing method is not public.");
     }
     if (!isStatic(method)) {
-      return left("Providing method is not static.");
+      return err("Providing method is not static.");
     }
     if (!hasBytecodeFactoryParam(method)) {
-      return left("Providing method parameter is not of type "
+      return err("Providing method parameter is not of type "
           + BytecodeFactory.class.getCanonicalName() + ".");
     }
     if (method.getParameterTypes().length != 2) {
-      return left("Providing method parameter count is different than 2.");
+      return err("Providing method parameter count is different than 2.");
     }
     if (!method.getReturnType().equals(BValue.class)) {
-      return left("Providing method result type is not " + BValue.class.getName() + ".");
+      return err("Providing method result type is not " + BValue.class.getName() + ".");
     }
-    return right(method);
+    return ok(method);
   }
 
   private static boolean hasBytecodeFactoryParam(Method method) {

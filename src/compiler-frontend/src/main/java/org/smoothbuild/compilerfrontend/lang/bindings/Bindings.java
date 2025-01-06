@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.Maybe.maybe;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
@@ -40,7 +40,7 @@ public sealed interface Bindings<E>
     if (parts.size() == 1) {
       return maybe(get(parts.get(0))).toResult(() -> cannotResolveErrorMessage(parts, 1));
     }
-    return error(cannotResolveErrorMessage(parts, 2));
+    return err(cannotResolveErrorMessage(parts, 2));
   }
 
   private static String cannotResolveErrorMessage(List<Name> parts, int toIndex) {

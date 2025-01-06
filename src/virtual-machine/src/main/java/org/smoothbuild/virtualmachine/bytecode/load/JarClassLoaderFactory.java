@@ -11,8 +11,8 @@ import static org.smoothbuild.virtualmachine.evaluate.plugin.UnzipBlob.unzipBlob
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -28,7 +28,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 public class JarClassLoaderFactory {
   private final BytecodeFactory bytecodeFactory;
   private final ClassLoader parentClassLoader;
-  private final Function1<BBlob, Either<String, ClassLoader>, IOException> memoizer;
+  private final Function1<BBlob, Result<ClassLoader>, IOException> memoizer;
 
   @Inject
   public JarClassLoaderFactory(BytecodeFactory bytecodeFactory) {
@@ -41,14 +41,14 @@ public class JarClassLoaderFactory {
     this.memoizer = memoizer(this::newClassLoader);
   }
 
-  public Either<String, ClassLoader> classLoaderFor(BBlob jar) throws IOException {
+  public Result<ClassLoader> classLoaderFor(BBlob jar) throws IOException {
     return memoizer.apply(jar);
   }
 
-  private Either<String, ClassLoader> newClassLoader(BBlob jar) throws IOException {
+  private Result<ClassLoader> newClassLoader(BBlob jar) throws IOException {
     return unzipBlob(bytecodeFactory, jar, s -> true)
-        .mapRight(this::newClassLoader)
-        .mapLeft(error -> "Error unpacking jar with native code: " + error);
+        .mapOk(this::newClassLoader)
+        .mapErr(error -> "Error unpacking jar with native code: " + error);
   }
 
   private ClassLoader newClassLoader(BArray files) throws BytecodeException {

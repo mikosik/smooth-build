@@ -12,7 +12,7 @@ public class UnzipHelper {
   public static BArray unzipToArrayB(
       NativeApi nativeApi, BBlob blob, Predicate<String> includePredicate) throws IOException {
     return unzipBlob(nativeApi.factory(), blob, includePredicate)
-        .ifLeft(error -> nativeApi.log().error("Error reading archive: " + error))
-        .rightOrGet(() -> null);
+        .ifErr(error -> nativeApi.log().error("Error reading archive: " + error))
+        .okOrGet(() -> null);
   }
 }

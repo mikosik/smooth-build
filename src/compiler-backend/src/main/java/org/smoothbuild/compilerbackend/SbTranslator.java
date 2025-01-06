@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.HasLocation;
@@ -209,9 +209,8 @@ public class SbTranslator {
     }
     return evaluables
         .find(id)
-        .mapRight(this::translateNamedEvaluable)
-        .rightOrThrow(
-            e -> new SbTranslatorException(compileErrorMessage(sReference.location(), e)));
+        .mapOk(this::translateNamedEvaluable)
+        .okOrThrow(e -> new SbTranslatorException(compileErrorMessage(sReference.location(), e)));
   }
 
   private BExpr translateNamedEvaluable(SNamedEvaluable evaluable) throws SbTranslatorException {
@@ -372,10 +371,10 @@ public class SbTranslator {
     var varNameToTypeMap = typeF.varMap().mapKeys(SVar::name);
     var jar = readNativeJar(annotation.location());
     var bytecode = loadBytecode(id, jar, annotation.path().string(), varNameToTypeMap);
-    if (bytecode.isLeft()) {
-      throw new SbTranslatorException(annotation.location() + ": " + bytecode.left());
+    if (bytecode.isErr()) {
+      throw new SbTranslatorException(annotation.location() + ": " + bytecode.err());
     }
-    var bExpr = bytecode.right();
+    var bExpr = bytecode.ok();
     if (!bExpr.evaluationType().equals(bType)) {
       throw new SbTranslatorException(annotation.location()
           + ": Bytecode provider returned expression of wrong type "
@@ -385,7 +384,7 @@ public class SbTranslator {
     return bExpr;
   }
 
-  private Either<String, BExpr> loadBytecode(
+  private Result<BExpr> loadBytecode(
       Id id, BBlob jar, String classBinaryName, Map<String, BType> varNameToTypeMap)
       throws SbTranslatorException {
     try {

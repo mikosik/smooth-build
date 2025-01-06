@@ -13,7 +13,7 @@ public class JarClassLoaderFactoryTest extends VmTestContext {
     var jar = blobBJarWithJavaByteCode(MyClass.class);
     var classLoaderFactory = new JarClassLoaderFactory(bytecodeF(), getPlatformClassLoader());
     var classLoaderTry = classLoaderFactory.classLoaderFor(jar);
-    var clazz = classLoaderTry.right().loadClass(MyClass.class.getName());
+    var clazz = classLoaderTry.ok().loadClass(MyClass.class.getName());
     assertThat(clazz).isNotSameInstanceAs(MyClass.class);
     assertThat(clazz.getMethod("method").invoke(null)).isEqualTo("MyClass result");
   }

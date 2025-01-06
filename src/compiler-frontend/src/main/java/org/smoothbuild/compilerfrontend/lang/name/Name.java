@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.name;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isLowerCase;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isUpperCase;
@@ -34,7 +34,7 @@ public final class Name extends Id {
   public static Result<Name> parseReferenceableName(String name) {
     var errorMessage = findReferenceableNameErrors(name);
     if (errorMessage != null) {
-      return error(errorMessage);
+      return err(errorMessage);
     }
 
     return ok(new Name(name));
@@ -54,7 +54,7 @@ public final class Name extends Id {
   public static Result<Name> parseStructName(String name) {
     var errorMessage = findStructNameErrors(name);
     if (errorMessage != null) {
-      return error(errorMessage);
+      return err(errorMessage);
     }
 
     return ok(new Name(name));

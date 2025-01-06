@@ -31,8 +31,8 @@ public record PScope(
   public SSchema schemaFor(Id id) {
     return referencables
         .find(id)
-        .mapRight(Referenceable::schema)
-        .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
+        .mapOk(Referenceable::schema)
+        .okOrThrow(e -> new RuntimeException("Internal error: " + e));
   }
 
   public SType translate(PType type) {
@@ -51,7 +51,7 @@ public record PScope(
   private SType typeWithId(Id id) {
     return types
         .find(id)
-        .mapRight(TypeDefinition::type)
-        .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
+        .mapOk(TypeDefinition::type)
+        .okOrThrow(e -> new RuntimeException("Internal error: " + e));
   }
 }

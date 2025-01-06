@@ -54,8 +54,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
           pFuncType.params().forEach(this::visitType);
         }
         case PIdType pIdType -> parseReference(pIdType.nameText())
-            .ifLeft(e -> logIllegalTypeReference(pIdType, e))
-            .ifRight(pIdType::setId);
+            .ifErr(e -> logIllegalTypeReference(pIdType, e))
+            .ifOk(pIdType::setId);
         case PImplicitType pImplicitType -> {}
       }
     }
@@ -64,20 +64,20 @@ public class GenerateIds implements Task1<PModule, PModule> {
     public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
       var nameText = pNamedEvaluable.nameText();
       parseReferenceableName(nameText)
-          .ifLeft(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
-          .mapRight(this::fullId)
-          .ifRight(pNamedEvaluable::setId)
-          .ifRight(id -> runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable)));
+          .ifErr(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
+          .mapOk(this::fullId)
+          .ifOk(pNamedEvaluable::setId)
+          .ifOk(id -> runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable)));
     }
 
     @Override
     public void visitLambda(PLambda pLambda) throws RuntimeException {
       var nameText = pLambda.nameText();
       parseReferenceableName(nameText)
-          .ifLeft(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
-          .mapRight(this::fullId)
-          .ifRight(pLambda::setId)
-          .ifRight(id -> runWithScopeId(id, () -> super.visitLambda(pLambda)));
+          .ifErr(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
+          .mapOk(this::fullId)
+          .ifOk(pLambda::setId)
+          .ifOk(id -> runWithScopeId(id, () -> super.visitLambda(pLambda)));
     }
 
     private void logIllegalTypeReference(PIdType id, String e) {
@@ -89,8 +89,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
     public void visitItem(PItem pItem) throws RuntimeException {
       var nameText = pItem.nameText();
       parseReferenceableName(nameText)
-          .ifLeft(e -> logIllegalIdentifier(nameText, pItem.location(), e))
-          .ifRight(id -> {
+          .ifErr(e -> logIllegalIdentifier(nameText, pItem.location(), e))
+          .ifOk(id -> {
             var fullId = fullId(id);
             pItem.setName(id);
             pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fullId));
@@ -107,8 +107,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
     public void visitStruct(PStruct pStruct) {
       var nameText = pStruct.nameText();
       parseStructName(nameText)
-          .ifLeft(e -> logIllegalStructName(pStruct, e, pStruct.nameText()))
-          .ifRight(id -> {
+          .ifErr(e -> logIllegalStructName(pStruct, e, pStruct.nameText()))
+          .ifOk(id -> {
             pStruct.setId(id);
             runWithScopeId(fullId(id), () -> super.visitStruct(pStruct));
           });
@@ -123,8 +123,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
     public void visitReference(PReference pReference) throws RuntimeException {
       super.visitReference(pReference);
       parseReference(pReference.nameText())
-          .ifRight(pReference::setId)
-          .ifLeft(e -> logIllegalReference(pReference, e, pReference.nameText()));
+          .ifOk(pReference::setId)
+          .ifErr(e -> logIllegalReference(pReference, e, pReference.nameText()));
     }
 
     private void logIllegalReference(PReference pReference, String e, String nameText) {
@@ -135,8 +135,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
     public void visitNamedArg(PNamedArg pNamedArg) throws RuntimeException {
       super.visitNamedArg(pNamedArg);
       parseReferenceableName(pNamedArg.nameText())
-          .ifRight(pNamedArg::setName)
-          .ifLeft(e -> logIllegalParamName(pNamedArg, e));
+          .ifOk(pNamedArg::setName)
+          .ifErr(e -> logIllegalParamName(pNamedArg, e));
     }
 
     private void logIllegalParamName(PNamedArg pNamedArg, String e) {
@@ -148,8 +148,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
     public void visitSelect(PSelect pSelect) throws RuntimeException {
       super.visitSelect(pSelect);
       parseReferenceableName(pSelect.fieldNameText())
-          .ifRight(pSelect::setFieldName)
-          .ifLeft(e -> logIllegalFieldName(pSelect, e));
+          .ifOk(pSelect::setFieldName)
+          .ifErr(e -> logIllegalFieldName(pSelect, e));
     }
 
     private void logIllegalFieldName(PSelect pSelect, String e) {

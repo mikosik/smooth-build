@@ -64,7 +64,7 @@ public class DetectUndefined implements Task1<PModule, PModule> {
     @Override
     public void visitReference(PReference pReference) {
       var id = pReference.id();
-      scope.referencables().find(id).ifLeft(e -> log.log(compileError(pReference, e)));
+      scope.referencables().find(id).ifErr(e -> log.log(compileError(pReference, e)));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class DetectUndefined implements Task1<PModule, PModule> {
 
     private void visitExplicitType(PIdType pIdType) {
       if (!isTypeVarName(pIdType.nameText())) {
-        scope.types().find(pIdType.id()).ifLeft(e -> log.log(compileError(pIdType.location(), e)));
+        scope.types().find(pIdType.id()).ifErr(e -> log.log(compileError(pIdType.location(), e)));
       }
     }
 
