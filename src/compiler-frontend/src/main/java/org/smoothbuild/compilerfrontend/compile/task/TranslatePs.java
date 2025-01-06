@@ -92,7 +92,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SConstructor convertConstructor(PConstructor pConstructor) {
       var fields = pConstructor.params();
       var params =
-          fields.map(f -> new SItem(fields.get(f.id()).sType(), f.name(), none(), f.location()));
+          fields.map(f -> new SItem(fields.get(f.name()).sType(), f.name(), none(), f.location()));
       return new SConstructor(
           pConstructor.schema(), pConstructor.id(), params, pConstructor.location());
     }
