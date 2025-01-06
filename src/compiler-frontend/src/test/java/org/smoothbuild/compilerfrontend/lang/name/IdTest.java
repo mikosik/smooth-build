@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.name;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
@@ -28,7 +28,7 @@ public class IdTest {
       @ParameterizedTest
       @MethodSource
       void legal(String string) {
-        var name = parseReferenceableName(string).right();
+        var name = parseReferenceableName(string).ok();
         assertThat(name.toString()).isEqualTo(string);
       }
 
@@ -39,7 +39,7 @@ public class IdTest {
       @ParameterizedTest
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
-        assertThat(parseReferenceableName(string)).isEqualTo(error(expectedErrorMessage));
+        assertThat(parseReferenceableName(string)).isEqualTo(err(expectedErrorMessage));
       }
 
       public static List<Arguments> illegal() {
@@ -108,7 +108,7 @@ public class IdTest {
       @ParameterizedTest
       @MethodSource
       void legal(String string) {
-        var name = parseStructName(string).right();
+        var name = parseStructName(string).ok();
         assertThat(name.toString()).isEqualTo(string);
       }
 
@@ -119,7 +119,7 @@ public class IdTest {
       @ParameterizedTest
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
-        assertThat(parseStructName(string)).isEqualTo(error(expectedErrorMessage));
+        assertThat(parseStructName(string)).isEqualTo(err(expectedErrorMessage));
       }
 
       static List<Arguments> illegal() {
@@ -193,7 +193,7 @@ public class IdTest {
       @ParameterizedTest
       @MethodSource
       void legal(String string) {
-        var name = parseReference(string).right();
+        var name = parseReference(string).ok();
         assertThat(name.toString()).isEqualTo(string);
       }
 
@@ -204,7 +204,7 @@ public class IdTest {
       @ParameterizedTest
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
-        assertThat(parseReference(string)).isEqualTo(error(expectedErrorMessage));
+        assertThat(parseReference(string)).isEqualTo(err(expectedErrorMessage));
       }
 
       static List<Arguments> illegal() {
@@ -283,9 +283,9 @@ public class IdTest {
 
   @Test
   void append() {
-    var name1 = parseReferenceableName("abc").right();
-    var name2 = parseReferenceableName("def").right();
-    assertThat(name1.append(name2)).isEqualTo(parseReference("abc:def").right());
+    var name1 = parseReferenceableName("abc").ok();
+    var name2 = parseReferenceableName("def").ok();
+    assertThat(name1.append(name2)).isEqualTo(parseReference("abc:def").ok());
   }
 
   @ParameterizedTest
@@ -321,9 +321,9 @@ public class IdTest {
 
   @Test
   void to_string() {
-    assertThat(parseReferenceableName("abc").right().toString()).isEqualTo("abc");
-    assertThat(parseStructName("Struct").right().toString()).isEqualTo("Struct");
-    assertThat(parseReference("name:abc").right().toString()).isEqualTo("name:abc");
+    assertThat(parseReferenceableName("abc").ok().toString()).isEqualTo("abc");
+    assertThat(parseStructName("Struct").ok().toString()).isEqualTo("Struct");
+    assertThat(parseReference("name:abc").ok().toString()).isEqualTo("name:abc");
   }
 
   private static Name name(String name) {

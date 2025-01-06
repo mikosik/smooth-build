@@ -6,14 +6,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
@@ -78,8 +78,8 @@ public class NativeMethodLoaderTest extends VmTestContext {
         new MethodLoader(new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader())));
   }
 
-  private Either<String, Object> loadingError(Class<?> clazz, String message) {
-    return left("Error loading native implementation specified as `" + clazz.getCanonicalName()
+  private Result<Object> loadingError(Class<?> clazz, String message) {
+    return err("Error loading native implementation specified as `" + clazz.getCanonicalName()
         + "`: " + message);
   }
 
@@ -89,7 +89,7 @@ public class NativeMethodLoaderTest extends VmTestContext {
     void method_is_cached() throws Exception {
       var method = ReturnAbc.class.getDeclaredMethod(
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, BTuple.class);
-      testCaching(method, right(method), right(method));
+      testCaching(method, ok(method), ok(method));
     }
 
     @Test
@@ -98,18 +98,17 @@ public class NativeMethodLoaderTest extends VmTestContext {
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, BTuple.class);
       testCaching(
           method,
-          left("xx"),
-          left("Error loading native implementation specified as `binary.name`: xx"));
+          err("xx"),
+          err("Error loading native implementation specified as `binary.name`: xx"));
     }
 
-    private void testCaching(
-        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected)
+    private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected)
         throws Exception {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
       var bMethod = bMethod(jar, classBinaryName, method.getName());
-      when(methodLoader.load(bMethod)).thenReturn(eitherMethod);
+      when(methodLoader.load(bMethod)).thenReturn(resultMethod);
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 

@@ -10,9 +10,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.common.log.base.Level.ERROR;
 import static org.smoothbuild.common.log.base.Level.FATAL;
 import static org.smoothbuild.common.log.base.Log.fatal;
@@ -298,8 +298,8 @@ public class BEvaluateTest extends VmTestContext {
         var invoke = bInvoke(bIntType(), methodTuple, bTuple(bInt(33)));
         var nativeMethodLoader = mock(NativeMethodLoader.class);
         when(nativeMethodLoader.load(eq(new BMethod(methodTuple))))
-            .thenReturn(right(
-                BEvaluateTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
+            .thenReturn(
+                ok(BEvaluateTest.class.getMethod("returnIntParam", NativeApi.class, BTuple.class)));
         assertThat(evaluate(bEvaluate(nativeMethodLoader), invoke).get().get()).isEqualTo(bInt(33));
       }
 
@@ -711,7 +711,7 @@ public class BEvaluateTest extends VmTestContext {
     var nativeMethodLoader = mock(NativeMethodLoader.class);
     when(nativeMethodLoader.load(any()))
         .thenReturn(
-            right(BEvaluateTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
+            ok(BEvaluateTest.class.getMethod("memoizeString", NativeApi.class, BTuple.class)));
     return nativeMethodLoader;
   }
 

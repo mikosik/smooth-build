@@ -66,8 +66,8 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
           && pInstantiate.polymorphic() instanceof PReference pReference) {
         return referenceables
             .find(pReference.id())
-            .mapRight(r -> inferPositionedArgs(pCall, r))
-            .rightOrThrow(e -> new RuntimeException("Internal error: " + e));
+            .mapOk(r -> inferPositionedArgs(pCall, r))
+            .okOrThrow(e -> new RuntimeException("Internal error: " + e));
       } else {
         return inferPositionedArgs(pCall, logger);
       }

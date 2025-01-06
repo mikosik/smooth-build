@@ -5,15 +5,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.collect.Either;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
@@ -30,22 +30,22 @@ public class BytecodeMethodLoaderTest extends VmTestContext {
     @Test
     void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
-      testCaching(right(method), right(method));
+      testCaching(ok(method), ok(method));
     }
 
     @Test
     void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(left("error message"), left("error message"));
+      testCaching(err("error message"), err("error message"));
     }
 
-    private void testCaching(Either<String, Method> eitherMethod, Either<String, Method> expected)
+    private void testCaching(Result<Method> resultMethod, Result<Method> expected)
         throws Exception {
       var methodLoader = mock(MethodLoader.class);
       var jar = bBlob();
       var classBinaryName = "binary.name";
       var bMethod = bMethod(jar, classBinaryName, BYTECODE_METHOD_NAME);
-      when(methodLoader.load(bMethod)).thenReturn(eitherMethod);
+      when(methodLoader.load(bMethod)).thenReturn(resultMethod);
 
       var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
@@ -91,7 +91,7 @@ public class BytecodeMethodLoaderTest extends VmTestContext {
   private void assertLoadingCausesError(Class<?> clazz, String message) throws Exception {
     var bMethod = bMethod(clazz, BYTECODE_METHOD_NAME);
     var bytecodeMethodLoader = bytecodeMethodLoader();
-    assertThat(bytecodeMethodLoader.load(bMethod)).isEqualTo(left(message));
+    assertThat(bytecodeMethodLoader.load(bMethod)).isEqualTo(err(message));
   }
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {

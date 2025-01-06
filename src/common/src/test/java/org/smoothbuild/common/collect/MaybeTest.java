@@ -9,7 +9,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 
@@ -269,7 +269,7 @@ public class MaybeTest {
 
     @Test
     void toResult_returns_ok_with_element() {
-      assertThat(none().toResult(() -> "message")).isEqualTo(error("message"));
+      assertThat(none().toResult(() -> "message")).isEqualTo(err("message"));
     }
 
     @Test

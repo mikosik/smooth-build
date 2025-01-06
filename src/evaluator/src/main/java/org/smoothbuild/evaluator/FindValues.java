@@ -1,7 +1,7 @@
 package org.smoothbuild.evaluator;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.common.log.location.Locations.commandLineLocation;
 import static org.smoothbuild.common.schedule.Output.output;
@@ -9,8 +9,8 @@ import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
 import static org.smoothbuild.evaluator.EvaluatorConstants.EVALUATOR_LABEL;
 
 import java.util.ArrayList;
-import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
@@ -28,9 +28,9 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
     var result = new ArrayList<SNamedValue>();
     for (var name : valueNames) {
       parseFqn(name)
-          .flatMapRight(fqn -> getNamedEvaluable(environment, fqn))
-          .ifRight(result::add)
-          .ifLeft(logger::error);
+          .flatMapOk(fqn -> getNamedEvaluable(environment, fqn))
+          .ifOk(result::add)
+          .ifErr(logger::error);
     }
     var label = EVALUATOR_LABEL.append(":findValues");
     if (logger.containsFailure()) {
@@ -41,24 +41,24 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
     return output(exprs, label, logger.toList());
   }
 
-  private static Either<String, Fqn> parseFqn(String name) {
-    return parseReference(name).mapLeft(message -> "Illegal reference `" + name + "`. " + message);
+  private static Result<Fqn> parseFqn(String name) {
+    return parseReference(name).mapErr(message -> "Illegal reference `" + name + "`. " + message);
   }
 
-  private static Either<String, SNamedValue> getNamedEvaluable(SScope environment, Fqn fqn) {
+  private static Result<SNamedValue> getNamedEvaluable(SScope environment, Fqn fqn) {
     return environment
         .evaluables()
         .find(fqn)
-        .mapLeft(e -> unknownFqnMessage(fqn))
-        .flatMapRight(e -> {
+        .mapErr(e -> unknownFqnMessage(fqn))
+        .flatMapOk(e -> {
           if (e instanceof SNamedValue namedValue) {
             if (namedValue.schema().quantifiedVars().isEmpty()) {
               return ok(namedValue);
             } else {
-              return error(e.id().q() + " cannot be calculated as it is a polymorphic value.");
+              return err(e.id().q() + " cannot be calculated as it is a polymorphic value.");
             }
           } else {
-            return error(e.id().q() + " cannot be calculated as it is not a value but a function.");
+            return err(e.id().q() + " cannot be calculated as it is not a value but a function.");
           }
         });
   }

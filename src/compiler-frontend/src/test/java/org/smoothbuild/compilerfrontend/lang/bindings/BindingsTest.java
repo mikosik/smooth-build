@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.bindings;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
@@ -146,14 +146,13 @@ public class BindingsTest {
     @Test
     void find_missing_element_returns_error() {
       var bindings = newBindings();
-      assertThat(bindings.find(name("name"))).isEqualTo(error("Cannot resolve `name`."));
+      assertThat(bindings.find(name("name"))).isEqualTo(err("Cannot resolve `name`."));
     }
 
     @Test
     void find_missing_nested_element_returns_error() {
       var bindings = newBindings(element("name", 7));
-      assertThat(bindings.find(fqn("name:nested")))
-          .isEqualTo(error("Cannot resolve `name:nested`."));
+      assertThat(bindings.find(fqn("name:nested"))).isEqualTo(err("Cannot resolve `name:nested`."));
     }
 
     @Test

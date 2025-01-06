@@ -35,9 +35,9 @@ public final class InvokeStep extends Step {
     return container
         .nativeMethodLoader()
         .load(new BMethod((BTuple) input.get(METHOD_INDEX)))
-        .mapRight(m -> invokeMethod(m, input.get(ARGUMENTS_INDEX), container))
-        .ifLeft(left -> container.log().fatal(left))
-        .rightOrGet(() -> bOutput(null, container.messages()));
+        .mapOk(m -> invokeMethod(m, input.get(ARGUMENTS_INDEX), container))
+        .ifErr(left -> container.log().fatal(left))
+        .okOrGet(() -> bOutput(null, container.messages()));
   }
 
   private BOutput invokeMethod(Method method, BValue arguments, Container container)

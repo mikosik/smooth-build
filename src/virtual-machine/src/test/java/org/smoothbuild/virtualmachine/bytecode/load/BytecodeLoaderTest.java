@@ -3,14 +3,14 @@ package org.smoothbuild.virtualmachine.bytecode.load;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.common.collect.Either.left;
-import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.collect.Result.err;
+import static org.smoothbuild.common.collect.Result.ok;
 
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
@@ -22,13 +22,13 @@ import org.smoothbuild.virtualmachine.testing.func.bytecode.ThrowException;
 public class BytecodeLoaderTest extends VmTestContext {
   @Test
   void loading_bytecode() throws Exception {
-    assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(right(bString("abc")));
+    assertThat(loadBytecode(ReturnAbc.class, map())).isEqualTo(ok(bString("abc")));
   }
 
   @Test
   void loading_monomorphised_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnIdFunc.class, map("A", bIntType())))
-        .isEqualTo(right(bIntIdLambda()));
+        .isEqualTo(ok(bIntIdLambda()));
   }
 
   @Test
@@ -38,8 +38,7 @@ public class BytecodeLoaderTest extends VmTestContext {
             + ".UnsupportedOperationException: detailed message"));
   }
 
-  private Either<String, BExpr> loadBytecode(Class<?> clazz, Map<String, BType> varMap)
-      throws Exception {
+  private Result<BExpr> loadBytecode(Class<?> clazz, Map<String, BType> varMap) throws Exception {
     var jar = bBlob();
     var classBinaryName = "binary.name";
     var bMethod = bMethod(jar, classBinaryName);
@@ -49,13 +48,13 @@ public class BytecodeLoaderTest extends VmTestContext {
     return new BytecodeLoader(bytecodeMethodLoader, bytecodeF()).load("name", bMethod, varMap);
   }
 
-  private static Either<String, Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
-    return right(clazz.getDeclaredMethod(
+  private static Result<Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
+    return ok(clazz.getDeclaredMethod(
         BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeFactory.class, java.util.Map.class));
   }
 
-  private Either<String, Object> loadingError(String message) {
-    return left(
+  private Result<Object> loadingError(String message) {
+    return err(
         "Error loading bytecode for `name` using provider specified as `binary.name`: " + message);
   }
 }

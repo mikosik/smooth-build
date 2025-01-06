@@ -162,7 +162,7 @@ public class InferenceTest extends FrontendCompileTester {
           .localScope()
           .evaluables()
           .find(fqn("myValue"));
-      var myValueBody = ((SNamedExprValue) myValue.right()).body();
+      var myValueBody = ((SNamedExprValue) myValue.ok()).body();
       var lambda = ((SInstantiate) myValueBody).sPolymorphic();
       assertThat(lambda.schema()).isEqualTo(expected);
     }

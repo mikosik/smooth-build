@@ -2,7 +2,7 @@ package org.smoothbuild.common.collect;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Result.error;
+import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
 
 import java.util.NoSuchElementException;
@@ -203,7 +203,7 @@ public abstract sealed class Maybe<E> permits Some, None {
 
     @Override
     public <T extends Throwable> Result<E> toResult(Function0<String, T> errorSupplier) throws T {
-      return error(errorSupplier.apply());
+      return err(errorSupplier.apply());
     }
 
     @Override
