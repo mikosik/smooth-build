@@ -11,7 +11,8 @@ public class SNamedExprValueTest extends FrontendCompilerTestContext {
   void to_source_code() {
     var value = new SNamedExprValue(sSchema(varA()), fqn("module:myValue"), sInt(9), location(7));
     assertThat(value.toSourceCode()).isEqualTo("""
-        A myValue<A> = 9;""");
+        A myValue<A>
+          = 9;""");
   }
 
   @Test

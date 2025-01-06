@@ -11,7 +11,7 @@ import org.smoothbuild.common.collect.List;
  */
 public record SModule(SScope localScope, SScope fullScope) {
   public String toSourceCode() {
-    return typesAsSourceCode().addAll(evaluablesAsSourceCode()).toString("\n");
+    return typesAsSourceCode().addAll(evaluablesAsSourceCode()).toString("", "\n", "\n");
   }
 
   private List<String> typesAsSourceCode() {
