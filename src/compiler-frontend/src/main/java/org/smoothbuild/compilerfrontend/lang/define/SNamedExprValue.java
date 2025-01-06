@@ -32,7 +32,7 @@ public final class SNamedExprValue implements SNamedValue, Identifiable {
 
   @Override
   public String toSourceCode() {
-    return valueHeaderToSourceCode(this) + " = " + body.toSourceCode() + ";";
+    return valueHeaderToSourceCode(this) + "\n  = " + body.toSourceCode() + ";";
   }
 
   @Override

@@ -16,10 +16,11 @@ public class SModuleTest extends FrontendCompilerTestContext {
     assertThat(new SModule(scope, null).toSourceCode())
         .isEqualTo(
             """
-        MyStruct {
-          Int param0,
-        }
-        A myId<A>(A a)
-          = a<>;""");
+            MyStruct {
+              Int param0,
+            }
+            A myId<A>(A a)
+              = a<>;
+            """);
   }
 }
