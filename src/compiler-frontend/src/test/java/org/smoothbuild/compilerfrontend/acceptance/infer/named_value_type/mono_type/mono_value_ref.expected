@@ -1,0 +1,4 @@
+String stringValue<>
+  = "abc";
+String myValue<>
+  = stringValue<>;

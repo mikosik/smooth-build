@@ -1,0 +1,2 @@
+A myIdentity(A a) = a;
+myFunc(B b) = myIdentity(b);

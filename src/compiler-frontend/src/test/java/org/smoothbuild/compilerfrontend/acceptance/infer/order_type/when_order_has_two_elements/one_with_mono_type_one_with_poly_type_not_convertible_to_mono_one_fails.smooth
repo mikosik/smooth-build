@@ -1,0 +1,3 @@
+Int myIntId(Int i) = i;
+A myId(A a, A b) = a;
+result = [myIntId, myId];

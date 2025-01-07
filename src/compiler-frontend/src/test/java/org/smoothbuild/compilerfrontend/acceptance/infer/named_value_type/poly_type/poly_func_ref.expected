@@ -1,0 +1,4 @@
+A myId<A>(A a)
+  = a<>;
+(A)->A myValue<A>
+  = myId<A>;

@@ -1,0 +1,2 @@
+String myEqual(A p1, A p2) = "true";
+result = myEqual(7, [7]);

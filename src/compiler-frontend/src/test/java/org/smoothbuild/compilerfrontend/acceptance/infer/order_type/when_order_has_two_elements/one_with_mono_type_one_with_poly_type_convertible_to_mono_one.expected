@@ -1,0 +1,6 @@
+Int myIntId<>(Int i)
+  = i<>;
+A myId<A>(A a)
+  = a<>;
+[(Int)->Int] result<>
+  = [myIntId<>, myId<Int>];

@@ -1,0 +1,2 @@
+A myId(A a) = a;
+result = [myId];

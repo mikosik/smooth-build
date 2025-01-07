@@ -1,0 +1,4 @@
+@Native("impl")
+A firstElem([A] array);
+valueWithNoninferableType = firstElem(7);
+Int myValue = valueWithNoninferableType.field;

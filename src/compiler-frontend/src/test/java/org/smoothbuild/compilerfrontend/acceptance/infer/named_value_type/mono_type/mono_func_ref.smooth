@@ -1,0 +1,2 @@
+String myFunc(Blob param) = "abc";
+myValue = myFunc;

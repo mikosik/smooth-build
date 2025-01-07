@@ -1,0 +1,2 @@
+(A)->[B] myValue<A,B>
+  = <A,B>(A a) -> []<A, B>;

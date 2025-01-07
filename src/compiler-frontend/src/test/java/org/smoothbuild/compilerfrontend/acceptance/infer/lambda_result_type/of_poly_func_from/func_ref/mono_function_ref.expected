@@ -1,0 +1,4 @@
+Int otherFunc<>(Blob param)
+  = 7;
+()->(Blob)->Int myValue<>
+  = <>() -> otherFunc<><>;

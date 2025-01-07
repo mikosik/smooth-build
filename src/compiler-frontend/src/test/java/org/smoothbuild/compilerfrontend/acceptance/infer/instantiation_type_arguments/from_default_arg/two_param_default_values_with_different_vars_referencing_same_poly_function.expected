@@ -1,0 +1,10 @@
+A myId<A>(A a)
+  = a<>;
+(A)->A myFunc~f1<A>
+  = myId<A>;
+(A)->A myFunc~f2<A>
+  = myId<A>;
+Blob myFunc<A,B>(A a, B b, (A)->A f1 = myFunc~f1, (B)->B f2 = myFunc~f2)
+  = 0x33;
+Blob myValue<>
+  = myFunc<Int, String>(7,"abc",myFunc~f1<Int>,myFunc~f2<String>);

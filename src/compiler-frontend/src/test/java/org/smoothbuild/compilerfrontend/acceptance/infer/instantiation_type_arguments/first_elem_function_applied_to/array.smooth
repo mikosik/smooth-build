@@ -1,0 +1,3 @@
+@Native("impl.met")
+A firstElement([A] array);
+myValue = firstElement(["abc"]);

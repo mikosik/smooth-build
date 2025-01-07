@@ -1,0 +1,6 @@
+Int myFunc~a<>
+  = 7;
+A myFunc<A>(A a = myFunc~a)
+  = a<>;
+Int myValue<>
+  = myFunc<Int>(myFunc~a<>);

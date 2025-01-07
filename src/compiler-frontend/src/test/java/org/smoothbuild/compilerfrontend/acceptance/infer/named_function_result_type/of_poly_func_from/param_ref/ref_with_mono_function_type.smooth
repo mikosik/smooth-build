@@ -1,0 +1,2 @@
+
+myFunc((Bool)->Int func) = func;

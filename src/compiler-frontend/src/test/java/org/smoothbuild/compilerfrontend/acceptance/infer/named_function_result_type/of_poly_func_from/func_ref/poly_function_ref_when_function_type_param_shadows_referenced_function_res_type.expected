@@ -1,0 +1,4 @@
+A myId<A>(A a)
+  = a<>;
+(B)->B myFunc<A,B>(A a)
+  = myId<B>;

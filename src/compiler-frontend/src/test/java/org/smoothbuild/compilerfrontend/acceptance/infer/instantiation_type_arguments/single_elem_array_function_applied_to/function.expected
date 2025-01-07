@@ -1,0 +1,6 @@
+[A] singleElement<A>(A a)
+  = [a<>];
+String myFunc<>(Blob param)
+  = "abc";
+[(Blob)->String] myValue<>
+  = singleElement<(Blob)->String>(myFunc<>);

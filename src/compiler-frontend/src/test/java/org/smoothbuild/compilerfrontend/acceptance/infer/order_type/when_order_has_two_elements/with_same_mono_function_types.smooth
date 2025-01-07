@@ -1,0 +1,6 @@
+Int firstFunc() = 7;
+Int secondFunc() = 3;
+result = [
+  firstFunc,
+  secondFunc,
+];

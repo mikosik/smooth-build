@@ -1,0 +1,4 @@
+String myFunc<>(Blob param)
+  = "abc";
+(Blob)->String myValue<>
+  = myFunc<>;

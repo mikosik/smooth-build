@@ -39,7 +39,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
   public class Api {
     private final String sourceCode;
     private String importedSourceCode;
-    private Try<SModule> moduleS;
+    private Try<SModule> sModule;
 
     private Api(String sourceCode) {
       this.sourceCode = sourceCode;
@@ -51,8 +51,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     public Api loadsWithSuccess() {
-      moduleS = loadModule();
-      assertWithMessage(messageWithSourceCode()).that(moduleS.logs()).isEmpty();
+      assertWithMessage(messageWithSourceCode()).that(loadModule().logs()).isEmpty();
       return this;
     }
 
@@ -68,7 +67,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private SNamedEvaluable assertContainsEvaluable(String name) {
-      var evaluables = moduleS.get().localScope().evaluables();
+      var evaluables = sModule.get().localScope().evaluables();
       assertWithMessage("Module doesn't contain '" + name + "'.")
           .that(evaluables.find(fqn(name)).isOk())
           .isTrue();
@@ -77,7 +76,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
     public void containsType(SType expected) {
       var name = expected.name();
-      var types = moduleS.get().localScope().types();
+      var types = sModule.get().localScope().types();
       assertWithMessage("Module doesn't contain value with '" + name + "' type.")
           .that(types.find(Fqn.fqn(name)).isOk())
           .isTrue();
@@ -88,13 +87,12 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     public SModule getLoadedModule() {
-      return moduleS.get();
+      return sModule.get();
     }
 
     public void loadsWithProblems() {
-      var module = loadModule();
       assertWithMessage(messageWithSourceCode())
-          .that(containsFailure(module.logs()))
+          .that(containsFailure(loadModule().logs()))
           .isTrue();
     }
 
@@ -107,9 +105,8 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     public void loadsWith(Log... logs) {
-      var module = loadModule();
       assertWithMessage(messageWithSourceCode())
-          .that(module.logs())
+          .that(loadModule().logs())
           .containsExactlyElementsIn(logs);
     }
 
@@ -120,7 +117,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
           + "\n====================\n";
     }
 
-    private Try<SModule> loadModule() {
+    public Try<SModule> loadModule() {
       var testReporter = new TestReporter();
       var injector = Guice.createInjector(PRODUCTION, new AbstractModule() {
         @Override
@@ -138,7 +135,8 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       var paths = list(standardLibraryModulePath(), moduleFullPath());
       var module = scheduler.submit(FrontendCompile.class, argument(paths));
       await().until(() -> module.toMaybe().isSome());
-      return Try.of(module.get().getOr(null), testReporter.logs());
+      sModule = Try.of(module.get().getOr(null), testReporter.logs());
+      return sModule;
     }
 
     private FileSystem<FullPath> createFilesystemWithModuleFiles() {

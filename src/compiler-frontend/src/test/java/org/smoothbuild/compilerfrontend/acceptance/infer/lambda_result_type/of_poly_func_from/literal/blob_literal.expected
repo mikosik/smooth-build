@@ -1,0 +1,2 @@
+(A)->Blob myValue<A>
+  = <A>(A a) -> 0x07<A>;

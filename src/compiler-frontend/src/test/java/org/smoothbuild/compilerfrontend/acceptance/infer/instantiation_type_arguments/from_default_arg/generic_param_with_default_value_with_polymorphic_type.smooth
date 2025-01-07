@@ -1,0 +1,3 @@
+A myId(A a) = a;
+(B)->A myFunc(A a, (B)->A f = myId) = f;
+myValue = myFunc(7);

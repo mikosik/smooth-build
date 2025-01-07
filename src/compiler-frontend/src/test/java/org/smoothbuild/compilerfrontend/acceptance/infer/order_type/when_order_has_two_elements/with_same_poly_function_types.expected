@@ -1,0 +1,6 @@
+B myOtherId<B>(B b)
+  = b<>;
+A myId<A>(A a)
+  = a<>;
+[(A)->A] result<A>
+  = [myId<A>, myOtherId<A>];

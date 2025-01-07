@@ -1,0 +1,4 @@
+A myIdentity<A>(A a)
+  = a<>;
+Int myFunc<>()
+  = myIdentity<Int>(7);

@@ -1,0 +1,6 @@
+String firstFunc() = "abc";
+Blob secondFunc() = 0x01;
+result = [
+  firstFunc,
+  secondFunc,
+];

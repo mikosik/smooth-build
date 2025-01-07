@@ -1,0 +1,2 @@
+A myIdentity(A a) = a;
+myValue = () -> myIdentity(7);

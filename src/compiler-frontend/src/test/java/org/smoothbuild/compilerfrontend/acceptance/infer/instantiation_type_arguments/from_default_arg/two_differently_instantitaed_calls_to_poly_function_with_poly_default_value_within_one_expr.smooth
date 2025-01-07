@@ -1,0 +1,3 @@
+[A] empty([A] array = []) = array;
+myFunc([String] s, [Int] i) = 7;
+myValue = myFunc(empty(), empty());

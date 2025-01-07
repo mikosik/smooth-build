@@ -1,0 +1,2 @@
+(A)->[Int] myValue<A>
+  = <A>(A a) -> [7]<A>;

@@ -1,0 +1,2 @@
+Int otherFunc() = 7;
+myFunc() = otherFunc();
