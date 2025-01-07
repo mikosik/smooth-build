@@ -190,8 +190,8 @@ public class SbTranslator {
   }
 
   private BExpr translateLambda(SLambda sLambda) throws SbTranslatorException {
-    var lambdaB = funcBodySbTranslator(sLambda).translateExprFunc(sLambda);
-    return saveNalAndReturn("<lambda>", sLambda, lambdaB);
+    var bLambda = funcBodySbTranslator(sLambda).translateExprFunc(sLambda);
+    return saveNalAndReturn("<lambda>", sLambda, bLambda);
   }
 
   private BExpr translateReference(SReference sReference) throws SbTranslatorException {
@@ -203,8 +203,8 @@ public class SbTranslator {
       if (itemS != null) {
         var evaluationType = typeF.translate(itemS.type());
         var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
-        return saveNalAndReturn(
-            name.toString(), sReference, bytecodeF.reference(evaluationType, index));
+        var bReference = bytecodeF.reference(evaluationType, index);
+        return saveNalAndReturn(name.toString(), sReference, bReference);
       }
     }
     return evaluables
