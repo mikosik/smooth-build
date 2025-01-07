@@ -7,7 +7,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 public class Util {
   public static String illegalCallMessage(SType called, List<? extends SType> args) {
     return "Illegal call: Instance of " + called.q()
-        + " cannot be called with arguments " + args.toString("`(", ",", ")`")
+        + " cannot be called with arguments "
+        + args.map(SType::toSourceCode).toString("`(", ", ", ")`")
         + ".";
   }
 
