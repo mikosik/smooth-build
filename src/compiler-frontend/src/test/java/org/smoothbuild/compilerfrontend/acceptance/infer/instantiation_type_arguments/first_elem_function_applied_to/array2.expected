@@ -1,0 +1,4 @@
+@Native("impl.met")
+A firstElement<A>([A] array);
+[String] myValue<>
+  = firstElement<[String]>([["abc"]]);

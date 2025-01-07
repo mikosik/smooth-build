@@ -1,0 +1,2 @@
+Int intValue = 7;
+myFunc() = intValue;

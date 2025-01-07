@@ -1,0 +1,2 @@
+(A)->String myValue<A>
+  = <A>(A a) -> "abc"<A>;

@@ -1,0 +1,4 @@
+Int intValue<>
+  = 7;
+Int myFunc<>()
+  = intValue<>;

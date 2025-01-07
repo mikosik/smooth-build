@@ -1,0 +1,3 @@
+B converterApplier(A item, (A)->B convert) = convert(item);
+[C] single(C elem) = [elem];
+result = converterApplier("abc", single);

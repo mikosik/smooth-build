@@ -1,0 +1,3 @@
+@Native("impl")
+Int myFunc(String string);
+Int myValue = myFunc(7);

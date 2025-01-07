@@ -1,0 +1,8 @@
+MyStruct1{
+  String x,
+}
+MyStruct2{
+  String a,
+}
+A myEqual(A a1, A a2) = a1;
+result = myEqual(MyStruct1("aaa"), MyStruct2("aaa"));

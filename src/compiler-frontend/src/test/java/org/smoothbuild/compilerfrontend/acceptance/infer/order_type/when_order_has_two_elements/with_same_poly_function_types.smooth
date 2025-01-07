@@ -1,0 +1,3 @@
+A myId(A a) = a;
+B myOtherId(B b) = b;
+result = [myId, myOtherId];

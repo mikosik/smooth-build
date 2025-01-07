@@ -1,0 +1,3 @@
+A myId(A a) = a;
+B otherFunc(B b, C c) = b;
+result = [myId, otherFunc];

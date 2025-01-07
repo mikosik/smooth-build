@@ -1,0 +1,4 @@
+[A] emptyArray<A>
+  = [];
+[A] myValue<A>
+  = emptyArray<A>;

@@ -1,0 +1,2 @@
+[A] singleElement(A a) = [a];
+myValue = singleElement(["abc"]);

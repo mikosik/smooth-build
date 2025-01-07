@@ -1,0 +1,4 @@
+Int myIntId<>(Int i)
+  = i<>;
+[(Int)->Int] result<>
+  = [myIntId<>];

@@ -1,0 +1,2 @@
+Int myFunc(A a) = 7;
+result = myFunc([]);

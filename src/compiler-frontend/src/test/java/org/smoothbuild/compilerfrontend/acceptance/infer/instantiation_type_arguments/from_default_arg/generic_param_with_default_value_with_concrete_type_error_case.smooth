@@ -1,0 +1,2 @@
+A myFunc(A a, A other = 7) = a;
+myValue = myFunc("abc");

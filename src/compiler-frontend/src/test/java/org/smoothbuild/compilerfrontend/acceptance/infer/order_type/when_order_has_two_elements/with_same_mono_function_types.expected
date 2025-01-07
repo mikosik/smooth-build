@@ -1,0 +1,6 @@
+Int secondFunc<>()
+  = 3;
+Int firstFunc<>()
+  = 7;
+[()->Int] result<>
+  = [firstFunc<>, secondFunc<>];

@@ -1,0 +1,4 @@
+Int myFunc<A>(A a)
+  = 7;
+Int result<>
+  = myFunc<[{}]>([]);

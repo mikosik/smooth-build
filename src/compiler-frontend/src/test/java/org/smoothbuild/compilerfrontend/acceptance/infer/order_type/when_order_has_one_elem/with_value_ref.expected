@@ -1,0 +1,4 @@
+Int myValue<>
+  = 7;
+[Int] result<>
+  = [myValue<>];

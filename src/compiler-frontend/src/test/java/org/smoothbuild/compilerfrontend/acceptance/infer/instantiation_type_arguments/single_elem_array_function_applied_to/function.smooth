@@ -1,0 +1,3 @@
+[A] singleElement(A a) = [a];
+String myFunc(Blob param) = "abc";
+myValue = singleElement(myFunc);

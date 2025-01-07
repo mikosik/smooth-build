@@ -1,0 +1,3 @@
+@Native("impl")
+A myId(A a, String string);
+Int myValue = myId(7, 7);
