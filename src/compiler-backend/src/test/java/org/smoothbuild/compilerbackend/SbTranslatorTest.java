@@ -135,8 +135,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         void poly_expression_function() throws Exception {
           var funcS = idSFunc();
           var instantiateS = sInstantiate(list(sIntType()), funcS);
-          var lambdaB = bLambda(bIntIntLambdaType(), bReference(bIntType(), 0));
-          assertTranslation(bindings(funcS), instantiateS, lambdaB);
+          var bLambda = bLambda(bIntIntLambdaType(), bReference(bIntType(), 0));
+          assertTranslation(bindings(funcS), instantiateS, bLambda);
         }
 
         @Test
@@ -270,9 +270,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var monoFuncS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), monoLambdaS);
 
         var bodyB = bLambda(bReference(bIntType(), 0));
-        var lambdaB = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
+        var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
 
-        assertTranslation(monoFuncS, lambdaB);
+        assertTranslation(monoFuncS, bLambda);
       }
 
       @Test
@@ -283,9 +283,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var monoFuncS = sFunc("myFunc", nlist(sItem(sIntType(), "i")), monoLambdaS);
 
         var bodyB = bLambda(list(bBlobType()), bReference(bIntType(), 1));
-        var lambdaB = bLambda(list(bIntType()), bodyB);
+        var bLambda = bLambda(list(bIntType()), bodyB);
 
-        assertTranslation(monoFuncS, lambdaB);
+        assertTranslation(monoFuncS, bLambda);
       }
 
       @Test
@@ -342,9 +342,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var instantiateS = sInstantiate(list(sIntType()), funcS);
 
         var bodyB = bLambda(bReference(bIntType(), 0));
-        var lambdaB = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
+        var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
 
-        assertTranslation(bindings(funcS), instantiateS, lambdaB);
+        assertTranslation(bindings(funcS), instantiateS, bLambda);
       }
     }
   }

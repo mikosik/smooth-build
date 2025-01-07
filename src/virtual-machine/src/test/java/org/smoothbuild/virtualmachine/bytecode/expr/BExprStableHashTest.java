@@ -109,16 +109,16 @@ public class BExprStableHashTest extends VmTestContext {
   class _lambda {
     @Test
     void with_zero_params() throws Exception {
-      var lambdaB = bLambda(bIntLambdaType(), bInt(1));
-      assertThat(lambdaB.hash())
+      var bLambda = bLambda(bIntLambdaType(), bInt(1));
+      assertThat(bLambda.hash())
           .isEqualTo(
               Hash.decode("cbebb7b4c0262db1ee75678b2cf4f8d0b4d587e53c9d0167234d3f75b5c82e45"));
     }
 
     @Test
     void with_one_param() throws Exception {
-      var lambdaB = bLambda(bLambdaType(bBlobType(), bIntType()), bInt(1));
-      assertThat(lambdaB.hash())
+      var bLambda = bLambda(bLambdaType(bBlobType(), bIntType()), bInt(1));
+      assertThat(bLambda.hash())
           .isEqualTo(
               Hash.decode("8ce918aa234ebc3ab7a490fd559d31b4be576a465c4f3307c476bcf280872d5a"));
     }
@@ -208,8 +208,8 @@ public class BExprStableHashTest extends VmTestContext {
 
     @Test
     void call_with_one_arg() throws Exception {
-      var lambdaB = bLambda(list(bStringType()), bInt());
-      assertThat(bCall(lambdaB, bString("abc")).hash())
+      var bLambda = bLambda(list(bStringType()), bInt());
+      assertThat(bCall(bLambda, bString("abc")).hash())
           .isEqualTo(
               Hash.decode("3b252948eca848beff114959af5f9fe1e39fbf0a01279dd66b52d5f008f2fcc9"));
     }
