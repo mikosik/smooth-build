@@ -1,0 +1,3 @@
+@Native("impl")
+(Int)->Blob myFunc();
+@Native("impl") Blob f7(Int p0);

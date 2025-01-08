@@ -1,0 +1,4 @@
+MyStruct{
+  String firstField,
+  [MyStruct] field
+}

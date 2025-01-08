@@ -1,0 +1,3 @@
+    @Native("Impl.met")
+    A myId(A param);
+    (Int)->Int myValue = myId;

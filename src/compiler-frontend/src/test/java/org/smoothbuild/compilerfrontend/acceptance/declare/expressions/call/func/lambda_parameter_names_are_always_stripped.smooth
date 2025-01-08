@@ -1,0 +1,3 @@
+myFunc(String param) = param;
+valueReferencingFunc = myFunc;
+result = ((Int int) -> int)(param=7);

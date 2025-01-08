@@ -1,0 +1,9 @@
+Log{ERROR, '{t-project}/module.smooth:1: token recognition error at: '"ab\n'
+result = "ab
+         ^'}
+Log{ERROR, '{t-project}/module.smooth:2: token recognition error at: '";\n'
+cd";
+  ^'}
+Log{ERROR, '{t-project}/module.smooth:3: missing ';' at '<EOF>'
+
+^'}

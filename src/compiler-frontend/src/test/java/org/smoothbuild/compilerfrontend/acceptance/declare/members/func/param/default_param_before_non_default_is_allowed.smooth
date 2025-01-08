@@ -1,0 +1,4 @@
+@Native("Impl.met")
+String myFunc(
+  String default = "value",
+  String nonDefault);

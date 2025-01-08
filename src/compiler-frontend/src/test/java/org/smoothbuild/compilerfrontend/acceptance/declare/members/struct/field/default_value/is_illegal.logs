@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:2: Struct field `myField` has default value. Only function parameters can have default value.'}

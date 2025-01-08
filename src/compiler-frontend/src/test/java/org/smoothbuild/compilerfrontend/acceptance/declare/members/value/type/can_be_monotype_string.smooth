@@ -1,0 +1,3 @@
+@Native("Impl.met")
+String myFunc();
+String myValue = myFunc();

@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.acceptance.infer;
+package org.smoothbuild.compilerfrontend.acceptance.declare;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -13,13 +13,13 @@ import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
 /**
- * Test verifying that types that are not declared explicitly are inferred correctly.
+ * Test verifying that valid declaration are accepted and invalid causes proper error.
  * To overwrite files with expected output with actual output, change field MODE to OVERWRITE.
  */
-public class InferTest extends FrontendCompileTester {
+public class DeclareTest extends FrontendCompileTester {
   private static final Mode MODE = Mode.ASSERT;
   private static final String TESTS_DIR =
-      "src/test/java/org/smoothbuild/compilerfrontend/acceptance/infer";
+      "src/test/java/org/smoothbuild/compilerfrontend/acceptance/declare";
 
   enum Mode {
     ASSERT,
@@ -36,26 +36,13 @@ public class InferTest extends FrontendCompileTester {
   }
 
   private void assertTest(Path input) throws IOException {
-    var module = loadModule(input);
-    var expectedPath = withExtension(input, ".expected");
-    if (Files.exists(expectedPath)) {
-      assertThat(module.get().toSourceCode()).isEqualTo(Files.readString(expectedPath));
-    }
-    var logsPath = withExtension(input, ".logs");
-    if (Files.exists(logsPath)) {
-      assertThat(module.logs().toString("\n")).isEqualTo(Files.readString(logsPath));
-    }
+    var actualLogs = loadModule(input).logs().toString("\n");
+    var expectedLogs = Files.readString(withExtension(input, ".logs"));
+    assertThat(actualLogs).isEqualTo(expectedLogs);
   }
 
   private void overwriteTest(Path input) throws IOException {
-    var module = loadModule(input);
-    module
-        .toMaybe()
-        .ifPresent(m -> Files.writeString(withExtension(input, ".expected"), m.toSourceCode()));
-    var logs = module.logs();
-    if (!logs.isEmpty()) {
-      Files.writeString(withExtension(input, ".logs"), logs.toString("\n"));
-    }
+    Files.writeString(withExtension(input, ".logs"), loadModule(input).logs().toString("\n"));
   }
 
   private Try<SModule> loadModule(Path input) throws IOException {
@@ -63,7 +50,10 @@ public class InferTest extends FrontendCompileTester {
   }
 
   private static Path withExtension(Path input, String extension) {
-    return Path.of(input.toString() + extension);
+    var name = input.getFileName().toString();
+    var dotIndex = name.lastIndexOf(".");
+    var newName = dotIndex == -1 ? name + extension : name.substring(0, dotIndex) + extension;
+    return input.getParent().resolve(newName);
   }
 
   static class ArgumentsProvider extends TestFileArgumentsProvider {

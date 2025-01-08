@@ -1,0 +1,4 @@
+MyStruct{
+  String field,
+}
+result = MyStruct();

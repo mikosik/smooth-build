@@ -1,0 +1,2 @@
+Log{ERROR, 'Type hierarchy contains cycle:
+{t-project}/module.smooth:3: MyStruct ~> MyStruct'}

@@ -1,0 +1,3 @@
+@Native("Impl.met")
+(Int)->Blob myFunc();
+(Int)->Blob myValue = myFunc();

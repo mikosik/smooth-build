@@ -1,0 +1,2 @@
+returnFirst(String param1, String param2) = param1;
+result = returnFirst("abc");

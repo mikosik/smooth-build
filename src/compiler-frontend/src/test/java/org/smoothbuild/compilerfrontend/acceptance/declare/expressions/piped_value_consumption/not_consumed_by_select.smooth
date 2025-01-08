@@ -1,0 +1,5 @@
+MyStruct{
+  String myField,
+}
+myValue = myStruct("def");
+result = "abc" > myValue.myField;

@@ -1,0 +1,3 @@
+String stringId(String string) = string;
+A id(A a) = a;
+result = "abc" > (stringId > id())();

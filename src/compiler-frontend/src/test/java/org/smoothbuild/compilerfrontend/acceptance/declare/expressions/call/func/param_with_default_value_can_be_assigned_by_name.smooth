@@ -1,0 +1,2 @@
+myIdentity(String param1="abc", String param2="def") = param1;
+result = myIdentity(param1="abc", param2="def");

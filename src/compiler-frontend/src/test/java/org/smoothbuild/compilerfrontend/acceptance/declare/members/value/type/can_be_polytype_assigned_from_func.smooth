@@ -1,0 +1,2 @@
+    A myId(A a) = a;
+    (A)->A myValue = myId;

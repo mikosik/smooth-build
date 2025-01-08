@@ -1,0 +1,3 @@
+Log{ERROR, '{t-project}/module.smooth:2: no viable alternative at input ',,'
+result = myIntId(1,,);
+                   ^'}
