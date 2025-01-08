@@ -1,0 +1,1 @@
+result = (Int int, String string) -> 7;

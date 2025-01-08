@@ -1,0 +1,2 @@
+@Bytecode("Impl.met")
+myFunc();

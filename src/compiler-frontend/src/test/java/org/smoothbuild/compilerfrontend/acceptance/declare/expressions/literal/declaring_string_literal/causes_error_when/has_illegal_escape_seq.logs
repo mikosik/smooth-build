@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:1: Illegal String literal: Illegal escape sequence at char index = 1. Legal sequences are: \t \b \n \r \f \" \\.'}

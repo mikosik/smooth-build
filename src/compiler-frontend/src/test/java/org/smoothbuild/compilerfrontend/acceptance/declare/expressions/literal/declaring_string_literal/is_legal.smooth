@@ -1,0 +1,14 @@
+result1 = "";
+result2 = "abc";
+result3 = "abcdefghijklmnopqrstuvwxyz";
+result4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+result5 = "abc←";
+result6 = "#";
+result7 = "'";
+result8 = "\\";
+result9 = "\t";
+result10 = "\b";
+result11 = "\n";
+result12 = "\r";
+result13 = "\f";
+result14 = "\"";

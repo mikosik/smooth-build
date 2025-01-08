@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:2: Function `myFunc` with @Native annotation cannot have body.'}

@@ -1,0 +1,2 @@
+@NativeImpure("implementation")
+String result = "abc";

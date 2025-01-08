@@ -1,0 +1,2 @@
+myIdentity(String param) = param;
+result = myIdentity(wrongName="abc");

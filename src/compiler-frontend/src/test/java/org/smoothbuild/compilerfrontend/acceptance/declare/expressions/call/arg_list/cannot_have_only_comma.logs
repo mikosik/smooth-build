@@ -1,0 +1,3 @@
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input ',' expecting {'(', ')', '[', NAME, INT, BLOB, STRING}
+result = myIntId(,);
+                 ^'}

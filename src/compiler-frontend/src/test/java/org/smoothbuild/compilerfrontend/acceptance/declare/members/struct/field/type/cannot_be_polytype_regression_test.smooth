@@ -1,0 +1,5 @@
+MyStruct{
+  (B)->A field
+}
+@Native("impl")
+MyStruct myFunction();

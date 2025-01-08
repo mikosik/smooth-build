@@ -1,0 +1,2 @@
+@Bytecode("implementation")
+String result = "abc";

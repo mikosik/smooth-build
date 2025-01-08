@@ -1,0 +1,2 @@
+Log{ERROR, '{t-project}/module.smooth:3: Unknown parameter `unknown1`.'}
+Log{ERROR, '{t-project}/module.smooth:4: Unknown parameter `unknown2`.'}

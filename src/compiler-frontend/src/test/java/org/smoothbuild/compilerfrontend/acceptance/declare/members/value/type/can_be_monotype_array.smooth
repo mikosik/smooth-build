@@ -1,0 +1,3 @@
+@Native("Impl.met")
+[Int] myFunc();
+[Int] myValue = myFunc();

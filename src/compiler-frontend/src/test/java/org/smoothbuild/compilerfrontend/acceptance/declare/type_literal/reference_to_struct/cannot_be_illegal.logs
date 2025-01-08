@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:1: Illegal type reference `abc::def`. It must not contain "::" substring.'}

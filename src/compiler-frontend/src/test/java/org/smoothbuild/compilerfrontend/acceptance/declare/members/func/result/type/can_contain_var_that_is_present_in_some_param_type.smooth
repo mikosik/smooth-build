@@ -1,0 +1,2 @@
+@Native("Impl.met")
+A myFunc(A a);

@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:2: Value `result` with @Bytecode annotation must declare type.'}

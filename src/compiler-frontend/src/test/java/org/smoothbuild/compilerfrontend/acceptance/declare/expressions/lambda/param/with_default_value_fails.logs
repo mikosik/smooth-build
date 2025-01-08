@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:1: Parameter `int` of lambda cannot have default value.'}

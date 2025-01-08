@@ -1,0 +1,2 @@
+@Bytecode("Impl.met")
+String myFunc() = "abc";

@@ -1,0 +1,2 @@
+Int myIntId(Int i) = i;
+result = myIntId(,);

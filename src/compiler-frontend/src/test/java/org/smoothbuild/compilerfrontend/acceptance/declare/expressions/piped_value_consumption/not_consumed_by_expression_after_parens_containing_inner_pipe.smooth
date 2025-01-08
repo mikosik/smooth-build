@@ -1,0 +1,6 @@
+MyStruct{
+  Int myField,
+}
+v = myStruct(7);
+A id(A a) = a;
+result = "abc" > (v > id()).myField;

@@ -1,0 +1,2 @@
+myValue = 7;
+result = "abc" > myValue;

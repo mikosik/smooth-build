@@ -1,0 +1,3 @@
+myFunc(String param = "abc") = param;
+valueReferencingFunc = myFunc;
+result = valueReferencingFunc();

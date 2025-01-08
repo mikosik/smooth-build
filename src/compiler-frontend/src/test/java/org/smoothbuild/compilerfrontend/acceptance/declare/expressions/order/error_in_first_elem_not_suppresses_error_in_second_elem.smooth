@@ -1,0 +1,5 @@
+myFunc() = "abc";
+result = [
+  myFunc(unknown1=""),
+  myFunc(unknown2="")
+];
