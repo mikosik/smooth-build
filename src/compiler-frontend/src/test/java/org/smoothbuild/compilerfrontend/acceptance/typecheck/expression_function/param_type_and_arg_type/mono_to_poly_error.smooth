@@ -1,0 +1,2 @@
+String myFunc([A] a) = "abc";
+result = () -> myFunc(7);

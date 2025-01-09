@@ -1,0 +1,2 @@
+
+result = (([Int] param) -> "abc")([]);

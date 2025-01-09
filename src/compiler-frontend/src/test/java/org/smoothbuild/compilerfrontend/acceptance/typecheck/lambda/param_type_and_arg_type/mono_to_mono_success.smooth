@@ -1,0 +1,2 @@
+
+result = ((Int int) -> "abc")(7);

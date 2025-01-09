@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:1: Illegal call: Instance of `(A)->A` cannot be called with arguments `(String)`.'}

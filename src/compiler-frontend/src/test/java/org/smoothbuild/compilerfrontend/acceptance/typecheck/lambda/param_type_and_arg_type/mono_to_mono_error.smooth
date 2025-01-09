@@ -1,0 +1,2 @@
+
+result = ((Blob blob) -> "abc")(7);

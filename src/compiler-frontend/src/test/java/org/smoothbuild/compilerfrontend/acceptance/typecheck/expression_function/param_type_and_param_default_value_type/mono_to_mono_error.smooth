@@ -1,0 +1,1 @@
+String myFunc([Blob] blobArray = [1, 2, 3]) = "abc";

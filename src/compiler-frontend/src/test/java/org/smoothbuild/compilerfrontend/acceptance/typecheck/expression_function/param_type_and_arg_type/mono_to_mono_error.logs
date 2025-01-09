@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:2: Illegal call: Instance of `(Blob)->String` cannot be called with arguments `(Int)`.'}
