@@ -1,0 +1,2 @@
+String myFunc(Int int) = "abc";
+result = myFunc(int=7);

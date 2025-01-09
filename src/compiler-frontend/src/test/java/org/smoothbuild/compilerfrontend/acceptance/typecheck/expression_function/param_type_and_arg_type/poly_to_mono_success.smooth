@@ -1,0 +1,2 @@
+String myFunc([Int] param) = "abc";
+result = () -> myFunc([]);

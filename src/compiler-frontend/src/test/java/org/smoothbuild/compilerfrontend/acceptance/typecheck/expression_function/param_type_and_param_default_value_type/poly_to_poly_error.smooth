@@ -1,0 +1,2 @@
+A myIdentity (A a) = a;
+(A, A)->A myFunc((A, A)->A funcParam = myIdentity) = funcParam;

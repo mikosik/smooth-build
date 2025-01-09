@@ -1,0 +1,2 @@
+String myFunc(Blob blob) = "abc";
+result = myFunc(blob=7);
