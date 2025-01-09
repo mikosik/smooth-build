@@ -1,0 +1,2 @@
+myValue = "abc";
+otherValue = (String myValue) -> 7;

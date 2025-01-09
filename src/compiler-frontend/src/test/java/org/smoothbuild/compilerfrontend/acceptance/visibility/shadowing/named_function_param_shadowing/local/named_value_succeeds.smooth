@@ -1,0 +1,2 @@
+myValue = "abc";
+String myFunc(String myValue) = "abc";

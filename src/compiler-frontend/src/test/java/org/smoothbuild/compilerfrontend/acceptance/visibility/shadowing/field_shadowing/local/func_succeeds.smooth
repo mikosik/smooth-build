@@ -1,0 +1,4 @@
+myFunc() = "abc";
+MyStruct {
+  String myFunc,
+}

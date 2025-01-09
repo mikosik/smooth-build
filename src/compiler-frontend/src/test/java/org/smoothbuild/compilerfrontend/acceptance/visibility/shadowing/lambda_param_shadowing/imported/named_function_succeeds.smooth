@@ -1,0 +1,1 @@
+myValue = (String otherModuleFunc) -> 7;

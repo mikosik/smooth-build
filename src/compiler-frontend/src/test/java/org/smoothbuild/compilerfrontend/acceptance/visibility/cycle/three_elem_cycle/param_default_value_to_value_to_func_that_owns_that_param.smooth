@@ -1,0 +1,2 @@
+myFunc(Int param = myValue) = 5;
+myValue = myFunc(3);

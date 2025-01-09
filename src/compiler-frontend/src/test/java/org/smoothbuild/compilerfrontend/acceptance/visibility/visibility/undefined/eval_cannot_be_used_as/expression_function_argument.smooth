@@ -1,0 +1,2 @@
+String myFunc(Blob b) = "abc";
+result = myFunc(undefined);
