@@ -1,0 +1,3 @@
+String myValue = "abc";
+String myFunc(String param) = "abc";
+result = myFunc(myValue);

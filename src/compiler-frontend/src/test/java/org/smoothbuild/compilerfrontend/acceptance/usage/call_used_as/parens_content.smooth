@@ -1,0 +1,2 @@
+myFunc() = 7;
+result = (myFunc());

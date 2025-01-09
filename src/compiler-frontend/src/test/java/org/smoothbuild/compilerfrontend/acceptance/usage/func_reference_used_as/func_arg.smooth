@@ -1,0 +1,3 @@
+String otherFunc() = "abc";
+String myFunc(()->String param) = "abc";
+result = myFunc(otherFunc);

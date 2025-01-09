@@ -1,0 +1,6 @@
+MyStruct{
+  String field,
+}
+myValue = MyStruct("abc");
+String myFunc(String s) = "abc";
+result = myFunc(myValue.field);

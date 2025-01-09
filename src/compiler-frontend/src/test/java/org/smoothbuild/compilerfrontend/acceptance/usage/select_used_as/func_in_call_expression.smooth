@@ -1,0 +1,5 @@
+MyStruct{
+  ()->String myFunc
+}
+String justAbc() = "abc";
+result = MyStruct(justAbc).myFunc();

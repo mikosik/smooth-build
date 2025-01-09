@@ -1,0 +1,4 @@
+MyStruct{
+  Int myField
+}
+result = (MyStruct(7)).myField;

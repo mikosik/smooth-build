@@ -1,0 +1,6 @@
+Log{ERROR, '{t-project}/module.smooth:2: mismatched input '>' expecting {'(', ')', ',', '.'}
+String myFunc(String param = "abc" > myIdentity()) = "abc";
+                                   ^'}
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input ')' expecting {'=', ';'}
+String myFunc(String param = "abc" > myIdentity()) = "abc";
+                                                 ^'}

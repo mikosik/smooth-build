@@ -1,0 +1,7 @@
+S1{
+  S2 f1,
+}
+S2{
+  String f2,
+}
+String result = S1(S2("abc")).f1.f2;

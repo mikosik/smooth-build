@@ -1,0 +1,4 @@
+ReferencingStruct {
+ MyStruct field
+}
+MyStruct {}

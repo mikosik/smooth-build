@@ -1,0 +1,2 @@
+[MyStruct] myFunc(String param) = [];
+MyStruct {}

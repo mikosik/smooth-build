@@ -1,0 +1,5 @@
+ReferencingStruct {
+  String firstField,
+  [MyStruct] field
+}
+MyStruct {}

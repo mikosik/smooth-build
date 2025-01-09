@@ -1,0 +1,2 @@
+myValue = "abc";
+result = myValue();

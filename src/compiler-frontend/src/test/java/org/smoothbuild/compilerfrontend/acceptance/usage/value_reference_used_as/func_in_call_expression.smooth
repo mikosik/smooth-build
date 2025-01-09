@@ -1,0 +1,3 @@
+String justAbc() = "abc";
+myValue = justAbc;
+result = myValue();

@@ -1,0 +1,3 @@
+@Native("Impl.met")
+MyStruct myFunc(String param);
+MyStruct {}

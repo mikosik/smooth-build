@@ -1,0 +1,2 @@
+A myIdentity(A a) = a;
+String myFunc(String param = "abc" > myIdentity()) = "abc";
