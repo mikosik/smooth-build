@@ -1,0 +1,3 @@
+Log{ERROR, 'Reference graph contains cycle:
+{t-project}/module.smooth:1: myValue1 ~> myValue2
+{t-project}/module.smooth:2: myValue2 ~> myValue1'}

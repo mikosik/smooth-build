@@ -1,0 +1,3 @@
+myFunc1() = myValue;
+myValue = myFunc2();
+myFunc2() = myFunc1();

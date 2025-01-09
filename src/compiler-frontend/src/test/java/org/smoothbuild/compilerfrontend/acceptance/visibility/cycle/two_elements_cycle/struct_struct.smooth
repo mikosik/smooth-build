@@ -1,0 +1,6 @@
+MyStruct1 {
+  MyStruct2 myField
+}
+MyStruct2 {
+  MyStruct1 myField
+}

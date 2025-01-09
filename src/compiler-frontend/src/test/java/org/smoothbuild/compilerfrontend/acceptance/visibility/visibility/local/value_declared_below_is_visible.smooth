@@ -1,0 +1,2 @@
+result = myValue;
+String myValue = "abc";

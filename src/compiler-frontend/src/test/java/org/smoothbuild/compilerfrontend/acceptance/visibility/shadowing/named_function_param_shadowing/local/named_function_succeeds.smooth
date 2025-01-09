@@ -1,0 +1,2 @@
+myFunc() = "abc";
+String myOtherFunc(String myFunc) = "abc";

@@ -1,0 +1,3 @@
+myValue1 = myValue2;
+myValue2 = myValue3;
+myValue3 = myValue1;

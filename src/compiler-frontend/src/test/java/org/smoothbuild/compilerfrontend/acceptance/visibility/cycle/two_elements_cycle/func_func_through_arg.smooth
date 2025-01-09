@@ -1,0 +1,2 @@
+String myFunc() = myIdentity(myFunc());
+String myIdentity(String s) = s;
