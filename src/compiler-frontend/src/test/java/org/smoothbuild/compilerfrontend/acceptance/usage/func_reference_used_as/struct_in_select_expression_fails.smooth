@@ -1,0 +1,2 @@
+myFunc() = "abc";
+result = myFunc.myField;

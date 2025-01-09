@@ -1,0 +1,4 @@
+MyStruct{
+  String myField,
+}
+String result = MyStruct("abc").myField.otherField;

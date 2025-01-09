@@ -1,0 +1,3 @@
+String justAbc() = "abc";
+()->String highOrderFunc() = justAbc;
+result = highOrderFunc()();

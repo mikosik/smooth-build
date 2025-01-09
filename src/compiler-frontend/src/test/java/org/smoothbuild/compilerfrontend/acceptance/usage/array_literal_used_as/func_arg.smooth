@@ -1,0 +1,2 @@
+myFunc([String] param) = "abc";
+result = myFunc(["abc"]);

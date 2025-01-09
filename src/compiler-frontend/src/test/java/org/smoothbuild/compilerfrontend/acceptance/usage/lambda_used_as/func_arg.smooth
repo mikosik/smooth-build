@@ -1,0 +1,2 @@
+Int myFunc(()->Int param) = param();
+result = myFunc(() -> 7);

@@ -1,0 +1,4 @@
+MyStruct{
+  String myField
+}
+myFunc(MyStruct param) = param.myField;

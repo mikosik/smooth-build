@@ -1,0 +1,3 @@
+@Native("Impl.met")
+[MyStruct] myValue();
+MyStruct {}

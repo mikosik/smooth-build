@@ -1,0 +1,1 @@
+String myFunc(Blob b = 0x01) = "abc";
