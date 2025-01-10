@@ -43,7 +43,7 @@ def fatJar = tasks.register('fatJar', Jar) {
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect {
             zipTree(it).matching {
-                exclude "META-INF/**", "LICENSE"
+                exclude "META-INF/**", "LICENSE", "module-info.class"
             }
         }
     }
