@@ -63,7 +63,10 @@ public class InferTest extends FrontendCompileTester {
   }
 
   private static Path withExtension(Path input, String extension) {
-    return Path.of(input.toString() + extension);
+    var name = input.getFileName().toString();
+    var dotIndex = name.lastIndexOf(".");
+    var newName = dotIndex == -1 ? name + extension : name.substring(0, dotIndex) + extension;
+    return input.getParent().resolve(newName);
   }
 
   static class ArgumentsProvider extends TestFileArgumentsProvider {
