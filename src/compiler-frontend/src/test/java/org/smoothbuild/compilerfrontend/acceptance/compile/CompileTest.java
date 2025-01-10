@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.acceptance.typecheck;
+package org.smoothbuild.compilerfrontend.acceptance.compile;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -7,19 +7,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.smoothbuild.common.log.base.Try;
 import org.smoothbuild.compilerfrontend.acceptance.TestFileArgumentsProvider;
-import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
 /**
- * Test verifying type checking.
+ * Test verifying that compilation of given smooth file results in expected log files.
  * To overwrite files with expected output with actual output, change field MODE to OVERWRITE.
  */
-public class TypeCheckTest extends FrontendCompileTester {
+public class CompileTest extends FrontendCompileTester {
   private static final Mode MODE = Mode.ASSERT;
   private static final String TESTS_DIR =
-      "src/test/java/org/smoothbuild/compilerfrontend/acceptance/typecheck";
+      "src/test/java/org/smoothbuild/compilerfrontend/acceptance/compile";
 
   enum Mode {
     ASSERT,
@@ -36,23 +34,39 @@ public class TypeCheckTest extends FrontendCompileTester {
   }
 
   private void assertTest(Path input) throws IOException {
-    var actualLogs = loadModule(input).logs().toString("\n");
+    var actualLogs = compile(input);
     var expectedLogs = Files.readString(withExtension(input, ".logs"));
     assertThat(actualLogs).isEqualTo(expectedLogs);
   }
 
   private void overwriteTest(Path input) throws IOException {
-    Files.writeString(withExtension(input, ".logs"), loadModule(input).logs().toString("\n"));
+    var logs = compile(input);
+    Files.writeString(withExtension(input, ".logs"), logs);
   }
 
-  private Try<SModule> loadModule(Path input) throws IOException {
-    return module(Files.readString(input)).loadModule();
+  private String compile(Path input) throws IOException {
+    var code = Files.readString(input);
+    var testApi = module(code);
+    var importedPath = withSuffix(input, "-imported");
+    if (Files.exists(importedPath)) {
+      testApi.withImported(Files.readString(importedPath));
+    }
+    return testApi.loadModule().logs().toString("\n");
   }
 
   private static Path withExtension(Path input, String extension) {
     var name = input.getFileName().toString();
     var dotIndex = name.lastIndexOf(".");
     var newName = dotIndex == -1 ? name + extension : name.substring(0, dotIndex) + extension;
+    return input.getParent().resolve(newName);
+  }
+
+  private static Path withSuffix(Path input, String suffix) {
+    var name = input.getFileName().toString();
+    var dotIndex = name.lastIndexOf(".");
+    var newName = dotIndex == -1
+        ? name + suffix
+        : name.substring(0, dotIndex) + suffix + name.substring(dotIndex + 1);
     return input.getParent().resolve(newName);
   }
 
