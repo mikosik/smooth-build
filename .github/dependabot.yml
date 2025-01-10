@@ -1,0 +1,15 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+updates:
+  # Check for updates to Gradle dependencies
+  - package-ecosystem: "gradle"
+    directory: "/" # Directory where your `build.gradle` or `build.gradle.kts` file is located
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "dependabot: " # Optional prefix for commit messages
+    open-pull-requests-limit: 10 # Limit on the number of open PRs
+    target-branch: "dev"
