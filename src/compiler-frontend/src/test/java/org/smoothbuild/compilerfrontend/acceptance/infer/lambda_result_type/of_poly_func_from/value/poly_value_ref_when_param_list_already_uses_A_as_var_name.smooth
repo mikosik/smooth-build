@@ -1,2 +1,0 @@
-[A] emptyArray = [];
-myValue = (A a) -> emptyArray;

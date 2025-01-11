@@ -53,7 +53,7 @@ public class AndTest extends StandardLibraryTestContext {
     var userModule = format(
         """
             @Native("%s")
-            A throwException();
+            A throwException<A>();
             result = and(false, throwException());
             """,
         ThrowException.class.getCanonicalName());

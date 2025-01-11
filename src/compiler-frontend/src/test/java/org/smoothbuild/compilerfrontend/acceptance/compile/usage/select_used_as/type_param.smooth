@@ -1,0 +1,5 @@
+MyStruct{
+  String field,
+}
+myValue = MyStruct("abc");
+Int result<myValue.field> = 7;

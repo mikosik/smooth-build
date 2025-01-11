@@ -72,16 +72,17 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void mono_lambda_using_generic_type_of_enclosing_function() {
         var code =
             """
-            (A)->A myFunc(A outerA) =
-              (A a)
+            (A)->A myFunc<A>(A outerA) =
+              <>(A a)
                 -> a;
             """;
-        var body = sParamRef(3, varA(), "a");
+        var var = sVar("myFunc:A");
+        var body = sParamRef(3, var, "a");
         var fqn = fqn("myFunc:lambda~1");
-        var lambdaParam = sItem(2, varA(), fqn("myFunc:lambda~1:a"));
+        var lambdaParam = sItem(2, var, fqn("myFunc:lambda~1:a"));
         var lambda = sLambda(2, fqn, varSetS(), nlist(lambdaParam), body);
         var instantiated = sInstantiate(2, lambda);
-        var funcParam = sItem(1, varA(), fqn("myFunc:outerA"));
+        var funcParam = sItem(1, var, fqn("myFunc:outerA"));
         var myFunc = sFunc(1, "myFunc", nlist(funcParam), instantiated);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
@@ -90,19 +91,20 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void mono_lambda_using_generic_type_of_enclosing_func_two_level_deep() {
         var code =
             """
-            () -> (A)->A myFunc(A outerA) =
-              ()
-                -> (A a)
+            () -> (A)->A myFunc<A>(A outerA) =
+              <>()
+                -> <>(A a)
                   -> a;
             """;
-        var deeperBody = sParamRef(4, varA(), "a");
         var deepFqn = fqn("myFunc:lambda~1:lambda~1");
-        var param = sItem(3, varA(), deepFqn.append(fqn("a")));
+        var var = sVar("myFunc:A");
+        var deeperBody = sParamRef(4, var, "a");
+        var param = sItem(3, var, deepFqn.append(fqn("a")));
         var deeperLambda = sLambda(3, deepFqn, varSetS(), nlist(param), deeperBody);
-        var monoDeepLambda = sInstantiate(3, deeperLambda);
-        var anonFunc = sLambda(2, fqn("myFunc:lambda~1"), varSetS(), nlist(), monoDeepLambda);
-        var monoLambda = sInstantiate(2, anonFunc);
-        var myFunc = sFunc(1, "myFunc", nlist(sItem(1, varA(), "outerA")), monoLambda);
+        var monoDeeperLambda = sInstantiate(3, deeperLambda);
+        var lambda = sLambda(2, fqn("myFunc:lambda~1"), varSetS(), nlist(), monoDeeperLambda);
+        var monoLambda = sInstantiate(2, lambda);
+        var myFunc = sFunc(1, "myFunc", nlist(sItem(1, var, "outerA")), monoLambda);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
 
@@ -110,14 +112,17 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void poly_lambda() {
         var code =
             """
-            result =
-              (A a)
+            (B)->B result<B> =
+              <A>(A a)
                 -> a;
             """;
-        var param = sItem(2, varA(), fqn("result:lambda~1:a"));
-        var lambda = sLambda(2, fqn("result:lambda~1"), nlist(param), sParamRef(3, varA(), "a"));
-        var instantiateS = sInstantiate(2, list(varA()), lambda);
-        var result = sValue(1, "result", instantiateS);
+        var aVar = sVar("result:lambda~1:A");
+        var bVar = sVar("result:B");
+        var param = sItem(2, aVar, fqn("result:lambda~1:a"));
+        var lambda = sLambda(2, fqn("result:lambda~1"), nlist(param), sParamRef(3, aVar, "a"));
+        var instantiate = sInstantiate(2, list(bVar), lambda);
+        var resultSchema = sSchema(varSetS(bVar), sFuncType(bVar, bVar));
+        var result = sValue(1, resultSchema, "result", instantiate);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
     }
@@ -128,16 +133,18 @@ public class SExprLoadingTest extends FrontendCompileTester {
       class _with_default_arg {
         @Test
         void with_reference_to_poly_val() {
-          var polyVal = sBytecodeValue(4, varA(), "polyVal");
-          var instantiateS = sInstantiate(1, list(varA()), polyVal);
+          var var = sVar("myFunc~b:A");
+          var polyVal = sBytecodeValue(4, var, "polyVal");
+          var instantiateS = sInstantiate(1, list(var), polyVal);
           var arg = sInstantiate(2, list(sIntType()), sValue(1, "myFunc~b", instantiateS));
           test_default_arg("polyVal", arg);
         }
 
         @Test
         void with_reference_to_poly_func() {
-          var polyFunc = sBytecodeFunc(6, varA(), "polyFunc", nlist());
-          var instantiateS = sInstantiate(1, list(varA()), polyFunc);
+          var var = sVar("myFunc~b:A");
+          var polyFunc = sBytecodeFunc(6, var, "polyFunc", nlist());
+          var instantiateS = sInstantiate(1, list(var), polyFunc);
           var paramDefaultValue = sValue("myFunc~b", sCall(1, instantiateS));
           var expected = sInstantiate(2, list(sIntType()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
@@ -152,12 +159,12 @@ public class SExprLoadingTest extends FrontendCompileTester {
         private void test_default_arg(String bodyCode, SExpr expected) {
           var code =
               """
-            B myFunc(B b = $$$) = b;
+            B myFunc<B>(B b = $$$) = b;
             Int result = myFunc();
             @Bytecode("impl")
-            A polyVal;
+            A polyVal<A>;
             @Bytecode("impl")
-            A polyFunc();
+            A polyFunc<A>();
 
             """
                   .replace("$$$", bodyCode);
@@ -230,7 +237,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
       @Test
       void with_poly_func_reference_and_arg() {
         module("""
-            A myId(A a) = a;
+            A myId<A>(A a) = a;
             result = myId(7);
             """)
             .loadsWithSuccess()
@@ -348,19 +355,21 @@ public class SExprLoadingTest extends FrontendCompileTester {
 
       @Test
       void to_poly_value() {
-        module(
-                """
-            [A] myValue = [];
+        var code =
+            """
+            [A] myValue<A> = [];
             [Int] result =
               myValue;
-            """)
+            """;
+        var var = sVar("myValue:A");
+        module(code)
             .loadsWithSuccess()
             .containsEvaluable(sValue(
                 2,
                 sIntArrayT(),
                 "result",
                 sInstantiate(
-                    3, list(sIntType()), sValue(1, sVarAArrayT(), "myValue", sOrder(varA())))));
+                    3, list(sIntType()), sValue(1, sArrayType(var), "myValue", sOrder(var)))));
       }
 
       @Test
@@ -380,11 +389,12 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void to_poly_func() {
         var code =
             """
-            A myId(A a) = a;
+            A myId<A>(A a) = a;
             (Int)->Int result =
               myId;
             """;
-        var myId = sFunc(1, "myId", nlist(sItem(varA(), "a")), sParamRef(1, varA(), "a"));
+        var var = sVar("myId:A");
+        var myId = sFunc(1, "myId", nlist(sItem(var, "a")), sParamRef(1, var, "a"));
         var resultBody = sInstantiate(3, list(sIntType()), myId);
         var result = sValue(2, sFuncType(sIntType(), sIntType()), "result", resultBody);
         module(code).loadsWithSuccess().containsEvaluable(result);
@@ -502,12 +512,12 @@ public class SExprLoadingTest extends FrontendCompileTester {
       @Test
       void poly_expression_value() {
         var code = """
-          [A] myValue =
+          [A] myValue<A> =
             [];
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluable(sValue(1, sVarAArrayT(), "myValue", sOrder(2, varA())));
+        var aVar = sVar("myValue:A");
+        var expected = sValue(1, sArrayType(aVar), "myValue", sOrder(2, aVar));
+        module(code).loadsWithSuccess().containsEvaluable(expected);
       }
 
       @Test
@@ -525,9 +535,10 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void poly_bytecode_value() {
         var code = """
           @Bytecode("impl")
-          A myValue;
+          A myValue<A>;
           """;
-        module(code).loadsWithSuccess().containsEvaluable(sBytecodeValue(2, varA(), "myValue"));
+        var expected = sBytecodeValue(2, sVar("myValue:A"), "myValue");
+        module(code).loadsWithSuccess().containsEvaluable(expected);
       }
     }
 
@@ -545,12 +556,14 @@ public class SExprLoadingTest extends FrontendCompileTester {
 
       @Test
       void poly_expression_function() {
-        module("""
-            [A] myFunc() =
+        var code = """
+            [A] myFunc<A>() =
               [];
-            """)
+            """;
+        var var = sVar("myFunc:A");
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(sFunc(1, sVarAArrayT(), "myFunc", nlist(), sOrder(2, varA())));
+            .containsEvaluable(sFunc(1, sArrayType(var), "myFunc", nlist(), sOrder(2, var)));
       }
 
       @Test
@@ -572,14 +585,17 @@ public class SExprLoadingTest extends FrontendCompileTester {
 
       @Test
       void poly_expression_function_with_param() {
-        module("""
-            A myFunc(
+        var code =
+            """
+            A myFunc<A>(
               A a)
               = a;
-            """)
+            """;
+        var var = sVar("myFunc:A");
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(sFunc(
-                1, varA(), "myFunc", nlist(sItem(2, varA(), "a")), sParamRef(3, varA(), "a")));
+            .containsEvaluable(
+                sFunc(1, var, "myFunc", nlist(sItem(2, var, "a")), sParamRef(3, var, "a")));
       }
 
       @Test
@@ -603,14 +619,15 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void poly_expression_function_with_param_with_default_value() {
         var code =
             """
-            A myFunc(
+            A myFunc<A>(
               A a =
                 7)
                 = a;
             """;
+        var var = sVar("myFunc:A");
         var value = sValue(3, "myFunc~a", sInt(3, 7));
-        var params = nlist(sItem(2, varA(), "a", "myFunc~a"));
-        var myFunc = sFunc(1, varA(), "myFunc", params, sParamRef(4, varA(), "a"));
+        var params = nlist(sItem(2, var, "a", "myFunc~a"));
+        var myFunc = sFunc(1, var, "myFunc", params, sParamRef(4, var, "a"));
         var api = module(code).loadsWithSuccess();
         api.containsEvaluable(myFunc);
         api.containsEvaluable(value);
@@ -634,13 +651,16 @@ public class SExprLoadingTest extends FrontendCompileTester {
 
       @Test
       void poly_native_impure_function() {
-        module("""
+        var code =
+            """
             @NativeImpure("Impl.met")
-            A myFunc();
-            """)
+            A myFunc<A>();
+            """;
+        var var = sVar("myFunc:A");
+        module(code)
             .loadsWithSuccess()
             .containsEvaluable(sAnnotatedFunc(
-                2, sNativeAnnotation(1, sString(1, "Impl.met"), false), varA(), "myFunc", nlist()));
+                2, sNativeAnnotation(1, sString(1, "Impl.met"), false), var, "myFunc", nlist()));
       }
 
       @Test
@@ -660,13 +680,15 @@ public class SExprLoadingTest extends FrontendCompileTester {
 
       @Test
       void poly_native_pure_function() {
-        module("""
+        var code = """
             @Native("Impl.met")
-            A myFunc();
-            """)
+            A myFunc<A>();
+            """;
+        var var = sVar("myFunc:A");
+        module(code)
             .loadsWithSuccess()
             .containsEvaluable(sAnnotatedFunc(
-                2, sNativeAnnotation(1, sString(1, "Impl.met"), true), varA(), "myFunc", nlist()));
+                2, sNativeAnnotation(1, sString(1, "Impl.met"), true), var, "myFunc", nlist()));
       }
 
       @Test
@@ -692,14 +714,15 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var code =
             """
             @Native("Impl.met")
-            A myFunc(
+            A myFunc<A>(
               Blob p1 =
                 0x07);
             """;
         var value = sValue(4, "myFunc~p1", sBlob(4, 7));
         var params = nlist(sItem(3, sBlobType(), "p1", "myFunc~p1"));
         var ann = sNativeAnnotation(1, sString(1, "Impl.met"), true);
-        var myFunc = sAnnotatedFunc(2, ann, varA(), "myFunc", params);
+        var var = sVar("myFunc:A");
+        var myFunc = sAnnotatedFunc(2, ann, var, "myFunc", params);
         var api = module(code).loadsWithSuccess();
         api.containsEvaluable(myFunc);
         api.containsEvaluable(value);
@@ -717,12 +740,14 @@ public class SExprLoadingTest extends FrontendCompileTester {
 
       @Test
       void poly_bytecode_function() {
-        module("""
+        var code = """
             @Bytecode("impl")
-            A myFunc();
-            """)
+            A myFunc<A>();
+            """;
+        var aVar = sVar("myFunc:A");
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(sBytecodeFunc(2, varA(), "myFunc", nlist()));
+            .containsEvaluable(sBytecodeFunc(2, aVar, "myFunc", nlist()));
       }
 
       @Test
@@ -747,13 +772,14 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var code =
             """
             @Bytecode("Impl.met")
-            A myFunc(
+            A myFunc<A>(
               Blob param1 =
                 0x07);
             """;
         var value = sValue(4, "myFunc~param1", sBlob(4, 7));
         var params = nlist(sItem(3, sBlobType(), "param1", "myFunc~param1"));
-        var myFunc = sBytecodeFunc(2, "Impl.met", varA(), "myFunc", params);
+        var aVar = sVar("myFunc:A");
+        var myFunc = sBytecodeFunc(2, "Impl.met", aVar, "myFunc", params);
         var api = module(code).loadsWithSuccess();
         api.containsEvaluable(myFunc);
         api.containsEvaluable(value);
@@ -794,11 +820,12 @@ public class SExprLoadingTest extends FrontendCompileTester {
               [Int] param1 =
                 empty)
                 = 7;
-            [A] empty = [];
+            [A] empty<A> = [];
             """;
-        var empty = sValue(5, "empty", sOrder(5, varA()));
-        var value = sValue(3, "myFunc~param1", sInstantiate(3, list(varA()), empty));
-        var params = nlist(sItem(2, sIntArrayT(), "param1", "myFunc~param1"));
+        var emptyReference = sReference(3, sSchema(sArrayType(sVar("empty:A"))), fqn("empty"));
+        var defName = "myFunc~param1";
+        var value = sValue(3, defName, sInstantiate(3, list(sVar(defName + ":A")), emptyReference));
+        var params = nlist(sItem(2, sIntArrayT(), "param1", defName));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         var api = module(code).loadsWithSuccess();
         api.containsEvaluable(func);
@@ -809,15 +836,18 @@ public class SExprLoadingTest extends FrontendCompileTester {
       void default_val_for_generic_param_referencing_poly_value() {
         var code =
             """
-            Int myFunc(
+            Int myFunc<B>(
               [B] param1 =
                 empty)
                 = 7;
-            [A] empty = [];
+            [A] empty<A> = [];
             """;
-        var empty = sValue(5, "empty", sOrder(5, varA()));
-        var defaultValue = sValue(3, "myFunc~param1", sInstantiate(3, list(varA()), empty));
-        var params = nlist(sItem(2, sVarBArrayT(), "param1", some("myFunc~param1")));
+        var emptyReference = sReference(3, sSchema(sArrayType(sVar("empty:A"))), fqn("empty"));
+        var varDefault = sVar("myFunc~param1:A");
+        var defaultBody = sInstantiate(3, list(varDefault), emptyReference);
+        var defaultValue = sValue(3, sSchema(sArrayType(varDefault)), "myFunc~param1", defaultBody);
+        var varFunc = sVar("myFunc:B");
+        var params = nlist(sItem(2, sArrayType(varFunc), "param1", some("myFunc~param1")));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         var api = module(code).loadsWithSuccess();
         api.containsEvaluable(func);

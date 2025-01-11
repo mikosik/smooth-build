@@ -1,1 +1,0 @@
-Log{ERROR, '{t-project}/module.smooth:1: `ABC` is illegal struct name. All-uppercase names are reserved for type variables.'}

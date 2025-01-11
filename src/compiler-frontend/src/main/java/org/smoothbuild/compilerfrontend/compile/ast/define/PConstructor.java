@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 
 public final class PConstructor extends PNamedFunc {
@@ -9,6 +10,7 @@ public final class PConstructor extends PNamedFunc {
     super(
         new PTypeReference(pStruct.nameText(), pStruct.location()),
         pStruct.nameText(),
+        new PExplicitTypeParams(list(), pStruct.location()),
         pStruct.fields(),
         none(),
         none(),

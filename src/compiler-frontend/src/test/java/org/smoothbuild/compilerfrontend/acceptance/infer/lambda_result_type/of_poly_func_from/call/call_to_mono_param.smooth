@@ -1,2 +1,1 @@
-
 myValue = (()->Int f) -> f();

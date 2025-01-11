@@ -1,0 +1,1 @@
+(A)->A myFunc<A>(A a) = <A>(A x) -> x;

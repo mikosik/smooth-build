@@ -1,0 +1,1 @@
+Int myFunc<A>() = 3;

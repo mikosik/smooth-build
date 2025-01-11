@@ -13,7 +13,8 @@ import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
 /**
- * Test verifying that types that are not declared explicitly are inferred correctly.
+ * Test verifying that type that is not declared explicitly is inferred correctly or error is
+ * reported when it is impossible to infer it.
  * To overwrite files with expected output with actual output, change field MODE to OVERWRITE.
  */
 public class InferTest extends FrontendCompileTester {

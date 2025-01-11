@@ -1,1 +1,1 @@
-f(String s, (A)->A id) = id(s);
+f<A>(String s, (A)->A id) = id(s);

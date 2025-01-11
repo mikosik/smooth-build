@@ -1,2 +1,2 @@
-A myId(A a) = a;
+A myId<A>(A a) = a;
 myValue = myId;

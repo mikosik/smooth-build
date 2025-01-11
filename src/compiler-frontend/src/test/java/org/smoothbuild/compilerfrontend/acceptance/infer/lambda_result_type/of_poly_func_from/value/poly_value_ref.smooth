@@ -1,2 +1,2 @@
-[A] emptyArray = [];
+[A] emptyArray<A> = [];
 myValue = () -> emptyArray;

@@ -1,2 +1,1 @@
-
-myFunc(A a) = "abc";
+myFunc<A>(A a) = "abc";

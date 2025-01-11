@@ -1,1 +1,1 @@
-Int myFunc((A)->Int param = (Undefined x) -> 7) = 7;
+Int myFunc<A>((A)->Int param = (Undefined x) -> 7) = 7;

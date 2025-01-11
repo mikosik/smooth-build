@@ -1,2 +1,1 @@
-
-myValue = (A a) -> 0x07;
+myValue = <A>(A a) -> 0x07;

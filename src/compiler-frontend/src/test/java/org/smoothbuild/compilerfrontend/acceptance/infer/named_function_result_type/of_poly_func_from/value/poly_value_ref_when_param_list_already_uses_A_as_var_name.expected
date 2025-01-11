@@ -1,4 +1,0 @@
-[A] emptyArray<A>
-  = [];
-[B] myFunc<A,B>(A a)
-  = emptyArray<B>;

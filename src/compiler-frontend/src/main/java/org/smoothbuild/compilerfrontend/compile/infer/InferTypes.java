@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.schedule.Output.output;
@@ -131,8 +132,11 @@ public class InferTypes implements Task1<PModule, PModule> {
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
           } catch (UnifierException e) {
+            var defaultValueTypeString =
+                sSchema.quantifiedVars().isEmpty() ? sSchema.type().q() : sSchema.q();
+            var paramTypeString = q(resolvedParamType.specifier(funcSchema.quantifiedVars()));
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
-                .formatted(param.q(), resolvedParamType.q(), sSchema.type().q());
+                .formatted(param.q(), paramTypeString, defaultValueTypeString);
             throw new TypeException(compileError(param.location(), message), e);
           }
         });

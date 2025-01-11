@@ -14,6 +14,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
@@ -48,9 +49,11 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
       }
 
       private Id createNamedDefaultValue(PExpr expr, Fqn fqn) {
-        var type = new PImplicitType(expr.location());
+        var location = expr.location();
+        var type = new PImplicitType(location);
+        var typeParams = new PImplicitTypeParams();
         var name = fqn.parts().getLast().toString();
-        var pNamedValue = new PNamedValue(type, name, some(expr), none(), expr.location());
+        var pNamedValue = new PNamedValue(type, name, typeParams, some(expr), none(), location);
         pNamedValue.setFqn(fqn);
         namedDefaultValues.add(pNamedValue);
         return fqn;

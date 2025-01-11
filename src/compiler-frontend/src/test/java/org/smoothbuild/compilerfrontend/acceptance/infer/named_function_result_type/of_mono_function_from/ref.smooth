@@ -1,2 +1,1 @@
-
 myFunc(Int int) = int;

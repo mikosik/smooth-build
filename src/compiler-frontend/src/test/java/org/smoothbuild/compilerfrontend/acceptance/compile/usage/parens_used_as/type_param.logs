@@ -1,0 +1,6 @@
+Log{ERROR, '{t-project}/module.smooth:1: extraneous input '(' expecting {'>', NAME}
+[A] result<(A)> = [];
+           ^'}
+Log{ERROR, '{t-project}/module.smooth:1: extraneous input ')' expecting {',', '>'}
+[A] result<(A)> = [];
+             ^'}

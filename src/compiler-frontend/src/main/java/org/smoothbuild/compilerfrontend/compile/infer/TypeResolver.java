@@ -50,10 +50,10 @@ public class TypeResolver {
   }
 
   private void resolveFunc(PFunc pFunc) throws TypeException {
-    resolveBody(pFunc.body());
     var sSchema = pFunc.schema();
     var quantifiedVars = resolveQuantifiedVars(sSchema);
     pFunc.setSchema(new SFuncSchema(quantifiedVars, (SFuncType) resolveType(sSchema)));
+    resolveBody(pFunc.body());
   }
 
   private SVarSet resolveQuantifiedVars(SSchema sSchema) {

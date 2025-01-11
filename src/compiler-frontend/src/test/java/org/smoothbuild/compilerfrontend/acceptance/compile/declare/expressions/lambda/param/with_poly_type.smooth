@@ -1,1 +1,1 @@
-result = (A a) -> 7;
+result = <A>(A a) -> 7;

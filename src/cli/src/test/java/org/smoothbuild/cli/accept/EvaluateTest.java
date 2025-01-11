@@ -142,7 +142,7 @@ public class EvaluateTest extends EvaluatorTestContext {
           var userModule =
               """
               @Native("impl")
-              A throwException();
+              A throwException<A>();
               result = ((String notUsedParameter) -> "abc")(throwException());
               """;
           createUserModule(userModule, ThrowException.class);
@@ -154,7 +154,7 @@ public class EvaluateTest extends EvaluatorTestContext {
         void func_passed_as_argument() throws Exception {
           var userModule =
               """
-              A invokeProducer(()->A producer) = producer();
+              A invokeProducer<A>(()->A producer) = producer();
               result = invokeProducer(() -> "abc");
               """;
           createUserModule(userModule, ThrowException.class);
@@ -215,7 +215,7 @@ public class EvaluateTest extends EvaluatorTestContext {
           var userModule =
               """
               @Native("impl")
-              A throwException();
+              A throwException<A>();
               func(String notUsedParameter) = "abc";
               result = func(throwException());
               """;
@@ -229,7 +229,7 @@ public class EvaluateTest extends EvaluatorTestContext {
           var userModule =
               """
               String returnAbc() = "abc";
-              A invokeProducer(()->A producer) = producer();
+              A invokeProducer<A>(()->A producer) = producer();
               result = invokeProducer(returnAbc);
               """;
           createUserModule(userModule, ThrowException.class);
@@ -296,7 +296,7 @@ public class EvaluateTest extends EvaluatorTestContext {
             var userModule = format(
                 """
                     @Native("%s")
-                    A throwException();
+                    A throwException<A>();
                     func(String withDefault = throwException()) = withDefault;
                     result = func("def");
                     """,
@@ -344,7 +344,7 @@ public class EvaluateTest extends EvaluatorTestContext {
                     @Native("%s")
                     String stringIdentity(String value = throwException());
                     @Native("%s")
-                    A throwException();
+                    A throwException<A>();
                     result = stringIdentity("def");
                     """,
                 StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName());

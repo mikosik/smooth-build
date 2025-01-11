@@ -1,2 +1,2 @@
-Int myFunc(A a) = 7;
+Int myFunc<A>(A a) = 7;
 result = myFunc([]);

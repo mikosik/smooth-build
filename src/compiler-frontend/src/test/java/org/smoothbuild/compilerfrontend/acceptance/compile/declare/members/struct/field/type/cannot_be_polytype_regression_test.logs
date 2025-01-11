@@ -1,1 +1,2 @@
-Log{ERROR, '{t-project}/module.smooth:2: Field type cannot be polymorphic. Found field `field` with type `(B)->A`.'}
+Log{ERROR, '{t-project}/module.smooth:2: Cannot resolve `A`.'}
+Log{ERROR, '{t-project}/module.smooth:2: Cannot resolve `B`.'}

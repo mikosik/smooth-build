@@ -6,8 +6,10 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -25,6 +27,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParams;
 
 public abstract class PModuleVisitor<P, T extends Throwable> {
   private P containerProperty;
@@ -99,6 +103,7 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
   public void visitNamedValueSignature(PNamedValue pNamedValue) throws T {
     pNamedValue.annotation().ifPresent(this::visitAnnotation);
     visitType(pNamedValue.type());
+    visitTypeParams(pNamedValue.typeParams());
     visitNameOf(pNamedValue);
   }
 
@@ -114,9 +119,19 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
   public void visitNamedFuncSignature(PNamedFunc pNamedFunc) throws T {
     pNamedFunc.annotation().ifPresent(this::visitAnnotation);
     visitType(pNamedFunc.resultT());
+    visitTypeParams(pNamedFunc.typeParams());
     visitItems(pNamedFunc.params().list());
     visitNameOf(pNamedFunc);
   }
+
+  public void visitTypeParams(PTypeParams pExplicitTypeParams) {
+    switch (pExplicitTypeParams) {
+      case PExplicitTypeParams explicit -> explicit.typeVars().foreach(this::visitTypeParam);
+      case PImplicitTypeParams implicit -> {}
+    }
+  }
+
+  public void visitTypeParam(PTypeParam pTypeParam) {}
 
   public void visitFuncBody(PFunc pFunc) throws T {
     pFunc.body().ifPresent(expr -> visitFuncBody(pFunc, expr));
@@ -161,6 +176,7 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
 
   public void visitLambdaSignature(PLambda pLambda) throws T {
     visitType(pLambda.resultT());
+    visitTypeParams(pLambda.typeParams());
     visitItems(pLambda.params().list());
     visitNameOf(pLambda);
   }

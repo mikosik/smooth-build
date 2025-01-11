@@ -1,0 +1,6 @@
+Log{ERROR, '{t-project}/module.smooth:2: mismatched input '(' expecting {',', '>'}
+Int result<myFunc()> = 7;
+                 ^'}
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input '>' expecting {'=', ';'}
+Int result<myFunc()> = 7;
+                   ^'}

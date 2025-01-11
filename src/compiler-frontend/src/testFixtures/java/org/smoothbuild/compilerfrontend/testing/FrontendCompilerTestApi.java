@@ -28,6 +28,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
@@ -709,7 +710,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedExprFunc idSFunc() {
-    var a = varA();
+    var a = sVar("myId:A");
     return sFunc(a, "myId", nlist(sItem(a, "a")), sParamRef(a, "a"));
   }
 
@@ -730,7 +731,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
-    var pLambda = new PLambda("lambda~1", params, body, location());
+    var typeParams = new PExplicitTypeParams(list(), location());
+    var pLambda = new PLambda("lambda~1", typeParams, params, body, location());
     pLambda.setFqn(fqn("lambda~1"));
     return pInstantiate(pLambda);
   }
@@ -778,7 +780,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default PNamedFunc pNamedFunc(
       String name, NList<PItem> params, Maybe<PExpr> body, Location location) {
     var resultT = new PImplicitType(location);
-    var pNamedFunc = new PNamedFunc(resultT, name, params, body, none(), location);
+    var typeParams = new PExplicitTypeParams(list(), location());
+    var pNamedFunc = new PNamedFunc(resultT, name, typeParams, params, body, none(), location);
     pNamedFunc.setFqn(fqn(name));
     return pNamedFunc;
   }
@@ -801,9 +804,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return pNamedValue(name, body, type, location);
   }
 
-  private static PNamedValue pNamedValue(
+  public default PNamedValue pNamedValue(
       String name, PExpr body, PImplicitType type, Location location) {
-    var pNamedValue = new PNamedValue(type, name, some(body), none(), location);
+    var typeParams = new PExplicitTypeParams(list(), location());
+    var pNamedValue = new PNamedValue(type, name, typeParams, some(body), none(), location);
     pNamedValue.setFqn(fqn(name));
     return pNamedValue;
   }

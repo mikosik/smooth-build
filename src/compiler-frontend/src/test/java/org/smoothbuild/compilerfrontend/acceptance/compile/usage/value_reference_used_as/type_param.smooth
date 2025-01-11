@@ -1,0 +1,2 @@
+Int value = 7;
+Int otherValue<value> = 3;

@@ -1,2 +1,1 @@
-
-myFunc(A a) = 0x07;
+myFunc<A>(A a) = 0x07;

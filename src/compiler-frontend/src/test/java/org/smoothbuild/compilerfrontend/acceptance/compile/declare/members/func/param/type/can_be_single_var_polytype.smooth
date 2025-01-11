@@ -1,2 +1,2 @@
 @Native("Impl.met")
-String myFunc((A)->Int f);
+String myFunc<A>((A)->Int f);

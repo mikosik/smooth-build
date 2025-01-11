@@ -12,16 +12,16 @@ Bool and(Bool first, Bool second) = if(first, second, false);
 Bool or(Bool first, Bool second) = if(first, true, second);
 
 @Native("org.smoothbuild.stdlib.common.EqualFunc")
-Bool equal(A first, A second);
+Bool equal<A>(A first, A second);
 
 @Bytecode("org.smoothbuild.stdlib.array.ElemFunc")
-A elem([A] array, Int index);
+A elem<A>([A] array, Int index);
 
 @Native("org.smoothbuild.stdlib.array.SizeFunc")
-Int size([A] array);
+Int size<A>([A] array);
 
 @Native("org.smoothbuild.stdlib.array.ConcatFunc")
-[A] concat([[A]] array);
+[A] concat<A>([[A]] array);
 
 @NativeImpure("org.smoothbuild.stdlib.file.FileFunc")
 File file(String path);
@@ -29,11 +29,11 @@ File file(String path);
 @NativeImpure("org.smoothbuild.stdlib.file.FilesFunc")
 [File] files(String dir);
 
-[A] filter([A] array, (A)->Bool predicate) =
+[A] filter<A>([A] array, (A)->Bool predicate) =
     filterByMask(array, map(array, predicate));
 
 @Native("org.smoothbuild.stdlib.core.FilterByMaskFunc")
-[A] filterByMask([A] array, [Bool] filter);
+[A] filterByMask<A>([A] array, [Bool] filter);
 
 @Native("org.smoothbuild.stdlib.file.FilterFilesFunc")
 [File] filterFiles([File] files, String pattern);
@@ -82,16 +82,16 @@ String toString(Blob blob);
 @Native("org.smoothbuild.stdlib.compress.ZipFunc")
 Blob zip([File] files);
 
-A id(A a) = a;
+A id<A>(A a) = a;
 
 @Native("org.smoothbuild.stdlib.core.ErrorFunc")
-A error(String message);
+A error<A>(String message);
 
 @Bytecode("org.smoothbuild.stdlib.core.IfFunc")
-A if(Bool condition, A then, A else);
+A if<A>(Bool condition, A then, A else);
 
 @Bytecode("org.smoothbuild.stdlib.core.MapFunc")
-[R] map([S] array, (S)->R mapper);
+[R] map<S,R>([S] array, (S)->R mapper);
 
 @Bytecode("org.smoothbuild.stdlib.bool.False")
 Bool false;

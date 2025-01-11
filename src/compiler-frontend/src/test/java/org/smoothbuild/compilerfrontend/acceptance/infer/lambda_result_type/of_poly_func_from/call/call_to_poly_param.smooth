@@ -1,2 +1,1 @@
-
-myValue = (()->A f) -> f();
+myValue = <A>(()->A f) -> f();

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 
 import java.util.Objects;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 
 /**
@@ -57,6 +58,10 @@ public sealed class SSchema permits SFuncSchema {
   @Override
   public int hashCode() {
     return Objects.hash(quantifiedVars, type);
+  }
+
+  public String q() {
+    return Strings.q(toShortString());
   }
 
   public String toShortString() {

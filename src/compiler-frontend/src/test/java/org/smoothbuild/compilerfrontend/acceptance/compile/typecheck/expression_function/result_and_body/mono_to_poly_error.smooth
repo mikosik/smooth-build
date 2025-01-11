@@ -1,1 +1,1 @@
-A myFunc() = 7;
+A myFunc<A>() = 7;

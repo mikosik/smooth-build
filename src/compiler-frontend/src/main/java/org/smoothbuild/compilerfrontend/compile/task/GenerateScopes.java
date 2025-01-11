@@ -14,13 +14,17 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
@@ -65,7 +69,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     private final PScope scope;
     private final Logger log;
     private final MutableBindings<PReferenceable> referenceables = mutableBindings();
-    private final MutableBindings<PStruct> types = mutableBindings();
+    private final MutableBindings<PTypeDefinition> types = mutableBindings();
 
     public ScopeCreator(PScope scope, Logger log) {
       this.scope = scope;
@@ -100,7 +104,9 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
       pStruct.fields().forEach(this::addReferenceable);
     }
 
-    private void initializeScopeFor(PNamedValue pNamedValue) {}
+    private void initializeScopeFor(PNamedValue pNamedValue) {
+      addTypeParams(pNamedValue);
+    }
 
     private void initializeScopeFor(PConstructor pConstructor) {
       // Do not report errors as duplicate parameters in constructor means there are duplicate
@@ -110,9 +116,18 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
 
     private void initializeScopeFor(PFunc pFunc) {
       pFunc.params().forEach(this::addReferenceable);
+      addTypeParams(pFunc);
     }
 
-    private void addType(PStruct type) {
+    private void addTypeParams(PEvaluable pEvaluable) {
+      var pTypeParams = pEvaluable.typeParams();
+      switch (pTypeParams) {
+        case PExplicitTypeParams explicit -> explicit.typeVars().foreach(this::addType);
+        case PImplicitTypeParams implicit -> {}
+      }
+    }
+
+    private void addType(PTypeDefinition type) {
       addBinding(types, type, true);
     }
 

@@ -1,2 +1,1 @@
-
-myValue = (A a) -> "abc";
+myValue = <A>(A a) -> "abc";

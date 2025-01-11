@@ -1,2 +1,1 @@
-
-myValue = (A param) -> param;
+myValue = <A>(A param) -> param;

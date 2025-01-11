@@ -1,2 +1,1 @@
-
-result = ((A a) -> "abc")(7);
+result = (<A>(A a) -> "abc")(7);

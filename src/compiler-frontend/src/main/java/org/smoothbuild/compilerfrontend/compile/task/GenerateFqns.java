@@ -6,7 +6,7 @@ import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compile
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.parseReferenceableName;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.parseStructName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.parseTypeName;
 
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.log.base.Logger;
@@ -27,6 +27,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
@@ -93,6 +94,14 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     }
 
     @Override
+    public void visitTypeParam(PTypeParam pTypeParam) {
+      parseTypeName(pTypeParam.nameText())
+          .ifErr(e -> logIllegalIdentifier(pTypeParam.nameText(), pTypeParam.location(), e))
+          .mapOk(this::toFqn)
+          .ifOk(pTypeParam::setFqn);
+    }
+
+    @Override
     public void visitItem(PItem pItem) throws RuntimeException {
       var nameText = pItem.nameText();
       parseReferenceableName(nameText)
@@ -112,7 +121,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
 
     private Result<Name> setStructFqn(PStruct pStruct) {
       var nameText = pStruct.nameText();
-      return parseStructName(nameText)
+      return parseTypeName(nameText)
           .ifErr(e -> logIllegalStructName(pStruct, e, pStruct.nameText()));
     }
 
