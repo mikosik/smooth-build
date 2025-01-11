@@ -1,2 +1,2 @@
-A myIdentity(A a) = a;
-myFunc(B b) = myIdentity(b);
+A myIdentity<A>(A a) = a;
+myFunc<B>(B b) = myIdentity(b);

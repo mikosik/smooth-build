@@ -1,0 +1,3 @@
+Log{ERROR, '{t-project}/module.smooth:1: extraneous input '0x01' expecting {'>', NAME}
+Int result<0x01> = 7;
+           ^^^^'}

@@ -1,0 +1,9 @@
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input '"abc"' expecting {'>', NAME}
+Int result<"abc" > myIdentity()> = 7;
+           ^^^^^'}
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input 'myIdentity' expecting {'=', ';', '('}
+Int result<"abc" > myIdentity()> = 7;
+                   ^^^^^^^^^^'}
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input '>' expecting {'=', ';'}
+Int result<"abc" > myIdentity()> = 7;
+                               ^'}

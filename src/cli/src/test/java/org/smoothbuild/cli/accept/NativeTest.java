@@ -98,7 +98,7 @@ public class NativeTest extends EvaluatorTestContext {
         var userModule = format(
             """
                 @Native("%s")
-                A throwException();
+                A throwException<A>();
                 Int result = throwException();
                 """,
             ThrowException.class.getCanonicalName());
@@ -222,7 +222,7 @@ public class NativeTest extends EvaluatorTestContext {
           var userModule = format(
               """
                   @Native("%s")
-                  A brokenIdentity(A value);
+                  A brokenIdentity<A>(A value);
                   Int result = brokenIdentity(7);
                   """,
               BrokenIdentity.class.getCanonicalName());
@@ -293,7 +293,7 @@ public class NativeTest extends EvaluatorTestContext {
       var userModule = format(
           """
               @Bytecode("%s")
-              A myId(A a);
+              A myId<A>(A a);
               result = myId(77);
               """,
           ReturnIdFunc.class.getCanonicalName());

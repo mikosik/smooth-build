@@ -1,0 +1,2 @@
+String myIdentity(String string) = string;
+Int result<"abc" > myIdentity()> = 7;

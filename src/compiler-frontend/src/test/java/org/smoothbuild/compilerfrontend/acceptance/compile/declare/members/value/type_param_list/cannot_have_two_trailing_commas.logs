@@ -1,0 +1,3 @@
+Log{ERROR, '{t-project}/module.smooth:1: no viable alternative at input ',,'
+value<A,,> = 7;
+        ^'}

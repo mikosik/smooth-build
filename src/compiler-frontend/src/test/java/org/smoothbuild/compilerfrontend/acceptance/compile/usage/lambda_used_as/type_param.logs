@@ -1,0 +1,6 @@
+Log{ERROR, '{t-project}/module.smooth:1: mismatched input '(' expecting {'>', NAME}
+Int result<() -> 7> = 7;
+           ^'}
+Log{ERROR, '{t-project}/module.smooth:1: mismatched input '->' expecting {'=', ';'}
+Int result<() -> 7> = 7;
+              ^^'}

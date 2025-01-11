@@ -1,2 +1,2 @@
-A myIdentity (A a) = a;
-(A, A)->A myFunc((A, A)->A funcParam = myIdentity) = funcParam;
+A myIdentity<A>(A a) = a;
+(B, B)->B myFunc<B>((B, B)->B funcParam = myIdentity) = funcParam;

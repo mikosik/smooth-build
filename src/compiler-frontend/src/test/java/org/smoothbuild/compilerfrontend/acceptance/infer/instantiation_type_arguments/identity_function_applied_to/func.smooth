@@ -1,3 +1,3 @@
-A myIdentity(A a) = a;
+A myIdentity<A>(A a) = a;
 String myFunc(Blob param) = "abc";
 myValue = myIdentity(myFunc);

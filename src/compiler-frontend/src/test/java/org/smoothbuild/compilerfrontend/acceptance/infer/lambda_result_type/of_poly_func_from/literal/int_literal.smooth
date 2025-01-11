@@ -1,2 +1,1 @@
-
-myValue = (A a) -> 7;
+myValue = <A>(A a) -> 7;

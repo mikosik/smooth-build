@@ -156,7 +156,7 @@ public class BuildCommandTest {
       createUserModule(format(
           """
               @Native("%s")
-              A reportError(String message);
+              A reportError<A>(String message);
               Int result = reportError("my-error-message");
               """,
           ReportError.class.getCanonicalName()));
@@ -239,7 +239,7 @@ public class BuildCommandTest {
         createUserModule(format(
             """
             @Native("%s")
-            A reportError(String message);
+            A reportError<A>(String message);
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
@@ -287,7 +287,7 @@ public class BuildCommandTest {
         createUserModule(format(
             """
             @Native("%s")
-            A reportError(String message);
+            A reportError<A>(String message);
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));
@@ -335,7 +335,7 @@ public class BuildCommandTest {
         createUserModule(format(
             """
             @Native("%s")
-            A reportError(String message);
+            A reportError<A>(String message);
             Int result = reportError("my-error-message");
             """,
             ReportError.class.getCanonicalName()));

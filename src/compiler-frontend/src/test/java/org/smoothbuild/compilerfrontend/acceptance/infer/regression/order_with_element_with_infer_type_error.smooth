@@ -1,4 +1,4 @@
 @Native("impl")
-A firstElem([A] array);
+A firstElem<A>([A] array);
 valueWithNonInferableType = firstElem(7);
 [Int] myValue = [valueWithNonInferableType];

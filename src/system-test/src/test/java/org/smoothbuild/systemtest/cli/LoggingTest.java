@@ -50,7 +50,7 @@ public class LoggingTest extends SystemTestContext {
     testCase.createUserModule(format(
         """
             @Native("%s")
-            A reportError(String message);
+            A reportError<A>(String message);
             Int result = reportError("%s");
             """,
         ReportError.class.getCanonicalName(), LOG_MESSAGE));

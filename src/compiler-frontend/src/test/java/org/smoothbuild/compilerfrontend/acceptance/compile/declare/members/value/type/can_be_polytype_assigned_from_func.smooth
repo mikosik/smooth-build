@@ -1,2 +1,2 @@
-    A myId(A a) = a;
-    (A)->A myValue = myId;
+A myId<A>(A a) = a;
+(B)->B myValue<B> = myId;

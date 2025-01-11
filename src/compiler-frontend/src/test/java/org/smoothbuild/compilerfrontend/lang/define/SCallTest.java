@@ -28,7 +28,7 @@ public class SCallTest extends FrontendCompilerTestContext {
               callee = SInstantiate(
                 typeArgs = <Int>
                 polymorphic = SReference(
-                  schema = <A>(A)->A
+                  schema = <myId:A>(myId:A)->myId:A
                   referencedName = myId
                   location = {t-project}/module.smooth:4
                 )

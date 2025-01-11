@@ -1,2 +1,0 @@
-[A] emptyArray = [];
-myFunc(A a) = emptyArray;

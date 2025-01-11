@@ -53,7 +53,7 @@ public class OrTest extends StandardLibraryTestContext {
     var userModule = format(
         """
             @Native("%s")
-            A throwException();
+            A throwException<A>();
             result = or(true, throwException());
             """,
         ThrowException.class.getCanonicalName());

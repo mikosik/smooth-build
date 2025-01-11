@@ -11,10 +11,10 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;
 
 public final class Name extends Id {
-  public static Name structName(String name) {
-    var errorMessage = findStructNameErrors(name);
+  public static Name typeName(String name) {
+    var errorMessage = findTypeNameErrors(name);
     if (errorMessage != null) {
-      throw new IllegalArgumentException("Illegal struct name. " + errorMessage);
+      throw new IllegalArgumentException("Illegal type name. " + errorMessage);
     }
     return new Name(name);
   }
@@ -23,14 +23,6 @@ public final class Name extends Id {
     var errorMessage = findReferenceableNameErrors(name);
     if (errorMessage != null) {
       throw new IllegalArgumentException("Illegal referenceable name. " + errorMessage);
-    }
-    return new Name(name);
-  }
-
-  public static Name typeVarName(String name) {
-    var errorMessage = findTypeVarNameErrors(name);
-    if (errorMessage != null) {
-      throw new IllegalArgumentException("Illegal type var name. " + errorMessage);
     }
     return new Name(name);
   }
@@ -59,8 +51,8 @@ public final class Name extends Id {
     return null;
   }
 
-  public static Result<Name> parseStructName(String name) {
-    var errorMessage = findStructNameErrors(name);
+  public static Result<Name> parseTypeName(String name) {
+    var errorMessage = findTypeNameErrors(name);
     if (errorMessage != null) {
       return err(errorMessage);
     }
@@ -68,7 +60,7 @@ public final class Name extends Id {
     return ok(new Name(name));
   }
 
-  public static String findStructNameErrors(String name) {
+  public static String findTypeNameErrors(String name) {
     var errorMessage = findNameErrors(name);
     if (errorMessage != null) {
       return errorMessage;
@@ -76,34 +68,7 @@ public final class Name extends Id {
     if (!isUpperCase(name.charAt(0))) {
       return "It must start with uppercase letter.";
     }
-    if (isTypeVarName(name)) {
-      return "All-uppercase names are reserved for type variables.";
-    }
     return null;
-  }
-
-  public static Result<Name> parseTypeVarName(String name) {
-    var errorMessage = findTypeVarNameErrors(name);
-    if (errorMessage != null) {
-      return err(errorMessage);
-    }
-
-    return ok(new Name(name));
-  }
-
-  private static String findTypeVarNameErrors(String name) {
-    var errorMessage = findNameErrors(name);
-    if (errorMessage != null) {
-      return errorMessage;
-    }
-    if (!isTypeVarName(name)) {
-      return "Type variable must be UPPERCASE.";
-    }
-    return null;
-  }
-
-  private static boolean isTypeVarName(String name) {
-    return !name.isEmpty() && name.chars().allMatch(CharUtils::isUpperCase);
   }
 
   private static String findNameErrors(String name) {

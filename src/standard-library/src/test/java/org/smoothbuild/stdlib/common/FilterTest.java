@@ -19,7 +19,7 @@ public class FilterTest extends StandardLibraryTestContext {
   @Test
   void true_predicate_returns_whole_list() throws Exception {
     var userModule = """
-        result = filter([1, 2, 3], (A a) -> true);
+        result = filter([1, 2, 3], <A>(A a) -> true);
         """;
     createUserModule(userModule);
     evaluate("result");
@@ -29,7 +29,7 @@ public class FilterTest extends StandardLibraryTestContext {
   @Test
   void false_predicate_returns_empty_list() throws Exception {
     var userModule = """
-        result = filter([1, 2, 3], (A a) -> false);
+        result = filter([1, 2, 3], <A>(A a) -> false);
         """;
     createUserModule(userModule);
     evaluate("result");
@@ -39,7 +39,7 @@ public class FilterTest extends StandardLibraryTestContext {
   @Test
   void empty_list_is_filtered_to_empty_list() throws Exception {
     var userModule = """
-        [Int] result = filter([], (A i) -> true);
+        [Int] result = filter([], <A>(A i) -> true);
         """;
     createUserModule(userModule);
     evaluate("result");

@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static java.util.Comparator.comparing;
 
 import com.google.common.collect.ImmutableSet;
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
@@ -45,6 +46,10 @@ public final class SVarSet extends Set<SVar> {
 
   public String toSourceCode() {
     return toShortString();
+  }
+
+  public String q() {
+    return Strings.q(toShortString());
   }
 
   public String toShortString() {

@@ -1,3 +1,3 @@
-A myId(A a) = a;
-myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
+A myId<A>(A a) = a;
+myFunc<A,B>(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
 myValue = myFunc(7, "abc");

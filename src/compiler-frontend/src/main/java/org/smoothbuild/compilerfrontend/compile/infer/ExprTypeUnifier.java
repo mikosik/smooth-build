@@ -10,6 +10,7 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
@@ -65,12 +66,12 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, scope);
     var resolvedType = resolveType(pNamedValue);
     var vars = resolveQuantifiedVars(resolvedType);
+    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pNamedValue, vars);
     pNamedValue.setSchema(new SSchema(vars, resolvedType));
   }
 
-  public static void unifyFunc(Unifier unifier, PScope scope, PFunc namedFunc)
-      throws TypeException {
-    new ExprTypeUnifier(unifier, scope).unifyFunc(namedFunc);
+  public static void unifyFunc(Unifier unifier, PScope scope, PFunc pFunc) throws TypeException {
+    new ExprTypeUnifier(unifier, scope).unifyFunc(pFunc);
   }
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
@@ -81,7 +82,21 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pFunc, resultType, funcTS, pFunc.scope());
     var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
+    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pFunc, vars);
     pFunc.setSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
+  }
+
+  private static void verifyInferredTypeParamsAreEqualToExplicitlyDeclared(
+      PEvaluable pEvaluable, SVarSet inferredTypeParams) throws TypeException {
+    if (pEvaluable.typeParams() instanceof PExplicitTypeParams explicitTypeParams) {
+      var explicit = explicitTypeParams.toVarSet();
+      if (!explicit.equals(inferredTypeParams)) {
+        throw new TypeException(compileError(
+            explicitTypeParams.location(),
+            "Type parameters are declared as " + explicit.q() + " but inferred type parameters are "
+                + inferredTypeParams.q() + "."));
+      }
+    }
   }
 
   private SVarSet resolveQuantifiedVars(SType sType) {
@@ -196,9 +211,13 @@ public class ExprTypeUnifier {
 
   private void unifyPolymorphic(PPolymorphic pPolymorphic) throws TypeException {
     switch (pPolymorphic) {
-      case PLambda pLambda -> unifyFunc(pLambda);
+      case PLambda pLambda -> unifyLambda(pLambda);
       case PReference pReference -> unifyReference(pReference);
     }
+  }
+
+  private void unifyLambda(PLambda pLambda) throws TypeException {
+    new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeVars).unifyFunc(pLambda);
   }
 
   private SType unifyNamedArg(PNamedArg pNamedArg) throws TypeException {

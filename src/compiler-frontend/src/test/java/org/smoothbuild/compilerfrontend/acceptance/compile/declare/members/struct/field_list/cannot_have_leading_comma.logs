@@ -1,6 +1,6 @@
 Log{ERROR, '{t-project}/module.smooth:1: mismatched input ',' expecting {'}', '(', '[', NAME}
 MyStruct{ , String field }
           ^'}
-Log{ERROR, '{t-project}/module.smooth:1: mismatched input '}' expecting {'=', ';', '('}
+Log{ERROR, '{t-project}/module.smooth:1: mismatched input '}' expecting {'=', ';', '<', '('}
 MyStruct{ , String field }
                          ^'}

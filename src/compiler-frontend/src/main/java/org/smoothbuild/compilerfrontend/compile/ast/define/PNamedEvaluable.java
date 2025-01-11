@@ -11,6 +11,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluable
     permits PNamedFunc, PNamedValue {
   private final String nameText;
+  private final PTypeParams typeParams;
   private final Maybe<PExpr> body;
   private final Maybe<PAnnotation> annotation;
   private final Location location;
@@ -18,8 +19,13 @@ public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluab
   private Fqn fqn;
 
   protected PNamedEvaluable(
-      String nameText, Maybe<PExpr> body, Maybe<PAnnotation> annotation, Location location) {
+      String nameText,
+      PTypeParams typeParams,
+      Maybe<PExpr> body,
+      Maybe<PAnnotation> annotation,
+      Location location) {
     this.nameText = nameText;
+    this.typeParams = typeParams;
     this.body = body;
     this.annotation = annotation;
     this.location = location;
@@ -38,6 +44,11 @@ public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluab
   @Override
   public String nameText() {
     return nameText;
+  }
+
+  @Override
+  public PTypeParams typeParams() {
+    return typeParams;
   }
 
   @Override

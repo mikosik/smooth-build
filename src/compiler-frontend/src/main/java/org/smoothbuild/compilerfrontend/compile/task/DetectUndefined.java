@@ -3,7 +3,6 @@ package org.smoothbuild.compilerfrontend.compile.task;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Logger;
@@ -63,12 +62,10 @@ public class DetectUndefined implements Task1<PModule, PModule> {
     }
 
     private void visitExplicitType(PTypeReference pTypeReference) {
-      if (!isTypeVarName(pTypeReference.nameText())) {
-        scope()
-            .types()
-            .find(pTypeReference.fqn())
-            .ifErr(e -> logger.log(compileError(pTypeReference.location(), e)));
-      }
+      scope()
+          .types()
+          .find(pTypeReference.fqn())
+          .ifErr(e -> logger.log(compileError(pTypeReference.location(), e)));
     }
 
     private void visitFuncType(PFuncType func) {

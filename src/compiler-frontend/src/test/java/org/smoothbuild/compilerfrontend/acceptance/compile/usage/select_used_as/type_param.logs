@@ -1,0 +1,3 @@
+Log{ERROR, '{t-project}/module.smooth:5: mismatched input '.' expecting {',', '>'}
+Int result<myValue.field> = 7;
+                  ^'}

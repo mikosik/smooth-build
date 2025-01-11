@@ -1,2 +1,2 @@
 @Native("Impl.met")
-A myFunc(B b, C c);
+A myFunc<A,B,C>(B b, C c);

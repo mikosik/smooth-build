@@ -13,7 +13,11 @@ struct
    ;
 
 evaluable
-   : annotation? type? NAME params? ('=' pipe)? ';'
+   : annotation? type? NAME typeParams? params? ('=' pipe)? ';'
+   ;
+
+typeParams
+   : '<' (NAME (',' NAME)* ','?)? '>'
    ;
 
 params
@@ -80,7 +84,7 @@ array
    ;
 
 lambda
-   : params '->' expr
+   : typeParams? params '->' expr
    ;
 
 type

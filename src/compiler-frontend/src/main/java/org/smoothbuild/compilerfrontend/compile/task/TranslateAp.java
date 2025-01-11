@@ -36,6 +36,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeParamsContext;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -48,9 +49,11 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -66,6 +69,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 
@@ -139,13 +144,28 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
 
       var annotation = createNativeSane(evaluable.annotation());
 
+      var typeParams = createTypeParams(evaluable.typeParams());
       if (evaluable.params() == null) {
-        evaluables.add(new PNamedValue(type, name, body, annotation, location));
+        evaluables.add(new PNamedValue(type, name, typeParams, body, annotation, location));
       } else {
         var params = visitor.createItems(evaluable.params().itemList());
-        evaluables.add(new PNamedFunc(type, name, params, body, annotation, location));
+        evaluables.add(new PNamedFunc(type, name, typeParams, params, body, annotation, location));
       }
       return null;
+    }
+
+    public PTypeParams createTypeParams(TypeParamsContext typeParams) {
+      if (typeParams == null) {
+        return new PImplicitTypeParams();
+      } else {
+        var typeParamList = listOfAll(typeParams.NAME()).map(this::createTypeParam);
+        var location = fileLocation(fullPath, typeParams);
+        return new PExplicitTypeParams(typeParamList, location);
+      }
+    }
+
+    private PTypeParam createTypeParam(TerminalNode node) {
+      return new PTypeParam(node.getText(), fileLocation(fullPath, node));
     }
 
     private Maybe<PAnnotation> createNativeSane(AnnotationContext annotation) {
@@ -285,10 +305,11 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PInstantiate createLambda(LambdaContext lambdaFunc) {
       var name = "lambda~" + (++lambdaCount);
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
+      var typeParams = createTypeParams(lambdaFunc.typeParams());
       var params = visitor.createItems(lambdaFunc.params().itemList());
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
-      var lambdaFuncP = new PLambda(name, params, body, location);
+      var lambdaFuncP = new PLambda(name, typeParams, params, body, location);
       return new PInstantiate(lambdaFuncP, location);
     }
 

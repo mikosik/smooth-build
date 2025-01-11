@@ -1,2 +1,2 @@
-String myFunc((A)->A param) = "abc";
+String myFunc<A>((A)->A param) = "abc";
 result = myFunc(param=[]);

@@ -1,0 +1,1 @@
+(A)->A myValue<A> = <A>(A x) -> (<A>(A y) -> y)(x);

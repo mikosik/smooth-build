@@ -1,2 +1,2 @@
-[A] singleElement(A a) = [a];
+[A] singleElement<A>(A a) = [a];
 myValue = singleElement(["abc"]);

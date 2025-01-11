@@ -19,11 +19,12 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
   public PNamedFunc(
       PType resultT,
       String nameText,
+      PTypeParams typeParams,
       NList<PItem> params,
       Maybe<PExpr> body,
       Maybe<PAnnotation> annotation,
       Location location) {
-    super(nameText, body, annotation, location);
+    super(nameText, typeParams, body, annotation, location);
     this.resultT = resultT;
     this.params = params;
   }

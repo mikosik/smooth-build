@@ -1,2 +1,2 @@
-String myFunc(A a) = "abc";
+String myFunc<A>(A a) = "abc";
 result = myFunc(a=7);

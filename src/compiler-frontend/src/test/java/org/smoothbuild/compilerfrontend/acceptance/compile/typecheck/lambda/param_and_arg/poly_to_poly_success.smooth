@@ -1,2 +1,1 @@
-
-result = (([A] param) -> "abc")([]);
+result = (<A>([A] param) -> "abc")([]);

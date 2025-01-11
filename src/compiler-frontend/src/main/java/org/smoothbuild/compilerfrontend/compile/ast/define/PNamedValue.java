@@ -15,10 +15,11 @@ public final class PNamedValue extends PNamedEvaluable {
   public PNamedValue(
       PType type,
       String nameText,
+      PTypeParams typeParams,
       Maybe<PExpr> body,
       Maybe<PAnnotation> annotation,
       Location location) {
-    super(nameText, body, annotation, location);
+    super(nameText, typeParams, body, annotation, location);
     this.type = type;
   }
 

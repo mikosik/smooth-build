@@ -34,7 +34,7 @@ public class IfTest extends StandardLibraryTestContext {
     var userModule = format(
         """
             @Native("%s")
-            A throwException();
+            A throwException<A>();
             result = if(false, throwException(), "else clause");
             """,
         ThrowException.class.getCanonicalName());
@@ -48,7 +48,7 @@ public class IfTest extends StandardLibraryTestContext {
     var userModule = format(
         """
             @Native("%s")
-            A throwException();
+            A throwException<A>();
             result = if(true, "then clause", throwException());
             """,
         ThrowException.class.getCanonicalName());
@@ -64,7 +64,7 @@ public class IfTest extends StandardLibraryTestContext {
       var userModule = format(
           """
               @Native("%s")
-              A throwException();
+              A throwException<A>();
               result = if(true, if(false, throwException(), "else clause"), "ignored");
               """,
           ThrowException.class.getCanonicalName());
@@ -78,7 +78,7 @@ public class IfTest extends StandardLibraryTestContext {
       var userModule = format(
           """
               @Native("%s")
-              A throwException();
+              A throwException<A>();
               result = if(true, if(true, "then clause", throwException()), "ignored");
               """,
           ThrowException.class.getCanonicalName());

@@ -8,11 +8,9 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.parseReferenceableName;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.parseStructName;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.parseTypeVarName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.parseTypeName;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.structName;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.typeVarName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 
 import com.google.common.testing.EqualsTester;
 import java.util.stream.Stream;
@@ -107,58 +105,60 @@ public class IdTest {
     }
 
     @Nested
-    class _parse_struct_name {
+    class _parse_type_name {
       @ParameterizedTest
       @MethodSource
       void legal(String string) {
-        var name = parseStructName(string).ok();
+        var name = parseTypeName(string).ok();
         assertThat(name.toString()).isEqualTo(string);
       }
 
       static List<Arguments> legal() {
-        return legal_struct_names();
+        return legal_type_names();
       }
 
       @ParameterizedTest
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
-        assertThat(parseStructName(string)).isEqualTo(err(expectedErrorMessage));
+        assertThat(parseTypeName(string)).isEqualTo(err(expectedErrorMessage));
       }
 
       static List<Arguments> illegal() {
-        return illegal_struct_names();
+        return illegal_type_names();
       }
     }
 
     @Nested
-    class _struct_name {
+    class _type_name {
       @ParameterizedTest
       @MethodSource
       void legal(String string) {
-        var name = structName(string);
+        var name = typeName(string);
         assertThat(name.toString()).isEqualTo(string);
       }
 
       static List<Arguments> legal() {
-        return legal_struct_names();
+        return legal_type_names();
       }
 
       @ParameterizedTest
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
-        assertCall(() -> structName(string))
+        assertCall(() -> typeName(string))
             .throwsException(
-                new IllegalArgumentException("Illegal struct name. " + expectedErrorMessage));
+                new IllegalArgumentException("Illegal type name. " + expectedErrorMessage));
       }
 
       static List<Arguments> illegal() {
-        return illegal_struct_names();
+        return illegal_type_names();
       }
     }
 
-    static List<Arguments> legal_struct_names() {
+    static List<Arguments> legal_type_names() {
       return list(
           arguments("Name"),
+          arguments("A"),
+          arguments("ABC"),
           arguments("Name_"),
           arguments("A_name"),
           arguments("Name123"),
@@ -166,7 +166,7 @@ public class IdTest {
           arguments("Name~1"));
     }
 
-    static List<Arguments> illegal_struct_names() {
+    static List<Arguments> illegal_type_names() {
       return list(
           arguments("", "It must not be empty string."),
           arguments("Abc^", "It must not contain '^' character."),
@@ -178,93 +178,12 @@ public class IdTest {
           arguments("Ab c", "It must not contain ' ' character."),
           arguments("_", "`_` is reserved for future use."),
           arguments("_Abc", "It must start with uppercase letter."),
-          arguments("A", "All-uppercase names are reserved for type variables."),
-          arguments("ABC", "All-uppercase names are reserved for type variables."),
           arguments("3", "It must start with uppercase letter."),
           arguments("123", "It must start with uppercase letter."),
           arguments("3abc", "It must start with uppercase letter."),
           arguments("~abc", "It must start with uppercase letter."),
           arguments("~", "It must start with uppercase letter."),
           arguments("abc", "It must start with uppercase letter."));
-    }
-
-    @Nested
-    class _parse_type_var_name {
-      @ParameterizedTest
-      @MethodSource
-      void legal(String string) {
-        var name = parseTypeVarName(string).ok();
-        assertThat(name.toString()).isEqualTo(string);
-      }
-
-      static List<Arguments> legal() {
-        return legal_type_var_names();
-      }
-
-      @ParameterizedTest
-      @MethodSource
-      void illegal(String string, String expectedErrorMessage) {
-        assertThat(parseTypeVarName(string)).isEqualTo(err(expectedErrorMessage));
-      }
-
-      static List<Arguments> illegal() {
-        return illegal_type_var_names();
-      }
-    }
-
-    @Nested
-    class _type_var_name {
-      @ParameterizedTest
-      @MethodSource
-      void legal(String string) {
-        var name = typeVarName(string);
-        assertThat(name.toString()).isEqualTo(string);
-      }
-
-      static List<Arguments> legal() {
-        return legal_type_var_names();
-      }
-
-      @ParameterizedTest
-      @MethodSource
-      void illegal(String string, String expectedErrorMessage) {
-        assertCall(() -> typeVarName(string))
-            .throwsException(
-                new IllegalArgumentException("Illegal type var name. " + expectedErrorMessage));
-      }
-
-      static List<Arguments> illegal() {
-        return illegal_type_var_names();
-      }
-    }
-
-    static List<Arguments> legal_type_var_names() {
-      return list(
-          arguments("A"),
-          arguments("B"),
-          arguments("C"),
-          arguments("X"),
-          arguments("ABC"),
-          arguments("ABCDEF"));
-    }
-
-    static List<Arguments> illegal_type_var_names() {
-      return list(
-          arguments("", "It must not be empty string."),
-          arguments("A^", "It must not contain '^' character."),
-          arguments("^A", "It must not contain '^' character."),
-          arguments("A:", "It must not contain ':' character."),
-          arguments(":A", "It must not contain ':' character."),
-          arguments("A:A", "It must not contain ':' character."),
-          arguments(":", "It must not contain ':' character."),
-          arguments("A B", "It must not contain ' ' character."),
-          arguments("_", "`_` is reserved for future use."),
-          arguments("_A", "Type variable must be UPPERCASE."),
-          arguments("3", "Type variable must be UPPERCASE."),
-          arguments("123", "Type variable must be UPPERCASE."),
-          arguments("3ABC", "Type variable must be UPPERCASE."),
-          arguments("~ABC", "Type variable must be UPPERCASE."),
-          arguments("~", "Type variable must be UPPERCASE."));
     }
   }
 
@@ -424,7 +343,7 @@ public class IdTest {
   @Test
   void to_string() {
     assertThat(parseReferenceableName("abc").ok().toString()).isEqualTo("abc");
-    assertThat(parseStructName("Struct").ok().toString()).isEqualTo("Struct");
+    assertThat(parseTypeName("Struct").ok().toString()).isEqualTo("Struct");
     assertThat(parseReference("name:abc").ok().toString()).isEqualTo("name:abc");
   }
 
