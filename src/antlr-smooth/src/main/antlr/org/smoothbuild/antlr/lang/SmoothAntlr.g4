@@ -17,7 +17,7 @@ evaluable
    ;
 
 params
-   : ('(' itemList ')')
+   : '(' itemList ')'
    ;
 
 itemList
@@ -80,7 +80,7 @@ array
    ;
 
 lambda
-   : '(' itemList ')' '->' expr
+   : params '->' expr
    ;
 
 type
