@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.kind.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.tupleTypeName;
 
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
@@ -15,7 +16,7 @@ public final class BTupleType extends BType {
   private final List<BType> elements;
 
   public BTupleType(Hash hash, List<BType> elements) {
-    super(hash, calculateName(elements), BTuple.class);
+    super(hash, tupleTypeName(elements), BTuple.class);
     this.elements = elements;
   }
 
@@ -25,19 +26,11 @@ public final class BTupleType extends BType {
     return new BTuple(merkleRoot, exprDb);
   }
 
-  public BType get(int i) {
-    return elements.get(i);
-  }
-
   public int size() {
     return elements().size();
   }
 
   public List<BType> elements() {
     return elements;
-  }
-
-  private static String calculateName(List<? extends BType> elementTypes) {
-    return BTypeNames.tupleTypeName(elementTypes);
   }
 }
