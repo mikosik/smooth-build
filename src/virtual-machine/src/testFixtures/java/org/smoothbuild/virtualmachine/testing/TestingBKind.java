@@ -6,6 +6,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
@@ -58,6 +59,9 @@ public class TestingBKind {
         lambda(CONTEXT.bBlobType(), CONTEXT.bBlobType(), CONTEXT.bBlobType()),
         lambda(CONTEXT.bStringType()),
         CONTEXT.bStringType(),
+        choice(),
+        choice(CONTEXT.bIntType()),
+        choice(CONTEXT.bIntType(), CONTEXT.bStringType()),
         tuple(),
         tuple(CONTEXT.bBlobType()),
         tuple(CONTEXT.bBlobType(), CONTEXT.bBlobType()),
@@ -96,7 +100,11 @@ public class TestingBKind {
     return CONTEXT.bLambdaType(list(paramTypes), resultType);
   }
 
-  private static BTupleType tuple(BType... paramTypes) throws BytecodeException {
-    return CONTEXT.bTupleType(paramTypes);
+  private static BChoiceType choice(BType... alternativeTypes) throws BytecodeException {
+    return CONTEXT.bChoiceType(alternativeTypes);
+  }
+
+  private static BTupleType tuple(BType... itemTypes) throws BytecodeException {
+    return CONTEXT.bTupleType(itemTypes);
   }
 }

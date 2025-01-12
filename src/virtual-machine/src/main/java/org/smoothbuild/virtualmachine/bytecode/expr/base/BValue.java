@@ -9,7 +9,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
  * This class is thread-safe.
  */
 public abstract sealed class BValue extends BExpr
-    permits BArray, BBlob, BBool, BInt, BLambda, BString, BTuple {
+    permits BArray, BBlob, BBool, BChoice, BInt, BLambda, BString, BTuple {
   public BValue(MerkleRoot merkleRoot, BExprDb exprDb) {
     super(merkleRoot, exprDb);
   }

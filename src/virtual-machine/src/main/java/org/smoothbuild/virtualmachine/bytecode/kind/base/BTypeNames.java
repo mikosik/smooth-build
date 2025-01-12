@@ -7,6 +7,7 @@ public class BTypeNames {
   public static final String BOOL = "Bool";
   public static final String INT = "Int";
   public static final String STRING = "String";
+  public static final String CHOICE = "Choice";
 
   public static String arrayTypeName(BType elemT) {
     return "[" + elemT.name() + "]";
@@ -18,6 +19,10 @@ public class BTypeNames {
 
   public static String tupleTypeName(List<? extends BType> elementTypes) {
     return "{" + commaSeparatedTypeNames(elementTypes) + "}";
+  }
+
+  public static String choiceTypeName(List<? extends BType> elementTypes) {
+    return "{" + elementTypes.toString("|") + "}";
   }
 
   private static String commaSeparatedTypeNames(List<? extends BType> types) {

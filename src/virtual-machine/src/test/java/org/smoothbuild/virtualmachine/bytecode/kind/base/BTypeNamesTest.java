@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.kind.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.arrayTypeName;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.choiceTypeName;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.lambdaTypeName;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.tupleTypeName;
 
@@ -24,5 +25,10 @@ public class BTypeNamesTest extends VmTestContext {
   @Test
   void tuple_type_name() throws Exception {
     assertThat(tupleTypeName(list(bBlobType(), bBoolType()))).isEqualTo("{Blob,Bool}");
+  }
+
+  @Test
+  void choice_type_name() throws Exception {
+    assertThat(choiceTypeName(list(bBlobType(), bIntType()))).isEqualTo("{Blob|Int}");
   }
 }

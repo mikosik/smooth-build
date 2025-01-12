@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
@@ -37,7 +38,8 @@ public class BKindCachingTest extends VmTestContext {
         BKindCachingTest::lambdaType,
         BKindDb::int_,
         BKindDb::string,
-        BKindCachingTest::tupleT,
+        BKindCachingTest::choiceType,
+        BKindCachingTest::tupleType,
         kindDb -> kindDb.call(kindDb.int_()),
         kindDb -> kindDb.combine(kindDb.tuple()),
         kindDb -> kindDb.combine(kindDb.tuple(kindDb.int_())),
@@ -52,17 +54,21 @@ public class BKindCachingTest extends VmTestContext {
         kindDb -> kindDb.array(kindDb.bool()),
         kindDb -> kindDb.array(kindDb.int_()),
         kindDb -> kindDb.array(kindDb.string()),
-        kindDb -> kindDb.array(tupleT(kindDb)),
+        kindDb -> kindDb.array(tupleType(kindDb)),
         kindDb -> kindDb.array(lambdaType(kindDb)),
         kindDb -> kindDb.array(kindDb.array(kindDb.blob())),
         kindDb -> kindDb.array(kindDb.array(kindDb.bool())),
         kindDb -> kindDb.array(kindDb.array(kindDb.int_())),
         kindDb -> kindDb.array(kindDb.array(kindDb.string())),
-        kindDb -> kindDb.array(kindDb.array(tupleT(kindDb))),
+        kindDb -> kindDb.array(kindDb.array(tupleType(kindDb))),
         kindDb -> kindDb.array(kindDb.array(lambdaType(kindDb))));
   }
 
-  private static BTupleType tupleT(BKindDb kindDb) throws BytecodeException {
+  private static BChoiceType choiceType(BKindDb kindDb) throws BytecodeException {
+    return kindDb.choice(kindDb.blob(), kindDb.int_());
+  }
+
+  private static BTupleType tupleType(BKindDb kindDb) throws BytecodeException {
     return kindDb.tuple(kindDb.string(), kindDb.string());
   }
 

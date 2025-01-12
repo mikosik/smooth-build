@@ -19,6 +19,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
@@ -65,6 +66,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.bool(), "Bool"),
         args(f -> f.int_(), "Int"),
         args(f -> f.string(), "String"),
+        args(f -> f.choice(f.blob(), f.int_()), "{Blob|Int}"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
@@ -154,6 +156,30 @@ public class BKindTest extends VmTestContext {
   }
 
   @Nested
+  class _choice {
+    @Test
+    void _without_items_can_be_created() throws Exception {
+      bChoiceType();
+    }
+
+    @ParameterizedTest
+    @MethodSource("tuple_alternatives")
+    public void tuple_alternatives(
+        Function1<BKindDb, BChoiceType, BytecodeException> factoryCall,
+        Function1<BKindDb, List<BType>, BytecodeException> expected)
+        throws Exception {
+      assertThat(execute(factoryCall).alternatives()).isEqualTo(execute(expected));
+    }
+
+    public static java.util.List<Arguments> tuple_alternatives() {
+      return asList(
+          args(f -> f.choice(), f -> list()),
+          args(f -> f.choice(f.string()), f -> list(f.string())),
+          args(f -> f.choice(f.string(), f.int_()), f -> list(f.string(), f.int_())));
+    }
+  }
+
+  @Nested
   class _tuple {
     @Test
     void _without_items_can_be_created() throws Exception {
@@ -188,6 +214,7 @@ public class BKindTest extends VmTestContext {
     return Stream.of(
         arguments(test.bBlobType(), BBlob.class),
         arguments(test.bBoolType(), BBool.class),
+        arguments(test.bChoiceType(), BChoice.class),
         arguments(test.bLambdaType(test.bBoolType(), test.bBlobType()), BLambda.class),
         arguments(test.bIfKind(), BIf.class),
         arguments(test.bMapKind(), BMap.class),
@@ -294,6 +321,7 @@ public class BKindTest extends VmTestContext {
     var tester = new EqualsTester();
     tester.addEqualityGroup(bBlobType(), bBlobType());
     tester.addEqualityGroup(bBoolType(), bBoolType());
+    tester.addEqualityGroup(bChoiceType(), bChoiceType());
     tester.addEqualityGroup(
         bLambdaType(bBoolType(), bBlobType()), bLambdaType(bBoolType(), bBlobType()));
     tester.addEqualityGroup(bIntType(), bIntType());

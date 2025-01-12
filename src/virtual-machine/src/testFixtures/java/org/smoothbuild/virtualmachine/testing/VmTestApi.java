@@ -57,6 +57,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
@@ -325,6 +326,18 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BTupleType bFileType() throws BytecodeException {
     return bytecodeF().fileType();
+  }
+
+  public default BChoiceType bChoiceType() throws BytecodeException {
+    return bChoiceType(bBlobType(), bStringType());
+  }
+
+  public default BChoiceType bChoiceType(BType... alternatives) throws BytecodeException {
+    return kindDb().choice(alternatives);
+  }
+
+  public default BChoiceType bChoiceType(List<BType> alternatives) throws BytecodeException {
+    return kindDb().choice(alternatives);
   }
 
   public default BLambdaType bLambdaType() throws BytecodeException {

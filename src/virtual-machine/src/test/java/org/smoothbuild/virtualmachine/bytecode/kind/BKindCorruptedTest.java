@@ -8,6 +8,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ARRAY;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOICE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
@@ -276,6 +277,67 @@ public class BKindCorruptedTest extends VmTestContext {
             hash(hash(LAMBDA.byteMarker()), hash(corruptedArrayTHash(), hash(bIntType())));
         assertCall(() -> kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
+            .withCause(corruptedArrayTypeExc());
+      }
+    }
+
+    @Nested
+    class _choice {
+      @Test
+      void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Choice type in HashedDb.
+         */
+        var hash = hash(hash(CHOICE.byteMarker()), hash(hash(bBlobType()), hash(bIntType())));
+        assertThat(hash).isEqualTo(bChoiceType(bBlobType(), bIntType()).hash());
+      }
+
+      @Test
+      void without_data() throws Exception {
+        assert_reading_kind_without_data_causes_exc(CHOICE);
+      }
+
+      @Test
+      void with_additional_data() throws Exception {
+        assert_reading_kind_with_additional_data_causes_exc(CHOICE);
+      }
+
+      @Test
+      void with_data_hash_pointing_nowhere() throws Exception {
+        assert_reading_kind_with_data_pointing_nowhere_instead_of_being_chain_causes_exc(CHOICE);
+      }
+
+      @Test
+      void with_elements_not_being_hash_chain() throws Exception {
+        var notHashOfChain = hash("abc");
+        var hash = hash(hash(CHOICE.byteMarker()), notHashOfChain);
+        assertThatGet(hash).throwsException(new DecodeKindNodeException(hash, CHOICE, DATA_PATH));
+      }
+
+      @Test
+      void with_elements_being_array_of_non_type() throws Exception {
+        var stringHash = hash(bString("abc"));
+        var hash = hash(hash(CHOICE.byteMarker()), hash(stringHash));
+        assertThatGet(hash)
+            .throwsException(new DecodeKindNodeException(hash, CHOICE, "data[0]"))
+            .withCause(new DecodeKindException(stringHash));
+      }
+
+      @Test
+      void with_elements_being_chain_of_operation_types() throws Exception {
+        var hash = hash(hash(CHOICE.byteMarker()), hash(hash(bReferenceKind())));
+        assertThatGet(hash)
+            .throwsException(new DecodeKindWrongNodeKindException(
+                hash, CHOICE, "data", 0, BType.class, BReferenceKind.class));
+      }
+
+      @Test
+      void with_corrupted_element_type() throws Exception {
+        var hash =
+            hash(hash(CHOICE.byteMarker()), hash(corruptedArrayTHash(), hash(bStringType())));
+        assertThatGet(hash)
+            .throwsException(new DecodeKindNodeException(hash, CHOICE, "data[0]"))
             .withCause(corruptedArrayTypeExc());
       }
     }

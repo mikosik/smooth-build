@@ -11,6 +11,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.ARRAY;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOICE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
@@ -37,6 +38,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
@@ -107,6 +109,14 @@ public class BKindDb {
 
   public BBoolType bool() throws BKindDbException {
     return boolSupplier.apply();
+  }
+
+  public BChoiceType choice(BType... alternatives) throws BKindDbException {
+    return choice(list(alternatives));
+  }
+
+  public BChoiceType choice(List<BType> alternatives) throws BKindDbException {
+    return newChoice(alternatives);
   }
 
   public BLambdaType lambda(List<BType> params, BType result) throws BKindDbException {
@@ -191,6 +201,7 @@ public class BKindDb {
       case INT -> newBaseType(hash, id, children, BIntType::new);
       case STRING -> newBaseType(hash, id, children, BStringType::new);
       case LAMBDA -> readLambdaType(hash, children);
+      case CHOICE -> readChoiceType(hash, children);
       case IF -> readOperationKind(hash, children, id, BType.class, BIfKind::new);
       case MAP -> readOperationKind(hash, children, id, BArrayType.class, BMapKind::new);
       case INVOKE -> readOperationKind(hash, children, id, BType.class, BInvokeKind::new);
@@ -262,6 +273,13 @@ public class BKindDb {
       throw new DecodeKindWrongNodeKindException(
           rootHash, LAMBDA, LAMBDA_PARAMS_PATH, BTupleType.class, params.getClass());
     }
+  }
+
+  private BChoiceType readChoiceType(Hash rootHash, List<Hash> rootChildren)
+      throws DecodeKindException {
+    assertKindRootChildrenSize(rootHash, CHOICE, rootChildren, 2);
+    var items = readDataChainAsTypes(CHOICE, rootHash, rootChildren);
+    return newChoice(rootHash, items);
   }
 
   private BTupleType readTupleType(Hash rootHash, List<Hash> rootChildren)
@@ -338,8 +356,17 @@ public class BKindDb {
     return cache(new BLambdaType(rootHash, params, result));
   }
 
+  private BChoiceType newChoice(List<BType> alternatives) throws BKindDbException {
+    var hash = writeRootWithElements(CHOICE, alternatives);
+    return newChoice(hash, alternatives);
+  }
+
+  private BChoiceType newChoice(Hash rootHash, List<BType> alternatives) {
+    return cache(new BChoiceType(rootHash, alternatives));
+  }
+
   private BTupleType newTuple(List<BType> items) throws BKindDbException {
-    var hash = writeTupleRoot(items);
+    var hash = writeRootWithElements(TUPLE, items);
     return newTuple(hash, items);
   }
 
@@ -375,9 +402,9 @@ public class BKindDb {
     return writeRoot(LAMBDA, dataHash);
   }
 
-  private Hash writeTupleRoot(List<BType> items) throws BKindDbException {
-    var dataHash = writeChain(items);
-    return writeRoot(TUPLE, dataHash);
+  private Hash writeRootWithElements(KindId kindId, List<BType> elements) throws BKindDbException {
+    var dataHash = writeChain(elements);
+    return writeRoot(kindId, dataHash);
   }
 
   // Helper methods for writing roots
