@@ -183,7 +183,7 @@ public abstract sealed class BExpr permits BOperation, BValue {
   }
 
   protected static String exprsToString(List<? extends BExpr> exprs) {
-    return exprs.map(BExpr::valToStringSafe).toString(",");
+    return exprs.map(BExpr::exprToStringSafe).toString(",");
   }
 
   private <T> List<T> castDataChainElements(List<BExpr> elements, Class<T> clazz)
@@ -233,10 +233,10 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   @Override
   public String toString() {
-    return valToStringSafe() + "@" + hash();
+    return exprToStringSafe() + "@" + hash();
   }
 
-  private String valToStringSafe() {
+  private String exprToStringSafe() {
     try {
       return exprToString();
     } catch (BytecodeException e) {
