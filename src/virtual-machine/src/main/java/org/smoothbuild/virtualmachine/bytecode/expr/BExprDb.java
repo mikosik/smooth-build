@@ -221,10 +221,10 @@ public class BExprDb {
   }
 
   private static void validateMemberEvaluationType(
-      String memberName, BExpr method, BType expectedType) {
-    var methodEvaluationType = method.evaluationType();
-    if (!methodEvaluationType.equals(expectedType)) {
-      throw illegalEvaluationType(memberName, expectedType, methodEvaluationType);
+      String memberName, BExpr member, BType expectedType) {
+    var memberEvaluationType = member.evaluationType();
+    if (!memberEvaluationType.equals(expectedType)) {
+      throw illegalEvaluationType(memberName, expectedType, memberEvaluationType);
     }
   }
 
