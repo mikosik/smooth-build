@@ -71,6 +71,6 @@ public final class BArray extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return "[" + exprsToString(readElements()) + ']';
+    return readElements().map(BExpr::exprToString).toString("[", ",", "]");
   }
 }

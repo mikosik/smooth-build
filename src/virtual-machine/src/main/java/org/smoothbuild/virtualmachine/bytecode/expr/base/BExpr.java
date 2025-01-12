@@ -182,10 +182,6 @@ public abstract sealed class BExpr permits BOperation, BValue {
     return readDataAsHashChain(expectedSize).get(i);
   }
 
-  protected static String exprsToString(List<? extends BExpr> exprs) {
-    return exprs.map(BExpr::exprToStringSafe).toString(",");
-  }
-
   private <T> List<T> castDataChainElements(List<BExpr> elements, Class<T> clazz)
       throws BExprDbException {
     for (int i = 0; i < elements.size(); i++) {

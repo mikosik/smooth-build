@@ -77,6 +77,6 @@ public final class BTuple extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return "{" + exprsToString(elements()) + '}';
+    return elements().map(BExpr::exprToString).toString("{", ",", "}");
   }
 }
