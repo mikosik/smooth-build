@@ -106,6 +106,81 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
+  class _choice {
+    @Test
+    void first_alternative() throws Exception {
+      assertThat(exprDb().newChoice(bChoiceType(), bInt(0), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b"));
+    }
+
+    @Test
+    void second_alternative() throws Exception {
+      assertThat(exprDb().newChoice(bChoiceType(), bInt(1), bInt(7)).hash())
+          .isEqualTo(
+              Hash.decode("c3c3a47dc890634321beb35bc73b8a0cca86e6a43c8e37c98a0dbda734c89593"));
+    }
+
+    @Test
+    void reversed_alternatives() throws Exception {
+      var type = bChoiceType(bIntType(), bStringType());
+      assertThat(exprDb().newChoice(type, bInt(1), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("85de78ee123ee1a99e1fbd63febd0a7207558ec672d6ab22df06599379de8d55"));
+    }
+  }
+
+  @Nested
+  class _choose {
+    @Test
+    void first_alternative() throws Exception {
+      assertThat(exprDb().newChoose(bChoiceType(), bInt(0), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("caec4416a98ec12639f2b26ee748efcb87b40207d1061ad0487eee1a1398b3f5"));
+    }
+
+    @Test
+    void second_alternative() throws Exception {
+      assertThat(exprDb().newChoose(bChoiceType(), bInt(1), bInt(7)).hash())
+          .isEqualTo(
+              Hash.decode("fdc44a7228f7276d2f8a2c45b8e9c89cb79f4384082bcd541dc8e559bbe3ba02"));
+    }
+
+    @Test
+    void reversed_alternatives() throws Exception {
+      var type = bChoiceType(bIntType(), bStringType());
+      assertThat(exprDb().newChoose(type, bInt(1), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("a53c5ac6929698e9f9ab27b1d82d5ba6a04f86bd0f57cc0e01dabed5e873042b"));
+    }
+  }
+
+  @Nested
+  class _switch {
+    @Test
+    void first_alternative() throws Exception {
+      assertThat(bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda(1))).hash())
+          .isEqualTo(
+              Hash.decode("760328d6f9b15735b0cc96955ddd970eb59652abdba390ab697efb5f6fa76c23"));
+    }
+
+    @Test
+    void second_alternative() throws Exception {
+      assertThat(bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda(2))).hash())
+          .isEqualTo(
+              Hash.decode("06945eb66514e8af9048f49967f09e91ce909f660bc363596f0a8349f85c8a72"));
+    }
+
+    @Test
+    void reversed_alternatives() throws Exception {
+      var type = bChoiceType(bIntType(), bStringType());
+      assertThat(exprDb().newChoice(type, bInt(1), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("85de78ee123ee1a99e1fbd63febd0a7207558ec672d6ab22df06599379de8d55"));
+    }
+  }
+
+  @Nested
   class _lambda {
     @Test
     void with_zero_params() throws Exception {

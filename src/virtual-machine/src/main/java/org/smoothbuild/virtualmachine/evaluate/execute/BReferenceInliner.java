@@ -5,6 +5,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -15,6 +16,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 
 public class BReferenceInliner {
@@ -30,7 +32,7 @@ public class BReferenceInliner {
     return rewriteExpr(job.expr(), new Resolver(inlinedEnvironment));
   }
 
-  private List<BExpr> rewriteExprs(Resolver resolver, List<BExpr> elements)
+  private List<BExpr> rewriteExprs(List<BExpr> elements, Resolver resolver)
       throws BytecodeException {
     return elements.map(e -> rewriteExpr(e, resolver));
   }
@@ -39,6 +41,7 @@ public class BReferenceInliner {
     return switch (expr) {
       case BCall call -> rewriteCall(call, resolver);
       case BCombine combine -> rewriteCombine(combine, resolver);
+      case BChoose choose -> rewriteChoose(choose, resolver);
       case BIf if_ -> rewriteIf(if_, resolver);
       case BInvoke invoke -> rewriteInvoke(invoke, resolver);
       case BLambda lambda -> rewriteLambda(lambda, resolver);
@@ -47,6 +50,7 @@ public class BReferenceInliner {
       case BPick pick -> rewritePick(pick, resolver);
       case BReference reference -> rewriteReference(reference, resolver);
       case BSelect select -> rewriteSelect(select, resolver);
+      case BSwitch switch_ -> rewriteSwitch(switch_, resolver);
       case BValue value -> value;
     };
   }
@@ -64,13 +68,39 @@ public class BReferenceInliner {
     }
   }
 
+  private BSwitch rewriteSwitch(BSwitch switch_, Resolver resolver) throws BytecodeException {
+    var subExprs = switch_.subExprs();
+    var choice = subExprs.choice();
+    var handlers = subExprs.handlers();
+    var rewrittenChoice = rewriteExpr(choice, resolver);
+    var rewrittenHandlers = rewriteCombine(handlers, resolver);
+    if (choice.equals(rewrittenChoice) && handlers.equals(rewrittenHandlers)) {
+      return switch_;
+    } else {
+      return bytecodeFactory.switch_(rewrittenChoice, rewrittenHandlers);
+    }
+  }
+
   private BCombine rewriteCombine(BCombine combine, Resolver resolver) throws BytecodeException {
     var items = combine.subExprs().items();
-    var rewrittenItems = rewriteExprs(resolver, items);
+    var rewrittenItems = rewriteExprs(items, resolver);
     if (items.equals(rewrittenItems)) {
       return combine;
     } else {
       return bytecodeFactory.combine(rewrittenItems);
+    }
+  }
+
+  private BChoose rewriteChoose(BChoose choose, Resolver resolver) throws BytecodeException {
+    var subExprs = choose.subExprs();
+    var index = subExprs.index();
+    var chosen = subExprs.chosen();
+    // Only chosen has to be rewritten as index is BValue
+    var rewrittenChosen = rewriteExpr(chosen, resolver);
+    if (rewrittenChosen.equals(chosen)) {
+      return choose;
+    } else {
+      return bytecodeFactory.choose(choose.evaluationType(), index, rewrittenChosen);
     }
   }
 
@@ -139,7 +169,7 @@ public class BReferenceInliner {
 
   private BExpr rewriteOrder(BOrder order, Resolver resolver) throws BytecodeException {
     var elements = order.elements();
-    var rewrittenElements = rewriteExprs(resolver, elements);
+    var rewrittenElements = rewriteExprs(elements, resolver);
     if (elements.equals(rewrittenElements)) {
       return order;
     } else {

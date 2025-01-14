@@ -39,7 +39,7 @@ public class BKindStableHashTest extends VmTestContext {
             t.bStringType(), "c942a06c127c2c18022677e888020afb174208d299354f3ecfedb124a1f3fa45"),
         arguments(
             t.bChoiceType(t.bBlobType()),
-            "5dd0e3dcfc99ddad8446c6ee80bd8050a998472e69a48fee3142e99880c4b75a"),
+            "897922f43dd0600cb3af0599fbe1fae6d513be06813bb011b59681496a2b216e"),
         arguments(
             t.bTupleType(t.bBlobType()),
             "e6831749c04819dc01d5e7ae2c9c4e85eb54fcf3a2866270e679c908e9529efa"),

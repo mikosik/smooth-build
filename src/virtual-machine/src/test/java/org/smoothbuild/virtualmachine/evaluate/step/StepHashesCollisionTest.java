@@ -16,10 +16,10 @@ public class StepHashesCollisionTest extends VmTestContext {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 
+    addHash(list, set, new ChooseStep(bChoose(), trace()));
     addHash(list, set, new CombineStep(bCombine(), trace()));
     var invoke = bInvoke(bIntType(), bMethodTuple(bBlob(1), bString("1")), bBool(true), bTuple());
-    var trace = trace();
-    addHash(list, set, new InvokeStep(invoke, trace));
+    addHash(list, set, new InvokeStep(invoke, trace()));
     addHash(list, set, new OrderStep(bOrder(bIntType()), trace()));
     addHash(list, set, new OrderStep(bOrder(bBlobType()), trace()));
     addHash(list, set, new PickStep(bPick(), trace()));

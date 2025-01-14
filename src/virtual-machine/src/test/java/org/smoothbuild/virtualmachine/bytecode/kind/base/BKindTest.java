@@ -67,6 +67,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.string(), "String"),
         args(f -> f.choice(f.blob(), f.int_()), "{Blob|Int}"),
+        args(f -> f.choose(f.choice(f.blob(), f.int_())), "CHOOSE"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
@@ -89,6 +90,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.order(f.array(f.string())), "ORDER"),
         args(f -> f.pick(f.int_()), "PICK"),
         args(f -> f.select(f.int_()), "SELECT"),
+        args(f -> f.switch_(f.int_()), "SWITCH"),
         args(f -> f.reference(f.int_()), "REFERENCE"));
   }
 
@@ -163,15 +165,15 @@ public class BKindTest extends VmTestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("tuple_alternatives")
-    public void tuple_alternatives(
+    @MethodSource("choice_alternatives")
+    public void choice_alternatives(
         Function1<BKindDb, BChoiceType, BytecodeException> factoryCall,
         Function1<BKindDb, List<BType>, BytecodeException> expected)
         throws Exception {
       assertThat(execute(factoryCall).alternatives()).isEqualTo(execute(expected));
     }
 
-    public static java.util.List<Arguments> tuple_alternatives() {
+    public static java.util.List<Arguments> choice_alternatives() {
       return asList(
           args(f -> f.choice(), f -> list()),
           args(f -> f.choice(f.string()), f -> list(f.string())),

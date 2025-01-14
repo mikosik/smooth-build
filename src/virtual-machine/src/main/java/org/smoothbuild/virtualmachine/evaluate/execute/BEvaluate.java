@@ -32,6 +32,8 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -43,10 +45,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
+import org.smoothbuild.virtualmachine.evaluate.step.ChooseStep;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
@@ -105,16 +110,18 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     Promise<Maybe<BValue>> doScheduleJob(Job job) throws BytecodeException {
       return switch (job.expr()) {
         case BCall call -> scheduleCall(job, call);
+        case BChoose choose -> scheduleOperation(job, choose, ChooseStep::new);
         case BCombine combine -> scheduleOperation(job, combine, CombineStep::new);
         case BIf if_ -> scheduleIf(job, if_);
-        case BMap map -> scheduleMap(job, map);
+        case BInvoke invoke -> scheduleOperation(job, invoke, InvokeStep::new);
         case BLambda lambda -> scheduleInlineTask(job);
-        case BValue value -> promise(some(value));
+        case BMap map -> scheduleMap(job, map);
         case BOrder order -> scheduleOperation(job, order, OrderStep::new);
         case BPick pick -> scheduleOperation(job, pick, PickStep::new);
         case BReference reference -> scheduleReference(job, reference);
         case BSelect select -> scheduleOperation(job, select, SelectStep::new);
-        case BInvoke bInvoke -> scheduleOperation(job, bInvoke, InvokeStep::new);
+        case BSwitch switch_ -> scheduleSwitch(job, switch_);
+        case BValue value -> promise(some(value));
       };
     }
 
@@ -280,6 +287,30 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         }
       };
       return scheduler.submit(inlineTask);
+    }
+
+    private Promise<Maybe<BValue>> scheduleSwitch(Job switchJob, BSwitch switch_)
+        throws BytecodeException {
+      var subExprs = switch_.subExprs();
+      var choicePromise = scheduleNewJob(subExprs.choice(), switchJob);
+      var schedulingTask = newSwitchSchedulingTask(switchJob, subExprs);
+      return scheduler.submit(schedulingTask, choicePromise);
+    }
+
+    private Task1<BValue, BValue> newSwitchSchedulingTask(Job switchJob, BSubExprs subExprs) {
+      return (choiceValue) -> {
+        var label = VM_LABEL.append(":scheduleChoice");
+        try {
+          var nodes = ((BChoice) choiceValue).nodes();
+          var index = nodes.index().toJavaBigInteger();
+          var handler = subExprs.handlers().items().get(index.intValue());
+          var call = newCallB(handler, nodes.chosen());
+          var result = scheduleNewJob(call, switchJob);
+          return successOutput(result, label, switchJob.trace());
+        } catch (BytecodeException e) {
+          return failedSchedulingOutput(label, switchJob.trace(), e);
+        }
+      };
     }
 
     // helpers

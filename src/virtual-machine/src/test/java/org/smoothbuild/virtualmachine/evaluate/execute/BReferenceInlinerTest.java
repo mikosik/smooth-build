@@ -33,6 +33,16 @@ public class BReferenceInlinerTest extends VmTestContext {
     }
 
     @Test
+    void choice() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bChoice());
+    }
+
+    @Test
+    void choose() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(r -> bChoose());
+    }
+
+    @Test
     void order() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bOrder(bInt()));
     }
@@ -45,6 +55,12 @@ public class BReferenceInlinerTest extends VmTestContext {
     @Test
     void select() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bSelect(bCombine(bInt()), bInt(0)));
+    }
+
+    @Test
+    void switch_() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(
+          r -> bSwitch(bChoice(), bCombine(bs2iLambda(), bi2iLambda())));
     }
 
     // values
@@ -139,6 +155,14 @@ public class BReferenceInlinerTest extends VmTestContext {
     }
 
     @Test
+    void choose() throws Exception {
+      assertReferenceInliningReplacesReference(r -> {
+        var choiceType = bChoiceType(bStringType(), bIntType());
+        return bChoose(choiceType, 1, r);
+      });
+    }
+
+    @Test
     void combine() throws Exception {
       assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bCombine);
     }
@@ -216,6 +240,25 @@ public class BReferenceInlinerTest extends VmTestContext {
     void select_selectable() throws Exception {
       assertReferenceInliningReplacesReference(r -> bSelect(bCombine(r), bInt(0)));
     }
+
+    @Test
+    void switch_choice() throws Exception {
+      assertReferenceInliningReplacesReference(r -> {
+        var type = bChoiceType(bStringType(), bIntType());
+        var choice = bChoose(type, 1, r);
+        var handlers = bCombine(bs2iLambda(), bi2iLambda());
+        return bSwitch(choice, handlers);
+      });
+    }
+
+    @Test
+    void switch_handlers() throws Exception {
+      assertReferenceInliningReplacesReference(1, bInt(1), r -> {
+        var choice = bChoice();
+        var handlers = bCombine(bLambda(list(bStringType()), r), bLambda(list(bIntType()), r));
+        return bSwitch(choice, handlers);
+      });
+    }
   }
 
   @Test
@@ -255,7 +298,8 @@ public class BReferenceInlinerTest extends VmTestContext {
     BExpr expr = factory.apply(bReference(referenceEvaluationType, referencedIndex));
     BExpr expected = factory.apply(expectedReplacement);
     var job = job(expr, environment);
-    assertThat(bReferenceInliner().inline(job)).isEqualTo(expected);
+    var inlined = bReferenceInliner().inline(job);
+    assertThat(inlined).isEqualTo(expected);
   }
 
   private void assertReferenceInliningDoesNotChangeExpression(

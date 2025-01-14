@@ -17,7 +17,9 @@ public enum KindId {
   IF,
   REFERENCE,
   MAP,
+  CHOOSE,
   CHOICE,
+  SWITCH,
   ;
 
   public byte byteMarker() {

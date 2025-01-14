@@ -38,16 +38,16 @@ public final class BChoice extends BValue {
     var alternatives = type().alternatives();
     int size = alternatives.size();
     if (i < 0 || size <= i) {
-      throw new ChoiceHasIndexOutOfBoundException(hash(), kind(), i, size);
+      throw new ChoiceHasIndexOutOfBoundException(hash(), type(), i, size);
     }
 
     var expectedExprType = alternatives.get(i);
-    var expr = readMemberFromHashChain(hashes, 1);
-    var itemType = expr.evaluationType();
+    var value = readAndCastMemberFromHashChain(hashes, 1, "chosen", BValue.class);
+    var itemType = value.evaluationType();
     if (!itemType.equals(expectedExprType)) {
-      throw new NodeHasWrongTypeException(hash(), kind(), "expr", expectedExprType, itemType);
+      throw new NodeHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
     }
-    return new BSubExprs(index, expr);
+    return new BSubExprs(index, value);
   }
 
   @Override
@@ -55,10 +55,10 @@ public final class BChoice extends BValue {
     return nodes().toList().map(BExpr::exprToString).toString("{|", "=>", "|}");
   }
 
-  public static record BSubExprs(BInt index, BExpr value) implements BExprs {
+  public static record BSubExprs(BInt index, BValue chosen) implements BExprs {
     @Override
     public List<BExpr> toList() {
-      return list(index, value);
+      return list(index, chosen);
     }
   }
 }

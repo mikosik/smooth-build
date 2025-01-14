@@ -24,6 +24,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -37,12 +39,14 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
@@ -99,6 +103,14 @@ public class BytecodeFactory {
     return exprDb.newCall(lambda, arguments);
   }
 
+  public BChoice choice(BChoiceType type, BInt index, BValue chosen) throws BytecodeException {
+    return exprDb.newChoice(type, index, chosen);
+  }
+
+  public BChoose choose(BChoiceType type, BInt index, BExpr chosen) throws BytecodeException {
+    return exprDb.newChoose(type, index, chosen);
+  }
+
   public BCombine combine(List<BExpr> items) throws BytecodeException {
     return exprDb.newCombine(items);
   }
@@ -147,6 +159,10 @@ public class BytecodeFactory {
 
   public BString string(String string) throws BytecodeException {
     return exprDb.newString(string);
+  }
+
+  public BSwitch switch_(BExpr choice, BCombine handlers) throws BytecodeException {
+    return exprDb.newSwitch(choice, handlers);
   }
 
   public BTuple tuple(List<BValue> items) throws BytecodeException {
