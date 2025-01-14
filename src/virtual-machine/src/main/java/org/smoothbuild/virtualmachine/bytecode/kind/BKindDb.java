@@ -12,6 +12,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOICE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOOSE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
@@ -39,6 +40,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
@@ -151,7 +153,7 @@ public class BKindDb {
     return tuple(list(items));
   }
 
-  public BTupleType tuple(List<BType> items) throws BKindDbException {
+  public BTupleType tuple(List<? extends BType> items) throws BKindDbException {
     return newTuple(items);
   }
 
@@ -163,6 +165,10 @@ public class BKindDb {
 
   public BCallKind call(BType evaluationType) throws BKindDbException {
     return newOperation(CALL, evaluationType, BCallKind::new);
+  }
+
+  public BChooseKind choose(BType evaluationType) throws BKindDbException {
+    return newOperation(CHOOSE, evaluationType, BChooseKind::new);
   }
 
   public BCombineKind combine(BTupleType evaluationType) throws BKindDbException {
@@ -211,6 +217,7 @@ public class BKindDb {
       case PICK -> readOperationKind(hash, children, id, BType.class, BPickKind::new);
       case REFERENCE -> readOperationKind(hash, children, id, BType.class, BReferenceKind::new);
       case SELECT -> readOperationKind(hash, children, id, BType.class, BSelectKind::new);
+      case CHOOSE -> readOperationKind(hash, children, id, BType.class, BChooseKind::new);
       case TUPLE -> readTupleType(hash, children);
     };
   }
@@ -365,12 +372,12 @@ public class BKindDb {
     return cache(new BChoiceType(rootHash, alternatives));
   }
 
-  private BTupleType newTuple(List<BType> items) throws BKindDbException {
+  private BTupleType newTuple(List<? extends BType> items) throws BKindDbException {
     var hash = writeRootWithElements(TUPLE, items);
     return newTuple(hash, items);
   }
 
-  private BTupleType newTuple(Hash rootHash, List<BType> items) {
+  private BTupleType newTuple(Hash rootHash, List<? extends BType> items) {
     return cache(new BTupleType(rootHash, items));
   }
 
@@ -402,7 +409,8 @@ public class BKindDb {
     return writeRoot(LAMBDA, dataHash);
   }
 
-  private Hash writeRootWithElements(KindId kindId, List<BType> elements) throws BKindDbException {
+  private Hash writeRootWithElements(KindId kindId, List<? extends BType> elements)
+      throws BKindDbException {
     var dataHash = writeChain(elements);
     return writeRoot(kindId, dataHash);
   }

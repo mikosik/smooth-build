@@ -55,6 +55,7 @@ public final class BChoice extends BValue {
     return nodes().toList().map(BExpr::exprToString).toString("{|", "=>", "|}");
   }
 
+  // TODO change BExpr -> BValue
   public static record BSubExprs(BInt index, BExpr value) implements BExprs {
     @Override
     public List<BExpr> toList() {

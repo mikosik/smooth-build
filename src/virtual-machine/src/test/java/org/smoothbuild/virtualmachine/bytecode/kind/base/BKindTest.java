@@ -89,6 +89,7 @@ public class BKindTest extends VmTestContext {
         args(f -> f.order(f.array(f.string())), "ORDER"),
         args(f -> f.pick(f.int_()), "PICK"),
         args(f -> f.select(f.int_()), "SELECT"),
+        args(f -> f.choose(f.int_()), "CHOOSE"),
         args(f -> f.reference(f.int_()), "REFERENCE"));
   }
 

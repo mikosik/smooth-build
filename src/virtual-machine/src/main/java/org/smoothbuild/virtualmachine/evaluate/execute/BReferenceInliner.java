@@ -5,6 +5,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -48,6 +49,7 @@ public class BReferenceInliner {
       case BReference reference -> rewriteReference(reference, resolver);
       case BSelect select -> rewriteSelect(select, resolver);
       case BValue value -> value;
+      case BChoose bChoose -> throw new RuntimeException("implement me");
     };
   }
 

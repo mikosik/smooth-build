@@ -37,6 +37,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -544,6 +546,16 @@ public interface VmTestApi extends CommonTestApi {
     return bytecodeF().bool(value);
   }
 
+  public default BChoice bChoice(BChoiceType type, int index, BValue value)
+      throws BytecodeException {
+    return bChoice(type, bInt(index), value);
+  }
+
+  public default BChoice bChoice(BChoiceType type, BInt index, BValue value)
+      throws BytecodeException {
+    return bytecodeF().choice(type, index, value);
+  }
+
   public default BTuple bFile(Path path) throws IOException {
     return bFile(path, path.toString());
   }
@@ -791,6 +803,10 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BCall bCallWithArguments(BExpr lambda, BExpr arguments) throws BytecodeException {
     return bytecodeF().call(lambda, arguments);
+  }
+
+  public default BChoose bChoose(BExpr choice, BExpr handlers) throws BytecodeException {
+    return bytecodeF().choose(choice, handlers);
   }
 
   public default BCombine bCombine(BExpr... items) throws BytecodeException {

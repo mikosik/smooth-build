@@ -5,6 +5,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 
 public abstract sealed class BOperationKind extends BKind
     permits BCallKind,
+        BChooseKind,
         BCombineKind,
         BIfKind,
         BInvokeKind,

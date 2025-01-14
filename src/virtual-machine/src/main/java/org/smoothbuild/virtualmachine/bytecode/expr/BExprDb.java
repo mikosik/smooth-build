@@ -1,6 +1,8 @@
 package org.smoothbuild.virtualmachine.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
+import static org.smoothbuild.common.base.Strings.q;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainHashedDbException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
@@ -15,6 +17,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -38,6 +42,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
@@ -71,6 +76,16 @@ public class BExprDb {
   public BBool newBool(boolean value) throws BytecodeException {
     var type = kindDb.bool();
     var dataHash = writeBoolean(value);
+    var root = newRoot(type, dataHash);
+    return type.newExpr(root, this);
+  }
+
+  public BChoice newChoice(BChoiceType type, BInt index, BValue value) throws BytecodeException {
+    var dataHash = writeChain(list(index, value));
+    var intIndex = index.toJavaBigInteger().intValue();
+    var alternatives = type.alternatives();
+    checkElementIndex(intIndex, alternatives.size());
+    validateMemberType("value", value, alternatives.get(intIndex));
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
@@ -121,6 +136,61 @@ public class BExprDb {
     validateMemberEvaluationType("arguments", args, lambdaType.params());
     var kind = kindDb.call(lambdaType.result());
     var dataHash = writeChain(lambda.hash(), args.hash());
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
+  }
+
+  public BChoose newChoose(BExpr choice, BExpr handlers) throws BytecodeException {
+    var choiceEvaluationType =
+        validateMemberEvaluationTypeClass("choice", choice, BChoiceType.class);
+    var handlersEvaluationType =
+        validateMemberEvaluationTypeClass("handlers", handlers, BTupleType.class);
+    var handlerTypes = handlersEvaluationType.elements();
+    var handlersSize = handlerTypes.size();
+    var alternatives = choiceEvaluationType.alternatives();
+    var alternativesSize = alternatives.size();
+    // TODO should we disallow empty handlers here
+    // or disallow empty alternatives when creating choice
+    // or allow both and evaluate choose by returning {}?
+    if (handlersSize != alternativesSize) {
+      throw new IllegalArgumentException("`handlers.evaluationType().elements().size()` == "
+          + handlersSize
+          + " must be equal `choice.evaluationType().alternatives().size()` == " + alternativesSize
+          + ".");
+    }
+    BType evaluationType = null;
+    for (int i = 0; i < handlersSize; i++) {
+      if (handlerTypes.get(i) instanceof BLambdaType lambdaType) {
+        var params = lambdaType.params();
+        var expectedParams = kindDb().tuple(alternatives.get(i));
+        if (params.equals(expectedParams)) {
+          if (evaluationType == null) {
+            evaluationType = lambdaType.result();
+          } else if (!evaluationType.equals(lambdaType.result())) {
+            throw new IllegalArgumentException(
+                "`handlers.evaluationType()` have lambdas at index " + (i - 1)
+                    + " and " + i
+                    + " that have different result types: " + evaluationType.q()
+                    + " and " + lambdaType.result().q()
+                    + ".");
+          }
+        } else {
+          var paramsString = q(params.elements().toString("(", ",", ")"));
+          var expectedString = q(expectedParams.elements().toString("(", ",", ")"));
+          throw new IllegalArgumentException(
+              "`handlers.evaluationType()` is tuple with element at index 1 being lambda with parameters "
+                  + paramsString + " but expected "
+                  + expectedString + ".");
+        }
+      } else {
+        throw new IllegalArgumentException(
+            "`alternatives.evaluationType()` is tuple with element at index " + i
+                + " not equal to lambda type");
+      }
+    }
+
+    var kind = kindDb.choose(evaluationType);
+    var dataHash = writeChain(list(choice, handlers));
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
   }
@@ -243,6 +313,14 @@ public class BExprDb {
       String name, String expected, String actual) {
     return new IllegalArgumentException(
         "`%s.evaluationType()` should be `%s` but is `%s`.".formatted(name, expected, actual));
+  }
+
+  private static void validateMemberType(String memberName, BValue member, BType expectedType) {
+    var memberType = member.type();
+    if (!memberType.equals(expectedType)) {
+      throw new IllegalArgumentException("`%s.type()` should be `%s` but is `%s`."
+          .formatted(memberName, expectedType.name(), memberType.name()));
+    }
   }
 
   // generic getter

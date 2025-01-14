@@ -32,6 +32,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -115,6 +116,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         case BReference reference -> scheduleReference(job, reference);
         case BSelect select -> scheduleOperation(job, select, SelectStep::new);
         case BInvoke bInvoke -> scheduleOperation(job, bInvoke, InvokeStep::new);
+        case BChoose bChoose -> throw new RuntimeException("implement me");
       };
     }
 
