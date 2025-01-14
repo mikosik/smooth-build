@@ -37,8 +37,8 @@ public final class BCombine extends BOperation {
   }
 
   public List<BExpr> items() throws BytecodeException {
-    List<BType> expectedTypes = evaluationType().elements();
-    List<BExpr> items = readDataAsExprChain(BExpr.class);
+    var expectedTypes = evaluationType().elements();
+    var items = readDataAsExprChain(BExpr.class);
     if (items.size() != expectedTypes.size()) {
       throw new CombineHasWrongElementsSizeException(hash(), kind(), items.size());
     }

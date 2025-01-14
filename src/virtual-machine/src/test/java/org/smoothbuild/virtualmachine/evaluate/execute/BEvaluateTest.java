@@ -144,6 +144,20 @@ public class BEvaluateTest extends VmTestContext {
 
         assertThat(MEMOIZED).doesNotContain(testName);
       }
+
+      @Test
+      void switch_handler_that_is_not_taken_is_not_evaluated() throws Exception {
+        var testName = "switch_handler_that_is_not_taken_is_not_evaluated";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
+        var lambda = bLambda(list(bStringType()), invoke);
+        var choice = bChoice(bChoiceType(), 1, bInt());
+        var switch_ = bSwitch(choice, bCombine(lambda, bi2sLambda()));
+
+        evaluate(bEvaluate(nativeMethodLoader), switch_);
+
+        assertThat(MEMOIZED).doesNotContain(testName);
+      }
     }
 
     @Nested
@@ -209,6 +223,13 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void bool() throws Exception {
         assertThat(evaluate(bBool(true))).isEqualTo(bBool(true));
+      }
+
+      @Test
+      void choice() throws Exception {
+        var type = bChoiceType(bStringType(), bIntType());
+        var choice = bChoice(type, bInt(0), bString("7"));
+        assertThat(evaluate(choice)).isEqualTo(choice);
       }
 
       @Test
@@ -302,6 +323,23 @@ public class BEvaluateTest extends VmTestContext {
       void combine() throws Exception {
         var combine = bCombine(bInt(7));
         assertThat(evaluate(combine)).isEqualTo(bTuple(bInt(7)));
+      }
+
+      @Test
+      void choose() throws Exception {
+        var type = bChoiceType(bStringType(), bIntType());
+        var choose = bChoose(type, bInt(0), bSelect(bCombine(bString("7")), 0));
+        assertThat(evaluate(choose)).isEqualTo(bChoice(type, 0, bString("7")));
+      }
+
+      @Test
+      void switch_() throws Exception {
+        var type = bChoiceType(bStringType(), bIntType());
+        var choice = bChoice(type, bInt(0), bString("7"));
+        var tupelizeString = bLambda(list(bStringType()), bCombine(bReference(bStringType(), 0)));
+        var intToTuple = bLambda(list(bIntType()), bTuple(bString("x")));
+        var switch_ = bSwitch(choice, bCombine(tupelizeString, intToTuple));
+        assertThat(evaluate(switch_)).isEqualTo(bTuple(bString("7")));
       }
 
       @Test

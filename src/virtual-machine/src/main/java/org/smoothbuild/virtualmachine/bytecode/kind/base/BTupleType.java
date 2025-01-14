@@ -13,9 +13,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
  * This class is immutable.
  */
 public final class BTupleType extends BType {
-  private final List<BType> elements;
+  private final List<? extends BType> elements;
 
-  public BTupleType(Hash hash, List<BType> elements) {
+  public BTupleType(Hash hash, List<? extends BType> elements) {
     super(hash, tupleTypeName(elements), BTuple.class);
     this.elements = elements;
   }
@@ -30,7 +30,7 @@ public final class BTupleType extends BType {
     return elements().size();
   }
 
-  public List<BType> elements() {
+  public List<? extends BType> elements() {
     return elements;
   }
 }

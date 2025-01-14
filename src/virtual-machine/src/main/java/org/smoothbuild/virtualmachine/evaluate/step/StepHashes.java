@@ -9,6 +9,7 @@ public class StepHashes {
   public static Hash stepHash(Step step) {
     return switch (step) {
       case CombineStep combineStep -> combineHash();
+      case ChooseStep chooseStep -> chooseHash();
       case InvokeStep invokeStep -> invokeHash();
       case OrderStep orderStep -> orderHash(orderStep.evaluationType());
       case PickStep pickStep -> pickHash();
@@ -34,6 +35,10 @@ public class StepHashes {
 
   private static Hash selectHash() {
     return hash(4);
+  }
+
+  private static Hash chooseHash() {
+    return hash(5);
   }
 
   private static Hash hash(int id, Hash hash) {

@@ -37,6 +37,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -50,6 +52,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BPick;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
@@ -58,6 +61,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BBlobType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BBoolType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
@@ -69,6 +73,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BPickKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BReferenceKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BSelectKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BStringType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BSwitchKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
@@ -329,7 +334,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BChoiceType bChoiceType() throws BytecodeException {
-    return bChoiceType(bBlobType(), bStringType());
+    return bChoiceType(bStringType(), bIntType());
   }
 
   public default BChoiceType bChoiceType(BType... alternatives) throws BytecodeException {
@@ -414,6 +419,14 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BCallKind bCallKind(BType evaluationType) throws BytecodeException {
     return kindDb().call(evaluationType);
+  }
+
+  public default BChooseKind bChooseKind(BChoiceType evaluationType) throws BytecodeException {
+    return kindDb().choose(evaluationType);
+  }
+
+  public default BSwitchKind bSwitchKind(BType evaluationType) throws BytecodeException {
+    return kindDb().switch_(evaluationType);
   }
 
   public default BCombineKind bCombineKind(BType... itemTypes) throws BytecodeException {
@@ -544,6 +557,36 @@ public interface VmTestApi extends CommonTestApi {
     return bytecodeF().bool(value);
   }
 
+  public default BChoice bChoice() throws BytecodeException {
+    var type = bChoiceType(bStringType(), bIntType());
+    return bChoice(type, bInt(0), bString("7"));
+  }
+
+  public default BChoice bChoice(BChoiceType type, int index, BValue chosen)
+      throws BytecodeException {
+    return bChoice(type, bInt(index), chosen);
+  }
+
+  public default BChoice bChoice(BChoiceType type, BInt index, BValue chosen)
+      throws BytecodeException {
+    return bytecodeF().choice(type, index, chosen);
+  }
+
+  public default BChoose bChoose() throws BytecodeException {
+    var type = bChoiceType(bStringType(), bIntType());
+    return bChoose(type, bInt(0), bString("7"));
+  }
+
+  public default BChoose bChoose(BChoiceType type, int index, BExpr chosen)
+      throws BytecodeException {
+    return bChoose(type, bInt(index), chosen);
+  }
+
+  public default BChoose bChoose(BChoiceType type, BInt index, BExpr chosen)
+      throws BytecodeException {
+    return bytecodeF().choose(type, index, chosen);
+  }
+
   public default BTuple bFile(Path path) throws IOException {
     return bFile(path, path.toString());
   }
@@ -592,6 +635,22 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BLambda bStringIdLambda() throws BytecodeException {
     return bLambda(list(bStringType()), bReference(bStringType(), 0));
+  }
+
+  public default BLambda bs2iLambda() throws BytecodeException {
+    return bLambda(list(bStringType()), bInt(7));
+  }
+
+  public default BLambda bi2sLambda() throws BytecodeException {
+    return bLambda(list(bIntType()), bString("a"));
+  }
+
+  public default BLambda bi2iLambda() throws BytecodeException {
+    return bi2iLambda(7);
+  }
+
+  public default BLambda bi2iLambda(int value) throws BytecodeException {
+    return bLambda(list(bIntType()), bInt(value));
   }
 
   public default BLambda bReturnAbcLambda() throws BytecodeException {
@@ -791,6 +850,10 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BCall bCallWithArguments(BExpr lambda, BExpr arguments) throws BytecodeException {
     return bytecodeF().call(lambda, arguments);
+  }
+
+  public default BSwitch bSwitch(BExpr choice, BCombine handlers) throws BytecodeException {
+    return bytecodeF().switch_(choice, handlers);
   }
 
   public default BCombine bCombine(BExpr... items) throws BytecodeException {

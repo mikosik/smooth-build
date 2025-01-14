@@ -3,8 +3,8 @@ package org.smoothbuild.virtualmachine.bytecode.expr.exc;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 
-public class ChoiceHasIndexOutOfBoundException extends DecodeExprException {
-  public ChoiceHasIndexOutOfBoundException(Hash hash, BChoiceType type, int index, int size) {
+public class ChooseHasIndexOutOfBoundException extends DecodeExprException {
+  public ChooseHasIndexOutOfBoundException(Hash hash, BChoiceType type, int index, int size) {
     super(buildMessage(hash, type, index, size));
   }
 

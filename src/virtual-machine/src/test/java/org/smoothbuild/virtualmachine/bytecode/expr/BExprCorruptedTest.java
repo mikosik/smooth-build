@@ -31,6 +31,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBool;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
@@ -44,8 +46,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BReference;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.ChoiceHasIndexOutOfBoundException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.ChooseHasIndexOutOfBoundException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.CombineHasWrongElementsSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
@@ -413,6 +418,333 @@ public class BExprCorruptedTest extends VmTestContext {
   }
 
   @Nested
+  class _choice {
+    @Test
+    void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save Choice
+       * in HashedDb.
+       */
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(0);
+      var chosen = bString("abc");
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(choiceType), dataHash);
+      assertThat(((BChoice) exprDb().get(hash)).nodes())
+          .isEqualTo(new BChoice.BSubExprs(index, chosen));
+    }
+
+    @Test
+    void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(bChoiceType(bIntType()));
+    }
+
+    @Test
+    void root_with_two_data_hashes() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(0);
+      var chosen = bString("abc");
+      var dataHash = hash(hash(index), hash(chosen));
+      obj_root_with_two_data_hashes(
+          choiceType, dataHash, (Hash hash) -> ((BChoice) exprDb().get(hash)).nodes());
+    }
+
+    @Test
+    void root_with_data_hash_pointing_nowhere() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          choiceType, (Hash hash) -> ((BChoice) exprDb().get(hash)).nodes());
+    }
+
+    @Test
+    void data_is_chain_with_one_element() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(0);
+      var dataHash = hash(hash(index));
+      var hash = hash(hash(choiceType), dataHash);
+      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+          .throwsException(new NodeChainSizeIsWrongException(hash, bChoiceType(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    void data_is_chain_with_three_elements() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(0);
+      var chosen = bString("abc");
+      var dataHash = hash(hash(index), hash(chosen), hash(chosen));
+      var hash = hash(hash(choiceType), dataHash);
+      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+          .throwsException(new NodeChainSizeIsWrongException(hash, bChoiceType(), DATA_PATH, 2, 3));
+    }
+
+    @Test
+    void index_is_lower_than_zero() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(-1);
+      var chosen = bString("abc");
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(choiceType), dataHash);
+      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+          .throwsException(new ChoiceHasIndexOutOfBoundException(hash, choiceType, -1, 2));
+    }
+
+    @Test
+    void index_is_equal_to_choice_size() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(choiceType.size());
+      var chosen = bString("abc");
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(choiceType), dataHash);
+      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+          .throwsException(new ChoiceHasIndexOutOfBoundException(hash, choiceType, 2, 2));
+    }
+
+    @Test
+    void value_is_not_value() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(0);
+      var chosen = bReference(bStringType(), 0);
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(choiceType), dataHash);
+      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+          .throwsException(new MemberHasWrongTypeException(
+              hash, choiceType, "chosen", BValue.class, BReference.class));
+    }
+
+    @Test
+    void value_has_wrong_type() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var index = bInt(0);
+      var chosen = bInt(7);
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(choiceType), dataHash);
+      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+          .throwsException(
+              new NodeHasWrongTypeException(hash, choiceType, "chosen", bStringType(), bIntType()));
+    }
+  }
+
+  @Nested
+  class _choose {
+    @Test
+    void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save Choose
+       * in HashedDb.
+       */
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(0);
+      var chosen = bSelect(bCombine(bString("abc")), 0);
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(chooseKind), dataHash);
+      assertThat(((BChoose) exprDb().get(hash)).subExprs())
+          .isEqualTo(new BChoose.BSubExprs(index, chosen));
+    }
+
+    @Test
+    void root_without_data_hash() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      obj_root_without_data_hash(chooseKind);
+    }
+
+    @Test
+    void root_with_two_data_hashes() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(0);
+      var chosen = bSelect(bCombine(bString("abc")), 0);
+      var dataHash = hash(hash(index), hash(chosen));
+      obj_root_with_two_data_hashes(
+          chooseKind, dataHash, (Hash hash) -> ((BChoose) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    void root_with_data_hash_pointing_nowhere() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          chooseKind, (Hash hash) -> ((BChoose) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    void data_is_chain_with_one_element() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(0);
+      var dataHash = hash(hash(index));
+      var hash = hash(hash(chooseKind), dataHash);
+      assertCall(() -> ((BChoose) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, chooseKind, DATA_PATH, 2, 1));
+    }
+
+    @Test
+    void data_is_chain_with_three_elements() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(0);
+      var chosen = bSelect(bCombine(bString("abc")), 0);
+      var dataHash = hash(hash(index), hash(chosen), hash(chosen));
+      var hash = hash(hash(chooseKind), dataHash);
+      assertCall(() -> ((BChoose) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, chooseKind, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    void index_is_lower_than_zero() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(-1);
+      var chosen = bSelect(bCombine(bString("abc")), 0);
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(chooseKind), dataHash);
+      assertCall(() -> ((BChoose) exprDb().get(hash)).subExprs())
+          .throwsException(new ChooseHasIndexOutOfBoundException(hash, choiceType, -1, 2));
+    }
+
+    @Test
+    void index_is_equal_to_choice_size() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(choiceType.size());
+      var chosen = bSelect(bCombine(bString("abc")), 0);
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(chooseKind), dataHash);
+      assertCall(() -> ((BChoose) exprDb().get(hash)).subExprs())
+          .throwsException(new ChooseHasIndexOutOfBoundException(hash, choiceType, 2, 2));
+    }
+
+    @Test
+    void chosen_has_wrong_evaluation_type() throws Exception {
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var chooseKind = bChooseKind(choiceType);
+      var index = bInt(0);
+      var chosen = bSelect(bCombine(bInt()), 0);
+      var dataHash = hash(hash(index), hash(chosen));
+      var hash = hash(hash(chooseKind), dataHash);
+      assertCall(() -> ((BChoose) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, chooseKind, "chosen", bStringType(), bIntType()));
+    }
+  }
+
+  @Nested
+  class _switch {
+    @Test
+    void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save Switch
+       * in HashedDb.
+       */
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var handlers = bCombine(bs2iLambda(), bi2iLambda());
+      var dataHash = hash(hash(choice), hash(handlers));
+      var hash = hash(hash(switchKind), dataHash);
+      assertThat(((BSwitch) exprDb().get(hash)).subExprs())
+          .isEqualTo(new BSwitch.BSubExprs(choice, handlers));
+    }
+
+    @Test
+    void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(bSwitchKind(bIntType()));
+    }
+
+    @Test
+    void root_with_two_data_hashes() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var handlers = bCombine(bs2iLambda(), bi2iLambda());
+      var dataHash = hash(hash(choice), hash(handlers));
+      obj_root_with_two_data_hashes(
+          switchKind, dataHash, (Hash hash) -> ((BSwitch) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    void root_with_data_hash_pointing_nowhere() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          switchKind, (Hash hash) -> ((BSwitch) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    void data_is_chain_with_one_element() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var dataHash = hash(hash(choice));
+      var hash = hash(hash(switchKind), dataHash);
+      assertCall(() -> ((BSwitch) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, switchKind, DATA_PATH, 2, 1));
+    }
+
+    @Test
+    void data_is_chain_with_three_elements() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var handlers = bCombine(bs2iLambda(), bi2iLambda());
+      var dataHash = hash(hash(choice), hash(handlers), hash(handlers));
+      var hash = hash(hash(switchKind), dataHash);
+
+      assertCall(() -> ((BSwitch) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, switchKind, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    void handlers_size_is_different_than_choice_alternatives() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var handlers = bCombine(bs2iLambda(), bi2iLambda(), bi2iLambda());
+      var dataHash = hash(hash(choice), hash(handlers));
+      var hash = hash(hash(switchKind), dataHash);
+
+      var expected = bTupleType(bs2iLambda().type(), bi2iLambda().type());
+      var actual =
+          bTupleType(bs2iLambda().type(), bi2iLambda().type(), bi2iLambda().type());
+      assertCall(() -> ((BSwitch) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, switchKind, "handlers", expected, actual));
+    }
+
+    @Test
+    void handler_param_type_not_matches_alternative_type() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var handlers = bCombine(bs2iLambda(), bs2iLambda());
+      var dataHash = hash(hash(choice), hash(handlers));
+      var hash = hash(hash(switchKind), dataHash);
+
+      var expected = bTupleType(bs2iLambda().type(), bi2iLambda().type());
+      var actual = bTupleType(bs2iLambda().type(), bs2iLambda().type());
+      assertCall(() -> ((BSwitch) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, switchKind, "handlers", expected, actual));
+    }
+
+    @Test
+    void handler_result_type_not_matches_switch_evaluation_type() throws Exception {
+      var switchKind = bSwitchKind(bIntType());
+      var choiceType = bChoiceType(bStringType(), bIntType());
+      var choice = bChoice(choiceType, 0, bString("abc"));
+      var handlers = bCombine(bs2iLambda(), bi2sLambda());
+      var dataHash = hash(hash(choice), hash(handlers));
+      var hash = hash(hash(switchKind), dataHash);
+
+      var expected = bTupleType(bs2iLambda().type(), bi2iLambda().type());
+      var actual = bTupleType(bs2iLambda().type(), bi2sLambda().type());
+      assertCall(() -> ((BSwitch) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, switchKind, "handlers", expected, actual));
+    }
+  }
+
+  @Nested
   class _combine {
     @Test
     void learning_test() throws Exception {
@@ -687,7 +1019,7 @@ public class BExprCorruptedTest extends VmTestContext {
     @Test
     void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save IF
+       * This test makes sure that other tests in this class use proper scheme to save MAP
        * in HashedDb.
        */
       var array = bArray(bInt(1));

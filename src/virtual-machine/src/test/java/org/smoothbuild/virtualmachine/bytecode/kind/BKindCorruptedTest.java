@@ -9,6 +9,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BLOB;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.BOOL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOICE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOOSE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
@@ -20,6 +21,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.PICK;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.REFERENCE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SELECT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.STRING;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SWITCH;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.TUPLE;
 
 import okio.ByteString;
@@ -35,6 +37,7 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
@@ -506,6 +509,34 @@ public class BKindCorruptedTest extends VmTestContext {
     }
 
     @Nested
+    class _choose {
+      @Test
+      void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save CHOOSE kind in HashedDb.
+         */
+        var hash = hash(hash(CHOOSE.byteMarker()), hash(bChoiceType()));
+        assertThat(hash).isEqualTo(bChooseKind(bChoiceType()).hash());
+      }
+
+      @Nested
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
+          super(CHOOSE, BChoiceType.class);
+        }
+      }
+
+      @Test
+      void with_evaluation_type_not_being_choice_type() throws Exception {
+        var hash = hash(hash(CHOOSE.byteMarker()), hash(bIntType()));
+        assertThatGet(hash)
+            .throwsException(new DecodeKindWrongNodeKindException(
+                hash, CHOOSE, DATA_PATH, BChoiceType.class, BIntType.class));
+      }
+    }
+
+    @Nested
     class _combine {
       @Test
       void learning_test() throws Exception {
@@ -685,6 +716,26 @@ public class BKindCorruptedTest extends VmTestContext {
       class _operation_kind_tests extends AbstractOperationKindTestSuite {
         protected _operation_kind_tests() {
           super(SELECT);
+        }
+      }
+    }
+
+    @Nested
+    class _switch {
+      @Test
+      void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save SWITCH kind in HashedDb.
+         */
+        var hash = hash(hash(SWITCH.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(bSwitchKind(bIntType()).hash());
+      }
+
+      @Nested
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
+          super(SWITCH);
         }
       }
     }

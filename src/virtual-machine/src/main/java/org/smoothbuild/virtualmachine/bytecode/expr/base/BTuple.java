@@ -56,14 +56,14 @@ public final class BTuple extends BValue {
 
   private void validateTuple(BTupleType type, List<BType> elementTypes)
       throws NodeHasWrongTypeException {
-    List<BType> expectedTypes = type.elements();
+    var expectedTypes = type.elements();
     if (expectedTypes.size() != elementTypes.size()) {
       throw new NodeHasWrongTypeException(
           hash(), kind(), DATA_PATH, type, asTupleToString(elementTypes));
     }
     for (int i = 0; i < expectedTypes.size(); i++) {
-      BType expectedType = expectedTypes.get(i);
-      BType itemType = elementTypes.get(i);
+      var expectedType = expectedTypes.get(i);
+      var itemType = elementTypes.get(i);
       if (!itemType.equals(expectedType)) {
         throw new NodeHasWrongTypeException(
             hash(), kind(), dataNodePath(i), type, asTupleToString(elementTypes));
