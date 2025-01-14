@@ -48,7 +48,7 @@ public class BChoiceTest extends VmTestContext {
 
   @Test
   void nodes_contains_object_passed_to_builder() throws Exception {
-    var choice = newChoice();
+    var choice = bChoice();
     assertThat(choice.nodes()).isEqualTo(new BChoice.BSubExprs(bInt(0), bString("7")));
   }
 
@@ -56,7 +56,7 @@ public class BChoiceTest extends VmTestContext {
   class _equals_hash_hashcode extends AbstractBExprTestSuite<BChoice> {
     @Override
     protected List<BChoice> equalExprs() throws BytecodeException {
-      return list(newChoice(), newChoice());
+      return list(bChoice(), bChoice());
     }
 
     @Override
@@ -74,25 +74,19 @@ public class BChoiceTest extends VmTestContext {
 
   @Test
   void choice_can_be_read_by_hash() throws Exception {
-    var choice = newChoice();
+    var choice = bChoice();
     assertThat(exprDbOther().get(choice.hash())).isEqualTo(choice);
   }
 
   @Test
   void choices_read_by_hash_have_equal_nodes() throws Exception {
-    var choice = newChoice();
+    var choice = bChoice();
     var choiceRead = (BChoice) exprDbOther().get(choice.hash());
     assertThat(choiceRead.nodes()).isEqualTo(choice.nodes());
   }
 
   @Test
   void to_string() throws Exception {
-    var choice = newChoice();
-    assertThat(choice.toString()).isEqualTo("{|0=>\"7\"|}@" + choice.hash());
-  }
-
-  private BChoice newChoice() throws BytecodeException {
-    var type = bChoiceType(bStringType(), bBlobType());
-    return exprDb().newChoice(type, bInt(0), bString("7"));
+    assertThat(bChoice().toString()).isEqualTo("{|0=>\"7\"|}@" + bChoice().hash());
   }
 }

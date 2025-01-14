@@ -141,22 +141,26 @@ public class BExprDb {
   }
 
   public BChoose newChoose(BExpr choice, BExpr handlers) throws BytecodeException {
-    var choiceEvaluationType =
-        validateMemberEvaluationTypeClass("choice", choice, BChoiceType.class);
-    var handlersEvaluationType =
-        validateMemberEvaluationTypeClass("handlers", handlers, BTupleType.class);
+    var choiceType = validateMemberEvaluationTypeClass("choice", choice, BChoiceType.class);
+    var handlersType = validateMemberEvaluationTypeClass("handlers", handlers, BTupleType.class);
+    var evaluationType = inferChooseEvaluationType(choiceType, handlersType);
+
+    var kind = kindDb.choose(evaluationType);
+    var dataHash = writeChain(list(choice, handlers));
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
+  }
+
+  private BType inferChooseEvaluationType(
+      BChoiceType choiceEvaluationType, BTupleType handlersEvaluationType) throws BKindDbException {
     var handlerTypes = handlersEvaluationType.elements();
-    var handlersSize = handlerTypes.size();
     var alternatives = choiceEvaluationType.alternatives();
+    var handlersSize = handlerTypes.size();
     var alternativesSize = alternatives.size();
-    // TODO should we disallow empty handlers here
-    // or disallow empty alternatives when creating choice
-    // or allow both and evaluate choose by returning {}?
     if (handlersSize != alternativesSize) {
       throw new IllegalArgumentException("`handlers.evaluationType().elements().size()` == "
-          + handlersSize
-          + " must be equal `choice.evaluationType().alternatives().size()` == " + alternativesSize
-          + ".");
+          + handlersSize + " must be equal `choice.evaluationType().alternatives().size()` == "
+          + alternativesSize + ".");
     }
     BType evaluationType = null;
     for (int i = 0; i < handlersSize; i++) {
@@ -167,32 +171,23 @@ public class BExprDb {
           if (evaluationType == null) {
             evaluationType = lambdaType.result();
           } else if (!evaluationType.equals(lambdaType.result())) {
-            throw new IllegalArgumentException(
-                "`handlers.evaluationType()` have lambdas at index " + (i - 1)
-                    + " and " + i
-                    + " that have different result types: " + evaluationType.q()
-                    + " and " + lambdaType.result().q()
-                    + ".");
+            throw new IllegalArgumentException("`handlers.evaluationType()` have lambdas at index "
+                + (i - 1) + " and " + i + " that have different result types: " + evaluationType.q()
+                + " and " + lambdaType.result().q() + ".");
           }
         } else {
           var paramsString = q(params.elements().toString("(", ",", ")"));
           var expectedString = q(expectedParams.elements().toString("(", ",", ")"));
-          throw new IllegalArgumentException(
-              "`handlers.evaluationType()` is tuple with element at index 1 being lambda with parameters "
-                  + paramsString + " but expected "
-                  + expectedString + ".");
+          throw new IllegalArgumentException("`handlers.evaluationType()` is tuple "
+              + "with element at index 1 being lambda with parameters " + paramsString
+              + " but expected " + expectedString + ".");
         }
       } else {
-        throw new IllegalArgumentException(
-            "`alternatives.evaluationType()` is tuple with element at index " + i
-                + " not equal to lambda type");
+        throw new IllegalArgumentException("`alternatives.evaluationType()` is tuple "
+            + "with element at index " + i + " not equal to lambda type");
       }
     }
-
-    var kind = kindDb.choose(evaluationType);
-    var dataHash = writeChain(list(choice, handlers));
-    var root = newRoot(kind, dataHash);
-    return kind.newExpr(root, this);
+    return evaluationType;
   }
 
   public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {

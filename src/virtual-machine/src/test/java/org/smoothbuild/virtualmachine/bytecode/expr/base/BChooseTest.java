@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect.BSubExprs;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class BChooseTest extends VmTestContext {
@@ -28,7 +28,7 @@ public class BChooseTest extends VmTestContext {
       throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newChoose(choice, bTuple(stringToIntLambda())))
+    assertCall(() -> exprDb().newChoose(choice, bTuple(bs2iLambda())))
         .throwsException(
             new IllegalArgumentException("`handlers.evaluationType().elements().size()` == 1 "
                 + "must be equal `choice.evaluationType().alternatives().size()` == 2."));
@@ -39,7 +39,7 @@ public class BChooseTest extends VmTestContext {
       throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newChoose(choice, bTuple(stringToIntLambda(), bInt(7))))
+    assertCall(() -> exprDb().newChoose(choice, bTuple(bs2iLambda(), bInt(7))))
         .throwsException(
             new IllegalArgumentException(
                 "`alternatives.evaluationType()` is tuple with element at index 1 not equal to lambda type"));
@@ -51,7 +51,7 @@ public class BChooseTest extends VmTestContext {
           throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newChoose(choice, bTuple(stringToIntLambda(), stringToIntLambda())))
+    assertCall(() -> exprDb().newChoose(choice, bTuple(bs2iLambda(), bs2iLambda())))
         .throwsException(
             new IllegalArgumentException(
                 "`handlers.evaluationType()` is tuple with element at index 1 being lambda with parameters `(String)` but expected `(Int)`."));
@@ -63,83 +63,59 @@ public class BChooseTest extends VmTestContext {
           throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newChoose(choice, bTuple(stringToIntLambda(), intToStringLambda())))
+    assertCall(() -> exprDb().newChoose(choice, bTuple(bs2iLambda(), bi2sLambda())))
         .throwsException(new IllegalArgumentException(
             "`handlers.evaluationType()` have lambdas at index 0 and 1 "
                 + "that have different result types: `Int` and `String`."));
   }
 
-  /// TODO continue here
-  ///
   @Test
-  void creating_select_with_too_great_index_causes_exception() throws Exception {
-    var tuple = bAnimal("rabbit", 7);
-    assertCall(() -> bSelect(tuple, bInt(2)).kind())
-        .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
-  }
-
-  @Test
-  void creating_select_with_index_lower_than_zero_causes_exception() throws Exception {
-    var tuple = bAnimal("rabbit", 7);
-    assertCall(() -> bSelect(tuple, bInt(-1)).kind())
-        .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
-  }
-
-  @Test
-  void sub_expressions_contains_tuple_and_index() throws Exception {
-    var selectable = bTuple(bInt(7));
-    var index = bInt(0);
-    assertThat(bSelect(selectable, index).subExprs()).isEqualTo(new BSubExprs(selectable, index));
+  void sub_expressions_contains_choice_and_handlers() throws Exception {
+    var handlers = bTuple(bs2iLambda(), bi2iLambda());
+    var choose = exprDb().newChoose(bChoice(), handlers);
+    assertThat(choose.subExprs()).isEqualTo(new BSubExprs(bChoice(), handlers));
   }
 
   @Nested
-  class _equals_hash_hashcode extends AbstractBExprTestSuite<BSelect> {
+  class _equals_hash_hashcode extends AbstractBExprTestSuite<BChoose> {
     @Override
-    protected List<BSelect> equalExprs() throws BytecodeException {
+    protected List<BChoose> equalExprs() throws BytecodeException {
       return list(
-          bSelect(bTuple(bInt(7), bString("abc")), bInt(0)),
-          bSelect(bTuple(bInt(7), bString("abc")), bInt(0)));
+          bChoose(bChoice(), bTuple(bs2iLambda(), bi2iLambda())),
+          bChoose(bChoice(), bTuple(bs2iLambda(), bi2iLambda())));
     }
 
     @Override
-    protected List<BSelect> nonEqualExprs() throws BytecodeException {
+    protected List<BChoose> nonEqualExprs() throws BytecodeException {
+      var type = bChoiceType(bStringType(), bIntType());
+      var choice1 = exprDb().newChoice(type, bInt(0), bString("7"));
+      var choice2 = exprDb().newChoice(type, bInt(1), bInt(8));
       return list(
-          bSelect(bTuple(bInt(1)), bInt(0)),
-          bSelect(bTuple(bInt(2)), bInt(0)),
-          bSelect(bTuple(bInt(2), bInt(2)), bInt(0)),
-          bSelect(bTuple(bInt(2), bInt(2)), bInt(1)),
-          bSelect(bTuple(bInt(2), bInt(7)), bInt(0)),
-          bSelect(bTuple(bInt(7), bInt(2)), bInt(0)));
+          bChoose(choice1, bTuple(bs2iLambda(), bi2iLambda(11))),
+          bChoose(choice1, bTuple(bs2iLambda(), bi2iLambda(12))),
+          bChoose(choice2, bTuple(bs2iLambda(), bi2iLambda(11)))
+      );
     }
   }
 
   @Test
-  void select_can_be_read_back_by_hash() throws Exception {
-    var tuple = bAnimal("rabbit", 7);
-    var select = bSelect(tuple, bInt(0));
-    assertThat(exprDbOther().get(select.hash())).isEqualTo(select);
+  void choose_can_be_read_back_by_hash() throws Exception {
+    var choose = bChoose(bChoice(), bTuple(bs2iLambda(), bi2iLambda()));
+    assertThat(exprDbOther().get(choose.hash())).isEqualTo(choose);
   }
 
   @Test
-  void select_read_back_by_hash_has_same_sub_expressions() throws Exception {
-    var selectable = bAnimal();
-    var index = bInt(0);
-    var select = bSelect(selectable, index);
-    assertThat(((BSelect) exprDbOther().get(select.hash())).subExprs())
-        .isEqualTo(new BSubExprs(selectable, index));
+  void choose_read_back_by_hash_has_same_sub_expressions() throws Exception {
+    var choice = bChoice();
+    var handlers = bTuple(bs2iLambda(), bi2iLambda());
+    var choose = bChoose(choice, handlers);
+    assertThat(((BChoose) exprDbOther().get(choose.hash())).subExprs())
+        .isEqualTo(new BSubExprs(choice, handlers));
   }
 
   @Test
   void to_string() throws Exception {
-    var select = bSelect(bAnimal(), bInt(0));
-    assertThat(select.toString()).isEqualTo("SELECT:String(???)@" + select.hash());
-  }
-
-  private BLambda stringToIntLambda() throws BytecodeException {
-    return bLambda(list(bStringType()), bInt(7));
-  }
-
-  private BLambda intToStringLambda() throws BytecodeException {
-    return bLambda(list(bIntType()), bString("a"));
+    var choose = bChoose(bChoice(), bTuple(bs2iLambda(), bi2iLambda()));
+    assertThat(choose.toString()).isEqualTo("CHOOSE:Int(???)@" + choose.hash());
   }
 }

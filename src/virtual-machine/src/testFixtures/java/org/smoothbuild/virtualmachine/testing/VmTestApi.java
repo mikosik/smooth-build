@@ -331,7 +331,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BChoiceType bChoiceType() throws BytecodeException {
-    return bChoiceType(bBlobType(), bStringType());
+    return bChoiceType(bStringType(), bIntType());
   }
 
   public default BChoiceType bChoiceType(BType... alternatives) throws BytecodeException {
@@ -546,6 +546,11 @@ public interface VmTestApi extends CommonTestApi {
     return bytecodeF().bool(value);
   }
 
+  public default BChoice bChoice() throws BytecodeException {
+    var type = bChoiceType(bStringType(), bIntType());
+    return exprDb().newChoice(type, bInt(0), bString("7"));
+  }
+
   public default BChoice bChoice(BChoiceType type, int index, BValue value)
       throws BytecodeException {
     return bChoice(type, bInt(index), value);
@@ -604,6 +609,22 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BLambda bStringIdLambda() throws BytecodeException {
     return bLambda(list(bStringType()), bReference(bStringType(), 0));
+  }
+
+  public default BLambda bs2iLambda() throws BytecodeException {
+    return bLambda(list(bStringType()), bInt(7));
+  }
+
+  public default BLambda bi2sLambda() throws BytecodeException {
+    return bLambda(list(bIntType()), bString("a"));
+  }
+
+  public default BLambda bi2iLambda() throws BytecodeException {
+    return bi2iLambda(7);
+  }
+
+  public default BLambda bi2iLambda(int value) throws BytecodeException {
+    return bLambda(list(bIntType()), bInt(value));
   }
 
   public default BLambda bReturnAbcLambda() throws BytecodeException {

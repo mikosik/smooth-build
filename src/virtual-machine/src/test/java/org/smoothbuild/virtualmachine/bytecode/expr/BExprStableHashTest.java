@@ -106,6 +106,56 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
+  class _choice {
+    @Test
+    void first_alternative() throws Exception {
+      assertThat(exprDb().newChoice(bChoiceType(), bInt(0), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("fecba278d81fe1f5acb46b9b90a61baa4db11f6a50181bf2f5399ab9d94dc9e0"));
+    }
+
+    @Test
+    void second_alternative() throws Exception {
+      assertThat(exprDb().newChoice(bChoiceType(), bInt(1), bInt(7)).hash())
+          .isEqualTo(
+              Hash.decode("1f95ac02585e483ec2fc6fb8297d2f3fbda32c8bfcb721a2fac89179a3b2ce65"));
+    }
+
+    @Test
+    void reversed_alternatives() throws Exception {
+      var type = bChoiceType(bIntType(), bStringType());
+      assertThat(exprDb().newChoice(type, bInt(1), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("7bb4814536094fe0a6c27afd9c9bf1580ec9f71625fc62071dd4835928a74ca5"));
+    }
+  }
+
+  @Nested
+  class _choose {
+    @Test
+    void first_alternative() throws Exception {
+      assertThat(bChoose(bChoice(), bTuple(bs2iLambda(), bi2iLambda(1))).hash())
+          .isEqualTo(
+              Hash.decode("36dc83887d2625cc7e3f016a37fcbcc4a1b6d07339bb6de1b500b14e29a354c7"));
+    }
+
+    @Test
+    void second_alternative() throws Exception {
+      assertThat(bChoose(bChoice(), bTuple(bs2iLambda(), bi2iLambda(2))).hash())
+          .isEqualTo(
+              Hash.decode("7886272e7e0f2fade246edb67fcea17b645cc8cce47ed93c211735479dad643e"));
+    }
+
+    @Test
+    void reversed_alternatives() throws Exception {
+      var type = bChoiceType(bIntType(), bStringType());
+      assertThat(exprDb().newChoice(type, bInt(1), bString("7")).hash())
+          .isEqualTo(
+              Hash.decode("7bb4814536094fe0a6c27afd9c9bf1580ec9f71625fc62071dd4835928a74ca5"));
+    }
+  }
+
+  @Nested
   class _lambda {
     @Test
     void with_zero_params() throws Exception {
