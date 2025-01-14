@@ -308,6 +308,33 @@ public class ListTest {
   }
 
   @Nested
+  class _construct {
+    @Test
+    void with_empty_list() {
+      var list = list();
+      var result = list.construct(List::size);
+      assertThat(result).isEqualTo(0);
+    }
+
+    @Test
+    void with_non_empty_list() {
+      var list = list(1, 2, 3);
+      var result = list.construct(List::size);
+      assertThat(result).isEqualTo(3);
+    }
+
+    @Test
+    void exception_from_constructor_is_propagated() {
+      var list = list(1, 2, 3);
+      var exception = new Exception("message");
+      Function1<List<Integer>, Integer, Exception> constructor = l -> {
+        throw exception;
+      };
+      assertCall(() -> list.construct(constructor)).throwsException(exception);
+    }
+  }
+
+  @Nested
   class _stream {
     @Test
     void provides_all_list_elements() {

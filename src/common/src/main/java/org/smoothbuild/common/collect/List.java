@@ -346,6 +346,10 @@ public final class List<E> implements Collection<E> {
     return setOfAll(this);
   }
 
+  public <R, T extends Throwable> R construct(Function1<List<E>, R, T> constructor) throws T {
+    return constructor.apply(this);
+  }
+
   @Override
   public Stream<E> stream() {
     return Arrays.stream(array);
