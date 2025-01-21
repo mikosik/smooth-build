@@ -8,7 +8,7 @@ subprojects {
         format 'misc', {
             target '*.gradle', '.gitattributes', '.gitignore', "*.g4"
             trimTrailingWhitespace()
-            indentWithSpaces()
+            leadingTabsToSpaces()
             endWithNewline()
         }
         antlr4 {
