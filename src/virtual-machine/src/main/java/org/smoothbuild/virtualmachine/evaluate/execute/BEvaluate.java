@@ -142,7 +142,14 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
 
     private Promise<Maybe<BValue>> scheduleCallWithCombineArgs(
         Job callJob, BCall call, BExpr lambdaExpr, BCombine combine) throws BytecodeException {
-      Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
+      var schedulingTask = newCallWithCombineArgsSchedulingTask(callJob, call, combine);
+      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
+      return scheduler.submit(schedulingTask, lambdaPromise);
+    }
+
+    private Task1<BValue, BValue> newCallWithCombineArgsSchedulingTask(
+        Job callJob, BCall call, BCombine combine) {
+      return (lambdaValue) -> {
         var bLambda = (BLambda) lambdaValue;
         try {
           var argJobs = combine.subExprs().items().map(e -> newJob(e, callJob));
@@ -154,12 +161,18 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
         }
       };
-      return scheduler.submit(schedulingTask, scheduleNewJob(lambdaExpr, callJob));
     }
 
     private Promise<Maybe<BValue>> scheduleCallWithTupleArgs(
         Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) throws BytecodeException {
-      Task1<BValue, BValue> schedulingTask = (lambdaValue) -> {
+      var schedulingTask = newCallWithTupleArgsSchedulingTask(callJob, bCall, lambdaExpr, tuple);
+      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
+      return scheduler.submit(schedulingTask, lambdaPromise);
+    }
+
+    private Task1<BValue, BValue> newCallWithTupleArgsSchedulingTask(
+        Job callJob, BCall bCall, BExpr lambdaExpr, BTuple tuple) {
+      return (lambdaValue) -> {
         var bLambda = (BLambda) lambdaValue;
         try {
           var result =
@@ -169,13 +182,23 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
         }
       };
-      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-      return scheduler.submit(schedulingTask, lambdaPromise);
     }
 
     private Promise<Maybe<BValue>> scheduleCallWithExprArgs(
         Job callJob, BCall bCall, BExpr lambdaExpr, BExpr lambdaArgs) throws BytecodeException {
-      Task2<BValue, BValue, BValue> schedulingTask = (lambdaValue, argsValue) -> {
+      var schedulingTask = newCallWithExprArgsSchedulingTask(callJob, bCall, lambdaExpr);
+      /*
+       * Performance can be improved. It just evaluates whole arguments expression
+       * without taking into account whether lambda's body actually uses any argument at all.
+       */
+      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
+      var argsPromise = scheduleNewJob(lambdaArgs, callJob);
+      return scheduler.submit(schedulingTask, lambdaPromise, argsPromise);
+    }
+
+    private Task2<BValue, BValue, BValue> newCallWithExprArgsSchedulingTask(
+        Job callJob, BCall bCall, BExpr lambdaExpr) {
+      return (lambdaValue, argsValue) -> {
         try {
           var bLambda = (BLambda) lambdaValue;
           var argsTuple = (BTuple) argsValue;
@@ -187,13 +210,6 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           return failedSchedulingOutput(SCHEDULE_CALL_LABEL, callJob.trace(), e);
         }
       };
-      /*
-       * Performance can be improved. It just evaluates whole arguments expression
-       * without taking into account whether lambda's body actually uses any argument at all.
-       */
-      var lambdaPromise = scheduleNewJob(lambdaExpr, callJob);
-      var argsPromise = scheduleNewJob(lambdaArgs, callJob);
-      return scheduler.submit(schedulingTask, lambdaPromise, argsPromise);
     }
 
     private Promise<Maybe<BValue>> scheduleCallBodyWithTupleArguments(
@@ -208,7 +224,13 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
 
     private Promise<Maybe<BValue>> scheduleIf(Job ifJob, BIf if_) throws BytecodeException {
       var subExprs = if_.subExprs();
-      Task1<BValue, BValue> schedulingTask = (conditionValue) -> {
+      var schedulingTask = newIfSchedulingTask(ifJob, subExprs);
+      var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
+      return scheduler.submit(schedulingTask, conditionPromise);
+    }
+
+    private Task1<BValue, BValue> newIfSchedulingTask(Job ifJob, BIf.BSubExprs subExprs) {
+      return (conditionValue) -> {
         var label = VM_LABEL.append(":scheduleIf");
         try {
           var condition = ((BBool) conditionValue).toJavaBoolean();
@@ -220,14 +242,18 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           return failedSchedulingOutput(label, ifJob.trace(), e);
         }
       };
-      var conditionPromise = scheduleNewJob(subExprs.condition(), ifJob);
-      return scheduler.submit(schedulingTask, conditionPromise);
     }
 
     private Promise<Maybe<BValue>> scheduleMap(Job mapJob, BMap map) throws BytecodeException {
       var subExprs = map.subExprs();
       var arrayArg = subExprs.array();
-      Task1<BValue, BValue> schedulingTask = (arrayValue) -> {
+      var schedulingTask = newMapSchedulingTask(mapJob, subExprs);
+      var arrayPromise = scheduleNewJob(arrayArg, mapJob);
+      return scheduler.submit(schedulingTask, arrayPromise);
+    }
+
+    private Task1<BValue, BValue> newMapSchedulingTask(Job mapJob, BMap.BSubExprs subExprs) {
+      return (arrayValue) -> {
         var label = VM_LABEL.append(":scheduleMap");
         try {
           var array = ((BArray) arrayValue);
@@ -241,8 +267,6 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           return failedSchedulingOutput(label, mapJob.trace(), e);
         }
       };
-      var arrayPromise = scheduleNewJob(arrayArg, mapJob);
-      return scheduler.submit(schedulingTask, arrayPromise);
     }
 
     private BExpr newCall(BExpr lambdaExpr, BValue value) throws BytecodeException {
@@ -276,7 +300,12 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
     }
 
     private Promise<Maybe<BValue>> scheduleInlineTask(Job job) {
-      Task0<BValue> inlineTask = () -> {
+      var inlineTask = newInlinseSchedulingTask(job);
+      return scheduler.submit(inlineTask);
+    }
+
+    private Task0<BValue> newInlinseSchedulingTask(Job job) {
+      return () -> {
         var label = VM_LABEL.append(":inline");
         try {
           var inlined = (BValue) bReferenceInliner.inline(job);
@@ -286,7 +315,6 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           return failedOutput(label, some(job.trace()), "Vm inline Task failed with exception:", e);
         }
       };
-      return scheduler.submit(inlineTask);
     }
 
     private Promise<Maybe<BValue>> scheduleSwitch(Job switchJob, BSwitch switch_)
