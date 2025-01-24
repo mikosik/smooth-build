@@ -232,7 +232,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         try {
           var array = ((BArray) arrayValue);
           var mapperArg = subExprs.mapper();
-          var calls = array.elements(BValue.class).map(e -> newCallB(mapperArg, e));
+          var calls = array.elements(BValue.class).map(e -> newCall(mapperArg, e));
           var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
           var arrayType = bytecodeFactory.arrayType(mappingLambdaResultType);
           var order = bytecodeFactory.order(arrayType, calls);
@@ -245,7 +245,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       return scheduler.submit(schedulingTask, arrayPromise);
     }
 
-    private BExpr newCallB(BExpr lambdaExpr, BValue value) throws BytecodeException {
+    private BExpr newCall(BExpr lambdaExpr, BValue value) throws BytecodeException {
       return bytecodeFactory.call(lambdaExpr, singleArg(value));
     }
 
@@ -304,7 +304,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           var nodes = ((BChoice) choiceValue).nodes();
           var index = nodes.index().toJavaBigInteger();
           var handler = subExprs.handlers().items().get(index.intValue());
-          var call = newCallB(handler, nodes.chosen());
+          var call = newCall(handler, nodes.chosen());
           var result = scheduleNewJob(call, switchJob);
           return successOutput(result, label, switchJob.trace());
         } catch (BytecodeException e) {
