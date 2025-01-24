@@ -69,7 +69,7 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void learning_test() throws Exception {
         // This test makes sure that it is possible to detect Task creation using a mock.
-        var testName = "learning_test";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
 
@@ -80,7 +80,7 @@ public class BEvaluateTest extends VmTestContext {
 
       @Test
       void no_task_is_executed_for_lambda_arg_that_is_not_used() throws Exception {
-        var testName = "unused_arg_is_not_evaluated";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var lambda = bLambda(list(bStringType()), bInt(7));
@@ -94,7 +94,7 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void no_task_is_executed_for_lambda_arg_that_is_passed_to_lambda_where_it_is_not_used()
           throws Exception {
-        var testName = "arg_passed_to_other_lambda_where_it_is_not_used_is_not_evaluated";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var innerLambda = bLambda(list(bStringType()), bInt(7));
@@ -109,7 +109,7 @@ public class BEvaluateTest extends VmTestContext {
 
       @Test
       void task_for_lambda_arg_that_is_used_twice_is_executed_only_once() throws Exception {
-        var testName = "arg_used_twice_is_executed_only_once";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var type = bStringType();
@@ -123,7 +123,7 @@ public class BEvaluateTest extends VmTestContext {
 
       @Test
       void if_else_is_not_evaluated_when_condition_is_true() throws Exception {
-        var testName = "if_else_is_not_evaluated_when_condition_is_true";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var if_ = bIf(bBool(true), bString("then"), invoke);
@@ -135,7 +135,7 @@ public class BEvaluateTest extends VmTestContext {
 
       @Test
       void if_then_is_not_evaluated_when_condition_is_false() throws Exception {
-        var testName = "if_then_is_not_evaluated_when_condition_is_false";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var if_ = bIf(bBool(false), invoke, bString("else"));
@@ -147,7 +147,7 @@ public class BEvaluateTest extends VmTestContext {
 
       @Test
       void switch_handler_that_is_not_taken_is_not_evaluated() throws Exception {
-        var testName = "switch_handler_that_is_not_taken_is_not_evaluated";
+        var testName = detectEnclosingMethodName();
         var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
         var lambda = bLambda(list(bStringType()), invoke);
@@ -647,7 +647,7 @@ public class BEvaluateTest extends VmTestContext {
   class _parallelism {
     @Test
     void tasks_are_executed_in_parallel() throws Exception {
-      String testName = "tasks_are_executed_in_parallel";
+      var testName = detectEnclosingMethodName();
       var counterA = testName + "1";
       var counterB = testName + "2";
       var countdown = testName + "1";
@@ -663,7 +663,7 @@ public class BEvaluateTest extends VmTestContext {
     @Test
     void execution_waits_and_reuses_computation_with_equal_hash_that_is_being_executed()
         throws Exception {
-      var testName = "execution_waits_and_reuses_computation_with_equal_hash";
+      var testName = detectEnclosingMethodName();
       var counterName = testName + "1";
       COUNTERS.put(counterName, new AtomicInteger());
       var bExpr = bOrder(
@@ -684,7 +684,7 @@ public class BEvaluateTest extends VmTestContext {
     @Test
     public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
         throws Exception {
-      var testName = "waiting_for_computation_with_same_hash_doesnt_block_executor_thread";
+      var testName = detectEnclosingMethodName();
       var counter1 = testName + "1";
       var counter2 = testName + "2";
       var countdown1 = testName + "1";
@@ -830,5 +830,14 @@ public class BEvaluateTest extends VmTestContext {
     var contains = reports.stream().anyMatch(r -> r.logs()
         .anyMatches(l -> l.level() == level && l.message().startsWith(messagePrefix)));
     assertWithMessage(reports.toString()).that(contains).isTrue();
+  }
+
+  private static String detectEnclosingMethodName() {
+    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+    if (stackTrace.length > 2) {
+      return stackTrace[2].getMethodName();
+    } else {
+      throw new RuntimeException("Cannot detect enclosing method name.");
+    }
   }
 }
