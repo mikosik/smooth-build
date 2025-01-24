@@ -69,8 +69,8 @@ public class BEvaluateTest extends VmTestContext {
       @Test
       void learning_test() throws Exception {
         // This test makes sure that it is possible to detect Task creation using a mock.
-        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var testName = "learning_test";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
         var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
 
         evaluate(bEvaluate(nativeMethodLoader), invoke);
@@ -119,6 +119,30 @@ public class BEvaluateTest extends VmTestContext {
         evaluate(bEvaluate(nativeMethodLoader), call);
 
         assertThat(MEMOIZED.stream().filter(x -> x.equals(testName)).toList()).hasSize(1);
+      }
+
+      @Test
+      void if_else_is_not_evaluated_when_condition_is_true() throws Exception {
+        var testName = "if_else_is_not_evaluated_when_condition_is_true";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
+        var if_ = bIf(bBool(true), bString("then"), invoke);
+
+        evaluate(bEvaluate(nativeMethodLoader), if_);
+
+        assertThat(MEMOIZED).doesNotContain(testName);
+      }
+
+      @Test
+      void if_then_is_not_evaluated_when_condition_is_false() throws Exception {
+        var testName = "if_then_is_not_evaluated_when_condition_is_false";
+        var nativeMethodLoader = nativeMethodLoaderThatAlwaysLoadsMemoizeString();
+        var invoke = bInvoke(bStringType(), bMethodTuple(), bTuple(bString(testName)));
+        var if_ = bIf(bBool(false), invoke, bString("else"));
+
+        evaluate(bEvaluate(nativeMethodLoader), if_);
+
+        assertThat(MEMOIZED).doesNotContain(testName);
       }
     }
 
