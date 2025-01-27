@@ -47,9 +47,9 @@ public class BChoiceTest extends VmTestContext {
   }
 
   @Test
-  void nodes_contains_object_passed_to_builder() throws Exception {
+  void members_contains_object_passed_to_builder() throws Exception {
     var choice = bChoice();
-    assertThat(choice.nodes()).isEqualTo(new BChoice.BSubExprs(bInt(0), bString("7")));
+    assertThat(choice.members()).isEqualTo(new BChoice.BSubExprs(bInt(0), bString("7")));
   }
 
   @Nested
@@ -79,10 +79,10 @@ public class BChoiceTest extends VmTestContext {
   }
 
   @Test
-  void choice_read_by_hash_have_equal_nodes() throws Exception {
+  void choice_read_by_hash_have_equal_members() throws Exception {
     var choice = bChoice();
     var choiceRead = (BChoice) exprDbOther().get(choice.hash());
-    assertThat(choiceRead.nodes()).isEqualTo(choice.nodes());
+    assertThat(choiceRead.members()).isEqualTo(choice.members());
   }
 
   @Test

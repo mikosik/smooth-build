@@ -429,7 +429,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bString("abc");
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertThat(((BChoice) exprDb().get(hash)).nodes())
+      assertThat(((BChoice) exprDb().get(hash)).members())
           .isEqualTo(new BChoice.BSubExprs(index, chosen));
     }
 
@@ -445,14 +445,14 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bString("abc");
       var dataHash = hash(hash(index), hash(chosen));
       obj_root_with_two_data_hashes(
-          choiceType, dataHash, (Hash hash) -> ((BChoice) exprDb().get(hash)).nodes());
+          choiceType, dataHash, (Hash hash) -> ((BChoice) exprDb().get(hash)).members());
     }
 
     @Test
     void root_with_data_hash_pointing_nowhere() throws Exception {
       var choiceType = bChoiceType(bStringType(), bIntType());
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          choiceType, (Hash hash) -> ((BChoice) exprDb().get(hash)).nodes());
+          choiceType, (Hash hash) -> ((BChoice) exprDb().get(hash)).members());
     }
 
     @Test
@@ -461,7 +461,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var index = bInt(0);
       var dataHash = hash(hash(index));
       var hash = hash(hash(choiceType), dataHash);
-      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+      assertCall(() -> ((BChoice) exprDb().get(hash)).members())
           .throwsException(new NodeChainSizeIsWrongException(hash, bChoiceType(), DATA_PATH, 2, 1));
     }
 
@@ -472,7 +472,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bString("abc");
       var dataHash = hash(hash(index), hash(chosen), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+      assertCall(() -> ((BChoice) exprDb().get(hash)).members())
           .throwsException(new NodeChainSizeIsWrongException(hash, bChoiceType(), DATA_PATH, 2, 3));
     }
 
@@ -483,7 +483,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bString("abc");
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+      assertCall(() -> ((BChoice) exprDb().get(hash)).members())
           .throwsException(new ChoiceHasIndexOutOfBoundException(hash, choiceType, -1, 2));
     }
 
@@ -494,7 +494,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bString("abc");
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+      assertCall(() -> ((BChoice) exprDb().get(hash)).members())
           .throwsException(new ChoiceHasIndexOutOfBoundException(hash, choiceType, 2, 2));
     }
 
@@ -505,7 +505,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bReference(bStringType(), 0);
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+      assertCall(() -> ((BChoice) exprDb().get(hash)).members())
           .throwsException(new MemberHasWrongTypeException(
               hash, choiceType, "chosen", BValue.class, BReference.class));
     }
@@ -517,7 +517,7 @@ public class BExprCorruptedTest extends VmTestContext {
       var chosen = bInt(7);
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
-      assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
+      assertCall(() -> ((BChoice) exprDb().get(hash)).members())
           .throwsException(new MemberHasWrongTypeException(
               hash, choiceType, "chosen", bStringType(), bIntType()));
     }

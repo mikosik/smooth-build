@@ -329,10 +329,10 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       return (choiceValue) -> {
         var label = VM_LABEL.append(":scheduleChoice");
         try {
-          var nodes = ((BChoice) choiceValue).nodes();
-          var index = nodes.index().toJavaBigInteger();
+          var members = ((BChoice) choiceValue).members();
+          var index = members.index().toJavaBigInteger();
           var handler = subExprs.handlers().items().get(index.intValue());
-          var call = newCall(handler, nodes.chosen());
+          var call = newCall(handler, members.chosen());
           var result = scheduleNewJob(call, switchJob);
           return successOutput(result, label, switchJob.trace());
         } catch (BytecodeException e) {
