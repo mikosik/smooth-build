@@ -21,7 +21,7 @@ public class BTypeNames {
   }
 
   public static String choiceTypeName(List<? extends BType> elementTypes) {
-    return "{" + elementTypes.toString("|") + "}";
+    return "{" + elementTypes.toString("|") + (elementTypes.size() == 1 ? "|}" : "}");
   }
 
   private static String commaSeparatedTypeNames(List<? extends BType> types) {
