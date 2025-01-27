@@ -6,11 +6,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.CombineHasWrongElementsSizeException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
-import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 /**
  * This class is thread-safe.
@@ -37,18 +35,11 @@ public final class BCombine extends BOperation {
   }
 
   public List<BExpr> items() throws BytecodeException {
-    var expectedTypes = evaluationType().elements();
     var items = readDataAsExprChain(BExpr.class);
-    if (items.size() != expectedTypes.size()) {
-      throw new CombineHasWrongElementsSizeException(hash(), kind(), items.size());
-    }
-    for (int i = 0; i < items.size(); i++) {
-      BExpr item = items.get(i);
-      BType type = expectedTypes.get(i);
-      if (!type.equals(item.evaluationType())) {
-        throw new NodeHasWrongTypeException(
-            hash(), kind(), "elements", i, expectedTypes.get(i), items.get(i).evaluationType());
-      }
+    var actualType = kindDb().tuple(items.map(BExpr::evaluationType));
+    if (!actualType.equals(evaluationType())) {
+      throw new MemberHasWrongTypeException(
+          hash(), kind(), "elements", evaluationType(), actualType);
     }
     return items;
   }

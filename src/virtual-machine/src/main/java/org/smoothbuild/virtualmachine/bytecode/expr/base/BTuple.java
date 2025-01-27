@@ -9,9 +9,10 @@ import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
 
 /**
  * This class is thread-safe.
@@ -55,19 +56,10 @@ public final class BTuple extends BValue {
   }
 
   private void validateTuple(BTupleType type, List<BType> elementTypes)
-      throws NodeHasWrongTypeException {
-    var expectedTypes = type.elements();
-    if (expectedTypes.size() != elementTypes.size()) {
-      throw new NodeHasWrongTypeException(
-          hash(), kind(), DATA_PATH, type, asTupleToString(elementTypes));
-    }
-    for (int i = 0; i < expectedTypes.size(); i++) {
-      var expectedType = expectedTypes.get(i);
-      var itemType = elementTypes.get(i);
-      if (!itemType.equals(expectedType)) {
-        throw new NodeHasWrongTypeException(
-            hash(), kind(), dataNodePath(i), type, asTupleToString(elementTypes));
-      }
+      throws BKindDbException, MemberHasWrongTypeException {
+    var actualType = kindDb().tuple(elementTypes);
+    if (!actualType.equals(type)) {
+      throw new MemberHasWrongTypeException(hash(), kind(), "elements", type, actualType);
     }
   }
 

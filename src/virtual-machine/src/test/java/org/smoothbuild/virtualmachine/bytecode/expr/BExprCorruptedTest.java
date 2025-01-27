@@ -51,7 +51,6 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.ChoiceHasIndexOutOfBoundException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.ChooseHasIndexOutOfBoundException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.CombineHasWrongElementsSizeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprKindException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongEvaluationTypeException;
@@ -519,8 +518,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var dataHash = hash(hash(index), hash(chosen));
       var hash = hash(hash(choiceType), dataHash);
       assertCall(() -> ((BChoice) exprDb().get(hash)).nodes())
-          .throwsException(
-              new NodeHasWrongTypeException(hash, choiceType, "chosen", bStringType(), bIntType()));
+          .throwsException(new MemberHasWrongTypeException(
+              hash, choiceType, "chosen", bStringType(), bIntType()));
     }
   }
 
@@ -807,8 +806,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var type = bCombineKind(bIntType(), bStringType());
       var hash = hash(hash(type), hash(hash(item1)));
 
+      var expectedType = bTupleType(bIntType(), bStringType());
+      var actualType = bTupleType(bIntType());
       assertCall(() -> ((BCombine) exprDb().get(hash)).subExprs())
-          .throwsException(new CombineHasWrongElementsSizeException(hash, type, 1));
+          .throwsException(
+              new MemberHasWrongTypeException(hash, type, "elements", expectedType, actualType));
     }
 
     @Test
@@ -818,9 +820,11 @@ public class BExprCorruptedTest extends VmTestContext {
       var type = bCombineKind(bIntType(), bBoolType());
       var hash = hash(hash(type), hash(hash(item1), hash(item2)));
 
+      var expectedType = bTupleType(bIntType(), bBoolType());
+      var actualType = bTupleType(bIntType(), bStringType());
       assertCall(() -> ((BCombine) exprDb().get(hash)).subExprs())
           .throwsException(
-              new NodeHasWrongTypeException(hash, type, "elements", 1, bBoolType(), bStringType()));
+              new MemberHasWrongTypeException(hash, type, "elements", expectedType, actualType));
     }
   }
 
@@ -1320,8 +1324,8 @@ public class BExprCorruptedTest extends VmTestContext {
       var type = bOrderKind(bIntType());
       var hash = hash(hash(type), hash(hash(expr1), hash(expr2)));
       assertCall(() -> ((BOrder) exprDb().get(hash)).subExprs())
-          .throwsException(
-              new NodeHasWrongTypeException(hash, type, "elements[1]", bIntType(), bStringType()));
+          .throwsException(new MemberHasWrongTypeException(
+              hash, type, "elements[1]", bIntType(), bStringType()));
     }
   }
 
@@ -1666,9 +1670,10 @@ public class BExprCorruptedTest extends VmTestContext {
     void with_element_of_wrong_type() throws Exception {
       var hash = hash(hash(bPersonType()), hash(hash(bString("John")), hash(bBool(true))));
       var tuple = (BTuple) exprDb().get(hash);
+      var actualType = bTupleType(bStringType(), bBoolType());
       assertCall(() -> tuple.get(0))
-          .throwsException(new NodeHasWrongTypeException(
-              hash, bPersonType(), DATA_PATH + "[1]", bPersonType(), "`{String,Bool}`"));
+          .throwsException(new MemberHasWrongTypeException(
+              hash, bPersonType(), "elements", bPersonType(), actualType));
     }
 
     @Test
