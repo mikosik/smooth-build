@@ -1,4 +1,4 @@
-package org.smoothbuild.virtualmachine.bytecode.expr;
+package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
@@ -6,7 +6,6 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public abstract class AbstractBExprTestSuite<T extends BExpr> extends VmTestContext {

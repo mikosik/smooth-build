@@ -7,7 +7,6 @@ import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.virtualmachine.bytecode.expr.AbstractBExprTestSuite;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke.BSubExprs;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
