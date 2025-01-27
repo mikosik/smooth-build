@@ -28,7 +28,12 @@ public class BTypeNamesTest extends VmTestContext {
   }
 
   @Test
-  void choice_type_name() throws Exception {
+  void choice_type_name_with_single_alternative() throws Exception {
+    assertThat(choiceTypeName(list(bIntType()))).isEqualTo("{Int|}");
+  }
+
+  @Test
+  void choice_type_name_with_multiple_alternatives() throws Exception {
     assertThat(choiceTypeName(list(bBlobType(), bIntType()))).isEqualTo("{Blob|Int}");
   }
 }
