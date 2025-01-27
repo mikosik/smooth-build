@@ -30,7 +30,7 @@ public final class BChoice extends BValue {
     return (BChoiceType) super.kind();
   }
 
-  public BSubExprs nodes() throws BytecodeException {
+  public BSubExprs members() throws BytecodeException {
     var hashes = readDataAsHashChain(2);
     var index = readAndCastMemberFromHashChain(hashes, 0, "index", BInt.class);
 
@@ -52,7 +52,7 @@ public final class BChoice extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return nodes().toList().map(BExpr::exprToString).toString("{|", "=>", "|}");
+    return members().toList().map(BExpr::exprToString).toString("{|", "=>", "|}");
   }
 
   public static record BSubExprs(BInt index, BValue chosen) implements BExprs {
