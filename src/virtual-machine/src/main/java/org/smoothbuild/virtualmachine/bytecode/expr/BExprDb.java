@@ -103,9 +103,9 @@ public class BExprDb {
     return chooseKind.newExpr(root, this);
   }
 
-  public BLambda newLambda(BLambdaType type, BExpr body) throws BytecodeException {
-    validateMemberEvaluationType("body", body, type.result());
-    var dataHash = body.hash();
+  public BInt newInt(BigInteger value) throws BytecodeException {
+    var type = kindDb.int_();
+    var dataHash = writeBigInteger(value);
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
@@ -121,9 +121,9 @@ public class BExprDb {
     return kind.newExpr(root, this);
   }
 
-  public BInt newInt(BigInteger value) throws BytecodeException {
-    var type = kindDb.int_();
-    var dataHash = writeBigInteger(value);
+  public BLambda newLambda(BLambdaType type, BExpr body) throws BytecodeException {
+    validateMemberEvaluationType("body", body, type.result());
+    var dataHash = body.hash();
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
@@ -151,55 +151,6 @@ public class BExprDb {
     var dataHash = writeChain(lambda.hash(), args.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
-  }
-
-  public BSwitch newSwitch(BExpr choice, BCombine handlers) throws BytecodeException {
-    var choiceType = validateMemberEvaluationTypeClass("choice", choice, BChoiceType.class);
-    var handlersType = validateMemberEvaluationTypeClass("handlers", handlers, BTupleType.class);
-    var evaluationType = inferSwitchEvaluationType(choiceType, handlersType);
-    var kind = kindDb.switch_(evaluationType);
-    var dataHash = writeChain(list(choice, handlers));
-    var root = newRoot(kind, dataHash);
-    return kind.newExpr(root, this);
-  }
-
-  private BType inferSwitchEvaluationType(
-      BChoiceType choiceEvaluationType, BTupleType handlersEvaluationType) throws BKindDbException {
-    var handlerTypes = handlersEvaluationType.elements();
-    var alternatives = choiceEvaluationType.alternatives();
-    var handlersSize = handlerTypes.size();
-    var alternativesSize = alternatives.size();
-    if (handlersSize != alternativesSize) {
-      throw new IllegalArgumentException("`handlers.evaluationType().elements().size()` == "
-          + handlersSize + " must be equal `choice.evaluationType().alternatives().size()` == "
-          + alternativesSize + ".");
-    }
-    BType evaluationType = null;
-    for (int i = 0; i < handlersSize; i++) {
-      if (handlerTypes.get(i) instanceof BLambdaType lambdaType) {
-        var params = lambdaType.params();
-        var expectedParams = kindDb().tuple(alternatives.get(i));
-        if (params.equals(expectedParams)) {
-          if (evaluationType == null) {
-            evaluationType = lambdaType.result();
-          } else if (!evaluationType.equals(lambdaType.result())) {
-            throw new IllegalArgumentException("`handlers.evaluationType()` have lambdas at index "
-                + (i - 1) + " and " + i + " that have different result types: " + evaluationType.q()
-                + " and " + lambdaType.result().q() + ".");
-          }
-        } else {
-          var paramsString = q(params.elements().toString("(", ",", ")"));
-          var expectedString = q(expectedParams.elements().toString("(", ",", ")"));
-          throw new IllegalArgumentException("`handlers.evaluationType()` is tuple "
-              + "with element at index 1 being lambda with parameters " + paramsString
-              + " but expected " + expectedString + ".");
-        }
-      } else {
-        throw new IllegalArgumentException("`alternatives.evaluationType()` is tuple "
-            + "with element at index " + i + " not equal to lambda type");
-      }
-    }
-    return evaluationType;
   }
 
   public BCombine newCombine(List<? extends BExpr> items) throws BytecodeException {
@@ -273,6 +224,55 @@ public class BExprDb {
     var dataHash = writeChain(selectable.hash(), index.hash());
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
+  }
+
+  public BSwitch newSwitch(BExpr choice, BCombine handlers) throws BytecodeException {
+    var choiceType = validateMemberEvaluationTypeClass("choice", choice, BChoiceType.class);
+    var handlersType = validateMemberEvaluationTypeClass("handlers", handlers, BTupleType.class);
+    var evaluationType = inferSwitchEvaluationType(choiceType, handlersType);
+    var kind = kindDb.switch_(evaluationType);
+    var dataHash = writeChain(list(choice, handlers));
+    var root = newRoot(kind, dataHash);
+    return kind.newExpr(root, this);
+  }
+
+  private BType inferSwitchEvaluationType(
+      BChoiceType choiceEvaluationType, BTupleType handlersEvaluationType) throws BKindDbException {
+    var handlerTypes = handlersEvaluationType.elements();
+    var alternatives = choiceEvaluationType.alternatives();
+    var handlersSize = handlerTypes.size();
+    var alternativesSize = alternatives.size();
+    if (handlersSize != alternativesSize) {
+      throw new IllegalArgumentException("`handlers.evaluationType().elements().size()` == "
+          + handlersSize + " must be equal `choice.evaluationType().alternatives().size()` == "
+          + alternativesSize + ".");
+    }
+    BType evaluationType = null;
+    for (int i = 0; i < handlersSize; i++) {
+      if (handlerTypes.get(i) instanceof BLambdaType lambdaType) {
+        var params = lambdaType.params();
+        var expectedParams = kindDb().tuple(alternatives.get(i));
+        if (params.equals(expectedParams)) {
+          if (evaluationType == null) {
+            evaluationType = lambdaType.result();
+          } else if (!evaluationType.equals(lambdaType.result())) {
+            throw new IllegalArgumentException("`handlers.evaluationType()` have lambdas at index "
+                + (i - 1) + " and " + i + " that have different result types: " + evaluationType.q()
+                + " and " + lambdaType.result().q() + ".");
+          }
+        } else {
+          var paramsString = q(params.elements().toString("(", ",", ")"));
+          var expectedString = q(expectedParams.elements().toString("(", ",", ")"));
+          throw new IllegalArgumentException("`handlers.evaluationType()` is tuple "
+              + "with element at index 1 being lambda with parameters " + paramsString
+              + " but expected " + expectedString + ".");
+        }
+      } else {
+        throw new IllegalArgumentException("`alternatives.evaluationType()` is tuple "
+            + "with element at index " + i + " not equal to lambda type");
+      }
+    }
+    return evaluationType;
   }
 
   // validators
