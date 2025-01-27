@@ -8,7 +8,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
 import org.smoothbuild.virtualmachine.bytecode.expr.exc.ChoiceHasIndexOutOfBoundException;
-import org.smoothbuild.virtualmachine.bytecode.expr.exc.NodeHasWrongTypeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.MemberHasWrongTypeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 
 /**
@@ -45,7 +45,7 @@ public final class BChoice extends BValue {
     var value = readAndCastMemberFromHashChain(hashes, 1, "chosen", BValue.class);
     var itemType = value.evaluationType();
     if (!itemType.equals(expectedExprType)) {
-      throw new NodeHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
+      throw new MemberHasWrongTypeException(hash(), kind(), "chosen", expectedExprType, itemType);
     }
     return new BSubExprs(index, value);
   }
