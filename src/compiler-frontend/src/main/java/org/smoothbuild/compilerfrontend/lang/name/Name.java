@@ -27,6 +27,14 @@ public final class Name extends Id {
     return new Name(name);
   }
 
+  public static Name typeVarName(String name) {
+    var errorMessage = findTypeVarNameErrors(name);
+    if (errorMessage != null) {
+      throw new IllegalArgumentException("Illegal type var name. " + errorMessage);
+    }
+    return new Name(name);
+  }
+
   Name(String name) {
     super(name);
   }
@@ -70,6 +78,26 @@ public final class Name extends Id {
     }
     if (isTypeVarName(name)) {
       return "All-uppercase names are reserved for type variables.";
+    }
+    return null;
+  }
+
+  public static Result<Name> parseTypeVarName(String name) {
+    var errorMessage = findTypeVarNameErrors(name);
+    if (errorMessage != null) {
+      return err(errorMessage);
+    }
+
+    return ok(new Name(name));
+  }
+
+  private static String findTypeVarNameErrors(String name) {
+    var errorMessage = findNameErrors(name);
+    if (errorMessage != null) {
+      return errorMessage;
+    }
+    if (!isTypeVarName(name)) {
+      return "Type variable must be UPPERCASE.";
     }
     return null;
   }
