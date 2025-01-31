@@ -14,7 +14,6 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
@@ -25,6 +24,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public class GenerateIds implements Task1<PModule, PModule> {
@@ -53,9 +53,9 @@ public class GenerateIds implements Task1<PModule, PModule> {
           visitType(pFuncType.result());
           pFuncType.params().forEach(this::visitType);
         }
-        case PIdType pIdType -> parseReference(pIdType.nameText())
-            .ifErr(e -> logIllegalTypeReference(pIdType, e))
-            .ifOk(pIdType::setId);
+        case PTypeReference pTypeReference -> parseReference(pTypeReference.nameText())
+            .ifErr(e -> logIllegalTypeReference(pTypeReference, e))
+            .ifOk(pTypeReference::setId);
         case PImplicitType pImplicitType -> {}
       }
     }
@@ -80,9 +80,9 @@ public class GenerateIds implements Task1<PModule, PModule> {
           .ifOk(id -> runWithScopeId(id, () -> super.visitLambda(pLambda)));
     }
 
-    private void logIllegalTypeReference(PIdType id, String e) {
-      logger.log(
-          compileError(id.location(), "Illegal type reference `" + id.nameText() + "`. " + e));
+    private void logIllegalTypeReference(PTypeReference pTypeReference, String e) {
+      var message = "Illegal type reference `" + pTypeReference.nameText() + "`. " + e;
+      logger.log(compileError(pTypeReference.location(), message));
     }
 
     @Override

@@ -42,7 +42,7 @@ public record PScope(
     return switch (type) {
       case PArrayType a -> new SArrayType(translate(a.elemT()));
       case PFuncType f -> new SFuncType(f.params().map(this::translate), translate(f.result()));
-      case PIdType i -> typeWithId(i.id());
+      case PTypeReference i -> typeWithId(i.id());
       case PImplicitType im -> throw new RuntimeException(
           "Internal error: Did not expect implicit type.");
     };
