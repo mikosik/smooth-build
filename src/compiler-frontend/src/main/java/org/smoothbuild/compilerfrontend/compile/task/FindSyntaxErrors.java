@@ -112,7 +112,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
         if (param.defaultValue().isSome()) {
           logger.log(compileError(
               param.location(),
-              "Struct field " + param.id().q()
+              "Struct field " + param.name().q()
                   + " has default value. Only function parameters can have default value."));
         }
       }
