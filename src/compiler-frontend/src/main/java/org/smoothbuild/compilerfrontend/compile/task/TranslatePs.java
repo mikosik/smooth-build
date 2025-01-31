@@ -108,14 +108,14 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
       var schema = pNamedValue.schema();
-      var name = pNamedValue.id();
+      var fqn = pNamedValue.id();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
         var ann = convertAnnotation(pNamedValue.annotation().get());
-        return new SAnnotatedValue(ann, schema, name, location);
+        return new SAnnotatedValue(ann, schema, fqn, location);
       } else if (pNamedValue.body().isSome()) {
         var body = convertExpr(pNamedValue.body().get());
-        return new SNamedExprValue(schema, name, body, location);
+        return new SNamedExprValue(schema, fqn, body, location);
       } else {
         throw new RuntimeException("Internal error: PNamedValue without annotation and body.");
       }
@@ -139,14 +139,14 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
       var schema = pNamedFunc.schema();
-      var name = pNamedFunc.id();
+      var fqn = pNamedFunc.id();
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
         var annotationS = convertAnnotation(pNamedFunc.annotation().get());
-        return new SAnnotatedFunc(annotationS, schema, name, params, loc);
+        return new SAnnotatedFunc(annotationS, schema, fqn, params, loc);
       } else if (pNamedFunc.body().isSome()) {
         var body = convertFuncBody(pNamedFunc.body().get());
-        return new SNamedExprFunc(schema, name, params, body, loc);
+        return new SNamedExprFunc(schema, fqn, params, body, loc);
       } else {
         throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
       }
