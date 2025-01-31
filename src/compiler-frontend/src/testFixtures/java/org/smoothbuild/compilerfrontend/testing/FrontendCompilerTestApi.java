@@ -29,7 +29,6 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
@@ -42,6 +41,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
@@ -795,7 +795,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
-    var pItem = new PItem(new PIdType("Int", location()), name, defaultValue, location());
+    var pItem = new PItem(new PTypeReference("Int", location()), name, defaultValue, location());
     pItem.setName(referenceableName(name));
     return pItem;
   }

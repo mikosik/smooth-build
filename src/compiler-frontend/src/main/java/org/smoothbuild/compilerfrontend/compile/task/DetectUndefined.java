@@ -16,13 +16,13 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 
 /**
  * Detect undefined referenceables and types.
@@ -72,14 +72,17 @@ public class DetectUndefined implements Task1<PModule, PModule> {
       switch (pType) {
         case PArrayType array -> visitType(array.elemT());
         case PFuncType func -> visitFuncType(func);
-        case PIdType pIdType -> visitExplicitType(pIdType);
+        case PTypeReference pTypeReference -> visitExplicitType(pTypeReference);
         case PImplicitType pImplicitType -> {}
       }
     }
 
-    private void visitExplicitType(PIdType pIdType) {
-      if (!isTypeVarName(pIdType.nameText())) {
-        scope.types().find(pIdType.id()).ifErr(e -> log.log(compileError(pIdType.location(), e)));
+    private void visitExplicitType(PTypeReference pTypeReference) {
+      if (!isTypeVarName(pTypeReference.nameText())) {
+        scope
+            .types()
+            .find(pTypeReference.id())
+            .ifErr(e -> log.log(compileError(pTypeReference.location(), e)));
       }
     }
 

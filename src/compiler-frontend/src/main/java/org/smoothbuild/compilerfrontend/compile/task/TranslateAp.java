@@ -50,7 +50,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PIdType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
@@ -67,6 +66,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 
 public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
@@ -330,15 +330,15 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
 
     private PType createType(TypeContext type) {
       return switch (type) {
-        case TypeNameContext name -> createType(name);
+        case TypeNameContext name -> createTypeReference(name);
         case ArrayTypeContext arrayType -> createArrayType(arrayType);
         case FuncTypeContext funcType -> createFuncType(funcType);
         default -> throw unexpectedCaseException(type);
       };
     }
 
-    private PType createType(TypeNameContext type) {
-      return new PIdType(type.getText(), fileLocation(fullPath, type.NAME()));
+    private PType createTypeReference(TypeNameContext type) {
+      return new PTypeReference(type.getText(), fileLocation(fullPath, type.NAME()));
     }
 
     private PType createArrayType(ArrayTypeContext arrayType) {

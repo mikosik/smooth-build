@@ -1,17 +1,15 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
-public final class PIdType extends PExplicitType implements Identifiable {
+public final class PTypeReference extends PExplicitType {
   private Id id;
 
-  public PIdType(String idText, Location location) {
+  public PTypeReference(String idText, Location location) {
     super(idText, location);
   }
 
-  @Override
   public Id id() {
     return id;
   }
