@@ -2,22 +2,22 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public abstract sealed class SBaseType extends SType
     permits SBlobType, SBoolType, SIntType, SStringType {
-  private final Id id;
+  private final Fqn fqn;
 
-  protected SBaseType(Id id) {
-    this(id, varSetS());
+  protected SBaseType(Fqn fqn) {
+    this(fqn, varSetS());
   }
 
-  protected SBaseType(Id id, SVarSet vars) {
-    super(id.toString(), vars);
-    this.id = id;
+  protected SBaseType(Fqn fqn, SVarSet vars) {
+    super(fqn.toString(), vars);
+    this.fqn = fqn;
   }
 
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 }

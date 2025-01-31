@@ -15,12 +15,12 @@ public class SConstructorTest extends FrontendCompilerTestContext {
         .isEqualTo(
             """
             SConstructor(
-              name = constructorName
+              fqn = constructorName
               schema = <>(Int)->MyStruct
               params = [
                 SItem(
                   type = Int
-                  name = field
+                  fqn = MyStruct:field
                   defaultValueId = None
                   location = {t-project}/module.smooth:2
                 )

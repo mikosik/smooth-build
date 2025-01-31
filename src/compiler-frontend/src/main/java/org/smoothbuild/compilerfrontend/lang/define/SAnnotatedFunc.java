@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 
@@ -15,8 +15,8 @@ public final class SAnnotatedFunc extends SNamedFunc {
   private final SAnnotation annotation;
 
   public SAnnotatedFunc(
-      SAnnotation annotation, SFuncSchema schema, Id id, NList<SItem> params, Location location) {
-    super(schema, id, params, location);
+      SAnnotation annotation, SFuncSchema schema, Fqn fqn, NList<SItem> params, Location location) {
+    super(schema, fqn, params, location);
     this.annotation = annotation;
   }
 
@@ -37,14 +37,14 @@ public final class SAnnotatedFunc extends SNamedFunc {
     return object instanceof SAnnotatedFunc that
         && this.annotation.equals(that.annotation)
         && this.schema().equals(that.schema())
-        && this.id().equals(that.id())
+        && this.fqn().equals(that.fqn())
         && this.params().equals(that.params())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation, schema(), id(), params(), location());
+    return Objects.hash(annotation, schema(), fqn(), params(), location());
   }
 
   @Override

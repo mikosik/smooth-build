@@ -59,7 +59,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   private static TopologicalSortingRes<Id, PNamedEvaluable, Location> sortEvaluablesByDeps(
       List<PNamedEvaluable> evaluables) {
     HashSet<Id> ids = new HashSet<>();
-    evaluables.forEach(e -> ids.add(e.id()));
+    evaluables.forEach(e -> ids.add(e.fqn()));
     return sortTopologically(evaluables.map(e -> evaluable(e, ids)));
   }
 
@@ -81,12 +81,12 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
         pItem.defaultValueId().ifPresent(id -> deps.add(new GraphEdge<>(pItem.location(), id)));
       }
     }.visitNamedEvaluable(evaluable);
-    return new GraphNode<>(evaluable.id(), evaluable, listOfAll(deps));
+    return new GraphNode<>(evaluable.fqn(), evaluable, listOfAll(deps));
   }
 
   private static TopologicalSortingRes<Id, PStruct, Location> sortStructsByDeps(
       List<PStruct> structs) {
-    var structNames = structs.map(pStruct -> pStruct.id().toString()).toSet();
+    var structNames = structs.map(pStruct -> pStruct.fqn().toString()).toSet();
     var nodes = structs.map(struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
@@ -116,7 +116,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
         }
       }
     }.visitStruct(struct);
-    return new GraphNode<>(struct.id(), struct, listOfAll(deps));
+    return new GraphNode<>(struct.fqn(), struct, listOfAll(deps));
   }
 
   private static Log createCycleError(String name, List<GraphEdge<Location, Id>> cycle) {

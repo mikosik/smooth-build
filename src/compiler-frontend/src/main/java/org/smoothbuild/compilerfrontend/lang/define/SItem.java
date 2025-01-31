@@ -7,11 +7,9 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasName;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
-import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
@@ -19,15 +17,15 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Item is a func param or a struct field.
  * This class is immutable.
  */
-public final class SItem implements Item, SReferenceable, HasName, Identifiable {
+public final class SItem implements Item, SReferenceable {
   private final Maybe<Id> defaultValueId;
   private final SType type;
-  private final Name name;
+  private final Fqn fqn;
   private final Location location;
 
-  public SItem(SType type, Name name, Maybe<Id> defaultValueId, Location location) {
+  public SItem(SType type, Fqn fqn, Maybe<Id> defaultValueId, Location location) {
     this.type = type;
-    this.name = name;
+    this.fqn = fqn;
     this.defaultValueId = defaultValueId;
     this.location = location;
   }
@@ -52,13 +50,8 @@ public final class SItem implements Item, SReferenceable, HasName, Identifiable 
   }
 
   @Override
-  public Name id() {
-    return name();
-  }
-
-  @Override
-  public Name name() {
-    return name;
+  public Fqn fqn() {
+    return fqn;
   }
 
   public static List<SType> toTypes(List<? extends SItem> items) {
@@ -66,7 +59,7 @@ public final class SItem implements Item, SReferenceable, HasName, Identifiable 
   }
 
   public String toSourceCode() {
-    return type.toSourceCode() + " " + name.toString()
+    return type.toSourceCode() + " " + name().toString()
         + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
   }
 
@@ -77,21 +70,21 @@ public final class SItem implements Item, SReferenceable, HasName, Identifiable 
     }
     return (o instanceof SItem that)
         && Objects.equals(this.type(), that.type())
-        && Objects.equals(this.id(), that.id())
+        && Objects.equals(this.fqn(), that.fqn())
         && Objects.equals(this.defaultValueId, that.defaultValueId)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), id(), defaultValueId, location());
+    return Objects.hash(type(), fqn(), defaultValueId, location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SItem")
         .addField("type", type().name())
-        .addField("name", id())
+        .addField("fqn", fqn())
         .addField("defaultValueId", defaultValueId)
         .addField("location", location())
         .toString();

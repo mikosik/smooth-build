@@ -6,7 +6,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
@@ -14,7 +14,7 @@ public final class PStruct implements TypeDefinition, PContainer, Identifiable {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;
-  private Id id;
+  private Fqn fqn;
   private PScope scope;
   private SStructType sStructType;
 
@@ -28,13 +28,13 @@ public final class PStruct implements TypeDefinition, PContainer, Identifiable {
     return nameText;
   }
 
-  public void setId(Id id) {
-    this.id = id;
+  public void setFqn(Fqn fqn) {
+    this.fqn = fqn;
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   public NList<PItem> fields() {
@@ -71,20 +71,20 @@ public final class PStruct implements TypeDefinition, PContainer, Identifiable {
     }
     return object instanceof PStruct that
         && Objects.equals(this.nameText(), that.nameText())
-        && Objects.equals(this.id(), that.id())
+        && Objects.equals(this.fqn(), that.fqn())
         && Objects.equals(this.fields, that.fields)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(nameText, id(), fields, location());
+    return Objects.hash(nameText, fqn(), fields, location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("PStruct")
-        .addField("id", id())
+        .addField("fqn", fqn())
         .addField("fields", fields)
         .addField("location", location())
         .toString();

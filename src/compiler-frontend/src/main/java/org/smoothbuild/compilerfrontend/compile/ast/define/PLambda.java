@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -17,7 +17,7 @@ public final class PLambda implements PFunc, PPolymorphic {
   private final PImplicitType resultT;
   private final NList<PItem> params;
   private final PExpr body;
-  private Id id;
+  private Fqn fqn;
   private SFuncType typeS;
   private SFuncSchema sSchema;
   private PScope scope;
@@ -35,13 +35,13 @@ public final class PLambda implements PFunc, PPolymorphic {
     return nameText;
   }
 
-  public void setId(Id id) {
-    this.id = id;
+  public void setFqn(Fqn id) {
+    this.fqn = id;
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   @Override

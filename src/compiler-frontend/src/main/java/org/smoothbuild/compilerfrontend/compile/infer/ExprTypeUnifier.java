@@ -245,7 +245,7 @@ public class ExprTypeUnifier {
       if (itemSigS == null) {
         throw new TypeException(compileError(
             pSelect.location(),
-            "Struct " + sStructType.id().q() + " has no field "
+            "Struct " + sStructType.fqn().q() + " has no field "
                 + pSelect.fieldName().q() + "."));
       } else {
         return itemSigS.type();

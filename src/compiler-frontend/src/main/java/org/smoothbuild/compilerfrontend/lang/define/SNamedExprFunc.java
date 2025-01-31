@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 
@@ -15,8 +15,8 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
   private final SExpr body;
 
   public SNamedExprFunc(
-      SFuncSchema schema, Id id, NList<SItem> params, SExpr body, Location location) {
-    super(schema, id, params, location);
+      SFuncSchema schema, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
+    super(schema, fqn, params, location);
     this.body = body;
   }
 
@@ -37,7 +37,7 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
     }
     return object instanceof SNamedExprFunc that
         && this.schema().equals(that.schema())
-        && this.id().equals(that.id())
+        && this.fqn().equals(that.fqn())
         && this.params().equals(that.params())
         && this.body.equals(that.body)
         && this.location().equals(that.location());
@@ -45,13 +45,13 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), id(), params(), body, location());
+    return Objects.hash(schema(), fqn(), params(), body, location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SNamedExprFunc")
-        .addField("name", id())
+        .addField("fqn", fqn())
         .addField("schema", schema())
         .addListField("params", params().list())
         .addField("location", location())

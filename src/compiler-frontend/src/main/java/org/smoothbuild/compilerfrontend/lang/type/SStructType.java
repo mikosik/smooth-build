@@ -4,7 +4,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.interfaceTyp
 
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
@@ -12,17 +12,17 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
  * This class is immutable.
  */
 public final class SStructType extends SInterfaceType {
-  private final Id id;
+  private final Fqn fqn;
   private final NList<SItemSig> fields;
 
-  public SStructType(Id id, NList<SItemSig> fields) {
-    super(id.toString(), fields.map());
-    this.id = id;
+  public SStructType(Fqn fqn, NList<SItemSig> fields) {
+    super(fqn.toString(), fields.map());
+    this.fqn = fqn;
     this.fields = fields;
   }
 
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   public NList<SItemSig> fields() {

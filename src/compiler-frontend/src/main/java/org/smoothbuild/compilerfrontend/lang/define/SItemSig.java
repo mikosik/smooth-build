@@ -25,10 +25,6 @@ public class SItemSig implements HasName {
     return type;
   }
 
-  public Name id() {
-    return name();
-  }
-
   @Override
   public Name name() {
     return name;

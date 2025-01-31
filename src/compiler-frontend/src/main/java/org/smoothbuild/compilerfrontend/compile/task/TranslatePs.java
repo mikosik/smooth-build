@@ -86,15 +86,15 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private STypeDefinition convertStruct(PStruct pStruct) {
-      return new STypeDefinition(pStruct.type(), pStruct.type().id(), pStruct.location());
+      return new STypeDefinition(pStruct.type(), pStruct.type().fqn(), pStruct.location());
     }
 
     private SConstructor convertConstructor(PConstructor pConstructor) {
       var fields = pConstructor.params();
       var params =
-          fields.map(f -> new SItem(fields.get(f.name()).sType(), f.name(), none(), f.location()));
+          fields.map(f -> new SItem(fields.get(f.name()).sType(), f.fqn(), none(), f.location()));
       return new SConstructor(
-          pConstructor.schema(), pConstructor.id(), params, pConstructor.location());
+          pConstructor.schema(), pConstructor.fqn(), params, pConstructor.location());
     }
 
     private SNamedEvaluable convertReferenceableP(PReferenceable pReferenceable) {
@@ -108,7 +108,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
       var schema = pNamedValue.schema();
-      var fqn = pNamedValue.id();
+      var fqn = pNamedValue.fqn();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
         var ann = convertAnnotation(pNamedValue.annotation().get());
@@ -134,12 +134,12 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     public SItem convertParam(PItem paramP) {
-      return new SItem(paramP.sType(), paramP.name(), paramP.defaultValueId(), paramP.location());
+      return new SItem(paramP.sType(), paramP.fqn(), paramP.defaultValueId(), paramP.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
       var schema = pNamedFunc.schema();
-      var fqn = pNamedFunc.id();
+      var fqn = pNamedFunc.fqn();
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
         var annotationS = convertAnnotation(pNamedFunc.annotation().get());
@@ -177,7 +177,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda.bodyGet());
-      return new SLambda(pLambda.schema(), pLambda.id(), params, body, pLambda.location());
+      return new SLambda(pLambda.schema(), pLambda.fqn(), params, body, pLambda.location());
     }
 
     private SBlob convertBlob(PBlob blob) {

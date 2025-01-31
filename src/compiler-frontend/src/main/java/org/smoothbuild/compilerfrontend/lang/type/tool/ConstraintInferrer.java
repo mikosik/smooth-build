@@ -119,7 +119,7 @@ public class ConstraintInferrer {
         struct1.fields().list(),
         struct2.fields().list(),
         (itemSig1, itemSig2) -> unifyItemSigAndItemSig(itemSig1, itemSig2, constraints));
-    return new SStructType(struct1.id(), nlist(itemSigs));
+    return new SStructType(struct1.fqn(), nlist(itemSigs));
   }
 
   private static SItemSig unifyItemSigAndItemSig(

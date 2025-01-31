@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 /**
  * Evaluable that has fully qualified name.
@@ -15,7 +15,7 @@ public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluab
   private final Maybe<PAnnotation> annotation;
   private final Location location;
   private PScope scope;
-  private Id id;
+  private Fqn fqn;
 
   protected PNamedEvaluable(
       String nameText, Maybe<PExpr> body, Maybe<PAnnotation> annotation, Location location) {
@@ -51,13 +51,13 @@ public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluab
 
   public abstract PType evaluationType();
 
-  public void setId(Id id) {
-    this.id = id;
+  public void setFqn(Fqn fqn) {
+    this.fqn = fqn;
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   @Override

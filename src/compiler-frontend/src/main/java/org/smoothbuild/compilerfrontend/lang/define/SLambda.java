@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 
@@ -14,14 +14,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
  */
 public final class SLambda implements SExprFunc, SPolymorphic {
   private final SFuncSchema schema;
-  private final Id id;
+  private final Fqn fqn;
   private final NList<SItem> params;
   private final SExpr body;
   private final Location location;
 
-  public SLambda(SFuncSchema schema, Id id, NList<SItem> params, SExpr body, Location location) {
+  public SLambda(SFuncSchema schema, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
     this.schema = schema;
-    this.id = id;
+    this.fqn = fqn;
     this.params = params;
     this.body = body;
     this.location = location;
@@ -33,8 +33,8 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   @Override
@@ -79,7 +79,7 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   @Override
   public String toString() {
     return new ToStringBuilder("SLambda")
-        .addField("fqn", id())
+        .addField("fqn", fqn())
         .addField("schema", schema())
         .addListField("params", params().list())
         .addField("location", location())

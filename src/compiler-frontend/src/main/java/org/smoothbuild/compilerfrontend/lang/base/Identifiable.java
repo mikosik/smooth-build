@@ -1,17 +1,17 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.log.location.HasLocation;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 /**
- * Interface marking classes that have Id and Location.
+ * Interface marking classes that have FQN (fully qualified name) and Location.
  */
 public interface Identifiable extends HasName, HasLocation {
-  public Id id();
+  public Fqn fqn();
 
   @Override
   public default Name name() {
-    return id().parts().getLast();
+    return fqn().parts().getLast();
   }
 }

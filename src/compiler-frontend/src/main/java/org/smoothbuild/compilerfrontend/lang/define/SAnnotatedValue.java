@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
@@ -16,18 +16,33 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public final class SAnnotatedValue implements SNamedValue, Identifiable {
   private final SAnnotation annotation;
   private final SSchema schema;
-  private final Id id;
+  private final Fqn fqn;
   private final Location location;
 
-  public SAnnotatedValue(SAnnotation annotation, SSchema schema, Id id, Location location) {
+  public SAnnotatedValue(SAnnotation annotation, SSchema schema, Fqn fqn, Location location) {
     this.annotation = annotation;
     this.schema = schema;
-    this.id = id;
+    this.fqn = fqn;
     this.location = location;
   }
 
   public SAnnotation annotation() {
     return annotation;
+  }
+
+  @Override
+  public SSchema schema() {
+    return schema;
+  }
+
+  @Override
+  public Fqn fqn() {
+    return fqn;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   @Override
@@ -43,13 +58,13 @@ public final class SAnnotatedValue implements SNamedValue, Identifiable {
     return object instanceof SAnnotatedValue that
         && this.annotation().equals(that.annotation())
         && this.schema().equals(that.schema())
-        && this.id().equals(that.id())
+        && this.fqn().equals(that.fqn())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation(), schema(), id(), location());
+    return Objects.hash(annotation(), schema(), fqn(), location());
   }
 
   @Override
@@ -57,23 +72,8 @@ public final class SAnnotatedValue implements SNamedValue, Identifiable {
     return new ToStringBuilder("SAnnotatedValue")
         .addField("annotation", annotation)
         .addField("schema", schema())
-        .addField("name", id())
+        .addField("fqn", fqn())
         .addField("location", location())
         .toString();
-  }
-
-  @Override
-  public SSchema schema() {
-    return schema;
-  }
-
-  @Override
-  public Id id() {
-    return id;
-  }
-
-  @Override
-  public Location location() {
-    return location;
   }
 }

@@ -55,10 +55,10 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
             if (namedValue.schema().quantifiedVars().isEmpty()) {
               return ok(namedValue);
             } else {
-              return err(e.id().q() + " cannot be calculated as it is a polymorphic value.");
+              return err(e.fqn().q() + " cannot be calculated as it is a polymorphic value.");
             }
           } else {
-            return err(e.id().q() + " cannot be calculated as it is not a value but a function.");
+            return err(e.fqn().q() + " cannot be calculated as it is not a value but a function.");
           }
         });
   }
@@ -69,6 +69,6 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   }
 
   private static SReference referenceTo(SNamedValue sNamedValue) {
-    return new SReference(sNamedValue.schema(), sNamedValue.id(), commandLineLocation());
+    return new SReference(sNamedValue.schema(), sNamedValue.fqn(), commandLineLocation());
   }
 }

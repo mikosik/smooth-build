@@ -13,7 +13,7 @@ public final class PConstructor extends PNamedFunc {
         none(),
         none(),
         pStruct.location());
-    setId(pStruct.id());
+    setFqn(pStruct.fqn());
     this.pStruct = pStruct;
   }
 

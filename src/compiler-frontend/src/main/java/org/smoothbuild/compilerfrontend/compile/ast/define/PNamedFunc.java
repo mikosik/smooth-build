@@ -70,7 +70,7 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
     }
     return object instanceof PNamedFunc that
         && Objects.equals(this.resultT, that.resultT)
-        && Objects.equals(this.id(), that.id())
+        && Objects.equals(this.fqn(), that.fqn())
         && Objects.equals(this.params, that.params)
         && Objects.equals(this.body(), that.body())
         && Objects.equals(this.annotation(), that.annotation())
@@ -79,14 +79,14 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultT, id(), params, body(), annotation(), location());
+    return Objects.hash(resultT, this.fqn(), params, body(), annotation(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("PNamedFuncP")
         .addField("resulT", resultT)
-        .addField("name", id())
+        .addField("fqn", fqn())
         .addListField("params", params().list())
         .addField("body", body())
         .addField("annotation", annotation())

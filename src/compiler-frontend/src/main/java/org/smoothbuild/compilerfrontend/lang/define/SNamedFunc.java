@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
@@ -14,12 +14,12 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
     permits SAnnotatedFunc, SNamedExprFunc, SConstructor {
   private final NList<SItem> params;
   private final SSchema schema;
-  private final Id id;
+  private final Fqn fqn;
   private final Location location;
 
-  public SNamedFunc(SFuncSchema schema, Id id, NList<SItem> params, Location location) {
+  public SNamedFunc(SFuncSchema schema, Fqn fqn, NList<SItem> params, Location location) {
     this.schema = schema;
-    this.id = id;
+    this.fqn = fqn;
     this.params = params;
     this.location = location;
   }
@@ -35,8 +35,8 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   @Override

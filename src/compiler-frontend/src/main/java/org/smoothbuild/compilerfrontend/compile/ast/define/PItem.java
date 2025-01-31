@@ -8,22 +8,20 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.HasName;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
-public final class PItem implements Item, PReferenceable, HasName, HasLocation {
+public final class PItem implements Item, PReferenceable {
   private final PType type;
   private final String nameText;
   private final Maybe<PExpr> defaultValue;
   private final Location location;
-  private Name name;
+  private Fqn fqn;
   private Maybe<Id> defaultValueId;
   private SType sType;
 
@@ -46,18 +44,13 @@ public final class PItem implements Item, PReferenceable, HasName, HasLocation {
     return Strings.q(nameText);
   }
 
-  public void setName(Name name) {
-    this.name = name;
+  public void setFqn(Fqn fqn) {
+    this.fqn = fqn;
   }
 
   @Override
-  public Name name() {
-    return name;
-  }
-
-  @Override
-  public Name id() {
-    return name();
+  public Fqn fqn() {
+    return fqn;
   }
 
   public Maybe<PExpr> defaultValue() {

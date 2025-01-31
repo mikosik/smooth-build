@@ -377,8 +377,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SInstantiate sInstantiate(
       int line, List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
     var location = location(line);
-    var referenceS = new SReference(namedEvaluable.schema(), namedEvaluable.id(), location);
-    return sInstantiate(typeArgs, referenceS, location);
+    var reference = new SReference(namedEvaluable.schema(), namedEvaluable.fqn(), location);
+    return sInstantiate(typeArgs, reference, location);
   }
 
   public default SInstantiate sInstantiate(SPolymorphic polymorphic) {
@@ -436,7 +436,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
-    return sReference(line, namedEvaluable.schema(), namedEvaluable.id());
+    return sReference(line, namedEvaluable.schema(), namedEvaluable.fqn());
   }
 
   public default SReference sReference(SSchema schema, Id id) {
@@ -526,7 +526,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name) {
-    return new SItem(type, referenceableName(name), none(), location(line));
+    return sItem(line, type, fqn("myFunc:" + name));
+  }
+
+  public default SItem sItem(int line, SType type, Fqn fqn) {
+    return new SItem(type, fqn, none(), location(line));
   }
 
   public default SItem sItem(SType type, String name, String defaultValueFullName) {
@@ -538,7 +542,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueId) {
-    return new SItem(type, referenceableName(name), defaultValueId.map(Fqn::fqn), location(line));
+    return new SItem(type, fqn("myFunc:" + name), defaultValueId.map(Fqn::fqn), location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {
@@ -593,7 +597,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SConstructor sConstructor(int line, SStructType structType, String name) {
     var fields = structType.fields();
-    var params = fields.map(f -> new SItem(f.type(), f.name(), none(), location(2)));
+    var params = fields.map(f -> {
+      var fqn = structType.fqn().append(f.name());
+      return sItem(2, f.type(), fqn);
+    });
     return new SConstructor(sFuncSchema(params, structType), fqn(name), params, location(line));
   }
 
@@ -646,8 +653,9 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SNamedExprFunc sFunc(
       int line, SType resultType, String name, NList<SItem> params, SExpr body) {
+    Fqn fqn = fqn(name);
     var schema = sFuncSchema(params, resultType);
-    return new SNamedExprFunc(schema, fqn(name), params, body, location(line));
+    return new SNamedExprFunc(schema, fqn, params, body, location(line));
   }
 
   public default SLambda sLambda(SVarSet quantifiedVars, SExpr body) {
@@ -660,9 +668,14 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SLambda sLambda(
       int line, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
+    return sLambda(line, fqn("lambda"), quantifiedVars, params, body);
+  }
+
+  public default SLambda sLambda(
+      int line, Fqn fqn, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
     var funcTS = sFuncType(toTypes(params.list()), body.evaluationType());
     var funcSSchema = sFuncSchema(quantifiedVars, funcTS);
-    return new SLambda(funcSSchema, fqn("lambda"), params, body, location(line));
+    return new SLambda(funcSSchema, fqn, params, body, location(line));
   }
 
   public default SLambda sLambda(SExpr body) {
@@ -674,8 +687,13 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SLambda sLambda(int line, NList<SItem> params, SExpr body) {
+    var fqn = fqn("lambda");
+    return sLambda(line, fqn, params, body);
+  }
+
+  public default SLambda sLambda(int line, Fqn fqn, NList<SItem> params, SExpr body) {
     var funcSSchema = sFuncSchema(toTypes(params.list()), body.evaluationType());
-    return new SLambda(funcSSchema, fqn("lambda"), params, body, location(line));
+    return new SLambda(funcSSchema, fqn, params, body, location(line));
   }
 
   public default SNamedExprFunc idSFunc() {
@@ -701,7 +719,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
     var pLambda = new PLambda("lambda~1", params, body, location());
-    pLambda.setId(fqn("lambda~1"));
+    pLambda.setFqn(fqn("lambda~1"));
     return pInstantiate(pLambda);
   }
 
@@ -749,7 +767,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
       String name, NList<PItem> params, Maybe<PExpr> body, Location location) {
     var resultT = new PImplicitType(location);
     var pNamedFunc = new PNamedFunc(resultT, name, params, body, none(), location);
-    pNamedFunc.setId(fqn(name));
+    pNamedFunc.setFqn(fqn(name));
     return pNamedFunc;
   }
 
@@ -774,7 +792,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   private static PNamedValue pNamedValue(
       String name, PExpr body, PImplicitType type, Location location) {
     var pNamedValue = new PNamedValue(type, name, some(body), none(), location);
-    pNamedValue.setId(fqn(name));
+    pNamedValue.setFqn(fqn(name));
     return pNamedValue;
   }
 
@@ -796,7 +814,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
     var pItem = new PItem(new PTypeReference("Int", location()), name, defaultValue, location());
-    pItem.setName(referenceableName(name));
+    pItem.setFqn(fqn("myFunc:" + name));
     return pItem;
   }
 

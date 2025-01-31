@@ -28,7 +28,6 @@ import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class FrontendCompileTester extends FrontendCompilerTestContext {
@@ -56,29 +55,24 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     public void containsEvaluable(SNamedEvaluable expected) {
-      var name = expected.id().toString();
-      var actual = assertContainsEvaluable(name);
+      var fqn = expected.fqn();
+      var actual = assertContainsEvaluable(fqn);
       assertThat(actual).isEqualTo(expected);
     }
 
-    public void containsEvaluableWithSchema(String name, SSchema expectedT) {
-      var referenceable = assertContainsEvaluable(name);
-      assertThat(referenceable.schema()).isEqualTo(expectedT);
-    }
-
-    private SNamedEvaluable assertContainsEvaluable(String name) {
+    private SNamedEvaluable assertContainsEvaluable(Fqn fqn) {
       var evaluables = sModule.get().localScope().evaluables();
-      assertWithMessage("Module doesn't contain '" + name + "'.")
-          .that(evaluables.find(fqn(name)).isOk())
+      assertWithMessage("Module doesn't contain " + fqn.q() + ".")
+          .that(evaluables.find(fqn).isOk())
           .isTrue();
-      return evaluables.find(fqn(name)).ok();
+      return evaluables.find(fqn).ok();
     }
 
     public void containsType(SType expected) {
       var name = expected.name();
       var types = sModule.get().localScope().types();
-      assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-          .that(types.find(Fqn.fqn(name)).isOk())
+      assertWithMessage("Module doesn't contain type with '" + name + "' name.")
+          .that(types.find(fqn(name)).isOk())
           .isTrue();
       SType actual = types.find(structName(name)).ok().type();
       assertWithMessage("Module contains type '" + name + "', but")
