@@ -20,7 +20,7 @@ public class SItemTest extends FrontendCompilerTestContext {
   }
 
   @Test
-  void name_getter() {
+  void id_getter() {
     var param = new SItem(sStringType(), name, none(), location());
     assertThat(param.id()).isEqualTo(name);
   }
