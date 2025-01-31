@@ -79,6 +79,7 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   @Override
   public String toString() {
     return new ToStringBuilder("SLambda")
+        .addField("fqn", id())
         .addField("schema", schema())
         .addListField("params", params().list())
         .addField("location", location())
