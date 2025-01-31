@@ -69,7 +69,7 @@ public class InferTypes implements Task1<PModule, PModule> {
       var type = scope.translate(field.type());
       if (type.vars().isEmpty()) {
         field.setSType(type);
-        return new SItemSig(type, field.id());
+        return new SItemSig(type, field.name());
       } else {
         var message = "Field type cannot be polymorphic. Found field %s with type %s."
             .formatted(field.q(), type.q());
