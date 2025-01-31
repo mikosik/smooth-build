@@ -19,6 +19,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public class GenerateDefaultValues implements Task1<PModule, PModule> {
@@ -55,17 +56,17 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
-        var id = fqn(scopeId.toString() + "~" + pItem.name().toString());
-        pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, id)));
+        var fqn = fqn(scopeId.toString() + "~" + pItem.name().toString());
+        pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, fqn)));
       }
 
-      private Id createNamedDefaultValue(PExpr expr, Id id) {
+      private Id createNamedDefaultValue(PExpr expr, Fqn fqn) {
         var type = new PImplicitType(expr.location());
-        var name = id.parts().getLast().toString();
+        var name = fqn.parts().getLast().toString();
         var pNamedValue = new PNamedValue(type, name, some(expr), none(), expr.location());
-        pNamedValue.setId(id);
+        pNamedValue.setId(fqn);
         namedDefaultValues.add(pNamedValue);
-        return id;
+        return fqn;
       }
 
       private void runWithScopeId(Id id, Runnable runnable) {
