@@ -24,7 +24,7 @@ public class SNamedExprValueTest extends FrontendCompilerTestContext {
             """
             SNamedExprValue(
               schema = <>String
-              name = myVal
+              fqn = myVal
               location = {t-project}/module.smooth:7
               body = SInt(
                 type = Int

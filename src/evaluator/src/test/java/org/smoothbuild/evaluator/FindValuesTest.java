@@ -18,7 +18,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
     var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
     var sScope = new SScope(immutableBindings(), immutableBindings(list(sValue)));
 
-    var exprs = new FindValues().execute(sScope, list(sValue.id().toString()));
+    var exprs = new FindValues().execute(sScope, list(sValue.fqn().toString()));
 
     var sReference = sReference(sSchema, fqn("myValue"), commandLineLocation());
     assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
@@ -29,7 +29,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
     var value = sValue(sSchema(sVarAArrayT()), "myValue", sOrder(varA()));
     var sScope = new SScope(immutableBindings(), immutableBindings(list(value)));
 
-    var exprs = new FindValues().execute(sScope, list(value.id().toString()));
+    var exprs = new FindValues().execute(sScope, list(value.fqn().toString()));
 
     assertThat(exprs.report().logs())
         .containsExactly(error("`myValue` cannot be calculated as it is a polymorphic value."));

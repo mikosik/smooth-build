@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 
@@ -12,8 +12,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
  * This class is immutable.
  */
 public final class SConstructor extends SNamedFunc {
-  public SConstructor(SFuncSchema schema, Id id, NList<SItem> params, Location location) {
-    super(schema, id, params, location);
+  public SConstructor(SFuncSchema schema, Fqn fqn, NList<SItem> params, Location location) {
+    super(schema, fqn, params, location);
   }
 
   @Override
@@ -23,20 +23,20 @@ public final class SConstructor extends SNamedFunc {
     }
     return object instanceof SConstructor that
         && this.schema().equals(that.schema())
-        && this.id().equals(that.id())
+        && this.fqn().equals(that.fqn())
         && this.params().equals(that.params())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), id(), params(), location());
+    return Objects.hash(schema(), fqn(), params(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SConstructor")
-        .addField("name", id())
+        .addField("fqn", fqn())
         .addField("schema", schema())
         .addListField("params", params().list())
         .addField("location", location())

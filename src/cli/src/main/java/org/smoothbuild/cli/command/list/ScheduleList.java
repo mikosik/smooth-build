@@ -46,7 +46,7 @@ public class ScheduleList implements Task0<Tuple0> {
     public Output<Tuple0> execute(SModule sModule) {
       var oneValuePerLineString = sModule.fullScope().evaluables().toMap().values().stream()
           .filter(ScheduleList::isNoArgNotGenericValue)
-          .map(sNamedEvaluable -> sNamedEvaluable.id().toString())
+          .map(sNamedEvaluable -> sNamedEvaluable.fqn().toString())
           .sorted()
           .collect(joining("\n"));
       var info = info("Values that can be evaluated:\n" + oneValuePerLineString);

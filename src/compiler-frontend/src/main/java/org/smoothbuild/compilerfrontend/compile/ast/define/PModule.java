@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public final class PModule implements PContainer {
   private final String fileName;
@@ -28,7 +28,7 @@ public final class PModule implements PContainer {
   }
 
   @Override
-  public Id id() {
+  public Fqn fqn() {
     return null;
   }
 

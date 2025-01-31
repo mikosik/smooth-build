@@ -40,17 +40,17 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
 
       @Override
       public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
-        runWithScopeId(pNamedEvaluable.id(), () -> super.visitNamedEvaluable(pNamedEvaluable));
+        runWithScopeId(pNamedEvaluable.fqn(), () -> super.visitNamedEvaluable(pNamedEvaluable));
       }
 
       @Override
       public void visitLambda(PLambda pLambda) throws RuntimeException {
-        runWithScopeId(pLambda.id(), () -> super.visitLambda(pLambda));
+        runWithScopeId(pLambda.fqn(), () -> super.visitLambda(pLambda));
       }
 
       @Override
       public void visitStruct(PStruct pStruct) throws RuntimeException {
-        runWithScopeId(pStruct.id(), () -> super.visitStruct(pStruct));
+        runWithScopeId(pStruct.fqn(), () -> super.visitStruct(pStruct));
       }
 
       @Override
@@ -64,7 +64,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
         var type = new PImplicitType(expr.location());
         var name = fqn.parts().getLast().toString();
         var pNamedValue = new PNamedValue(type, name, some(expr), none(), expr.location());
-        pNamedValue.setId(fqn);
+        pNamedValue.setFqn(fqn);
         namedDefaultValues.add(pNamedValue);
         return fqn;
       }

@@ -221,7 +221,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {
-    var key = new CacheKey(sNamedFunc.id(), typeF.varMap());
+    var key = new CacheKey(sNamedFunc.fqn(), typeF.varMap());
     return computeIfAbsent(cache, key, k -> translateNamedFunc(sNamedFunc));
   }
 
@@ -328,7 +328,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
-    var key = new CacheKey(sNamedValue.id(), typeF.varMap());
+    var key = new CacheKey(sNamedValue.fqn(), typeF.varMap());
     return computeIfAbsent(cache, key, k -> translateNamedValue(sNamedValue));
   }
 
@@ -358,12 +358,12 @@ public class SbTranslator {
 
   private BExpr fetchValBytecode(SAnnotatedValue sAnnotatedValue) throws SbTranslatorException {
     var bType = typeF.translate(sAnnotatedValue.schema().type());
-    return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.id());
+    return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.fqn());
   }
 
   private BExpr fetchFuncBytecode(SAnnotatedFunc sAnnotatedFunc) throws SbTranslatorException {
     var bType = typeF.translate(sAnnotatedFunc.schema().type());
-    return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.id());
+    return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.fqn());
   }
 
   private BExpr fetchBytecode(SAnnotation annotation, BType bType, Id id)
@@ -435,7 +435,7 @@ public class SbTranslator {
   }
 
   private void saveNal(BExpr bExpr, SNamedEvaluable sNamedEvaluable) {
-    saveNal(bExpr, sNamedEvaluable.id().toString(), sNamedEvaluable);
+    saveNal(bExpr, sNamedEvaluable.fqn().toString(), sNamedEvaluable);
   }
 
   private void saveNal(BExpr bExpr, String name, HasLocation hasLocation) {

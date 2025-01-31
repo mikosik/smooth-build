@@ -4,14 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.name.Name;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemTest extends FrontendCompilerTestContext {
-  private final Name name = referenceableName("name");
+  private final Fqn name = fqn("myFunc:name");
 
   @Test
   void type_getter() {
@@ -20,9 +19,9 @@ public class SItemTest extends FrontendCompilerTestContext {
   }
 
   @Test
-  void id_getter() {
+  void fqn_getter() {
     var param = new SItem(sStringType(), name, none(), location());
-    assertThat(param.id()).isEqualTo(name);
+    assertThat(param.fqn()).isEqualTo(name);
   }
 
   @Test
@@ -45,7 +44,7 @@ public class SItemTest extends FrontendCompilerTestContext {
             """
             SItem(
               type = String
-              name = name
+              fqn = myFunc:name
               defaultValueId = None
               location = {t-project}/module.smooth:11
             )""");

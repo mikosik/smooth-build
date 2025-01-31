@@ -43,7 +43,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
                   params = [
                     SItem(
                       type = Int
-                      name = myParam
+                      fqn = myFunc:myParam
                       defaultValueId = None
                       location = {t-project}/module.smooth:1
                     )

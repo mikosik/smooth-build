@@ -28,12 +28,12 @@ public class SNamedExprFuncTest extends FrontendCompilerTestContext {
         .isEqualTo(
             """
             SNamedExprFunc(
-              name = myFunc
+              fqn = myFunc
               schema = <>(Int)->String
               params = [
                 SItem(
                   type = Int
-                  name = myParam
+                  fqn = myFunc:myParam
                   defaultValueId = None
                   location = {t-project}/module.smooth:1
                 )

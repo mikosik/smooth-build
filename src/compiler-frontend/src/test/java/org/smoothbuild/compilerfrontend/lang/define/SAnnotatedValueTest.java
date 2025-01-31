@@ -37,7 +37,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
                 location = {t-project}/module.smooth:17
               )
               schema = <>String
-              name = myVal
+              fqn = myVal
               location = {t-project}/module.smooth:7
             )""");
   }

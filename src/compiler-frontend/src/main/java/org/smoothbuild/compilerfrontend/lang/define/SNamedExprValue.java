@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 /**
@@ -16,12 +16,12 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public final class SNamedExprValue implements SNamedValue, Identifiable {
   private final SExpr body;
   private final SSchema schema;
-  private final Id id;
+  private final Fqn fqn;
   private final Location location;
 
-  public SNamedExprValue(SSchema schema, Id id, SExpr body, Location location) {
+  public SNamedExprValue(SSchema schema, Fqn fqn, SExpr body, Location location) {
     this.schema = schema;
-    this.id = id;
+    this.fqn = fqn;
     this.body = body;
     this.location = location;
   }
@@ -42,21 +42,21 @@ public final class SNamedExprValue implements SNamedValue, Identifiable {
     }
     return object instanceof SNamedExprValue that
         && this.schema().equals(that.schema())
-        && this.id().equals(that.id())
+        && this.fqn().equals(that.fqn())
         && this.body().equals(that.body())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), id(), body(), location());
+    return Objects.hash(schema(), fqn(), body(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SNamedExprValue")
         .addField("schema", schema())
-        .addField("name", id())
+        .addField("fqn", fqn())
         .addField("location", location())
         .addField("body", body)
         .toString();
@@ -68,8 +68,8 @@ public final class SNamedExprValue implements SNamedValue, Identifiable {
   }
 
   @Override
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
   @Override

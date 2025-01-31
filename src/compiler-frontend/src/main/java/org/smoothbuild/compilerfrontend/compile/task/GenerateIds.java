@@ -25,7 +25,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public class GenerateIds implements Task1<PModule, PModule> {
   @Override
@@ -65,8 +67,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
       var nameText = pNamedEvaluable.nameText();
       parseReferenceableName(nameText)
           .ifErr(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
-          .mapOk(this::fullId)
-          .ifOk(pNamedEvaluable::setId)
+          .mapOk(this::toFqn)
+          .ifOk(pNamedEvaluable::setFqn)
           .ifOk(id -> runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable)));
     }
 
@@ -75,8 +77,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
       var nameText = pLambda.nameText();
       parseReferenceableName(nameText)
           .ifErr(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
-          .mapOk(this::fullId)
-          .ifOk(pLambda::setId)
+          .mapOk(this::toFqn)
+          .ifOk(pLambda::setFqn)
           .ifOk(id -> runWithScopeId(id, () -> super.visitLambda(pLambda)));
     }
 
@@ -90,10 +92,10 @@ public class GenerateIds implements Task1<PModule, PModule> {
       var nameText = pItem.nameText();
       parseReferenceableName(nameText)
           .ifErr(e -> logIllegalIdentifier(nameText, pItem.location(), e))
-          .ifOk(id -> {
-            var fullId = fullId(id);
-            pItem.setName(id);
-            pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fullId));
+          .ifOk(name -> {
+            var fqn = toFqn(name);
+            pItem.setFqn(fqn);
+            pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fqn));
           });
       pItem.defaultValue().ifPresent(this::visitExpr);
       visitType(pItem.type());
@@ -108,9 +110,10 @@ public class GenerateIds implements Task1<PModule, PModule> {
       var nameText = pStruct.nameText();
       parseStructName(nameText)
           .ifErr(e -> logIllegalStructName(pStruct, e, pStruct.nameText()))
-          .ifOk(id -> {
-            pStruct.setId(id);
-            runWithScopeId(fullId(id), () -> super.visitStruct(pStruct));
+          .ifOk(name -> {
+            var fqn = toFqn(name);
+            pStruct.setFqn(fqn);
+            runWithScopeId(fqn, () -> super.visitStruct(pStruct));
           });
     }
 
@@ -167,8 +170,8 @@ public class GenerateIds implements Task1<PModule, PModule> {
       }
     }
 
-    private Id fullId(Id id) {
-      return scopeId == null ? id : scopeId.append(id);
+    private Fqn toFqn(Name name) {
+      return scopeId == null ? Fqn.fqn(name.toString()) : scopeId.append(name);
     }
   }
 }

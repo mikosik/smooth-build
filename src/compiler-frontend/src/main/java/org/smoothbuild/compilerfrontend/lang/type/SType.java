@@ -117,7 +117,7 @@ public abstract sealed class SType
   private static SStructType mapVarsInStruct(
       SStructType sStructType, Function<? super SVar, SType> map) {
     var fields = sStructType.fields().map(f -> mapItemSigComponents(f, map));
-    return new SStructType(sStructType.id(), fields);
+    return new SStructType(sStructType.fqn(), fields);
   }
 
   private static SItemSig mapItemSigComponents(SItemSig f, Function<? super SVar, SType> map) {
