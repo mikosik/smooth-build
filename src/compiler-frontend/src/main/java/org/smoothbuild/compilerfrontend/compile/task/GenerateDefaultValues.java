@@ -29,7 +29,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
     generateDefaultValues(pModule, namedDefaultValues);
     var label = COMPILER_FRONT_LABEL.append(":generateDefaultValues");
     var newModule = new PModule(
-        pModule.fileName(), pModule.structs(), pModule.evaluables().addAll(namedDefaultValues));
+        pModule.fullPath(), pModule.structs(), pModule.evaluables().addAll(namedDefaultValues));
     return output(newModule, label, list());
   }
 

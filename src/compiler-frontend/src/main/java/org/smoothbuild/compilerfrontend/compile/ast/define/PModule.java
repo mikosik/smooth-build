@@ -3,28 +3,29 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public final class PModule implements PContainer {
-  private final String fileName;
+  private final FullPath fullPath;
   private final List<PStruct> structs;
   private final List<PNamedEvaluable> evaluables;
   private PScope scope;
 
-  public PModule(String fileName, List<PStruct> structs, List<PNamedEvaluable> evaluables) {
-    this(fileName, structs, evaluables, null);
+  public PModule(FullPath fullPath, List<PStruct> structs, List<PNamedEvaluable> evaluables) {
+    this(fullPath, structs, evaluables, null);
   }
 
   public PModule(
-      String fileName, List<PStruct> structs, List<PNamedEvaluable> evaluables, PScope scope) {
-    this.fileName = fileName;
+      FullPath fullPath, List<PStruct> structs, List<PNamedEvaluable> evaluables, PScope scope) {
+    this.fullPath = fullPath;
     this.structs = structs;
     this.evaluables = evaluables;
     this.scope = scope;
   }
 
-  public String fileName() {
-    return fileName;
+  public FullPath fullPath() {
+    return fullPath;
   }
 
   @Override
@@ -68,7 +69,7 @@ public final class PModule implements PContainer {
   @Override
   public String toString() {
     return new ToStringBuilder("PModule")
-        .addField("fileName", fileName)
+        .addField("fullPath", fullPath)
         .addListField("structs", structs)
         .addListField("evaluables", evaluables)
         .addField("scope", scope)

@@ -714,7 +714,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PModule pModule(List<PStruct> structs, List<PNamedEvaluable> evaluables) {
-    return new PModule("Module.smooth", structs, evaluables);
+    return new PModule(moduleFullPath(), structs, evaluables);
   }
 
   public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
