@@ -49,7 +49,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
       return output(label, list(error));
     }
     PModule result = new PModule(
-        pModule.fileName(),
+        pModule.fullPath(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         pModule.scope());
