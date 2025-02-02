@@ -4,13 +4,13 @@ import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
+import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
-public final class PStruct implements TypeDefinition, PContainer, Identifiable {
+public final class PStruct implements TypeDefinition, PContainer, IdentifiableCode {
   private final String nameText;
   private final NList<PItem> fields;
   private final Location location;

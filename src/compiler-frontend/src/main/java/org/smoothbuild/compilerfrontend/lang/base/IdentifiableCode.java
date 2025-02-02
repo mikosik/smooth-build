@@ -7,7 +7,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
 /**
  * Interface marking classes that have FQN (fully qualified name) and Location.
  */
-public interface Identifiable extends HasName, HasLocation {
+public interface IdentifiableCode extends HasName, HasLocation {
   public Fqn fqn();
 
   @Override
