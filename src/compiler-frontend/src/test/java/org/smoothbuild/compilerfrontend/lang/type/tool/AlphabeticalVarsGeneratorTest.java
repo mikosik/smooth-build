@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
@@ -32,7 +33,7 @@ public class AlphabeticalVarsGeneratorTest {
   }
 
   private static void checkNameAtIndex(int index, String name) {
-    assertThat(find(index)).isEqualTo(new SVar(name));
+    assertThat(find(index)).isEqualTo(new SVar(fqn(name)));
   }
 
   private static SVar find(int index) {

@@ -5,13 +5,14 @@ import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
-public class UnusedVarsGeneratorTest {
+public class UnusedVarsGeneratorTest extends FrontendCompilerTestContext {
+
   @Test
   void test() {
-    var generator = new UnusedVarsGenerator(varSetS(new SVar("B"), new SVar("C")));
+    var generator = new UnusedVarsGenerator(varSetS(varB(), varC()));
     assertThat(List.of(generator.next(), generator.next(), generator.next()))
-        .isEqualTo(List.of(new SVar("A"), new SVar("D"), new SVar("E")));
+        .isEqualTo(List.of(varA(), varD(), varE()));
   }
 }

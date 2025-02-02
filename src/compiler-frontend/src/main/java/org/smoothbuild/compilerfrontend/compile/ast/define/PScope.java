@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
@@ -37,7 +38,7 @@ public record PScope(
 
   public SType translate(PType type) {
     if (isTypeVarName(type.nameText())) {
-      return new SVar(type.nameText());
+      return new SVar(fqn(type.nameText()));
     }
     return switch (type) {
       case PArrayType a -> new SArrayType(translate(a.elemT()));

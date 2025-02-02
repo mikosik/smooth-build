@@ -33,6 +33,10 @@ public abstract sealed class SType
     return name;
   }
 
+  public String asTypeSpecifierInSourceCode() {
+    return name;
+  }
+
   public String q() {
     return Strings.q(name);
   }
