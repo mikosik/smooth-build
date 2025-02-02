@@ -92,11 +92,15 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     FullPath artifactPath = artifactPath(sReference.referencedId());
     if (sReference.schema().type() instanceof SArrayType sArrayType) {
       return saveArray(sArrayType, artifactPath, (BArray) value);
-    } else if (sReference.schema().type().name().equals(FILE_STRUCT_NAME)) {
+    } else if (isFileStructType(sReference.schema().type())) {
       return saveFile(artifactPath, (BTuple) value);
     } else {
       return saveBaseValue(artifactPath, value);
     }
+  }
+
+  private static boolean isFileStructType(SType type) {
+    return type.name().equals(FILE_STRUCT_NAME);
   }
 
   private FullPath saveFile(FullPath artifactPath, BTuple file)
@@ -115,7 +119,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
         saveArray(sElemArrayType, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
-    } else if (elemTS.name().equals(FILE_STRUCT_NAME)) {
+    } else if (isFileStructType(elemTS)) {
       saveFileArray(artifactPath, array.elements(BTuple.class));
     } else {
       saveNonFileArray(artifactPath, array);
