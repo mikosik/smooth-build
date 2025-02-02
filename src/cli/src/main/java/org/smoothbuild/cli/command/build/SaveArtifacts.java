@@ -7,6 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.schedule.Output.output;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
 import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
@@ -27,8 +28,10 @@ import org.smoothbuild.common.tuple.Tuples;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.evaluator.EvaluatedExprs;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -38,7 +41,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.wire.BytecodeDb;
 
 public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
-  static final String FILE_STRUCT_NAME = "File";
+  static final Fqn FILE_STRUCT_FQN = fqn("File");
   private final FileSystem<FullPath> fileSystem;
   private final FullPath artifactsPath;
   private final FullPath bytecodeDbPath;
@@ -100,7 +103,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private static boolean isFileStructType(SType type) {
-    return type.name().equals(FILE_STRUCT_NAME);
+    return type instanceof SStructType structType && structType.fqn().equals(FILE_STRUCT_FQN);
   }
 
   private FullPath saveFile(FullPath artifactPath, BTuple file)

@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
 import static org.smoothbuild.compilerfrontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
@@ -172,7 +171,7 @@ public class Unifier {
   private Unified unifiedFor(SVar var) {
     var unified = flexibleVarToUnified.get(var);
     if (unified == null) {
-      throw new IllegalStateException("Unknown flexible var " + q(var.name()) + ".");
+      throw new IllegalStateException("Unknown flexible var " + var.fqn().q() + ".");
     }
     return unified;
   }
@@ -181,7 +180,7 @@ public class Unifier {
   public String toString() {
     return new HashSet<>(flexibleVarToUnified.values())
         .stream()
-            .sorted(comparing(u -> u.mainVar.name()))
+            .sorted(comparing(u -> u.mainVar.specifier()))
             .map(Object::toString)
             .collect(joining("\n"));
   }

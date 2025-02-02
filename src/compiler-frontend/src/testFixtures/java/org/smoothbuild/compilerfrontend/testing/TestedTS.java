@@ -27,8 +27,8 @@ public class TestedTS {
     return type;
   }
 
-  public String name() {
-    return type().name();
+  public String specifier() {
+    return type().specifier();
   }
 
   public String q() {
@@ -93,8 +93,8 @@ public class TestedTS {
     }
 
     @Override
-    public String name() {
-      return paramTs.map(TestedTS::name).toString("(", ",", ")->") + resultT.name();
+    public String specifier() {
+      return paramTs.map(TestedTS::specifier).toString("(", ",", ")->") + resultT.specifier();
     }
   }
 

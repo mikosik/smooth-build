@@ -1,14 +1,13 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
-
+import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 /**
  * Type variable.
  * This class is immutable.
  */
-public final class SVar extends SType {
+public final class SVar extends SType implements Identifiable {
   private final SVarSet vars;
   private final Fqn fqn;
 
@@ -22,6 +21,7 @@ public final class SVar extends SType {
     return new SVar(Fqn.fqn("T" + i));
   }
 
+  @Override
   public Fqn fqn() {
     return fqn;
   }
@@ -33,6 +33,6 @@ public final class SVar extends SType {
 
   @Override
   public boolean isFlexibleVar() {
-    return name().chars().anyMatch(Character::isDigit);
+    return specifier().chars().anyMatch(Character::isDigit);
   }
 }

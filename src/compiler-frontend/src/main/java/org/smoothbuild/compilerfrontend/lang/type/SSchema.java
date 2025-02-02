@@ -11,13 +11,11 @@ import org.smoothbuild.common.collect.List;
  * Polymorphic type (aka type schema).
  */
 public sealed class SSchema permits SFuncSchema {
-  private final String name;
   private final SVarSet quantifiedVars;
   private final SType type;
 
   public SSchema(SVarSet quantifiedVars, SType type) {
     assertQuantifiedVarsArePresentInType(quantifiedVars, type);
-    this.name = calculateName(quantifiedVars, type);
     this.quantifiedVars = requireNonNull(quantifiedVars);
     this.type = requireNonNull(type);
   }
@@ -26,14 +24,6 @@ public sealed class SSchema permits SFuncSchema {
     checkArgument(
         type.vars().containsAll(quantifiedVars),
         "Quantified variable(s) " + quantifiedVars + " are not present in type " + type.q() + ".");
-  }
-
-  private static String calculateName(SVarSet quantifiedVars, SType type) {
-    return quantifiedVars.toString() + type.name();
-  }
-
-  public String name() {
-    return name;
   }
 
   /**
@@ -66,11 +56,11 @@ public sealed class SSchema permits SFuncSchema {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, quantifiedVars, type);
+    return Objects.hash(quantifiedVars, type);
   }
 
   @Override
   public String toString() {
-    return name;
+    return quantifiedVars.toString() + type.specifier();
   }
 }

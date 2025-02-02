@@ -56,6 +56,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
@@ -368,7 +369,7 @@ public class SbTranslator {
 
   private BExpr fetchBytecode(SAnnotation annotation, BType bType, Id id)
       throws SbTranslatorException {
-    var varNameToTypeMap = typeF.varMap().mapKeys(SVar::name);
+    var varNameToTypeMap = typeF.varMap().mapKeys(SType::specifier);
     var jar = readNativeJar(annotation.location());
     var bytecode = loadBytecode(id, jar, annotation.path().string(), varNameToTypeMap);
     if (bytecode.isErr()) {

@@ -112,7 +112,7 @@ public class ConstraintInferrer {
   private static SStructType unifyStructAndStruct(
       SStructType struct1, SStructType struct2, Queue<Constraint> constraints)
       throws UnifierException {
-    if (!struct1.name().equals(struct2.name())) {
+    if (!struct1.fqn().equals(struct2.fqn())) {
       throw new UnifierException();
     }
     var itemSigs = zip(
