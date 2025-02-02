@@ -45,7 +45,7 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
   }
 
   protected String funcHeaderToSourceCode() {
-    return schema().type().result().toSourceCode() + " " + name()
+    return schema().type().result().specifier() + " " + name()
         + schema().quantifiedVars().toSourceCode()
         + params().list().map(SItem::toSourceCode).toString("(", ", ", ")");
   }

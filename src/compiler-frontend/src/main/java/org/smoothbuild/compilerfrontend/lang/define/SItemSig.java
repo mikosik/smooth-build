@@ -37,7 +37,7 @@ public class SItemSig implements HasName {
   }
 
   public String toSourceCode() {
-    return type().toSourceCode() + " " + name;
+    return type().specifier() + " " + name;
   }
 
   @Override

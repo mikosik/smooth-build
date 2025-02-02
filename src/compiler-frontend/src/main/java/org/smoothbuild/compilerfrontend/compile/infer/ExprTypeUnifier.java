@@ -180,7 +180,7 @@ public class ExprTypeUnifier {
               location,
               "Illegal call: Instance of " + resolvedCalleeType.q()
                   + " cannot be called with arguments `"
-                  + resolvedArgTypes.map(SType::toSourceCode).toString("(", ", ", ")")
+                  + resolvedArgTypes.map(SType::specifier).toString("(", ", ", ")")
                   + "`."),
           e);
     }

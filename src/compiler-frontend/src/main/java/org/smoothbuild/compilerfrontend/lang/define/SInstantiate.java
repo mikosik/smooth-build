@@ -26,7 +26,7 @@ public record SInstantiate(
 
   @Override
   public String toSourceCode() {
-    return sPolymorphic.toSourceCode() + typeArgs.map(SType::toSourceCode).toString("<", ", ", ">");
+    return sPolymorphic.toSourceCode() + typeArgs.map(SType::specifier).toString("<", ", ", ">");
   }
 
   @Override

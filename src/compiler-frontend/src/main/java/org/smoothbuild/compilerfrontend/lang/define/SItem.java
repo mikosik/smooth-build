@@ -59,7 +59,7 @@ public final class SItem implements Item, SReferenceable {
   }
 
   public String toSourceCode() {
-    return type.toSourceCode() + " " + name().toString()
+    return type.specifier() + " " + name().toString()
         + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
   }
 

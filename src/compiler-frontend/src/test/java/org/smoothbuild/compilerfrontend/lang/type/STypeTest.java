@@ -45,12 +45,6 @@ public class STypeTest extends FrontendCompilerTestContext {
     assertThat(type.toString()).isEqualTo(toString);
   }
 
-  @ParameterizedTest
-  @MethodSource("specifiers")
-  public void to_source_code(SType type, String specifier) {
-    assertThat(type.toSourceCode()).isEqualTo(specifier);
-  }
-
   public static List<Arguments> specifiers() {
     return new STypeTest().names_non_static();
   }
