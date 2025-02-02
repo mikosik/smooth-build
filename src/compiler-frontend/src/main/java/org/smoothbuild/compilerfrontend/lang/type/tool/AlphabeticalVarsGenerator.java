@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+
 import java.util.Arrays;
 import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
@@ -7,7 +9,7 @@ public class AlphabeticalVarsGenerator {
   private char[] name = new char[] {'A'};
 
   public SVar next() {
-    SVar sVar = new SVar(new String(name));
+    SVar sVar = new SVar(fqn(new String(name)));
     generateNextName();
     return sVar;
   }

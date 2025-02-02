@@ -300,6 +300,14 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sVar("C");
   }
 
+  public default SVar varD() {
+    return sVar("D");
+  }
+
+  public default SVar varE() {
+    return sVar("E");
+  }
+
   public default SVar varX() {
     return sVar("X");
   }
@@ -317,7 +325,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SVar sVar(String name) {
-    return new SVar(name);
+    return new SVar(fqn(name));
   }
 
   public default SBlob sBlob(int data) {
