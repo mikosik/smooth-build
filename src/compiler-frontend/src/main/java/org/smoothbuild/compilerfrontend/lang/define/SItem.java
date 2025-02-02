@@ -83,7 +83,7 @@ public final class SItem implements Item, SReferenceable {
   @Override
   public String toString() {
     return new ToStringBuilder("SItem")
-        .addField("type", type().name())
+        .addField("type", type())
         .addField("fqn", fqn())
         .addField("defaultValueId", defaultValueId)
         .addField("location", location())

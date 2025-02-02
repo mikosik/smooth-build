@@ -14,11 +14,11 @@ public class TokenNames {
   }
 
   public static String arrayTypeName(SType elemT) {
-    return "[" + elemT.name() + "]";
+    return "[" + elemT.specifier() + "]";
   }
 
   public static String funcTypeName(STupleType paramTypes, SType resultType) {
-    return "(" + commaSeparatedTypeNames(paramTypes.elements()) + ")->" + resultType.name();
+    return "(" + commaSeparatedTypeNames(paramTypes.elements()) + ")->" + resultType.specifier();
   }
 
   public static String tupleTypeName(List<? extends SType> elemTypes) {
@@ -30,6 +30,6 @@ public class TokenNames {
   }
 
   private static String commaSeparatedTypeNames(List<? extends SType> elemTypes) {
-    return elemTypes.map(SType::name).toString(",");
+    return elemTypes.map(SType::specifier).toString(",");
   }
 }

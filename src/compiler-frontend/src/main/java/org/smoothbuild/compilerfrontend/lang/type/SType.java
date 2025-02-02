@@ -16,29 +16,29 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
  */
 public abstract sealed class SType
     permits SBaseType, SArrayType, SFuncType, SInterfaceType, STupleType, SVar {
+  private final String specifier;
   private final SVarSet vars;
-  private final String name;
 
-  protected SType(String name) {
-    this(name, varSetS());
+  protected SType(String specifier) {
+    this(specifier, varSetS());
   }
 
-  protected SType(String name, SVarSet vars) {
-    checkArgument(!name.isBlank());
-    this.name = name;
+  protected SType(String specifier, SVarSet vars) {
+    checkArgument(!specifier.isBlank());
+    this.specifier = specifier;
     this.vars = vars;
   }
 
-  public String name() {
-    return name;
-  }
-
-  public String asTypeSpecifierInSourceCode() {
-    return name;
+  /**
+   * Exact smooth source code that is a reference or specification of this type
+   * so it can be used to specify type of function parameter, its result type, value type, etc.
+   */
+  public String specifier() {
+    return specifier;
   }
 
   public String q() {
-    return Strings.q(name);
+    return Strings.q(specifier);
   }
 
   public SVarSet vars() {
@@ -135,7 +135,7 @@ public abstract sealed class SType
   }
 
   public String toSourceCode() {
-    return name();
+    return specifier();
   }
 
   @Override
@@ -145,16 +145,16 @@ public abstract sealed class SType
     }
     return object instanceof SType that
         && getClass().equals(object.getClass())
-        && this.name().equals(that.name());
+        && this.specifier.equals(that.specifier);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name());
+    return Objects.hash(specifier);
   }
 
   @Override
   public String toString() {
-    return name();
+    return specifier;
   }
 }

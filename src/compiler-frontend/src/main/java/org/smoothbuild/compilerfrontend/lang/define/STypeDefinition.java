@@ -19,7 +19,7 @@ public record STypeDefinition(SType type, Fqn fqn, Location location) implements
   }
 
   private static String structToSourceCode(SStructType struct) {
-    return struct.name() + " {\n  "
+    return struct.fqn() + " {\n  "
         + struct.fields().list().map(SItemSig::toSourceCode).toString(",\n  ") + ",\n}";
   }
 

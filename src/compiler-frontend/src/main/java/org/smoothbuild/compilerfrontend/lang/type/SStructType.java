@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.interfaceTypeName;
 
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
@@ -11,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
 /**
  * This class is immutable.
  */
-public final class SStructType extends SInterfaceType {
+public final class SStructType extends SInterfaceType implements Identifiable {
   private final Fqn fqn;
   private final NList<SItemSig> fields;
 
@@ -21,6 +22,7 @@ public final class SStructType extends SInterfaceType {
     this.fields = fields;
   }
 
+  @Override
   public Fqn fqn() {
     return fqn;
   }
@@ -40,12 +42,12 @@ public final class SStructType extends SInterfaceType {
       return true;
     }
     return object instanceof SStructType thatStruct
-        && this.name().equals(thatStruct.name())
+        && this.fqn.equals(thatStruct.fqn())
         && this.fields.equals(thatStruct.fields);
   }
 
   @Override
   public String toString() {
-    return name() + interfaceTypeName(fieldSet());
+    return fqn + interfaceTypeName(fieldSet());
   }
 }

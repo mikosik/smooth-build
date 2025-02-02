@@ -10,7 +10,6 @@ import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
-import static org.smoothbuild.compilerfrontend.lang.name.Name.structName;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -28,6 +27,7 @@ import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
+import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class FrontendCompileTester extends FrontendCompilerTestContext {
@@ -68,16 +68,14 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       return evaluables.find(fqn).ok();
     }
 
-    public void containsType(SType expected) {
-      var name = expected.name();
+    public void containsType(SStructType expected) {
+      var fqn = expected.fqn();
       var types = sModule.get().localScope().types();
-      assertWithMessage("Module doesn't contain type with '" + name + "' name.")
-          .that(types.find(fqn(name)).isOk())
+      assertWithMessage("Module doesn't contain type '" + fqn + "'.")
+          .that(types.find(fqn).isOk())
           .isTrue();
-      SType actual = types.find(structName(name)).ok().type();
-      assertWithMessage("Module contains type '" + name + "', but")
-          .that(actual)
-          .isEqualTo(expected);
+      SType actual = types.find(fqn).ok().type();
+      assertWithMessage("Module contains type '" + fqn + "', but").that(actual).isEqualTo(expected);
     }
 
     public SModule getLoadedModule() {

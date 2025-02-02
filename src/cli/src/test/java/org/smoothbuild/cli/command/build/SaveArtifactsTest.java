@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.command.build;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.command.build.SaveArtifacts.FILE_STRUCT_NAME;
+import static org.smoothbuild.cli.command.build.SaveArtifacts.FILE_STRUCT_FQN;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 import static org.smoothbuild.common.log.base.Label.label;
@@ -252,6 +252,6 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
   }
 
   public SStructType sFileT() {
-    return sStructType(FILE_STRUCT_NAME, sBlobType(), sStringType());
+    return sStructType(FILE_STRUCT_FQN.toString(), sBlobType(), sStringType());
   }
 }

@@ -8,7 +8,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class STypeDefinitionTest extends FrontendCompilerTestContext {
   @Test
-  void name() {
+  void specifier() {
     var fqn = fqn("my:company:MyStruct");
     var type = sStructType(fqn.parts().getLast().toString(), sIntType(), sBoolType());
     var structTypeDefinition = new STypeDefinition(type, fqn, location());

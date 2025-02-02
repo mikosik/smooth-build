@@ -28,35 +28,35 @@ public class STypeTest extends FrontendCompilerTestContext {
   }
 
   @ParameterizedTest
-  @MethodSource("names")
-  public void name(SType type, String name) {
-    assertThat(type.name()).isEqualTo(name);
+  @MethodSource("specifiers")
+  public void specifier(SType type, String specifier) {
+    assertThat(type.specifier()).isEqualTo(specifier);
   }
 
   @ParameterizedTest
-  @MethodSource("names")
-  public void quoted_name(SType type, String name) {
-    assertThat(type.q()).isEqualTo("`" + name + "`");
+  @MethodSource("specifiers")
+  public void quoted_specifier(SType type, String specifier) {
+    assertThat(type.q()).isEqualTo("`" + specifier + "`");
   }
 
   @ParameterizedTest
   @MethodSource("to_string")
-  public void to_string(SType type, String name) {
-    assertThat(type.toString()).isEqualTo(name);
+  public void to_string(SType type, String toString) {
+    assertThat(type.toString()).isEqualTo(toString);
   }
 
   @ParameterizedTest
-  @MethodSource("names")
-  public void to_source_code(SType type, String name) {
-    assertThat(type.toSourceCode()).isEqualTo(name);
+  @MethodSource("specifiers")
+  public void to_source_code(SType type, String specifier) {
+    assertThat(type.toSourceCode()).isEqualTo(specifier);
   }
 
-  public static List<Arguments> names() {
+  public static List<Arguments> specifiers() {
     return new STypeTest().names_non_static();
   }
 
   public List<Arguments> names_non_static() {
-    return name_or_to_string()
+    return specifier_or_to_string()
         .addAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct"),
             arguments(sStructType("MyStruct", nlist(sSig(sIntType(), "field"))), "MyStruct")));
@@ -67,14 +67,14 @@ public class STypeTest extends FrontendCompilerTestContext {
   }
 
   public List<Arguments> to_string_non_static() {
-    return name_or_to_string()
+    return specifier_or_to_string()
         .addAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct{}"),
             arguments(
                 sStructType("MyStruct", nlist(sSig(sIntType(), "field"))), "MyStruct{Int field}")));
   }
 
-  public List<Arguments> name_or_to_string() {
+  public List<Arguments> specifier_or_to_string() {
     return list(
         arguments(sBlobType(), "Blob"),
         arguments(sBoolType(), "Bool"),
@@ -162,7 +162,7 @@ public class STypeTest extends FrontendCompilerTestContext {
   @ParameterizedTest
   @MethodSource("map_vars")
   public void map_vars(SType type, SType expected) {
-    Function<SVar, SType> addPrefix = (SVar v) -> new SVar(fqn("module:" + v.name()));
+    Function<SVar, SType> addPrefix = (SVar v) -> new SVar(fqn("module").append(v.fqn()));
     assertThat(type.mapVars(addPrefix)).isEqualTo(expected);
   }
 
@@ -323,9 +323,9 @@ public class STypeTest extends FrontendCompilerTestContext {
     }
 
     @Test
-    void struct_name() {
+    void struct_specifier() {
       var struct = sStructType("MyStruct", nlist());
-      assertThat(struct.name()).isEqualTo("MyStruct");
+      assertThat(struct.specifier()).isEqualTo("MyStruct");
     }
 
     @ParameterizedTest

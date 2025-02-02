@@ -596,11 +596,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SConstructor sConstructor(SStructType structType) {
-    return sConstructor(1, structType, UPPER_CAMEL.to(LOWER_CAMEL, structType.name()));
+    return sConstructor(1, structType, UPPER_CAMEL.to(LOWER_CAMEL, structType.specifier()));
   }
 
   public default SConstructor sConstructor(int line, SStructType structType) {
-    return sConstructor(line, structType, structType.name());
+    return sConstructor(line, structType, structType.specifier());
   }
 
   public default SConstructor sConstructor(int line, SStructType structType, String name) {

@@ -92,7 +92,7 @@ public class TestedTSF {
     var paramSigs = toSigs(paramTestedTs);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);"
-        .formatted(resultT.name(), name, toParamDeclarationString(paramTestedTs));
+        .formatted(resultT.specifier(), name, toParamDeclarationString(paramTestedTs));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
         .addAll(resultT.allDeclarations())
@@ -115,7 +115,7 @@ public class TestedTSF {
   private static String toParamDeclarationString(List<TestedTS> paramTestedTs) {
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < paramTestedTs.size(); i++) {
-      builder.append(paramTestedTs.get(i).name() + " p" + i);
+      builder.append(paramTestedTs.get(i).specifier() + " p" + i);
     }
     return builder.toString();
   }
