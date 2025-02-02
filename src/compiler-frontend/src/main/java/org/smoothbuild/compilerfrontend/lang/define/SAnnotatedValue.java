@@ -5,7 +5,7 @@ import static org.smoothbuild.compilerfrontend.lang.define.SNamedValue.valueHead
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
+import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
@@ -13,7 +13,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class SAnnotatedValue implements SNamedValue, Identifiable {
+public final class SAnnotatedValue implements SNamedValue, IdentifiableCode {
   private final SAnnotation annotation;
   private final SSchema schema;
   private final Fqn fqn;

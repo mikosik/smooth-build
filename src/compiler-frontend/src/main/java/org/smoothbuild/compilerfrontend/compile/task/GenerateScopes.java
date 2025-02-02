@@ -22,7 +22,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
+import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
@@ -128,7 +128,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
       addBinding(referenceables, pReferenceable, reportErrors);
     }
 
-    private <T extends Identifiable> void addBinding(
+    private <T extends IdentifiableCode> void addBinding(
         MutableBindings<T> bindings, T binding, boolean reportErrors) {
       // For now, we don't have anything (function or value) that can be enclosed inside other
       // function or value and have fully qualified name that contains enclosing name.
@@ -143,7 +143,7 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
     // with other constructor name. This can only happen when other structure
     // with same name is declared which will be reported when detecting duplicate struct name.
 
-    private <T extends Identifiable> void addBinding(
+    private <T extends IdentifiableCode> void addBinding(
         MutableBindings<T> bindings, T binding, Name name, boolean reportErrors) {
       var previousBinding = bindings.add(name, binding);
       if (previousBinding != null && reportErrors) {
