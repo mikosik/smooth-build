@@ -4,13 +4,14 @@ import static com.google.common.base.Suppliers.memoize;
 
 import com.google.common.base.Supplier;
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 
 /**
  * Identifier.
  */
-public abstract class Id {
+public abstract class Id implements Comparable<Id> {
   private final String string;
   private final Supplier<List<Name>> parts = memoize(this::splitToParts);
 
@@ -34,6 +35,11 @@ public abstract class Id {
 
   public String toSourceCode() {
     return string;
+  }
+
+  @Override
+  public int compareTo(@NotNull Id id) {
+    return this.string.compareTo(id.string);
   }
 
   @Override

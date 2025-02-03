@@ -15,6 +15,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Name.structName;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.typeVarName;
 
 import com.google.common.testing.EqualsTester;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -381,6 +382,26 @@ public class IdTest {
         arguments(fqn("abc:def"), list(name("abc"), name("def"))),
         arguments(fqn("abc:def:ghi"), list(name("abc"), name("def"), name("ghi"))),
         arguments(fqn("abc:_"), list(name("abc"), name("_"))));
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  public void compare_to(Id left, Id right, int result) {
+    var comparison = left.compareTo(right);
+    assertThat(Math.clamp(comparison, -1, 1)).isEqualTo(result);
+  }
+
+  public static Stream<Arguments> compare_to() {
+    return Stream.of(
+        arguments(fqn("abc"), referenceableName("abc"), 0),
+        arguments(fqn("abc"), fqn("def"), -1),
+        arguments(referenceableName("abc"), fqn("def"), -1),
+        arguments(fqn("abc"), referenceableName("def"), -1),
+        arguments(fqn("abc"), fqn("abcd"), -1),
+        arguments(fqn("abc:def"), fqn("abc:ghi"), -1),
+        arguments(fqn("abc:def"), fqn("abcd:ef"), -1),
+        arguments(fqn("abc"), fqn("abc:def"), -1),
+        arguments(referenceableName("abc"), fqn("abc:ghi"), -1));
   }
 
   @Test
