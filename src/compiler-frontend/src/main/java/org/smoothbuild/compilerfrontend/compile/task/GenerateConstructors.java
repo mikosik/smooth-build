@@ -1,41 +1,35 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 
-public class GenerateConstructors extends PModuleVisitor<RuntimeException>
-    implements Task1<PModule, PModule> {
+public class GenerateConstructors implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
-    var logger = new Logger();
-    var constructors = new ArrayList<PConstructor>();
-    new ConstructorCreator(constructors).visitModule(pModule);
+    var constructorCreator = new ConstructorCreator();
+    constructorCreator.visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":generateConstructors");
-    var newEvaluables = pModule.evaluables().addAll(constructors);
+    var newEvaluables = pModule.evaluables().addAll(constructorCreator.constructors);
     var newModule = new PModule(pModule.fullPath(), pModule.structs(), newEvaluables);
-    return output(newModule, label, logger.toList());
+    return output(newModule, label, list());
   }
 
-  private static class ConstructorCreator extends PModuleVisitor<RuntimeException> {
-    private final List<PConstructor> constructors;
-
-    public ConstructorCreator(ArrayList<PConstructor> constructors) {
-      this.constructors = constructors;
-    }
+  private static class ConstructorCreator extends PScopingModuleVisitor<RuntimeException> {
+    private final List<PConstructor> constructors = new ArrayList<>();
 
     @Override
-    public void visitStruct(PStruct pStruct) throws RuntimeException {
-      super.visitStruct(pStruct);
+    public void visitStructSignature(PStruct pStruct) throws RuntimeException {
+      super.visitStructSignature(pStruct);
       constructors.add(new PConstructor(pStruct));
     }
   }

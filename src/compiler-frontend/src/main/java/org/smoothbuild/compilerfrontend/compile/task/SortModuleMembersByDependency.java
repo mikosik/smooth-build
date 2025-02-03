@@ -20,7 +20,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -66,7 +66,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   private static GraphNode<Id, PNamedEvaluable, Location> evaluable(
       PNamedEvaluable evaluable, HashSet<Id> ids) {
     HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
-    new PModuleVisitor<RuntimeException>() {
+    new PScopingModuleVisitor<RuntimeException>() {
       @Override
       public void visitReference(PReference pReference) {
         super.visitReference(pReference);
@@ -94,7 +94,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   private static GraphNode<Id, PStruct, Location> structToGraphNode(
       PStruct struct, Set<String> structNames) {
     HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
-    new PModuleVisitor<RuntimeException>() {
+    new PScopingModuleVisitor<RuntimeException>() {
       @Override
       public void visitStructSignature(PStruct pStruct) {
         super.visitStructSignature(pStruct);

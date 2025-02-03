@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
-import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
@@ -13,7 +13,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnusedVarsGenerator;
 
-public class FlexibleToRigidVarConverter extends PModuleVisitor<RuntimeException> {
+public class FlexibleToRigidVarConverter extends PScopingModuleVisitor<RuntimeException> {
   private final Unifier unifier;
   private final SVarSet outerScopeVars;
 

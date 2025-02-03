@@ -3,16 +3,19 @@ package org.smoothbuild.compilerfrontend.compile.task;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.parseReference;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.parseReferenceableName;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.parseStructName;
 
+import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
@@ -32,18 +35,28 @@ public class GenerateFqns implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    new CreateIdVisitor(null, logger).visitModule(pModule);
+    new CreateIdVisitor(logger).visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":generateIds");
     return output(pModule, label, logger.toList());
   }
 
-  private static class CreateIdVisitor extends PModuleVisitor<RuntimeException> {
+  private static class CreateIdVisitor extends PModuleVisitor<Fqn, RuntimeException> {
     private final Logger logger;
-    private Fqn scopeFqn;
 
-    public CreateIdVisitor(Fqn scopeFqn, Logger logger) {
-      this.scopeFqn = scopeFqn;
+    public CreateIdVisitor(Logger logger) {
       this.logger = logger;
+    }
+
+    @Override
+    protected Fqn propertyOf(PContainer pContainer) {
+      var name =
+          switch (pContainer) {
+            case PLambda pLambda -> setLambdaFqn(pLambda);
+            case PModule pModule -> Result.<Name>err("");
+            case PNamedEvaluable pNamedEvaluable -> setNamedEvaluableFqn(pNamedEvaluable);
+            case PStruct pStruct -> setStructFqn(pStruct);
+          };
+      return name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOrGet(() -> null);
     }
 
     @Override
@@ -61,24 +74,17 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       }
     }
 
-    @Override
-    public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
+    private Result<Name> setNamedEvaluableFqn(PNamedEvaluable pNamedEvaluable)
+        throws RuntimeException {
       var nameText = pNamedEvaluable.nameText();
-      parseReferenceableName(nameText)
-          .ifErr(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e))
-          .mapOk(this::toFqn)
-          .ifOk(pNamedEvaluable::setFqn)
-          .ifOk(id -> runWithScopeId(id, () -> super.visitNamedEvaluable(pNamedEvaluable)));
+      return parseReferenceableName(nameText)
+          .ifErr(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e));
     }
 
-    @Override
-    public void visitLambda(PLambda pLambda) throws RuntimeException {
+    private Result<Name> setLambdaFqn(PLambda pLambda) throws RuntimeException {
       var nameText = pLambda.nameText();
-      parseReferenceableName(nameText)
-          .ifErr(e -> logIllegalIdentifier(nameText, pLambda.location(), e))
-          .mapOk(this::toFqn)
-          .ifOk(pLambda::setFqn)
-          .ifOk(id -> runWithScopeId(id, () -> super.visitLambda(pLambda)));
+      return parseReferenceableName(nameText)
+          .ifErr(e -> logIllegalIdentifier(nameText, pLambda.location(), e));
     }
 
     private void logIllegalTypeReference(PTypeReference pTypeReference, String e) {
@@ -104,16 +110,10 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       logger.log(compileError(location, "`" + nameText + "` is illegal identifier name. " + e));
     }
 
-    @Override
-    public void visitStruct(PStruct pStruct) {
+    private Result<Name> setStructFqn(PStruct pStruct) {
       var nameText = pStruct.nameText();
-      parseStructName(nameText)
-          .ifErr(e -> logIllegalStructName(pStruct, e, pStruct.nameText()))
-          .ifOk(name -> {
-            var fqn = toFqn(name);
-            pStruct.setFqn(fqn);
-            runWithScopeId(fqn, () -> super.visitStruct(pStruct));
-          });
+      return parseStructName(nameText)
+          .ifErr(e -> logIllegalStructName(pStruct, e, pStruct.nameText()));
     }
 
     private void logIllegalStructName(PStruct pStruct, String e, String nameText) {
@@ -159,18 +159,9 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       logger.log(compileError(pSelect.location(), message));
     }
 
-    private void runWithScopeId(Fqn fqn, Runnable runnable) {
-      var old = scopeFqn;
-      scopeFqn = fqn;
-      try {
-        runnable.run();
-      } finally {
-        scopeFqn = old;
-      }
-    }
-
     private Fqn toFqn(Name name) {
-      return scopeFqn == null ? Fqn.fqn(name.toString()) : scopeFqn.append(name);
+      var containerFqn = containerProperty();
+      return containerFqn == null ? fqn(name.toString()) : containerFqn.append(name);
     }
   }
 }

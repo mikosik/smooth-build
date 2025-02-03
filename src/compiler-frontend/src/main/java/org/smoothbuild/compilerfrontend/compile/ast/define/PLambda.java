@@ -35,6 +35,7 @@ public final class PLambda implements PFunc, PPolymorphic {
     return nameText;
   }
 
+  @Override
   public void setFqn(Fqn id) {
     this.fqn = id;
   }

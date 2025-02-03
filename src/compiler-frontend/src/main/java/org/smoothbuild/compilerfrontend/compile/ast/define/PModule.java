@@ -13,6 +13,7 @@ public final class PModule implements PContainer {
   private final List<PStruct> structs;
   private final List<PNamedEvaluable> evaluables;
   private PScope scope;
+  private Fqn fqn = null;
 
   public PModule(FullPath fullPath, List<PStruct> structs, List<PNamedEvaluable> evaluables) {
     this(fullPath, structs, evaluables, null);
@@ -31,8 +32,13 @@ public final class PModule implements PContainer {
   }
 
   @Override
+  public void setFqn(Fqn fqn) {
+    this.fqn = fqn;
+  }
+
+  @Override
   public Fqn fqn() {
-    return null;
+    return fqn;
   }
 
   @Override

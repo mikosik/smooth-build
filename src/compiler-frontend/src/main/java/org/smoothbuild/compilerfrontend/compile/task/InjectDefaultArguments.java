@@ -16,10 +16,8 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
@@ -28,32 +26,20 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
-import org.smoothbuild.compilerfrontend.lang.bindings.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 public class InjectDefaultArguments implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
-    var logger = new Logger();
-    new Visitor(null, logger).visitModule(pModule);
+    var visitor = new Visitor();
+    visitor.visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":injectDefaultArguments");
-    return output(pModule, label, logger.toList());
+    return output(pModule, label, visitor.logger.toList());
   }
 
   private static class Visitor extends PScopingModuleVisitor<RuntimeException> {
-    private final Bindings<? extends Referenceable> referenceables;
-    private final Logger logger;
-
-    public Visitor(Bindings<? extends Referenceable> referenceables, Logger logger) {
-      this.referenceables = referenceables;
-      this.logger = logger;
-    }
-
-    @Override
-    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PContainer pContainer) {
-      return new Visitor(pContainer.scope().referencables(), logger);
-    }
+    private final Logger logger = new Logger();
 
     @Override
     public void visitCall(PCall pCall) {
@@ -64,7 +50,8 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
-        return referenceables
+        return scope()
+            .referencables()
             .find(pReference.id())
             .mapOk(r -> inferPositionedArgs(pCall, r))
             .okOrThrow(e -> new RuntimeException("Internal error: " + e));

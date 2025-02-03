@@ -51,6 +51,7 @@ public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluab
 
   public abstract PType evaluationType();
 
+  @Override
   public void setFqn(Fqn fqn) {
     this.fqn = fqn;
   }

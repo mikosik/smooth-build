@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
@@ -35,28 +34,16 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
 
   private static void generateDefaultValues(
       PModule pModule, ArrayList<PNamedEvaluable> namedDefaultValues) {
-    new PModuleVisitor<RuntimeException>() {
-      private Fqn scopeFqn;
-
+    new PModuleVisitor<Fqn, RuntimeException>() {
       @Override
-      public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
-        runWithScopeFqn(pNamedEvaluable.fqn(), () -> super.visitNamedEvaluable(pNamedEvaluable));
-      }
-
-      @Override
-      public void visitLambda(PLambda pLambda) throws RuntimeException {
-        runWithScopeFqn(pLambda.fqn(), () -> super.visitLambda(pLambda));
-      }
-
-      @Override
-      public void visitStruct(PStruct pStruct) throws RuntimeException {
-        runWithScopeFqn(pStruct.fqn(), () -> super.visitStruct(pStruct));
+      protected Fqn propertyOf(PContainer pContainer) {
+        return pContainer.fqn();
       }
 
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
-        var fqn = fqn(scopeFqn.toString() + "~" + pItem.name().toString());
+        var fqn = fqn(containerProperty().toString() + "~" + pItem.name().toString());
         pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, fqn)));
       }
 
@@ -68,16 +55,6 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
         namedDefaultValues.add(pNamedValue);
         return fqn;
       }
-
-      private void runWithScopeFqn(Fqn fqn, Runnable runnable) {
-        var oldFqn = scopeFqn;
-        scopeFqn = fqn;
-        try {
-          runnable.run();
-        } finally {
-          scopeFqn = oldFqn;
-        }
-      }
-    }.visitModule(pModule);
+    }.visit(pModule);
   }
 }
