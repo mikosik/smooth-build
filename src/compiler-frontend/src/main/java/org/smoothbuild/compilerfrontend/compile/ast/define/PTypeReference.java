@@ -1,20 +1,20 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public final class PTypeReference extends PExplicitType {
-  private Id id;
+  private Fqn fqn;
 
   public PTypeReference(String idText, Location location) {
     super(idText, location);
   }
 
-  public Id id() {
-    return id;
+  public Fqn fqn() {
+    return fqn;
   }
 
-  public void setId(Id id) {
-    this.id = id;
+  public void setFqn(Fqn fqn) {
+    this.fqn = fqn;
   }
 }
