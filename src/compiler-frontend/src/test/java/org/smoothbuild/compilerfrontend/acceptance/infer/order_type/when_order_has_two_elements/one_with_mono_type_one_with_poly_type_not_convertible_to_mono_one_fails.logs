@@ -1,1 +1,1 @@
-Log{ERROR, '{t-project}/module.smooth:3: Cannot infer array type. After unifying first 2 elements, array type is inferred as `[(Int)->Int]`. However type of element at index 1 is `(T1,T1)->T1`.'}
+Log{ERROR, '{t-project}/module.smooth:3: Cannot infer array type. After unifying first 2 elements, array type is inferred as `[(Int)->Int]`. However type of element at index 1 is `(T~1,T~1)->T~1`.'}

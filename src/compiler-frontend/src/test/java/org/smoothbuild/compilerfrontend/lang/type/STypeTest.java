@@ -236,6 +236,9 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(var1(), true),
         arguments(var2(), true),
         arguments(var3(), true),
+        arguments(sVar(fqn("TT~1")), false),
+        arguments(sVar(fqn("module~:T")), false),
+        arguments(sVar(fqn("module:T~1")), false),
         arguments(varA(), false),
         arguments(varB(), false));
   }

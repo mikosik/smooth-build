@@ -8,6 +8,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
  * This class is immutable.
  */
 public final class SVar extends SType implements Identifiable {
+  private static final String FLEXIBLE_VAR_PREFIX = "T~";
   private final SVarSet vars;
   private final Fqn fqn;
 
@@ -18,7 +19,7 @@ public final class SVar extends SType implements Identifiable {
   }
 
   public static SVar flexibleVar(int i) {
-    return new SVar(Fqn.fqn("T" + i));
+    return new SVar(Fqn.fqn(FLEXIBLE_VAR_PREFIX + i));
   }
 
   @Override
@@ -33,6 +34,6 @@ public final class SVar extends SType implements Identifiable {
 
   @Override
   public boolean isFlexibleVar() {
-    return specifier().chars().anyMatch(Character::isDigit);
+    return specifier().startsWith(FLEXIBLE_VAR_PREFIX);
   }
 }

@@ -7,6 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -783,8 +784,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
   class _resolve {
     @Test
     void unknown_flexible_var_cannot_be_resolved() {
-      assertCall(() -> unifier.resolve(sVar("_1")))
-          .throwsException(new IllegalStateException("Unknown flexible var `_1`."));
+      assertCall(() -> unifier.resolve(flexibleVar(1)))
+          .throwsException(new IllegalStateException("Unknown flexible var `T~1`."));
     }
 
     @ParameterizedTest
