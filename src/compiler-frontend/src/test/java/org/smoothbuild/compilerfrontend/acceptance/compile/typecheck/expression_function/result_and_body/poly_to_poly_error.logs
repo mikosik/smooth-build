@@ -1,1 +1,1 @@
-Log{ERROR, '{t-project}/module.smooth:1: `myFunc` body type `[T1]` is not equal to declared type `[A]`.'}
+Log{ERROR, '{t-project}/module.smooth:1: `myFunc` body type `[T~1]` is not equal to declared type `[A]`.'}
