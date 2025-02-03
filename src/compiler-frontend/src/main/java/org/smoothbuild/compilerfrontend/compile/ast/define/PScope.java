@@ -1,12 +1,12 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -37,21 +37,21 @@ public record PScope(
   }
 
   public SType translate(PType type) {
-    if (isTypeVarName(type.nameText())) {
-      return new SVar(fqn(type.nameText()));
-    }
     return switch (type) {
       case PArrayType a -> new SArrayType(translate(a.elemT()));
       case PFuncType f -> new SFuncType(f.params().map(this::translate), translate(f.result()));
-      case PTypeReference i -> typeWithId(i.fqn());
-      case PImplicitType im -> throw new RuntimeException(
+      case PTypeReference r -> typeByReference(r.fqn());
+      case PImplicitType i -> throw new RuntimeException(
           "Internal error: Did not expect implicit type.");
     };
   }
 
-  private SType typeWithId(Id id) {
+  private SType typeByReference(Fqn fqn) {
+    if (isTypeVarName(fqn.parts().getLast().toString())) {
+      return new SVar(fqn);
+    }
     return types
-        .find(id)
+        .find(fqn)
         .mapOk(TypeDefinition::type)
         .okOrThrow(e -> new RuntimeException("Internal error: " + e));
   }
