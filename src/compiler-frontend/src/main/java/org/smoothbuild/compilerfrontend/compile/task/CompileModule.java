@@ -29,7 +29,7 @@ public class CompileModule implements Task2<SModule, FullPath, SModule> {
     var fileContent = scheduler.submit(ReadFileContent.class, path);
     var moduleContext = scheduler.submit(Parse.class, fileContent, path);
     var pModule = scheduler.submit(TranslateAp.class, moduleContext, path);
-    var withVerifiedIds = scheduler.submit(GenerateIds.class, pModule);
+    var withVerifiedIds = scheduler.submit(GenerateFqns.class, pModule);
     var withGeneratedDefaults = scheduler.submit(GenerateDefaultValues.class, withVerifiedIds);
     var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, withGeneratedDefaults);
     var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);

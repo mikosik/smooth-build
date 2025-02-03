@@ -26,10 +26,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
-public class GenerateIds implements Task1<PModule, PModule> {
+public class GenerateFqns implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
@@ -40,10 +39,10 @@ public class GenerateIds implements Task1<PModule, PModule> {
 
   private static class CreateIdVisitor extends PModuleVisitor<RuntimeException> {
     private final Logger logger;
-    private Id scopeId;
+    private Fqn scopeFqn;
 
-    public CreateIdVisitor(Id scopeId, Logger logger) {
-      this.scopeId = scopeId;
+    public CreateIdVisitor(Fqn scopeFqn, Logger logger) {
+      this.scopeFqn = scopeFqn;
       this.logger = logger;
     }
 
@@ -160,18 +159,18 @@ public class GenerateIds implements Task1<PModule, PModule> {
       logger.log(compileError(pSelect.location(), message));
     }
 
-    private void runWithScopeId(Id id, Runnable runnable) {
-      var old = scopeId;
-      scopeId = id;
+    private void runWithScopeId(Fqn fqn, Runnable runnable) {
+      var old = scopeFqn;
+      scopeFqn = fqn;
       try {
         runnable.run();
       } finally {
-        scopeId = old;
+        scopeFqn = old;
       }
     }
 
     private Fqn toFqn(Name name) {
-      return scopeId == null ? Fqn.fqn(name.toString()) : scopeId.append(name);
+      return scopeFqn == null ? Fqn.fqn(name.toString()) : scopeFqn.append(name);
     }
   }
 }
