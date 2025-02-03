@@ -79,7 +79,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SModule convertModule(PModule pModule) {
       var structs = pModule.structs().map(this::convertStruct);
-      var evaluables = pModule.evaluables().map(this::convertReferenceableP);
+      var evaluables = pModule.evaluables().map(this::convertReferenceable);
       var members = new SScope(immutableBindings(structs), immutableBindings(evaluables));
       var sScope = sScope(imported, members);
       return new SModule(members, sScope);
@@ -97,7 +97,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
           pConstructor.schema(), pConstructor.fqn(), params, pConstructor.location());
     }
 
-    private SNamedEvaluable convertReferenceableP(PReferenceable pReferenceable) {
+    private SNamedEvaluable convertReferenceable(PReferenceable pReferenceable) {
       return switch (pReferenceable) {
         case PConstructor pConstructor -> convertConstructor(pConstructor);
         case PNamedFunc pNamedFunc -> convertNamedFunc(pNamedFunc);
