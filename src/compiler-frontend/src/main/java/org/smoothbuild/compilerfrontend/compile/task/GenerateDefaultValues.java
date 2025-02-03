@@ -36,27 +36,27 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
   private static void generateDefaultValues(
       PModule pModule, ArrayList<PNamedEvaluable> namedDefaultValues) {
     new PModuleVisitor<RuntimeException>() {
-      private Id scopeId;
+      private Fqn scopeFqn;
 
       @Override
       public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
-        runWithScopeId(pNamedEvaluable.fqn(), () -> super.visitNamedEvaluable(pNamedEvaluable));
+        runWithScopeFqn(pNamedEvaluable.fqn(), () -> super.visitNamedEvaluable(pNamedEvaluable));
       }
 
       @Override
       public void visitLambda(PLambda pLambda) throws RuntimeException {
-        runWithScopeId(pLambda.fqn(), () -> super.visitLambda(pLambda));
+        runWithScopeFqn(pLambda.fqn(), () -> super.visitLambda(pLambda));
       }
 
       @Override
       public void visitStruct(PStruct pStruct) throws RuntimeException {
-        runWithScopeId(pStruct.fqn(), () -> super.visitStruct(pStruct));
+        runWithScopeFqn(pStruct.fqn(), () -> super.visitStruct(pStruct));
       }
 
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
-        var fqn = fqn(scopeId.toString() + "~" + pItem.name().toString());
+        var fqn = fqn(scopeFqn.toString() + "~" + pItem.name().toString());
         pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, fqn)));
       }
 
@@ -69,13 +69,13 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
         return fqn;
       }
 
-      private void runWithScopeId(Id id, Runnable runnable) {
-        var old = scopeId;
-        scopeId = id;
+      private void runWithScopeFqn(Fqn fqn, Runnable runnable) {
+        var oldFqn = scopeFqn;
+        scopeFqn = fqn;
         try {
           runnable.run();
         } finally {
-          scopeId = old;
+          scopeFqn = oldFqn;
         }
       }
     }.visitModule(pModule);
