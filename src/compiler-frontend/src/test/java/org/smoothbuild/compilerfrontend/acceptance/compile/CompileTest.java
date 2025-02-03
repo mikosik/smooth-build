@@ -26,7 +26,7 @@ public class CompileTest extends FrontendCompileTester {
 
   @ParameterizedTest(name = "{0}")
   @ArgumentsSource(ArgumentsProvider.class)
-  void test_inference(String testName, Path input) throws IOException {
+  void test_compile(String testName, Path input) throws IOException {
     switch (MODE) {
       case ASSERT -> assertTest(input);
       case OVERWRITE -> overwriteTest(input);
