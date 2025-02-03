@@ -18,7 +18,7 @@ public final class SVarSet extends Set<SVar> {
   }
 
   private static SVarSet newSortedVarSetS(Set<SVar> set) {
-    return new SVarSet(set.sort(comparing(SVar::specifier)));
+    return new SVarSet(set.sort(comparing(SVar::fqn)));
   }
 
   private SVarSet(Set<SVar> elements) {

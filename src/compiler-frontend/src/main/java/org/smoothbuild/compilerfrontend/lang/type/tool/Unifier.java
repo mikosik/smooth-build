@@ -180,7 +180,7 @@ public class Unifier {
   public String toString() {
     return new HashSet<>(flexibleVarToUnified.values())
         .stream()
-            .sorted(comparing(u -> u.mainVar.specifier()))
+            .sorted(comparing(u -> u.mainVar.fqn()))
             .map(Object::toString)
             .collect(joining("\n"));
   }
