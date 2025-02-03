@@ -12,7 +12,6 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
-import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
@@ -31,8 +30,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class GenerateScopes extends PModuleVisitor<RuntimeException>
-    implements Task2<SScope, PModule, PModule> {
+public class GenerateScopes implements Task2<SScope, PModule, PModule> {
   @Override
   public Output<PModule> execute(SScope importedScope, PModule pModule) {
     var logger = new Logger();
@@ -44,24 +42,22 @@ public class GenerateScopes extends PModuleVisitor<RuntimeException>
   @VisibleForTesting
   static void initializeScopes(SScope importedScope, PModule pModule, Logger logger) {
     var pScope = new PScope(importedScope.evaluables(), importedScope.types());
-    new Initializer(pScope, logger).visitModule(pModule);
+    new Initializer(pScope, logger).visit(pModule);
   }
 
-  private static class Initializer extends PScopingModuleVisitor<RuntimeException> {
-    private final PScope scope;
+  private static class Initializer extends PModuleVisitor<PScope, RuntimeException> {
     private final Logger logger;
 
     private Initializer(PScope scope, Logger logger) {
-      this.scope = scope;
+      super(scope);
       this.logger = logger;
     }
 
     @Override
-    protected PModuleVisitor<RuntimeException> createVisitorForScopeOf(PContainer pContainer) {
-      var scopeFiller = new ScopeCreator(scope, logger);
-      var newScope = scopeFiller.createScopeFor(pContainer);
+    protected PScope propertyOf(PContainer pContainer) {
+      var newScope = new ScopeCreator(containerProperty(), logger).createScopeFor(pContainer);
       pContainer.setScope(newScope);
-      return new Initializer(newScope, logger);
+      return newScope;
     }
   }
 

@@ -9,7 +9,7 @@ import org.smoothbuild.common.base.UnescapeFailedException;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
@@ -18,18 +18,14 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 public class DecodeLiterals implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
-    var logger = new Logger();
-    new DecodeLiteralModuleVisitor(logger).visitModule(pModule);
+    var decodeLiteralModuleVisitor = new DecodeLiteralModuleVisitor();
+    decodeLiteralModuleVisitor.visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":decodeLiterals");
-    return output(pModule, label, logger.toList());
+    return output(pModule, label, decodeLiteralModuleVisitor.logger.toList());
   }
 
-  private static class DecodeLiteralModuleVisitor extends PModuleVisitor<RuntimeException> {
-    private final Logger logger;
-
-    public DecodeLiteralModuleVisitor(Logger logger) {
-      this.logger = logger;
-    }
+  private static class DecodeLiteralModuleVisitor extends PScopingModuleVisitor<RuntimeException> {
+    private final Logger logger = new Logger();
 
     @Override
     public void visitBlob(PBlob pBlob) {

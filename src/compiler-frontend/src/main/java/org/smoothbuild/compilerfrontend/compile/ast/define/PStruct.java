@@ -28,6 +28,7 @@ public final class PStruct implements TypeDefinition, PContainer, IdentifiableCo
     return nameText;
   }
 
+  @Override
   public void setFqn(Fqn fqn) {
     this.fqn = fqn;
   }

@@ -4,6 +4,8 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
@@ -24,18 +26,60 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 
-public class PModuleVisitor<T extends Throwable> {
+public abstract class PModuleVisitor<P, T extends Throwable> {
+  private P containerProperty;
+
+  public PModuleVisitor() {}
+
+  public PModuleVisitor(P containerProperty) {
+    this.containerProperty = containerProperty;
+  }
+
+  protected abstract P propertyOf(PContainer pContainer);
+
+  public P containerProperty() {
+    return containerProperty;
+  }
+
+  public void visit(List<? extends PContainer> pContainer) throws T {
+    pContainer.foreach(this::visit);
+  }
+
+  public void visit(PContainer pContainer) throws T {
+    var previousProperty = containerProperty;
+    try {
+      containerProperty = propertyOf(pContainer);
+      switch (pContainer) {
+        case PModule pModule -> visitModule(pModule);
+        case PEvaluable pEvaluable -> visitEvaluable(pEvaluable);
+        case PStruct pStruct -> visitStruct(pStruct);
+      }
+    } finally {
+      containerProperty = previousProperty;
+    }
+  }
+
+  public void visitEvaluable(PEvaluable pEvaluable) throws T {
+    switch (pEvaluable) {
+      case PLambda pLambda -> visitLambda(pLambda);
+      case PNamedEvaluable pNamedEvaluable -> visitNamedEvaluable(pNamedEvaluable);
+    }
+  }
+
+  public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws T {
+    switch (pNamedEvaluable) {
+      case PNamedFunc pNamedFunc -> visitNamedFunc(pNamedFunc);
+      case PNamedValue pNamedValue -> visitNamedValue(pNamedValue);
+    }
+  }
+
   public void visitModule(PModule pModule) throws T {
     visitModuleChildren(pModule);
   }
 
   public void visitModuleChildren(PModule pModule) throws T {
-    visitStructs(pModule.structs());
-    visitNamedEvaluables(pModule.evaluables());
-  }
-
-  public void visitStructs(List<PStruct> pStructs) throws T {
-    pStructs.foreach(this::visitStruct);
+    visit(pModule.structs());
+    visit(pModule.evaluables());
   }
 
   public void visitStruct(PStruct pStruct) throws T {
@@ -45,17 +89,6 @@ public class PModuleVisitor<T extends Throwable> {
   public void visitStructSignature(PStruct pStruct) throws T {
     visitItems(pStruct.fields().list());
     visitNameOf(pStruct);
-  }
-
-  public void visitNamedEvaluables(List<PNamedEvaluable> pNamedEvaluables) throws T {
-    pNamedEvaluables.foreach(this::visitNamedEvaluable);
-  }
-
-  public void visitNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws T {
-    switch (pNamedEvaluable) {
-      case PNamedFunc pNamedFunc -> visitNamedFunc(pNamedFunc);
-      case PNamedValue pNamedValue -> visitNamedValue(pNamedValue);
-    }
   }
 
   public void visitNamedValue(PNamedValue pNamedValue) throws T {
@@ -151,7 +184,7 @@ public class PModuleVisitor<T extends Throwable> {
 
   private void visitPolymorphicP(PPolymorphic pPolymorphic) throws T {
     switch (pPolymorphic) {
-      case PLambda pLambda -> visitLambda(pLambda);
+      case PLambda pLambda -> visit(pLambda);
       case PReference pReference -> visitReference(pReference);
     }
   }

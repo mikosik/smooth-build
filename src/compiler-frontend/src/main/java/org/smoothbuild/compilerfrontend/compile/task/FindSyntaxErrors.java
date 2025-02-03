@@ -9,7 +9,7 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
-import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
@@ -38,10 +38,10 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
   }
 
   private static void detectIllegalAnnotations(PModule pModule, Logger logger) {
-    new PModuleVisitor<RuntimeException>() {
+    new PScopingModuleVisitor<RuntimeException>() {
       @Override
-      public void visitNamedFunc(PNamedFunc pNamedFunc) {
-        super.visitNamedFunc(pNamedFunc);
+      public void visitNamedFuncSignature(PNamedFunc pNamedFunc) {
+        super.visitNamedFuncSignature(pNamedFunc);
         if (pNamedFunc.annotation().isSome()) {
           var ann = pNamedFunc.annotation().get();
           var annName = ann.nameText();
@@ -68,8 +68,8 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
       }
 
       @Override
-      public void visitNamedValue(PNamedValue pNamedValue) {
-        super.visitNamedValue(pNamedValue);
+      public void visitNamedValueSignature(PNamedValue pNamedValue) {
+        super.visitNamedValueSignature(pNamedValue);
         if (pNamedValue.annotation().isSome()) {
           var ann = pNamedValue.annotation().get();
           var annName = ann.nameText();
@@ -97,14 +97,14 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
           logger.log(compileError(pNamedValue, "Value cannot have empty body."));
         }
       }
-    }.visitModule(pModule);
+    }.visit(pModule);
   }
 
   private static void detectStructFieldWithDefaultValue(PModule pModule, Logger logger) {
-    new PModuleVisitor<RuntimeException>() {
+    new PScopingModuleVisitor<RuntimeException>() {
       @Override
-      public void visitStruct(PStruct pStruct) {
-        super.visitStruct(pStruct);
+      public void visitStructSignature(PStruct pStruct) {
+        super.visitStructSignature(pStruct);
         pStruct.fields().forEach(this::logErrorIfDefaultValuePresent);
       }
 
@@ -116,14 +116,14 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
                   + " has default value. Only function parameters can have default value."));
         }
       }
-    }.visitModule(pModule);
+    }.visit(pModule);
   }
 
   private static void detectLambdaParamWithDefaultValue(PModule pModule, Logger logger) {
-    new PModuleVisitor<RuntimeException>() {
+    new PScopingModuleVisitor<RuntimeException>() {
       @Override
-      public void visitLambda(PLambda pLambda) {
-        super.visitLambda(pLambda);
+      public void visitLambdaSignature(PLambda pLambda) {
+        super.visitLambdaSignature(pLambda);
         pLambda.params().forEach(this::logErrorIfDefaultValuePresent);
       }
 
@@ -134,6 +134,6 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
               "Parameter " + param.q() + " of lambda cannot have default value."));
         }
       }
-    }.visitModule(pModule);
+    }.visit(pModule);
   }
 }
