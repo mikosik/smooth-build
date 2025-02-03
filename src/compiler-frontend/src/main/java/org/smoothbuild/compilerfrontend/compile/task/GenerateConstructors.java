@@ -19,17 +19,17 @@ public class GenerateConstructors extends PModuleVisitor<RuntimeException>
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
     var constructors = new ArrayList<PConstructor>();
-    new ScopeCreator(constructors).visitModule(pModule);
+    new ConstructorCreator(constructors).visitModule(pModule);
     var label = COMPILER_FRONT_LABEL.append(":generateConstructors");
     var newEvaluables = pModule.evaluables().addAll(constructors);
     var newModule = new PModule(pModule.fullPath(), pModule.structs(), newEvaluables);
     return output(newModule, label, logger.toList());
   }
 
-  private static class ScopeCreator extends PModuleVisitor<RuntimeException> {
+  private static class ConstructorCreator extends PModuleVisitor<RuntimeException> {
     private final List<PConstructor> constructors;
 
-    public ScopeCreator(ArrayList<PConstructor> constructors) {
+    public ConstructorCreator(ArrayList<PConstructor> constructors) {
       this.constructors = constructors;
     }
 
