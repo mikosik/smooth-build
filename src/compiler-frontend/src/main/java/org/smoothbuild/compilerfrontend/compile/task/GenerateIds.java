@@ -57,7 +57,7 @@ public class GenerateIds implements Task1<PModule, PModule> {
         }
         case PTypeReference pTypeReference -> parseReference(pTypeReference.nameText())
             .ifErr(e -> logIllegalTypeReference(pTypeReference, e))
-            .ifOk(pTypeReference::setId);
+            .ifOk(pTypeReference::setFqn);
         case PImplicitType pImplicitType -> {}
       }
     }

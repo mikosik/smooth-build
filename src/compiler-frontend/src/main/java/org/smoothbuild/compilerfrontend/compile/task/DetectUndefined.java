@@ -81,7 +81,7 @@ public class DetectUndefined implements Task1<PModule, PModule> {
       if (!isTypeVarName(pTypeReference.nameText())) {
         scope
             .types()
-            .find(pTypeReference.id())
+            .find(pTypeReference.fqn())
             .ifErr(e -> log.log(compileError(pTypeReference.location(), e)));
       }
     }
