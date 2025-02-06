@@ -59,6 +59,10 @@ public sealed class SSchema permits SFuncSchema {
     return Objects.hash(quantifiedVars, type);
   }
 
+  public String toShortString() {
+    return quantifiedVars.toShortString() + type.specifier(quantifiedVars);
+  }
+
   @Override
   public String toString() {
     return quantifiedVars.toString() + type.specifier();

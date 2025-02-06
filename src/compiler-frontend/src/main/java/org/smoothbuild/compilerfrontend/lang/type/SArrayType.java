@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.arrayTypeName;
 
 /**
  * This class is immutable.
@@ -19,8 +18,8 @@ public final class SArrayType extends SType {
   }
 
   @Override
-  public String specifier() {
-    return arrayTypeName(elem);
+  public String specifier(SVarSet localVars) {
+    return "[" + elem.specifier(localVars) + "]";
   }
 
   @Override

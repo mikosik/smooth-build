@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.interfaceTypeName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import org.smoothbuild.common.collect.List;
@@ -29,8 +28,8 @@ public sealed class SInterfaceType extends SType permits SStructType {
   }
 
   @Override
-  public String specifier() {
-    return interfaceTypeName(fields);
+  public String specifier(SVarSet localVars) {
+    return listOfAll(fields.values()).toString("{", ",", "}");
   }
 
   @Override

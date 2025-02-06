@@ -1,8 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.arrayTypeName;
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.funcTypeName;
 import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.isTypeVarName;
 
 import org.junit.jupiter.api.Nested;
@@ -70,23 +68,6 @@ public class TokenNamesTest extends FrontendCompilerTestContext {
     @Test
     void longer_string_starting_with_uppercase_is_not_type_var_name() {
       assertThat(isTypeVarName("Alphabet")).isFalse();
-    }
-  }
-
-  @Nested
-  class _array_type_name {
-    @Test
-    void array_type_name() {
-      assertThat(arrayTypeName(sStringType())).isEqualTo("[String]");
-    }
-  }
-
-  @Nested
-  class _func_type_name {
-    @Test
-    void func_type_name() {
-      assertThat(funcTypeName(sTupleType(sBlobType(), sBoolType()), sStringType()))
-          .isEqualTo("(Blob,Bool)->String");
     }
   }
 }

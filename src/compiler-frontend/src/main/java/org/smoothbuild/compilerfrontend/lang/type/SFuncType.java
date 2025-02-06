@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.funcTypeName;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
 
 import java.util.Objects;
@@ -38,8 +37,9 @@ public final class SFuncType extends SType {
   }
 
   @Override
-  public String specifier() {
-    return funcTypeName(params, result);
+  public String specifier(SVarSet localVars) {
+    var paramStrings = params.elements().map(t -> t.specifier(localVars));
+    return "(" + paramStrings.toString(",") + ")->" + result.specifier(localVars);
   }
 
   @Override

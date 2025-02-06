@@ -47,8 +47,12 @@ public final class SVarSet extends Set<SVar> {
     return toString();
   }
 
+  public String toShortString() {
+    return map(SVar::name).toString("<", ",", ">");
+  }
+
   @Override
   public String toString() {
-    return map(SVar::name).toString("<", ",", ">");
+    return map(SVar::fqn).toString("<", ",", ">");
   }
 }
