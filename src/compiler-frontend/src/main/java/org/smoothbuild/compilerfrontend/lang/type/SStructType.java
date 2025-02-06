@@ -17,7 +17,7 @@ public final class SStructType extends SInterfaceType implements Identifiable {
   private final NList<SItemSig> fields;
 
   public SStructType(Fqn fqn, NList<SItemSig> fields) {
-    super(fqn.toString(), fields.map());
+    super(fields.map());
     this.fqn = fqn;
     this.fields = fields;
   }
@@ -34,6 +34,11 @@ public final class SStructType extends SInterfaceType implements Identifiable {
   @Override
   public Map<Name, SItemSig> fieldSet() {
     return fields.map();
+  }
+
+  @Override
+  public String specifier() {
+    return fqn.toString();
   }
 
   @Override

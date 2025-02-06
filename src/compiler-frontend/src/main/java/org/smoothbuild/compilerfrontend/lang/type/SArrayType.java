@@ -10,12 +10,17 @@ public final class SArrayType extends SType {
   private final SType elem;
 
   public SArrayType(SType elem) {
-    super(arrayTypeName(elem), elem.vars());
+    super(elem.vars());
     this.elem = requireNonNull(elem);
   }
 
   public SType elem() {
     return elem;
+  }
+
+  @Override
+  public String specifier() {
+    return arrayTypeName(elem);
   }
 
   @Override

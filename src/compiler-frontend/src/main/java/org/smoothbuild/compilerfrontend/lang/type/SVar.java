@@ -13,7 +13,7 @@ public final class SVar extends SType implements Identifiable {
   private final Fqn fqn;
 
   public SVar(Fqn fqn) {
-    super(fqn.toString(), null);
+    super(null);
     this.fqn = fqn;
     this.vars = SVarSet.varSetS(this);
   }
@@ -35,5 +35,10 @@ public final class SVar extends SType implements Identifiable {
   @Override
   public boolean isFlexibleVar() {
     return specifier().startsWith(FLEXIBLE_VAR_PREFIX);
+  }
+
+  @Override
+  public String specifier() {
+    return fqn.toString();
   }
 }
