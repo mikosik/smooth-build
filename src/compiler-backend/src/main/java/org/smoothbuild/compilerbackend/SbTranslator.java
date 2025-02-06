@@ -76,7 +76,7 @@ import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 
 public class SbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
-  private final TypeSbTranslator typeF;
+  private final TypeSbTranslator typeTranslator;
   private final FileContentReader fileContentReader;
   private final BytecodeLoader bytecodeLoader;
   private final ImmutableBindings<SNamedEvaluable> evaluables;
@@ -105,7 +105,7 @@ public class SbTranslator {
 
   private SbTranslator(
       ChainingBytecodeFactory bytecodeF,
-      TypeSbTranslator typeF,
+      TypeSbTranslator typeTranslator,
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<SNamedEvaluable> evaluables,
@@ -114,7 +114,7 @@ public class SbTranslator {
       HashMap<Hash, String> names,
       HashMap<Hash, Location> locations) {
     this.bytecodeF = bytecodeF;
-    this.typeF = typeF;
+    this.typeTranslator = typeTranslator;
     this.fileContentReader = fileContentReader;
     this.bytecodeLoader = bytecodeLoader;
     this.evaluables = evaluables;
@@ -166,9 +166,9 @@ public class SbTranslator {
 
   private BExpr translateInstantiate(SInstantiate sInstantiate) throws SbTranslatorException {
     var keys = sInstantiate.sPolymorphic().schema().quantifiedVars().toList();
-    var values = sInstantiate.typeArgs().map(typeF::translate);
+    var values = sInstantiate.typeArgs().map(typeTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
-    var varMap = typeF.varMap().overrideWith(instantiatedVarMap);
+    var varMap = typeTranslator.varMap().overrideWith(instantiatedVarMap);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
         bytecodeF,
@@ -202,7 +202,7 @@ public class SbTranslator {
       var name = parts.get(0);
       var itemS = lexicalEnvironment.get(name);
       if (itemS != null) {
-        var evaluationType = typeF.translate(itemS.type());
+        var evaluationType = typeTranslator.translate(itemS.type());
         var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
         var bReference = bytecodeF.reference(evaluationType, index);
         return saveNalAndReturn(name.toString(), sReference, bReference);
@@ -222,7 +222,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {
-    var key = new CacheKey(sNamedFunc.fqn(), typeF.varMap());
+    var key = new CacheKey(sNamedFunc.fqn(), typeTranslator.varMap());
     return computeIfAbsent(cache, key, k -> translateNamedFunc(sNamedFunc));
   }
 
@@ -235,7 +235,7 @@ public class SbTranslator {
     var newEnvironment = nlistWithShadowing(sFunc.params().list().addAll(lexicalEnvironment));
     return new SbTranslator(
         bytecodeF,
-        typeF,
+        typeTranslator,
         fileContentReader,
         bytecodeLoader,
         evaluables,
@@ -264,7 +264,7 @@ public class SbTranslator {
   }
 
   private BLambda translateExprFunc(SExprFunc sExprFunc) throws SbTranslatorException {
-    var funcT = typeF.translate(sExprFunc.schema().type());
+    var funcT = typeTranslator.translate(sExprFunc.schema().type());
     var bodyB = translateExpr(sExprFunc.body());
     return bytecodeF.lambda(funcT, bodyB);
   }
@@ -276,7 +276,7 @@ public class SbTranslator {
     var bMethodName = bytecodeF.string(NATIVE_METHOD_NAME);
     var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName, bMethodName).tuple();
     var bIsPure = bytecodeF.bool(sAnnotation.name().equals(NATIVE_PURE));
-    var bLambdaType = typeF.translate(sNativeFunc.schema().type());
+    var bLambdaType = typeTranslator.translate(sNativeFunc.schema().type());
     var bArguments = referencesToAllArguments(bLambdaType);
     var bInvoke = bytecodeF.invoke(bLambdaType.result(), bMethodTuple, bIsPure, bArguments);
     saveNal(bInvoke, sNativeFunc);
@@ -295,7 +295,7 @@ public class SbTranslator {
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
-    var funcTB = typeF.translate(sConstructor.schema().type());
+    var funcTB = typeTranslator.translate(sConstructor.schema().type());
     var bodyB = bytecodeF.combine(createReferenceB(funcTB.params()));
     saveLoc(bodyB, sConstructor);
     return bytecodeF.lambda(funcTB, bodyB);
@@ -309,7 +309,7 @@ public class SbTranslator {
   }
 
   private BOrder translateOrder(SOrder sOrder) throws SbTranslatorException {
-    var arrayTB = typeF.translate(sOrder.evaluationType());
+    var arrayTB = typeTranslator.translate(sOrder.evaluationType());
     var elementsB = translateExprs(sOrder.elements());
     return bytecodeF.order(arrayTB, elementsB);
   }
@@ -329,7 +329,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
-    var key = new CacheKey(sNamedValue.fqn(), typeF.varMap());
+    var key = new CacheKey(sNamedValue.fqn(), typeTranslator.varMap());
     return computeIfAbsent(cache, key, k -> translateNamedValue(sNamedValue));
   }
 
@@ -358,18 +358,18 @@ public class SbTranslator {
   // helpers
 
   private BExpr fetchValBytecode(SAnnotatedValue sAnnotatedValue) throws SbTranslatorException {
-    var bType = typeF.translate(sAnnotatedValue.schema().type());
+    var bType = typeTranslator.translate(sAnnotatedValue.schema().type());
     return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.fqn());
   }
 
   private BExpr fetchFuncBytecode(SAnnotatedFunc sAnnotatedFunc) throws SbTranslatorException {
-    var bType = typeF.translate(sAnnotatedFunc.schema().type());
+    var bType = typeTranslator.translate(sAnnotatedFunc.schema().type());
     return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.fqn());
   }
 
   private BExpr fetchBytecode(SAnnotation annotation, BType bType, Id id)
       throws SbTranslatorException {
-    var varNameToTypeMap = typeF.varMap().mapKeys(SType::specifier);
+    var varNameToTypeMap = typeTranslator.varMap().mapKeys(SType::specifier);
     var jar = readNativeJar(annotation.location());
     var bytecode = loadBytecode(id, jar, annotation.path().string(), varNameToTypeMap);
     if (bytecode.isErr()) {
