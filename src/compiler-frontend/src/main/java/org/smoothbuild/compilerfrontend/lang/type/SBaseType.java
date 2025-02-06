@@ -18,7 +18,7 @@ public abstract sealed class SBaseType extends SType
   }
 
   @Override
-  public String specifier() {
+  public String specifier(SVarSet localVars) {
     return fqn.toString();
   }
 }

@@ -44,7 +44,7 @@ public final class SVar extends SType implements Identifiable {
   }
 
   @Override
-  public String specifier() {
-    return fqn.toString();
+  public String specifier(SVarSet localVars) {
+    return localVars.contains(this) ? name().toString() : fqn.toString();
   }
 }

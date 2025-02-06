@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.interfaceTypeName;
+import static org.smoothbuild.common.collect.List.listOfAll;
 
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
@@ -37,7 +37,7 @@ public final class SStructType extends SInterfaceType implements Identifiable {
   }
 
   @Override
-  public String specifier() {
+  public String specifier(SVarSet localVars) {
     return fqn.toString();
   }
 
@@ -53,6 +53,6 @@ public final class SStructType extends SInterfaceType implements Identifiable {
 
   @Override
   public String toString() {
-    return fqn + interfaceTypeName(fieldSet());
+    return fqn + listOfAll(fieldSet().values()).toString("{", ",", "}");
   }
 }

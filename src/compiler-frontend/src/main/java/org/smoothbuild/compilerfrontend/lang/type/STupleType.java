@@ -1,7 +1,5 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.name.TokenNames.tupleTypeName;
-
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 
@@ -31,8 +29,8 @@ public final class STupleType extends SType {
   }
 
   @Override
-  public String specifier() {
-    return tupleTypeName(elements);
+  public String specifier(SVarSet localVars) {
+    return "{" + elements.map(type -> type.specifier(localVars)).toString(",") + "}";
   }
 
   @Override

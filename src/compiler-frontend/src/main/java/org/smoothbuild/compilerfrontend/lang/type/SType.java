@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -17,16 +19,6 @@ public abstract sealed class SType
 
   protected SType(SVarSet vars) {
     this.vars = vars;
-  }
-
-  /**
-   * Exact smooth source code that is a reference or specification of this type
-   * so it can be used to specify type of function parameter, its result type, value type, etc.
-   */
-  public abstract String specifier();
-
-  public String q() {
-    return Strings.q(specifier());
   }
 
   public SVarSet vars() {
@@ -120,6 +112,20 @@ public abstract sealed class SType
       STupleType sTupleType, Function<? super SVar, SType> map) {
     var items = sTupleType.elements().map(type -> type.mapVars(map));
     return new STupleType(items);
+  }
+
+  /**
+   * Exact smooth source code that is a reference or specification of this type
+   * so it can be used to specify type of function parameter, its result type, value type, etc.
+   */
+  public String specifier() {
+    return specifier(varSetS());
+  }
+
+  public abstract String specifier(SVarSet localVars);
+
+  public String q() {
+    return Strings.q(specifier());
   }
 
   @Override
