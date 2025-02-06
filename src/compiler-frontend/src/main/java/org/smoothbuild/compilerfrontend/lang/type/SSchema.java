@@ -1,6 +1,5 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.Map.zipToMap;
 
@@ -21,9 +20,10 @@ public sealed class SSchema permits SFuncSchema {
   }
 
   private static void assertQuantifiedVarsArePresentInType(SVarSet quantifiedVars, SType type) {
-    checkArgument(
-        type.vars().containsAll(quantifiedVars),
-        "Quantified variable(s) " + quantifiedVars + " are not present in type " + type.q() + ".");
+    if (!type.vars().containsAll(quantifiedVars)) {
+      throw new IllegalArgumentException("Quantified variable(s) " + quantifiedVars
+          + " are not present in type " + type.q() + ".");
+    }
   }
 
   /**

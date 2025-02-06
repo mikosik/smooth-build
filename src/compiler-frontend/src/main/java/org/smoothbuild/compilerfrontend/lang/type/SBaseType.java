@@ -9,11 +9,16 @@ public abstract sealed class SBaseType extends SType
   private final Fqn fqn;
 
   protected SBaseType(Fqn fqn) {
-    super(fqn.toString(), varSetS());
+    super(varSetS());
     this.fqn = fqn;
   }
 
   public Fqn fqn() {
     return fqn;
+  }
+
+  @Override
+  public String specifier() {
+    return fqn.toString();
   }
 }

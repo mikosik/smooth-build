@@ -20,7 +20,7 @@ public final class SFuncType extends SType {
   }
 
   public SFuncType(STupleType params, SType result) {
-    super(funcTypeName(params, result), calculateFuncVars(params, result));
+    super(calculateFuncVars(params, result));
     this.result = requireNonNull(result);
     this.params = requireNonNull(params);
   }
@@ -35,6 +35,11 @@ public final class SFuncType extends SType {
 
   public SType result() {
     return result;
+  }
+
+  @Override
+  public String specifier() {
+    return funcTypeName(params, result);
   }
 
   @Override

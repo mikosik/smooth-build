@@ -16,11 +16,7 @@ public sealed class SInterfaceType extends SType permits SStructType {
   private final Map<Name, SItemSig> fields;
 
   public SInterfaceType(Map<Name, SItemSig> fields) {
-    this(interfaceTypeName(fields), fields);
-  }
-
-  protected SInterfaceType(String name, Map<Name, SItemSig> fields) {
-    super(name, calculateFieldSetVars(listOfAll(fields.values())));
+    super(calculateFieldSetVars(listOfAll(fields.values())));
     this.fields = fields;
   }
 
@@ -30,6 +26,11 @@ public sealed class SInterfaceType extends SType permits SStructType {
 
   public Map<Name, SItemSig> fieldSet() {
     return fields;
+  }
+
+  @Override
+  public String specifier() {
+    return interfaceTypeName(fields);
   }
 
   @Override

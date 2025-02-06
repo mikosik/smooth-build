@@ -12,7 +12,7 @@ public final class STupleType extends SType {
   private final List<SType> elements;
 
   public STupleType(List<? extends SType> elements) {
-    super(tupleTypeName(elements), calculateVars(elements));
+    super(calculateVars(elements));
     @SuppressWarnings("unchecked")
     var cast = (List<SType>) elements;
     this.elements = cast;
@@ -28,6 +28,11 @@ public final class STupleType extends SType {
 
   public int size() {
     return elements.size();
+  }
+
+  @Override
+  public String specifier() {
+    return tupleTypeName(elements);
   }
 
   @Override
