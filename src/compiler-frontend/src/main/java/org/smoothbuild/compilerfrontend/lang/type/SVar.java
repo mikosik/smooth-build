@@ -11,15 +11,21 @@ public final class SVar extends SType implements Identifiable {
   private static final String FLEXIBLE_VAR_PREFIX = "T~";
   private final SVarSet vars;
   private final Fqn fqn;
+  private final boolean isFlexible;
 
   public SVar(Fqn fqn) {
+    this(fqn, false);
+  }
+
+  private SVar(Fqn fqn, boolean isFlexible) {
     super(null);
     this.fqn = fqn;
     this.vars = SVarSet.varSetS(this);
+    this.isFlexible = isFlexible;
   }
 
   public static SVar flexibleVar(int i) {
-    return new SVar(Fqn.fqn(FLEXIBLE_VAR_PREFIX + i));
+    return new SVar(Fqn.fqn(FLEXIBLE_VAR_PREFIX + i), true);
   }
 
   @Override
@@ -34,7 +40,7 @@ public final class SVar extends SType implements Identifiable {
 
   @Override
   public boolean isFlexibleVar() {
-    return specifier().startsWith(FLEXIBLE_VAR_PREFIX);
+    return isFlexible;
   }
 
   @Override
