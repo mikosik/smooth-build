@@ -54,9 +54,10 @@ public final class SLambda implements SExprFunc, SPolymorphic {
 
   @Override
   public String toSourceCode() {
-    return schema().quantifiedVars().toSourceCode()
-        + params().list().map(SItem::toSourceCode).toString("(", ", ", ")")
-        + " -> " + body().toSourceCode();
+    var localVars = schema().quantifiedVars();
+    return localVars.toSourceCode()
+        + params().list().map(sItem -> sItem.toSourceCode(localVars)).toString("(", ", ", ")")
+        + " -> " + body().toSourceCode(localVars);
   }
 
   @Override

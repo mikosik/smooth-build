@@ -14,6 +14,6 @@ public class SInstantiateTest extends FrontendCompilerTestContext {
     var sSchema = sSchema(varSetS(varA()), varA());
     var id = fqn("my:company:evaluable");
     var sInstantiate = sInstantiate(list(sIntType()), sReference(sSchema, id));
-    assertThat(sInstantiate.toSourceCode()).isEqualTo("my:company:evaluable<Int>");
+    assertThat(sInstantiate.toSourceCode(varSetS())).isEqualTo("my:company:evaluable<Int>");
   }
 }

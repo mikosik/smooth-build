@@ -6,6 +6,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 /**
  * Named function.
@@ -44,9 +45,9 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
     return location;
   }
 
-  protected String funcHeaderToSourceCode() {
-    return schema().type().result().specifier() + " " + name()
+  protected String funcHeaderToSourceCode(SVarSet localVars) {
+    return schema().type().result().specifier(localVars) + " " + name()
         + schema().quantifiedVars().toSourceCode()
-        + params().list().map(SItem::toSourceCode).toString("(", ", ", ")");
+        + params().list().map(sItem -> sItem.toSourceCode(localVars)).toString("(", ", ", ")");
   }
 }

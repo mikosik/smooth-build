@@ -7,6 +7,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 /**
  * Instantiation of polymorphic entity.
@@ -25,8 +26,9 @@ public record SInstantiate(
   }
 
   @Override
-  public String toSourceCode() {
-    return sPolymorphic.toSourceCode() + typeArgs.map(SType::specifier).toString("<", ", ", ">");
+  public String toSourceCode(SVarSet localVars) {
+    return sPolymorphic.toSourceCode()
+        + typeArgs.map(type -> type.specifier(localVars)).toString("<", ", ", ">");
   }
 
   @Override

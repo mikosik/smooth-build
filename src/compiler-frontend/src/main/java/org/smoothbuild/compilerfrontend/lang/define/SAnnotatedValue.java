@@ -47,7 +47,8 @@ public final class SAnnotatedValue implements SNamedValue, IdentifiableCode {
 
   @Override
   public String toSourceCode() {
-    return annotation.toSourceCode() + "\n" + valueHeaderToSourceCode(this) + ";";
+    return annotation.toSourceCode() + "\n"
+        + valueHeaderToSourceCode(this, this.schema().quantifiedVars()) + ";";
   }
 
   @Override

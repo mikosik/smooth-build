@@ -12,6 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 /**
  * Item is a func param or a struct field.
@@ -59,7 +60,11 @@ public final class SItem implements Item, SReferenceable {
   }
 
   public String toSourceCode() {
-    return type.specifier() + " " + name().toString()
+    return toSourceCode(SVarSet.varSetS());
+  }
+
+  public String toSourceCode(SVarSet localVars) {
+    return type.specifier(localVars) + " " + name().toString()
         + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
   }
 

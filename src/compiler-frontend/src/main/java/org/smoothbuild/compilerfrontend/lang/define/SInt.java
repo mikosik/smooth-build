@@ -4,10 +4,11 @@ import java.math.BigInteger;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SIntType;
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 
 public record SInt(SIntType type, BigInteger bigInteger, Location location) implements SConstant {
   @Override
-  public String toSourceCode() {
+  public String toSourceCode(SVarSet localVars) {
     return bigInteger.toString();
   }
 
