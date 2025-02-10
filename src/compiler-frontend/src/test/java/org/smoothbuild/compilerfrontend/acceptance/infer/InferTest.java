@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.acceptance.infer;
 
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,14 +36,25 @@ public class InferTest extends FrontendCompileTester {
   }
 
   private void assertTest(Path input) throws IOException {
-    var module = loadModule(input);
+    var code = Files.readString(input);
+    var module = loadModule(code);
     var expectedPath = withExtension(input, ".expected");
+    var inputs =
+        """
+        **** code ****
+        %s
+        **** end ****
+        """.formatted(code);
     if (Files.exists(expectedPath)) {
-      assertThat(module.get().toSourceCode()).isEqualTo(Files.readString(expectedPath));
+      assertWithMessage(inputs)
+          .that(module.get().toSourceCode())
+          .isEqualTo(Files.readString(expectedPath));
     }
     var logsPath = withExtension(input, ".logs");
     if (Files.exists(logsPath)) {
-      assertThat(module.logs().toString("\n")).isEqualTo(Files.readString(logsPath));
+      assertWithMessage(inputs)
+          .that(module.logs().toString("\n"))
+          .isEqualTo(Files.readString(logsPath));
     }
   }
 
@@ -59,7 +70,11 @@ public class InferTest extends FrontendCompileTester {
   }
 
   private Try<SModule> loadModule(Path input) throws IOException {
-    return module(Files.readString(input)).loadModule();
+    return loadModule(Files.readString(input));
+  }
+
+  private Try<SModule> loadModule(String code) {
+    return module(code).loadModule();
   }
 
   private static Path withExtension(Path input, String extension) {
