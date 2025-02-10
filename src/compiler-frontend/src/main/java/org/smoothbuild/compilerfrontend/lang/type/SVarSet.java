@@ -44,7 +44,7 @@ public final class SVarSet extends Set<SVar> {
   }
 
   public String toSourceCode() {
-    return toString();
+    return toShortString();
   }
 
   public String toShortString() {

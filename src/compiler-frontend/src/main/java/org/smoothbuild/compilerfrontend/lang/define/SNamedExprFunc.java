@@ -27,7 +27,8 @@ public final class SNamedExprFunc extends SNamedFunc implements SExprFunc {
 
   @Override
   public String toSourceCode() {
-    return funcHeaderToSourceCode() + "\n  = " + body.toSourceCode() + ";";
+    var localVars = schema().quantifiedVars();
+    return funcHeaderToSourceCode(localVars) + "\n  = " + body.toSourceCode(localVars) + ";";
   }
 
   @Override
