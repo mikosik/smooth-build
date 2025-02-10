@@ -1,12 +1,15 @@
 package org.smoothbuild.compilerfrontend.acceptance.compile;
 
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.acceptance.TestFileArgumentsProvider;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
@@ -34,9 +37,20 @@ public class CompileTest extends FrontendCompileTester {
   }
 
   private void assertTest(Path input) throws IOException {
-    var actualLogs = compile(input);
+    var code = Files.readString(input);
+    var importedCode = readImportedModule(input).getOr("");
+    var actualLogs = compile(input, code);
     var expectedLogs = Files.readString(withExtension(input, ".logs"));
-    assertThat(actualLogs).isEqualTo(expectedLogs);
+    var inputs =
+        """
+        **** code ****
+        %s
+        **** imported code ****
+        %s
+        **** end ****
+        """
+            .formatted(code, importedCode);
+    assertWithMessage(inputs).that(actualLogs).isEqualTo(expectedLogs);
   }
 
   private void overwriteTest(Path input) throws IOException {
@@ -45,13 +59,24 @@ public class CompileTest extends FrontendCompileTester {
   }
 
   private String compile(Path input) throws IOException {
-    var code = Files.readString(input);
+    return compile(input, Files.readString(input));
+  }
+
+  private String compile(Path input, String code) throws IOException {
     var testApi = module(code);
-    var importedPath = withSuffix(input, "-imported");
-    if (Files.exists(importedPath)) {
-      testApi.withImported(Files.readString(importedPath));
-    }
+    readImportedModule(input).ifPresent(testApi::withImported);
     return testApi.loadModule().logs().toString("\n");
+  }
+
+  private static Maybe<String> readImportedModule(Path input) throws IOException {
+    return readFile(withSuffix(input, "-imported"));
+  }
+
+  private static Maybe<String> readFile(Path importedPath) throws IOException {
+    if (Files.exists(importedPath)) {
+      return some(Files.readString(importedPath));
+    }
+    return none();
   }
 
   private static Path withExtension(Path input, String extension) {
