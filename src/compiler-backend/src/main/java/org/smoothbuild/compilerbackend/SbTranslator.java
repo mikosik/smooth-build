@@ -164,7 +164,7 @@ public class SbTranslator {
   }
 
   private BExpr translateInstantiate(SInstantiate sInstantiate) throws SbTranslatorException {
-    var keys = sInstantiate.sPolymorphic().schema().quantifiedVars().toList();
+    var keys = sInstantiate.sPolymorphic().schema().typeParams().toList();
     var values = sInstantiate.typeArgs().map(typeTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
     var varMap = typeTranslator.varMap().overrideWith(instantiatedVarMap);

@@ -11,29 +11,29 @@ import org.smoothbuild.common.collect.List;
  * Polymorphic type (aka type schema).
  */
 public sealed class SSchema permits SFuncSchema {
-  private final SVarSet quantifiedVars;
+  private final SVarSet typeParams;
   private final SType type;
 
-  public SSchema(SVarSet quantifiedVars, SType type) {
-    assertQuantifiedVarsArePresentInType(quantifiedVars, type);
-    this.quantifiedVars = requireNonNull(quantifiedVars);
+  public SSchema(SVarSet typeParams, SType type) {
+    assertTypeParamsArePresentInType(typeParams, type);
+    this.typeParams = requireNonNull(typeParams);
     this.type = requireNonNull(type);
   }
 
-  private static void assertQuantifiedVarsArePresentInType(SVarSet quantifiedVars, SType type) {
-    if (!type.vars().containsAll(quantifiedVars)) {
-      throw new IllegalArgumentException("Quantified variable(s) " + quantifiedVars
-          + " are not present in type " + type.q() + ".");
+  private static void assertTypeParamsArePresentInType(SVarSet typeParams, SType type) {
+    if (!type.vars().containsAll(typeParams)) {
+      throw new IllegalArgumentException(
+          "Type parameter(s) " + typeParams + " are not present in type " + type.q() + ".");
     }
   }
 
   /**
-   * Type variables that are quantified with for-all quantifier.
+   * Type variables that are quantified with for-all quantifier (= Parameters of this schema).
    * Other variables present in this schema are type variables which are quantified variables
    * of enclosing environment (enclosing function or value).
    */
-  public SVarSet quantifiedVars() {
-    return quantifiedVars;
+  public SVarSet typeParams() {
+    return typeParams;
   }
 
   public SType type() {
@@ -41,7 +41,7 @@ public sealed class SSchema permits SFuncSchema {
   }
 
   public SType instantiate(List<SType> typeArgs) {
-    var map = zipToMap(quantifiedVars.toList(), typeArgs);
+    var map = zipToMap(typeParams.toList(), typeArgs);
     return type.mapVars(v -> map.getOrDefault(v, v));
   }
 
@@ -51,13 +51,13 @@ public sealed class SSchema permits SFuncSchema {
       return true;
     }
     return object instanceof SSchema schema
-        && quantifiedVars.equals(schema.quantifiedVars)
+        && typeParams.equals(schema.typeParams)
         && type.equals(schema.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(quantifiedVars, type);
+    return Objects.hash(typeParams, type);
   }
 
   public String q() {
@@ -65,11 +65,11 @@ public sealed class SSchema permits SFuncSchema {
   }
 
   public String toShortString() {
-    return quantifiedVars.toShortString() + type.specifier(quantifiedVars);
+    return typeParams.toShortString() + type.specifier(typeParams);
   }
 
   @Override
   public String toString() {
-    return quantifiedVars.toString() + type.specifier();
+    return typeParams.toString() + type.specifier();
   }
 }

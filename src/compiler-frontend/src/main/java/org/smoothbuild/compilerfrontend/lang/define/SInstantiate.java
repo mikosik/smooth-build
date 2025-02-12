@@ -18,7 +18,7 @@ public record SInstantiate(
 
   public SInstantiate(SPolymorphic sPolymorphic, Location location) {
     this(list(), sPolymorphic, location);
-    checkArgument(sPolymorphic.schema().quantifiedVars().isEmpty());
+    checkArgument(sPolymorphic.schema().typeParams().isEmpty());
   }
 
   public SInstantiate(List<SType> typeArgs, SPolymorphic sPolymorphic, Location location) {

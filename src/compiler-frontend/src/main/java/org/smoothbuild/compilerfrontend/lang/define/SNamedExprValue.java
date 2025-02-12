@@ -32,8 +32,8 @@ public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
 
   @Override
   public String toSourceCode() {
-    return valueHeaderToSourceCode(this, this.schema().quantifiedVars()) + "\n  = "
-        + body.toSourceCode(schema.quantifiedVars()) + ";";
+    return valueHeaderToSourceCode(this, this.schema().typeParams()) + "\n  = "
+        + body.toSourceCode(schema.typeParams()) + ";";
   }
 
   @Override

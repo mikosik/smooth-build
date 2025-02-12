@@ -41,8 +41,8 @@ public class TypeResolver {
   private void resolveNamedValue(PNamedValue pNamedValue) throws TypeException {
     resolveBody(pNamedValue.body());
     var sSchema = pNamedValue.schema();
-    var quantifiedVars = resolveQuantifiedVars(sSchema);
-    pNamedValue.setSchema(new SSchema(quantifiedVars, resolveType(sSchema)));
+    var typeParams = resolveTypeParams(sSchema);
+    pNamedValue.setSchema(new SSchema(typeParams, resolveType(sSchema)));
   }
 
   public static void resolveFunc(Unifier unifier, PFunc pFunc) throws TypeException {
@@ -51,13 +51,13 @@ public class TypeResolver {
 
   private void resolveFunc(PFunc pFunc) throws TypeException {
     var sSchema = pFunc.schema();
-    var quantifiedVars = resolveQuantifiedVars(sSchema);
-    pFunc.setSchema(new SFuncSchema(quantifiedVars, (SFuncType) resolveType(sSchema)));
+    var typeParams = resolveTypeParams(sSchema);
+    pFunc.setSchema(new SFuncSchema(typeParams, (SFuncType) resolveType(sSchema)));
     resolveBody(pFunc.body());
   }
 
-  private SVarSet resolveQuantifiedVars(SSchema sSchema) {
-    return sSchema.quantifiedVars().mapVars(v -> (SVar) unifier.resolve(v));
+  private SVarSet resolveTypeParams(SSchema sSchema) {
+    return sSchema.typeParams().mapVars(v -> (SVar) unifier.resolve(v));
   }
 
   private SType resolveType(SSchema sSchema) {
