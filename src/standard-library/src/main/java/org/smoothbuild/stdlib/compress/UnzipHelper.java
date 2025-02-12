@@ -13,6 +13,6 @@ public class UnzipHelper {
       NativeApi nativeApi, BBlob blob, Predicate<String> includePredicate) throws IOException {
     return unzipBlob(nativeApi.factory(), blob, includePredicate)
         .ifErr(error -> nativeApi.log().error("Error reading archive: " + error))
-        .okOrGet(() -> null);
+        .okOr(null);
   }
 }
