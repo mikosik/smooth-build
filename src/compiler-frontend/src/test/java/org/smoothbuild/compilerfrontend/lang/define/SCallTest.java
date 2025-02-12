@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -14,7 +14,7 @@ public class SCallTest extends FrontendCompilerTestContext {
     var funcReference = sReference(sFuncSchema(varA(), varA()), fqn("my:company:myFunc"));
     var callable = sInstantiate(list(sIntType()), funcReference);
     var callS = sCall(callable, sInt(7));
-    assertThat(callS.toSourceCode(varSetS())).isEqualTo("my:company:myFunc<Int>(7)");
+    assertThat(callS.toSourceCode(sVarSet())).isEqualTo("my:company:myFunc<Int>(7)");
   }
 
   @Test

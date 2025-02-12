@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -9,7 +9,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SIntTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    assertThat(sInt(16).toSourceCode(varSetS())).isEqualTo("16");
+    assertThat(sInt(16).toSourceCode(sVarSet())).isEqualTo("16");
   }
 
   @Test

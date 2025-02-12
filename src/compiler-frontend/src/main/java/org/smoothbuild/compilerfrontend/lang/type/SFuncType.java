@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -25,7 +25,7 @@ public final class SFuncType extends SType {
   }
 
   public static SVarSet calculateFuncVars(STupleType paramTs, SType resultT) {
-    return varSetS(list(resultT).addAll(paramTs.elements()));
+    return sVarSet(list(resultT).addAll(paramTs.elements()));
   }
 
   public STupleType params() {

@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
@@ -37,7 +37,7 @@ public final class SItem implements Item, SReferenceable {
 
   @Override
   public SSchema schema() {
-    return new SSchema(varSetS(), type);
+    return new SSchema(sVarSet(), type);
   }
 
   @Override
@@ -60,7 +60,7 @@ public final class SItem implements Item, SReferenceable {
   }
 
   public String toSourceCode() {
-    return toSourceCode(SVarSet.varSetS());
+    return toSourceCode(sVarSet());
   }
 
   public String toSourceCode(SVarSet localVars) {

@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
@@ -9,7 +9,7 @@ public abstract sealed class SBaseType extends SType
   private final Fqn fqn;
 
   protected SBaseType(Fqn fqn) {
-    super(varSetS());
+    super(sVarSet());
     this.fqn = fqn;
   }
 

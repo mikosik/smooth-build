@@ -9,16 +9,16 @@ import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
 
 public final class SVarSet extends Set<SVar> {
-  public static SVarSet varSetS(SVar... vars) {
+  public static SVarSet sVarSet(SVar... vars) {
     var set = set(vars);
-    return newSortedVarSetS(set);
+    return newSortedSVarSet(set);
   }
 
-  public static SVarSet varSetS(Collection<? extends SType> types) {
-    return newSortedVarSetS(setOfAll(types.toList().flatMap(SType::vars)));
+  public static SVarSet sVarSet(Collection<? extends SType> types) {
+    return newSortedSVarSet(setOfAll(types.toList().flatMap(SType::vars)));
   }
 
-  private static SVarSet newSortedVarSetS(Set<SVar> set) {
+  private static SVarSet newSortedSVarSet(Set<SVar> set) {
     return new SVarSet(set.sort(comparing(SVar::fqn)));
   }
 

@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
@@ -20,7 +22,7 @@ public final class SVar extends SType implements Identifiable {
   private SVar(Fqn fqn, boolean isFlexible) {
     super(null);
     this.fqn = fqn;
-    this.vars = SVarSet.varSetS(this);
+    this.vars = sVarSet(this);
     this.isFlexible = isFlexible;
   }
 
