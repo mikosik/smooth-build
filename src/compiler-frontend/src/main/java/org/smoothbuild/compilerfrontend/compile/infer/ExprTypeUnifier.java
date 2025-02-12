@@ -63,7 +63,7 @@ public class ExprTypeUnifier {
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
     var evaluationType = translateOrGenerateFlexibleVar(pNamedValue.evaluationType());
     pNamedValue.setSType(evaluationType);
-    unifyEvaluableBody(pNamedValue, evaluationType, evaluationType, scope);
+    unifyEvaluableBody(pNamedValue, evaluationType, scope);
     var resolvedType = resolveType(pNamedValue);
     var vars = resolveQuantifiedVars(resolvedType);
     verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pNamedValue, vars);
@@ -77,9 +77,8 @@ public class ExprTypeUnifier {
   private void unifyFunc(PFunc pFunc) throws TypeException {
     var paramTypes = inferParamTypes(pFunc.params());
     var resultType = translateOrGenerateFlexibleVar(pFunc.resultT());
-    var funcTS = new SFuncType(paramTypes, resultType);
-    pFunc.setSType(funcTS);
-    unifyEvaluableBody(pFunc, resultType, funcTS, pFunc.scope());
+    pFunc.setSType(new SFuncType(paramTypes, resultType));
+    unifyEvaluableBody(pFunc, resultType, pFunc.scope());
     var resolvedT = resolveType(pFunc);
     var vars = resolveQuantifiedVars(resolvedT);
     verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pFunc, vars);
@@ -113,10 +112,9 @@ public class ExprTypeUnifier {
     return paramTypes;
   }
 
-  private void unifyEvaluableBody(
-      PEvaluable pEvaluable, SType evaluationType, SType type, PScope bodyScope)
+  private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType, PScope bodyScope)
       throws TypeException {
-    var vars = outerScopeVars.addAll(type.vars());
+    var vars = outerScopeVars.addAll(pEvaluable.typeParams().toVarSet());
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 

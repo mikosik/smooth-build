@@ -1,0 +1,1 @@
+myValue<A>(A arg) = <>(A name) -> name;

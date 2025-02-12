@@ -1,0 +1,1 @@
+myValue = (Int name = 3) -> 7;
