@@ -1,1 +1,1 @@
-Log{ERROR, '{t-project}/module.smooth:2: `string` is illegal identifier name. It must start with uppercase letter.'}
+Log{ERROR, '{t-project}/module.smooth:2: `string` is illegal type variable name. It must start with uppercase letter.'}
