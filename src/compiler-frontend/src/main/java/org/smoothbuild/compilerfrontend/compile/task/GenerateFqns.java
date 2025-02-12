@@ -36,15 +36,15 @@ public class GenerateFqns implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var logger = new Logger();
-    new CreateIdVisitor(logger).visit(pModule);
+    new Visitor(logger).visit(pModule);
     var label = COMPILER_FRONT_LABEL.append(":generateIds");
     return output(pModule, label, logger.toList());
   }
 
-  private static class CreateIdVisitor extends PModuleVisitor<Fqn, RuntimeException> {
+  private static class Visitor extends PModuleVisitor<Fqn, RuntimeException> {
     private final Logger logger;
 
-    public CreateIdVisitor(Logger logger) {
+    public Visitor(Logger logger) {
       this.logger = logger;
     }
 
