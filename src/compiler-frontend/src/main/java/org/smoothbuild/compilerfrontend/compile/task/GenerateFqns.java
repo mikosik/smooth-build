@@ -57,7 +57,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
             case PNamedEvaluable pNamedEvaluable -> setNamedEvaluableFqn(pNamedEvaluable);
             case PStruct pStruct -> setStructFqn(pStruct);
           };
-      return name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOrGet(() -> null);
+      return name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOr(null);
     }
 
     @Override
