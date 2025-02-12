@@ -47,7 +47,7 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
 
   protected String funcHeaderToSourceCode(SVarSet localVars) {
     return schema().type().result().specifier(localVars) + " " + name()
-        + schema().quantifiedVars().toSourceCode()
+        + schema().typeParams().toSourceCode()
         + params().list().map(sItem -> sItem.toSourceCode(localVars)).toString("(", ", ", ")");
   }
 }

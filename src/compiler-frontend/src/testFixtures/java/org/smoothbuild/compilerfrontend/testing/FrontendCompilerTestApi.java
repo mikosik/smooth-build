@@ -209,8 +209,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sFuncSchema(funcType.vars(), funcType);
   }
 
-  private SFuncSchema sFuncSchema(SVarSet quantifiedVars, SFuncType funcType) {
-    return new SFuncSchema(quantifiedVars, funcType);
+  private SFuncSchema sFuncSchema(SVarSet typeParams, SFuncType funcType) {
+    return new SFuncSchema(typeParams, funcType);
   }
 
   public default SInterfaceType sInterfaceType() {
@@ -233,8 +233,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sSchema(type.vars(), type);
   }
 
-  public default SSchema sSchema(SVarSet vars, SType type) {
-    return new SSchema(vars, type);
+  public default SSchema sSchema(SVarSet typeParams, SType type) {
+    return new SSchema(typeParams, type);
   }
 
   public default SStringType sStringType() {
@@ -671,24 +671,23 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SNamedExprFunc(schema, fqn, params, body, location(line));
   }
 
-  public default SLambda sLambda(SVarSet quantifiedVars, SExpr body) {
-    return sLambda(quantifiedVars, nlist(), body);
+  public default SLambda sLambda(SVarSet typeParams, SExpr body) {
+    return sLambda(typeParams, nlist(), body);
   }
 
-  public default SLambda sLambda(SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
-    return sLambda(1, quantifiedVars, params, body);
+  public default SLambda sLambda(SVarSet typeParams, NList<SItem> params, SExpr body) {
+    return sLambda(1, typeParams, params, body);
+  }
+
+  public default SLambda sLambda(int line, SVarSet typeParams, NList<SItem> params, SExpr body) {
+    return sLambda(line, fqn("lambda"), typeParams, params, body);
   }
 
   public default SLambda sLambda(
-      int line, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
-    return sLambda(line, fqn("lambda"), quantifiedVars, params, body);
-  }
-
-  public default SLambda sLambda(
-      int line, Fqn fqn, SVarSet quantifiedVars, NList<SItem> params, SExpr body) {
-    var funcTS = sFuncType(toTypes(params.list()), body.evaluationType());
-    var funcSSchema = sFuncSchema(quantifiedVars, funcTS);
-    return new SLambda(funcSSchema, fqn, params, body, location(line));
+      int line, Fqn fqn, SVarSet typeParams, NList<SItem> params, SExpr body) {
+    var sFuncType = sFuncType(toTypes(params.list()), body.evaluationType());
+    var sFuncSchema = sFuncSchema(typeParams, sFuncType);
+    return new SLambda(sFuncSchema, fqn, params, body, location(line));
   }
 
   public default SLambda sLambda(SExpr body) {

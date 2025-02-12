@@ -26,8 +26,7 @@ public final class SAnnotatedFunc extends SNamedFunc {
 
   @Override
   public String toSourceCode() {
-    return annotation.toSourceCode() + "\n" + funcHeaderToSourceCode(schema().quantifiedVars())
-        + ";";
+    return annotation.toSourceCode() + "\n" + funcHeaderToSourceCode(schema().typeParams()) + ";";
   }
 
   @Override

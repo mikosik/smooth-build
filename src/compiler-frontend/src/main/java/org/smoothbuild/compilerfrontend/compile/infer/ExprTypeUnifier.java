@@ -65,9 +65,9 @@ public class ExprTypeUnifier {
     pNamedValue.setSType(evaluationType);
     unifyEvaluableBody(pNamedValue, evaluationType, scope);
     var resolvedType = resolveType(pNamedValue);
-    var vars = resolveQuantifiedVars(resolvedType);
-    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pNamedValue, vars);
-    pNamedValue.setSchema(new SSchema(vars, resolvedType));
+    var typeParams = resolveTypeParams(resolvedType);
+    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pNamedValue, typeParams);
+    pNamedValue.setSchema(new SSchema(typeParams, resolvedType));
   }
 
   public static void unifyFunc(Unifier unifier, PScope scope, PFunc pFunc) throws TypeException {
@@ -80,9 +80,9 @@ public class ExprTypeUnifier {
     pFunc.setSType(new SFuncType(paramTypes, resultType));
     unifyEvaluableBody(pFunc, resultType, pFunc.scope());
     var resolvedT = resolveType(pFunc);
-    var vars = resolveQuantifiedVars(resolvedT);
-    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pFunc, vars);
-    pFunc.setSchema(new SFuncSchema(vars, (SFuncType) resolvedT));
+    var typeParams = resolveTypeParams(resolvedT);
+    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pFunc, typeParams);
+    pFunc.setSchema(new SFuncSchema(typeParams, (SFuncType) resolvedT));
   }
 
   private static void verifyInferredTypeParamsAreEqualToExplicitlyDeclared(
@@ -98,7 +98,7 @@ public class ExprTypeUnifier {
     }
   }
 
-  private SVarSet resolveQuantifiedVars(SType sType) {
+  private SVarSet resolveTypeParams(SType sType) {
     return sType.vars().removeAll(outerScopeVars.map(unifier::resolve));
   }
 
@@ -203,7 +203,7 @@ public class ExprTypeUnifier {
     var polymorphicP = pInstantiate.polymorphic();
     unifyPolymorphic(polymorphicP);
     var schema = polymorphicP.schema();
-    pInstantiate.setTypeArgs(generateList(schema.quantifiedVars().size(), unifier::newFlexibleVar));
+    pInstantiate.setTypeArgs(generateList(schema.typeParams().size(), unifier::newFlexibleVar));
     return schema.instantiate(pInstantiate.typeArgs());
   }
 

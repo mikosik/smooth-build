@@ -126,15 +126,15 @@ public class InferTypes implements Task1<PModule, PModule> {
           var unifier = new Unifier();
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
-              replaceVarsWithFlexible(funcSchema.quantifiedVars(), resolvedParamType, unifier);
+              replaceVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
           var sSchema = scope().schemaFor(defaultValueId);
-          var defaultValueType = replaceQuantifiedVarsWithFlexible(sSchema, unifier);
+          var defaultValueType = replaceTypeParamVarsWithFlexibleVars(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
           } catch (UnifierException e) {
             var defaultValueTypeString =
-                sSchema.quantifiedVars().isEmpty() ? sSchema.type().q() : sSchema.q();
-            var paramTypeString = q(resolvedParamType.specifier(funcSchema.quantifiedVars()));
+                sSchema.typeParams().isEmpty() ? sSchema.type().q() : sSchema.q();
+            var paramTypeString = q(resolvedParamType.specifier(funcSchema.typeParams()));
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(param.q(), paramTypeString, defaultValueTypeString);
             throw new TypeException(compileError(param.location(), message), e);
@@ -143,8 +143,8 @@ public class InferTypes implements Task1<PModule, PModule> {
       }
     }
 
-    private static SType replaceQuantifiedVarsWithFlexible(SSchema sSchema, Unifier unifier) {
-      return replaceVarsWithFlexible(sSchema.quantifiedVars(), sSchema.type(), unifier);
+    private static SType replaceTypeParamVarsWithFlexibleVars(SSchema sSchema, Unifier unifier) {
+      return replaceVarsWithFlexible(sSchema.typeParams(), sSchema.type(), unifier);
     }
 
     private static SType replaceVarsWithFlexible(SVarSet vars, SType type, Unifier unifier) {

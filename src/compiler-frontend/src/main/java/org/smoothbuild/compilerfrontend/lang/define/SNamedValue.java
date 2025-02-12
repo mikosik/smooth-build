@@ -11,6 +11,6 @@ public sealed interface SNamedValue extends SValue, SNamedEvaluable
   static String valueHeaderToSourceCode(SValue value, SVarSet localVars) {
     var schema = value.schema();
     return schema.type().specifier(localVars) + " " + value.name()
-        + schema.quantifiedVars().toSourceCode();
+        + schema.typeParams().toSourceCode();
   }
 }
