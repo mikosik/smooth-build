@@ -32,6 +32,8 @@ public sealed interface Result<R> permits Err, Ok {
 
   public <T extends Throwable> Result<R> ifErr(Consumer1<? super String, T> consumer) throws T;
 
+  public R okOr(R or);
+
   public <T extends Throwable> R okOrGet(Function0<R, T> supplier) throws T;
 
   public <T extends Throwable> String errOrGet(Function0<String, T> supplier) throws T;
@@ -80,6 +82,11 @@ public sealed interface Result<R> permits Err, Ok {
     @Override
     public <T extends Throwable> Result<R> ifErr(Consumer1<? super String, T> consumer) {
       return this;
+    }
+
+    @Override
+    public R okOr(R or) {
+      return value;
     }
 
     @Override
@@ -173,6 +180,11 @@ public sealed interface Result<R> permits Err, Ok {
     public <T extends Throwable> Err<R> ifErr(Consumer1<? super String, T> consumer) throws T {
       consumer.accept(message);
       return this;
+    }
+
+    @Override
+    public R okOr(R or) {
+      return or;
     }
 
     @Override
