@@ -1,3 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-public sealed interface PTypeParams permits PExplicitTypeParams, PImplicitTypeParams {}
+import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+
+public sealed interface PTypeParams permits PExplicitTypeParams, PImplicitTypeParams {
+  public SVarSet toVarSet();
+}
