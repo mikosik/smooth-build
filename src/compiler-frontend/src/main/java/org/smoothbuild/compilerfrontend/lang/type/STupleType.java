@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
 
@@ -17,7 +19,7 @@ public final class STupleType extends SType {
   }
 
   private static SVarSet calculateVars(List<? extends SType> elements) {
-    return SVarSet.varSetS(elements);
+    return sVarSet(elements);
   }
 
   public List<SType> elements() {

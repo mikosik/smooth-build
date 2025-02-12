@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
@@ -25,6 +25,6 @@ public final class PExplicitTypeParams implements PTypeParams {
 
   @Override
   public SVarSet toVarSet() {
-    return varSetS(typeVars.map(PTypeParam::type));
+    return sVarSet(typeVars.map(PTypeParam::type));
   }
 }

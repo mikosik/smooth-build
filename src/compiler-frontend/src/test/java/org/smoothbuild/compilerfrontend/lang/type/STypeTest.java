@@ -6,7 +6,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import com.google.common.testing.EqualsTester;
 import java.util.function.Function;
@@ -132,25 +132,25 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   public List<Arguments> vars_test_data_non_static() {
     return list(
-        arguments(varA(), varSetS(varA())),
-        arguments(sBlobType(), varSetS()),
-        arguments(sBoolType(), varSetS()),
-        arguments(sIntType(), varSetS()),
-        arguments(sStringType(), varSetS()),
-        arguments(sTupleType(sIntType()), varSetS()),
-        arguments(sTupleType(varA(), varB()), varSetS(varA(), varB())),
-        arguments(sIntArrayT(), varSetS()),
-        arguments(sVarAArrayT(), varSetS(varA())),
-        arguments(sFuncType(sBoolType(), sBlobType()), varSetS()),
-        arguments(sFuncType(sBoolType(), varA()), varSetS(varA())),
-        arguments(sFuncType(varA(), sBlobType()), varSetS(varA())),
-        arguments(sFuncType(varB(), varA()), varSetS(varA(), varB())),
-        arguments(sStructType(sIntType()), varSetS()),
-        arguments(sStructType(sIntType(), varA()), varSetS(varA())),
-        arguments(sStructType(varB(), varA()), varSetS(varA(), varB())),
-        arguments(sInterfaceType(sIntType()), varSetS()),
-        arguments(sInterfaceType(sIntType(), varA()), varSetS(varA())),
-        arguments(sInterfaceType(varB(), varA()), varSetS(varA(), varB())));
+        arguments(varA(), sVarSet(varA())),
+        arguments(sBlobType(), sVarSet()),
+        arguments(sBoolType(), sVarSet()),
+        arguments(sIntType(), sVarSet()),
+        arguments(sStringType(), sVarSet()),
+        arguments(sTupleType(sIntType()), sVarSet()),
+        arguments(sTupleType(varA(), varB()), sVarSet(varA(), varB())),
+        arguments(sIntArrayT(), sVarSet()),
+        arguments(sVarAArrayT(), sVarSet(varA())),
+        arguments(sFuncType(sBoolType(), sBlobType()), sVarSet()),
+        arguments(sFuncType(sBoolType(), varA()), sVarSet(varA())),
+        arguments(sFuncType(varA(), sBlobType()), sVarSet(varA())),
+        arguments(sFuncType(varB(), varA()), sVarSet(varA(), varB())),
+        arguments(sStructType(sIntType()), sVarSet()),
+        arguments(sStructType(sIntType(), varA()), sVarSet(varA())),
+        arguments(sStructType(varB(), varA()), sVarSet(varA(), varB())),
+        arguments(sInterfaceType(sIntType()), sVarSet()),
+        arguments(sInterfaceType(sIntType(), varA()), sVarSet(varA())),
+        arguments(sInterfaceType(varB(), varA()), sVarSet(varA(), varB())));
   }
 
   @ParameterizedTest

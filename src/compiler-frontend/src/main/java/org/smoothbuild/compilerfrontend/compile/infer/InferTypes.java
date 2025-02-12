@@ -11,7 +11,7 @@ import static org.smoothbuild.compilerfrontend.compile.infer.FlexibleToRigidVarC
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Log;
@@ -110,7 +110,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           .list()
           .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.fqn(), none(), f.location()));
       var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
-      var schema = new SFuncSchema(varSetS(), sFuncType);
+      var schema = new SFuncSchema(sVarSet(), sFuncType);
       pConstructor.setSchema(schema);
       pConstructor.setSType(sFuncType);
     }

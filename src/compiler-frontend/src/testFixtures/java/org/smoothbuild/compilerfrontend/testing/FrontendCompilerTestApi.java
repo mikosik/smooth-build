@@ -18,7 +18,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -445,7 +445,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sReference(line, new SSchema(varSetS(), type), fqn(name)));
+    return sInstantiate(line, sReference(line, new SSchema(sVarSet(), type), fqn(name)));
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {

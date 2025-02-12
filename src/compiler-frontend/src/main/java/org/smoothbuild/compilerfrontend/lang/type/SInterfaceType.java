@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
@@ -20,7 +20,7 @@ public sealed class SInterfaceType extends SType permits SStructType {
   }
 
   public static SVarSet calculateFieldSetVars(List<SItemSig> fields) {
-    return varSetS(fields.map(SItemSig::type));
+    return sVarSet(fields.map(SItemSig::type));
   }
 
   public Map<Name, SItemSig> fieldSet() {

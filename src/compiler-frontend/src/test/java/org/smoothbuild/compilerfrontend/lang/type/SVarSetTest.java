@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Set.set;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
@@ -15,14 +15,14 @@ public class SVarSetTest extends FrontendCompilerTestContext {
   class _filter {
     @Test
     void filter_empty() {
-      var varSet = varSetS();
-      assertThat(varSet.filter(v -> !v.equals(varC()))).isEqualTo(varSetS());
+      var varSet = sVarSet();
+      assertThat(varSet.filter(v -> !v.equals(varC()))).isEqualTo(sVarSet());
     }
 
     @Test
     void filter() {
-      var varSet = varSetS(varB(), varC(), varA());
-      assertThat(varSet.filter(v -> !v.equals(varC()))).isEqualTo(varSetS(varA(), varB()));
+      var varSet = sVarSet(varB(), varC(), varA());
+      assertThat(varSet.filter(v -> !v.equals(varC()))).isEqualTo(sVarSet(varA(), varB()));
     }
   }
 
@@ -30,20 +30,20 @@ public class SVarSetTest extends FrontendCompilerTestContext {
   class _withAddedAll {
     @Test
     void empty_set_is_not_changed() {
-      var varSet = varSetS(varA());
-      assertThat(varSet.addAll(varSetS())).isEqualTo(varSetS(varA()));
+      var varSet = sVarSet(varA());
+      assertThat(varSet.addAll(sVarSet())).isEqualTo(sVarSet(varA()));
     }
 
     @Test
     void itself() {
-      var varSet = varSetS(varA());
-      assertThat(varSet.addAll(varSet)).isEqualTo(varSetS(varA()));
+      var varSet = sVarSet(varA());
+      assertThat(varSet.addAll(varSet)).isEqualTo(sVarSet(varA()));
     }
 
     @Test
     void other_varset() {
-      var varSet = varSetS(varA());
-      assertThat(varSet.addAll(varSetS(varB()))).isEqualTo(varSetS(varA(), varB()));
+      var varSet = sVarSet(varA());
+      assertThat(varSet.addAll(sVarSet(varB()))).isEqualTo(sVarSet(varA(), varB()));
     }
   }
 
@@ -51,45 +51,45 @@ public class SVarSetTest extends FrontendCompilerTestContext {
   class withRemovedAll {
     @Test
     void empty_set() {
-      var varSet = varSetS(varA());
-      assertThat(varSet.removeAll(set())).isEqualTo(varSetS(varA()));
+      var varSet = sVarSet(varA());
+      assertThat(varSet.removeAll(set())).isEqualTo(sVarSet(varA()));
     }
 
     @Test
     void other_non_overlapping_set() {
-      var varSet = varSetS(varA());
-      assertThat(varSet.removeAll(set(varB()))).isEqualTo(varSetS(varA()));
+      var varSet = sVarSet(varA());
+      assertThat(varSet.removeAll(set(varB()))).isEqualTo(sVarSet(varA()));
     }
 
     @Test
     void other_overlapping_set() {
-      var varSet = varSetS(varA(), varB(), varC());
-      assertThat(varSet.removeAll(set(varB()))).isEqualTo(varSetS(varA(), varC()));
+      var varSet = sVarSet(varA(), varB(), varC());
+      assertThat(varSet.removeAll(set(varB()))).isEqualTo(sVarSet(varA(), varC()));
     }
   }
 
   @Test
   void to_list() {
-    var varSet = varSetS(varB(), varC(), varA());
+    var varSet = sVarSet(varB(), varC(), varA());
     assertThat(varSet.toList()).isEqualTo(list(varA(), varB(), varC()));
   }
 
   @Test
   void equals_and_hash_code() {
     new EqualsTester()
-        .addEqualityGroup(varSetS(), varSetS())
-        .addEqualityGroup(varSetS(varA()), varSetS(varA()))
-        .addEqualityGroup(varSetS(varA(), varB()), varSetS(varA(), varB()))
+        .addEqualityGroup(sVarSet(), sVarSet())
+        .addEqualityGroup(sVarSet(varA()), sVarSet(varA()))
+        .addEqualityGroup(sVarSet(varA(), varB()), sVarSet(varA(), varB()))
         .addEqualityGroup(
-            varSetS(varC(), varA(), varB()),
-            varSetS(varA(), varB(), varC()),
-            varSetS(varC(), varA(), varB()))
+            sVarSet(varC(), varA(), varB()),
+            sVarSet(varA(), varB(), varC()),
+            sVarSet(varC(), varA(), varB()))
         .testEquals();
   }
 
   @Test
   void to_string() {
-    var varSet = varSetS(varC(), varA(), varB());
+    var varSet = sVarSet(varC(), varA(), varB());
     assertThat(varSet.toString()).isEqualTo("<A,B,C>");
   }
 }

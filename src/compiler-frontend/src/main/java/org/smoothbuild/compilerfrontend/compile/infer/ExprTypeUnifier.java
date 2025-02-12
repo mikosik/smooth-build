@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function1;
@@ -46,7 +46,7 @@ public class ExprTypeUnifier {
   private final SVarSet outerScopeVars;
 
   private ExprTypeUnifier(Unifier unifier, PScope scope) {
-    this(unifier, scope, varSetS());
+    this(unifier, scope, sVarSet());
   }
 
   private ExprTypeUnifier(Unifier unifier, PScope scope, SVarSet outerScopeVars) {

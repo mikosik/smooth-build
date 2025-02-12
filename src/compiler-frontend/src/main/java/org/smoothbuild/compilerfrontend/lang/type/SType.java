@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.varSetS;
+import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -119,7 +119,7 @@ public abstract sealed class SType
    * so it can be used to specify type of function parameter, its result type, value type, etc.
    */
   public String specifier() {
-    return specifier(varSetS());
+    return specifier(sVarSet());
   }
 
   public abstract String specifier(SVarSet localVars);
