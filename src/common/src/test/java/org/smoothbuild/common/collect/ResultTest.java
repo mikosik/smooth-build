@@ -77,6 +77,11 @@ public class ResultTest {
     }
 
     @Test
+    void okOr_returns_ok() {
+      assertThat(ok("a").okOr("b")).isEqualTo("a");
+    }
+
+    @Test
     void okOrGet_returns_ok() {
       assertThat(ok("a").okOrGet(() -> "b")).isEqualTo("a");
     }
@@ -218,6 +223,11 @@ public class ResultTest {
             throw exception;
           }))
           .throwsException(exception);
+    }
+
+    @Test
+    void okOr_returns_supplied_value() {
+      assertThat(err("a").okOr("b")).isEqualTo("b");
     }
 
     @Test
