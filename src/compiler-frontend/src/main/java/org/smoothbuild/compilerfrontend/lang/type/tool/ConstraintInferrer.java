@@ -17,16 +17,16 @@ import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public class ConstraintInferrer {
   public static SType unifyAndInferConstraints(
       SType type1, SType type2, Queue<Constraint> constraints) throws UnifierException {
-    if (type1.isFlexibleVar()) {
+    if (type1.isFlexibleTypeVar()) {
       constraints.add(new Constraint(type1, type2));
       return type1;
     }
-    if (type2.isFlexibleVar()) {
+    if (type2.isFlexibleTypeVar()) {
       constraints.add(new Constraint(type1, type2));
       return type2;
     }
@@ -35,7 +35,7 @@ public class ConstraintInferrer {
       case SInterfaceType fieldSet1 -> unifyInterface(fieldSet1, type2, constraints);
       case SFuncType func1 -> unifyFunction(func1, type2, constraints);
       case STupleType tuple1 -> unifyTuple(tuple1, type2, constraints);
-      case SVar sVar -> assertTypesAreEqual(sVar, type2);
+      case STypeVar sTypeVar -> assertTypesAreEqual(sTypeVar, type2);
       default -> assertTypesAreEqual(type1, type2);
     };
   }

@@ -17,7 +17,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.flexibleTypeVar;
 import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import java.math.BigInteger;
@@ -83,8 +83,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.virtualmachine.testing.VmTestApi;
 
@@ -289,48 +289,48 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SStructType(fqn(name), fields);
   }
 
-  public default SVar varA() {
+  public default STypeVar varA() {
     return sVar("A");
   }
 
-  public default SVar varB() {
+  public default STypeVar varB() {
     return sVar("B");
   }
 
-  public default SVar varC() {
+  public default STypeVar varC() {
     return sVar("C");
   }
 
-  public default SVar varD() {
+  public default STypeVar varD() {
     return sVar("D");
   }
 
-  public default SVar varE() {
+  public default STypeVar varE() {
     return sVar("E");
   }
 
-  public default SVar varX() {
+  public default STypeVar varX() {
     return sVar("X");
   }
 
-  public default SVar var1() {
-    return flexibleVar(1);
+  public default STypeVar var1() {
+    return flexibleTypeVar(1);
   }
 
-  public default SVar var2() {
-    return flexibleVar(2);
+  public default STypeVar var2() {
+    return flexibleTypeVar(2);
   }
 
-  public default SVar var3() {
-    return flexibleVar(3);
+  public default STypeVar var3() {
+    return flexibleTypeVar(3);
   }
 
-  public default SVar sVar(String name) {
+  public default STypeVar sVar(String name) {
     return sVar(fqn(name));
   }
 
-  public default SVar sVar(Fqn fqn) {
-    return new SVar(fqn);
+  public default STypeVar sVar(Fqn fqn) {
+    return new STypeVar(fqn);
   }
 
   public default SBlob sBlob(int data) {
@@ -367,12 +367,12 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SInt(sIntType(), BigInteger.valueOf(value), location(line));
   }
 
-  public default Map<SVar, SType> varMap() {
+  public default Map<STypeVar, SType> varMap() {
     return map();
   }
 
-  public default Map<SVar, SType> varMap(SVar var, SType type) {
-    return map(var, type);
+  public default Map<STypeVar, SType> varMap(STypeVar typeVar, SType type) {
+    return map(typeVar, type);
   }
 
   public default SInstantiate sInstantiate(SNamedEvaluable namedEvaluable) {
@@ -596,7 +596,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return emptySArrayValue(varA());
   }
 
-  public default SNamedValue emptySArrayValue(SVar elementType) {
+  public default SNamedValue emptySArrayValue(SType elementType) {
     return sValue("emptyArray", sOrder(elementType));
   }
 

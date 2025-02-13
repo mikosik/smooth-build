@@ -3,15 +3,15 @@ package org.smoothbuild.compilerfrontend.lang.type.tool;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import java.util.Arrays;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
-public class AlphabeticalVarsGenerator {
+public class AlphabeticalTypeVarGenerator {
   private char[] name = new char[] {'A'};
 
-  public SVar next() {
-    SVar sVar = new SVar(fqn(new String(name)));
+  public STypeVar next() {
+    STypeVar sTypeVar = new STypeVar(fqn(new String(name)));
     generateNextName();
-    return sVar;
+    return sTypeVar;
   }
 
   private void generateNextName() {

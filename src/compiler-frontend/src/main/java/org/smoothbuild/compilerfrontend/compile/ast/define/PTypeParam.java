@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public final class PTypeParam implements PTypeDefinition {
   private final String nameText;
@@ -30,7 +30,7 @@ public final class PTypeParam implements PTypeDefinition {
 
   @Override
   public SType type() {
-    return new SVar(fqn);
+    return new STypeVar(fqn);
   }
 
   @Override

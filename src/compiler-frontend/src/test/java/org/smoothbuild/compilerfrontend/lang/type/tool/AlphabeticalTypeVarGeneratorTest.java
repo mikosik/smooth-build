@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
-public class AlphabeticalVarsGeneratorTest {
+public class AlphabeticalTypeVarGeneratorTest {
   private static final String DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   private static final int RADIX = DIGITS.length();
 
@@ -33,11 +33,11 @@ public class AlphabeticalVarsGeneratorTest {
   }
 
   private static void checkNameAtIndex(int index, String name) {
-    assertThat(find(index)).isEqualTo(new SVar(fqn(name)));
+    assertThat(find(index)).isEqualTo(new STypeVar(fqn(name)));
   }
 
-  private static SVar find(int index) {
-    var iterator = new AlphabeticalVarsGenerator();
+  private static STypeVar find(int index) {
+    var iterator = new AlphabeticalTypeVarGenerator();
     for (int j = 0; j < index; j++) {
       iterator.next();
     }

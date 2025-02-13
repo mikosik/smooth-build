@@ -56,7 +56,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
@@ -167,7 +167,7 @@ public class SbTranslator {
     var keys = sInstantiate.sPolymorphic().schema().typeParams().toList();
     var values = sInstantiate.typeArgs().map(typeTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
-    var varMap = typeTranslator.varMap().overrideWith(instantiatedVarMap);
+    var varMap = typeTranslator.typeVarMap().overrideWith(instantiatedVarMap);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
         bytecodeF,
@@ -221,7 +221,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedFuncWithCache(SNamedFunc sNamedFunc) throws SbTranslatorException {
-    var key = new CacheKey(sNamedFunc.fqn(), typeTranslator.varMap());
+    var key = new CacheKey(sNamedFunc.fqn(), typeTranslator.typeVarMap());
     return computeIfAbsent(cache, key, k -> translateNamedFunc(sNamedFunc));
   }
 
@@ -328,7 +328,7 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedValueWithCache(SNamedValue sNamedValue) throws SbTranslatorException {
-    var key = new CacheKey(sNamedValue.fqn(), typeTranslator.varMap());
+    var key = new CacheKey(sNamedValue.fqn(), typeTranslator.typeVarMap());
     return computeIfAbsent(cache, key, k -> translateNamedValue(sNamedValue));
   }
 
@@ -368,7 +368,7 @@ public class SbTranslator {
 
   private BExpr fetchBytecode(SAnnotation annotation, BType bType, Id id)
       throws SbTranslatorException {
-    var varNameToTypeMap = typeTranslator.varMap().mapKeys(var -> var.name().toString());
+    var varNameToTypeMap = typeTranslator.typeVarMap().mapKeys(var -> var.name().toString());
     var jar = readNativeJar(annotation.location());
     var bytecode = loadBytecode(id, jar, annotation.path().string(), varNameToTypeMap);
     if (bytecode.isErr()) {
@@ -451,5 +451,5 @@ public class SbTranslator {
     locations.put(bExpr.hash(), location);
   }
 
-  private static record CacheKey(Id id, Map<SVar, BType> varMap) {}
+  private static record CacheKey(Id id, Map<STypeVar, BType> varMap) {}
 }

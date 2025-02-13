@@ -8,9 +8,9 @@ import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
 
-public final class SVarSet extends Set<SVar> {
-  public static SVarSet sVarSet(SVar... vars) {
-    var set = set(vars);
+public final class SVarSet extends Set<STypeVar> {
+  public static SVarSet sVarSet(STypeVar... typeVars) {
+    var set = set(typeVars);
     return newSortedSVarSet(set);
   }
 
@@ -18,24 +18,25 @@ public final class SVarSet extends Set<SVar> {
     return newSortedSVarSet(setOfAll(types.toList().flatMap(SType::vars)));
   }
 
-  private static SVarSet newSortedSVarSet(Set<SVar> set) {
-    return new SVarSet(set.sort(comparing(SVar::fqn)));
+  private static SVarSet newSortedSVarSet(Set<STypeVar> set) {
+    return new SVarSet(set.sort(comparing(STypeVar::fqn)));
   }
 
-  private SVarSet(Set<SVar> elements) {
+  private SVarSet(Set<STypeVar> elements) {
     super(ImmutableSet.copyOf(elements));
   }
 
-  public <T extends Throwable> SVarSet mapVars(Function1<? super SVar, SVar, T> filter) throws T {
+  public <T extends Throwable> SVarSet mapVars(Function1<? super STypeVar, STypeVar, T> filter)
+      throws T {
     return new SVarSet(super.map(filter));
   }
 
   @Override
-  public <T extends Throwable> SVarSet filter(Function1<SVar, Boolean, T> predicate) throws T {
+  public <T extends Throwable> SVarSet filter(Function1<STypeVar, Boolean, T> predicate) throws T {
     return new SVarSet(super.filter(predicate));
   }
 
-  public SVarSet addAll(Iterable<? extends SVar> toAdd) {
+  public SVarSet addAll(Iterable<? extends STypeVar> toAdd) {
     return new SVarSet(unionWith(toAdd));
   }
 
@@ -53,11 +54,11 @@ public final class SVarSet extends Set<SVar> {
   }
 
   public String toShortString() {
-    return map(SVar::name).toString("<", ",", ">");
+    return map(STypeVar::name).toString("<", ",", ">");
   }
 
   @Override
   public String toString() {
-    return map(SVar::fqn).toString("<", ",", ">");
+    return map(STypeVar::fqn).toString("<", ",", ">");
   }
 }

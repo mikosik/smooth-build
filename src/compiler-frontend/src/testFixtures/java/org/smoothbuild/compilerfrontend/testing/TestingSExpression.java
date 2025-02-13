@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
 
 public class TestingSExpression {
   public static java.util.List<SType> typesToTest() {
@@ -17,7 +17,7 @@ public class TestingSExpression {
   }
 
   public static List<SType> nonCompositeTypes() {
-    return List.<SType>list(new SVar(fqn("A"))).addAll(STypes.baseTypes().add());
+    return List.<SType>list(new STypeVar(fqn("A"))).addAll(STypes.baseTypes().add());
   }
 
   public static java.util.List<Function<SType, SType>> compositeTypeSFactories() {

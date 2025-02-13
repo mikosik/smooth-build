@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SStringType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
@@ -22,15 +22,15 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
 class TypeSbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
-  private final Map<SVar, BType> varMap;
+  private final Map<STypeVar, BType> typeVarMap;
 
-  public TypeSbTranslator(ChainingBytecodeFactory bytecodeF, Map<SVar, BType> varMap) {
+  public TypeSbTranslator(ChainingBytecodeFactory bytecodeF, Map<STypeVar, BType> typeVarMap) {
     this.bytecodeF = bytecodeF;
-    this.varMap = varMap;
+    this.typeVarMap = typeVarMap;
   }
 
-  public Map<SVar, BType> varMap() {
-    return varMap;
+  public Map<STypeVar, BType> typeVarMap() {
+    return typeVarMap;
   }
 
   public BType translate(SType type) throws SbTranslatorException {
@@ -40,7 +40,7 @@ class TypeSbTranslator {
       case SBoolType sBoolType -> bytecodeF.boolType();
       case SFuncType sFuncType -> translate(sFuncType);
       case SIntType sIntType -> bytecodeF.intType();
-      case SVar sVar -> translate(sVar);
+      case STypeVar sTypeVar -> translate(sTypeVar);
       case SStringType sStringType -> bytecodeF.stringType();
       case SStructType sStructType -> translate(sStructType);
       case STupleType sTupleType -> translate(sTupleType);
@@ -48,10 +48,10 @@ class TypeSbTranslator {
     };
   }
 
-  public BType translate(SVar var) {
-    BType bType = varMap.get(var);
+  public BType translate(STypeVar typeVar) {
+    var bType = typeVarMap.get(typeVar);
     if (bType == null) {
-      throw new IllegalStateException("Unknown variable " + var.q() + ".");
+      throw new IllegalStateException("Unknown variable " + typeVar.q() + ".");
     } else {
       return bType;
     }

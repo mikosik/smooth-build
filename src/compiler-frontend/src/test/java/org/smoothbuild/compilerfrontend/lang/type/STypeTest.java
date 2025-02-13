@@ -156,7 +156,8 @@ public class STypeTest extends FrontendCompilerTestContext {
   @ParameterizedTest
   @MethodSource("map_vars")
   public void map_vars(SType type, SType expected) {
-    Function<SVar, SType> addPrefix = (SVar v) -> new SVar(fqn("module").append(v.fqn()));
+    Function<STypeVar, SType> addPrefix =
+        (STypeVar v) -> new STypeVar(fqn("module").append(v.fqn()));
     assertThat(type.mapVars(addPrefix)).isEqualTo(expected);
   }
 
@@ -205,11 +206,11 @@ public class STypeTest extends FrontendCompilerTestContext {
 
   @ParameterizedTest
   @MethodSource
-  void is_flexible_var(SType var, boolean isFlexible) {
-    assertThat(var.isFlexibleVar()).isEqualTo(isFlexible);
+  void is_flexible_type_var(SType var, boolean isFlexible) {
+    assertThat(var.isFlexibleTypeVar()).isEqualTo(isFlexible);
   }
 
-  static List<Arguments> is_flexible_var() {
+  static List<Arguments> is_flexible_type_var() {
     return new STypeTest().non_static_is_flexible_var();
   }
 

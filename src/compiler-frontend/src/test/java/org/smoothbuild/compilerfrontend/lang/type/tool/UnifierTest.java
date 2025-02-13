@@ -7,7 +7,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
-import static org.smoothbuild.compilerfrontend.lang.type.SVar.flexibleVar;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.flexibleTypeVar;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -19,8 +19,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class UnifierTest extends FrontendCompilerTestContext {
@@ -421,7 +421,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       }
 
       public static List<SType> typesToTest() {
-        return List.<SType>list().addAll(STypes.baseTypes()).add(new SVar(fqn("A")));
+        return List.<SType>list().addAll(STypes.baseTypes()).add(new STypeVar(fqn("A")));
       }
     }
   }
@@ -764,9 +764,9 @@ public class UnifierTest extends FrontendCompilerTestContext {
   class _temporary_vars {
     @Test
     void non_temporary_var_has_priority_over_temporary() throws UnifierException {
-      SVar a = unifier.newFlexibleVar();
-      SVar b = unifier.newFlexibleVar();
-      SVar x = varX();
+      STypeVar a = unifier.newFlexibleVar();
+      STypeVar b = unifier.newFlexibleVar();
+      STypeVar x = varX();
       var constraints = list(new Constraint(a, b), new Constraint(b, x));
       assertResolvedAreEqualForEachPermutation(constraints, a, x);
       assertResolvedAreEqualForEachPermutation(constraints, b, x);
@@ -784,7 +784,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
   class _resolve {
     @Test
     void unknown_flexible_var_cannot_be_resolved() {
-      assertCall(() -> unifier.resolve(flexibleVar(1)))
+      assertCall(() -> unifier.resolve(flexibleTypeVar(1)))
           .throwsException(new IllegalStateException("Unknown flexible var `T~1`."));
     }
 

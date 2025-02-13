@@ -30,7 +30,7 @@ public class UnitTypeInferrer extends PScopingModuleVisitor<RuntimeException> {
   public void visitInstantiate(PInstantiate pInstantiate) {
     for (var typeArg : pInstantiate.typeArgs()) {
       for (var var : unifier.resolve(typeArg).vars()) {
-        if (var.isFlexibleVar()) {
+        if (var.isFlexibleTypeVar()) {
           unifier.addOrFailWithRuntimeException(new Constraint(var, new STupleType(list())));
         }
       }

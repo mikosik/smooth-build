@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 
@@ -100,9 +100,10 @@ public class TypeSbTranslatorTest extends FrontendCompilerTestContext {
     assertTranslation(map(), sType, expected);
   }
 
-  private void assertTranslation(Map<SVar, BType> varMap, SType sType, BType expected)
+  private void assertTranslation(Map<STypeVar, BType> typeVarMap, SType sType, BType expected)
       throws SbTranslatorException {
-    var typeSbTranslator = new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF()), varMap);
+    var typeSbTranslator =
+        new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeF()), typeVarMap);
     assertThat(typeSbTranslator.translate(sType)).isEqualTo(expected);
   }
 }
