@@ -23,7 +23,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 public class TypeResolver {
@@ -56,7 +56,7 @@ public class TypeResolver {
     resolveBody(pFunc.body());
   }
 
-  private SVarSet resolveTypeParams(SSchema sSchema) {
+  private STypeVarSet resolveTypeParams(SSchema sSchema) {
     return sSchema.typeParams().mapVars(v -> (STypeVar) unifier.resolve(v));
   }
 
@@ -133,6 +133,6 @@ public class TypeResolver {
   }
 
   private boolean hasFlexibleVar(SType sType) {
-    return sType.vars().stream().anyMatch(STypeVar::isFlexibleTypeVar);
+    return sType.typeVars().stream().anyMatch(STypeVar::isFlexibleTypeVar);
   }
 }

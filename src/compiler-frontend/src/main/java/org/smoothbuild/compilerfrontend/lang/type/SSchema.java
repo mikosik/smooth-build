@@ -11,17 +11,17 @@ import org.smoothbuild.common.collect.List;
  * Polymorphic type (aka type schema).
  */
 public sealed class SSchema permits SFuncSchema {
-  private final SVarSet typeParams;
+  private final STypeVarSet typeParams;
   private final SType type;
 
-  public SSchema(SVarSet typeParams, SType type) {
+  public SSchema(STypeVarSet typeParams, SType type) {
     assertTypeParamsArePresentInType(typeParams, type);
     this.typeParams = requireNonNull(typeParams);
     this.type = requireNonNull(type);
   }
 
-  private static void assertTypeParamsArePresentInType(SVarSet typeParams, SType type) {
-    if (!type.vars().containsAll(typeParams)) {
+  private static void assertTypeParamsArePresentInType(STypeVarSet typeParams, SType type) {
+    if (!type.typeVars().containsAll(typeParams)) {
       throw new IllegalArgumentException(
           "Type parameter(s) " + typeParams + " are not present in type " + type.q() + ".");
     }
@@ -32,7 +32,7 @@ public sealed class SSchema permits SFuncSchema {
    * Other variables present in this schema are type variables which are quantified variables
    * of enclosing environment (enclosing function or value).
    */
-  public SVarSet typeParams() {
+  public STypeVarSet typeParams() {
     return typeParams;
   }
 

@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -19,13 +19,13 @@ public final class SFuncType extends SType {
   }
 
   public SFuncType(STupleType params, SType result) {
-    super(calculateFuncVars(params, result));
+    super(calculateFuncTypeVars(params, result));
     this.result = requireNonNull(result);
     this.params = requireNonNull(params);
   }
 
-  public static SVarSet calculateFuncVars(STupleType paramTs, SType resultT) {
-    return sVarSet(list(resultT).addAll(paramTs.elements()));
+  public static STypeVarSet calculateFuncTypeVars(STupleType paramTs, SType resultT) {
+    return sTypeVarSet(list(resultT).addAll(paramTs.elements()));
   }
 
   public STupleType params() {
@@ -37,9 +37,9 @@ public final class SFuncType extends SType {
   }
 
   @Override
-  public String specifier(SVarSet localVars) {
-    var paramStrings = params.elements().map(t -> t.specifier(localVars));
-    return "(" + paramStrings.toString(",") + ")->" + result.specifier(localVars);
+  public String specifier(STypeVarSet localTypeVars) {
+    var paramStrings = params.elements().map(t -> t.specifier(localTypeVars));
+    return "(" + paramStrings.toString(",") + ")->" + result.specifier(localTypeVars);
   }
 
   @Override

@@ -8,7 +8,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -259,7 +259,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void lambda() throws Exception {
-        var lambda = sLambda(sVarSet(varA()), nlist(sItem(varA(), "p")), sParamRef(varA(), "p"));
+        var lambda =
+            sLambda(sTypeVarSet(varA()), nlist(sItem(varA(), "p")), sParamRef(varA(), "p"));
         var monoLambdaS = sInstantiate(list(sIntType()), lambda);
         assertTranslation(monoLambdaS, bLambda(list(bIntType()), bReference(bIntType(), 0)));
       }
@@ -337,7 +338,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var()
           throws Exception {
         // regression test
-        var monoLambdaS = sInstantiate(sLambda(sVarSet(), sParamRef(varA(), "a")));
+        var monoLambdaS = sInstantiate(sLambda(sTypeVarSet(), sParamRef(varA(), "a")));
         var funcS = sFunc("myFunc", nlist(sItem(varA(), "a")), monoLambdaS);
         var instantiateS = sInstantiate(list(sIntType()), funcS);
 

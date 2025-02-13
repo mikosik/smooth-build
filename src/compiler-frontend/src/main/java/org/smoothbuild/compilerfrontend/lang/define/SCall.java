@@ -4,7 +4,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 
 /**
  * This class is immutable.
@@ -33,9 +33,9 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
   }
 
   @Override
-  public String toSourceCode(SVarSet localVars) {
-    return callee.toSourceCode(localVars) + "("
-        + args.elements().map(a -> a.toSourceCode(localVars)).toString(",") + ")";
+  public String toSourceCode(STypeVarSet localTypeVars) {
+    return callee.toSourceCode(localTypeVars) + "("
+        + args.elements().map(a -> a.toSourceCode(localTypeVars)).toString(",") + ")";
   }
 
   @Override

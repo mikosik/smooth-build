@@ -3,11 +3,11 @@ package org.smoothbuild.compilerfrontend.lang.define;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SStringType;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 
 public record SString(SStringType type, String string, Location location) implements SConstant {
   @Override
-  public String toSourceCode(SVarSet localVars) {
+  public String toSourceCode(STypeVarSet localTypeVars) {
     return "\"" + string + "\"";
   }
 

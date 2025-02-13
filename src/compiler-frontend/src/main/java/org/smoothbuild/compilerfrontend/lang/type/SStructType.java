@@ -37,7 +37,7 @@ public final class SStructType extends SInterfaceType implements Identifiable {
   }
 
   @Override
-  public String specifier(SVarSet localVars) {
+  public String specifier(STypeVarSet localTypeVars) {
     return fqn.toString();
   }
 

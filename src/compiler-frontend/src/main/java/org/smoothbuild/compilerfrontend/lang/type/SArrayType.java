@@ -9,7 +9,7 @@ public final class SArrayType extends SType {
   private final SType elem;
 
   public SArrayType(SType elem) {
-    super(elem.vars());
+    super(elem.typeVars());
     this.elem = requireNonNull(elem);
   }
 
@@ -18,8 +18,8 @@ public final class SArrayType extends SType {
   }
 
   @Override
-  public String specifier(SVarSet localVars) {
-    return "[" + elem.specifier(localVars) + "]";
+  public String specifier(STypeVarSet localTypeVars) {
+    return "[" + elem.specifier(localTypeVars) + "]";
   }
 
   @Override

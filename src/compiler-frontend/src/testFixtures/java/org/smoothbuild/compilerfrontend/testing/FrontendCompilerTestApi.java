@@ -18,7 +18,7 @@ import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.flexibleTypeVar;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -84,8 +84,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.virtualmachine.testing.VmTestApi;
 
 public interface FrontendCompilerTestApi extends VmTestApi {
@@ -206,10 +206,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   private SFuncSchema sFuncSchema(SFuncType funcType) {
-    return sFuncSchema(funcType.vars(), funcType);
+    return sFuncSchema(funcType.typeVars(), funcType);
   }
 
-  private SFuncSchema sFuncSchema(SVarSet typeParams, SFuncType funcType) {
+  private SFuncSchema sFuncSchema(STypeVarSet typeParams, SFuncType funcType) {
     return new SFuncSchema(typeParams, funcType);
   }
 
@@ -230,10 +230,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SSchema sSchema(SType type) {
-    return sSchema(type.vars(), type);
+    return sSchema(type.typeVars(), type);
   }
 
-  public default SSchema sSchema(SVarSet typeParams, SType type) {
+  public default SSchema sSchema(STypeVarSet typeParams, SType type) {
     return new SSchema(typeParams, type);
   }
 
@@ -445,7 +445,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sReference(line, new SSchema(sVarSet(), type), fqn(name)));
+    return sInstantiate(line, sReference(line, new SSchema(sTypeVarSet(), type), fqn(name)));
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
@@ -671,20 +671,21 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SNamedExprFunc(schema, fqn, params, body, location(line));
   }
 
-  public default SLambda sLambda(SVarSet typeParams, SExpr body) {
+  public default SLambda sLambda(STypeVarSet typeParams, SExpr body) {
     return sLambda(typeParams, nlist(), body);
   }
 
-  public default SLambda sLambda(SVarSet typeParams, NList<SItem> params, SExpr body) {
+  public default SLambda sLambda(STypeVarSet typeParams, NList<SItem> params, SExpr body) {
     return sLambda(1, typeParams, params, body);
   }
 
-  public default SLambda sLambda(int line, SVarSet typeParams, NList<SItem> params, SExpr body) {
+  public default SLambda sLambda(
+      int line, STypeVarSet typeParams, NList<SItem> params, SExpr body) {
     return sLambda(line, fqn("lambda"), typeParams, params, body);
   }
 
   public default SLambda sLambda(
-      int line, Fqn fqn, SVarSet typeParams, NList<SItem> params, SExpr body) {
+      int line, Fqn fqn, STypeVarSet typeParams, NList<SItem> params, SExpr body) {
     var sFuncType = sFuncType(toTypes(params.list()), body.evaluationType());
     var sFuncSchema = sFuncSchema(typeParams, sFuncType);
     return new SLambda(sFuncSchema, fqn, params, body, location(line));

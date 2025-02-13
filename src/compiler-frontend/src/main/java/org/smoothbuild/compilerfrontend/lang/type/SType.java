@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -15,14 +15,14 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
  */
 public abstract sealed class SType
     permits SBaseType, SArrayType, SFuncType, SInterfaceType, STupleType, STypeVar {
-  private final SVarSet vars;
+  private final STypeVarSet typeVars;
 
-  protected SType(SVarSet vars) {
-    this.vars = vars;
+  protected SType(STypeVarSet typeVars) {
+    this.typeVars = typeVars;
   }
 
-  public SVarSet vars() {
-    return vars;
+  public STypeVarSet typeVars() {
+    return typeVars;
   }
 
   public boolean isFlexibleTypeVar() {
@@ -65,7 +65,7 @@ public abstract sealed class SType
   }
 
   public SType mapVars(Function<? super STypeVar, SType> map) {
-    if (vars().isEmpty()) {
+    if (typeVars().isEmpty()) {
       return this;
     } else {
       return switch (this) {
@@ -120,10 +120,10 @@ public abstract sealed class SType
    * so it can be used to specify type of function parameter, its result type, value type, etc.
    */
   public String specifier() {
-    return specifier(sVarSet());
+    return specifier(sTypeVarSet());
   }
 
-  public abstract String specifier(SVarSet localVars);
+  public abstract String specifier(STypeVarSet localTypeVars);
 
   public String q() {
     return Strings.q(specifier());

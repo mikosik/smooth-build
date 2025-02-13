@@ -785,7 +785,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
     @Test
     void unknown_flexible_var_cannot_be_resolved() {
       assertCall(() -> unifier.resolve(flexibleTypeVar(1)))
-          .throwsException(new IllegalStateException("Unknown flexible var `T~1`."));
+          .throwsException(new IllegalStateException("Unknown flexible type var `T~1`."));
     }
 
     @ParameterizedTest

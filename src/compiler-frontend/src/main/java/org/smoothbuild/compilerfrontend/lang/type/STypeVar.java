@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
@@ -11,7 +11,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
  */
 public final class STypeVar extends SType implements Identifiable {
   private static final String FLEXIBLE_VAR_PREFIX = "T~";
-  private final SVarSet vars;
+  private final STypeVarSet typeVars;
   private final Fqn fqn;
   private final boolean isFlexible;
 
@@ -22,7 +22,7 @@ public final class STypeVar extends SType implements Identifiable {
   private STypeVar(Fqn fqn, boolean isFlexible) {
     super(null);
     this.fqn = fqn;
-    this.vars = sVarSet(this);
+    this.typeVars = sTypeVarSet(this);
     this.isFlexible = isFlexible;
   }
 
@@ -36,8 +36,8 @@ public final class STypeVar extends SType implements Identifiable {
   }
 
   @Override
-  public SVarSet vars() {
-    return vars;
+  public STypeVarSet typeVars() {
+    return typeVars;
   }
 
   @Override
@@ -46,7 +46,7 @@ public final class STypeVar extends SType implements Identifiable {
   }
 
   @Override
-  public String specifier(SVarSet localVars) {
-    return localVars.contains(this) ? name().toString() : fqn.toString();
+  public String specifier(STypeVarSet localTypeVars) {
+    return localTypeVars.contains(this) ? name().toString() : fqn.toString();
   }
 }

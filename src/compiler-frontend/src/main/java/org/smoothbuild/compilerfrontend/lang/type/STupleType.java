@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import java.util.Objects;
 import org.smoothbuild.common.collect.List;
@@ -12,14 +12,14 @@ public final class STupleType extends SType {
   private final List<SType> elements;
 
   public STupleType(List<? extends SType> elements) {
-    super(calculateVars(elements));
+    super(calculateTypeVars(elements));
     @SuppressWarnings("unchecked")
     var cast = (List<SType>) elements;
     this.elements = cast;
   }
 
-  private static SVarSet calculateVars(List<? extends SType> elements) {
-    return sVarSet(elements);
+  private static STypeVarSet calculateTypeVars(List<? extends SType> elements) {
+    return sTypeVarSet(elements);
   }
 
   public List<SType> elements() {
@@ -31,8 +31,8 @@ public final class STupleType extends SType {
   }
 
   @Override
-  public String specifier(SVarSet localVars) {
-    return "{" + elements.map(type -> type.specifier(localVars)).toString(",") + "}";
+  public String specifier(STypeVarSet localTypeVars) {
+    return "{" + elements.map(type -> type.specifier(localTypeVars)).toString(",") + "}";
   }
 
   @Override

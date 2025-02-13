@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
@@ -12,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 
 /**
  * Item is a func param or a struct field.
@@ -37,7 +37,7 @@ public final class SItem implements Item, SReferenceable {
 
   @Override
   public SSchema schema() {
-    return new SSchema(sVarSet(), type);
+    return new SSchema(sTypeVarSet(), type);
   }
 
   @Override
@@ -60,11 +60,11 @@ public final class SItem implements Item, SReferenceable {
   }
 
   public String toSourceCode() {
-    return toSourceCode(sVarSet());
+    return toSourceCode(sTypeVarSet());
   }
 
-  public String toSourceCode(SVarSet localVars) {
-    return type.specifier(localVars) + " " + name().toString()
+  public String toSourceCode(STypeVarSet localTypeVars) {
+    return type.specifier(localTypeVars) + " " + name().toString()
         + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
   }
 

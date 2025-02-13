@@ -7,7 +7,7 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 
 public record SSelect(SExpr selectable, Name field, Location location) implements SExpr {
   public SSelect {
@@ -21,8 +21,8 @@ public record SSelect(SExpr selectable, Name field, Location location) implement
   }
 
   @Override
-  public String toSourceCode(SVarSet localVars) {
-    return selectable.toSourceCode(localVars) + "." + field;
+  public String toSourceCode(STypeVarSet localTypeVars) {
+    return selectable.toSourceCode(localTypeVars) + "." + field;
   }
 
   @Override

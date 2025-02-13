@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
@@ -19,8 +19,8 @@ public sealed class SInterfaceType extends SType permits SStructType {
     this.fields = fields;
   }
 
-  public static SVarSet calculateFieldSetVars(List<SItemSig> fields) {
-    return sVarSet(fields.map(SItemSig::type));
+  public static STypeVarSet calculateFieldSetVars(List<SItemSig> fields) {
+    return sTypeVarSet(fields.map(SItemSig::type));
   }
 
   public Map<Name, SItemSig> fieldSet() {
@@ -28,7 +28,7 @@ public sealed class SInterfaceType extends SType permits SStructType {
   }
 
   @Override
-  public String specifier(SVarSet localVars) {
+  public String specifier(STypeVarSet localTypeVars) {
     return listOfAll(fields.values()).toString("{", ",", "}");
   }
 

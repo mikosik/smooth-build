@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function1;
@@ -34,8 +34,8 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -43,16 +43,16 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 public class ExprTypeUnifier {
   private final Unifier unifier;
   private final PScope scope;
-  private final SVarSet outerScopeVars;
+  private final STypeVarSet outerScopeTypeVars;
 
   private ExprTypeUnifier(Unifier unifier, PScope scope) {
-    this(unifier, scope, sVarSet());
+    this(unifier, scope, sTypeVarSet());
   }
 
-  private ExprTypeUnifier(Unifier unifier, PScope scope, SVarSet outerScopeVars) {
+  private ExprTypeUnifier(Unifier unifier, PScope scope, STypeVarSet outerScopeTypeVars) {
     this.unifier = unifier;
     this.scope = scope;
-    this.outerScopeVars = outerScopeVars;
+    this.outerScopeTypeVars = outerScopeTypeVars;
   }
 
   public static void unifyNamedValue(Unifier unifier, PScope scope, PNamedValue pNamedValue)
@@ -86,9 +86,9 @@ public class ExprTypeUnifier {
   }
 
   private static void verifyInferredTypeParamsAreEqualToExplicitlyDeclared(
-      PEvaluable pEvaluable, SVarSet inferredTypeParams) throws TypeException {
+      PEvaluable pEvaluable, STypeVarSet inferredTypeParams) throws TypeException {
     if (pEvaluable.typeParams() instanceof PExplicitTypeParams explicitTypeParams) {
-      var explicit = explicitTypeParams.toVarSet();
+      var explicit = explicitTypeParams.toTypeVarSet();
       if (!explicit.equals(inferredTypeParams)) {
         throw new TypeException(compileError(
             explicitTypeParams.location(),
@@ -98,8 +98,8 @@ public class ExprTypeUnifier {
     }
   }
 
-  private SVarSet resolveTypeParams(SType sType) {
-    return sType.vars().removeAll(outerScopeVars.map(unifier::resolve));
+  private STypeVarSet resolveTypeParams(SType sType) {
+    return sType.typeVars().removeAll(outerScopeTypeVars.map(unifier::resolve));
   }
 
   private SType resolveType(PEvaluable pEvaluable) {
@@ -114,7 +114,7 @@ public class ExprTypeUnifier {
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType, PScope bodyScope)
       throws TypeException {
-    var vars = outerScopeVars.addAll(pEvaluable.typeParams().toVarSet());
+    var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().toTypeVarSet());
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
@@ -215,7 +215,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyLambda(PLambda pLambda) throws TypeException {
-    new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeVars).unifyFunc(pLambda);
+    new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeTypeVars).unifyFunc(pLambda);
   }
 
   private SType unifyNamedArg(PNamedArg pNamedArg) throws TypeException {

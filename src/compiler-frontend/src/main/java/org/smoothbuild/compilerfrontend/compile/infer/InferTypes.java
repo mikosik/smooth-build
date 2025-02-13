@@ -11,7 +11,7 @@ import static org.smoothbuild.compilerfrontend.compile.infer.FlexibleToRigidVarC
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Log;
@@ -32,7 +32,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -66,7 +66,7 @@ public class InferTypes implements Task1<PModule, PModule> {
 
     private SItemSig inferFieldSig(PItem field) throws TypeException {
       var type = scope().translate(field.type());
-      if (type.vars().isEmpty()) {
+      if (type.typeVars().isEmpty()) {
         field.setSType(type);
         return new SItemSig(type, field.name());
       } else {
@@ -110,7 +110,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           .list()
           .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.fqn(), none(), f.location()));
       var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
-      var schema = new SFuncSchema(sVarSet(), sFuncType);
+      var schema = new SFuncSchema(sTypeVarSet(), sFuncType);
       pConstructor.setSchema(schema);
       pConstructor.setSType(sFuncType);
     }
@@ -126,9 +126,9 @@ public class InferTypes implements Task1<PModule, PModule> {
           var unifier = new Unifier();
           var resolvedParamType = funcSchema.type().params().elements().get(index);
           var paramType =
-              replaceVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
+              replaceTypeVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
           var sSchema = scope().schemaFor(defaultValueId);
-          var defaultValueType = replaceTypeParamVarsWithFlexibleVars(sSchema, unifier);
+          var defaultValueType = replaceTypeParamVarsWithFlexibleTypeVars(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
           } catch (UnifierException e) {
@@ -143,12 +143,14 @@ public class InferTypes implements Task1<PModule, PModule> {
       }
     }
 
-    private static SType replaceTypeParamVarsWithFlexibleVars(SSchema sSchema, Unifier unifier) {
-      return replaceVarsWithFlexible(sSchema.typeParams(), sSchema.type(), unifier);
+    private static SType replaceTypeParamVarsWithFlexibleTypeVars(
+        SSchema sSchema, Unifier unifier) {
+      return replaceTypeVarsWithFlexible(sSchema.typeParams(), sSchema.type(), unifier);
     }
 
-    private static SType replaceVarsWithFlexible(SVarSet vars, SType type, Unifier unifier) {
-      var mapping = vars.toList().toMap(v -> (SType) unifier.newFlexibleVar());
+    private static SType replaceTypeVarsWithFlexible(
+        STypeVarSet typeVars, SType type, Unifier unifier) {
+      var mapping = typeVars.toList().toMap(v -> (SType) unifier.newFlexibleVar());
       return type.mapVars(mapping);
     }
   }

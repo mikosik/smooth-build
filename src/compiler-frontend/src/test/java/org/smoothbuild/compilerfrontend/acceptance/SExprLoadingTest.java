@@ -5,8 +5,8 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 import static org.smoothbuild.compilerfrontend.lang.type.STypes.INT;
-import static org.smoothbuild.compilerfrontend.lang.type.SVarSet.sVarSet;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -80,7 +80,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var body = sParamRef(3, var, "a");
         var fqn = fqn("myFunc:lambda~1");
         var lambdaParam = sItem(2, var, fqn("myFunc:lambda~1:a"));
-        var lambda = sLambda(2, fqn, sVarSet(), nlist(lambdaParam), body);
+        var lambda = sLambda(2, fqn, sTypeVarSet(), nlist(lambdaParam), body);
         var instantiated = sInstantiate(2, lambda);
         var funcParam = sItem(1, var, fqn("myFunc:outerA"));
         var myFunc = sFunc(1, "myFunc", nlist(funcParam), instantiated);
@@ -100,9 +100,9 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var var = sVar("myFunc:A");
         var deeperBody = sParamRef(4, var, "a");
         var param = sItem(3, var, deepFqn.append(fqn("a")));
-        var deeperLambda = sLambda(3, deepFqn, sVarSet(), nlist(param), deeperBody);
+        var deeperLambda = sLambda(3, deepFqn, sTypeVarSet(), nlist(param), deeperBody);
         var monoDeeperLambda = sInstantiate(3, deeperLambda);
-        var lambda = sLambda(2, fqn("myFunc:lambda~1"), sVarSet(), nlist(), monoDeeperLambda);
+        var lambda = sLambda(2, fqn("myFunc:lambda~1"), sTypeVarSet(), nlist(), monoDeeperLambda);
         var monoLambda = sInstantiate(2, lambda);
         var myFunc = sFunc(1, "myFunc", nlist(sItem(1, var, "outerA")), monoLambda);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
@@ -121,7 +121,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var param = sItem(2, aVar, fqn("result:lambda~1:a"));
         var lambda = sLambda(2, fqn("result:lambda~1"), nlist(param), sParamRef(3, aVar, "a"));
         var instantiate = sInstantiate(2, list(bVar), lambda);
-        var resultSchema = sSchema(sVarSet(bVar), sFuncType(bVar, bVar));
+        var resultSchema = sSchema(sTypeVarSet(bVar), sFuncType(bVar, bVar));
         var result = sValue(1, resultSchema, "result", instantiate);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }

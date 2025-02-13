@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 
 /**
  * Named value.
@@ -8,9 +8,9 @@ import org.smoothbuild.compilerfrontend.lang.type.SVarSet;
  */
 public sealed interface SNamedValue extends SValue, SNamedEvaluable
     permits SAnnotatedValue, SNamedExprValue {
-  static String valueHeaderToSourceCode(SValue value, SVarSet localVars) {
+  static String valueHeaderToSourceCode(SValue value, STypeVarSet localTypeVars) {
     var schema = value.schema();
-    return schema.type().specifier(localVars) + " " + value.name()
+    return schema.type().specifier(localTypeVars) + " " + value.name()
         + schema.typeParams().toSourceCode();
   }
 }
