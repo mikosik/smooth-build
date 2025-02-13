@@ -34,6 +34,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
@@ -114,7 +115,8 @@ public class ExprTypeUnifier {
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType, PScope bodyScope)
       throws TypeException {
-    var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().toTypeVarSet());
+    var vars =
+        outerScopeTypeVars.addAll((Iterable<STypeVar>) pEvaluable.typeParams().toTypeVarSet());
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 

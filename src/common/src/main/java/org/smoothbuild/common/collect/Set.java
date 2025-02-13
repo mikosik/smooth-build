@@ -6,6 +6,7 @@ import static org.smoothbuild.common.collect.Map.zipToMap;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -107,6 +108,33 @@ public non-sealed class Set<E> implements Collection<E> {
   @Override
   public int size() {
     return set.size();
+  }
+
+  public Set<E> addAll(java.util.Collection<? extends E> collection) {
+    Builder<E> builder = ImmutableSet.builderWithExpectedSize(set.size() + collection.size());
+    builder.addAll(set);
+    builder.addAll(collection);
+    return new Set<>(builder.build());
+  }
+
+  public Set<E> addAll(Collection<? extends E> collection) {
+    return switch (collection) {
+      case List<? extends E> l -> addAll(collection);
+      case Set<? extends E> s -> addAll(s);
+    };
+  }
+
+  public Set<E> addAll(Set<? extends E> set) {
+    return addAll(set.set);
+  }
+
+  public Set<E> addAll(List<? extends E> list) {
+    return addAll(list.asJdkList());
+  }
+
+  @SafeVarargs
+  public final Set<E> add(E... toAdd) {
+    return addAll(Arrays.stream(toAdd).toList());
   }
 
   @Override

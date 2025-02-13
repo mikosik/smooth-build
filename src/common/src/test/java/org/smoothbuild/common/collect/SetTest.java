@@ -334,6 +334,136 @@ public class SetTest {
   }
 
   @Nested
+  class _addAll {
+    @Nested
+    class _jdk_collection {
+      @Test
+      void two_empty_sets() {
+        assertThat(set().addAll(asList())).isEqualTo(set());
+      }
+
+      @Test
+      void empty_list() {
+        assertThat(set(1).addAll(asList())).isEqualTo(set(1));
+      }
+
+      @Test
+      void to_empty_list() {
+        assertThat(set().addAll(asList(2))).isEqualTo(set(2));
+      }
+
+      @Test
+      void two_one_element_sets() {
+        assertThat(set(1).addAll(asList(2))).isEqualTo(set(1, 2));
+      }
+
+      @Test
+      void element_sets() {
+        assertThat(set(1, 2, 3).addAll(asList(4, 5, 6))).isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+
+      @Test
+      void duplicates_are_removed() {
+        assertThat(set(1, 2, 3).addAll(asList(1, 4, 5, 6, 6))).isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+    }
+
+    @Nested
+    class _custom_list {
+      @Test
+      void two_empty_sets() {
+        assertThat(set().addAll(list())).isEqualTo(set());
+      }
+
+      @Test
+      void empty_list() {
+        assertThat(set(1).addAll(list())).isEqualTo(set(1));
+      }
+
+      @Test
+      void to_empty_list() {
+        assertThat(set().addAll(list(2))).isEqualTo(set(2));
+      }
+
+      @Test
+      void two_one_element_sets() {
+        assertThat(set(1).addAll(list(2))).isEqualTo(set(1, 2));
+      }
+
+      @Test
+      void element_sets() {
+        assertThat(set(1, 2, 3).addAll(list(4, 5, 6))).isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+
+      @Test
+      void duplicates_are_removed() {
+        assertThat(set(1, 2, 3).addAll(list(1, 4, 5, 6, 6))).isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+    }
+
+    @Nested
+    class _custom_set {
+      @Test
+      void both_empty() {
+        assertThat(set().addAll(set())).isEqualTo(set());
+      }
+
+      @Test
+      void empty_set() {
+        assertThat(set(1).addAll(set())).isEqualTo(set(1));
+      }
+
+      @Test
+      void to_empty_list() {
+        assertThat(set().addAll(set(2))).isEqualTo(set(2));
+      }
+
+      @Test
+      void two_one_element_sets() {
+        assertThat(set(1).addAll(set(2))).isEqualTo(set(1, 2));
+      }
+
+      @Test
+      void with_many_elements() {
+        assertThat(set(1, 2, 3).addAll(set(4, 5, 6))).isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+
+      @Test
+      void duplicates_are_removed() {
+        assertThat(set(1, 2, 3).addAll(set(1, 4, 5, 6))).isEqualTo(set(1, 2, 3, 4, 5, 6));
+      }
+    }
+  }
+
+  @Nested
+  class _add {
+    @Test
+    void nothing_to_empty_set() {
+      assertThat(set().add()).isEqualTo(set());
+    }
+
+    @Test
+    void nothing_to_set() {
+      assertThat(set(1).add()).isEqualTo(set(1));
+    }
+
+    @Test
+    void one_element_to_empty_set() {
+      assertThat(set().add(2)).isEqualTo(set(2));
+    }
+
+    @Test
+    void one_element_to_one_element_set() {
+      assertThat(set(1).add(2)).isEqualTo(set(1, 2));
+    }
+
+    @Test
+    void many_elements_to_many_element_set() {
+      assertThat(set(1, 2, 3).add(4, 5, 6)).isEqualTo(set(1, 2, 3, 4, 5, 6));
+    }
+  }
+
+  @Nested
   class _to_string {
     @Test
     void argless() {
