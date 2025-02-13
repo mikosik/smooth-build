@@ -1,12 +1,13 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.common.collect.List.list;
 
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public final class PImplicitTypeParams implements PTypeParams {
   @Override
-  public STypeVarSet toTypeVarSet() {
-    return sTypeVarSet();
+  public List<STypeVar> toTypeVarList() {
+    return list();
   }
 }

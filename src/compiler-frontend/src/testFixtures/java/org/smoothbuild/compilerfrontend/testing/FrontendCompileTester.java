@@ -9,7 +9,6 @@ import static org.smoothbuild.common.log.base.Log.error;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

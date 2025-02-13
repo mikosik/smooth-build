@@ -1,12 +1,14 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.common.collect.Set.set;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.Map;
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 
 /**
@@ -15,13 +17,13 @@ import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
  */
 public abstract sealed class SType
     permits SBaseType, SArrayType, SFuncType, SInterfaceType, STupleType, STypeVar {
-  private final STypeVarSet typeVars;
+  private final Set<STypeVar> typeVars;
 
-  protected SType(STypeVarSet typeVars) {
+  protected SType(Set<STypeVar> typeVars) {
     this.typeVars = typeVars;
   }
 
-  public STypeVarSet typeVars() {
+  public Set<STypeVar> typeVars() {
     return typeVars;
   }
 
@@ -120,10 +122,10 @@ public abstract sealed class SType
    * so it can be used to specify type of function parameter, its result type, value type, etc.
    */
   public String specifier() {
-    return specifier(sTypeVarSet());
+    return specifier(set());
   }
 
-  public abstract String specifier(STypeVarSet localTypeVars);
+  public abstract String specifier(Collection<STypeVar> localTypeVars);
 
   public String q() {
     return Strings.q(specifier());

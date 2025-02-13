@@ -4,10 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Instantiation of polymorphic entity.
@@ -26,7 +27,7 @@ public record SInstantiate(
   }
 
   @Override
-  public String toSourceCode(STypeVarSet localTypeVars) {
+  public String toSourceCode(Collection<STypeVar> localTypeVars) {
     return sPolymorphic.toSourceCode()
         + typeArgs.map(type -> type.specifier(localTypeVars)).toString("<", ", ", ">");
   }

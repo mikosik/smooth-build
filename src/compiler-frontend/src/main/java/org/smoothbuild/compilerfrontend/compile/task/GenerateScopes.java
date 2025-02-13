@@ -122,7 +122,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     private void addTypeParams(PEvaluable pEvaluable) {
       var pTypeParams = pEvaluable.typeParams();
       switch (pTypeParams) {
-        case PExplicitTypeParams explicit -> explicit.typeVars().foreach(this::addType);
+        case PExplicitTypeParams explicit -> explicit.typeParams().foreach(this::addType);
         case PImplicitTypeParams implicit -> {}
       }
     }

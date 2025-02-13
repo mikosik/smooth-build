@@ -1,7 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.common.collect.Set.set;
 
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public abstract sealed class SBaseType extends SType
@@ -9,7 +10,7 @@ public abstract sealed class SBaseType extends SType
   private final Fqn fqn;
 
   protected SBaseType(Fqn fqn) {
-    super(sTypeVarSet());
+    super(set());
     this.fqn = fqn;
   }
 
@@ -18,7 +19,7 @@ public abstract sealed class SBaseType extends SType
   }
 
   @Override
-  public String specifier(STypeVarSet localTypeVars) {
+  public String specifier(Collection<STypeVar> localTypeVars) {
     return fqn.toString();
   }
 }

@@ -1,10 +1,11 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
 
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public final class PExplicitTypeParams implements PTypeParams {
   private final List<PTypeParam> typeVars;
@@ -15,7 +16,7 @@ public final class PExplicitTypeParams implements PTypeParams {
     this.location = location;
   }
 
-  public List<PTypeParam> typeVars() {
+  public List<PTypeParam> typeParams() {
     return typeVars;
   }
 
@@ -24,7 +25,15 @@ public final class PExplicitTypeParams implements PTypeParams {
   }
 
   @Override
-  public STypeVarSet toTypeVarSet() {
-    return sTypeVarSet(typeVars.map(PTypeParam::type));
+  public List<STypeVar> toTypeVarList() {
+    return typeVars.map(PTypeParam::type);
+  }
+
+  public String q() {
+    return Strings.q(toSourceCode());
+  }
+
+  public String toSourceCode() {
+    return typeParamsToSourceCode(typeVars.map(PTypeParam::type));
   }
 }

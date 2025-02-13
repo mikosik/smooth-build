@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.Map.zipToMap;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
@@ -11,16 +12,16 @@ import org.smoothbuild.common.collect.List;
  * Polymorphic type (aka type schema).
  */
 public sealed class SSchema permits SFuncSchema {
-  private final STypeVarSet typeParams;
+  private final List<STypeVar> typeParams;
   private final SType type;
 
-  public SSchema(STypeVarSet typeParams, SType type) {
+  public SSchema(List<STypeVar> typeParams, SType type) {
     assertTypeParamsArePresentInType(typeParams, type);
     this.typeParams = requireNonNull(typeParams);
     this.type = requireNonNull(type);
   }
 
-  private static void assertTypeParamsArePresentInType(STypeVarSet typeParams, SType type) {
+  private static void assertTypeParamsArePresentInType(List<STypeVar> typeParams, SType type) {
     if (!type.typeVars().containsAll(typeParams)) {
       throw new IllegalArgumentException(
           "Type parameter(s) " + typeParams + " are not present in type " + type.q() + ".");
@@ -32,7 +33,7 @@ public sealed class SSchema permits SFuncSchema {
    * Other variables present in this schema are type variables which are quantified variables
    * of enclosing environment (enclosing function or value).
    */
-  public STypeVarSet typeParams() {
+  public List<STypeVar> typeParams() {
     return typeParams;
   }
 
@@ -65,11 +66,11 @@ public sealed class SSchema permits SFuncSchema {
   }
 
   public String toShortString() {
-    return typeParams.toShortString() + type.specifier(typeParams);
+    return typeParamsToSourceCode(typeParams) + type.specifier(typeParams);
   }
 
   @Override
   public String toString() {
-    return typeParams.toString() + type.specifier();
+    return typeParams.toString("<", ",", ">") + type.specifier();
   }
 }

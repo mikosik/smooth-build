@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
@@ -23,7 +24,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 public class TypeResolver {
@@ -56,8 +56,8 @@ public class TypeResolver {
     resolveBody(pFunc.body());
   }
 
-  private STypeVarSet resolveTypeParams(SSchema sSchema) {
-    return sSchema.typeParams().mapVars(v -> (STypeVar) unifier.resolve(v));
+  private List<STypeVar> resolveTypeParams(SSchema sSchema) {
+    return sSchema.typeParams().map(v -> (STypeVar) unifier.resolve(v));
   }
 
   private SType resolveType(SSchema sSchema) {

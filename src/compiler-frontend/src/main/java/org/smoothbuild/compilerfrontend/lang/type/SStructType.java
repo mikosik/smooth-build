@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
@@ -37,7 +38,7 @@ public final class SStructType extends SInterfaceType implements Identifiable {
   }
 
   @Override
-  public String specifier(STypeVarSet localTypeVars) {
+  public String specifier(Collection<STypeVar> localTypeVars) {
     return fqn.toString();
   }
 

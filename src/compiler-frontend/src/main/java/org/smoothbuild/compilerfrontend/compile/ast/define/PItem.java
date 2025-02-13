@@ -1,7 +1,7 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
@@ -86,7 +86,7 @@ public final class PItem implements Item, PReferenceable {
 
   @Override
   public SSchema schema() {
-    return new SSchema(sTypeVarSet(), requireNonNull(sType()));
+    return new SSchema(list(), requireNonNull(sType()));
   }
 
   @Override

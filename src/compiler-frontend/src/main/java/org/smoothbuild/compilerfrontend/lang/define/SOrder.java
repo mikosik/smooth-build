@@ -1,15 +1,16 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public record SOrder(SArrayType evaluationType, List<SExpr> elements, Location location)
     implements SExpr {
   @Override
-  public String toSourceCode(STypeVarSet localTypeVars) {
+  public String toSourceCode(Collection<STypeVar> localTypeVars) {
     return "[" + elements.map(e -> e.toSourceCode(localTypeVars)).toString(", ") + "]";
   }
 

@@ -1,7 +1,8 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public sealed interface PTypeParams permits PExplicitTypeParams, PImplicitTypeParams {
-  public STypeVarSet toTypeVarSet();
+  public List<STypeVar> toTypeVarList();
 }

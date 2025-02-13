@@ -1,9 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
-
 import java.util.Objects;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Set;
 
 /**
  * This class is immutable.
@@ -18,8 +18,8 @@ public final class STupleType extends SType {
     this.elements = cast;
   }
 
-  private static STypeVarSet calculateTypeVars(List<? extends SType> elements) {
-    return sTypeVarSet(elements);
+  private static Set<STypeVar> calculateTypeVars(List<? extends SType> elements) {
+    return elements.flatMap(SType::typeVars).toSet();
   }
 
   public List<SType> elements() {
@@ -31,7 +31,7 @@ public final class STupleType extends SType {
   }
 
   @Override
-  public String specifier(STypeVarSet localTypeVars) {
+  public String specifier(Collection<STypeVar> localTypeVars) {
     return "{" + elements.map(type -> type.specifier(localTypeVars)).toString(",") + "}";
   }
 

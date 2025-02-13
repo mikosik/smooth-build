@@ -1,12 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
+
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Named function.
@@ -45,9 +48,9 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
     return location;
   }
 
-  protected String funcHeaderToSourceCode(STypeVarSet localTypeVars) {
+  protected String funcHeaderToSourceCode(Set<STypeVar> localTypeVars) {
     return schema().type().result().specifier(localTypeVars) + " " + name()
-        + schema().typeParams().toSourceCode()
+        + typeParamsToSourceCode(schema().typeParams())
         + params().list().map(sItem -> sItem.toSourceCode(localTypeVars)).toString("(", ", ", ")");
   }
 }

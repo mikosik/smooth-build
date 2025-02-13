@@ -1,18 +1,20 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Set.set;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Item is a func param or a struct field.
@@ -37,7 +39,7 @@ public final class SItem implements Item, SReferenceable {
 
   @Override
   public SSchema schema() {
-    return new SSchema(sTypeVarSet(), type);
+    return new SSchema(list(), type);
   }
 
   @Override
@@ -60,10 +62,10 @@ public final class SItem implements Item, SReferenceable {
   }
 
   public String toSourceCode() {
-    return toSourceCode(sTypeVarSet());
+    return toSourceCode(set());
   }
 
-  public String toSourceCode(STypeVarSet localTypeVars) {
+  public String toSourceCode(Set<STypeVar> localTypeVars) {
     return type.specifier(localTypeVars) + " " + name().toString()
         + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
   }

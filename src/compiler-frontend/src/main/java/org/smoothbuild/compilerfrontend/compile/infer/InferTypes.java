@@ -11,7 +11,6 @@ import static org.smoothbuild.compilerfrontend.compile.infer.FlexibleToRigidVarC
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveFunc;
 import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveNamedValue;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Log;
@@ -32,7 +31,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
@@ -110,7 +109,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           .list()
           .map(f -> new SItem(fieldSigs.get(f.name()).type(), f.fqn(), none(), f.location()));
       var sFuncType = new SFuncType(SItem.toTypes(params), sStructType);
-      var schema = new SFuncSchema(sTypeVarSet(), sFuncType);
+      var schema = new SFuncSchema(list(), sFuncType);
       pConstructor.setSchema(schema);
       pConstructor.setSType(sFuncType);
     }
@@ -149,8 +148,8 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private static SType replaceTypeVarsWithFlexible(
-        STypeVarSet typeVars, SType type, Unifier unifier) {
-      var mapping = typeVars.toList().toMap(v -> (SType) unifier.newFlexibleTypeVar());
+        List<STypeVar> typeVars, SType type, Unifier unifier) {
+      var mapping = typeVars.toMap(v -> (SType) unifier.newFlexibleTypeVar());
       return type.mapTypeVars(mapping);
     }
   }

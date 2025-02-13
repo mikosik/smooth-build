@@ -2,6 +2,8 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
 
+import org.smoothbuild.common.collect.Collection;
+
 /**
  * This class is immutable.
  */
@@ -18,7 +20,7 @@ public final class SArrayType extends SType {
   }
 
   @Override
-  public String specifier(STypeVarSet localTypeVars) {
+  public String specifier(Collection<STypeVar> localTypeVars) {
     return "[" + elem.specifier(localTypeVars) + "]";
   }
 

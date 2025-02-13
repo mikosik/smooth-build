@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public final class PTypeParam implements PTypeDefinition {
@@ -29,7 +28,7 @@ public final class PTypeParam implements PTypeDefinition {
   }
 
   @Override
-  public SType type() {
+  public STypeVar type() {
     return new STypeVar(fqn);
   }
 

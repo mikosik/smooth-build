@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -10,7 +10,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SSelectTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    assertThat(createSSelect().toSourceCode(sTypeVarSet())).isEqualTo("structValue<>.field");
+    assertThat(createSSelect().toSourceCode(set())).isEqualTo("structValue<>.field");
   }
 
   @Test

@@ -1,10 +1,14 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
+import static java.util.Comparator.comparing;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.generateList;
+import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
 
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
@@ -35,7 +39,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVarSet;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
@@ -44,13 +47,13 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 public class ExprTypeUnifier {
   private final Unifier unifier;
   private final PScope scope;
-  private final STypeVarSet outerScopeTypeVars;
+  private final Set<STypeVar> outerScopeTypeVars;
 
   private ExprTypeUnifier(Unifier unifier, PScope scope) {
-    this(unifier, scope, sTypeVarSet());
+    this(unifier, scope, set());
   }
 
-  private ExprTypeUnifier(Unifier unifier, PScope scope, STypeVarSet outerScopeTypeVars) {
+  private ExprTypeUnifier(Unifier unifier, PScope scope, Set<STypeVar> outerScopeTypeVars) {
     this.unifier = unifier;
     this.scope = scope;
     this.outerScopeTypeVars = outerScopeTypeVars;
@@ -66,8 +69,7 @@ public class ExprTypeUnifier {
     pNamedValue.setSType(evaluationType);
     unifyEvaluableBody(pNamedValue, evaluationType, scope);
     var resolvedType = resolveType(pNamedValue);
-    var typeParams = resolveTypeParams(resolvedType);
-    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pNamedValue, typeParams);
+    var typeParams = resolveTypeParams(pNamedValue, resolvedType);
     pNamedValue.setSchema(new SSchema(typeParams, resolvedType));
   }
 
@@ -81,26 +83,27 @@ public class ExprTypeUnifier {
     pFunc.setSType(new SFuncType(paramTypes, resultType));
     unifyEvaluableBody(pFunc, resultType, pFunc.scope());
     var resolvedT = resolveType(pFunc);
-    var typeParams = resolveTypeParams(resolvedT);
-    verifyInferredTypeParamsAreEqualToExplicitlyDeclared(pFunc, typeParams);
+    var typeParams = resolveTypeParams(pFunc, resolvedT);
     pFunc.setSchema(new SFuncSchema(typeParams, (SFuncType) resolvedT));
   }
 
-  private static void verifyInferredTypeParamsAreEqualToExplicitlyDeclared(
-      PEvaluable pEvaluable, STypeVarSet inferredTypeParams) throws TypeException {
+  private List<STypeVar> resolveTypeParams(PEvaluable pEvaluable, SType sType)
+      throws TypeException {
+    var typeParams = sType.typeVars().removeAll(outerScopeTypeVars.map(unifier::resolve));
     if (pEvaluable.typeParams() instanceof PExplicitTypeParams explicitTypeParams) {
-      var explicit = explicitTypeParams.toTypeVarSet();
-      if (!explicit.equals(inferredTypeParams)) {
+      var explicit = explicitTypeParams.toTypeVarList();
+      if (!explicit.toSet().equals(typeParams)) {
+        // Sort to make error message stable so tests are not flaky.
+        var sortedTypeParams = typeParams.toList().sortUsing(comparing(STypeVar::fqn));
         throw new TypeException(compileError(
             explicitTypeParams.location(),
-            "Type parameters are declared as " + explicit.q() + " but inferred type parameters are "
-                + inferredTypeParams.q() + "."));
+            "Type parameters are declared as " + explicitTypeParams.q()
+                + " but inferred type parameters are " + q(typeParamsToSourceCode(sortedTypeParams))
+                + "."));
       }
+      return explicit;
     }
-  }
-
-  private STypeVarSet resolveTypeParams(SType sType) {
-    return sType.typeVars().removeAll(outerScopeTypeVars.map(unifier::resolve));
+    return typeParams.toList();
   }
 
   private SType resolveType(PEvaluable pEvaluable) {
@@ -115,8 +118,7 @@ public class ExprTypeUnifier {
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType, PScope bodyScope)
       throws TypeException {
-    var vars =
-        outerScopeTypeVars.addAll((Iterable<STypeVar>) pEvaluable.typeParams().toTypeVarSet());
+    var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().toTypeVarList());
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 

@@ -1,11 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVarSet.sTypeVarSet;
 
 import java.util.Objects;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Set;
 
 /**
  * This class is immutable.
@@ -24,8 +24,8 @@ public final class SFuncType extends SType {
     this.params = requireNonNull(params);
   }
 
-  public static STypeVarSet calculateFuncTypeVars(STupleType paramTs, SType resultT) {
-    return sTypeVarSet(list(resultT).addAll(paramTs.elements()));
+  public static Set<STypeVar> calculateFuncTypeVars(STupleType paramTs, SType resultT) {
+    return paramTs.elements().flatMap(SType::typeVars).toSet().addAll(resultT.typeVars());
   }
 
   public STupleType params() {
@@ -37,7 +37,7 @@ public final class SFuncType extends SType {
   }
 
   @Override
-  public String specifier(STypeVarSet localTypeVars) {
+  public String specifier(Collection<STypeVar> localTypeVars) {
     var paramStrings = params.elements().map(t -> t.specifier(localTypeVars));
     return "(" + paramStrings.toString(",") + ")->" + result.specifier(localTypeVars);
   }

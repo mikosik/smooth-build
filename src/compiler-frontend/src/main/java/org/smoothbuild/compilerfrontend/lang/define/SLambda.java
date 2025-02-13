@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
+
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
@@ -54,10 +56,11 @@ public final class SLambda implements SExprFunc, SPolymorphic {
 
   @Override
   public String toSourceCode() {
-    var localVars = schema().typeParams();
-    return localVars.toSourceCode()
-        + params().list().map(sItem -> sItem.toSourceCode(localVars)).toString("(", ", ", ")")
-        + " -> " + body().toSourceCode(localVars);
+    var typeParams = schema().typeParams();
+    var localTypeVars = typeParams.toSet();
+    return typeParamsToSourceCode(typeParams)
+        + params().list().map(sItem -> sItem.toSourceCode(localTypeVars)).toString("(", ", ", ")")
+        + " -> " + body().toSourceCode(localTypeVars);
   }
 
   @Override
