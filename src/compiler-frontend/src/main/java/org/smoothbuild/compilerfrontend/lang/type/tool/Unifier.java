@@ -36,7 +36,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  */
 public class Unifier {
   private final Map<STypeVar, Unified> flexibleTypeVarToUnified;
-  private int flexibleVarCounter = 0;
+  private int flexibleTypeVarCounter = 0;
 
   public Unifier() {
     this.flexibleTypeVarToUnified = new HashMap<>();
@@ -118,12 +118,12 @@ public class Unifier {
     } else {
       unified.type = unifyAndInferConstraints(unified.type, type, constraints);
     }
-    type.forEachFlexibleVar(t -> unifiedFor(t).usedIn.add(unified));
+    type.forEachFlexibleTypeVar(t -> unifiedFor(t).usedIn.add(unified));
     failIfCycleExists(unified);
   }
 
-  public STypeVar newFlexibleVar() {
-    var var = flexibleTypeVar(flexibleVarCounter++);
+  public STypeVar newFlexibleTypeVar() {
+    var var = flexibleTypeVar(flexibleTypeVarCounter++);
     flexibleTypeVarToUnified.put(var, new Unified(var));
     return var;
   }
@@ -148,7 +148,7 @@ public class Unifier {
   }
 
   private SType resolveNonFlexible(SType type) {
-    return type.mapFlexibleVars(this::resolve);
+    return type.mapFlexibleTypeVars(this::resolve);
   }
 
   // Unified helpers

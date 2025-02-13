@@ -150,8 +150,8 @@ public class InferTypes implements Task1<PModule, PModule> {
 
     private static SType replaceTypeVarsWithFlexible(
         STypeVarSet typeVars, SType type, Unifier unifier) {
-      var mapping = typeVars.toList().toMap(v -> (SType) unifier.newFlexibleVar());
-      return type.mapVars(mapping);
+      var mapping = typeVars.toList().toMap(v -> (SType) unifier.newFlexibleTypeVar());
+      return type.mapTypeVars(mapping);
     }
   }
 }

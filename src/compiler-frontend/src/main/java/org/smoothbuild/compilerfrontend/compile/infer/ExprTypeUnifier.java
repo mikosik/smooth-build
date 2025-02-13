@@ -180,7 +180,7 @@ public class ExprTypeUnifier {
 
   private SType unifyCall(SType calleeType, List<SType> argTypes, Location location)
       throws TypeException {
-    var resultType = unifier.newFlexibleVar();
+    var resultType = unifier.newFlexibleTypeVar();
     var funcType = new SFuncType(argTypes, resultType);
     var resolvedCalleeType = unifier.resolve(calleeType);
     var resolvedArgTypes = argTypes.map(unifier::resolve);
@@ -203,7 +203,7 @@ public class ExprTypeUnifier {
     var polymorphicP = pInstantiate.polymorphic();
     unifyPolymorphic(polymorphicP);
     var schema = polymorphicP.schema();
-    pInstantiate.setTypeArgs(generateList(schema.typeParams().size(), unifier::newFlexibleVar));
+    pInstantiate.setTypeArgs(generateList(schema.typeParams().size(), unifier::newFlexibleTypeVar));
     return schema.instantiate(pInstantiate.typeArgs());
   }
 
@@ -230,7 +230,7 @@ public class ExprTypeUnifier {
 
   private SArrayType unifyElementsWithArray(List<SType> elemTypes, Location location)
       throws TypeException {
-    var elemVar = unifier.newFlexibleVar();
+    var elemVar = unifier.newFlexibleTypeVar();
     for (int i = 0; i < elemTypes.size(); i++) {
       SType elemType = elemTypes.get(i);
       try {
@@ -282,7 +282,7 @@ public class ExprTypeUnifier {
 
   private SType translateOrGenerateFlexibleVar(PType pType) {
     if (pType instanceof PImplicitType) {
-      return unifier.newFlexibleVar();
+      return unifier.newFlexibleTypeVar();
     } else {
       return scope.translate(pType);
     }

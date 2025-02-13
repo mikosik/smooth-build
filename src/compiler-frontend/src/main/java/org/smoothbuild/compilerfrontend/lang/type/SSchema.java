@@ -42,7 +42,7 @@ public sealed class SSchema permits SFuncSchema {
 
   public SType instantiate(List<SType> typeArgs) {
     var map = zipToMap(typeParams.toList(), typeArgs);
-    return type.mapVars(v -> map.getOrDefault(v, v));
+    return type.mapTypeVars(v -> map.getOrDefault(v, v));
   }
 
   @Override

@@ -33,15 +33,15 @@ public class UnifierTest extends FrontendCompilerTestContext {
       @Test
       void temp_vs_itself() throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
         assertUnifyInfers(unifier, a, a, a, a);
       }
 
       @Test
       void temp_vs_other_temp() throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         unifier.add(new Constraint(a, b));
         assertThat(unifier.resolve(a)).isEqualTo(unifier.resolve(b));
       }
@@ -49,9 +49,9 @@ public class UnifierTest extends FrontendCompilerTestContext {
       @Test
       void temp_vs_other_temp_vs_yet_another_temp() throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
-        var c = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
+        var c = unifier.newFlexibleTypeVar();
         unifier.add(new Constraint(a, b));
         unifier.add(new Constraint(b, c));
         assertThat(unifier.resolve(a)).isEqualTo(unifier.resolve(c));
@@ -63,7 +63,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       public void temp_vs_composed_with_that_temp_fails(Function<SType, SType> composedFactory)
           throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
         assertUnifyFails(a, composedFactory.apply(a));
       }
 
@@ -73,8 +73,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
       public void temp_vs_composed_with_different_temp_succeeds(
           Function<SType, SType> composedFactory) throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         assertUnifyInfers(unifier, a, composedFactory.apply(b), a, composedFactory.apply(b));
       }
 
@@ -84,8 +84,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
       public void composed_with_temp_vs_same_composed_with_other_temp_succeeds(
           Function<SType, SType> composedFactory) throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         assertUnifyInfersEquality(
             unifier, composedFactory.apply(a), composedFactory.apply(b), a, b);
       }
@@ -97,7 +97,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       @MethodSource("org.smoothbuild.compilerfrontend.testing.TestingSExpression#typesToTest")
       public void temp_vs_concrete_type(SType type) throws UnifierException {
         var unifier = new Unifier();
-        var a = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
         assertUnifyInfers(unifier, a, type, a, type);
       }
 
@@ -109,7 +109,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
         public void composed_with_temp_vs_same_composed_with_base_type_instead_temp(
             Function<SType, SType> factory) throws UnifierException {
           var unifier = new Unifier();
-          var var = unifier.newFlexibleVar();
+          var var = unifier.newFlexibleTypeVar();
           var baseType = sIntType();
           assertUnifyInfers(unifier, factory.apply(var), factory.apply(baseType), var, baseType);
         }
@@ -599,7 +599,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
         "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
     public void one_element_cycle_through_composed(Function<SType, SType> composedFactory)
         throws UnifierException {
-      var a = unifier.newFlexibleVar();
+      var a = unifier.newFlexibleTypeVar();
       var constraints = list(new Constraint(a, composedFactory.apply(a)));
       assertExceptionThrownForLastConstraintForEachPermutation(constraints);
     }
@@ -609,8 +609,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
         "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
     public void two_elements_cycle_through_composed(Function<SType, SType> composedFactory)
         throws UnifierException {
-      var a = unifier.newFlexibleVar();
-      var b = unifier.newFlexibleVar();
+      var a = unifier.newFlexibleTypeVar();
+      var b = unifier.newFlexibleTypeVar();
       var constraints = list(
           new Constraint(a, composedFactory.apply(b)), new Constraint(b, composedFactory.apply(a)));
       assertExceptionThrownForLastConstraintForEachPermutation(constraints);
@@ -621,9 +621,9 @@ public class UnifierTest extends FrontendCompilerTestContext {
         "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
     public void three_elements_cycle_through_composed(Function<SType, SType> composedFactory)
         throws UnifierException {
-      var a = unifier.newFlexibleVar();
-      var b = unifier.newFlexibleVar();
-      var c = unifier.newFlexibleVar();
+      var a = unifier.newFlexibleTypeVar();
+      var b = unifier.newFlexibleTypeVar();
+      var c = unifier.newFlexibleTypeVar();
       var constraints = list(
           new Constraint(a, composedFactory.apply(b)),
           new Constraint(b, composedFactory.apply(c)),
@@ -634,9 +634,9 @@ public class UnifierTest extends FrontendCompilerTestContext {
     @Test
     void regression_test() throws UnifierException {
       // Cycle detection algorithm had a bug which is detected by this test.
-      var a = unifier.newFlexibleVar();
-      var b = unifier.newFlexibleVar();
-      var c = unifier.newFlexibleVar();
+      var a = unifier.newFlexibleTypeVar();
+      var b = unifier.newFlexibleTypeVar();
+      var c = unifier.newFlexibleTypeVar();
       var constraints = list(new Constraint(a, sArrayType(b)), new Constraint(c, sFuncType(b, a)));
       assertConstraintsAreSolvableForEachPermutation(constraints);
     }
@@ -648,26 +648,26 @@ public class UnifierTest extends FrontendCompilerTestContext {
     class _transitive_cases {
       @Test
       void unify_a_vs_b_vs_concrete_type() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         var constraints = list(new Constraint(a, b), new Constraint(b, sIntType()));
         assertResolvedAreEqualForEachPermutation(constraints, a, sIntType());
       }
 
       @Test
       void unify_a_vs_array_b_vs_c() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
-        var c = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
+        var c = unifier.newFlexibleTypeVar();
         var constraints = list(new Constraint(a, sArrayType(b)), new Constraint(sArrayType(b), c));
         assertResolvedAreEqualForEachPermutation(constraints, a, c);
       }
 
       @Test
       void unify_array_a_vs_b_vs_array_c() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
-        var c = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
+        var c = unifier.newFlexibleTypeVar();
         var constraints = list(new Constraint(sArrayType(a), b), new Constraint(b, sArrayType(c)));
         assertResolvedAreEqualForEachPermutation(constraints, a, c);
       }
@@ -680,10 +680,10 @@ public class UnifierTest extends FrontendCompilerTestContext {
           "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_different_temp(
           Function<SType, SType> composedFactory) throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
-        var x = unifier.newFlexibleVar();
-        var y = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
+        var x = unifier.newFlexibleTypeVar();
+        var y = unifier.newFlexibleTypeVar();
         var constraints = list(
             new Constraint(a, composedFactory.apply(x)),
             new Constraint(b, composedFactory.apply(y)),
@@ -696,9 +696,9 @@ public class UnifierTest extends FrontendCompilerTestContext {
           "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_int(Function<SType, SType> composedFactory)
           throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
-        var x = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
+        var x = unifier.newFlexibleTypeVar();
         var constraints = list(
             new Constraint(a, composedFactory.apply(x)),
             new Constraint(b, composedFactory.apply(sIntType())),
@@ -711,8 +711,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
           "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
       public void join_composed_of_int_vs_composed_of_blob_fails(
           Function<SType, SType> composedFactory) throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         var constraints = list(
             new Constraint(a, composedFactory.apply(sIntType())),
             new Constraint(b, composedFactory.apply(sBlobType())),
@@ -722,8 +722,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void join_func_vs_func_with_different_param_count_fails() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         var constraints = list(
             new Constraint(a, sFuncType(sIntType(), sIntType())),
             new Constraint(b, sIntFuncType()),
@@ -733,8 +733,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void join_array_vs_tuple_fails() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         unifier.add(new Constraint(a, sIntArrayT()));
         unifier.add(new Constraint(b, sTupleType(sIntType())));
         assertCall(() -> unifier.add(new Constraint(a, b))).throwsException(UnifierException.class);
@@ -742,8 +742,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void join_array_vs_func_fails() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         unifier.add(new Constraint(a, sIntArrayT()));
         unifier.add(new Constraint(b, sIntFuncType()));
         assertCall(() -> unifier.add(new Constraint(a, b))).throwsException(UnifierException.class);
@@ -751,8 +751,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
       @Test
       void join_tuple_vs_func_fails() throws UnifierException {
-        var a = unifier.newFlexibleVar();
-        var b = unifier.newFlexibleVar();
+        var a = unifier.newFlexibleTypeVar();
+        var b = unifier.newFlexibleTypeVar();
         unifier.add(new Constraint(a, sTupleType(sIntType())));
         unifier.add(new Constraint(b, sIntFuncType()));
         assertCall(() -> unifier.add(new Constraint(a, b))).throwsException(UnifierException.class);
@@ -764,8 +764,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
   class _temporary_vars {
     @Test
     void non_temporary_var_has_priority_over_temporary() throws UnifierException {
-      STypeVar a = unifier.newFlexibleVar();
-      STypeVar b = unifier.newFlexibleVar();
+      STypeVar a = unifier.newFlexibleTypeVar();
+      STypeVar b = unifier.newFlexibleTypeVar();
       STypeVar x = varX();
       var constraints = list(new Constraint(a, b), new Constraint(b, x));
       assertResolvedAreEqualForEachPermutation(constraints, a, x);
@@ -775,7 +775,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
     @Test
     void resolve_returns_temporary_var_when_no_normal_var_is_unified() {
-      var a = unifier.newFlexibleVar();
+      var a = unifier.newFlexibleTypeVar();
       assertThat(unifier.resolve(a)).isEqualTo(a);
     }
   }
@@ -792,8 +792,8 @@ public class UnifierTest extends FrontendCompilerTestContext {
     @MethodSource(
         "org.smoothbuild.compilerfrontend.testing.TestingSExpression#compositeTypeSFactories")
     public void composed_type(Function<SType, SType> composedFactory) throws UnifierException {
-      var a = unifier.newFlexibleVar();
-      var b = unifier.newFlexibleVar();
+      var a = unifier.newFlexibleTypeVar();
+      var b = unifier.newFlexibleTypeVar();
       var constraints =
           list(new Constraint(a, sIntType()), new Constraint(b, composedFactory.apply(a)));
       assertResolvedAreEqualForEachPermutation(constraints, b, composedFactory.apply(sIntType()));
@@ -816,7 +816,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
 
   private void assertUnifyThroughTempImpl(SType type1, SType type2, SType expected)
       throws UnifierException {
-    var a = unifier.newFlexibleVar();
+    var a = unifier.newFlexibleTypeVar();
     var constraints = list(new Constraint(a, type1), new Constraint(a, type2));
     assertResolvedAreEqualForEachPermutation(constraints, a, expected);
   }
@@ -852,7 +852,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       throws UnifierException {
     var unifier = new Unifier();
     for (int i = 0; i < 4; i++) {
-      unifier.newFlexibleVar();
+      unifier.newFlexibleTypeVar();
     }
     for (var constraint : permutation) {
       unifier.add(constraint);
@@ -872,7 +872,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       throws UnifierException {
     var unifier = new Unifier();
     for (int i = 0; i < 4; i++) {
-      unifier.newFlexibleVar();
+      unifier.newFlexibleTypeVar();
     }
     for (int i = 0; i < permutation.size() - 1; i++) {
       unifier.add(permutation.get(i));

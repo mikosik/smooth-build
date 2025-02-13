@@ -29,24 +29,24 @@ public abstract sealed class SType
     return false;
   }
 
-  public void forEachFlexibleVar(Consumer<STypeVar> consumer) {
-    forEachFlexibleVar(this, consumer);
+  public void forEachFlexibleTypeVar(Consumer<STypeVar> consumer) {
+    forEachFlexibleTypeVar(this, consumer);
   }
 
-  private static void forEachFlexibleVar(SType sType, Consumer<STypeVar> consumer) {
+  private static void forEachFlexibleTypeVar(SType sType, Consumer<STypeVar> consumer) {
     switch (sType) {
-      case SArrayType sArrayType -> forEachFlexibleVar(sArrayType.elem(), consumer);
+      case SArrayType sArrayType -> forEachFlexibleTypeVar(sArrayType.elem(), consumer);
       case SInterfaceType sFieldSetType -> sFieldSetType
           .fieldSet()
           .values()
-          .forEach(f -> forEachFlexibleVar(f.type(), consumer));
+          .forEach(f -> forEachFlexibleTypeVar(f.type(), consumer));
       case SFuncType sFuncType -> {
-        forEachFlexibleVar(sFuncType.params(), consumer);
-        forEachFlexibleVar(sFuncType.result(), consumer);
+        forEachFlexibleTypeVar(sFuncType.params(), consumer);
+        forEachFlexibleTypeVar(sFuncType.result(), consumer);
       }
       case STupleType sTupleType -> sTupleType
           .elements()
-          .forEach(t -> forEachFlexibleVar(t, consumer));
+          .forEach(t -> forEachFlexibleTypeVar(t, consumer));
       case STypeVar sTypeVar -> {
         if (sTypeVar.isFlexibleTypeVar()) {
           consumer.accept(sTypeVar);
@@ -56,62 +56,62 @@ public abstract sealed class SType
     }
   }
 
-  public SType mapFlexibleVars(Function<SType, SType> map) {
-    return mapVars(t -> t.isFlexibleTypeVar() ? map.apply(t) : t);
+  public SType mapFlexibleTypeVars(Function<SType, SType> map) {
+    return mapTypeVars(t -> t.isFlexibleTypeVar() ? map.apply(t) : t);
   }
 
-  public SType mapVars(Map<STypeVar, SType> map) {
-    return mapVars(v -> map.getOrDefault(v, v));
+  public SType mapTypeVars(Map<STypeVar, SType> map) {
+    return mapTypeVars(v -> map.getOrDefault(v, v));
   }
 
-  public SType mapVars(Function<? super STypeVar, SType> map) {
+  public SType mapTypeVars(Function<? super STypeVar, SType> map) {
     if (typeVars().isEmpty()) {
       return this;
     } else {
       return switch (this) {
-        case SArrayType a -> mapVarsInArray(a, map);
-        case SFuncType f -> mapVarsInFunc(f, map);
-        case SStructType s -> mapVarsInStruct(s, map);
-        case SInterfaceType i -> mapVarsInInterface(i, map);
-        case STupleType t -> mapVarsInTuple(t, map);
+        case SArrayType a -> mapTypeVarsInArray(a, map);
+        case SFuncType f -> mapTypeVarsInFunc(f, map);
+        case SStructType s -> mapTypeVarsInStruct(s, map);
+        case SInterfaceType i -> mapTypeVarsInInterface(i, map);
+        case STupleType t -> mapTypeVarsInTuple(t, map);
         case STypeVar v -> map.apply(v);
         default -> this;
       };
     }
   }
 
-  private static SArrayType mapVarsInArray(
+  private static SArrayType mapTypeVarsInArray(
       SArrayType sArrayType, Function<? super STypeVar, SType> map) {
-    var elem = sArrayType.elem().mapVars(map);
+    var elem = sArrayType.elem().mapTypeVars(map);
     return new SArrayType(elem);
   }
 
-  private static SFuncType mapVarsInFunc(
+  private static SFuncType mapTypeVarsInFunc(
       SFuncType sFuncType, Function<? super STypeVar, SType> map) {
-    var params = (STupleType) sFuncType.params().mapVars(map);
-    var result = sFuncType.result().mapVars(map);
+    var params = (STupleType) sFuncType.params().mapTypeVars(map);
+    var result = sFuncType.result().mapTypeVars(map);
     return new SFuncType(params, result);
   }
 
-  private static SInterfaceType mapVarsInInterface(
+  private static SInterfaceType mapTypeVarsInInterface(
       SInterfaceType sInterfaceType, Function<? super STypeVar, SType> map) {
     var fields = sInterfaceType.fieldSet().mapValues(f -> mapItemSigComponents(f, map));
     return new SInterfaceType(fields);
   }
 
-  private static SStructType mapVarsInStruct(
+  private static SStructType mapTypeVarsInStruct(
       SStructType sStructType, Function<? super STypeVar, SType> map) {
     var fields = sStructType.fields().map(f -> mapItemSigComponents(f, map));
     return new SStructType(sStructType.fqn(), fields);
   }
 
   private static SItemSig mapItemSigComponents(SItemSig f, Function<? super STypeVar, SType> map) {
-    return new SItemSig(f.type().mapVars(map), f.name());
+    return new SItemSig(f.type().mapTypeVars(map), f.name());
   }
 
-  private static STupleType mapVarsInTuple(
+  private static STupleType mapTypeVarsInTuple(
       STupleType sTupleType, Function<? super STypeVar, SType> map) {
-    var items = sTupleType.elements().map(type -> type.mapVars(map));
+    var items = sTupleType.elements().map(type -> type.mapTypeVars(map));
     return new STupleType(items);
   }
 

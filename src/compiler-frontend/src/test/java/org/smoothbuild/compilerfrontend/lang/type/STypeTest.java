@@ -154,18 +154,18 @@ public class STypeTest extends FrontendCompilerTestContext {
   }
 
   @ParameterizedTest
-  @MethodSource("map_vars")
-  public void map_vars(SType type, SType expected) {
+  @MethodSource("map_type_vars")
+  public void map_type_vars(SType type, SType expected) {
     Function<STypeVar, SType> addPrefix =
         (STypeVar v) -> new STypeVar(fqn("module").append(v.fqn()));
-    assertThat(type.mapVars(addPrefix)).isEqualTo(expected);
+    assertThat(type.mapTypeVars(addPrefix)).isEqualTo(expected);
   }
 
-  public static List<Arguments> map_vars() {
-    return new STypeTest().map_vars_non_static();
+  public static List<Arguments> map_type_vars() {
+    return new STypeTest().map_type_vars_non_static();
   }
 
-  public List<Arguments> map_vars_non_static() {
+  public List<Arguments> map_type_vars_non_static() {
     return list(
         arguments(sBlobType(), sBlobType()),
         arguments(sBoolType(), sBoolType()),
