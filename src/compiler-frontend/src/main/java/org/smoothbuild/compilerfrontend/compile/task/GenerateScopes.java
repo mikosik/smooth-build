@@ -1,11 +1,13 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
+import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.mutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.util.HashMap;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.log.location.Location;
@@ -26,7 +28,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
-import org.smoothbuild.compilerfrontend.lang.bindings.MutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
@@ -68,8 +69,8 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
   private static class ScopeCreator {
     private final PScope scope;
     private final Logger log;
-    private final MutableBindings<PReferenceable> referenceables = mutableBindings();
-    private final MutableBindings<PTypeDefinition> types = mutableBindings();
+    private final java.util.Map<Name, PReferenceable> referenceables = new HashMap<>();
+    private final java.util.Map<Name, PTypeDefinition> types = new HashMap<>();
 
     public ScopeCreator(PScope scope, Logger log) {
       this.scope = scope;
@@ -84,7 +85,8 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
         case PConstructor pConstructor -> initializeScopeFor(pConstructor);
         case PFunc pFunc -> initializeScopeFor(pFunc);
       }
-      return scope.newInnerScope(referenceables.toFlatImmutable(), types.toFlatImmutable());
+      return scope.newInnerScope(
+          immutableBindings(mapOfAll(referenceables)), immutableBindings(mapOfAll(types)));
     }
 
     private void initializeScopeFor(PModule pModule) {
@@ -140,7 +142,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     }
 
     private <T extends IdentifiableCode> void addBinding(
-        MutableBindings<T> bindings, T binding, boolean reportErrors) {
+        java.util.Map<Name, T> bindings, T binding, boolean reportErrors) {
       // For now, we don't have anything (function or value) that can be enclosed inside other
       // function or value and have fully qualified name that contains enclosing name.
       // Everything is flat in the global scope. Parameter default values have workaround of
@@ -155,8 +157,8 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     // with same name is declared which will be reported when detecting duplicate struct name.
 
     private <T extends IdentifiableCode> void addBinding(
-        MutableBindings<T> bindings, T binding, Name name, boolean reportErrors) {
-      var previousBinding = bindings.add(name, binding);
+        java.util.Map<Name, T> bindings, T binding, Name name, boolean reportErrors) {
+      var previousBinding = bindings.put(name, binding);
       if (previousBinding != null && reportErrors) {
         log.log(alreadyDefinedError(
             binding.location(), previousBinding.location().description(), name));

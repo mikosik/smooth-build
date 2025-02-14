@@ -21,6 +21,11 @@ public sealed interface Bindings<E>
     return new ImmutableFlatBindings<>(elements.toMap(HasName::name, e -> e));
   }
 
+  public static <E extends HasName> ImmutableFlatBindings<E> immutableBindings(
+      Map<Name, E> elements) {
+    return new ImmutableFlatBindings<>(elements);
+  }
+
   public static <E> ImmutableScopedBindings<E> immutableBindings(
       ImmutableBindings<? extends E> outerScopeBindings,
       ImmutableBindings<? extends E> innerScopeBindings) {
