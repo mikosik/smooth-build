@@ -9,12 +9,12 @@ import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task2;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 
 public class BackendCompile
-    implements Task2<List<SExpr>, ImmutableBindings<SNamedEvaluable>, CompiledExprs> {
+    implements Task2<List<SExpr>, Bindings<SNamedEvaluable>, CompiledExprs> {
   private final SbTranslatorFactory sbTranslatorFactory;
 
   @Inject
@@ -23,8 +23,7 @@ public class BackendCompile
   }
 
   @Override
-  public Output<CompiledExprs> execute(
-      List<SExpr> sExprs, ImmutableBindings<SNamedEvaluable> evaluables) {
+  public Output<CompiledExprs> execute(List<SExpr> sExprs, Bindings<SNamedEvaluable> evaluables) {
     var label = COMPILER_BACK_LABEL.append(":generateBytecode");
     var sbTranslator = sbTranslatorFactory.create(evaluables);
     try {

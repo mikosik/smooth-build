@@ -1,30 +1,29 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 
+import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.base.TypeDefinition;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
+import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public record PScope(
-    ImmutableBindings<? extends Referenceable> referencables,
-    ImmutableBindings<? extends TypeDefinition> types) {
+    Bindings<? extends Referenceable> referencables, Bindings<? extends TypeDefinition> types) {
   public static PScope emptyScope() {
-    return new PScope(immutableBindings(), immutableBindings());
+    return new PScope(bindings(), bindings());
   }
 
   public PScope newInnerScope(
-      ImmutableBindings<? extends Referenceable> innerReferenceables,
-      ImmutableBindings<PTypeDefinition> innerTypes) {
-    return new PScope(
-        immutableBindings(referencables, innerReferenceables),
-        immutableBindings(types, innerTypes));
+      Map<Name, ? extends Referenceable> innerReferenceables,
+      Map<Name, ? extends PTypeDefinition> innerTypes) {
+    return new PScope(bindings(referencables, innerReferenceables), bindings(types, innerTypes));
   }
 
   public SSchema schemaFor(Id id) {

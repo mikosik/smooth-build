@@ -6,16 +6,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -357,7 +357,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         @Test
         void expression_value() throws Exception {
           var valueS = sValue(3, "myValue", sInt(7, 37));
-          ImmutableBindings<SNamedEvaluable> evaluables = bindings(valueS);
+          Bindings<SNamedEvaluable> evaluables = bindings(valueS);
           SExpr sExpr = sInstantiate(9, valueS);
           assertNalMapping(evaluables, sExpr, null, location(7));
         }
@@ -366,7 +366,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         void expression_value_referencing_other_expression_value() throws Exception {
           var otherValueS = sValue(6, "otherValue", sInt(7, 37));
           var valueS = sValue(5, "myValue", sInstantiate(otherValueS));
-          ImmutableBindings<SNamedEvaluable> evaluables = bindings(otherValueS, valueS);
+          Bindings<SNamedEvaluable> evaluables = bindings(otherValueS, valueS);
           SExpr sExpr = sInstantiate(9, valueS);
           assertNalMapping(evaluables, sExpr, null, location(7));
         }
@@ -582,15 +582,13 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       assertTranslationIsCached(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable));
     }
 
-    private void assertTranslationIsCached(
-        ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr) throws Exception {
+    private void assertTranslationIsCached(Bindings<SNamedEvaluable> evaluables, SExpr sExpr)
+        throws Exception {
       assertTranslationIsCached(sExpr, newTranslator(evaluables));
     }
 
     private void assertTranslationIsCached(
-        FileContentReader fileContentReader,
-        ImmutableBindings<SNamedEvaluable> evaluables,
-        SExpr sExpr)
+        FileContentReader fileContentReader, Bindings<SNamedEvaluable> evaluables, SExpr sExpr)
         throws SbTranslatorException {
       var sbTranslator = newTranslator(fileContentReader, evaluables);
       assertTranslationIsCached(sExpr, sbTranslator);
@@ -603,8 +601,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     }
   }
 
-  private void assertTranslation(
-      ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr expected) throws Exception {
+  private void assertTranslation(Bindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr expected)
+      throws Exception {
     assertTranslation(newTranslator(evaluables), sExpr, expected);
   }
 
@@ -619,7 +617,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
   private void assertTranslation(
       FileContentReader fileContentReader,
-      ImmutableBindings<SNamedEvaluable> evaluables,
+      Bindings<SNamedEvaluable> evaluables,
       SExpr sExpr,
       BExpr expected)
       throws SbTranslatorException {
@@ -633,7 +631,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
   }
 
   private void assertNalMapping(
-      ImmutableBindings<SNamedEvaluable> evaluables,
+      Bindings<SNamedEvaluable> evaluables,
       SExpr sExpr,
       String expectedName,
       Location expectedLocation)
@@ -662,18 +660,17 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
   }
 
   private SbTranslator newTranslator() throws Exception {
-    return newTranslator(immutableBindings());
+    return newTranslator(bindings());
   }
 
-  private SbTranslator newTranslator(ImmutableBindings<SNamedEvaluable> evaluables)
-      throws Exception {
+  private SbTranslator newTranslator(Bindings<SNamedEvaluable> evaluables) throws Exception {
     var fileContentReader = mock(FileContentReader.class);
     when(fileContentReader.read(any())).thenReturn(bBlob(1));
     return sbTranslator(fileContentReader, evaluables);
   }
 
   private SbTranslator newTranslator(
-      FileContentReader fileContentReader, ImmutableBindings<SNamedEvaluable> evaluables) {
+      FileContentReader fileContentReader, Bindings<SNamedEvaluable> evaluables) {
     return sbTranslator(fileContentReader, evaluables);
   }
 
@@ -683,19 +680,19 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     return mock;
   }
 
-  public SbTranslator sbTranslator(ImmutableBindings<SNamedEvaluable> evaluables) {
+  public SbTranslator sbTranslator(Bindings<SNamedEvaluable> evaluables) {
     return sbTranslator(fileContentReader(), evaluables);
   }
 
   public SbTranslator sbTranslator(
-      FileContentReader fileContentReader, ImmutableBindings<SNamedEvaluable> evaluables) {
+      FileContentReader fileContentReader, Bindings<SNamedEvaluable> evaluables) {
     return sbTranslator(fileContentReader, bytecodeLoader(), evaluables);
   }
 
   private SbTranslator sbTranslator(
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      ImmutableBindings<SNamedEvaluable> evaluables) {
+      Bindings<SNamedEvaluable> evaluables) {
     return new SbTranslator(bytecodeF(), fileContentReader, bytecodeLoader, evaluables);
   }
 }

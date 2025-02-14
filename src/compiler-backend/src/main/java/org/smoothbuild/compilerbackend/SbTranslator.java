@@ -28,7 +28,6 @@ import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.log.report.BExprAttributes;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -53,6 +52,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
+import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -78,7 +78,7 @@ public class SbTranslator {
   private final TypeSbTranslator typeTranslator;
   private final FileContentReader fileContentReader;
   private final BytecodeLoader bytecodeLoader;
-  private final ImmutableBindings<SNamedEvaluable> evaluables;
+  private final Bindings<SNamedEvaluable> evaluables;
   private final NList<SItem> lexicalEnvironment;
   private final HashMap<CacheKey, BExpr> cache;
   private final HashMap<Hash, String> names;
@@ -89,7 +89,7 @@ public class SbTranslator {
       BytecodeFactory bytecodeFactory,
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      @Assisted ImmutableBindings<SNamedEvaluable> evaluables) {
+      @Assisted Bindings<SNamedEvaluable> evaluables) {
     this(
         new ChainingBytecodeFactory(bytecodeFactory),
         new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeFactory), map()),
@@ -107,7 +107,7 @@ public class SbTranslator {
       TypeSbTranslator typeTranslator,
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      ImmutableBindings<SNamedEvaluable> evaluables,
+      Bindings<SNamedEvaluable> evaluables,
       NList<SItem> lexicalEnvironment,
       HashMap<CacheKey, BExpr> cache,
       HashMap<Hash, String> names,

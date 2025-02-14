@@ -4,7 +4,7 @@ import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.HashMap;
@@ -85,8 +85,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
         case PConstructor pConstructor -> initializeScopeFor(pConstructor);
         case PFunc pFunc -> initializeScopeFor(pFunc);
       }
-      return scope.newInnerScope(
-          immutableBindings(mapOfAll(referenceables)), immutableBindings(mapOfAll(types)));
+      return scope.newInnerScope(mapOfAll(referenceables), mapOfAll(types));
     }
 
     private void initializeScopeFor(PModule pModule) {

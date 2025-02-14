@@ -3,7 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.task;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
@@ -20,12 +20,12 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
         "myFunc",
         nlist(sItem(sIntType(), "param", "myFunc:param")),
         sParamRef(sIntType(), "param"));
-    var importedScope = new SScope(immutableBindings(), bindings(myFuncS));
+    var importedScope = new SScope(bindings(), bindings(myFuncS));
     var callLocation = location(9);
     var callP = pCall(pReference("myFunc"), callLocation);
     var namedValueP = pNamedValue("value", callP);
     var moduleP = pModule(list(), list(namedValueP));
-    moduleP.setScope(new PScope(importedScope.evaluables(), immutableBindings()));
+    moduleP.setScope(new PScope(importedScope.evaluables(), bindings()));
 
     callInjectDefaultArguments(moduleP, importedScope);
 
@@ -35,7 +35,7 @@ public class InjectDefaultArgumentsTest extends FrontendCompilerTestContext {
   @Test
   void
       missing_call_argument_in_call_within_default_body_is_filled_with_reference_to_default_argument() {
-    var sImported = new SScope(immutableBindings(), bindings());
+    var sImported = new SScope(bindings(), bindings());
     var callLocation = location(9);
     var pCall = pCall(pReference("myFunc"), callLocation);
     var pValue = pNamedValue("result", pCall);

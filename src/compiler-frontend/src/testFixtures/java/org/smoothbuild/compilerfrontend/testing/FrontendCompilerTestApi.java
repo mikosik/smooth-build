@@ -9,7 +9,6 @@ import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Okios.intToByteString;
 import static org.smoothbuild.common.log.base.Log.error;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
@@ -42,8 +41,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
-import org.smoothbuild.compilerfrontend.lang.base.HasName;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -848,11 +845,6 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     var pReference = new PReference(name, location);
     pReference.setId(fqn(name));
     return pReference;
-  }
-
-  @SuppressWarnings("unchecked")
-  public default <T extends HasName> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(list(nameds));
   }
 
   public default Log err(int line, String message) {

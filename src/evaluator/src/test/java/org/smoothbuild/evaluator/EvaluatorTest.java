@@ -7,6 +7,7 @@ import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.saveBytecodeInJar;
 import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
+import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import static org.smoothbuild.evaluator.ScheduleEvaluate.scheduleEvaluateCore;
 
@@ -24,9 +25,9 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
-import org.smoothbuild.compilerfrontend.lang.bindings.ImmutableBindings;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -290,19 +291,18 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
   }
 
   private void assertEvaluation(
-      Injector injector, ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr bExpr) {
+      Injector injector, Bindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr bExpr) {
     assertThat(evaluate(evaluables, sExpr, injector)).isEqualTo(bExpr);
   }
 
-  private BExpr evaluate(
-      ImmutableBindings<SNamedEvaluable> evaluables, SExpr sExpr, Injector injector) {
+  private BExpr evaluate(Bindings<SNamedEvaluable> evaluables, SExpr sExpr, Injector injector) {
     var bValues = evaluate(injector, evaluables, list(sExpr)).get().bValues();
     assertThat(bValues.size()).isEqualTo(1);
     return bValues.get(0);
   }
 
   private Maybe<EvaluatedExprs> evaluate(
-      Injector injector, ImmutableBindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
+      Injector injector, Bindings<SNamedEvaluable> evaluables, List<SExpr> exprs) {
     runInitializations(injector);
     var scheduler = injector.getInstance(Scheduler.class);
     var evaluatedExprs = scheduleEvaluateCore(scheduler, argument(exprs), argument(evaluables));

@@ -168,12 +168,8 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """
                   .replace("$$$", bodyCode);
 
-          var result = module(code)
-              .loadsWithSuccess()
-              .getLoadedModule()
-              .localScope()
-              .evaluables()
-              .find(fqn("result"));
+          var result =
+              module(code).loadsWithSuccess().getLoadedModule().evaluables().find(fqn("result"));
           SExpr actualDefArg =
               ((SCall) ((SNamedExprValue) result.ok()).body()).args().elements().get(0);
           assertThat(actualDefArg).isEqualTo(expected);

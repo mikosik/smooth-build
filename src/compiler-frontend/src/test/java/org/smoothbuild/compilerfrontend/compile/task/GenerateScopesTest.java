@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.compilerfrontend.compile.task.GenerateScopes.initializeScopes;
-import static org.smoothbuild.compilerfrontend.lang.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
+import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class GenerateScopesTest extends FrontendCompilerTestContext {
@@ -121,6 +121,6 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
   }
 
   private static SScope emptyImportedScope() {
-    return new SScope(immutableBindings(), immutableBindings());
+    return new SScope(Bindings.bindings(), Bindings.bindings());
   }
 }

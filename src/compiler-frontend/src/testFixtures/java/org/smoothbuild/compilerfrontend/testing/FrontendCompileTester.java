@@ -59,7 +59,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private SNamedEvaluable assertContainsEvaluable(Fqn fqn) {
-      var evaluables = sModule.get().localScope().evaluables();
+      var evaluables = sModule.get().evaluables();
       assertWithMessage("Module doesn't contain " + fqn.q() + ".")
           .that(evaluables.find(fqn).isOk())
           .isTrue();
@@ -68,7 +68,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
     public void containsType(SStructType expected) {
       var fqn = expected.fqn();
-      var types = sModule.get().localScope().types();
+      var types = sModule.get().types();
       assertWithMessage("Module doesn't contain type '" + fqn + "'.")
           .that(types.find(fqn).isOk())
           .isTrue();
