@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:3: Parameter `funcParam` has type `(B)->A` so it cannot have default value with type `(String,Blob)->Int`.'}

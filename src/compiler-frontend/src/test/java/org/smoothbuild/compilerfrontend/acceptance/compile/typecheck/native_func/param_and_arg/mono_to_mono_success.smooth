@@ -1,0 +1,3 @@
+@Native("impl")
+String myFunc(Int int);
+result = () -> myFunc(7);

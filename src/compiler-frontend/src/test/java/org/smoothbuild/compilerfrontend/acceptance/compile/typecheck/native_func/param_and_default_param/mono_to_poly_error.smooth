@@ -1,0 +1,3 @@
+Int twoParamFunc(String s, Blob b) = 7;
+@Native("impl")
+(B)->A myFunc<A,B>((B)->A funcParam = twoParamFunc);

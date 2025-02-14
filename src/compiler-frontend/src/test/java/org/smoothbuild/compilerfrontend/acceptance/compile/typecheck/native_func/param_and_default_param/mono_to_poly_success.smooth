@@ -1,0 +1,2 @@
+@Native("impl")
+A myFunc<A>(A a = 7);

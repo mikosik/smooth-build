@@ -1,0 +1,3 @@
+@Native("impl")
+String myFunc(Blob blob);
+result = () -> myFunc(7);

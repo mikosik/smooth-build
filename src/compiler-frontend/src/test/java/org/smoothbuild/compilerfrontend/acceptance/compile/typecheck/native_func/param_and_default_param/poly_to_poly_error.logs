@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:3: Parameter `funcParam` has type `(B,B)->B` so it cannot have default value with type `<A>(A)->A`.'}

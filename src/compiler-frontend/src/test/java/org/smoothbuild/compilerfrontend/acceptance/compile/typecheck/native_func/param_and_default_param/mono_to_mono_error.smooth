@@ -1,0 +1,2 @@
+@Native("impl")
+String myFunc([Blob] blobArray = [1, 2, 3]);

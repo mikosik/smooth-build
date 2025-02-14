@@ -1,0 +1,3 @@
+@Native("impl")
+String myFunc<A>([A] param);
+result = () -> myFunc([]);
