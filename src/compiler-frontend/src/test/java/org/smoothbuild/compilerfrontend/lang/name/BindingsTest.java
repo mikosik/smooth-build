@@ -33,23 +33,6 @@ public class BindingsTest {
       }
     }
 
-    @Nested
-    class _to_map {
-      @Test
-      void contains_elements_from_outer_and_inner_scope() {
-        var outer = bindings(element("n1", 1));
-        var bindings = newBindings(outer, element("n2", 2));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("n1", 1), element("n2", 2)));
-      }
-
-      @Test
-      void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
-        var outer = bindings(element("n1", 1));
-        var bindings = newBindings(outer, element("n1", 11));
-        assertThat(bindings.toMap()).isEqualTo(mapOfElems(element("n1", 11)));
-      }
-    }
-
     @Test
     void element_in_inner_bounds_shadows_element_from_outer_bounds() {
       var outer = bindings(element("valueA", 7));
@@ -134,26 +117,6 @@ public class BindingsTest {
     void find_missing_nested_element_returns_error() {
       var bindings = newBindings(element("name", 7));
       assertThat(bindings.find(fqn("name:nested"))).isEqualTo(err("Cannot resolve `name:nested`."));
-    }
-
-    @Test
-    void get_element() {
-      var bindings = newBindings(element("name", 7));
-      assertThat(bindings.get(name("name"))).isEqualTo(element("name", 7));
-    }
-
-    @Test
-    void get_missing_element_returns_null() {
-      var bindings = newBindings();
-      assertThat(bindings.get(name("name"))).isNull();
-    }
-
-    @Test
-    void asMap() {
-      var first = element("name", 7);
-      var second = element("other", 5);
-      var bindings = newBindings(first, second);
-      assertThat(bindings.toMap()).isEqualTo(Map.map(name("name"), first, name("other"), second));
     }
 
     public abstract Bindings<Element> newBindings(Element... elements);

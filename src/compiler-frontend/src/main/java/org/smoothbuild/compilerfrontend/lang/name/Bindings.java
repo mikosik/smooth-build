@@ -57,7 +57,7 @@ public final class Bindings<E> {
     return "Cannot resolve " + q(parts.subList(0, toIndex).toString(":")) + ".";
   }
 
-  public E get(Name name) {
+  private E get(Name name) {
     E element = inner.get(name);
     if (element != null) {
       return element;
@@ -65,16 +65,6 @@ public final class Bindings<E> {
       return null;
     } else {
       return outer.get(name);
-    }
-  }
-
-  public Map<Name, ? extends E> toMap() {
-    if (outer == null) {
-      return inner;
-    } else {
-      @SuppressWarnings("unchecked")
-      Map<Name, E> map = (Map<Name, E>) outer.toMap();
-      return map.overrideWith(inner);
     }
   }
 
