@@ -27,7 +27,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
-import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public class FrontendCompileTester extends FrontendCompilerTestContext {
   public Api module(String sourceCode) {
@@ -60,20 +59,28 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
     private SNamedEvaluable assertContainsEvaluable(Fqn fqn) {
       var evaluables = sModule.get().evaluables();
+      var sNamedEvaluable = evaluables.get(fqn.parts().getLast());
       assertWithMessage("Module doesn't contain " + fqn.q() + ".")
-          .that(evaluables.find(fqn).isOk())
-          .isTrue();
-      return evaluables.find(fqn).ok();
+          .that(sNamedEvaluable)
+          .isNotNull();
+      assertWithMessage("Module doesn't contain " + fqn.q() + ".")
+          .that(sNamedEvaluable.fqn())
+          .isEqualTo(fqn);
+      return sNamedEvaluable;
     }
 
     public void containsType(SStructType expected) {
       var fqn = expected.fqn();
-      var types = sModule.get().types();
+      var typeDefinition = sModule.get().types().get(fqn.parts().getLast());
       assertWithMessage("Module doesn't contain type '" + fqn + "'.")
-          .that(types.find(fqn).isOk())
-          .isTrue();
-      SType actual = types.find(fqn).ok().type();
-      assertWithMessage("Module contains type '" + fqn + "', but").that(actual).isEqualTo(expected);
+          .that(typeDefinition)
+          .isNotNull();
+      assertWithMessage("Module doesn't contain type '" + fqn + "'.")
+          .that(typeDefinition.fqn())
+          .isEqualTo(fqn);
+      assertWithMessage("Module contains type '" + fqn + "', but")
+          .that(typeDefinition.type())
+          .isEqualTo(expected);
     }
 
     public SModule getLoadedModule() {

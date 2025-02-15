@@ -5,6 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 import static org.smoothbuild.compilerfrontend.lang.type.STypes.INT;
 
 import org.junit.jupiter.api.Nested;
@@ -168,10 +169,13 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """
                   .replace("$$$", bodyCode);
 
-          var result =
-              module(code).loadsWithSuccess().getLoadedModule().evaluables().find(fqn("result"));
-          SExpr actualDefArg =
-              ((SCall) ((SNamedExprValue) result.ok()).body()).args().elements().get(0);
+          var result = module(code)
+              .loadsWithSuccess()
+              .getLoadedModule()
+              .evaluables()
+              .get(referenceableName("result"));
+          var body = (SCall) ((SNamedExprValue) result).body();
+          var actualDefArg = body.args().elements().get(0);
           assertThat(actualDefArg).isEqualTo(expected);
         }
       }

@@ -1,11 +1,10 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
+import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SModuleTest extends FrontendCompilerTestContext {
@@ -13,10 +12,10 @@ public class SModuleTest extends FrontendCompilerTestContext {
   void to_source_code() {
     var sStructType = sStructType("MyStruct", sIntType());
     var structDefinition = new STypeDefinition(sStructType, fqn("module:MyStruct"), location());
-
-    var types = bindings(structDefinition);
-    Bindings<SNamedEvaluable> evaluables = bindings(idSFunc());
-    assertThat(new SModule(types, evaluables, null).toSourceCode())
+    var func = idSFunc().name();
+    var struct = structDefinition.name();
+    assertThat(
+            new SModule(map(struct, structDefinition), map(func, idSFunc()), null).toSourceCode())
         .isEqualTo(
             """
             MyStruct {

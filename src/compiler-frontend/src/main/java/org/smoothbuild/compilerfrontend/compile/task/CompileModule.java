@@ -24,7 +24,7 @@ public class CompileModule implements Task2<SModule, FullPath, SModule> {
 
   @Override
   public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
-    var importedScope = argument(importedModule.fullScope());
+    var importedScope = argument(importedModule.scope());
     var path = argument(fullPath);
     var fileContent = scheduler.submit(ReadFileContent.class, path);
     var moduleContext = scheduler.submit(Parse.class, fileContent, path);

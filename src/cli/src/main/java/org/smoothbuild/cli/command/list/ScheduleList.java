@@ -44,7 +44,7 @@ public class ScheduleList implements Task0<Tuple0> {
   public static class PrintEvaluables implements Task1<SModule, Tuple0> {
     @Override
     public Output<Tuple0> execute(SModule sModule) {
-      var oneValuePerLineString = sModule.fullScope().evaluables().toMap().values().stream()
+      var oneValuePerLineString = sModule.scope().evaluables().toMap().values().stream()
           .filter(ScheduleList::isNoArgNotGenericValue)
           .map(sNamedEvaluable -> sNamedEvaluable.fqn().toString())
           .sorted()

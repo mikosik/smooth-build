@@ -3,9 +3,10 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static org.smoothbuild.common.collect.Set.set;
 
 import org.smoothbuild.common.collect.Collection;
+import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
-public abstract sealed class SBaseType extends SType
+public abstract sealed class SBaseType extends SType implements Identifiable
     permits SBlobType, SBoolType, SIntType, SStringType {
   private final Fqn fqn;
 
@@ -14,6 +15,7 @@ public abstract sealed class SBaseType extends SType
     this.fqn = fqn;
   }
 
+  @Override
   public Fqn fqn() {
     return fqn;
   }
