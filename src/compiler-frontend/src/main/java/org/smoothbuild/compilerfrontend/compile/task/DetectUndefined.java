@@ -4,17 +4,16 @@ import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.base.Logger;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
@@ -35,13 +34,11 @@ public class DetectUndefined implements Task1<PModule, PModule> {
     private final Logger logger = new Logger();
 
     @Override
-    public void visit(List<? extends PContainer> pContainers) {
-      for (var pContainer : pContainers) {
-        // Do not check generated constructor as any problem it can have is caused by problem
-        // in its struct which is reported separately.
-        if (!(pContainer instanceof PConstructor)) {
-          visit(pContainer);
-        }
+    public void visitNamedFunc(PNamedFunc pNamedFunc) throws RuntimeException {
+      // Do not check generated constructor as any problem it can have is caused by problem
+      // in its struct which is reported separately.
+      if (!(pNamedFunc instanceof PConstructor)) {
+        super.visitNamedFunc(pNamedFunc);
       }
     }
 
