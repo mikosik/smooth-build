@@ -24,11 +24,7 @@ public final class Bindings<E> {
 
   @SuppressWarnings("unchecked")
   public static <T extends HasName> Bindings<T> bindings(T... nameds) {
-    return bindings(list(nameds));
-  }
-
-  public static <E extends HasName> Bindings<E> bindings(List<E> elements) {
-    return bindings(elements.toMap(HasName::name, e -> e));
+    return bindings(list(nameds).toMap(HasName::name, e -> e));
   }
 
   public static <E extends HasName> Bindings<E> bindings(Map<Name, E> elements) {
@@ -40,7 +36,7 @@ public final class Bindings<E> {
     return new Bindings<>(outer, inner);
   }
 
-  Bindings(Bindings<? extends E> outer, Map<Name, ? extends E> inner) {
+  private Bindings(Bindings<? extends E> outer, Map<Name, ? extends E> inner) {
     this.outer = outer;
     this.inner = requireNonNull(inner);
   }
