@@ -45,8 +45,8 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
     return containerProperty;
   }
 
-  public void visit(List<? extends PContainer> pContainer) throws T {
-    pContainer.foreach(this::visit);
+  public void visit(List<? extends PContainer> pContainers) throws T {
+    pContainers.foreach(this::visit);
   }
 
   public void visit(PContainer pContainer) throws T {
