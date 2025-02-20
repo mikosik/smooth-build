@@ -16,6 +16,7 @@ public abstract sealed class BOperation extends BExpr
     permits BCall,
         BChoose,
         BCombine,
+        BFold,
         BIf,
         BInvoke,
         BMap,

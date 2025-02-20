@@ -28,6 +28,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -117,6 +118,10 @@ public class BytecodeFactory {
 
   public BTuple file(BBlob content, BString path) throws BytecodeException {
     return exprDb.newTuple(list(content, path));
+  }
+
+  public BFold fold(BExpr array, BExpr initial, BExpr folder) throws BytecodeException {
+    return exprDb.newFold(array, initial, folder);
   }
 
   public BIf if_(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {

@@ -55,6 +55,7 @@ import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
 import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 
 public class BEvaluateTest extends VmTestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
@@ -376,6 +377,32 @@ public class BEvaluateTest extends VmTestContext {
       void map_with_empty_array() throws Exception {
         var map = bMap(bArray(bIntType()), bIntIdLambda());
         assertThat(evaluate(map)).isEqualTo(bArray(bIntType()));
+      }
+
+      @Test
+      void fold() throws Exception {
+        var arguments = bCombine(bReference(bStringType(), 0), bReference(bStringType(), 1));
+        var body = bInvoke(bStringType(), ConcatStrings.class, true, arguments);
+        var folder = bLambda(list(bStringType(), bStringType()), body);
+
+        var array = bArray(bString("a"), bString("b"), bString("c"));
+        var initial = bString("0");
+
+        var fold = bytecodeF().fold(array, initial, folder);
+        assertThat(evaluate(fold)).isEqualTo(bString("0abc"));
+      }
+
+      @Test
+      void fold_empty_array() throws Exception {
+        var arguments = bCombine(bReference(0), bReference(1));
+        var body = bInvoke(bStringType(), ConcatStrings.class, true, arguments);
+        var folder = bLambda(list(bStringType(), bStringType()), body);
+
+        var array = bArray(bStringType());
+        var initial = bString("0");
+
+        var fold = bytecodeF().fold(array, initial, folder);
+        assertThat(evaluate(fold)).isEqualTo(bString("0"));
       }
 
       @Test

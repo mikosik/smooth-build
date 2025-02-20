@@ -308,6 +308,16 @@ public class BExprStableHashTest extends VmTestContext {
   }
 
   @Nested
+  class _fold_operation {
+    @Test
+    void fold_operation() throws Exception {
+      assertThat(bFold(bArray(bInt()), bInt(0), bii2iLambda()).hash())
+          .isEqualTo(
+              Hash.decode("e18ebb2da7e69fc73952e5676a8aa07176c8117607a46071eebdc21c1e27d72b"));
+    }
+  }
+
+  @Nested
   class _if_operation {
     @Test
     void if_operation() throws Exception {

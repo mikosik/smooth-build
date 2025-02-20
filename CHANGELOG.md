@@ -6,6 +6,7 @@ Version ?????? (??????????)
 ---------------------------
 
  * extend smooth syntax: Allow omitting parentheses in function type when it has one parameter
+ * added standard library function `fold`
 
 Version 0.23.0 (2025.03.20)
 ---------------------------
@@ -226,4 +227,3 @@ Version 0.1.0 (2013.09.23)
 --------------------------
 
  * initial release
-

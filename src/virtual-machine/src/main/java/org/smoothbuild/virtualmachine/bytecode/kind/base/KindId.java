@@ -20,6 +20,7 @@ public enum KindId {
   CHOOSE,
   CHOICE,
   SWITCH,
+  FOLD,
   ;
 
   public byte byteMarker() {

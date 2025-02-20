@@ -35,6 +35,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -1140,6 +1141,164 @@ public class BExprCorruptedTest extends VmTestContext {
       assertCall(() -> ((BMap) exprDb().get(hash)).subExprs())
           .throwsException(new MemberHasWrongEvaluationTypeException(
               hash, kind, "mapper", "(Int)->String", mapper.type()));
+    }
+  }
+
+  @Nested
+  class _fold {
+    @Test
+    void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save FOLD
+       * in HashedDb.
+       */
+      var array = bArray(bInt(1));
+      var initial = bInt(0);
+      var folder = bLambda(list(bIntType(), bIntType()), bInt());
+      var dataHash = hash(hash(array), hash(initial), hash(folder));
+      var hash = hash(hash(kindDb().fold(bIntType())), dataHash);
+      assertThat(((BFold) exprDb().get(hash)).subExprs())
+          .isEqualTo(new BFold.BSubExprs(array, initial, folder));
+    }
+
+    @Test
+    void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(kindDb().fold(bIntType()));
+    }
+
+    @Test
+    void root_with_two_data_hashes() throws Exception {
+      var array = bArray(bInt(1));
+      var initial = bInt(0);
+      var folder = bLambda(list(bIntType(), bIntType()), bInt());
+      var kind = kindDb().fold(bIntType());
+      var dataHash = hash(hash(array), hash(initial), hash(folder));
+      obj_root_with_two_data_hashes(
+          kind, dataHash, (Hash hash) -> ((BFold) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    void root_with_data_hash_pointing_nowhere() throws Exception {
+      var kind = kindDb().fold(bIntType());
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          kind, (Hash hash) -> ((BFold) exprDb().get(hash)).subExprs());
+    }
+
+    @Test
+    void data_is_chain_with_one_element() throws Exception {
+      var array = bArray(bInt());
+      var dataHash = hash(hash(array));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 3, 1));
+    }
+
+    @Test
+    void data_is_chain_with_two_elements() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var dataHash = hash(hash(array), hash(initial));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 3, 2));
+    }
+
+    @Test
+    void data_is_chain_with_four_elements() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var folder = bLambda(list(bIntType(), bIntType()), bInt());
+      var dataHash = hash(hash(array), hash(initial), hash(folder), hash(folder));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new NodeChainSizeIsWrongException(hash, kind, DATA_PATH, 3, 4));
+    }
+
+    @Test
+    void array_evaluation_type_is_not_array_type() throws Exception {
+      var notArray = bInt(1);
+      var initial = bInt(0);
+      var folder = bLambda(list(bIntType(), bIntType()), bInt());
+      var dataHash = hash(hash(notArray), hash(initial), hash(folder));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "array", "BArrayType", bIntType()));
+    }
+
+    @Test
+    void folder_evaluation_type_is_not_lambda_type() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var notFolder = bInt();
+      var dataHash = hash(hash(array), hash(initial), hash(notFolder));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "folder", "(Int,Int)->Int", bIntType()));
+    }
+
+    @Test
+    void folder_has_wrong_number_of_parameters() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var folderWithOneParam = bLambda(list(bIntType()), bInt());
+      var dataHash = hash(hash(array), hash(initial), hash(folderWithOneParam));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "folder", "(Int,Int)->Int", folderWithOneParam.type()));
+    }
+
+    @Test
+    void folder_first_param_type_is_different_than_initial_type() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var folderWithWrongFirstParam = bLambda(list(bStringType(), bIntType()), bInt());
+      var dataHash = hash(hash(array), hash(initial), hash(folderWithWrongFirstParam));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "folder", "(Int,Int)->Int", folderWithWrongFirstParam.type()));
+    }
+
+    @Test
+    void folder_second_param_type_is_different_than_array_element_type() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var folderWithWrongSecondParam = bLambda(list(bIntType(), bStringType()), bInt());
+      var dataHash = hash(hash(array), hash(initial), hash(folderWithWrongSecondParam));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "folder", "(Int,Int)->Int", folderWithWrongSecondParam.type()));
+    }
+
+    @Test
+    void folder_result_type_is_different_than_initial_type() throws Exception {
+      var array = bArray(bInt());
+      var initial = bInt(0);
+      var folderWithWrongResultType = bLambda(list(bIntType(), bIntType()), bString());
+      var dataHash = hash(hash(array), hash(initial), hash(folderWithWrongResultType));
+      var kind = kindDb().fold(bIntType());
+      var hash = hash(hash(kind), dataHash);
+
+      assertCall(() -> ((BFold) exprDb().get(hash)).subExprs())
+          .throwsException(new MemberHasWrongEvaluationTypeException(
+              hash, kind, "folder", "(Int,Int)->Int", folderWithWrongResultType.type()));
     }
   }
 

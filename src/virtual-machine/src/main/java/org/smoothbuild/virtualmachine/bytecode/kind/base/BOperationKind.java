@@ -7,6 +7,7 @@ public abstract sealed class BOperationKind extends BKind
     permits BCallKind,
         BChooseKind,
         BCombineKind,
+        BFoldKind,
         BIfKind,
         BInvokeKind,
         BMapKind,

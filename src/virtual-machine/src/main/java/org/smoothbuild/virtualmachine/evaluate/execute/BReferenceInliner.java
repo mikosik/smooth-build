@@ -8,6 +8,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BCall;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
@@ -42,6 +43,7 @@ public class BReferenceInliner {
       case BCall call -> rewriteCall(call, resolver);
       case BCombine combine -> rewriteCombine(combine, resolver);
       case BChoose choose -> rewriteChoose(choose, resolver);
+      case BFold fold -> rewriteFold(fold, resolver);
       case BIf if_ -> rewriteIf(if_, resolver);
       case BInvoke invoke -> rewriteInvoke(invoke, resolver);
       case BLambda lambda -> rewriteLambda(lambda, resolver);
@@ -164,6 +166,25 @@ public class BReferenceInliner {
       return map;
     } else {
       return bytecodeFactory.map(rewrittenArray, rewrittenMapper);
+    }
+  }
+
+  private BExpr rewriteFold(BFold fold, Resolver resolver) throws BytecodeException {
+    var subExprs = fold.subExprs();
+    var array = subExprs.array();
+    var initial = subExprs.initial();
+    var folder = subExprs.folder();
+
+    var rewrittenArray = rewriteExpr(array, resolver);
+    var rewrittenInitial = rewriteExpr(initial, resolver);
+    var rewrittenFolder = rewriteExpr(folder, resolver);
+
+    if (array.equals(rewrittenArray)
+        && initial.equals(rewrittenInitial)
+        && folder.equals(rewrittenFolder)) {
+      return fold;
+    } else {
+      return bytecodeFactory.fold(rewrittenArray, rewrittenInitial, rewrittenFolder);
     }
   }
 

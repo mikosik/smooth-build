@@ -28,7 +28,7 @@ public class BMapTest extends VmTestContext {
 
   @Test
   void creating_map_with_mapper_which_parameter_count_is_different_than_one_fails() {
-    assertCall(() -> bMap(bArray(bInt()), bLambda(list(bIntType(), bIntType()), bInt())))
+    assertCall(() -> bMap(bArray(bInt()), bii2iLambda()))
         .throwsException(new IllegalArgumentException(
             "`mapper.arguments.evaluationType()` should be `{Int}` but is `{Int,Int}`."));
   }

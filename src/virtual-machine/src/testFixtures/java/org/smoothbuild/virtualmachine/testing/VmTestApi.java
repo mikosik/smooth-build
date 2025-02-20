@@ -41,6 +41,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -63,6 +64,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BFoldKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
@@ -433,6 +435,10 @@ public interface VmTestApi extends CommonTestApi {
     return kindDb().combine(bTupleType(itemTypes));
   }
 
+  public default BFoldKind bFoldKind(BType evaluationType) throws BytecodeException {
+    return kindDb().fold(evaluationType);
+  }
+
   public default BIfKind bIfKind() throws BytecodeException {
     return bIfKind(bIntType());
   }
@@ -653,6 +659,14 @@ public interface VmTestApi extends CommonTestApi {
     return bLambda(list(bIntType()), bInt(value));
   }
 
+  public default BLambda bii2iLambda() throws BytecodeException {
+    return bii2iLambda(7);
+  }
+
+  public default BLambda bii2iLambda(int value) throws BytecodeException {
+    return bLambda(list(bIntType(), bIntType()), bInt(value));
+  }
+
   public default BLambda bReturnAbcLambda() throws BytecodeException {
     return bLambda(bString("abc"));
   }
@@ -710,7 +724,7 @@ public interface VmTestApi extends CommonTestApi {
   }
 
   public default BInvoke bInvoke(
-      BType evaluationType, Class<?> clazz, boolean isPure, BTuple arguments) throws IOException {
+      BType evaluationType, Class<?> clazz, boolean isPure, BExpr arguments) throws IOException {
     var bMethodTuple = bMethodTuple(clazz);
     return bInvoke(evaluationType, bMethodTuple, bBool(isPure), arguments);
   }
@@ -858,6 +872,10 @@ public interface VmTestApi extends CommonTestApi {
 
   public default BCombine bCombine(BExpr... items) throws BytecodeException {
     return bytecodeF().combine(list(items));
+  }
+
+  public default BFold bFold(BArray array, BExpr initial, BLambda folder) throws BytecodeException {
+    return bytecodeF().fold(array, initial, folder);
   }
 
   public default BIf bIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {

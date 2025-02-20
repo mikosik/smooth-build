@@ -313,6 +313,12 @@ public class BKindTest extends VmTestContext {
       assertThat(bSelectKind(type).evaluationType()).isEqualTo(type);
     }
 
+    @ParameterizedTest
+    @MethodSource("types")
+    public void fold(BType type) throws Exception {
+      assertThat(kindDb().fold(type).evaluationType()).isEqualTo(type);
+    }
+
     public static List<BKind> types() {
       return TestingBKind.KINDS_TO_TEST;
     }
@@ -352,6 +358,7 @@ public class BKindTest extends VmTestContext {
     tester.addEqualityGroup(bCallKind(), bCallKind());
     tester.addEqualityGroup(
         bCombineKind(bIntType(), bStringType()), bCombineKind(bIntType(), bStringType()));
+    tester.addEqualityGroup(bFoldKind(bIntType()), bFoldKind(bIntType()));
     tester.addEqualityGroup(bIfKind(), bIfKind());
     tester.addEqualityGroup(bMapKind(), bMapKind());
     tester.addEqualityGroup(bOrderKind(), bOrderKind());

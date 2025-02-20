@@ -43,6 +43,12 @@ public class BReferenceInlinerTest extends VmTestContext {
     }
 
     @Test
+    void fold() throws Exception {
+      assertReferenceInliningDoesNotChangeExpression(
+          r -> bytecodeF().fold(bArray(bInt()), bInt(), bFolderLambda()));
+    }
+
+    @Test
     void order() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(r -> bOrder(bInt()));
     }
@@ -222,6 +228,24 @@ public class BReferenceInlinerTest extends VmTestContext {
     }
 
     @Test
+    void fold_array() throws Exception {
+      assertReferenceInliningReplacesReference(
+          r -> bytecodeF().fold(bOrder(r), bInt(), bFolderLambda()));
+    }
+
+    @Test
+    void fold_initial() throws Exception {
+      assertReferenceInliningReplacesReference(
+          r -> bytecodeF().fold(bArray(bInt()), r, bFolderLambda()));
+    }
+
+    @Test
+    void fold_folder() throws Exception {
+      assertReferenceInliningReplacesReference(2, bInt(1), r -> bytecodeF()
+          .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bIntType()), r)));
+    }
+
+    @Test
     void order() throws Exception {
       assertReferenceInliningReplacesReference(BReferenceInlinerTest.this::bOrder);
     }
@@ -273,6 +297,10 @@ public class BReferenceInlinerTest extends VmTestContext {
     var job = job(bReference(bStringType(), -1), bInt(), bInt(), bInt(17));
     assertCall(() -> bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(-1, 3));
+  }
+
+  private BLambda bFolderLambda() throws BytecodeException {
+    return bii2iLambda();
   }
 
   private void assertReferenceInliningReplacesReference(

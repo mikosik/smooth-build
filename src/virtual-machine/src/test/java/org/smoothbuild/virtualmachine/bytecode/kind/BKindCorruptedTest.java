@@ -11,6 +11,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOICE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOOSE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FOLD;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
@@ -629,6 +630,26 @@ public class BKindCorruptedTest extends VmTestContext {
         assertThatGet(hash)
             .throwsException(new DecodeKindWrongNodeKindException(
                 hash, MAP, DATA_PATH, BArrayType.class, BIntType.class));
+      }
+    }
+
+    @Nested
+    class _fold {
+      @Test
+      void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save FOLD kind in HashedDb.
+         */
+        var hash = hash(hash(FOLD.byteMarker()), hash(bIntType()));
+        assertThat(hash).isEqualTo(kindDb().fold(bIntType()).hash());
+      }
+
+      @Nested
+      class _operation_kind_tests extends AbstractOperationKindTestSuite {
+        protected _operation_kind_tests() {
+          super(FOLD);
+        }
       }
     }
 

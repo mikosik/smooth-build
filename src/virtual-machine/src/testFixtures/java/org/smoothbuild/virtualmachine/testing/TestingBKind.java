@@ -86,7 +86,9 @@ public class TestingBKind {
         CONTEXT.bMapKind(CONTEXT.bBlobArrayType()),
         CONTEXT.bMapKind(CONTEXT.bStringArrayType()),
         CONTEXT.bInvokeKind(CONTEXT.bBlobType()),
-        CONTEXT.bInvokeKind(CONTEXT.bStringType()));
+        CONTEXT.bInvokeKind(CONTEXT.bStringType()),
+        CONTEXT.kindDb().fold(CONTEXT.bBlobType()),
+        CONTEXT.kindDb().fold(CONTEXT.bStringType()));
 
     return exprKinds.addAll(valueKinds);
   }

@@ -21,6 +21,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -159,6 +160,41 @@ public class BExprDb {
     var dataHash = writeChain(items);
     var root = newRoot(kind, dataHash);
     return kind.newExpr(root, this);
+  }
+
+  public BFold newFold(BExpr array, BExpr initial, BExpr folder) throws BytecodeException {
+    var resultType = validateFoldSubExprsAndGetResultType(array, initial, folder);
+    var kind = kindDb.fold(resultType);
+    var data = writeChain(array.hash(), initial.hash(), folder.hash());
+    var root = newRoot(kind, data);
+    return kind.newExpr(root, this);
+  }
+
+  private BType validateFoldSubExprsAndGetResultType(BExpr array, BExpr initial, BExpr folder)
+      throws BKindDbException {
+    var lambdaType = validateMemberEvaluationTypeClass("folder", folder, BLambdaType.class);
+    var arrayType = validateMemberEvaluationTypeClass("array", array, BArrayType.class);
+    var initialType = initial.evaluationType();
+    var params = lambdaType.params().elements();
+    var elementType = arrayType.element();
+    if (!(params.size() == 2
+        && params.get(0).equals(initialType)
+        && params.get(1).equals(elementType))) {
+      throw illegalEvaluationType(
+          "folder.arguments",
+          expectedFolderArgumentsType(initialType, elementType),
+          lambdaType.params());
+    }
+    var resultType = lambdaType.result();
+    if (!resultType.equals(initialType)) {
+      throw illegalEvaluationType("folder.result", initialType, resultType);
+    }
+    return resultType;
+  }
+
+  private BTupleType expectedFolderArgumentsType(BType accumulatorType, BType elementType)
+      throws BKindDbException {
+    return kindDb.tuple(accumulatorType, elementType);
   }
 
   public BIf newIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {

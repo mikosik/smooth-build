@@ -35,6 +35,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoice;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BChoose;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BCombine;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
+import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BIf;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
@@ -111,6 +112,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         case BCall call -> scheduleCall(job, call);
         case BChoose choose -> scheduleOperation(job, choose, ChooseStep::new);
         case BCombine combine -> scheduleOperation(job, combine, CombineStep::new);
+        case BFold fold -> scheduleFold(job, fold);
         case BIf if_ -> scheduleIf(job, if_);
         case BInvoke invoke -> scheduleOperation(job, invoke, InvokeStep::new);
         case BLambda lambda -> scheduleInlineTask(job);
@@ -257,7 +259,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
         try {
           var array = ((BArray) arrayValue);
           var mapperArg = subExprs.mapper();
-          var calls = array.elements(BValue.class).map(e -> newCall(mapperArg, e));
+          var calls = array.elements(BValue.class).map(e -> newCall(mapperArg, list(e)));
           var mappingLambdaResultType = ((BLambdaType) mapperArg.evaluationType()).result();
           var arrayType = bytecodeFactory.arrayType(mappingLambdaResultType);
           var order = bytecodeFactory.order(arrayType, calls);
@@ -268,12 +270,37 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
       };
     }
 
-    private BExpr newCall(BExpr lambdaExpr, BValue value) throws BytecodeException {
-      return bytecodeFactory.call(lambdaExpr, singleArg(value));
+    private Promise<Maybe<BValue>> scheduleFold(Job foldJob, BFold fold) throws BytecodeException {
+      var subExprs = fold.subExprs();
+      var arrayArg = subExprs.array();
+      var initialArg = subExprs.initial();
+      var schedulingTask = newFoldSchedulingTask(foldJob, subExprs);
+      var arrayPromise = scheduleNewJob(arrayArg, foldJob);
+      var initialPromise = scheduleNewJob(initialArg, foldJob);
+      return scheduler.submit(schedulingTask, arrayPromise, initialPromise);
     }
 
-    private BExpr singleArg(BValue value) throws BytecodeException {
-      return bytecodeFactory.tuple(list(value));
+    private Task2<BValue, BValue, BValue> newFoldSchedulingTask(
+        Job foldJob, BFold.BSubExprs subExprs) {
+      return (arrayValue, initialValue) -> {
+        var label = VM_LABEL.append(":scheduleFold");
+        try {
+          var array = ((BArray) arrayValue);
+          var folderArg = subExprs.folder();
+          BExpr result = initialValue;
+          for (BValue element : array.elements(BValue.class)) {
+            result =
+                bytecodeFactory.call(folderArg, bytecodeFactory.combine(list(result, element)));
+          }
+          return successOutput(scheduleNewJob(result, foldJob), label, foldJob.trace());
+        } catch (BytecodeException e) {
+          return failedSchedulingOutput(label, foldJob.trace(), e);
+        }
+      };
+    }
+
+    private BExpr newCall(BExpr lambdaExpr, List<BValue> arguments) throws BytecodeException {
+      return bytecodeFactory.call(lambdaExpr, bytecodeFactory.tuple(arguments));
     }
 
     private <T extends BOperation> Promise<Maybe<BValue>> scheduleOperation(
@@ -331,7 +358,7 @@ public class BEvaluate implements Task1<Tuple2<BExpr, BExprAttributes>, BValue> 
           var members = ((BChoice) choiceValue).members();
           var index = members.index().toJavaBigInteger();
           var handler = subExprs.handlers().items().get(index.intValue());
-          var call = newCall(handler, members.chosen());
+          var call = newCall(handler, list(members.chosen()));
           var result = scheduleNewJob(call, switchJob);
           return successOutput(result, label, switchJob.trace());
         } catch (BytecodeException e) {

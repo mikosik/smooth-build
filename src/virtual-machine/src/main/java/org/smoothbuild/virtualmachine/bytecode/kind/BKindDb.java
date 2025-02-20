@@ -14,6 +14,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CALL;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOICE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.CHOOSE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.COMBINE;
+import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.FOLD;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.IF;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INVOKE;
@@ -43,6 +44,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BCallKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BChooseKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BCombineKind;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BFoldKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIfKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BIntType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BInvokeKind;
@@ -121,6 +123,10 @@ public class BKindDb {
 
   public BChoiceType choice(List<BType> alternatives) throws BKindDbException {
     return newChoice(alternatives);
+  }
+
+  public BFoldKind fold(BType evaluationType) throws BKindDbException {
+    return newOperation(FOLD, evaluationType, BFoldKind::new);
   }
 
   public BLambdaType lambda(List<BType> params, BType result) throws BKindDbException {
@@ -220,6 +226,7 @@ public class BKindDb {
       case CALL -> readOperationKind(hash, children, id, BType.class, BCallKind::new);
       case CHOOSE -> readOperationKind(hash, children, id, BChoiceType.class, BChooseKind::new);
       case COMBINE -> readOperationKind(hash, children, id, BTupleType.class, BCombineKind::new);
+      case FOLD -> readOperationKind(hash, children, id, BType.class, BFoldKind::new);
       case ORDER -> readOperationKind(hash, children, id, BArrayType.class, BOrderKind::new);
       case PICK -> readOperationKind(hash, children, id, BType.class, BPickKind::new);
       case REFERENCE -> readOperationKind(hash, children, id, BType.class, BReferenceKind::new);
