@@ -49,16 +49,23 @@ public class InferTest extends FrontendCompileTester {
         **** end ****
         """
             .formatted(input, code);
-    if (Files.exists(expectedPath)) {
+    var expectedExists = Files.exists(expectedPath);
+    if (expectedExists) {
       assertWithMessage(inputs)
           .that(module.get().toSourceCode())
           .isEqualTo(Files.readString(expectedPath));
     }
     var logsPath = withExtension(input, ".logs");
-    if (Files.exists(logsPath)) {
+    var logsExists = Files.exists(logsPath);
+    if (logsExists) {
       assertWithMessage(inputs)
           .that(module.logs().toString("\n"))
           .isEqualTo(Files.readString(logsPath));
+    }
+    if (!(logsExists || expectedExists)) {
+      assertWithMessage(inputs)
+          .withMessage("No *.expected or *.logs found for this test.")
+          .fail();
     }
   }
 

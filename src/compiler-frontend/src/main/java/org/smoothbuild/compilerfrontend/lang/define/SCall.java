@@ -33,8 +33,9 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
 
   @Override
   public String toSourceCode() {
-    return callee.toSourceCode() + "("
-        + args.elements().map(SExpr::toSourceCode).toString(",") + ")";
+    var calleeSourceCode =
+        (callee instanceof SLambda) ? "(" + callee.toSourceCode() + ")" : callee.toSourceCode();
+    return calleeSourceCode + "(" + args.elements().map(SExpr::toSourceCode).toString(",") + ")";
   }
 
   @Override

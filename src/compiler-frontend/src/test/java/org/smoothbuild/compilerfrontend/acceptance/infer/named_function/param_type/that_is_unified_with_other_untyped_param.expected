@@ -1,0 +1,2 @@
+[A] myFunc<A>(A x, A y)
+  = [x, y];

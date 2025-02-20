@@ -4,6 +4,7 @@ Change Log
 
 Version ?.??.? (????.??.??)
 ---------------------------
+ * changed smooth language: Added inferring parameter types in functions and lambdas
  * changed smooth language: Added explicit type parameters to functions and named values
  * redesigned cli options of `smooth build` command
  * added standard library function `error`

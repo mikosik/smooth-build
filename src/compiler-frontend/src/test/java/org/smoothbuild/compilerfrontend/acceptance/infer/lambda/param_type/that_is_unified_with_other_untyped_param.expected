@@ -1,0 +1,2 @@
+(A,A)->[A] myValue<A>
+  = (A x, A y) -> [x, y];

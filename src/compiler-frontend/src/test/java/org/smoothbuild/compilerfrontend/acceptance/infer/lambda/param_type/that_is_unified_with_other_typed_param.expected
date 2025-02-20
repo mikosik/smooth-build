@@ -1,0 +1,2 @@
+(Int,Int)->[Int] myValue<>
+  = (Int x, Int y) -> [x, y];

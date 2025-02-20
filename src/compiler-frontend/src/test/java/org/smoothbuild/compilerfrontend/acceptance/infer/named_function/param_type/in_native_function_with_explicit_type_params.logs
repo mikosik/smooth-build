@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:2: Type parameters are declared as `<A>` but inferred type parameters are `<T~0>`.'}

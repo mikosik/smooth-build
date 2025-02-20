@@ -195,7 +195,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PItem createItem(ItemContext item) {
-      var type = createType(item.type());
+      var type = createTypeSane(item.type(), fileLocation(fullPath, item));
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
       var location = fileLocation(fullPath, nameNode);

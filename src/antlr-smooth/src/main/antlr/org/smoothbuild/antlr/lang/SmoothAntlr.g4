@@ -29,7 +29,7 @@ itemList
    ;
 
 item
-   : type NAME ('=' expr)?
+   : type? NAME ('=' expr)?
    ;
 
 annotation
