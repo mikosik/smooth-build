@@ -1,12 +1,11 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
-public class AlphabeticalTypeVarGeneratorTest {
+public class AlphabeticalTypeNameGeneratorTest {
   private static final String DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   private static final int RADIX = DIGITS.length();
 
@@ -33,11 +32,11 @@ public class AlphabeticalTypeVarGeneratorTest {
   }
 
   private static void checkNameAtIndex(int index, String name) {
-    assertThat(find(index)).isEqualTo(new STypeVar(fqn(name)));
+    assertThat(find(index)).isEqualTo(Name.typeName(name));
   }
 
-  private static STypeVar find(int index) {
-    var iterator = new AlphabeticalTypeVarGenerator();
+  private static Name find(int index) {
+    var iterator = new AlphabeticalTypeNameGenerator();
     for (int j = 0; j < index; j++) {
       iterator.next();
     }

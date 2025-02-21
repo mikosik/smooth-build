@@ -1,17 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.type.tool;
 
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
-
 import java.util.Arrays;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
-public class AlphabeticalTypeVarGenerator {
+public class AlphabeticalTypeNameGenerator {
   private char[] name = new char[] {'A'};
 
-  public STypeVar next() {
-    STypeVar sTypeVar = new STypeVar(fqn(new String(name)));
+  public Name next() {
+    var typeName = Name.typeName(new String(name));
     generateNextName();
-    return sTypeVar;
+    return typeName;
   }
 
   private void generateNextName() {
