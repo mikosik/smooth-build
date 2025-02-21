@@ -79,7 +79,7 @@ public class ExprTypeUnifier {
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
     var paramTypes = inferParamTypes(pFunc.params());
-    var resultType = translateOrGenerateFlexibleVar(pFunc.resultT());
+    var resultType = translateOrGenerateFlexibleVar(pFunc.resultType());
     pFunc.setSType(new SFuncType(paramTypes, resultType));
     unifyEvaluableBody(pFunc, resultType, pFunc.scope());
     var resolvedT = resolveType(pFunc);

@@ -5,7 +5,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
 public sealed interface PFunc extends PEvaluable permits PLambda, PNamedFunc {
-  public PType resultT();
+  public PType resultType();
 
   public NList<PItem> params();
 

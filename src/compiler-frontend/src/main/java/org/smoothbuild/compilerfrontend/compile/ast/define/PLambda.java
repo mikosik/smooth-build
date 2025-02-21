@@ -14,12 +14,12 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 public final class PLambda implements PFunc, PPolymorphic {
   private final String nameText;
   private final Location location;
-  private final PImplicitType resultT;
+  private final PImplicitType resultType;
   private final PTypeParams typeParams;
   private final NList<PItem> params;
   private final PExpr body;
   private Fqn fqn;
-  private SFuncType typeS;
+  private SFuncType sType;
   private SFuncSchema sSchema;
   private PScope scope;
 
@@ -28,7 +28,7 @@ public final class PLambda implements PFunc, PPolymorphic {
     this.nameText = nameText;
     this.typeParams = typeParams;
     this.location = location;
-    this.resultT = new PImplicitType(location);
+    this.resultType = new PImplicitType(location);
     this.params = params;
     this.body = body;
   }
@@ -39,8 +39,8 @@ public final class PLambda implements PFunc, PPolymorphic {
   }
 
   @Override
-  public void setFqn(Fqn id) {
-    this.fqn = id;
+  public void setFqn(Fqn fqn) {
+    this.fqn = fqn;
   }
 
   @Override
@@ -54,8 +54,8 @@ public final class PLambda implements PFunc, PPolymorphic {
   }
 
   @Override
-  public PType resultT() {
-    return resultT;
+  public PType resultType() {
+    return resultType;
   }
 
   @Override
@@ -79,12 +79,12 @@ public final class PLambda implements PFunc, PPolymorphic {
 
   @Override
   public SFuncType sType() {
-    return typeS;
+    return sType;
   }
 
   @Override
   public void setSType(SFuncType type) {
-    this.typeS = type;
+    this.sType = type;
   }
 
   @Override
