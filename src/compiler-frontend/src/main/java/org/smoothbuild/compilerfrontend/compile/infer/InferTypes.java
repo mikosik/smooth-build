@@ -117,13 +117,11 @@ public class InferTypes implements Task1<PModule, PModule> {
     private void detectTypeErrorsBetweenParamAndItsDefaultValue(PNamedFunc namedFunc)
         throws TypeException {
       var params = namedFunc.params();
-      for (int i = 0; i < params.size(); i++) {
-        var param = params.get(i);
-        var index = i;
+      for (var param : params) {
         param.defaultValueId().ifPresent(defaultValueId -> {
           var funcSchema = namedFunc.schema();
           var unifier = new Unifier();
-          var resolvedParamType = funcSchema.type().params().elements().get(index);
+          var resolvedParamType = param.sType();
           var paramType =
               replaceTypeVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
           var sSchema = scope().schemaFor(defaultValueId);
