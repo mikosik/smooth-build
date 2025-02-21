@@ -22,7 +22,6 @@ public class FlexibleToRigidVarConverter extends PScopingModuleVisitor<RuntimeEx
 
   private void renameFlexibleVarsToRigid(PEvaluable evaluable) {
     var resolvedType = unifier.resolve(evaluable.sType());
-    evaluable.body().ifPresent(this::visitExpr);
     var varGenerator = new AlphabeticalTypeVarGenerator();
     var mapping = resolvedType
         .typeVars()
@@ -32,6 +31,7 @@ public class FlexibleToRigidVarConverter extends PScopingModuleVisitor<RuntimeEx
             v -> (SType) new STypeVar(evaluable.fqn().append(varGenerator.next().fqn())));
     var renamedVarsType = resolvedType.mapTypeVars(mapping);
     unifier.addOrFailWithRuntimeException(new Constraint(renamedVarsType, resolvedType));
+    evaluable.body().ifPresent(this::visitExpr);
   }
 
   @Override
