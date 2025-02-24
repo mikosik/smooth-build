@@ -84,7 +84,9 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pFunc, resultType, pFunc.scope());
     var resolvedT = (SFuncType) resolveType(pFunc);
     pFunc.setSType(resolvedT);
-    pFunc.params().list().zip(resolvedT.params().elements(), PItem::setSType);
+    pFunc.params().list().zip(resolvedT.params().elements(), (pItem, type) -> pItem
+        .type()
+        .setSType(type));
     var typeParams = resolveTypeParams(pFunc, resolvedT);
     pFunc.setSchema(new SFuncSchema(typeParams, resolvedT));
   }
@@ -114,7 +116,7 @@ public class ExprTypeUnifier {
 
   private List<SType> inferParamTypes(NList<PItem> params) {
     var paramTypes = params.list().map(p -> scope.translate(p.type()));
-    params.list().zip(paramTypes, PItem::setSType);
+    params.list().zip(paramTypes, (pItem, type) -> pItem.type().setSType(type));
     return paramTypes;
   }
 

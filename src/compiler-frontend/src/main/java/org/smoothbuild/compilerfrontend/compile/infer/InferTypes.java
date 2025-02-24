@@ -66,7 +66,7 @@ public class InferTypes implements Task1<PModule, PModule> {
     private SItemSig inferFieldSig(PItem field) throws TypeException {
       var type = scope().translate(field.type());
       if (type.typeVars().isEmpty()) {
-        field.setSType(type);
+        field.type().setSType(type);
         return new SItemSig(type, field.name());
       } else {
         var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -121,7 +121,7 @@ public class InferTypes implements Task1<PModule, PModule> {
         param.defaultValueId().ifPresent(defaultValueId -> {
           var funcSchema = namedFunc.schema();
           var unifier = new Unifier();
-          var resolvedParamType = param.sType();
+          var resolvedParamType = param.type().sType();
           var paramType =
               replaceTypeVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
           var sSchema = scope().schemaFor(defaultValueId);

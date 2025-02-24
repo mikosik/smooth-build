@@ -28,8 +28,9 @@ public abstract sealed class PType implements HasLocation permits PExplicitType,
     return sType;
   }
 
-  public void setSType(SType sType) {
+  public SType setSType(SType sType) {
     this.sType = sType;
+    return sType;
   }
 
   @Override

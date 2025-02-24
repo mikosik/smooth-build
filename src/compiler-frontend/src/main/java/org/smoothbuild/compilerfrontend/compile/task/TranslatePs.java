@@ -92,8 +92,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SConstructor convertConstructor(PConstructor pConstructor) {
       var fields = pConstructor.params();
-      var params =
-          fields.map(f -> new SItem(fields.get(f.name()).sType(), f.fqn(), none(), f.location()));
+      var params = fields.map(
+          f -> new SItem(fields.get(f.name()).type().sType(), f.fqn(), none(), f.location()));
       return new SConstructor(
           pConstructor.schema(), pConstructor.fqn(), params, pConstructor.location());
     }
@@ -135,7 +135,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     public SItem convertParam(PItem paramP) {
-      return new SItem(paramP.sType(), paramP.fqn(), paramP.defaultValueId(), paramP.location());
+      return new SItem(
+          paramP.type().sType(), paramP.fqn(), paramP.defaultValueId(), paramP.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
