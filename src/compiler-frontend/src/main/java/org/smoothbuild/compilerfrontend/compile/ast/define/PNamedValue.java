@@ -9,7 +9,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class PNamedValue extends PNamedEvaluable {
   private final PType type;
-  private SType sType;
   private SSchema sSchema;
 
   public PNamedValue(
@@ -34,11 +33,7 @@ public final class PNamedValue extends PNamedEvaluable {
 
   @Override
   public SType sType() {
-    return sType;
-  }
-
-  public void setSType(SType sType) {
-    this.sType = sType;
+    return type().sType();
   }
 
   @Override

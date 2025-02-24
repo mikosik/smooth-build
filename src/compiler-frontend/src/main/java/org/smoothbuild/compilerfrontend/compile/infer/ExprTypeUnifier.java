@@ -66,7 +66,7 @@ public class ExprTypeUnifier {
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
     var evaluationType = translateOrGenerateFlexibleVar(pNamedValue.evaluationType());
-    pNamedValue.setSType(evaluationType);
+    pNamedValue.type().setSType(evaluationType);
     unifyEvaluableBody(pNamedValue, evaluationType, scope);
     var resolvedType = resolveType(pNamedValue);
     var typeParams = resolveTypeParams(pNamedValue, resolvedType);

@@ -4,10 +4,12 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public abstract sealed class PType implements HasLocation permits PExplicitType, PImplicitType {
   private final String nameText;
   private final Location location;
+  private SType sType;
 
   protected PType(String nameText, Location location) {
     this.nameText = nameText;
@@ -20,6 +22,14 @@ public abstract sealed class PType implements HasLocation permits PExplicitType,
 
   public String q() {
     return Strings.q(nameText);
+  }
+
+  public SType sType() {
+    return sType;
+  }
+
+  public void setSType(SType sType) {
+    this.sType = sType;
   }
 
   @Override
