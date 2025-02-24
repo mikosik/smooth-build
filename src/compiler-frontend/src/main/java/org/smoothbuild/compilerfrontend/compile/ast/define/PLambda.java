@@ -9,7 +9,6 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
 public final class PLambda implements PFunc, PPolymorphic {
   private final String nameText;
@@ -19,7 +18,6 @@ public final class PLambda implements PFunc, PPolymorphic {
   private final NList<PItem> params;
   private final PExpr body;
   private Fqn fqn;
-  private SFuncType sType;
   private SFuncSchema sSchema;
   private PScope scope;
 
@@ -75,16 +73,6 @@ public final class PLambda implements PFunc, PPolymorphic {
 
   public PExpr bodyGet() {
     return body;
-  }
-
-  @Override
-  public SFuncType sType() {
-    return sType;
-  }
-
-  @Override
-  public void setSType(SFuncType type) {
-    this.sType = type;
   }
 
   @Override

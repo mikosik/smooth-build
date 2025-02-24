@@ -11,6 +11,8 @@ public sealed interface PEvaluable extends IdentifiableCode, PContainer
 
   public PTypeParams typeParams();
 
+  public abstract PType evaluationType();
+
   public SType sType();
 
   public SSchema schema();

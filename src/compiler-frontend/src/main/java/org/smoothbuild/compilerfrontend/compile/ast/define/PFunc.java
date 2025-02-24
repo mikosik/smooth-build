@@ -10,9 +10,15 @@ public sealed interface PFunc extends PEvaluable permits PLambda, PNamedFunc {
   public NList<PItem> params();
 
   @Override
-  public SFuncType sType();
+  public default PType evaluationType() {
+    return resultType();
+  }
 
-  public void setSType(SFuncType sFuncType);
+  @Override
+  public default SFuncType sType() {
+    return new SFuncType(
+        params().list().map(p -> p.type().sType()), resultType().sType());
+  }
 
   @Override
   public SFuncSchema schema();

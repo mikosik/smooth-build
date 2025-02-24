@@ -7,13 +7,11 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
 public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFunc
     permits PConstructor {
   private final PType resultType;
   private final NList<PItem> params;
-  private SFuncType sType;
   private SFuncSchema sFuncSchema;
 
   public PNamedFunc(
@@ -37,21 +35,6 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
   @Override
   public NList<PItem> params() {
     return params;
-  }
-
-  @Override
-  public PType evaluationType() {
-    return resultType();
-  }
-
-  @Override
-  public SFuncType sType() {
-    return sType;
-  }
-
-  @Override
-  public void setSType(SFuncType type) {
-    this.sType = type;
   }
 
   @Override

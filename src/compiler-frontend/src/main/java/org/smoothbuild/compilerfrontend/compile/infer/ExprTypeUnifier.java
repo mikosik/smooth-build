@@ -20,7 +20,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
@@ -31,7 +30,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -65,9 +63,8 @@ public class ExprTypeUnifier {
   }
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
-    var evaluationType = translateOrGenerateFlexibleVar(pNamedValue.evaluationType());
-    pNamedValue.type().setSType(evaluationType);
-    unifyEvaluableBody(pNamedValue, evaluationType, scope);
+    generateSType(pNamedValue.type());
+    unifyEvaluableBody(pNamedValue, scope);
     var resolvedType = resolveType(pNamedValue);
     var typeParams = resolveTypeParams(pNamedValue, resolvedType);
     pNamedValue.setSchema(new SSchema(typeParams, resolvedType));
@@ -78,15 +75,10 @@ public class ExprTypeUnifier {
   }
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
-    var paramTypes = inferParamTypes(pFunc.params());
-    var resultType = translateOrGenerateFlexibleVar(pFunc.resultType());
-    pFunc.setSType(new SFuncType(paramTypes, resultType));
-    unifyEvaluableBody(pFunc, resultType, pFunc.scope());
+    pFunc.params().forEach(p -> generateSType(p.type()));
+    generateSType(pFunc.resultType());
+    unifyEvaluableBody(pFunc, pFunc.scope());
     var resolvedT = (SFuncType) resolveType(pFunc);
-    pFunc.setSType(resolvedT);
-    pFunc.params().list().zip(resolvedT.params().elements(), (pItem, type) -> pItem
-        .type()
-        .setSType(type));
     var typeParams = resolveTypeParams(pFunc, resolvedT);
     pFunc.setSchema(new SFuncSchema(typeParams, resolvedT));
   }
@@ -114,15 +106,9 @@ public class ExprTypeUnifier {
     return unifier.resolve(pEvaluable.sType());
   }
 
-  private List<SType> inferParamTypes(NList<PItem> params) {
-    var paramTypes = params.list().map(p -> scope.translate(p.type()));
-    params.list().zip(paramTypes, (pItem, type) -> pItem.type().setSType(type));
-    return paramTypes;
-  }
-
-  private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType, PScope bodyScope)
-      throws TypeException {
+  private void unifyEvaluableBody(PEvaluable pEvaluable, PScope bodyScope) throws TypeException {
     var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().toTypeVarList());
+    var evaluationType = pEvaluable.evaluationType().sType();
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
@@ -288,11 +274,8 @@ public class ExprTypeUnifier {
     unifier.add(new Constraint(sType, bodyType));
   }
 
-  private SType translateOrGenerateFlexibleVar(PType pType) {
-    if (pType instanceof PImplicitType) {
-      return unifier.newFlexibleTypeVar();
-    } else {
-      return scope.translate(pType);
-    }
+  private void generateSType(PType pType) {
+    pType.setSType(
+        pType instanceof PImplicitType ? unifier.newFlexibleTypeVar() : scope.translate(pType));
   }
 }
