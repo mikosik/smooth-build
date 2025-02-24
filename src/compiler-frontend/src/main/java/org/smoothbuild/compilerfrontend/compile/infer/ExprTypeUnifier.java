@@ -82,9 +82,11 @@ public class ExprTypeUnifier {
     var resultType = translateOrGenerateFlexibleVar(pFunc.resultType());
     pFunc.setSType(new SFuncType(paramTypes, resultType));
     unifyEvaluableBody(pFunc, resultType, pFunc.scope());
-    var resolvedT = resolveType(pFunc);
+    var resolvedT = (SFuncType) resolveType(pFunc);
+    pFunc.setSType(resolvedT);
+    pFunc.params().list().zip(resolvedT.params().elements(), PItem::setSType);
     var typeParams = resolveTypeParams(pFunc, resolvedT);
-    pFunc.setSchema(new SFuncSchema(typeParams, (SFuncType) resolvedT));
+    pFunc.setSchema(new SFuncSchema(typeParams, resolvedT));
   }
 
   private List<STypeVar> resolveTypeParams(PEvaluable pEvaluable, SType sType)
