@@ -4,11 +4,9 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 
 public final class PConstructor extends PNamedFunc {
-  private final PStruct pStruct;
-
   public PConstructor(PStruct pStruct) {
     super(
-        new PTypeReference(pStruct.nameText(), pStruct.location()),
+        createResultType(pStruct),
         pStruct.nameText(),
         new PExplicitTypeParams(list(), pStruct.location()),
         pStruct.fields(),
@@ -16,10 +14,11 @@ public final class PConstructor extends PNamedFunc {
         none(),
         pStruct.location());
     setFqn(pStruct.fqn());
-    this.pStruct = pStruct;
   }
 
-  public PStruct pStruct() {
-    return pStruct;
+  private static PTypeReference createResultType(PStruct pStruct) {
+    var type = new PTypeReference(pStruct.nameText(), pStruct.location());
+    type.setFqn(pStruct.fqn());
+    return type;
   }
 }
