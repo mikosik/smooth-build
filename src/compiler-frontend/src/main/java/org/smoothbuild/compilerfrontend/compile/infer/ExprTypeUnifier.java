@@ -87,7 +87,7 @@ public class ExprTypeUnifier {
       throws TypeException {
     var typeParams = sType.typeVars().removeAll(outerScopeTypeVars.map(unifier::resolve));
     if (pEvaluable.typeParams() instanceof PExplicitTypeParams explicitTypeParams) {
-      var explicit = explicitTypeParams.toTypeVarList();
+      var explicit = explicitTypeParams.explicitTypeVars();
       if (!explicit.toSet().equals(typeParams)) {
         // Sort to make error message stable so tests are not flaky.
         var sortedTypeParams = typeParams.toList().sortUsing(comparing(STypeVar::fqn));
@@ -107,7 +107,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, PScope bodyScope) throws TypeException {
-    var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().toTypeVarList());
+    var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().explicitTypeVars());
     var evaluationType = pEvaluable.evaluationType().sType();
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }

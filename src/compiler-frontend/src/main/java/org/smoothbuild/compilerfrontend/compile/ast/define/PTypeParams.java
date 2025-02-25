@@ -4,5 +4,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public sealed interface PTypeParams permits PExplicitTypeParams, PImplicitTypeParams {
-  public List<STypeVar> toTypeVarList();
+  public List<STypeVar> explicitTypeVars();
+
+  public List<STypeVar> typeVars();
 }
