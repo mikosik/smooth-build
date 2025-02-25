@@ -7,5 +7,5 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Polymorphic entity.
  */
 public sealed interface PPolymorphic extends HasLocation permits PLambda, PReference {
-  public abstract SSchema schema();
+  public SSchema schema();
 }
