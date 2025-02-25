@@ -43,13 +43,15 @@ public class CompileTest extends FrontendCompileTester {
     var expectedLogs = Files.readString(withExtension(input, ".logs"));
     var inputs =
         """
+        **** test ****
+        %s
         **** code ****
         %s
         **** imported code ****
         %s
         **** end ****
         """
-            .formatted(code, importedCode);
+            .formatted(input, code, importedCode);
     assertWithMessage(inputs).that(actualLogs).isEqualTo(expectedLogs);
   }
 

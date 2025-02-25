@@ -42,10 +42,13 @@ public class InferTest extends FrontendCompileTester {
     var expectedPath = withExtension(input, ".expected");
     var inputs =
         """
+        **** test ****
+        %s
         **** code ****
         %s
         **** end ****
-        """.formatted(code);
+        """
+            .formatted(input, code);
     if (Files.exists(expectedPath)) {
       assertWithMessage(inputs)
           .that(module.get().toSourceCode())
