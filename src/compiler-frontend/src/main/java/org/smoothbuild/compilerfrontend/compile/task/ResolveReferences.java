@@ -19,7 +19,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 
 /**
- * Resolve references to Referenceables and ReferenceableTypes.
+ * For each PReference or PTypeReference it resolves its .fqn() and stores result in
+ * PReference.setReferenced() or PTypeReference.setReferenced().
  */
 public class ResolveReferences implements Task1<PModule, PModule> {
   @Override
