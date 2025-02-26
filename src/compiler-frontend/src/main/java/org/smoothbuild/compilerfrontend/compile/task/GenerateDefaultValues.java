@@ -44,7 +44,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
-        var fqn = fqn(containerProperty().toString() + "~" + pItem.name().toString());
+        var fqn = fqn(pItem.fqn().parent() + "~" + pItem.name().toString());
         pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, fqn)));
       }
 
