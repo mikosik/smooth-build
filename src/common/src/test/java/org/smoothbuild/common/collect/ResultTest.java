@@ -26,7 +26,8 @@ public class ResultTest {
 
     @Test
     void err_fails() {
-      assertCall(() -> ok("a").err()).throwsException(NoSuchElementException.class);
+      assertCall(() -> ok("a").err())
+          .throwsException(new NoSuchElementException("Result has no err but value = a."));
     }
 
     @Test
@@ -170,7 +171,8 @@ public class ResultTest {
   class _err {
     @Test
     void ok_fails() {
-      assertCall(() -> err("a").ok()).throwsException(NoSuchElementException.class);
+      assertCall(() -> err("error").ok())
+          .throwsException(new NoSuchElementException("Result has no value but err = error."));
     }
 
     @Test

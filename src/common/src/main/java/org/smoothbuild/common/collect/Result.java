@@ -60,7 +60,7 @@ public sealed interface Result<R> permits Err, Ok {
 
     @Override
     public String err() {
-      throw new NoSuchElementException();
+      throw new NoSuchElementException("Result has no err but value = " + value + ".");
     }
 
     @Override
@@ -158,7 +158,7 @@ public sealed interface Result<R> permits Err, Ok {
 
     @Override
     public R ok() {
-      throw new NoSuchElementException();
+      throw new NoSuchElementException("Result has no value but err = " + message + ".");
     }
 
     @Override
