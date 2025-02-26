@@ -50,11 +50,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
           && pInstantiate.polymorphic() instanceof PReference pReference) {
-        return scope()
-            .referencables()
-            .find(pReference.id())
-            .mapOk(r -> inferPositionedArgs(pCall, r))
-            .okOrThrow(e -> new RuntimeException("Internal error: " + e));
+        return inferPositionedArgs(pCall, pReference.referenced());
       } else {
         return inferPositionedArgs(pCall, logger);
       }
@@ -81,7 +77,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
       return args;
     }
 
-    private static List<PExpr> inferPositionedArgs(
+    private List<PExpr> inferPositionedArgs(
         PCall pCall, NList<? extends Item> params, Logger mainLogger) {
       var logger = new Logger();
       var positionalArgs = leadingPositionalArgs(pCall);
@@ -99,7 +95,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
       return pCall.args().takeWhile(a -> !(a instanceof PNamedArg));
     }
 
-    private static List<PExpr> positionedArgs(
+    private List<PExpr> positionedArgs(
         PCall pCall, NList<? extends Item> params, int positionalArgsCount, Logger logBuffer) {
       var names = params.list().map(Item::name);
       var args = pCall.args();
@@ -126,6 +122,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
             var location = pCall.location();
             var pReference = new PReference(id.toString(), location);
             pReference.setId(id);
+            pReference.setReferenced(scope().referencables().find(id).ok());
             var element = new PInstantiate(pReference, location);
             result.set(i, element);
           } else {

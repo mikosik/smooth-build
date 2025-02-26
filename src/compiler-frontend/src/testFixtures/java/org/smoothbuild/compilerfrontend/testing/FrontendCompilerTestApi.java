@@ -541,16 +541,16 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SItem(type, fqn, none(), location(line));
   }
 
-  public default SItem sItem(SType type, String name, String defaultValueFullName) {
-    return sItem(1, type, name, defaultValueFullName);
+  public default SItem sItem(SType type, String name, String defaultValueFqn) {
+    return sItem(1, type, name, defaultValueFqn);
   }
 
-  public default SItem sItem(int line, SType type, String name, String defaultValueFullName) {
-    return sItem(line, type, name, some(defaultValueFullName));
+  public default SItem sItem(int line, SType type, String name, String defaultValueFqn) {
+    return sItem(line, type, name, some(defaultValueFqn));
   }
 
-  public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueId) {
-    return new SItem(type, fqn("myFunc:" + name), defaultValueId.map(Fqn::fqn), location(line));
+  public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueFqn) {
+    return new SItem(type, fqn("myFunc:" + name), defaultValueFqn.map(Fqn::fqn), location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {

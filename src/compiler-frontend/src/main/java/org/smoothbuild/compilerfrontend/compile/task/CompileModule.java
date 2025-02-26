@@ -37,8 +37,8 @@ public class CompileModule implements Task2<SModule, FullPath, SModule> {
         scheduler.submit(GenerateConstructors.class, withDecodedLiterals);
     var withInitializedScopes =
         scheduler.submit(GenerateScopes.class, importedScope, withGeneratedConstructors);
-    var withUndefinedDetected = scheduler.submit(DetectUndefined.class, withInitializedScopes);
-    var withInjected = scheduler.submit(InjectDefaultArguments.class, withUndefinedDetected);
+    var withResolvedReferences = scheduler.submit(ResolveReferences.class, withInitializedScopes);
+    var withInjected = scheduler.submit(InjectDefaultArguments.class, withResolvedReferences);
     var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
     var typesInferred = scheduler.submit(InferTypes.class, sorted);
     var sModule = scheduler.submit(TranslatePs.class, typesInferred, importedScope);

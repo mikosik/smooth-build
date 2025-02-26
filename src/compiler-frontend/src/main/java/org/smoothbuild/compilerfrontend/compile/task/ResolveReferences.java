@@ -19,9 +19,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 
 /**
- * Detect undefined referenceables and types.
+ * Resolve references to Referenceables and ReferenceableTypes.
  */
-public class DetectUndefined implements Task1<PModule, PModule> {
+public class ResolveReferences implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
     var detector = new Detector();
@@ -45,7 +45,11 @@ public class DetectUndefined implements Task1<PModule, PModule> {
     @Override
     public void visitReference(PReference pReference) {
       var id = pReference.id();
-      scope().referencables().find(id).ifErr(e -> logger.log(compileError(pReference, e)));
+      scope()
+          .referencables()
+          .find(id)
+          .ifOk(pReference::setReferenced)
+          .ifErr(e -> logger.log(compileError(pReference, e)));
     }
 
     @Override
@@ -62,6 +66,7 @@ public class DetectUndefined implements Task1<PModule, PModule> {
       scope()
           .types()
           .find(pTypeReference.fqn())
+          .ifOk(pTypeReference::setReferenced)
           .ifErr(e -> logger.log(compileError(pTypeReference.location(), e)));
     }
 

@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
@@ -10,6 +11,7 @@ public final class PReference implements PPolymorphic {
   private final String nameText;
   private final Location location;
   private Id id;
+  private Referenceable referenced;
   private SSchema sSchema;
 
   public PReference(String nameText, Location location) {
@@ -27,6 +29,14 @@ public final class PReference implements PPolymorphic {
 
   public Id id() {
     return id;
+  }
+
+  public Referenceable referenced() {
+    return Objects.requireNonNull(referenced);
+  }
+
+  public void setReferenced(Referenceable referenced) {
+    this.referenced = referenced;
   }
 
   @Override
@@ -50,12 +60,13 @@ public final class PReference implements PPolymorphic {
     }
     return object instanceof PReference that
         && Objects.equals(this.id(), that.id())
+        && Objects.equals(this.referenced(), that.referenced())
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id(), location());
+    return Objects.hash(id(), referenced(), location());
   }
 
   @Override

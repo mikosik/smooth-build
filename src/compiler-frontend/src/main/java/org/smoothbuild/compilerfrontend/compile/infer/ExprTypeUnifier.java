@@ -245,7 +245,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyReference(PReference pReference) {
-    pReference.setSSchema(scope.schemaFor(pReference.id()));
+    pReference.setSSchema(pReference.referenced().schema());
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {

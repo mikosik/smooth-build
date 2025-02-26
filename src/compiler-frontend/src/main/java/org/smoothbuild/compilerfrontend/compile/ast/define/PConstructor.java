@@ -19,6 +19,7 @@ public final class PConstructor extends PNamedFunc {
   private static PTypeReference createResultType(PStruct pStruct) {
     var type = new PTypeReference(pStruct.nameText(), pStruct.location());
     type.setFqn(pStruct.fqn());
+    type.setReferenced(pStruct);
     return type;
   }
 }
