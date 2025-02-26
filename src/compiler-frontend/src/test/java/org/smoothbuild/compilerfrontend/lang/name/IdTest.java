@@ -13,6 +13,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 
 import com.google.common.testing.EqualsTester;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -279,6 +280,26 @@ public class IdTest {
           arguments("123", "It must not contain part that starts with digit."),
           arguments("3abc", "It must not contain part that starts with digit."),
           arguments("name:3abc", "It must not contain part that starts with digit."));
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void parent(Fqn fqn, Fqn parent) {
+      assertThat(fqn.parent()).isEqualTo(parent);
+    }
+
+    public static Stream<Arguments> parent() {
+      return Stream.of(
+          arguments(fqn("abc:def"), fqn("abc")),
+          arguments(fqn("abc:def:ghi"), fqn("abc:def")),
+          arguments(fqn("abc:def:ghi:jkl"), fqn("abc:def:ghi")));
+    }
+
+    @Test
+    void parent_of_single_name() {
+      var fqn = fqn("abc");
+      assertCall(() -> fqn.parent())
+          .throwsException(new NoSuchElementException("`abc` does not have parent."));
     }
   }
 

@@ -8,6 +8,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isDigit;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isValidFullQualifiedNameCharacter;
 
 import com.google.common.base.Splitter;
+import java.util.NoSuchElementException;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;
 
@@ -59,5 +60,13 @@ public final class Fqn extends Id {
   protected List<Name> splitToParts() {
     return listOfAll(
         Splitter.on(SEPARATOR).splitToStream(toString()).map(Name::new).toList());
+  }
+
+  public Fqn parent() {
+    var parts = parts();
+    if (parts.size() == 1) {
+      throw new NoSuchElementException(q() + " does not have parent.");
+    }
+    return new Fqn(parts.subList(0, parts.size() - 1).toString(":"));
   }
 }
