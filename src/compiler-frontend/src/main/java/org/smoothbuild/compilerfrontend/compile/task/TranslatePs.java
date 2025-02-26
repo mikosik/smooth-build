@@ -134,9 +134,9 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return params.map(this::convertParam);
     }
 
-    public SItem convertParam(PItem paramP) {
+    public SItem convertParam(PItem pParam) {
       return new SItem(
-          paramP.type().sType(), paramP.fqn(), paramP.defaultValueId(), paramP.location());
+          pParam.type().sType(), pParam.fqn(), pParam.defaultValueFqn(), pParam.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
@@ -228,7 +228,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SReference convertReference(PReference pReference, SSchema sSchema) {
-      return new SReference(sSchema, pReference.id(), pReference.location());
+      return new SReference(sSchema, pReference.fqn(), pReference.location());
     }
 
     private SExpr convertSelect(PSelect pSelect) {

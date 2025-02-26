@@ -839,7 +839,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PInstantiate pReference(String name, Location location) {
     var pReference = new PReference(name, location);
-    pReference.setId(fqn(name));
+    pReference.setFqn(fqn(name));
     return pInstantiate(pReference);
   }
 

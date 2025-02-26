@@ -9,7 +9,6 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 public final class PItem implements Item, PReferenceable {
@@ -18,7 +17,7 @@ public final class PItem implements Item, PReferenceable {
   private final Maybe<PExpr> defaultValue;
   private final Location location;
   private Fqn fqn;
-  private Maybe<Id> defaultValueId;
+  private Maybe<Fqn> defaultValueFqn;
 
   public PItem(PType type, String nameText, Maybe<PExpr> defaultValue, Location location) {
     this.type = type;
@@ -58,12 +57,12 @@ public final class PItem implements Item, PReferenceable {
   }
 
   @Override
-  public Maybe<Id> defaultValueId() {
-    return defaultValueId;
+  public Maybe<Fqn> defaultValueFqn() {
+    return defaultValueFqn;
   }
 
-  public void setDefaultValueId(Maybe<Id> defaultValueId) {
-    this.defaultValueId = defaultValueId;
+  public void setDefaultValueFqn(Maybe<Fqn> defaultValueFqn) {
+    this.defaultValueFqn = defaultValueFqn;
   }
 
   @Override
@@ -80,7 +79,7 @@ public final class PItem implements Item, PReferenceable {
         && Objects.equals(this.type, that.type)
         && Objects.equals(this.nameText(), that.nameText())
         && Objects.equals(this.defaultValue, that.defaultValue())
-        && Objects.equals(this.defaultValueId, that.defaultValueId())
+        && Objects.equals(this.defaultValueFqn, that.defaultValueFqn())
         && Objects.equals(this.location(), that.location());
   }
 
@@ -95,7 +94,7 @@ public final class PItem implements Item, PReferenceable {
         .addField("type", type)
         .addField("name", nameText())
         .addField("defaultValue", defaultValue)
-        .addField("defaultValueId", defaultValueId)
+        .addField("defaultValueFqn", defaultValueFqn)
         .addField("location", location())
         .toString();
   }

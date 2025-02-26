@@ -34,7 +34,7 @@ public class SNamedExprFuncTest extends FrontendCompilerTestContext {
                 SItem(
                   type = Int
                   fqn = myFunc:myParam
-                  defaultValueId = None
+                  defaultValueFqn = None
                   location = {t-project}/module.smooth:1
                 )
               ]

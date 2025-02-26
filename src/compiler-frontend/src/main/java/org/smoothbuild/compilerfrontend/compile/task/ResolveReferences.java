@@ -44,10 +44,10 @@ public class ResolveReferences implements Task1<PModule, PModule> {
 
     @Override
     public void visitReference(PReference pReference) {
-      var id = pReference.id();
+      var fqn = pReference.fqn();
       scope()
           .referencables()
-          .find(id)
+          .find(fqn)
           .ifOk(pReference::setReferenced)
           .ifErr(e -> logger.log(compileError(pReference, e)));
     }

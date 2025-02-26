@@ -20,7 +20,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 public class GenerateDefaultValues implements Task1<PModule, PModule> {
   @Override
@@ -45,10 +44,10 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);
         var fqn = fqn(pItem.fqn().parent() + "~" + pItem.name().toString());
-        pItem.setDefaultValueId(pItem.defaultValue().map(e -> createNamedDefaultValue(e, fqn)));
+        pItem.setDefaultValueFqn(pItem.defaultValue().map(e -> createNamedDefaultValue(e, fqn)));
       }
 
-      private Id createNamedDefaultValue(PExpr expr, Fqn fqn) {
+      private Fqn createNamedDefaultValue(PExpr expr, Fqn fqn) {
         var location = expr.location();
         var type = new PImplicitType(location);
         var typeParams = new PImplicitTypeParams();

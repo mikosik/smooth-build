@@ -21,7 +21,7 @@ public class SConstructorTest extends FrontendCompilerTestContext {
                 SItem(
                   type = Int
                   fqn = MyStruct:field
-                  defaultValueId = None
+                  defaultValueFqn = None
                   location = {t-project}/module.smooth:2
                 )
               ]

@@ -11,7 +11,6 @@ import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
@@ -21,15 +20,15 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  * This class is immutable.
  */
 public final class SItem implements Item, SReferenceable {
-  private final Maybe<Id> defaultValueId;
+  private final Maybe<Fqn> defaultValueFqn;
   private final SType type;
   private final Fqn fqn;
   private final Location location;
 
-  public SItem(SType type, Fqn fqn, Maybe<Id> defaultValueId, Location location) {
+  public SItem(SType type, Fqn fqn, Maybe<Fqn> defaultValueFqn, Location location) {
     this.type = type;
     this.fqn = fqn;
-    this.defaultValueId = defaultValueId;
+    this.defaultValueFqn = defaultValueFqn;
     this.location = location;
   }
 
@@ -43,8 +42,8 @@ public final class SItem implements Item, SReferenceable {
   }
 
   @Override
-  public Maybe<Id> defaultValueId() {
-    return defaultValueId;
+  public Maybe<Fqn> defaultValueFqn() {
+    return defaultValueFqn;
   }
 
   @Override
@@ -67,7 +66,7 @@ public final class SItem implements Item, SReferenceable {
 
   public String toSourceCode(Set<STypeVar> localTypeVars) {
     return type.specifier(localTypeVars) + " " + name().toString()
-        + defaultValueId.map(id -> " = " + id.toSourceCode()).getOr("");
+        + defaultValueFqn.map(id -> " = " + id.toSourceCode()).getOr("");
   }
 
   @Override
@@ -78,13 +77,13 @@ public final class SItem implements Item, SReferenceable {
     return (o instanceof SItem that)
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.fqn(), that.fqn())
-        && Objects.equals(this.defaultValueId, that.defaultValueId)
+        && Objects.equals(this.defaultValueFqn, that.defaultValueFqn)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), fqn(), defaultValueId, location());
+    return Objects.hash(type(), fqn(), defaultValueFqn, location());
   }
 
   @Override
@@ -92,7 +91,7 @@ public final class SItem implements Item, SReferenceable {
     return new ToStringBuilder("SItem")
         .addField("type", type())
         .addField("fqn", fqn())
-        .addField("defaultValueId", defaultValueId)
+        .addField("defaultValueFqn", defaultValueFqn)
         .addField("location", location())
         .toString();
   }

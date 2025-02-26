@@ -113,7 +113,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
           .ifOk(name -> {
             var fqn = toFqn(name);
             pItem.setFqn(fqn);
-            pItem.setDefaultValueId(pItem.defaultValue().map(ignore -> fqn));
+            pItem.setDefaultValueFqn(pItem.defaultValue().map(ignore -> fqn));
           });
       pItem.defaultValue().ifPresent(this::visitExpr);
       visitType(pItem.type());
@@ -138,7 +138,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     public void visitReference(PReference pReference) throws RuntimeException {
       super.visitReference(pReference);
       parseReference(pReference.nameText())
-          .ifOk(pReference::setId)
+          .ifOk(pReference::setFqn)
           .ifErr(e -> logIllegalReference(pReference, e, pReference.nameText()));
     }
 

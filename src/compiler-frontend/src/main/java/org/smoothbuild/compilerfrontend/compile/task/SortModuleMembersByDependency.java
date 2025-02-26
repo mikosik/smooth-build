@@ -70,15 +70,15 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
       @Override
       public void visitReference(PReference pReference) {
         super.visitReference(pReference);
-        if (ids.contains(pReference.id())) {
-          deps.add(new GraphEdge<>(pReference.location(), pReference.id()));
+        if (ids.contains(pReference.fqn())) {
+          deps.add(new GraphEdge<>(pReference.location(), pReference.fqn()));
         }
       }
 
       @Override
       public void visitItem(PItem pItem) {
         super.visitItem(pItem);
-        pItem.defaultValueId().ifPresent(id -> deps.add(new GraphEdge<>(pItem.location(), id)));
+        pItem.defaultValueFqn().ifPresent(id -> deps.add(new GraphEdge<>(pItem.location(), id)));
       }
     }.visitNamedEvaluable(evaluable);
     return new GraphNode<>(evaluable.fqn(), evaluable, listOfAll(deps));

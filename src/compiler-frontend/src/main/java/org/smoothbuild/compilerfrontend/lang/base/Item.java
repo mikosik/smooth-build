@@ -1,8 +1,8 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.compilerfrontend.lang.name.Id;
+import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public interface Item extends IdentifiableCode {
-  public Maybe<Id> defaultValueId();
+  public Maybe<Fqn> defaultValueFqn();
 }

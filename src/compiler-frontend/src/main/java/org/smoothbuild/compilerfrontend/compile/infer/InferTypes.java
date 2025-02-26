@@ -95,13 +95,13 @@ public class InferTypes implements Task1<PModule, PModule> {
         throws TypeException {
       var params = namedFunc.params();
       for (var param : params) {
-        param.defaultValueId().ifPresent(defaultValueId -> {
+        param.defaultValueFqn().ifPresent(defaultValueFqn -> {
           var funcSchema = namedFunc.schema();
           var unifier = new Unifier();
           var resolvedParamType = param.type().sType();
           var paramType =
               replaceTypeVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
-          var sSchema = scope().schemaFor(defaultValueId);
+          var sSchema = scope().schemaFor(defaultValueFqn);
           var defaultValueType = replaceTypeParamVarsWithFlexibleTypeVars(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
