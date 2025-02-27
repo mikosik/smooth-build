@@ -198,9 +198,13 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var type = createType(item.type());
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
-      var defaultValue = createExprSane(item.expr()).map(PDefaultValue::new);
       var location = fileLocation(fullPath, nameNode);
+      var defaultValue = maybe(item.expr()).map(this::createDefaultValue);
       return new PItem(type, itemName, defaultValue, location);
+    }
+
+    private PDefaultValue createDefaultValue(ExprContext e) {
+      return new PDefaultValue(createExpr(e), fileLocation(fullPath, e));
     }
 
     private Maybe<PExpr> createPipeSane(PipeContext pipe) {
@@ -229,10 +233,6 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private void logPipedValueNotConsumedError(ExprContext parserRuleContext) {
       var location = fileLocation(fullPath, parserRuleContext);
       logger.log(compileError(location, "Piped value is not consumed."));
-    }
-
-    private Maybe<PExpr> createExprSane(ExprContext expr) {
-      return maybe(expr).map(this::createExpr);
     }
 
     private PExpr createExpr(ExprContext expr) {

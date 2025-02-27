@@ -2,21 +2,30 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocation;
+import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.DefaultValue;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
-public class PDefaultValue implements DefaultValue {
+public class PDefaultValue implements DefaultValue, HasLocation {
   private final PExpr expr;
+  private final Location location;
   private Fqn fqn;
   private Referenceable referenced;
 
-  public PDefaultValue(PExpr expr) {
+  public PDefaultValue(PExpr expr, Location location) {
     this.expr = expr;
+    this.location = location;
   }
 
   public PExpr expr() {
     return expr;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   @Override

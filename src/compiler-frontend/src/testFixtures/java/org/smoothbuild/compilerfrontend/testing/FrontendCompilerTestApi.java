@@ -834,7 +834,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default Maybe<PDefaultValue> defaultValue(Maybe<PExpr> defaultValue) {
-    return defaultValue.map(e -> new PDefaultValue(e));
+    return defaultValue.map(e -> new PDefaultValue(e, location()));
   }
 
   public default PInt pInt() {
