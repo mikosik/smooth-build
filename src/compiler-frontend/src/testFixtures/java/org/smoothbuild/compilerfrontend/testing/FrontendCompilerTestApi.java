@@ -26,6 +26,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
@@ -826,9 +827,14 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default PItem pItem(String name, Maybe<PExpr> defaultValue) {
-    var pItem = new PItem(new PTypeReference("Int", location()), name, defaultValue, location());
+    var type = new PTypeReference("Int", location());
+    var pItem = new PItem(type, name, defaultValue(defaultValue), location());
     pItem.setFqn(fqn("myFunc:" + name));
     return pItem;
+  }
+
+  public default Maybe<PDefaultValue> defaultValue(Maybe<PExpr> defaultValue) {
+    return defaultValue.map(e -> new PDefaultValue(e));
   }
 
   public default PInt pInt() {

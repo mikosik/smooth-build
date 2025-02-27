@@ -18,10 +18,10 @@ public final class PItem implements Item, PReferenceable {
   private final Location location;
   private Fqn fqn;
 
-  public PItem(PType type, String nameText, Maybe<PExpr> defaultValue, Location location) {
+  public PItem(PType type, String nameText, Maybe<PDefaultValue> defaultValue, Location location) {
     this.type = type;
     this.nameText = nameText;
-    this.defaultValue = defaultValue.map(PDefaultValue::new);
+    this.defaultValue = defaultValue;
     this.location = location;
   }
 

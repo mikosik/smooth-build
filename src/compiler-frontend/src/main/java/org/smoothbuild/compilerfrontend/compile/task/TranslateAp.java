@@ -49,6 +49,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
@@ -197,8 +198,9 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var type = createType(item.type());
       var nameNode = item.NAME();
       var itemName = nameNode.getText();
+      var defaultValue = createExprSane(item.expr()).map(PDefaultValue::new);
       var location = fileLocation(fullPath, nameNode);
-      return new PItem(type, itemName, createExprSane(item.expr()), location);
+      return new PItem(type, itemName, defaultValue, location);
     }
 
     private Maybe<PExpr> createPipeSane(PipeContext pipe) {
