@@ -116,9 +116,9 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
       for (int i = 0; i < result.size(); i++) {
         if (result.get(i) == null) {
           var param = params.get(i);
-          var defaultValueFqn = param.defaultValueFqn();
-          if (defaultValueFqn.isSome()) {
-            var fqn = defaultValueFqn.get();
+          var defaultValue = param.defaultValue();
+          if (defaultValue.isSome()) {
+            var fqn = defaultValue.get().fqn();
             var location = pCall.location();
             var pReference = new PReference(fqn.toString(), location);
             pReference.setFqn(fqn);

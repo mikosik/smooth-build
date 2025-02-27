@@ -78,7 +78,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
       @Override
       public void visitItem(PItem pItem) {
         super.visitItem(pItem);
-        pItem.defaultValueFqn().ifPresent(id -> deps.add(new GraphEdge<>(pItem.location(), id)));
+        pItem.defaultValue().ifPresent(dv -> deps.add(new GraphEdge<>(pItem.location(), dv.fqn())));
       }
     }.visitNamedEvaluable(evaluable);
     return new GraphNode<>(evaluable.fqn(), evaluable, listOfAll(deps));

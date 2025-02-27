@@ -14,15 +14,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public final class PItem implements Item, PReferenceable {
   private final PType type;
   private final String nameText;
-  private final Maybe<PExpr> defaultValue;
+  private final Maybe<PDefaultValue> defaultValue;
   private final Location location;
   private Fqn fqn;
-  private Maybe<Fqn> defaultValueFqn;
 
   public PItem(PType type, String nameText, Maybe<PExpr> defaultValue, Location location) {
     this.type = type;
     this.nameText = nameText;
-    this.defaultValue = defaultValue;
+    this.defaultValue = defaultValue.map(PDefaultValue::new);
     this.location = location;
   }
 
@@ -47,22 +46,14 @@ public final class PItem implements Item, PReferenceable {
     return fqn;
   }
 
-  public Maybe<PExpr> defaultValue() {
+  @Override
+  public Maybe<PDefaultValue> defaultValue() {
     return defaultValue;
   }
 
   @Override
   public Location location() {
     return location;
-  }
-
-  @Override
-  public Maybe<Fqn> defaultValueFqn() {
-    return defaultValueFqn;
-  }
-
-  public void setDefaultValueFqn(Maybe<Fqn> defaultValueFqn) {
-    this.defaultValueFqn = defaultValueFqn;
   }
 
   @Override
@@ -77,15 +68,14 @@ public final class PItem implements Item, PReferenceable {
     }
     return object instanceof PItem that
         && Objects.equals(this.type, that.type)
-        && Objects.equals(this.nameText(), that.nameText())
-        && Objects.equals(this.defaultValue, that.defaultValue())
-        && Objects.equals(this.defaultValueFqn, that.defaultValueFqn())
-        && Objects.equals(this.location(), that.location());
+        && Objects.equals(this.nameText, that.nameText)
+        && Objects.equals(this.defaultValue, that.defaultValue)
+        && Objects.equals(this.location, that.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, nameText(), defaultValue, location());
+    return Objects.hash(type, nameText, defaultValue, location);
   }
 
   @Override
@@ -94,7 +84,6 @@ public final class PItem implements Item, PReferenceable {
         .addField("type", type)
         .addField("name", nameText())
         .addField("defaultValue", defaultValue)
-        .addField("defaultValueFqn", defaultValueFqn)
         .addField("location", location())
         .toString();
   }

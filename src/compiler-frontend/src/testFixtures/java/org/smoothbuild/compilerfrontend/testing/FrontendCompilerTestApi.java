@@ -48,6 +48,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
 import org.smoothbuild.compilerfrontend.lang.define.SCombine;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
+import org.smoothbuild.compilerfrontend.lang.define.SDefaultValue;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SInt;
@@ -550,7 +551,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SItem sItem(int line, SType type, String name, Maybe<String> defaultValueFqn) {
-    return new SItem(type, fqn("myFunc:" + name), defaultValueFqn.map(Fqn::fqn), location(line));
+    var defaultValue = defaultValueFqn.map(name1 -> new SDefaultValue(fqn(name1)));
+    return new SItem(type, fqn("myFunc:" + name), defaultValue, location(line));
   }
 
   public default SAnnotatedValue sBytecodeValue(int line, SType type, String name) {

@@ -26,7 +26,8 @@ public class SItemTest extends FrontendCompilerTestContext {
 
   @Test
   void to_source_code_with_default_value() {
-    var param = new SItem(sStringType(), name, some(fqn("some:name")), location());
+    var defaultValue = new SDefaultValue(fqn("some:name"));
+    var param = new SItem(sStringType(), name, some(defaultValue), location());
     assertThat(param.toSourceCode()).isEqualTo("String name = some:name");
   }
 
@@ -45,7 +46,7 @@ public class SItemTest extends FrontendCompilerTestContext {
             SItem(
               type = String
               fqn = myFunc:name
-              defaultValueFqn = None
+              defaultValue = None
               location = {t-project}/module.smooth:11
             )""");
   }

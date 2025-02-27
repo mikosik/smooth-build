@@ -38,6 +38,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SBlob;
 import org.smoothbuild.compilerfrontend.lang.define.SCall;
 import org.smoothbuild.compilerfrontend.lang.define.SCombine;
 import org.smoothbuild.compilerfrontend.lang.define.SConstructor;
+import org.smoothbuild.compilerfrontend.lang.define.SDefaultValue;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SInt;
@@ -136,7 +137,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     public SItem convertParam(PItem pParam) {
       return new SItem(
-          pParam.type().sType(), pParam.fqn(), pParam.defaultValueFqn(), pParam.location());
+          pParam.type().sType(),
+          pParam.fqn(),
+          pParam.defaultValue().map(dv -> new SDefaultValue(dv.fqn())),
+          pParam.location());
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {

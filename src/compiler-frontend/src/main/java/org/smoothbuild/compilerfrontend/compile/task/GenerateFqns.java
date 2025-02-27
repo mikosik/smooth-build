@@ -113,9 +113,12 @@ public class GenerateFqns implements Task1<PModule, PModule> {
           .ifOk(name -> {
             var fqn = toFqn(name);
             pItem.setFqn(fqn);
-            pItem.setDefaultValueFqn(pItem.defaultValue().map(ignore -> fqn));
+            pItem
+                .defaultValue()
+                .ifPresent(defaultValue -> defaultValue.setFqn(
+                    fqn(pItem.fqn().parent() + "~" + pItem.name().toString())));
           });
-      pItem.defaultValue().ifPresent(this::visitExpr);
+      pItem.defaultValue().ifPresent(pDefaultValue -> visitExpr(pDefaultValue.expr()));
       visitType(pItem.type());
     }
 
