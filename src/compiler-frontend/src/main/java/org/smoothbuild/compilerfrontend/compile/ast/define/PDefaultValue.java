@@ -3,11 +3,13 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.compilerfrontend.lang.base.DefaultValue;
+import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public class PDefaultValue implements DefaultValue {
   private final PExpr expr;
   private Fqn fqn;
+  private Referenceable referenced;
 
   public PDefaultValue(PExpr expr) {
     this.expr = expr;
@@ -24,6 +26,14 @@ public class PDefaultValue implements DefaultValue {
 
   public void setFqn(Fqn fqn) {
     this.fqn = fqn;
+  }
+
+  public void setReferenced(Referenceable referenced) {
+    this.referenced = referenced;
+  }
+
+  public Referenceable referenced() {
+    return referenced;
   }
 
   @Override

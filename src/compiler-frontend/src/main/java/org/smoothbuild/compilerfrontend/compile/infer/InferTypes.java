@@ -101,7 +101,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           var resolvedParamType = param.type().sType();
           var paramType =
               replaceTypeVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
-          var sSchema = scope().schemaFor(defaultValue.fqn());
+          var sSchema = defaultValue.referenced().schema();
           var defaultValueType = replaceTypeParamVarsWithFlexibleTypeVars(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));

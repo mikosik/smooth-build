@@ -12,6 +12,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
@@ -51,6 +52,16 @@ public class ResolveReferences implements Task1<PModule, PModule> {
           .find(fqn)
           .ifOk(pReference::setReferenced)
           .ifErr(e -> logger.log(compileError(pReference, e)));
+    }
+
+    @Override
+    public void visitItem(PItem pItem) throws RuntimeException {
+      super.visitItem(pItem);
+      pItem.defaultValue().ifPresent(dv -> scope()
+          .referencables()
+          .find(dv.fqn())
+          .ifOk(dv::setReferenced)
+          .ifErr(e -> logger.log(compileError(pItem, e))));
     }
 
     @Override
