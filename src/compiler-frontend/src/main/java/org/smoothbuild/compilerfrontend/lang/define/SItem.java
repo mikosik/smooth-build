@@ -20,7 +20,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  * Item is a func param or a struct field.
  * This class is immutable.
  */
-public final class SItem implements Item, SReferenceable {
+public final class SItem implements Item, SMonoReferenceable {
   private final Maybe<SDefaultValue> defaultValue;
   private final SType type;
   private final Fqn fqn;

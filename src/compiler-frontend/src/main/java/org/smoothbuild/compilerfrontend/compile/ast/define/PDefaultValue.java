@@ -5,14 +5,14 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.DefaultValue;
-import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public class PDefaultValue implements DefaultValue, HasLocation {
   private final PExpr expr;
   private final Location location;
   private Fqn fqn;
-  private Referenceable referenced;
+  private PolyReferenceable referenced;
 
   public PDefaultValue(PExpr expr, Location location) {
     this.expr = expr;
@@ -37,11 +37,11 @@ public class PDefaultValue implements DefaultValue, HasLocation {
     this.fqn = fqn;
   }
 
-  public void setReferenced(Referenceable referenced) {
+  public void setReferenced(PolyReferenceable referenced) {
     this.referenced = referenced;
   }
 
-  public Referenceable referenced() {
+  public PolyReferenceable referenced() {
     return referenced;
   }
 

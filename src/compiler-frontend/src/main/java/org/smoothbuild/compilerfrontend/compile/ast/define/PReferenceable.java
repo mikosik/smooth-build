@@ -5,4 +5,5 @@ import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 /**
  * Referencable.
  */
-public sealed interface PReferenceable extends Referenceable permits PItem, PNamedEvaluable {}
+public sealed interface PReferenceable extends Referenceable
+    permits PMonoReferenceable, PPolyReferenceable {}

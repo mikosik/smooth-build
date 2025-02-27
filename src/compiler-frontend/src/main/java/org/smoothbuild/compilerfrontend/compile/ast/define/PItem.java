@@ -11,7 +11,7 @@ import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
-public final class PItem implements Item, PReferenceable {
+public final class PItem implements Item, PMonoReferenceable {
   private final PType type;
   private final String nameText;
   private final Maybe<PDefaultValue> defaultValue;

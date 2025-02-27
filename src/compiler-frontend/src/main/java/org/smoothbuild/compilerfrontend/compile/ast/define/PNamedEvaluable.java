@@ -8,7 +8,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 /**
  * Evaluable that has fully qualified name.
  */
-public abstract sealed class PNamedEvaluable implements PReferenceable, PEvaluable
+public abstract sealed class PNamedEvaluable implements PEvaluable, PPolyReferenceable
     permits PNamedFunc, PNamedValue {
   private final String nameText;
   private final PTypeParams typeParams;

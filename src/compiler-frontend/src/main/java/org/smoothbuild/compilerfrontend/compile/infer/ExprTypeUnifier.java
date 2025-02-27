@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.base.Strings.q;
+import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
@@ -30,6 +31,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
@@ -245,7 +248,11 @@ public class ExprTypeUnifier {
   }
 
   private void unifyReference(PReference pReference) {
-    pReference.setSSchema(pReference.referenced().schema());
+    switch (pReference.referenced()) {
+      case MonoReferenceable mono -> pReference.setSSchema(mono.schema());
+      case PolyReferenceable poly -> pReference.setSSchema(poly.schema());
+      default -> throw unexpectedCaseException(pReference.referenced());
+    }
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {
