@@ -61,7 +61,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
           .referencables()
           .find(dv.fqn())
           .ifOk(dv::setReferenced)
-          .ifErr(e -> logger.log(compileError(pItem, e))));
+          .ifErr(e -> logger.log(compileError(dv, e))));
     }
 
     @Override
