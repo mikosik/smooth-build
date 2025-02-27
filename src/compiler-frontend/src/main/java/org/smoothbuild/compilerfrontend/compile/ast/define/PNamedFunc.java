@@ -68,8 +68,8 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
 
   @Override
   public String toString() {
-    return new ToStringBuilder("PNamedFuncP")
-        .addField("resulT", resultType)
+    return new ToStringBuilder("PNamedFunc")
+        .addField("resulType", resultType)
         .addField("fqn", fqn())
         .addListField("params", params().list())
         .addField("body", body())
