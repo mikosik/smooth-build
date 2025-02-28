@@ -249,8 +249,8 @@ public class SbTranslator {
   }
 
   private BExpr translateNamedFunc(SNamedFunc sNamedFunc) throws SbTranslatorException {
-    var funcB = funcBodySbTranslator(sNamedFunc).translateNamedFuncImpl(sNamedFunc);
-    return saveNalAndReturn(sNamedFunc, funcB);
+    var bFunc = funcBodySbTranslator(sNamedFunc).translateNamedFuncImpl(sNamedFunc);
+    return saveNalAndReturn(sNamedFunc, bFunc);
   }
 
   private SbTranslator funcBodySbTranslator(SFunc sFunc) {
@@ -286,9 +286,9 @@ public class SbTranslator {
   }
 
   private BLambda translateExprFunc(SExprFunc sExprFunc) throws SbTranslatorException {
-    var funcT = typeTranslator.translate(sExprFunc.schema().type());
-    var bodyB = translateExpr(sExprFunc.body());
-    return bytecodeF.lambda(funcT, bodyB);
+    var funcType = typeTranslator.translate(sExprFunc.schema().type());
+    var bBody = translateExpr(sExprFunc.body());
+    return bytecodeF.lambda(funcType, bBody);
   }
 
   private BLambda translateNativeFunc(SAnnotatedFunc sNativeFunc) throws SbTranslatorException {
@@ -317,33 +317,33 @@ public class SbTranslator {
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
-    var funcTB = typeTranslator.translate(sConstructor.schema().type());
-    var bodyB = bytecodeF.combine(createReferenceB(funcTB.params()));
-    saveLoc(bodyB, sConstructor);
-    return bytecodeF.lambda(funcTB, bodyB);
+    var bFuncType = typeTranslator.translate(sConstructor.schema().type());
+    var bBody = bytecodeF.combine(createReferenceB(bFuncType.params()));
+    saveLoc(bBody, sConstructor);
+    return bytecodeF.lambda(bFuncType, bBody);
   }
 
-  private List<BExpr> createReferenceB(BTupleType paramTs) throws SbTranslatorException {
-    return paramTs
+  private List<BExpr> createReferenceB(BTupleType sParamTypes) throws SbTranslatorException {
+    return sParamTypes
         .elements()
         .zipWithIndex()
         .map(tuple -> bytecodeF.reference(tuple.element1(), BigInteger.valueOf(tuple.element2())));
   }
 
   private BOrder translateOrder(SOrder sOrder) throws SbTranslatorException {
-    var arrayTB = typeTranslator.translate(sOrder.evaluationType());
-    var elementsB = translateExprs(sOrder.elements());
-    return bytecodeF.order(arrayTB, elementsB);
+    var bArrayType = typeTranslator.translate(sOrder.evaluationType());
+    var bElements = translateExprs(sOrder.elements());
+    return bytecodeF.order(bArrayType, bElements);
   }
 
   private BSelect translateSelect(SSelect sSelect) throws SbTranslatorException {
-    var selectableB = translateExpr(sSelect.selectable());
-    var structTS = (SStructType) sSelect.selectable().evaluationType();
-    var indexJ = structTS.fields().indexOf(sSelect.field());
+    var bSelectable = translateExpr(sSelect.selectable());
+    var sStructType = (SStructType) sSelect.selectable().evaluationType();
+    var indexJ = sStructType.fields().indexOf(sSelect.field());
     var bigInteger = BigInteger.valueOf(indexJ);
-    var indexB = bytecodeF.int_(bigInteger);
-    saveLoc(indexB, sSelect);
-    return bytecodeF.select(selectableB, indexB);
+    var bIndex = bytecodeF.int_(bigInteger);
+    saveLoc(bIndex, sSelect);
+    return bytecodeF.select(bSelectable, bIndex);
   }
 
   private BString translateString(SString sString) throws SbTranslatorException {
