@@ -64,8 +64,8 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     } catch (IOException e) {
       return output(label, list(error(e.getMessage())));
     }
-    var referenceSs = evaluatedExprs.sExprs().map(this::toReferenceS);
-    var artifacts = referenceSs.zip(evaluatedExprs.bValues(), Tuples::tuple);
+    var sReferences = evaluatedExprs.sExprs().map(this::toReferenceS);
+    var artifacts = sReferences.zip(evaluatedExprs.bValues(), Tuples::tuple);
     var logger = new Logger();
     artifacts
         .sortUsing(comparing(a -> a.element1().referencedId().toString()))
