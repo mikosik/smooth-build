@@ -17,6 +17,7 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
@@ -69,6 +70,6 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   }
 
   private static SReference referenceTo(SNamedValue sNamedValue) {
-    return new SReference(sNamedValue.schema(), sNamedValue.fqn(), commandLineLocation());
+    return new SPolyReference(sNamedValue.schema(), sNamedValue.fqn(), commandLineLocation());
   }
 }

@@ -27,7 +27,7 @@ import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.common.tuple.Tuples;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
-import org.smoothbuild.compilerfrontend.lang.define.SReference;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
@@ -73,11 +73,11 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     return output(label, logger.toList());
   }
 
-  private SReference toReferenceS(SExpr expr) {
-    return (SReference) ((SInstantiate) expr).sPolymorphic();
+  private SPolyReference toReferenceS(SExpr expr) {
+    return (SPolyReference) ((SInstantiate) expr).sPolymorphic();
   }
 
-  private void save(SReference valueS, BValue value, Logger logger) {
+  private void save(SPolyReference valueS, BValue value, Logger logger) {
     var name = valueS.referencedId();
     try {
       var path = write(valueS, value);
@@ -90,7 +90,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
     }
   }
 
-  private FullPath write(SReference sReference, BValue value)
+  private FullPath write(SPolyReference sReference, BValue value)
       throws IOException, DuplicatedPathsException {
     FullPath artifactPath = artifactPath(sReference.referencedId());
     if (sReference.schema().type() instanceof SArrayType sArrayType) {

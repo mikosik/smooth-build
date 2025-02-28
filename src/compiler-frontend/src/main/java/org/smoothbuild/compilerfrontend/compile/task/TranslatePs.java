@@ -31,6 +31,8 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
+import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -45,12 +47,14 @@ import org.smoothbuild.compilerfrontend.lang.define.SInt;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SLambda;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
+import org.smoothbuild.compilerfrontend.lang.define.SMonoReference;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
@@ -59,7 +63,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 
@@ -228,11 +231,13 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SReference convertReference(PReference pReference) {
-      return convertReference(pReference, pReference.schema());
-    }
-
-    private SReference convertReference(PReference pReference, SSchema sSchema) {
-      return new SReference(sSchema, pReference.fqn(), pReference.location());
+      final var fqn = pReference.fqn();
+      final var location = pReference.location();
+      return switch (pReference.referenced()) {
+        case MonoReferenceable mono -> new SMonoReference(mono.schema(), fqn, location);
+        case PolyReferenceable poly -> new SPolyReference(poly.schema(), fqn, location);
+        default -> throw unexpectedCaseException(pReference.referenced());
+      };
     }
 
     private SExpr convertSelect(PSelect pSelect) {

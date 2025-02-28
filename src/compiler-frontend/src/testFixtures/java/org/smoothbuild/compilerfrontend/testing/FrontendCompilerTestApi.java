@@ -56,11 +56,13 @@ import org.smoothbuild.compilerfrontend.lang.define.SInt;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.define.SLambda;
+import org.smoothbuild.compilerfrontend.lang.define.SMonoReference;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
@@ -387,7 +389,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default SInstantiate sInstantiate(
       int line, List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
     var location = location(line);
-    var reference = new SReference(namedEvaluable.schema(), namedEvaluable.fqn(), location);
+    var reference = new SPolyReference(namedEvaluable.schema(), namedEvaluable.fqn(), location);
     return sInstantiate(typeArgs, reference, location);
   }
 
@@ -442,7 +444,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sReference(line, new SSchema(list(), type), fqn(name)));
+    return sInstantiate(line, sMonoReference(line, type, fqn(name)));
+  }
+
+  public default SPolymorphic sMonoReference(int line, SType type, Fqn fqn) {
+    return new SMonoReference(sSchema(list(), type), fqn, location(line));
   }
 
   public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
@@ -458,7 +464,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SReference sReference(SSchema schema, Id id, Location location) {
-    return new SReference(schema, id, location);
+    return new SPolyReference(schema, id, location);
   }
 
   public default SSelect sSelect(SExpr selectable, String field) {

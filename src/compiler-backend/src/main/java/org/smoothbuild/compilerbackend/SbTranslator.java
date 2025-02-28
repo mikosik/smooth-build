@@ -42,12 +42,14 @@ import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SInt;
 import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SLambda;
+import org.smoothbuild.compilerfrontend.lang.define.SMonoReference;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
@@ -195,7 +197,14 @@ public class SbTranslator {
   }
 
   private BExpr translateReference(SReference sReference) throws SbTranslatorException {
-    var id = sReference.referencedId();
+    return switch (sReference) {
+      case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
+      case SPolyReference sPolyReference -> translatePolyReference(sPolyReference);
+    };
+  }
+
+  private BExpr translateMonoReference(SMonoReference sMonoReference) throws SbTranslatorException {
+    var id = sMonoReference.referencedId();
     var parts = id.parts();
     if (parts.size() == 1) {
       var name = parts.get(0);
@@ -204,13 +213,34 @@ public class SbTranslator {
         var evaluationType = typeTranslator.translate(itemS.type());
         var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
         var bReference = bytecodeF.reference(evaluationType, index);
-        return saveNalAndReturn(name.toString(), sReference, bReference);
+        return saveNalAndReturn(name.toString(), sMonoReference, bReference);
       }
     }
     return evaluables
         .find(id)
         .mapOk(this::translateNamedEvaluable)
-        .okOrThrow(e -> new SbTranslatorException(compileErrorMessage(sReference.location(), e)));
+        .okOrThrow(
+            e -> new SbTranslatorException(compileErrorMessage(sMonoReference.location(), e)));
+  }
+
+  private BExpr translatePolyReference(SPolyReference sPolyReference) throws SbTranslatorException {
+    var id = sPolyReference.referencedId();
+    var parts = id.parts();
+    if (parts.size() == 1) {
+      var name = parts.get(0);
+      var itemS = lexicalEnvironment.get(name);
+      if (itemS != null) {
+        var evaluationType = typeTranslator.translate(itemS.type());
+        var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
+        var bReference = bytecodeF.reference(evaluationType, index);
+        return saveNalAndReturn(name.toString(), sPolyReference, bReference);
+      }
+    }
+    return evaluables
+        .find(id)
+        .mapOk(this::translateNamedEvaluable)
+        .okOrThrow(
+            e -> new SbTranslatorException(compileErrorMessage(sPolyReference.location(), e)));
   }
 
   private BExpr translateNamedEvaluable(SNamedEvaluable evaluable) throws SbTranslatorException {
