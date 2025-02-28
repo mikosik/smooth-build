@@ -122,7 +122,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
             var location = pCall.location();
             var pReference = new PReference(fqn.toString(), location);
             pReference.setFqn(fqn);
-            pReference.setReferenced(scope().referencables().find(fqn).ok());
+            pReference.setReferenced(scope().referenceables().find(fqn).ok());
             var element = new PInstantiate(pReference, location);
             result.set(i, element);
           } else {

@@ -12,7 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public record PScope(
-    Bindings<? extends Referenceable> referencables, Bindings<? extends TypeDefinition> types) {
+    Bindings<? extends Referenceable> referenceables, Bindings<? extends TypeDefinition> types) {
   public static PScope emptyScope() {
     return new PScope(bindings(), bindings());
   }
@@ -20,7 +20,7 @@ public record PScope(
   public PScope newInnerScope(
       Map<Name, ? extends Referenceable> innerReferenceables,
       Map<Name, ? extends PTypeDefinition> innerTypes) {
-    return new PScope(bindings(referencables, innerReferenceables), bindings(types, innerTypes));
+    return new PScope(bindings(referenceables, innerReferenceables), bindings(types, innerTypes));
   }
 
   public SType translate(PType type) {

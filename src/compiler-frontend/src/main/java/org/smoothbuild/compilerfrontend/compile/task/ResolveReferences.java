@@ -49,7 +49,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
     public void visitReference(PReference pReference) {
       var fqn = pReference.fqn();
       scope()
-          .referencables()
+          .referenceables()
           .find(fqn)
           .ifOk(pReference::setReferenced)
           .ifErr(e -> logger.log(compileError(pReference, e)));
@@ -59,7 +59,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
     public void visitItem(PItem pItem) throws RuntimeException {
       super.visitItem(pItem);
       pItem.defaultValue().ifPresent(dv -> scope()
-          .referencables()
+          .referenceables()
           .find(dv.fqn())
           .ifOk(referenced -> dv.setReferenced((PolyReferenceable) referenced))
           .ifErr(e -> logger.log(compileError(dv, e))));
