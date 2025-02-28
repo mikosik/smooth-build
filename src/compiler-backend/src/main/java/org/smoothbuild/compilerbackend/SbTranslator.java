@@ -51,7 +51,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
-import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
@@ -143,6 +142,7 @@ public class SbTranslator {
       case SSelect sSelect -> saveLocAndReturn(sSelect, translateSelect(sSelect));
       case SString sString -> saveLocAndReturn(sString, translateString(sString));
       case SInstantiate sInstantiate -> translateInstantiate(sInstantiate);
+      case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
     };
   }
 
@@ -187,20 +187,13 @@ public class SbTranslator {
   private BExpr translatePolymorphic(SPolymorphic sPolymorphic) throws SbTranslatorException {
     return switch (sPolymorphic) {
       case SLambda sLambda -> translateLambda(sLambda);
-      case SReference sReference -> translateReference(sReference);
+      case SPolyReference sPolyReference -> translatePolyReference(sPolyReference);
     };
   }
 
   private BExpr translateLambda(SLambda sLambda) throws SbTranslatorException {
     var bLambda = funcBodySbTranslator(sLambda).translateExprFunc(sLambda);
     return saveNalAndReturn("<lambda>", sLambda, bLambda);
-  }
-
-  private BExpr translateReference(SReference sReference) throws SbTranslatorException {
-    return switch (sReference) {
-      case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
-      case SPolyReference sPolyReference -> translatePolyReference(sPolyReference);
-    };
   }
 
   private BExpr translateMonoReference(SMonoReference sMonoReference) throws SbTranslatorException {

@@ -1,4 +1,4 @@
 Int myIntId<>(Int i)
-  = i<>;
+  = i;
 [(Int)->Int] result<>
   = [myIntId<>];

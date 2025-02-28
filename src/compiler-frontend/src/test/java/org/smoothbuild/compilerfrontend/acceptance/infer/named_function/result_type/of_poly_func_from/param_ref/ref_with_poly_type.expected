@@ -1,2 +1,2 @@
 A myFunc<A>(A param)
-  = param<>;
+  = param;

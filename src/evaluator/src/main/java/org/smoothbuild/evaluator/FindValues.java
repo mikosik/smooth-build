@@ -18,7 +18,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
-import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
@@ -69,7 +68,7 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
         + "Try 'smooth list' to see all available values that can be calculated.";
   }
 
-  private static SReference referenceTo(SNamedValue sNamedValue) {
+  private static SPolyReference referenceTo(SNamedValue sNamedValue) {
     return new SPolyReference(sNamedValue.schema(), sNamedValue.fqn(), commandLineLocation());
   }
 }

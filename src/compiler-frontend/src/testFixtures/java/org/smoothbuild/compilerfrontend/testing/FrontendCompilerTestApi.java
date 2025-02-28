@@ -64,7 +64,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
-import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
@@ -379,7 +378,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sInstantiate(int line, SNamedEvaluable namedEvaluable) {
-    return sInstantiate(line, sReference(line, namedEvaluable));
+    return sInstantiate(line, sPolyReference(line, namedEvaluable));
   }
 
   public default SInstantiate sInstantiate(List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
@@ -439,31 +438,31 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SOrder(sArrayType(elementType), list(exprs), location(line));
   }
 
-  public default SInstantiate sParamRef(SType type, String name) {
+  public default SMonoReference sParamRef(SType type, String name) {
     return sParamRef(1, type, name);
   }
 
-  public default SInstantiate sParamRef(int line, SType type, String name) {
-    return sInstantiate(line, sMonoReference(line, type, fqn(name)));
+  public default SMonoReference sParamRef(int line, SType type, String name) {
+    return sMonoReference(line, type, fqn(name));
   }
 
-  public default SPolymorphic sMonoReference(int line, SType type, Fqn fqn) {
-    return new SMonoReference(sSchema(list(), type), fqn, location(line));
+  public default SMonoReference sMonoReference(int line, SType type, Fqn fqn) {
+    return new SMonoReference(type, fqn, location(line));
   }
 
-  public default SReference sReference(int line, SNamedEvaluable namedEvaluable) {
-    return sReference(line, namedEvaluable.schema(), namedEvaluable.fqn());
+  public default SPolyReference sPolyReference(int line, SNamedEvaluable namedEvaluable) {
+    return sPolyReference(line, namedEvaluable.schema(), namedEvaluable.fqn());
   }
 
-  public default SReference sReference(SSchema schema, Id id) {
-    return sReference(7, schema, id);
+  public default SPolyReference sPolyReference(SSchema schema, Id id) {
+    return sPolyReference(7, schema, id);
   }
 
-  public default SReference sReference(int line, SSchema schema, Id id) {
-    return sReference(schema, id, location(line));
+  public default SPolyReference sPolyReference(int line, SSchema schema, Id id) {
+    return sPolyReference(schema, id, location(line));
   }
 
-  public default SReference sReference(SSchema schema, Id id, Location location) {
+  public default SPolyReference sPolyReference(SSchema schema, Id id, Location location) {
     return new SPolyReference(schema, id, location);
   }
 

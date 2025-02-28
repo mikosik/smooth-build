@@ -1,4 +1,4 @@
 [A] singleElement<A>(A a)
-  = [a<>];
+  = [a];
 [String] myValue<>
   = singleElement<String>("abc");

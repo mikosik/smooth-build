@@ -1,4 +1,4 @@
 A myId<A>(A a)
-  = a<>;
+  = a;
 (A)->A myFunc<A>()
   = myId<A>;

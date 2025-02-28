@@ -1,2 +1,2 @@
 ((Bool)->Int)->(Bool)->Int myValue<>
-  = <>((Bool)->Int func) -> func<><>;
+  = <>((Bool)->Int func) -> func<>;

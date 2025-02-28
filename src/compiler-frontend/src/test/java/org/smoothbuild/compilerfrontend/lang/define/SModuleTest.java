@@ -22,7 +22,7 @@ public class SModuleTest extends FrontendCompilerTestContext {
               Int param0,
             }
             A myId<A>(A a)
-              = a<>;
+              = a;
             """);
   }
 }

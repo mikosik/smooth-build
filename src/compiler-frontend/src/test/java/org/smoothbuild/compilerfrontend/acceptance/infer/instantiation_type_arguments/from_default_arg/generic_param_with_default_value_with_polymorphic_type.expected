@@ -1,8 +1,8 @@
 A myId<A>(A a)
-  = a<>;
+  = a;
 (A)->A myFunc~f<A>
   = myId<A>;
 (B)->A myFunc<A,B>(A a, (B)->A f = myFunc~f)
-  = f<>;
+  = f;
 (Int)->Int myValue<>
   = myFunc<Int, Int>(7,myFunc~f<Int>);

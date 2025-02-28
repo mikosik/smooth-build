@@ -1,4 +1,4 @@
 A myId<A>(A a)
-  = a<>;
+  = a;
 Int myValue<>
   = myId<Int>(7);

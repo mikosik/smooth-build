@@ -1,7 +1,7 @@
 [A] empty~array<A>
   = [];
 [A] empty<A>([A] array = empty~array)
-  = array<>;
+  = array;
 Int myFunc<>([String] s, [Int] i)
   = 7;
 Int myValue<>

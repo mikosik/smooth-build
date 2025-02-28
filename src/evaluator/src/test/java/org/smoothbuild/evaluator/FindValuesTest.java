@@ -20,7 +20,7 @@ public class FindValuesTest extends FrontendCompilerTestContext {
 
     var exprs = new FindValues().execute(sScope, list(sValue.fqn().toString()));
 
-    var sReference = sReference(sSchema, fqn("myValue"), commandLineLocation());
+    var sReference = sPolyReference(sSchema, fqn("myValue"), commandLineLocation());
     assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
   }
 

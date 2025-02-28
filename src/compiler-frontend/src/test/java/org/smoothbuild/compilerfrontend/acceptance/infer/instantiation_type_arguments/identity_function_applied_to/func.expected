@@ -1,5 +1,5 @@
 A myIdentity<A>(A a)
-  = a<>;
+  = a;
 String myFunc<>(Blob param)
   = "abc";
 (Blob)->String myValue<>

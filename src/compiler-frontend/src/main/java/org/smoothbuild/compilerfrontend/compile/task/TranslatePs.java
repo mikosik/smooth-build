@@ -24,7 +24,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
@@ -55,8 +54,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
-import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
-import org.smoothbuild.compilerfrontend.lang.define.SReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
@@ -213,31 +210,30 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return new SInt(STypes.INT, int_.bigInteger(), int_.location());
     }
 
-    private SPolymorphic convertPolymorphic(PPolymorphic pPolymorphic) {
-      return switch (pPolymorphic) {
-        case PLambda pLambda -> convertLambda(pLambda);
-        case PReference pReference -> convertReference(pReference);
+    private SExpr convertInstantiate(PInstantiate pInstantiate) {
+      return switch (pInstantiate.polymorphic()) {
+        case PLambda pLambda -> new SInstantiate(
+            pInstantiate.typeArgs(), convertLambda(pLambda), pInstantiate.location());
+        case PReference pReference -> convertReference(pInstantiate, pReference);
       };
     }
 
-    private SExpr convertInstantiate(PInstantiate pInstantiate) {
-      var polymorphicS = convertPolymorphic(pInstantiate.polymorphic());
-      return new SInstantiate(pInstantiate.typeArgs(), polymorphicS, pInstantiate.location());
+    private static SExpr convertReference(PInstantiate pInstantiate, PReference pReference) {
+      final var fqn = pReference.fqn();
+      final var location = pReference.location();
+      return switch (pReference.referenced()) {
+        case MonoReferenceable mono -> new SMonoReference(mono.schema().type(), fqn, location);
+        case PolyReferenceable poly -> {
+          var sPolyReference = new SPolyReference(poly.schema(), fqn, location);
+          yield new SInstantiate(pInstantiate.typeArgs(), sPolyReference, pInstantiate.location());
+        }
+        default -> throw unexpectedCaseException(pReference.referenced());
+      };
     }
 
     private SExpr convertOrder(POrder order) {
       var elems = convertExprs(order.elements());
       return new SOrder((SArrayType) order.sType(), elems, order.location());
-    }
-
-    private SReference convertReference(PReference pReference) {
-      final var fqn = pReference.fqn();
-      final var location = pReference.location();
-      return switch (pReference.referenced()) {
-        case MonoReferenceable mono -> new SMonoReference(mono.schema(), fqn, location);
-        case PolyReferenceable poly -> new SPolyReference(poly.schema(), fqn, location);
-        default -> throw unexpectedCaseException(pReference.referenced());
-      };
     }
 
     private SExpr convertSelect(PSelect pSelect) {

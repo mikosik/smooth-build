@@ -9,7 +9,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  * Reference to {@link SMonoReferenceable}.
  */
 public record SPolyReference(SSchema schema, Id referencedId, Location location)
-    implements SReference {
+    implements SReference, SPolymorphic {
   @Override
   public String toSourceCode() {
     return referencedId.toString();

@@ -13,7 +13,7 @@ public class SInstantiateTest extends FrontendCompilerTestContext {
   public void to_source_code() {
     var sSchema = sSchema(list(varA()), varA());
     var id = fqn("my:company:evaluable");
-    var sInstantiate = sInstantiate(list(sIntType()), sReference(sSchema, id));
+    var sInstantiate = sInstantiate(list(sIntType()), sPolyReference(sSchema, id));
     assertThat(sInstantiate.toSourceCode(set())).isEqualTo("my:company:evaluable<Int>");
   }
 }

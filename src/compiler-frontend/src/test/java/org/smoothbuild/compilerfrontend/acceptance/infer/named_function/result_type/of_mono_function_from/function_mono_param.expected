@@ -1,2 +1,2 @@
 Int myFunc<>(Int param)
-  = param<>;
+  = param;

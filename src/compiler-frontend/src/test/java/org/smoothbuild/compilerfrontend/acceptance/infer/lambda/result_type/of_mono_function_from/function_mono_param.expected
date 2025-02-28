@@ -1,2 +1,2 @@
 (Int)->Int myValue<>
-  = <>(Int param) -> param<><>;
+  = <>(Int param) -> param<>;

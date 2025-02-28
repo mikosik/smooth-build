@@ -1,4 +1,4 @@
 A myIdentity<A>(A a)
-  = a<>;
+  = a;
 String myValue<>
   = myIdentity<String>("abc");

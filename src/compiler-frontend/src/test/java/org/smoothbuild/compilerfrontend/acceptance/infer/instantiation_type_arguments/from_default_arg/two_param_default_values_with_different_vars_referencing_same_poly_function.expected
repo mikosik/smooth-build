@@ -1,5 +1,5 @@
 A myId<A>(A a)
-  = a<>;
+  = a;
 (A)->A myFunc~f1<A>
   = myId<A>;
 (A)->A myFunc~f2<A>

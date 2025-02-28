@@ -9,18 +9,18 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SMonoReferenceTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    var refS = new SMonoReference(sSchema(sIntType()), fqn("my:company:evaluable"), location(7));
+    var refS = new SMonoReference(sIntType(), fqn("my:company:evaluable"), location(7));
     assertThat(refS.toSourceCode()).isEqualTo("my:company:evaluable");
   }
 
   @Test
   void to_string() {
-    var refS = new SMonoReference(sSchema(sIntType()), fqn("referenced"), location(7));
+    var refS = new SMonoReference(sIntType(), fqn("referenced"), location(7));
     assertThat(refS.toString())
         .isEqualTo(
             """
             SMonoReference(
-              schema = <>Int
+              type = Int
               referencedName = referenced
               location = {t-project}/module.smooth:7
             )""");

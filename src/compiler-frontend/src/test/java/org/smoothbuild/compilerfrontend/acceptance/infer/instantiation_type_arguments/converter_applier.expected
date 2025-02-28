@@ -1,6 +1,6 @@
 B converterApplier<A,B>(A item, (A)->B convert)
-  = convert<>(item<>);
+  = convert(item);
 [C] single<C>(C elem)
-  = [elem<>];
+  = [elem];
 [String] result<>
   = converterApplier<String, [String]>("abc",single<String>);
