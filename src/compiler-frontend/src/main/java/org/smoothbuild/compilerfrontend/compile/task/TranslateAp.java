@@ -307,7 +307,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PInstantiate createLambda(LambdaContext lambdaFunc) {
       var name = "lambda~" + (++lambdaCount);
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
-      var typeParams = createTypeParams(lambdaFunc.typeParams());
+      var typeParams = new PExplicitTypeParams(list(), fileLocation(fullPath, lambdaFunc));
       var params = visitor.createItems(lambdaFunc.params().itemList());
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);

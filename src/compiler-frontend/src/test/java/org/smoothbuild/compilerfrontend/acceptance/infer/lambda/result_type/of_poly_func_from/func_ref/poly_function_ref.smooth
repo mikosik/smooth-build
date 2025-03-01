@@ -1,2 +1,0 @@
-A myId<A>(A a) = a;
-myValue = () -> myId;

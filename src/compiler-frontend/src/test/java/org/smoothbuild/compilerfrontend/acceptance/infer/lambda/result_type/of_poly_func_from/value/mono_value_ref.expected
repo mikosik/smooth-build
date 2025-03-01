@@ -1,4 +1,0 @@
-Int intValue<>
-  = 7;
-()->Int myValue<>
-  = <>() -> intValue<><>;

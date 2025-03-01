@@ -1,2 +1,0 @@
-[A] emptyArray<A> = [];
-myValue = () -> emptyArray;

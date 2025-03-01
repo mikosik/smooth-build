@@ -1,1 +1,0 @@
-Log{ERROR, '{t-project}/module.smooth:1: Parameter `name` of lambda cannot have default value.'}

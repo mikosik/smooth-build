@@ -1,0 +1,4 @@
+Int otherFunc<>()
+  = 7;
+()->Int myValue<>
+  = () -> otherFunc<>();

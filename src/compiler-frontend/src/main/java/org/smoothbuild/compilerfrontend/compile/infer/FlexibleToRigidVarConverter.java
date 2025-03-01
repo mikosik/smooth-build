@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.tool.AlphabeticalTypeNameGenerator;
@@ -31,10 +30,5 @@ public class FlexibleToRigidVarConverter extends PScopingModuleVisitor<RuntimeEx
     var renamedVarsType = resolvedType.mapTypeVars(mapping);
     unifier.addOrFailWithRuntimeException(new Constraint(renamedVarsType, resolvedType));
     evaluable.body().ifPresent(this::visitExpr);
-  }
-
-  @Override
-  public void visitLambda(PLambda pLambda) {
-    renameFlexibleVarsToRigid(pLambda);
   }
 }

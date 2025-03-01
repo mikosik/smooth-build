@@ -11,8 +11,8 @@ public class SLambdaTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
     var params = nlist(sItem(varA(), "p1"), sItem(sIntType(), "p2"));
-    var schema = sFuncSchema(params, sStringType());
+    var schema = sFuncType(sStringType());
     var sLambda = new SLambda(schema, fqn("module:myFunc"), params, sInt(17), location(1));
-    assertThat(sLambda.toSourceCode()).isEqualTo("<A>(A p1, Int p2) -> 17");
+    assertThat(sLambda.toSourceCode()).isEqualTo("(A p1, Int p2) -> 17");
   }
 }

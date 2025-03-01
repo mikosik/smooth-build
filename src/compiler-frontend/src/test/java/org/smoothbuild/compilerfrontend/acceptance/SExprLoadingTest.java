@@ -63,8 +63,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
             """;
         var param = sItem(2, INT, fqn("result:lambda~1:int"));
         var lambda = sLambda(2, fqn("result:lambda~1"), nlist(param), sParamRef(3, INT, "int"));
-        var instantiated = sInstantiate(2, lambda);
-        var result = sValue(1, "result", instantiated);
+        var result = sValue(1, "result", lambda);
         module(code).loadsWithSuccess().containsEvaluable(result);
       }
 
@@ -73,7 +72,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var code =
             """
             (A)->A myFunc<A>(A outerA) =
-              <>(A a)
+              (A a)
                 -> a;
             """;
         var var = sVar("myFunc:A");
@@ -81,9 +80,8 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var fqn = fqn("myFunc:lambda~1");
         var lambdaParam = sItem(2, var, fqn("myFunc:lambda~1:a"));
         var lambda = sLambda(2, fqn, list(), nlist(lambdaParam), body);
-        var instantiated = sInstantiate(2, lambda);
         var funcParam = sItem(1, var, fqn("myFunc:outerA"));
-        var myFunc = sFunc(1, "myFunc", nlist(funcParam), instantiated);
+        var myFunc = sFunc(1, "myFunc", nlist(funcParam), lambda);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
       }
 
@@ -92,8 +90,8 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var code =
             """
             () -> (A)->A myFunc<A>(A outerA) =
-              <>()
-                -> <>(A a)
+              ()
+                -> (A a)
                   -> a;
             """;
         var deepFqn = fqn("myFunc:lambda~1:lambda~1");
@@ -101,29 +99,9 @@ public class SExprLoadingTest extends FrontendCompileTester {
         var deeperBody = sParamRef(4, var, "a");
         var param = sItem(3, var, deepFqn.append(fqn("a")));
         var deeperLambda = sLambda(3, deepFqn, list(), nlist(param), deeperBody);
-        var monoDeeperLambda = sInstantiate(3, deeperLambda);
-        var lambda = sLambda(2, fqn("myFunc:lambda~1"), list(), nlist(), monoDeeperLambda);
-        var monoLambda = sInstantiate(2, lambda);
-        var myFunc = sFunc(1, "myFunc", nlist(sItem(1, var, "outerA")), monoLambda);
+        var lambda = sLambda(2, fqn("myFunc:lambda~1"), list(), nlist(), deeperLambda);
+        var myFunc = sFunc(1, "myFunc", nlist(sItem(1, var, "outerA")), lambda);
         module(code).loadsWithSuccess().containsEvaluable(myFunc);
-      }
-
-      @Test
-      void poly_lambda() {
-        var code =
-            """
-            (B)->B result<B> =
-              <A>(A a)
-                -> a;
-            """;
-        var aVar = sVar("result:lambda~1:A");
-        var bVar = sVar("result:B");
-        var param = sItem(2, aVar, fqn("result:lambda~1:a"));
-        var lambda = sLambda(2, fqn("result:lambda~1"), nlist(param), sParamRef(3, aVar, "a"));
-        var instantiate = sInstantiate(2, list(bVar), lambda);
-        var resultSchema = sSchema(list(bVar), sFuncType(bVar, bVar));
-        var result = sValue(1, resultSchema, "result", instantiate);
-        module(code).loadsWithSuccess().containsEvaluable(result);
       }
     }
 

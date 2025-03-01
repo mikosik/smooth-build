@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
@@ -108,9 +109,15 @@ public class TypeResolver {
 
   private void resolvePolymorphic(PPolymorphic pPolymorphic) throws TypeException {
     switch (pPolymorphic) {
-      case PLambda pLambda -> resolveFunc(pLambda);
+      case PLambda pLambda -> resolveLambda(pLambda);
       case PReference pReference -> {}
     }
+  }
+
+  private void resolveLambda(PLambda pFunc) throws TypeException {
+    var sSchema = pFunc.schema();
+    pFunc.setSchema(new SFuncSchema(list(), (SFuncType) resolveType(sSchema)));
+    resolveBody(pFunc.body());
   }
 
   private void resolveNamedArg(PNamedArg pNamedArg) throws TypeException {

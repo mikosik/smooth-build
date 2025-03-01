@@ -1,2 +1,0 @@
-Int otherFunc() = 7;
-myValue = () -> otherFunc();

@@ -15,7 +15,7 @@ public class ParseErrorsTest extends EvaluatorTestContext {
             userError(
                 1,
                 """
-                mismatched input '<EOF>' expecting {'<', '(', '[', NAME, INT, BLOB, STRING}
+                mismatched input '<EOF>' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
   }
@@ -29,7 +29,7 @@ public class ParseErrorsTest extends EvaluatorTestContext {
             userError(
                 1,
                 """
-                mismatched input '<EOF>' expecting {'<', '(', '[', NAME, INT, BLOB, STRING}
+                mismatched input '<EOF>' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
   }

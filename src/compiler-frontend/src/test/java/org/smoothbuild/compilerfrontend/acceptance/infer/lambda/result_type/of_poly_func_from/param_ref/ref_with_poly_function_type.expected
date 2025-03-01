@@ -1,2 +1,0 @@
-((A)->A)->(A)->A myValue<A>
-  = <A>((A)->A param) -> param<A>;

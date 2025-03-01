@@ -221,7 +221,15 @@ public class ExprTypeUnifier {
   }
 
   private void unifyLambda(PLambda pLambda) throws TypeException {
-    new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeTypeVars).unifyFunc(pLambda);
+    new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeTypeVars).unifyLambda2(pLambda);
+  }
+
+  private void unifyLambda2(PLambda pLambda) throws TypeException {
+    pLambda.params().forEach(p -> generateSType(p.type()));
+    generateSType(pLambda.resultType());
+    unifyEvaluableBody(pLambda, pLambda.evaluationType().sType());
+    var resolvedT = (SFuncType) resolveType(pLambda);
+    pLambda.setSchema(new SFuncSchema(list(), resolvedT));
   }
 
   private SType unifyNamedArg(PNamedArg pNamedArg) throws TypeException {

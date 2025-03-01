@@ -143,6 +143,7 @@ public class SbTranslator {
       case SString sString -> saveLocAndReturn(sString, translateString(sString));
       case SInstantiate sInstantiate -> translateInstantiate(sInstantiate);
       case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
+      case SLambda sLambda -> translateLambda(sLambda);
     };
   }
 

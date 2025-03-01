@@ -1,1 +1,0 @@
-myFunc<A>(A a) = (<>(A b) -> b)(a);

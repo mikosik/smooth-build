@@ -1,2 +1,0 @@
-Int intValue = 7;
-myValue = () -> intValue;

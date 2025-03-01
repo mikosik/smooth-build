@@ -1,4 +1,0 @@
-A myId<A>(A a)
-  = a;
-()->Int myValue<>
-  = <>() -> myId<Int>(7)<>;

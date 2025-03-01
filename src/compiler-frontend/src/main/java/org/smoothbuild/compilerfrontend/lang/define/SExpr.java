@@ -9,7 +9,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  * Expression.
  */
 public sealed interface SExpr extends HasLocation
-    permits SCall, SCombine, SConstant, SInstantiate, SOrder, SSelect, SMonoReference {
+    permits SCall, SCombine, SConstant, SInstantiate, SLambda, SMonoReference, SOrder, SSelect {
   public String toSourceCode(Collection<STypeVar> localTypeVars);
 
   public SType evaluationType();

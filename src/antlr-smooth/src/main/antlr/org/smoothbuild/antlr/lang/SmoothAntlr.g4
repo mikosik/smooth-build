@@ -84,7 +84,7 @@ array
    ;
 
 lambda
-   : typeParams? params '->' expr
+   : params '->' expr
    ;
 
 type

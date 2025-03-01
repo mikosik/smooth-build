@@ -1,9 +1,0 @@
-Log{ERROR, '{t-project}/module.smooth:1: no viable alternative at input '(,'
-myValue = (,) -> 7;
-           ^'}
-Log{ERROR, '{t-project}/module.smooth:1: extraneous input ',' expecting {'(', ')', '[', NAME}
-myValue = (,) -> 7;
-           ^'}
-Log{ERROR, '{t-project}/module.smooth:1: mismatched input '7' expecting {'(', '[', NAME}
-myValue = (,) -> 7;
-                 ^'}

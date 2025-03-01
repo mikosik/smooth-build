@@ -1,2 +1,0 @@
-myFunc<A>(A a) = a;
-otherFunc(A a) = 5;

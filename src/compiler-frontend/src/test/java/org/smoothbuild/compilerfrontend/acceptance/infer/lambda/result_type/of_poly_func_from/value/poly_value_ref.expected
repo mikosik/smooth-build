@@ -1,4 +1,0 @@
-[A] emptyArray<A>
-  = [];
-()->[A] myValue<A>
-  = <A>() -> emptyArray<A><A>;

@@ -1,25 +1,33 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Set.set;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Lambda.
  *
  * This class is immutable.
  */
-public final class SLambda implements SExprFunc, SPolymorphic {
+public final class SLambda implements SExprFunc, SPolymorphic, SExpr {
   private final SFuncSchema schema;
   private final Fqn fqn;
   private final NList<SItem> params;
   private final SExpr body;
   private final Location location;
+
+  public SLambda(SFuncType type, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
+    this(new SFuncSchema(list(), type), fqn, params, body, location);
+  }
 
   public SLambda(SFuncSchema schema, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
     this.schema = schema;
@@ -55,12 +63,19 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   }
 
   @Override
+  public SFuncType evaluationType() {
+    return schema.type();
+  }
+
+  @Override
+  public String toSourceCode(Collection<STypeVar> localTypeVars) {
+    return toSourceCode();
+  }
+
+  @Override
   public String toSourceCode() {
-    var typeParams = schema().typeParams();
-    var localTypeVars = typeParams.toSet();
-    return typeParamsToSourceCode(typeParams)
-        + params().list().map(sItem -> sItem.toSourceCode(localTypeVars)).toString("(", ", ", ")")
-        + " -> " + body().toSourceCode(localTypeVars);
+    return params().list().map(SItem::toSourceCode).toString("(", ", ", ")") + " -> "
+        + body().toSourceCode(set());
   }
 
   @Override
@@ -84,7 +99,7 @@ public final class SLambda implements SExprFunc, SPolymorphic {
   public String toString() {
     return new ToStringBuilder("SLambda")
         .addField("fqn", fqn())
-        .addField("schema", schema())
+        .addField("type", schema().type())
         .addListField("params", params().list())
         .addField("location", location())
         .addField("body", body)
