@@ -1,6 +1,5 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Set.set;
 
 import java.util.Objects;
@@ -12,7 +11,6 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.DefaultValue;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
@@ -38,8 +36,8 @@ public final class SItem implements Item, SMonoReferenceable {
   }
 
   @Override
-  public SSchema schema() {
-    return new SSchema(list(), type);
+  public SType sType() {
+    return type;
   }
 
   @Override

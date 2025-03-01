@@ -5,14 +5,12 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 
 public final class PReference implements PPolymorphic {
   private final String nameText;
   private final Location location;
   private Fqn fqn;
   private Referenceable referenced;
-  private SSchema sSchema;
 
   public PReference(String nameText, Location location) {
     this.nameText = nameText;
@@ -42,15 +40,6 @@ public final class PReference implements PPolymorphic {
   @Override
   public Location location() {
     return location;
-  }
-
-  @Override
-  public SSchema schema() {
-    return sSchema;
-  }
-
-  public void setSSchema(SSchema schema) {
-    this.sSchema = schema;
   }
 
   @Override

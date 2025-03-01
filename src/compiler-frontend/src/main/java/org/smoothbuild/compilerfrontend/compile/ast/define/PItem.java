@@ -1,7 +1,5 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
 import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.base.ToStringBuilder;
@@ -9,7 +7,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public final class PItem implements Item, PMonoReferenceable {
   private final PType type;
@@ -27,6 +25,11 @@ public final class PItem implements Item, PMonoReferenceable {
 
   public PType type() {
     return type;
+  }
+
+  @Override
+  public SType sType() {
+    return type.sType();
   }
 
   public String nameText() {
@@ -54,11 +57,6 @@ public final class PItem implements Item, PMonoReferenceable {
   @Override
   public Location location() {
     return location;
-  }
-
-  @Override
-  public SSchema schema() {
-    return new SSchema(list(), type().sType());
   }
 
   @Override

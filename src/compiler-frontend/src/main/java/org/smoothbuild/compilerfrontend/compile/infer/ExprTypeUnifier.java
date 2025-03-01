@@ -4,6 +4,7 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.generateList;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
@@ -199,7 +200,15 @@ public class ExprTypeUnifier {
   private SType unifyInstantiate(PInstantiate pInstantiate) throws TypeException {
     var polymorphicP = pInstantiate.polymorphic();
     unifyPolymorphic(polymorphicP);
-    var schema = polymorphicP.schema();
+    var schema =
+        switch (polymorphicP) {
+          case PLambda pLambda -> pLambda.schema();
+          case PReference pReference -> switch (pReference.referenced()) {
+            case MonoReferenceable mono -> new SSchema(list(), mono.sType());
+            case PolyReferenceable poly -> poly.schema();
+            default -> throw unexpectedCaseException(pReference.referenced());
+          };
+        };
     pInstantiate.setTypeArgs(generateList(schema.typeParams().size(), unifier::newFlexibleTypeVar));
     return schema.instantiate(pInstantiate.typeArgs());
   }
@@ -207,7 +216,7 @@ public class ExprTypeUnifier {
   private void unifyPolymorphic(PPolymorphic pPolymorphic) throws TypeException {
     switch (pPolymorphic) {
       case PLambda pLambda -> unifyLambda(pLambda);
-      case PReference pReference -> unifyReference(pReference);
+      case PReference pReference -> {}
     }
   }
 
@@ -245,14 +254,6 @@ public class ExprTypeUnifier {
       }
     }
     return new SArrayType(elemVar);
-  }
-
-  private void unifyReference(PReference pReference) {
-    switch (pReference.referenced()) {
-      case MonoReferenceable mono -> pReference.setSSchema(mono.schema());
-      case PolyReferenceable poly -> pReference.setSSchema(poly.schema());
-      default -> throw unexpectedCaseException(pReference.referenced());
-    }
   }
 
   private SType unifySelect(PSelect pSelect) throws TypeException {

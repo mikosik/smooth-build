@@ -222,7 +222,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       final var fqn = pReference.fqn();
       final var location = pReference.location();
       return switch (pReference.referenced()) {
-        case MonoReferenceable mono -> new SMonoReference(mono.schema().type(), fqn, location);
+        case MonoReferenceable mono -> new SMonoReference(mono.sType(), fqn, location);
         case PolyReferenceable poly -> {
           var sPolyReference = new SPolyReference(poly.schema(), fqn, location);
           yield new SInstantiate(pInstantiate.typeArgs(), sPolyReference, pInstantiate.location());
