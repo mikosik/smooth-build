@@ -1,6 +1,6 @@
 package org.smoothbuild.compilerfrontend.testing;
 
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -17,7 +17,8 @@ public class TestingSExpression {
   }
 
   public static List<SType> nonCompositeTypes() {
-    return List.<SType>list(new STypeVar(fqn("A"))).addAll(STypes.baseTypes().add());
+    return List.<SType>list(new STypeVar(typeName("A")))
+        .addAll(STypes.baseTypes().add());
   }
 
   public static java.util.List<Function<SType, SType>> compositeTypeSFactories() {

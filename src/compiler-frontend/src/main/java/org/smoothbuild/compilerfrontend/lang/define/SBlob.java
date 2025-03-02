@@ -2,14 +2,12 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import okio.ByteString;
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SBlobType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public record SBlob(SBlobType type, ByteString byteString, Location location) implements SConstant {
   @Override
-  public String toSourceCode(Collection<STypeVar> localTypeVars) {
+  public String toSourceCode() {
     return "0x" + byteString.hex();
   }
 

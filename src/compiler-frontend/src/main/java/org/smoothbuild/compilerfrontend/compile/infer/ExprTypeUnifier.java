@@ -93,7 +93,7 @@ public class ExprTypeUnifier {
       var explicit = explicitTypeParams.explicitTypeVars();
       if (!explicit.toSet().equals(typeParams)) {
         // Sort to make error message stable so tests are not flaky.
-        var sortedTypeParams = typeParams.toList().sortUsing(comparing(STypeVar::fqn));
+        var sortedTypeParams = typeParams.toList().sortUsing(comparing(STypeVar::name));
         throw new TypeException(compileError(
             explicitTypeParams.location(),
             "Type parameters are declared as " + explicitTypeParams.q()

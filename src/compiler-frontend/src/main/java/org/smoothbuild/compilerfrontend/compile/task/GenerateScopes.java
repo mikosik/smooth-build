@@ -87,7 +87,11 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     }
 
     private void initializeScopeFor(PModule pModule) {
-      pModule.structs().forEach(this::addType);
+      // For now, we don't have anything (function or value) that can be enclosed inside other
+      // function or value and have fully qualified name that contains enclosing name.
+      // Everything is flat in the global scope. Parameter default values have workaround of
+      // gluing function name and parameter name using '~' into a name.
+      pModule.structs().forEach(type -> addType(type, type.name()));
       pModule.evaluables().forEach(this::addNamedEvaluable);
     }
 
@@ -121,17 +125,18 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     private void addTypeParams(PEvaluable pEvaluable) {
       var pTypeParams = pEvaluable.typeParams();
       switch (pTypeParams) {
-        case PExplicitTypeParams explicit -> explicit.typeParams().foreach(this::addType);
+          // For now, we don't have anything (function or value) that can be enclosed inside other
+          // function or value and have fully qualified name that contains enclosing name.
+          // Everything is flat in the global scope. Parameter default values have workaround of
+          // gluing function name and parameter name using '~' into a name.
+        case PExplicitTypeParams explicit -> explicit
+            .typeParams()
+            .foreach(type -> addType(type, type.name()));
         case PImplicitTypeParams implicit -> {}
       }
     }
 
-    private void addType(PTypeDefinition type) {
-      // For now, we don't have anything (function or value) that can be enclosed inside other
-      // function or value and have fully qualified name that contains enclosing name.
-      // Everything is flat in the global scope. Parameter default values have workaround of
-      // gluing function name and parameter name using '~' into a name.
-      var name = type.name();
+    private void addType(PTypeDefinition type, Name name) {
       PTypeDefinition previousBinding = types.put(name, type);
       if (previousBinding != null) {
         log.log(

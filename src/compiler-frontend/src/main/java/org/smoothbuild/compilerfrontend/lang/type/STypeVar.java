@@ -1,45 +1,43 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.Set.set;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
-import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
-import org.smoothbuild.compilerfrontend.lang.name.Fqn;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 
 /**
  * Type variable.
  * This class is immutable.
  */
-public final class STypeVar extends SType implements Identifiable {
+public final class STypeVar extends SType {
   private static final String FLEXIBLE_VAR_PREFIX = "T~";
   private final Set<STypeVar> typeVars;
-  private final Fqn fqn;
+  private final Name name;
   private final boolean isFlexible;
 
-  public STypeVar(Fqn fqn) {
-    this(fqn, false);
+  public STypeVar(Name name) {
+    this(name, false);
   }
 
-  private STypeVar(Fqn fqn, boolean isFlexible) {
+  private STypeVar(Name name, boolean isFlexible) {
     super(null);
-    this.fqn = fqn;
+    this.name = name;
     this.typeVars = set(this);
     this.isFlexible = isFlexible;
   }
 
   public static STypeVar flexibleTypeVar(int i) {
-    return new STypeVar(Fqn.fqn(FLEXIBLE_VAR_PREFIX + i), true);
+    return new STypeVar(typeName(FLEXIBLE_VAR_PREFIX + i), true);
   }
 
   public static String typeParamsToSourceCode(List<STypeVar> typeParams) {
     return typeParams.map(STypeVar::name).toString("<", ",", ">");
   }
 
-  @Override
-  public Fqn fqn() {
-    return fqn;
+  public Name name() {
+    return name;
   }
 
   @Override
@@ -53,7 +51,7 @@ public final class STypeVar extends SType implements Identifiable {
   }
 
   @Override
-  public String specifier(Collection<STypeVar> localTypeVars) {
-    return localTypeVars.contains(this) ? name().toString() : fqn.toString();
+  public String specifier() {
+    return name.toString();
   }
 }

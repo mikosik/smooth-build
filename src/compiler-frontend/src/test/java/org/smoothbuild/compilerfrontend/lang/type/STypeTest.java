@@ -5,8 +5,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 
 import com.google.common.testing.EqualsTester;
 import java.util.function.Function;
@@ -156,8 +156,7 @@ public class STypeTest extends FrontendCompilerTestContext {
   @ParameterizedTest
   @MethodSource("map_type_vars")
   public void map_type_vars(SType type, SType expected) {
-    Function<STypeVar, SType> addPrefix =
-        (STypeVar v) -> new STypeVar(fqn("module").append(v.fqn()));
+    Function<STypeVar, SType> addPrefix = (STypeVar v) -> new STypeVar(typeName("X" + v.name()));
     assertThat(type.mapTypeVars(addPrefix)).isEqualTo(expected);
   }
 
@@ -171,37 +170,29 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(sBoolType(), sBoolType()),
         arguments(sIntType(), sIntType()),
         arguments(sStringType(), sStringType()),
-        arguments(sVar("A"), sVar("module:A")),
-        arguments(sVar("func:A"), sVar("module:func:A")),
+        arguments(sVar("A"), sVar("XA")),
         arguments(sTupleType(sIntType()), sTupleType(sIntType())),
-        arguments(sTupleType(varA(), varB()), sTupleType(sVar("module:A"), sVar("module:B"))),
-        arguments(sTupleType(sTupleType(varA())), sTupleType(sTupleType(sVar("module:A")))),
+        arguments(sTupleType(varA(), varB()), sTupleType(sVar("XA"), sVar("XB"))),
+        arguments(sTupleType(sTupleType(varA())), sTupleType(sTupleType(sVar("XA")))),
         arguments(sIntArrayT(), sIntArrayT()),
-        arguments(sArrayType(sVar("A")), sArrayType(sVar("module:A"))),
-        arguments(sArrayType(sVar("func:A")), sArrayType(sVar("module:func:A"))),
-        arguments(sArrayType(sArrayType(sVar("A"))), sArrayType(sArrayType(sVar("module:A")))),
+        arguments(sArrayType(sVar("A")), sArrayType(sVar("XA"))),
+        arguments(sArrayType(sArrayType(sVar("A"))), sArrayType(sArrayType(sVar("XA")))),
         arguments(sFuncType(sBoolType(), sBlobType()), sFuncType(sBoolType(), sBlobType())),
-        arguments(sFuncType(sBoolType(), sVar("A")), sFuncType(sBoolType(), sVar("module:A"))),
-        arguments(sFuncType(sVar("A"), sBlobType()), sFuncType(sVar("module:A"), sBlobType())),
-        arguments(
-            sFuncType(sBoolType(), sVar("func:A")), sFuncType(sBoolType(), sVar("module:func:A"))),
-        arguments(
-            sFuncType(sVar("func:A"), sBlobType()), sFuncType(sVar("module:func:A"), sBlobType())),
-        arguments(sFuncType(sVarAFuncType()), sFuncType(sFuncType(sVar("module:A")))),
+        arguments(sFuncType(sBoolType(), sVar("A")), sFuncType(sBoolType(), sVar("XA"))),
+        arguments(sFuncType(sVar("A"), sBlobType()), sFuncType(sVar("XA"), sBlobType())),
+        arguments(sFuncType(sVarAFuncType()), sFuncType(sFuncType(sVar("XA")))),
         arguments(
             sFuncType(sFuncType(sVar("A"), sIntType()), sIntType()),
-            sFuncType(sFuncType(sVar("module:A"), sIntType()), sIntType())),
+            sFuncType(sFuncType(sVar("XA"), sIntType()), sIntType())),
         arguments(sStructType("MyStruct", sIntType()), sStructType("MyStruct", sIntType())),
-        arguments(sStructType(varA(), varB()), sStructType(sVar("module:A"), sVar("module:B"))),
+        arguments(sStructType(varA(), varB()), sStructType(sVar("XA"), sVar("XB"))),
         arguments(
             sStructType("S1", sStructType("S2", sVar("A"))),
-            sStructType("S1", sStructType("S2", sVar("module:A")))),
+            sStructType("S1", sStructType("S2", sVar("XA")))),
         arguments(sInterfaceType(sIntType()), sInterfaceType(sIntType())),
+        arguments(sInterfaceType(varA(), varB()), sInterfaceType(sVar("XA"), sVar("XB"))),
         arguments(
-            sInterfaceType(varA(), varB()), sInterfaceType(sVar("module:A"), sVar("module:B"))),
-        arguments(
-            sInterfaceType(sInterfaceType(sVar("A"))),
-            sInterfaceType(sInterfaceType(sVar("module:A")))));
+            sInterfaceType(sInterfaceType(sVar("A"))), sInterfaceType(sInterfaceType(sVar("XA")))));
   }
 
   @ParameterizedTest
@@ -237,9 +228,7 @@ public class STypeTest extends FrontendCompilerTestContext {
         arguments(var1(), true),
         arguments(var2(), true),
         arguments(var3(), true),
-        arguments(sVar(fqn("TT~1")), false),
-        arguments(sVar(fqn("module~:T")), false),
-        arguments(sVar(fqn("module:T~1")), false),
+        arguments(sVar("TT~1"), false),
         arguments(varA(), false),
         arguments(varB(), false));
   }

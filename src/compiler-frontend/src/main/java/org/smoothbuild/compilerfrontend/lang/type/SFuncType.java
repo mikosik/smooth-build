@@ -3,7 +3,6 @@ package org.smoothbuild.compilerfrontend.lang.type;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
 
@@ -37,9 +36,9 @@ public final class SFuncType extends SType {
   }
 
   @Override
-  public String specifier(Collection<STypeVar> localTypeVars) {
-    var paramStrings = params.elements().map(t -> t.specifier(localTypeVars));
-    return "(" + paramStrings.toString(",") + ")->" + result.specifier(localTypeVars);
+  public String specifier() {
+    var paramStrings = params.elements().map(SType::specifier);
+    return "(" + paramStrings.toString(",") + ")->" + result.specifier();
   }
 
   @Override

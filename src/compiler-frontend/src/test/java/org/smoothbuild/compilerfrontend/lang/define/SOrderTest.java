@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Set.set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -10,7 +9,7 @@ public class SOrderTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
     var orderS = sOrder(sInt(7), sInt(8));
-    assertThat(orderS.toSourceCode(set())).isEqualTo("[7, 8]");
+    assertThat(orderS.toSourceCode()).isEqualTo("[7, 8]");
   }
 
   @Test

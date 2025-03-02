@@ -62,15 +62,11 @@ public sealed class SSchema permits SFuncSchema {
   }
 
   public String q() {
-    return Strings.q(toShortString());
-  }
-
-  public String toShortString() {
-    return typeParamsToSourceCode(typeParams) + type.specifier(typeParams);
+    return Strings.q(toString());
   }
 
   @Override
   public String toString() {
-    return typeParams.toString("<", ",", ">") + type.specifier();
+    return typeParamsToSourceCode(typeParams) + type.specifier();
   }
 }

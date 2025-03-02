@@ -1,18 +1,14 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.collect.Set.set;
-
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.DefaultValue;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Item is a func param or a struct field.
@@ -60,11 +56,7 @@ public final class SItem implements Item, SMonoReferenceable {
   }
 
   public String toSourceCode() {
-    return toSourceCode(set());
-  }
-
-  public String toSourceCode(Set<STypeVar> localTypeVars) {
-    return type.specifier(localTypeVars) + " " + name().toString()
+    return type.specifier() + " " + name().toString()
         + defaultValue.map(dv -> " = " + dv.fqn().toSourceCode()).getOr("");
   }
 

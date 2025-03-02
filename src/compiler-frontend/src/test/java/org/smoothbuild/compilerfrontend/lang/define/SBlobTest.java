@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Set.set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -9,7 +8,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SBlobTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    assertThat(sBlob(16).toSourceCode(set())).isEqualTo("0x10");
+    assertThat(sBlob(16).toSourceCode()).isEqualTo("0x10");
   }
 
   @Test

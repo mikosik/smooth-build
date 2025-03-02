@@ -6,7 +6,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
-import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.flexibleTypeVar;
 
 import java.util.function.Consumer;
@@ -421,7 +421,7 @@ public class UnifierTest extends FrontendCompilerTestContext {
       }
 
       public static List<SType> typesToTest() {
-        return List.<SType>list().addAll(STypes.baseTypes()).add(new STypeVar(fqn("A")));
+        return List.<SType>list().addAll(STypes.baseTypes()).add(new STypeVar(typeName("A")));
       }
     }
   }

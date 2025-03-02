@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ public class SCallTest extends FrontendCompilerTestContext {
     var funcReference = sPolyReference(sFuncSchema(varA(), varA()), fqn("my:company:myFunc"));
     var callable = sInstantiate(list(sIntType()), funcReference);
     var callS = sCall(callable, sInt(7));
-    assertThat(callS.toSourceCode(set())).isEqualTo("my:company:myFunc<Int>(7)");
+    assertThat(callS.toSourceCode()).isEqualTo("my:company:myFunc<Int>(7)");
   }
 
   @Test
@@ -28,7 +27,7 @@ public class SCallTest extends FrontendCompilerTestContext {
               callee = SInstantiate(
                 typeArgs = <Int>
                 polymorphic = SPolyReference(
-                  schema = <myId:A>(myId:A)->myId:A
+                  schema = <A>(A)->A
                   referencedName = myId
                   location = {t-project}/module.smooth:4
                 )

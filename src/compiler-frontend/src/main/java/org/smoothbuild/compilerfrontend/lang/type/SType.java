@@ -1,12 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
-import static org.smoothbuild.common.collect.Set.set;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.smoothbuild.common.base.Strings;
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
@@ -121,11 +118,7 @@ public abstract sealed class SType
    * Exact smooth source code that is a reference or specification of this type
    * so it can be used to specify type of function parameter, its result type, value type, etc.
    */
-  public String specifier() {
-    return specifier(set());
-  }
-
-  public abstract String specifier(Collection<STypeVar> localTypeVars);
+  public abstract String specifier();
 
   public String q() {
     return Strings.q(specifier());

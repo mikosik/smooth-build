@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.Set.set;
 
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
@@ -21,7 +20,7 @@ public abstract sealed class SBaseType extends SType implements Identifiable
   }
 
   @Override
-  public String specifier(Collection<STypeVar> localTypeVars) {
+  public String specifier() {
     return fqn.toString();
   }
 }

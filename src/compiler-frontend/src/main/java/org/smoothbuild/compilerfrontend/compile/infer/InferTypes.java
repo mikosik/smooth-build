@@ -108,7 +108,7 @@ public class InferTypes implements Task1<PModule, PModule> {
           } catch (UnifierException e) {
             var defaultValueTypeString =
                 sSchema.typeParams().isEmpty() ? sSchema.type().q() : sSchema.q();
-            var paramTypeString = q(resolvedParamType.specifier(funcSchema.typeParams()));
+            var paramTypeString = q(resolvedParamType.specifier());
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(param.q(), paramTypeString, defaultValueTypeString);
             throw new TypeException(compileError(param.location(), message), e);

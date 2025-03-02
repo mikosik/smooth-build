@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.type;
 
 import java.util.Objects;
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Set;
 
@@ -31,8 +30,8 @@ public final class STupleType extends SType {
   }
 
   @Override
-  public String specifier(Collection<STypeVar> localTypeVars) {
-    return "{" + elements.map(type -> type.specifier(localTypeVars)).toString(",") + "}";
+  public String specifier() {
+    return "{" + elements.map(SType::specifier).toString(",") + "}";
   }
 
   @Override

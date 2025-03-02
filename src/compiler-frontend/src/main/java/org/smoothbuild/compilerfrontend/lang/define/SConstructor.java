@@ -45,6 +45,6 @@ public final class SConstructor extends SNamedFunc {
 
   @Override
   public String toSourceCode() {
-    return funcHeaderToSourceCode(schema().typeParams().toSet()) + "\n  = <generated>;";
+    return funcHeaderToSourceCode() + "\n  = <generated>;";
   }
 }

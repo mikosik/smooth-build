@@ -172,7 +172,7 @@ public class Unifier {
   private Unified unifiedFor(STypeVar var) {
     var unified = flexibleTypeVarToUnified.get(var);
     if (unified == null) {
-      throw new IllegalStateException("Unknown flexible type var " + var.fqn().q() + ".");
+      throw new IllegalStateException("Unknown flexible type var " + var.name().q() + ".");
     }
     return unified;
   }
@@ -181,7 +181,7 @@ public class Unifier {
   public String toString() {
     return new HashSet<>(flexibleTypeVarToUnified.values())
         .stream()
-            .sorted(comparing(u -> u.mainTypeVar.fqn()))
+            .sorted(comparing(u -> u.mainTypeVar.name()))
             .map(Object::toString)
             .collect(joining("\n"));
   }

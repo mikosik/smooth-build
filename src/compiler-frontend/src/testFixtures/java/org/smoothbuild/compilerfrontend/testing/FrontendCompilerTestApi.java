@@ -13,6 +13,7 @@ import static org.smoothbuild.compilerfrontend.lang.define.SItem.toTypes;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
+import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
@@ -322,11 +323,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default STypeVar sVar(String name) {
-    return sVar(fqn(name));
-  }
-
-  public default STypeVar sVar(Fqn fqn) {
-    return new STypeVar(fqn);
+    return new STypeVar(typeName(name));
   }
 
   public default SBlob sBlob(int data) {
@@ -693,7 +690,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedExprFunc idSFunc() {
-    var a = sVar("myId:A");
+    var a = varA();
     return sFunc(a, "myId", nlist(sItem(a, "a")), sParamRef(a, "a"));
   }
 

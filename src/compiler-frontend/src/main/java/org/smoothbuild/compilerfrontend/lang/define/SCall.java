@@ -1,11 +1,9 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * This class is immutable.
@@ -34,9 +32,9 @@ public record SCall(SExpr callee, SCombine args, Location location) implements S
   }
 
   @Override
-  public String toSourceCode(Collection<STypeVar> localTypeVars) {
-    return callee.toSourceCode(localTypeVars) + "("
-        + args.elements().map(a -> a.toSourceCode(localTypeVars)).toString(",") + ")";
+  public String toSourceCode() {
+    return callee.toSourceCode() + "("
+        + args.elements().map(SExpr::toSourceCode).toString(",") + ")";
   }
 
   @Override

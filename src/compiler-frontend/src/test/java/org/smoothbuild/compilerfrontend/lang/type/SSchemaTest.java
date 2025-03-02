@@ -24,15 +24,8 @@ public class SSchemaTest extends FrontendCompilerTestContext {
 
   @Test
   void to_string() {
-    var aVar = sVar("module:func:A");
+    var aVar = sVar("A");
     var sSchema = new SSchema(list(aVar), sFuncType(sIntType(), aVar));
-    assertThat(sSchema.toString()).isEqualTo("<module:func:A>(Int)->module:func:A");
-  }
-
-  @Test
-  void to_short_string() {
-    var aVar = sVar("module:func:A");
-    var sSchema = new SSchema(list(aVar), sFuncType(sIntType(), aVar));
-    assertThat(sSchema.toShortString()).isEqualTo("<A>(Int)->A");
+    assertThat(sSchema.toString()).isEqualTo("<A>(Int)->A");
   }
 }

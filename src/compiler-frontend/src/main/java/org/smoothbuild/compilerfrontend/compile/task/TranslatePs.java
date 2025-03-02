@@ -79,7 +79,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SModule convertModule(PModule pModule) {
-      var structs = pModule.structs().map(this::convertStruct).toMap(STypeDefinition::name, v -> v);
+      var structs =
+          pModule.structs().map(this::convertStruct).toMap(s -> s.fqn().parts().getLast(), v -> v);
       var evaluables =
           pModule.evaluables().map(this::convertReferenceable).toMap(Identifiable::name, v -> v);
       var sScope = new SScope(

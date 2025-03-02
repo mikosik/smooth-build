@@ -1,13 +1,13 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.name.Fqn;
+import org.smoothbuild.compilerfrontend.lang.name.Name;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 public final class PTypeParam implements PTypeDefinition {
   private final String nameText;
   private final Location location;
-  private Fqn fqn;
+  private Name name;
 
   public PTypeParam(String nameText, Location location) {
     this.nameText = nameText;
@@ -18,18 +18,18 @@ public final class PTypeParam implements PTypeDefinition {
     return nameText;
   }
 
-  public void setFqn(Fqn fqn) {
-    this.fqn = fqn;
+  public void setName(Name name) {
+    this.name = name;
   }
 
   @Override
-  public Fqn fqn() {
-    return fqn;
+  public Name name() {
+    return name;
   }
 
   @Override
   public STypeVar type() {
-    return new STypeVar(fqn);
+    return new STypeVar(name);
   }
 
   @Override

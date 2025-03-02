@@ -97,8 +97,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     public void visitTypeParam(PTypeParam pTypeParam) {
       parseTypeName(pTypeParam.nameText())
           .ifErr(e -> logIllegalTypeVar(pTypeParam.nameText(), pTypeParam.location(), e))
-          .mapOk(this::toFqn)
-          .ifOk(pTypeParam::setFqn);
+          .ifOk(pTypeParam::setName);
     }
 
     private void logIllegalTypeVar(String nameText, Location location, String e) {

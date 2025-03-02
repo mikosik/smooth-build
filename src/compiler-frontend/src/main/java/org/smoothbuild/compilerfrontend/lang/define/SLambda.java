@@ -1,17 +1,14 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Set.set;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Lambda.
@@ -68,14 +65,9 @@ public final class SLambda implements SExprFunc, SExpr {
   }
 
   @Override
-  public String toSourceCode(Collection<STypeVar> localTypeVars) {
-    return toSourceCode();
-  }
-
-  @Override
   public String toSourceCode() {
     return params().list().map(SItem::toSourceCode).toString("(", ", ", ")") + " -> "
-        + body().toSourceCode(set());
+        + body().toSourceCode();
   }
 
   @Override

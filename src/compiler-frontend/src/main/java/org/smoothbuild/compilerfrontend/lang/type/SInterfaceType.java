@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.lang.type;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
-import org.smoothbuild.common.collect.Collection;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Set;
@@ -29,7 +28,7 @@ public sealed class SInterfaceType extends SType permits SStructType {
   }
 
   @Override
-  public String specifier(Collection<STypeVar> localTypeVars) {
+  public String specifier() {
     return listOfAll(fields.values()).toString("{", ",", "}");
   }
 
