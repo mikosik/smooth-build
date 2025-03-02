@@ -14,29 +14,29 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  * Instantiation of polymorphic entity.
  */
 public record SInstantiate(
-    List<SType> typeArgs, SPolymorphic sPolymorphic, SType evaluationType, Location location)
+    List<SType> typeArgs, SPolyReference sPolyReference, SType evaluationType, Location location)
     implements SExpr {
 
-  public SInstantiate(SPolymorphic sPolymorphic, Location location) {
-    this(list(), sPolymorphic, location);
-    checkArgument(sPolymorphic.schema().typeParams().isEmpty());
+  public SInstantiate(SPolyReference sPolyReference, Location location) {
+    this(list(), sPolyReference, location);
+    checkArgument(sPolyReference.schema().typeParams().isEmpty());
   }
 
-  public SInstantiate(List<SType> typeArgs, SPolymorphic sPolymorphic, Location location) {
-    this(typeArgs, sPolymorphic, sPolymorphic.schema().instantiate(typeArgs), location);
+  public SInstantiate(List<SType> typeArgs, SPolyReference sPolyReference, Location location) {
+    this(typeArgs, sPolyReference, sPolyReference.schema().instantiate(typeArgs), location);
   }
 
   @Override
   public String toSourceCode(Collection<STypeVar> localTypeVars) {
-    return sPolymorphic.toSourceCode()
-        + typeArgs.map(type -> type.specifier(localTypeVars)).toString("<", ", ", ">");
+    return sPolyReference.toSourceCode()
+           + typeArgs.map(type -> type.specifier(localTypeVars)).toString("<", ", ", ">");
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SInstantiate")
         .addField("typeArgs", typeArgs.toString("<", ",", ">"))
-        .addField("polymorphic", sPolymorphic)
+        .addField("polymorphic", sPolyReference)
         .addField("evaluationType", evaluationType)
         .addField("location", location)
         .toString();

@@ -1,9 +1,10 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.collect.Maybe.some;
+
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
-import static org.smoothbuild.common.collect.Maybe.some;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;

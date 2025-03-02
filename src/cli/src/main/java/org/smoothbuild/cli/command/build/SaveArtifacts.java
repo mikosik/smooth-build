@@ -74,7 +74,7 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   }
 
   private SPolyReference toReferenceS(SExpr expr) {
-    return (SPolyReference) ((SInstantiate) expr).sPolymorphic();
+    return (SPolyReference) ((SInstantiate) expr).sPolyReference();
   }
 
   private void save(SPolyReference valueS, BValue value, Logger logger) {

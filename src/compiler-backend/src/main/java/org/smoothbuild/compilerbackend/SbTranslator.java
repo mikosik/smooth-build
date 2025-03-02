@@ -1,33 +1,25 @@
 package org.smoothbuild.compilerbackend;
 
-import static org.smoothbuild.common.base.Strings.q;
-import static org.smoothbuild.common.collect.Map.map;
-import static org.smoothbuild.common.collect.Map.mapOfAll;
-import static org.smoothbuild.common.collect.Map.zipToMap;
-import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileErrorMessage;
-import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
-import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
-import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
-import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
-import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
-import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
-
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import org.smoothbuild.common.base.Hash;
+import static org.smoothbuild.common.base.Strings.q;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
+import static org.smoothbuild.common.collect.Map.map;
+import static org.smoothbuild.common.collect.Map.mapOfAll;
+import static org.smoothbuild.common.collect.Map.zipToMap;
+import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.FileLocation;
 import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.log.report.BExprAttributes;
+import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileErrorMessage;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -50,12 +42,16 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
-import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
+import static org.smoothbuild.compilerfrontend.lang.name.NList.nlistWithShadowing;
+import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.BYTECODE;
+import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_PURE;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -72,7 +68,9 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
 import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
+import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
+import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 public class SbTranslator {
   private final ChainingBytecodeFactory bytecodeF;
@@ -167,7 +165,7 @@ public class SbTranslator {
   }
 
   private BExpr translateInstantiate(SInstantiate sInstantiate) throws SbTranslatorException {
-    var keys = sInstantiate.sPolymorphic().schema().typeParams().toList();
+    var keys = sInstantiate.sPolyReference().schema().typeParams().toList();
     var values = sInstantiate.typeArgs().map(typeTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
     var varMap = typeTranslator.typeVarMap().overrideWith(instantiatedVarMap);
@@ -182,13 +180,7 @@ public class SbTranslator {
         cache,
         names,
         locations);
-    return sbTranslator.translatePolymorphic(sInstantiate.sPolymorphic());
-  }
-
-  private BExpr translatePolymorphic(SPolymorphic sPolymorphic) throws SbTranslatorException {
-    return switch (sPolymorphic) {
-      case SPolyReference sPolyReference -> translatePolyReference(sPolyReference);
-    };
+    return sbTranslator.translatePolyReference(sInstantiate.sPolyReference());
   }
 
   private BExpr translateLambda(SLambda sLambda) throws SbTranslatorException {

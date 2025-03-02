@@ -10,7 +10,6 @@ import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Logger;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
@@ -90,7 +89,8 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      assertThat((pLambda).scope().referenceables().find(fqn("myValue"))).isEqualTo(ok(pNamedValue));
+      assertThat((pLambda).scope().referenceables().find(fqn("myValue")))
+          .isEqualTo(ok(pNamedValue));
     }
 
     @Test

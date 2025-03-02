@@ -392,30 +392,30 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return sInstantiate(typeArgs, reference, location);
   }
 
-  public default SInstantiate sInstantiate(SPolymorphic polymorphic) {
-    return sInstantiate(polymorphic, polymorphic.location());
+  public default SInstantiate sInstantiate(SPolyReference sPolyReference) {
+    return sInstantiate(sPolyReference, sPolyReference.location());
   }
 
-  public default SInstantiate sInstantiate(int line, SPolymorphic polymorphic) {
-    return sInstantiate(polymorphic, location(line));
+  public default SInstantiate sInstantiate(int line, SPolyReference sPolyReference) {
+    return sInstantiate(sPolyReference, location(line));
   }
 
-  public default SInstantiate sInstantiate(SPolymorphic polymorphic, Location location) {
-    return sInstantiate(list(), polymorphic, location);
+  public default SInstantiate sInstantiate(SPolyReference sPolyReference, Location location) {
+    return sInstantiate(list(), sPolyReference, location);
   }
 
-  public default SInstantiate sInstantiate(List<SType> typeArgs, SPolymorphic polymorphic) {
-    return sInstantiate(1, typeArgs, polymorphic);
-  }
-
-  public default SInstantiate sInstantiate(
-      int line, List<SType> typeArgs, SPolymorphic polymorphic) {
-    return sInstantiate(typeArgs, polymorphic, location(line));
+  public default SInstantiate sInstantiate(List<SType> typeArgs, SPolyReference sPolyReference) {
+    return sInstantiate(1, typeArgs, sPolyReference);
   }
 
   public default SInstantiate sInstantiate(
-      List<SType> typeArgs, SPolymorphic polymorphic, Location location) {
-    return new SInstantiate(typeArgs, polymorphic, location);
+      int line, List<SType> typeArgs, SPolyReference sPolyReference) {
+    return sInstantiate(typeArgs, sPolyReference, location(line));
+  }
+
+  public default SInstantiate sInstantiate(
+      List<SType> typeArgs, SPolyReference sPolyReference, Location location) {
+    return new SInstantiate(typeArgs, sPolyReference, location);
   }
 
   public default SOrder sOrder(SExpr headElement, SExpr... tailElements) {
