@@ -150,11 +150,6 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
       addBinding(bindings, binding, last, reportErrors);
     }
 
-    // No need to report error when other constructor with same name is already defined.
-    // Constructor name starts with capital letter, so it can collide only
-    // with other constructor name. This can only happen when other structure
-    // with same name is declared which will be reported when detecting duplicate struct name.
-
     private <T extends IdentifiableCode> void addBinding(
         java.util.Map<Name, T> bindings, T binding, Name name, boolean reportErrors) {
       var previousBinding = bindings.put(name, binding);
