@@ -715,11 +715,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new PModule(moduleFullPath(), structs, evaluables);
   }
 
-  public default PInstantiate pLambda(NList<PItem> params, PExpr body) {
+  public default PLambda pLambda(NList<PItem> params, PExpr body) {
     var typeParams = new PExplicitTypeParams(list(), location());
     var pLambda = new PLambda("lambda~1", typeParams, params, body, location());
     pLambda.setFqn(fqn("lambda~1"));
-    return pInstantiate(pLambda);
+    return pLambda;
   }
 
   public default PCall pCall(PExpr callee) {

@@ -26,7 +26,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
@@ -148,6 +147,7 @@ public class ExprTypeUnifier {
     return switch (pExpr) {
       case PCall pCall -> unifyAndMemoize(pCall, this::unifyCall);
       case PInstantiate pInstantiate -> unifyAndMemoize(pInstantiate, this::unifyInstantiate);
+      case PLambda pLambda -> unifyLambda(pLambda);
       case PNamedArg pNamedArg -> unifyAndMemoize(pNamedArg, this::unifyNamedArg);
       case POrder pOrder -> unifyAndMemoize(pOrder, this::unifyOrder);
       case PSelect pSelect -> unifyAndMemoize(pSelect, this::unifySelect);
@@ -197,12 +197,9 @@ public class ExprTypeUnifier {
     }
   }
 
-  private SType unifyInstantiate(PInstantiate pInstantiate) throws TypeException {
-    var polymorphicP = pInstantiate.polymorphic();
-    unifyPolymorphic(polymorphicP);
+  private SType unifyInstantiate(PInstantiate pInstantiate) {
     var schema =
-        switch (polymorphicP) {
-          case PLambda pLambda -> pLambda.schema();
+        switch (pInstantiate.polymorphic()) {
           case PReference pReference -> switch (pReference.referenced()) {
             case MonoReferenceable mono -> new SSchema(list(), mono.sType());
             case PolyReferenceable poly -> poly.schema();
@@ -213,23 +210,17 @@ public class ExprTypeUnifier {
     return schema.instantiate(pInstantiate.typeArgs());
   }
 
-  private void unifyPolymorphic(PPolymorphic pPolymorphic) throws TypeException {
-    switch (pPolymorphic) {
-      case PLambda pLambda -> unifyLambda(pLambda);
-      case PReference pReference -> {}
-    }
+  private SFuncType unifyLambda(PLambda pLambda) throws TypeException {
+    return new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeTypeVars).unifyLambda2(pLambda);
   }
 
-  private void unifyLambda(PLambda pLambda) throws TypeException {
-    new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeTypeVars).unifyLambda2(pLambda);
-  }
-
-  private void unifyLambda2(PLambda pLambda) throws TypeException {
+  private SFuncType unifyLambda2(PLambda pLambda) throws TypeException {
     pLambda.params().forEach(p -> generateSType(p.type()));
     generateSType(pLambda.resultType());
     unifyEvaluableBody(pLambda, pLambda.evaluationType().sType());
-    var resolvedT = (SFuncType) resolveType(pLambda);
-    pLambda.setSchema(new SFuncSchema(list(), resolvedT));
+    var resolvedType = (SFuncType) resolveType(pLambda);
+    pLambda.setSchema(new SFuncSchema(list(), resolvedType));
+    return resolvedType;
   }
 
   private SType unifyNamedArg(PNamedArg pNamedArg) throws TypeException {

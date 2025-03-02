@@ -16,8 +16,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
@@ -78,6 +76,7 @@ public class TypeResolver {
     switch (expr) {
       case PCall pCall -> resolveCall(pCall);
       case PInstantiate pInstantiate -> resolveInstantiate(pInstantiate);
+      case PLambda pLambda -> resolveLambda(pLambda);
       case PNamedArg pNamedArg -> resolveNamedArg(pNamedArg);
       case POrder pOrder -> resolveOrder(pOrder);
       case PSelect pSelect -> resolveSelect(pSelect);
@@ -94,24 +93,12 @@ public class TypeResolver {
   }
 
   private void resolveInstantiate(PInstantiate pInstantiate) throws TypeException {
-    resolvePolymorphic(pInstantiate.polymorphic());
-    resolveInstantiateTypeArgs(pInstantiate);
-  }
-
-  private void resolveInstantiateTypeArgs(PInstantiate pInstantiate) throws TypeException {
     var resolvedTypeArgs = pInstantiate.typeArgs().map(unifier::resolve);
     if (resolvedTypeArgs.stream().anyMatch(this::hasFlexibleVar)) {
       throw new TypeException(
           compileError(pInstantiate.location(), "Cannot infer actual type parameters."));
     }
     pInstantiate.setTypeArgs(resolvedTypeArgs);
-  }
-
-  private void resolvePolymorphic(PPolymorphic pPolymorphic) throws TypeException {
-    switch (pPolymorphic) {
-      case PLambda pLambda -> resolveLambda(pLambda);
-      case PReference pReference -> {}
-    }
   }
 
   private void resolveLambda(PLambda pFunc) throws TypeException {

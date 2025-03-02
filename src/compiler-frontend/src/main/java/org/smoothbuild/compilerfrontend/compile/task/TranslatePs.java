@@ -173,6 +173,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
         case PCall pCall -> convertCall(pCall);
         case PInt pInt -> convertInt(pInt);
         case PInstantiate pInstantiate -> convertInstantiate(pInstantiate);
+        case PLambda pLambda -> convertLambda(pLambda);
         case PNamedArg pNamedArg -> convertExpr(pNamedArg.expr());
         case POrder pOrder -> convertOrder(pOrder);
         case PSelect pSelect -> convertSelect(pSelect);
@@ -212,7 +213,6 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     private SExpr convertInstantiate(PInstantiate pInstantiate) {
       return switch (pInstantiate.polymorphic()) {
-        case PLambda pLambda -> convertLambda(pLambda);
         case PReference pReference -> convertReference(pInstantiate, pReference);
       };
     }

@@ -5,4 +5,4 @@ import org.smoothbuild.common.log.location.HasLocation;
 /**
  * Polymorphic entity.
  */
-public sealed interface PPolymorphic extends HasLocation permits PLambda, PReference {}
+public sealed interface PPolymorphic extends HasLocation permits PReference {}

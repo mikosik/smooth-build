@@ -90,8 +90,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      var cast = ((PLambda) pLambda.polymorphic());
-      assertThat(cast.scope().referenceables().find(fqn("myValue"))).isEqualTo(ok(pNamedValue));
+      assertThat((pLambda).scope().referenceables().find(fqn("myValue"))).isEqualTo(ok(pNamedValue));
     }
 
     @Test
@@ -103,8 +102,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      var cast = ((PLambda) pLambda.polymorphic());
-      assertThat(cast.scope().referenceables().find(fqn("myFunc"))).isEqualTo(ok(pNamedValue));
+      assertThat(pLambda.scope().referenceables().find(fqn("myFunc"))).isEqualTo(ok(pNamedValue));
     }
 
     @Test
@@ -115,8 +113,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      var cast = ((PLambda) pLambda.polymorphic());
-      assertThat(cast.scope().referenceables().find(fqn("param"))).isEqualTo(ok(param));
+      assertThat(pLambda.scope().referenceables().find(fqn("param"))).isEqualTo(ok(param));
     }
   }
 

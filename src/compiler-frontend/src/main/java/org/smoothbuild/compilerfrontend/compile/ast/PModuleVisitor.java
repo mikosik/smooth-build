@@ -162,6 +162,7 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
       case PCall pCall -> visitCall(pCall);
       case PInt pInt -> visitInt(pInt);
       case PInstantiate pInstantiate -> visitInstantiate(pInstantiate);
+      case PLambda pLambda -> visit(pLambda);
       case PNamedArg pNamedArg -> visitNamedArg(pNamedArg);
       case POrder pOrder -> visitOrder(pOrder);
       case PSelect pSelect -> visitSelect(pSelect);
@@ -200,7 +201,6 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
 
   private void visitPolymorphicP(PPolymorphic pPolymorphic) throws T {
     switch (pPolymorphic) {
-      case PLambda pLambda -> visit(pLambda);
       case PReference pReference -> visitReference(pReference);
     }
   }

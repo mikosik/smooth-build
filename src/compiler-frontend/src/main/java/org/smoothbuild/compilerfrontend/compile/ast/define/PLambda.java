@@ -1,18 +1,17 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
-import static org.smoothbuild.common.collect.Maybe.some;
-
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
+import static org.smoothbuild.common.collect.Maybe.some;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 
-public final class PLambda implements PFunc, PPolymorphic {
+public final class PLambda extends PExpr implements PFunc {
   private final String nameText;
-  private final Location location;
   private final PImplicitType resultType;
   private final PTypeParams typeParams;
   private final NList<PItem> params;
@@ -23,9 +22,9 @@ public final class PLambda implements PFunc, PPolymorphic {
 
   public PLambda(
       String nameText, PTypeParams typeParams, NList<PItem> params, PExpr body, Location location) {
+    super(location);
     this.nameText = nameText;
     this.typeParams = typeParams;
-    this.location = location;
     this.resultType = new PImplicitType(location);
     this.params = params;
     this.body = body;
@@ -44,11 +43,6 @@ public final class PLambda implements PFunc, PPolymorphic {
   @Override
   public Fqn fqn() {
     return fqn;
-  }
-
-  @Override
-  public Location location() {
-    return location;
   }
 
   @Override
@@ -73,6 +67,11 @@ public final class PLambda implements PFunc, PPolymorphic {
 
   public PExpr bodyGet() {
     return body;
+  }
+
+  @Override
+  public SFuncType sType() {
+    return PFunc.super.sType();
   }
 
   @Override

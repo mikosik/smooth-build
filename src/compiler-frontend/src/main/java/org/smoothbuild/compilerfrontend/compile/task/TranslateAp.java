@@ -304,15 +304,14 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return result;
     }
 
-    private PInstantiate createLambda(LambdaContext lambdaFunc) {
+    private PLambda createLambda(LambdaContext lambdaFunc) {
       var name = "lambda~" + (++lambdaCount);
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var typeParams = new PExplicitTypeParams(list(), fileLocation(fullPath, lambdaFunc));
       var params = visitor.createItems(lambdaFunc.params().itemList());
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
-      var lambdaFuncP = new PLambda(name, typeParams, params, body, location);
-      return new PInstantiate(lambdaFuncP, location);
+      return new PLambda(name, typeParams, params, body, location);
     }
 
     private PString createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
