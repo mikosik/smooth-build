@@ -258,7 +258,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void lambda() throws Exception {
-        var lambda = sLambda(list(), nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
+        var lambda = sLambda(nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
         assertTranslation(lambda, bLambda(list(bIntType()), bReference(bIntType(), 0)));
       }
 
@@ -334,7 +334,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var()
           throws Exception {
         // regression test
-        var sLambda = sLambda(list(), sParamRef(varA(), "a"));
+        var sLambda = sLambda(sParamRef(varA(), "a"));
         var sFunc = sFunc("myFunc", nlist(sItem(varA(), "a")), sLambda);
         var sInstantiate = sInstantiate(list(sIntType()), sFunc);
 

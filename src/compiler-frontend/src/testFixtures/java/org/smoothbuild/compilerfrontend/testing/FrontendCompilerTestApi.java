@@ -674,26 +674,6 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SNamedExprFunc(schema, fqn, params, body, location(line));
   }
 
-  public default SLambda sLambda(List<STypeVar> typeParams, SExpr body) {
-    return sLambda(typeParams, nlist(), body);
-  }
-
-  public default SLambda sLambda(List<STypeVar> typeParams, NList<SItem> params, SExpr body) {
-    return sLambda(1, typeParams, params, body);
-  }
-
-  public default SLambda sLambda(
-      int line, List<STypeVar> typeParams, NList<SItem> params, SExpr body) {
-    return sLambda(line, fqn("lambda"), typeParams, params, body);
-  }
-
-  public default SLambda sLambda(
-      int line, Fqn fqn, List<STypeVar> typeParams, NList<SItem> params, SExpr body) {
-    var sFuncType = sFuncType(toTypes(params.list()), body.evaluationType());
-    var sFuncSchema = sFuncSchema(typeParams, sFuncType);
-    return new SLambda(sFuncSchema, fqn, params, body, location(line));
-  }
-
   public default SLambda sLambda(SExpr body) {
     return sLambda(1, nlist(), body);
   }
@@ -708,7 +688,9 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SLambda sLambda(int line, Fqn fqn, NList<SItem> params, SExpr body) {
-    var funcSSchema = sFuncSchema(toTypes(params.list()), body.evaluationType());
+    var paramTypes = toTypes(params.list());
+    var funcType = sFuncType(paramTypes, body.evaluationType());
+    var funcSSchema = sFuncSchema(List.<STypeVar>list(), funcType);
     return new SLambda(funcSSchema, fqn, params, body, location(line));
   }
 
