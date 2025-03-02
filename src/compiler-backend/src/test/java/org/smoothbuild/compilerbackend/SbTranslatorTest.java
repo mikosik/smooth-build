@@ -258,33 +258,31 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void lambda() throws Exception {
-        var lambda = sLambda(list(varA()), nlist(sItem(varA(), "p")), sParamRef(varA(), "p"));
-        var monoLambdaS = sInstantiate(list(sIntType()), lambda);
-        assertTranslation(monoLambdaS, bLambda(list(bIntType()), bReference(bIntType(), 0)));
+        var lambda = sLambda(list(), nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
+        assertTranslation(lambda, bLambda(list(bIntType()), bReference(bIntType(), 0)));
       }
 
       @Test
       void lambda_referencing_param_of_enclosing_function() throws Exception {
-        var monoLambdaS = sInstantiate(sLambda(sParamRef(sIntType(), "p")));
-        var monoFuncS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), monoLambdaS);
+        var sLambda = sLambda(sParamRef(sIntType(), "p"));
+        var sFunc = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sLambda);
 
-        var bodyB = bLambda(bReference(bIntType(), 0));
-        var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
+        var bBody = bLambda(bReference(bIntType(), 0));
+        var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bBody);
 
-        assertTranslation(monoFuncS, bLambda);
+        assertTranslation(sFunc, bLambda);
       }
 
       @Test
       void lambda_with_param_and_referencing_param_of_enclosing_function() throws Exception {
         // myFunc(Int i) = (Blob b) -> i;
-        var monoLambdaS =
-            sInstantiate(sLambda(nlist(sItem(sBlobType(), "b")), sParamRef(sIntType(), "i")));
-        var monoFuncS = sFunc("myFunc", nlist(sItem(sIntType(), "i")), monoLambdaS);
+        var sLambda = sLambda(nlist(sItem(sBlobType(), "b")), sParamRef(sIntType(), "i"));
+        var sFunc = sFunc("myFunc", nlist(sItem(sIntType(), "i")), sLambda);
 
-        var bodyB = bLambda(list(bBlobType()), bReference(bIntType(), 1));
-        var bLambda = bLambda(list(bIntType()), bodyB);
+        var bBody = bLambda(list(bBlobType()), bReference(bIntType(), 1));
+        var bLambda = bLambda(list(bIntType()), bBody);
 
-        assertTranslation(monoFuncS, bLambda);
+        assertTranslation(sFunc, bLambda);
       }
 
       @Test
@@ -336,14 +334,14 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       void instantiated_poly_expr_twice_with_outer_instantiation_actually_setting_its_var()
           throws Exception {
         // regression test
-        var monoLambdaS = sInstantiate(sLambda(list(), sParamRef(varA(), "a")));
-        var funcS = sFunc("myFunc", nlist(sItem(varA(), "a")), monoLambdaS);
-        var instantiateS = sInstantiate(list(sIntType()), funcS);
+        var sLambda = sLambda(list(), sParamRef(varA(), "a"));
+        var sFunc = sFunc("myFunc", nlist(sItem(varA(), "a")), sLambda);
+        var sInstantiate = sInstantiate(list(sIntType()), sFunc);
 
-        var bodyB = bLambda(bReference(bIntType(), 0));
-        var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bodyB);
+        var bBody = bLambda(bReference(bIntType(), 0));
+        var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bBody);
 
-        assertTranslation(bindings(funcS), instantiateS, bLambda);
+        assertTranslation(bindings(sFunc), sInstantiate, bLambda);
       }
     }
   }
@@ -457,10 +455,10 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void lambda() throws Exception {
-        var monoLambdaS = sInstantiate(sLambda(7, nlist(), sString("abc")));
+        var sLambda = sLambda(7, nlist(), sString("abc"));
 
         var sbTranslator = newTranslator();
-        var bLambda = (BLambda) sbTranslator.translateExpr(monoLambdaS);
+        var bLambda = (BLambda) sbTranslator.translateExpr(sLambda);
         var names = sbTranslator.bExprAttributes().names();
         var locations = sbTranslator.bExprAttributes().locations();
         assertThat(names.get(bLambda.hash())).isEqualTo("<lambda>");

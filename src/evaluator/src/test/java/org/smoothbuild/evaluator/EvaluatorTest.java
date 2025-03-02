@@ -63,27 +63,27 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
       class _call {
         @Test
         void call_lambda() throws BytecodeException {
-          var LambdaS = sLambda(nlist(), sInt(7));
-          var callS = sCall(sInstantiate(LambdaS));
-          assertEvaluation(callS, bInt(7));
+          var sLambda = sLambda(nlist(), sInt(7));
+          var sCall = sCall(sLambda);
+          assertEvaluation(sCall, bInt(7));
         }
 
         @Test
         void call_lambda_returning_enclosing_func_param() throws BytecodeException {
-          var lambdaS = sInstantiate(sLambda(nlist(), sParamRef(sIntType(), "p")));
-          var funcS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sCall(lambdaS));
-          var callS = sCall(sInstantiate(funcS), sInt(7));
-          assertEvaluation(newInjector(), bindings(funcS), callS, bInt(7));
+          var sLambda = sLambda(nlist(), sParamRef(sIntType(), "p"));
+          var sFunc = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sCall(sLambda));
+          var sCall = sCall(sInstantiate(sFunc), sInt(7));
+          assertEvaluation(newInjector(), bindings(sFunc), sCall, bInt(7));
         }
 
         @Test
         void call_lambda_returning_enclosing_func_param_after_it_has_been_returned_by_that_func()
             throws BytecodeException {
-          var lambdaS = sInstantiate(sLambda(nlist(), sParamRef(sIntType(), "p")));
-          var funcS = sFunc("myFunc", nlist(sItem(sIntType(), "p")), lambdaS);
-          var callFunc = sCall(sInstantiate(funcS), sInt(7));
+          var sLambda = sLambda(nlist(), sParamRef(sIntType(), "p"));
+          var sFunc = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sLambda);
+          var callFunc = sCall(sInstantiate(sFunc), sInt(7));
           var callReturnedLambda = sCall(callFunc);
-          assertEvaluation(newInjector(), bindings(funcS), callReturnedLambda, bInt(7));
+          assertEvaluation(newInjector(), bindings(sFunc), callReturnedLambda, bInt(7));
         }
 
         @Test
@@ -152,6 +152,14 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
       }
 
       @Nested
+      class _lambda {
+        @Test
+        void mono_lambda() throws BytecodeException {
+          assertEvaluation(sLambda(sInt(7)), bLambda(bInt(7)));
+        }
+      }
+
+      @Nested
       class _order {
         @Test
         void order() throws BytecodeException {
@@ -184,22 +192,6 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
 
     @Nested
     class _instantiate {
-      @Nested
-      class _lambda {
-        @Test
-        void mono_lambda() throws BytecodeException {
-          assertEvaluation(sInstantiate(sLambda(sInt(7))), bLambda(bInt(7)));
-        }
-
-        @Test
-        void poly_lambda() throws BytecodeException {
-          var a = varA();
-          var polyLambdaS = sLambda(nlist(sItem(a, "a")), sParamRef(a, "a"));
-          var monoLambdaS = sInstantiate(list(sIntType()), polyLambdaS);
-          assertEvaluation(monoLambdaS, bLambda(list(bIntType()), bReference(bIntType(), 0)));
-        }
-      }
-
       @Nested
       class _named_func {
         @Test

@@ -187,7 +187,6 @@ public class SbTranslator {
 
   private BExpr translatePolymorphic(SPolymorphic sPolymorphic) throws SbTranslatorException {
     return switch (sPolymorphic) {
-      case SLambda sLambda -> translateLambda(sLambda);
       case SPolyReference sPolyReference -> translatePolyReference(sPolyReference);
     };
   }

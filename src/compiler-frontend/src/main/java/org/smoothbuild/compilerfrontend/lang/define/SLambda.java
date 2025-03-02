@@ -18,7 +18,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  *
  * This class is immutable.
  */
-public final class SLambda implements SExprFunc, SPolymorphic, SExpr {
+public final class SLambda implements SExprFunc, SExpr {
   private final SFuncSchema schema;
   private final Fqn fqn;
   private final NList<SItem> params;
