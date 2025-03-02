@@ -2,11 +2,12 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.log.location.HasLocation;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
-public final class PReference implements PPolymorphic {
+public final class PReference implements HasLocation {
   private final String nameText;
   private final Location location;
   private Fqn fqn;

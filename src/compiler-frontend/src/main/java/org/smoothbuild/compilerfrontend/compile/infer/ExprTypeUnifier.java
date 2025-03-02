@@ -199,7 +199,7 @@ public class ExprTypeUnifier {
 
   private SType unifyInstantiate(PInstantiate pInstantiate) {
     var schema =
-        switch (pInstantiate.polymorphic()) {
+        switch (pInstantiate.reference()) {
           case PReference pReference -> switch (pReference.referenced()) {
             case MonoReferenceable mono -> new SSchema(list(), mono.sType());
             case PolyReferenceable poly -> poly.schema();

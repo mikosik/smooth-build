@@ -212,7 +212,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SExpr convertInstantiate(PInstantiate pInstantiate) {
-      return switch (pInstantiate.polymorphic()) {
+      return switch (pInstantiate.reference()) {
         case PReference pReference -> convertReference(pInstantiate, pReference);
       };
     }

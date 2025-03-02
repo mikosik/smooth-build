@@ -38,7 +38,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
@@ -63,7 +62,6 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
-import org.smoothbuild.compilerfrontend.lang.define.SPolymorphic;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
@@ -730,8 +728,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new PCall(callee, list(), location);
   }
 
-  public default PInstantiate pInstantiate(PPolymorphic polymorphic) {
-    return new PInstantiate(polymorphic, polymorphic.location());
+  public default PInstantiate pInstantiate(PReference reference) {
+    return new PInstantiate(reference, reference.location());
   }
 
   public default PNamedFunc pNamedFunc() {

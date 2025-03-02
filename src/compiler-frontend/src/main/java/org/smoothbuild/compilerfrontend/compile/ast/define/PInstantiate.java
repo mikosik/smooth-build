@@ -10,16 +10,16 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Instantiation of polymorphic entity.
  */
 public final class PInstantiate extends PExpr {
-  private final PPolymorphic polymorphic;
+  private final PReference reference;
   private List<SType> typeArgs;
 
-  public PInstantiate(PPolymorphic polymorphic, Location location) {
+  public PInstantiate(PReference reference, Location location) {
     super(location);
-    this.polymorphic = polymorphic;
+    this.reference = reference;
   }
 
-  public PPolymorphic polymorphic() {
-    return polymorphic;
+  public PReference reference() {
+    return reference;
   }
 
   public void setTypeArgs(List<SType> typeArgs) {
@@ -36,19 +36,19 @@ public final class PInstantiate extends PExpr {
       return true;
     }
     return object instanceof PInstantiate that
-        && Objects.equals(this.polymorphic, that.polymorphic)
+        && Objects.equals(this.reference, that.reference)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(polymorphic, location());
+    return Objects.hash(reference, location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("PInstantiate")
-        .addField("polymorphic", polymorphic)
+        .addField("polymorphic", reference)
         .addField("location", location())
         .toString();
   }

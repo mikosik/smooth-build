@@ -20,7 +20,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PPolymorphic;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
@@ -199,14 +198,8 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
 
   public void visitInt(PInt pInt) throws T {}
 
-  private void visitPolymorphicP(PPolymorphic pPolymorphic) throws T {
-    switch (pPolymorphic) {
-      case PReference pReference -> visitReference(pReference);
-    }
-  }
-
   public void visitInstantiate(PInstantiate pInstantiate) throws T {
-    visitPolymorphicP(pInstantiate.polymorphic());
+    visitReference(pInstantiate.reference());
   }
 
   public void visitNamedArg(PNamedArg pNamedArg) throws T {

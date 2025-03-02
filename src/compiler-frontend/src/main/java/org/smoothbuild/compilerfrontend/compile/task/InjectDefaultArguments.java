@@ -49,7 +49,7 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
 
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
-          && pInstantiate.polymorphic() instanceof PReference pReference) {
+          && pInstantiate.reference() instanceof PReference pReference) {
         return inferPositionedArgs(pCall, pReference.referenced());
       } else {
         return inferPositionedArgs(pCall, logger);

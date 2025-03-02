@@ -29,7 +29,7 @@ public record SInstantiate(
   @Override
   public String toSourceCode(Collection<STypeVar> localTypeVars) {
     return sPolyReference.toSourceCode()
-           + typeArgs.map(type -> type.specifier(localTypeVars)).toString("<", ", ", ">");
+        + typeArgs.map(type -> type.specifier(localTypeVars)).toString("<", ", ", ">");
   }
 
   @Override
