@@ -7,6 +7,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isLowerCase;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isUpperCase;
 import static org.smoothbuild.compilerfrontend.lang.name.CharUtils.isValidNameCharacter;
 
+import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Result;
 
@@ -14,7 +15,8 @@ public final class Name extends Id {
   public static Name typeName(String name) {
     var errorMessage = findTypeNameErrors(name);
     if (errorMessage != null) {
-      throw new IllegalArgumentException("Illegal type name. " + errorMessage);
+      throw new IllegalArgumentException(
+          "Illegal type name " + Strings.q(name) + ". " + errorMessage);
     }
     return new Name(name);
   }
@@ -22,7 +24,8 @@ public final class Name extends Id {
   public static Name referenceableName(String name) {
     var errorMessage = findReferenceableNameErrors(name);
     if (errorMessage != null) {
-      throw new IllegalArgumentException("Illegal referenceable name. " + errorMessage);
+      throw new IllegalArgumentException(
+          "Illegal referenceable name " + Strings.q(name) + ". " + errorMessage);
     }
     return new Name(name);
   }

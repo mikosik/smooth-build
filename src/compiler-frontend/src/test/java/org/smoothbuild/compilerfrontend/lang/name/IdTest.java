@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.name;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
@@ -67,7 +68,7 @@ public class IdTest {
       void illegal(String string, String expectedErrorMessage) {
         assertCall(() -> referenceableName(string))
             .throwsException(new IllegalArgumentException(
-                "Illegal referenceable name. " + expectedErrorMessage));
+                "Illegal referenceable name " + q(string) + ". " + expectedErrorMessage));
       }
 
       public static List<Arguments> illegal() {
@@ -146,8 +147,8 @@ public class IdTest {
       @MethodSource
       void illegal(String string, String expectedErrorMessage) {
         assertCall(() -> typeName(string))
-            .throwsException(
-                new IllegalArgumentException("Illegal type name. " + expectedErrorMessage));
+            .throwsException(new IllegalArgumentException(
+                "Illegal type name " + q(string) + ". " + expectedErrorMessage));
       }
 
       static List<Arguments> illegal() {
