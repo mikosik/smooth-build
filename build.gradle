@@ -36,7 +36,7 @@ subprojects { subproject ->
         apply plugin: 'java'
         java {
             toolchain {
-                languageVersion = JavaLanguageVersion.of(21)
+                languageVersion = JavaLanguageVersion.of(23)
             }
         }
         apply plugin: 'com.diffplug.spotless'
