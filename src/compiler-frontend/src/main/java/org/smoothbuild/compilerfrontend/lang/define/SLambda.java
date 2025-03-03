@@ -7,8 +7,8 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 /**
  * Lambda.
@@ -16,18 +16,19 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
  * This class is immutable.
  */
 public final class SLambda implements SExprFunc, SExpr {
-  private final SFuncSchema schema;
+  private final SFuncTypeScheme funcTypeScheme;
   private final Fqn fqn;
   private final NList<SItem> params;
   private final SExpr body;
   private final Location location;
 
   public SLambda(SFuncType type, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
-    this(new SFuncSchema(list(), type), fqn, params, body, location);
+    this(new SFuncTypeScheme(list(), type), fqn, params, body, location);
   }
 
-  public SLambda(SFuncSchema schema, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
-    this.schema = schema;
+  public SLambda(
+      SFuncTypeScheme funcTypeScheme, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
+    this.funcTypeScheme = funcTypeScheme;
     this.fqn = fqn;
     this.params = params;
     this.body = body;
@@ -35,8 +36,8 @@ public final class SLambda implements SExprFunc, SExpr {
   }
 
   @Override
-  public SFuncSchema schema() {
-    return schema;
+  public SFuncTypeScheme typeScheme() {
+    return funcTypeScheme;
   }
 
   @Override
@@ -61,7 +62,7 @@ public final class SLambda implements SExprFunc, SExpr {
 
   @Override
   public SFuncType evaluationType() {
-    return schema.type();
+    return funcTypeScheme.type();
   }
 
   @Override
@@ -76,7 +77,7 @@ public final class SLambda implements SExprFunc, SExpr {
       return true;
     }
     return object instanceof SLambda that
-        && this.schema.equals(that.schema)
+        && this.funcTypeScheme.equals(that.funcTypeScheme)
         && this.params.equals(that.params)
         && this.body.equals(that.body)
         && this.location().equals(that.location());
@@ -84,14 +85,14 @@ public final class SLambda implements SExprFunc, SExpr {
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema, params, body, location());
+    return Objects.hash(funcTypeScheme, params, body, location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SLambda")
         .addField("fqn", fqn())
-        .addField("type", schema().type())
+        .addField("type", typeScheme().type())
         .addListField("params", params().list())
         .addField("location", location())
         .addField("body", body)

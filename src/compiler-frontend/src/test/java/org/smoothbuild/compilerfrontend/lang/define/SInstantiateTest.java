@@ -10,9 +10,9 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SInstantiateTest extends FrontendCompilerTestContext {
   @Test
   public void to_source_code() {
-    var sSchema = sSchema(list(varA()), varA());
+    var sScheme = sScheme(list(varA()), varA());
     var id = fqn("my:company:evaluable");
-    var sInstantiate = sInstantiate(list(sIntType()), sPolyReference(sSchema, id));
+    var sInstantiate = sInstantiate(list(sIntType()), sPolyReference(sScheme, id));
     assertThat(sInstantiate.toSourceCode()).isEqualTo("my:company:evaluable<Int>");
   }
 }

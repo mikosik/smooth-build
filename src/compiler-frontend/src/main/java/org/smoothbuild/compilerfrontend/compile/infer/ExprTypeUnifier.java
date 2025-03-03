@@ -34,11 +34,11 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
 import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
@@ -70,7 +70,7 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pNamedValue, scope);
     var resolvedType = resolveType(pNamedValue);
     var typeParams = resolveTypeParams(pNamedValue, resolvedType);
-    pNamedValue.setSchema(new SSchema(typeParams, resolvedType));
+    pNamedValue.setSchema(new STypeScheme(typeParams, resolvedType));
   }
 
   public static void unifyFunc(Unifier unifier, PScope scope, PFunc pFunc) throws TypeException {
@@ -83,7 +83,7 @@ public class ExprTypeUnifier {
     unifyEvaluableBody(pFunc, pFunc.scope());
     var resolvedT = (SFuncType) resolveType(pFunc);
     var typeParams = resolveTypeParams(pFunc, resolvedT);
-    pFunc.setSchema(new SFuncSchema(typeParams, resolvedT));
+    pFunc.setScheme(new SFuncTypeScheme(typeParams, resolvedT));
   }
 
   private List<STypeVar> resolveTypeParams(PEvaluable pEvaluable, SType sType)
@@ -201,8 +201,8 @@ public class ExprTypeUnifier {
     var schema =
         switch (pInstantiate.reference()) {
           case PReference pReference -> switch (pReference.referenced()) {
-            case MonoReferenceable mono -> new SSchema(list(), mono.sType());
-            case PolyReferenceable poly -> poly.schema();
+            case MonoReferenceable mono -> new STypeScheme(list(), mono.sType());
+            case PolyReferenceable poly -> poly.typeScheme();
             default -> throw unexpectedCaseException(pReference.referenced());
           };
         };
@@ -219,7 +219,7 @@ public class ExprTypeUnifier {
     generateSType(pLambda.resultType());
     unifyEvaluableBody(pLambda, pLambda.evaluationType().sType());
     var resolvedType = (SFuncType) resolveType(pLambda);
-    pLambda.setSchema(new SFuncSchema(list(), resolvedType));
+    pLambda.setScheme(new SFuncTypeScheme(list(), resolvedType));
     return resolvedType;
   }
 

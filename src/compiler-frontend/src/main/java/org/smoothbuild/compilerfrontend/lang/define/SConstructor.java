@@ -5,15 +5,16 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 /**
  * Structure constructor.
  * This class is immutable.
  */
 public final class SConstructor extends SNamedFunc {
-  public SConstructor(SFuncSchema schema, Fqn fqn, NList<SItem> params, Location location) {
-    super(schema, fqn, params, location);
+  public SConstructor(
+      SFuncTypeScheme funcTypeScheme, Fqn fqn, NList<SItem> params, Location location) {
+    super(funcTypeScheme, fqn, params, location);
   }
 
   @Override
@@ -22,7 +23,7 @@ public final class SConstructor extends SNamedFunc {
       return true;
     }
     return object instanceof SConstructor that
-        && this.schema().equals(that.schema())
+        && this.typeScheme().equals(that.typeScheme())
         && this.fqn().equals(that.fqn())
         && this.params().equals(that.params())
         && this.location().equals(that.location());
@@ -30,14 +31,14 @@ public final class SConstructor extends SNamedFunc {
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), fqn(), params(), location());
+    return Objects.hash(typeScheme(), fqn(), params(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SConstructor")
         .addField("fqn", fqn())
-        .addField("schema", schema())
+        .addField("typeScheme", this.typeScheme())
         .addListField("params", params().list())
         .addField("location", location())
         .toString();

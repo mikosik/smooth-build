@@ -9,18 +9,19 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SPolyReferenceTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    var refS = new SPolyReference(sSchema(sIntType()), fqn("my:company:evaluable"), location(7));
-    assertThat(refS.toSourceCode()).isEqualTo("my:company:evaluable");
+    var reference =
+        new SPolyReference(sScheme(sIntType()), fqn("my:company:evaluable"), location(7));
+    assertThat(reference.toSourceCode()).isEqualTo("my:company:evaluable");
   }
 
   @Test
   void to_string() {
-    var refS = new SPolyReference(sSchema(sIntType()), fqn("referenced"), location(7));
-    assertThat(refS.toString())
+    var reference = new SPolyReference(sScheme(sIntType()), fqn("referenced"), location(7));
+    assertThat(reference.toString())
         .isEqualTo(
             """
             SPolyReference(
-              schema = <>Int
+              typeScheme = <>Int
               referencedName = referenced
               location = {t-project}/module.smooth:7
             )""");

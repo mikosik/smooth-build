@@ -166,7 +166,7 @@ public class SbTranslator {
   }
 
   private BExpr translateInstantiate(SInstantiate sInstantiate) throws SbTranslatorException {
-    var keys = sInstantiate.sPolyReference().schema().typeParams().toList();
+    var keys = sInstantiate.sPolyReference().scheme().typeParams().toList();
     var values = sInstantiate.typeArgs().map(typeTranslator::translate);
     var instantiatedVarMap = zipToMap(keys, values);
     var varMap = typeTranslator.typeVarMap().overrideWith(instantiatedVarMap);
@@ -279,7 +279,7 @@ public class SbTranslator {
   }
 
   private BLambda translateExprFunc(SExprFunc sExprFunc) throws SbTranslatorException {
-    var funcType = typeTranslator.translate(sExprFunc.schema().type());
+    var funcType = typeTranslator.translate(sExprFunc.typeScheme().type());
     var bBody = translateExpr(sExprFunc.body());
     return bytecodeF.lambda(funcType, bBody);
   }
@@ -291,7 +291,7 @@ public class SbTranslator {
     var bMethodName = bytecodeF.string(NATIVE_METHOD_NAME);
     var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName, bMethodName).tuple();
     var bIsPure = bytecodeF.bool(sAnnotation.name().equals(NATIVE_PURE));
-    var bLambdaType = typeTranslator.translate(sNativeFunc.schema().type());
+    var bLambdaType = typeTranslator.translate(sNativeFunc.typeScheme().type());
     var bArguments = referencesToAllArguments(bLambdaType);
     var bInvoke = bytecodeF.invoke(bLambdaType.result(), bMethodTuple, bIsPure, bArguments);
     saveNal(bInvoke, sNativeFunc);
@@ -310,7 +310,7 @@ public class SbTranslator {
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
-    var bFuncType = typeTranslator.translate(sConstructor.schema().type());
+    var bFuncType = typeTranslator.translate(sConstructor.typeScheme().type());
     var bBody = bytecodeF.combine(createReferenceB(bFuncType.params()));
     saveLoc(bBody, sConstructor);
     return bytecodeF.lambda(bFuncType, bBody);
@@ -373,12 +373,12 @@ public class SbTranslator {
   // helpers
 
   private BExpr fetchValBytecode(SAnnotatedValue sAnnotatedValue) throws SbTranslatorException {
-    var bType = typeTranslator.translate(sAnnotatedValue.schema().type());
+    var bType = typeTranslator.translate(sAnnotatedValue.typeScheme().type());
     return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.fqn());
   }
 
   private BExpr fetchFuncBytecode(SAnnotatedFunc sAnnotatedFunc) throws SbTranslatorException {
-    var bType = typeTranslator.translate(sAnnotatedFunc.schema().type());
+    var bType = typeTranslator.translate(sAnnotatedFunc.typeScheme().type());
     return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.fqn());
   }
 

@@ -23,9 +23,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
@@ -96,12 +96,12 @@ public class InferTypes implements Task1<PModule, PModule> {
       var params = namedFunc.params();
       for (var param : params) {
         param.defaultValue().ifPresent(defaultValue -> {
-          var funcSchema = namedFunc.schema();
+          var funcSchema = namedFunc.typeScheme();
           var unifier = new Unifier();
           var resolvedParamType = param.type().sType();
           var paramType =
               replaceTypeVarsWithFlexible(funcSchema.typeParams(), resolvedParamType, unifier);
-          var sSchema = defaultValue.referenced().schema();
+          var sSchema = defaultValue.referenced().typeScheme();
           var defaultValueType = replaceTypeParamVarsWithFlexibleTypeVars(sSchema, unifier);
           try {
             unifier.add(new Constraint(paramType, defaultValueType));
@@ -118,8 +118,8 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private static SType replaceTypeParamVarsWithFlexibleTypeVars(
-        SSchema sSchema, Unifier unifier) {
-      return replaceTypeVarsWithFlexible(sSchema.typeParams(), sSchema.type(), unifier);
+        STypeScheme sTypeScheme, Unifier unifier) {
+      return replaceTypeVarsWithFlexible(sTypeScheme.typeParams(), sTypeScheme.type(), unifier);
     }
 
     private static SType replaceTypeVarsWithFlexible(

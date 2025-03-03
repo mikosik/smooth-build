@@ -4,12 +4,12 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 
 public final class PNamedValue extends PNamedEvaluable {
   private final PType type;
-  private SSchema sSchema;
+  private STypeScheme sTypeScheme;
 
   public PNamedValue(
       PType type,
@@ -37,12 +37,12 @@ public final class PNamedValue extends PNamedEvaluable {
   }
 
   @Override
-  public SSchema schema() {
-    return sSchema;
+  public STypeScheme typeScheme() {
+    return sTypeScheme;
   }
 
-  public void setSchema(SSchema schema) {
-    this.sSchema = schema;
+  public void setSchema(STypeScheme typeScheme) {
+    this.sTypeScheme = typeScheme;
   }
 
   @Override

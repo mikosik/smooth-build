@@ -57,7 +57,7 @@ public class ScheduleList implements Task0<Tuple0> {
   private static boolean isNoArgNotGenericValue(SNamedEvaluable evaluable) {
     return isInUserSpace(evaluable.location())
         && evaluable instanceof SNamedValue
-        && evaluable.schema().typeParams().isEmpty();
+        && evaluable.typeScheme().typeParams().isEmpty();
   }
 
   private static boolean isInUserSpace(Location location) {

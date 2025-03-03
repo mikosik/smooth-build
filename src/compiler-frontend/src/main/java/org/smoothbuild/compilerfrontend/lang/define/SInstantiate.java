@@ -17,11 +17,11 @@ public record SInstantiate(
 
   public SInstantiate(SPolyReference sPolyReference, Location location) {
     this(list(), sPolyReference, location);
-    checkArgument(sPolyReference.schema().typeParams().isEmpty());
+    checkArgument(sPolyReference.scheme().typeParams().isEmpty());
   }
 
   public SInstantiate(List<SType> typeArgs, SPolyReference sPolyReference, Location location) {
-    this(typeArgs, sPolyReference, sPolyReference.schema().instantiate(typeArgs), location);
+    this(typeArgs, sPolyReference, sPolyReference.scheme().instantiate(typeArgs), location);
   }
 
   @Override

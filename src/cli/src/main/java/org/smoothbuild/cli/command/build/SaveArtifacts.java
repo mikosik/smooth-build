@@ -93,9 +93,9 @@ public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   private FullPath write(SPolyReference sReference, BValue value)
       throws IOException, DuplicatedPathsException {
     FullPath artifactPath = artifactPath(sReference.referencedId());
-    if (sReference.schema().type() instanceof SArrayType sArrayType) {
+    if (sReference.scheme().type() instanceof SArrayType sArrayType) {
       return saveArray(sArrayType, artifactPath, (BArray) value);
-    } else if (isFileStructType(sReference.schema().type())) {
+    } else if (isFileStructType(sReference.scheme().type())) {
       return saveFile(artifactPath, (BTuple) value);
     } else {
       return saveBaseValue(artifactPath, value);

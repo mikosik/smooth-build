@@ -52,7 +52,7 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
         .mapErr(e -> unknownFqnMessage(fqn))
         .flatMapOk(e -> {
           if (e instanceof SNamedValue namedValue) {
-            if (namedValue.schema().typeParams().isEmpty()) {
+            if (namedValue.typeScheme().typeParams().isEmpty()) {
               return ok(namedValue);
             } else {
               return err(e.fqn().q() + " cannot be calculated as it is a polymorphic value.");
@@ -69,6 +69,6 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   }
 
   private static SPolyReference referenceTo(SNamedValue sNamedValue) {
-    return new SPolyReference(sNamedValue.schema(), sNamedValue.fqn(), commandLineLocation());
+    return new SPolyReference(sNamedValue.typeScheme(), sNamedValue.fqn(), commandLineLocation());
   }
 }

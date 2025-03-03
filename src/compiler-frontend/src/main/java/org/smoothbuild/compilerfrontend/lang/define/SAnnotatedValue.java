@@ -7,7 +7,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 
 /**
  * Annotated value (one that has not a body).
@@ -15,13 +15,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  */
 public final class SAnnotatedValue implements SNamedValue, IdentifiableCode {
   private final SAnnotation annotation;
-  private final SSchema schema;
+  private final STypeScheme typeScheme;
   private final Fqn fqn;
   private final Location location;
 
-  public SAnnotatedValue(SAnnotation annotation, SSchema schema, Fqn fqn, Location location) {
+  public SAnnotatedValue(
+      SAnnotation annotation, STypeScheme typeScheme, Fqn fqn, Location location) {
     this.annotation = annotation;
-    this.schema = schema;
+    this.typeScheme = typeScheme;
     this.fqn = fqn;
     this.location = location;
   }
@@ -31,8 +32,8 @@ public final class SAnnotatedValue implements SNamedValue, IdentifiableCode {
   }
 
   @Override
-  public SSchema schema() {
-    return schema;
+  public STypeScheme typeScheme() {
+    return typeScheme;
   }
 
   @Override
@@ -57,21 +58,21 @@ public final class SAnnotatedValue implements SNamedValue, IdentifiableCode {
     }
     return object instanceof SAnnotatedValue that
         && this.annotation().equals(that.annotation())
-        && this.schema().equals(that.schema())
+        && this.typeScheme().equals(that.typeScheme())
         && this.fqn().equals(that.fqn())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation(), schema(), fqn(), location());
+    return Objects.hash(annotation(), typeScheme(), fqn(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SAnnotatedValue")
         .addField("annotation", annotation)
-        .addField("schema", schema())
+        .addField("typeScheme", typeScheme())
         .addField("fqn", fqn())
         .addField("location", location())
         .toString();

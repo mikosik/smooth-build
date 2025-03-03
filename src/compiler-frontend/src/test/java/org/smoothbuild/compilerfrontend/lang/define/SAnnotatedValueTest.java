@@ -11,7 +11,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
   void to_source_code() {
     var annotationS = new SAnnotation("MyAnnotation", sString(7, "myPath"), location(17));
     var annotatedValueS =
-        new SAnnotatedValue(annotationS, sSchema(varA()), fqn("module:myValue"), location(7));
+        new SAnnotatedValue(annotationS, sScheme(varA()), fqn("module:myValue"), location(7));
     assertThat(annotatedValueS.toSourceCode())
         .isEqualTo("""
           @MyAnnotation("myPath")
@@ -22,7 +22,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
   void to_string() {
     var annotationS = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     var annotatedValueS =
-        new SAnnotatedValue(annotationS, sSchema(sStringType()), fqn("myVal"), location(7));
+        new SAnnotatedValue(annotationS, sScheme(sStringType()), fqn("myVal"), location(7));
     assertThat(annotatedValueS.toString())
         .isEqualTo(
             """
@@ -36,7 +36,7 @@ public class SAnnotatedValueTest extends FrontendCompilerTestContext {
                 )
                 location = {t-project}/module.smooth:17
               )
-              schema = <>String
+              typeScheme = <>String
               fqn = myVal
               location = {t-project}/module.smooth:7
             )""");

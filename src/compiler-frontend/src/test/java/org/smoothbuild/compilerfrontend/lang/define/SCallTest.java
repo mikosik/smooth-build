@@ -10,7 +10,7 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SCallTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    var funcReference = sPolyReference(sFuncSchema(varA(), varA()), fqn("my:company:myFunc"));
+    var funcReference = sPolyReference(sFuncScheme(varA(), varA()), fqn("my:company:myFunc"));
     var callable = sInstantiate(list(sIntType()), funcReference);
     var callS = sCall(callable, sInt(7));
     assertThat(callS.toSourceCode()).isEqualTo("my:company:myFunc<Int>(7)");
@@ -27,7 +27,7 @@ public class SCallTest extends FrontendCompilerTestContext {
               callee = SInstantiate(
                 typeArgs = <Int>
                 polymorphic = SPolyReference(
-                  schema = <A>(A)->A
+                  typeScheme = <A>(A)->A
                   referencedName = myId
                   location = {t-project}/module.smooth:4
                 )

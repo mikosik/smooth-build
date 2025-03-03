@@ -8,8 +8,8 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 public final class PLambda extends PExpr implements PFunc {
   private final String nameText;
@@ -18,7 +18,7 @@ public final class PLambda extends PExpr implements PFunc {
   private final NList<PItem> params;
   private final PExpr body;
   private Fqn fqn;
-  private SFuncSchema sSchema;
+  private SFuncTypeScheme sTypeScheme;
   private PScope scope;
 
   public PLambda(
@@ -76,13 +76,13 @@ public final class PLambda extends PExpr implements PFunc {
   }
 
   @Override
-  public SFuncSchema schema() {
-    return sSchema;
+  public SFuncTypeScheme typeScheme() {
+    return sTypeScheme;
   }
 
   @Override
-  public void setSchema(SFuncSchema sSchema) {
-    this.sSchema = sSchema;
+  public void setScheme(SFuncTypeScheme sTypeScheme) {
+    this.sTypeScheme = sTypeScheme;
   }
 
   @Override

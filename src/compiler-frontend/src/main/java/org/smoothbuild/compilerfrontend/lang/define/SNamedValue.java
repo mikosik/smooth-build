@@ -9,8 +9,8 @@ import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSo
 public sealed interface SNamedValue extends SValue, SNamedEvaluable
     permits SAnnotatedValue, SNamedExprValue {
   static String valueHeaderToSourceCode(SValue value) {
-    var schema = value.schema();
-    return schema.type().specifier() + " " + value.name()
-        + typeParamsToSourceCode(schema.typeParams());
+    var scheme = value.typeScheme();
+    return scheme.type().specifier() + " " + value.name()
+        + typeParamsToSourceCode(scheme.typeParams());
   }
 }

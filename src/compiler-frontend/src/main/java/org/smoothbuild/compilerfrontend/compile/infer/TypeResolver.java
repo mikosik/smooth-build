@@ -18,10 +18,10 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
@@ -39,9 +39,9 @@ public class TypeResolver {
 
   private void resolveNamedValue(PNamedValue pNamedValue) throws TypeException {
     resolveBody(pNamedValue.body());
-    var sSchema = pNamedValue.schema();
-    var typeParams = resolveTypeParams(sSchema);
-    pNamedValue.setSchema(new SSchema(typeParams, resolveType(sSchema)));
+    var typeScheme = pNamedValue.typeScheme();
+    var typeParams = resolveTypeParams(typeScheme);
+    pNamedValue.setSchema(new STypeScheme(typeParams, resolveType(typeScheme)));
   }
 
   public static void resolveFunc(Unifier unifier, PFunc pFunc) throws TypeException {
@@ -49,18 +49,18 @@ public class TypeResolver {
   }
 
   private void resolveFunc(PFunc pFunc) throws TypeException {
-    var sSchema = pFunc.schema();
-    var typeParams = resolveTypeParams(sSchema);
-    pFunc.setSchema(new SFuncSchema(typeParams, (SFuncType) resolveType(sSchema)));
+    var funcTypeScheme = pFunc.typeScheme();
+    var typeParams = resolveTypeParams(funcTypeScheme);
+    pFunc.setScheme(new SFuncTypeScheme(typeParams, (SFuncType) resolveType(funcTypeScheme)));
     resolveBody(pFunc.body());
   }
 
-  private List<STypeVar> resolveTypeParams(SSchema sSchema) {
-    return sSchema.typeParams().map(v -> (STypeVar) unifier.resolve(v));
+  private List<STypeVar> resolveTypeParams(STypeScheme sTypeScheme) {
+    return sTypeScheme.typeParams().map(v -> (STypeVar) unifier.resolve(v));
   }
 
-  private SType resolveType(SSchema sSchema) {
-    return unifier.resolve(sSchema.type());
+  private SType resolveType(STypeScheme sTypeScheme) {
+    return unifier.resolve(sTypeScheme.type());
   }
 
   private void resolveBody(Maybe<PExpr> body) throws TypeException {
@@ -102,8 +102,8 @@ public class TypeResolver {
   }
 
   private void resolveLambda(PLambda pFunc) throws TypeException {
-    var sSchema = pFunc.schema();
-    pFunc.setSchema(new SFuncSchema(list(), (SFuncType) resolveType(sSchema)));
+    var typeScheme = pFunc.typeScheme();
+    pFunc.setScheme(new SFuncTypeScheme(list(), (SFuncType) resolveType(typeScheme)));
     resolveBody(pFunc.body());
   }
 

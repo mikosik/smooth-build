@@ -11,7 +11,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
     var params = nlist(sItem(varA(), "p1"), sItem(sIntType(), "p2", "default:value"));
-    var funcTS = sFuncSchema(params, sStringType());
+    var funcTS = sFuncScheme(params, sStringType());
     var func =
         new SAnnotatedFunc(sNativeAnnotation("path"), funcTS, fqn("myFunc"), params, location(1));
     assertThat(func.toSourceCode())
@@ -24,7 +24,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
   @Test
   void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
-    var funcTS = sFuncSchema(params, sStringType());
+    var funcTS = sFuncScheme(params, sStringType());
     var func = new SAnnotatedFunc(sNativeAnnotation(), funcTS, fqn("myFunc"), params, location(1));
     assertThat(func.toString())
         .isEqualTo(
@@ -39,7 +39,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
                     )
                     location = {t-project}/module.smooth:1
                   )
-                  schema = <>(Int)->String
+                  typeScheme = <>(Int)->String
                   params = [
                     SItem(
                       type = Int

@@ -9,13 +9,13 @@ import org.smoothbuild.common.base.Strings;
 import org.smoothbuild.common.collect.List;
 
 /**
- * Polymorphic type (aka type schema).
+ * Polymorphic type (aka type scheme).
  */
-public sealed class SSchema permits SFuncSchema {
+public sealed class STypeScheme permits SFuncTypeScheme {
   private final List<STypeVar> typeParams;
   private final SType type;
 
-  public SSchema(List<STypeVar> typeParams, SType type) {
+  public STypeScheme(List<STypeVar> typeParams, SType type) {
     assertTypeParamsArePresentInType(typeParams, type);
     this.typeParams = requireNonNull(typeParams);
     this.type = requireNonNull(type);
@@ -29,8 +29,8 @@ public sealed class SSchema permits SFuncSchema {
   }
 
   /**
-   * Type variables that are quantified with for-all quantifier (= Parameters of this schema).
-   * Other variables present in this schema are type variables which are quantified variables
+   * Type variables that are quantified with for-all quantifier (= Parameters of this scheme).
+   * Other variables present in this scheme are type variables which are quantified variables
    * of enclosing environment (enclosing function or value).
    */
   public List<STypeVar> typeParams() {
@@ -51,9 +51,9 @@ public sealed class SSchema permits SFuncSchema {
     if (this == object) {
       return true;
     }
-    return object instanceof SSchema schema
-        && typeParams.equals(schema.typeParams)
-        && type.equals(schema.type);
+    return object instanceof STypeScheme typeScheme
+        && typeParams.equals(typeScheme.typeParams)
+        && type.equals(typeScheme.type);
   }
 
   @Override

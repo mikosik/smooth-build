@@ -6,13 +6,13 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFunc
     permits PConstructor {
   private final PType resultType;
   private final NList<PItem> params;
-  private SFuncSchema sFuncSchema;
+  private SFuncTypeScheme sFuncTypeScheme;
 
   public PNamedFunc(
       PType resultType,
@@ -38,13 +38,13 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
   }
 
   @Override
-  public SFuncSchema schema() {
-    return sFuncSchema;
+  public SFuncTypeScheme typeScheme() {
+    return sFuncTypeScheme;
   }
 
   @Override
-  public void setSchema(SFuncSchema sFuncSchema) {
-    this.sFuncSchema = sFuncSchema;
+  public void setScheme(SFuncTypeScheme sFuncTypeScheme) {
+    this.sFuncTypeScheme = sFuncTypeScheme;
   }
 
   @Override

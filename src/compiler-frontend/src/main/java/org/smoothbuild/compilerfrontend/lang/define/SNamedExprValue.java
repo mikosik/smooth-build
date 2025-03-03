@@ -7,7 +7,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 
 /**
  * Named Expression Value (one that has a body).
@@ -15,12 +15,12 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
  */
 public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
   private final SExpr body;
-  private final SSchema schema;
+  private final STypeScheme typeScheme;
   private final Fqn fqn;
   private final Location location;
 
-  public SNamedExprValue(SSchema schema, Fqn fqn, SExpr body, Location location) {
-    this.schema = schema;
+  public SNamedExprValue(STypeScheme typeScheme, Fqn fqn, SExpr body, Location location) {
+    this.typeScheme = typeScheme;
     this.fqn = fqn;
     this.body = body;
     this.location = location;
@@ -36,35 +36,8 @@ public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
   }
 
   @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof SNamedExprValue that
-        && this.schema().equals(that.schema())
-        && this.fqn().equals(that.fqn())
-        && this.body().equals(that.body())
-        && this.location().equals(that.location());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(schema(), fqn(), body(), location());
-  }
-
-  @Override
-  public String toString() {
-    return new ToStringBuilder("SNamedExprValue")
-        .addField("schema", schema())
-        .addField("fqn", fqn())
-        .addField("location", location())
-        .addField("body", body)
-        .toString();
-  }
-
-  @Override
-  public SSchema schema() {
-    return schema;
+  public STypeScheme typeScheme() {
+    return typeScheme;
   }
 
   @Override
@@ -75,5 +48,32 @@ public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
   @Override
   public Location location() {
     return location;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof SNamedExprValue that
+        && this.typeScheme().equals(that.typeScheme())
+        && this.fqn().equals(that.fqn())
+        && this.body().equals(that.body())
+        && this.location().equals(that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(typeScheme(), fqn(), body(), location());
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder("SNamedExprValue")
+        .addField("typeScheme", typeScheme())
+        .addField("fqn", fqn())
+        .addField("location", location())
+        .addField("body", body)
+        .toString();
   }
 }

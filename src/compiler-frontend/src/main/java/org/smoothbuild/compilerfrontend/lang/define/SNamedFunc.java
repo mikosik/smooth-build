@@ -6,8 +6,8 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
-import org.smoothbuild.compilerfrontend.lang.type.SSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
+import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 
 /**
  * Named function.
@@ -15,20 +15,20 @@ import org.smoothbuild.compilerfrontend.lang.type.SSchema;
 public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvaluable
     permits SAnnotatedFunc, SNamedExprFunc, SConstructor {
   private final NList<SItem> params;
-  private final SSchema schema;
+  private final STypeScheme typeScheme;
   private final Fqn fqn;
   private final Location location;
 
-  public SNamedFunc(SFuncSchema schema, Fqn fqn, NList<SItem> params, Location location) {
-    this.schema = schema;
+  public SNamedFunc(SFuncTypeScheme typeScheme, Fqn fqn, NList<SItem> params, Location location) {
+    this.typeScheme = typeScheme;
     this.fqn = fqn;
     this.params = params;
     this.location = location;
   }
 
   @Override
-  public SFuncSchema schema() {
-    return (SFuncSchema) schema;
+  public SFuncTypeScheme typeScheme() {
+    return (SFuncTypeScheme) typeScheme;
   }
 
   @Override
@@ -47,8 +47,8 @@ public abstract sealed class SNamedFunc implements NamedFunc, SFunc, SNamedEvalu
   }
 
   protected String funcHeaderToSourceCode() {
-    return schema().type().result().specifier() + " " + name()
-        + typeParamsToSourceCode(schema().typeParams())
+    return this.typeScheme().type().result().specifier() + " " + name()
+        + typeParamsToSourceCode(this.typeScheme().typeParams())
         + params().list().map(SItem::toSourceCode).toString("(", ", ", ")");
   }
 }

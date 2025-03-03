@@ -97,7 +97,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var params = fields.map(
           f -> new SItem(fields.get(f.name()).type().sType(), f.fqn(), none(), f.location()));
       return new SConstructor(
-          pConstructor.schema(), pConstructor.fqn(), params, pConstructor.location());
+          pConstructor.typeScheme(), pConstructor.fqn(), params, pConstructor.location());
     }
 
     private SNamedEvaluable convertReferenceable(PReferenceable pReferenceable) {
@@ -110,7 +110,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
-      var schema = pNamedValue.schema();
+      var schema = pNamedValue.typeScheme();
       var fqn = pNamedValue.fqn();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
@@ -145,7 +145,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
-      var schema = pNamedFunc.schema();
+      var schema = pNamedFunc.typeScheme();
       var fqn = pNamedFunc.fqn();
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
@@ -185,7 +185,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda.bodyGet());
-      return new SLambda(pLambda.schema(), pLambda.fqn(), params, body, pLambda.location());
+      return new SLambda(pLambda.typeScheme(), pLambda.fqn(), params, body, pLambda.location());
     }
 
     private SBlob convertBlob(PBlob blob) {
@@ -224,7 +224,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return switch (pReference.referenced()) {
         case MonoReferenceable mono -> new SMonoReference(mono.sType(), fqn, location);
         case PolyReferenceable poly -> {
-          var sPolyReference = new SPolyReference(poly.schema(), fqn, location);
+          var sPolyReference = new SPolyReference(poly.typeScheme(), fqn, location);
           yield new SInstantiate(pInstantiate.typeArgs(), sPolyReference, pInstantiate.location());
         }
         default -> throw unexpectedCaseException(pReference.referenced());

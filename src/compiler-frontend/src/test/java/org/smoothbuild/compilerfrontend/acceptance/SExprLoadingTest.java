@@ -787,7 +787,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
                 = 7;
             [A] empty<A> = [];
             """;
-        var emptyReference = sPolyReference(3, sSchema(sArrayType(varA())), fqn("empty"));
+        var emptyReference = sPolyReference(3, sScheme(sArrayType(varA())), fqn("empty"));
         var defName = "myFunc~param1";
         var value = sValue(3, defName, sInstantiate(3, list(varA()), emptyReference));
         var params = nlist(sItem(2, sIntArrayT(), "param1", defName));
@@ -807,9 +807,9 @@ public class SExprLoadingTest extends FrontendCompileTester {
                 = 7;
             [A] empty<A> = [];
             """;
-        var emptyReference = sPolyReference(3, sSchema(sArrayType(varA())), fqn("empty"));
+        var emptyReference = sPolyReference(3, sScheme(sArrayType(varA())), fqn("empty"));
         var defaultBody = sInstantiate(3, list(varA()), emptyReference);
-        var defaultValue = sValue(3, sSchema(sArrayType(varA())), "myFunc~param1", defaultBody);
+        var defaultValue = sValue(3, sScheme(sArrayType(varA())), "myFunc~param1", defaultBody);
         var params = nlist(sItem(2, sArrayType(varB()), "param1", some("myFunc~param1")));
         var func = sFunc(1, sIntType(), "myFunc", params, sInt(4, 7));
         var api = module(code).loadsWithSuccess();

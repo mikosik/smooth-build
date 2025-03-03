@@ -5,7 +5,7 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncSchema;
+import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 /**
  * Annotated function that has no defined body.
@@ -15,8 +15,12 @@ public final class SAnnotatedFunc extends SNamedFunc {
   private final SAnnotation annotation;
 
   public SAnnotatedFunc(
-      SAnnotation annotation, SFuncSchema schema, Fqn fqn, NList<SItem> params, Location location) {
-    super(schema, fqn, params, location);
+      SAnnotation annotation,
+      SFuncTypeScheme funcTypeScheme,
+      Fqn fqn,
+      NList<SItem> params,
+      Location location) {
+    super(funcTypeScheme, fqn, params, location);
     this.annotation = annotation;
   }
 
@@ -36,7 +40,7 @@ public final class SAnnotatedFunc extends SNamedFunc {
     }
     return object instanceof SAnnotatedFunc that
         && this.annotation.equals(that.annotation)
-        && this.schema().equals(that.schema())
+        && this.typeScheme().equals(that.typeScheme())
         && this.fqn().equals(that.fqn())
         && this.params().equals(that.params())
         && this.location().equals(that.location());
@@ -44,14 +48,14 @@ public final class SAnnotatedFunc extends SNamedFunc {
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation, schema(), fqn(), params(), location());
+    return Objects.hash(annotation, typeScheme(), fqn(), params(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SAnnotatedFunc")
         .addField("annotation", annotation)
-        .addField("schema", schema())
+        .addField("typeScheme", typeScheme())
         .addListField("params", params().list())
         .addField("location", location())
         .toString();
