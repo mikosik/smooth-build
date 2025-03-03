@@ -4,7 +4,6 @@ import static org.smoothbuild.common.collect.Map.mapOfAll;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.HashMap;
@@ -27,7 +26,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeDefinition;
-import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
@@ -129,7 +127,16 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     }
 
     private void addType(PTypeDefinition type) {
-      addBinding(types, type, true);
+      // For now, we don't have anything (function or value) that can be enclosed inside other
+      // function or value and have fully qualified name that contains enclosing name.
+      // Everything is flat in the global scope. Parameter default values have workaround of
+      // gluing function name and parameter name using '~' into a name.
+      var name = type.name();
+      PTypeDefinition previousBinding = types.put(name, type);
+      if (previousBinding != null) {
+        log.log(
+            alreadyDefinedError(type.location(), previousBinding.location().description(), name));
+      }
     }
 
     private void addReferenceable(PReferenceable pReferenceable) {
@@ -137,25 +144,15 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     }
 
     private void addReferenceable(PReferenceable pReferenceable, boolean reportErrors) {
-      addBinding(referenceables, pReferenceable, reportErrors);
-    }
-
-    private <T extends IdentifiableCode> void addBinding(
-        java.util.Map<Name, T> bindings, T binding, boolean reportErrors) {
       // For now, we don't have anything (function or value) that can be enclosed inside other
       // function or value and have fully qualified name that contains enclosing name.
       // Everything is flat in the global scope. Parameter default values have workaround of
       // gluing function name and parameter name using '~' into a name.
-      var last = binding.name();
-      addBinding(bindings, binding, last, reportErrors);
-    }
-
-    private <T extends IdentifiableCode> void addBinding(
-        java.util.Map<Name, T> bindings, T binding, Name name, boolean reportErrors) {
-      var previousBinding = bindings.put(name, binding);
+      var name = pReferenceable.name();
+      PReferenceable previousBinding = referenceables.put(name, pReferenceable);
       if (previousBinding != null && reportErrors) {
         log.log(alreadyDefinedError(
-            binding.location(), previousBinding.location().description(), name));
+            pReferenceable.location(), previousBinding.location().description(), name));
       }
     }
 
