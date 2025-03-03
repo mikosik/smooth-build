@@ -15,6 +15,7 @@ import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
@@ -35,22 +36,22 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       class _named_value {
         @Test
         void mono_expression_value() throws Exception {
-          var valueS = sValue("myValue", sInt(7));
-          assertTranslation(valueS, bInt(7));
+          var sValue = sPoly(sValue("myValue", sInt(7)));
+          assertTranslation(sValue, bInt(7));
         }
 
         @Test
         void poly_expression_value() throws Exception {
-          var emptyArrayValue = emptySArrayValue();
-          var instantiateS = sInstantiate(list(sIntType()), emptyArrayValue);
-          var orderB = bOrder(bIntType());
-          assertTranslation(bindings(emptyArrayValue), instantiateS, orderB);
+          var emptyArrayValue = sPoly(list(varA()), emptySArrayValue(varA()));
+          var sInstantiate = sInstantiate(emptyArrayValue, list(sIntType()));
+          var bOrder = bOrder(bIntType());
+          assertTranslation(bindings(emptyArrayValue), sInstantiate, bOrder);
         }
 
         @Test
         void mono_expression_value_referencing_other_expression_value() throws Exception {
-          var otherValue = sValue("otherValue", sInt(7));
-          var myValue = sValue("myValue", sInstantiate(otherValue));
+          var otherValue = sPoly(sValue("otherValue", sInt(7)));
+          var myValue = sPoly(sValue("myValue", sInstantiate(otherValue)));
           assertTranslation(bindings(otherValue, myValue), sInstantiate(myValue), bInt(7));
         }
 
@@ -60,15 +61,17 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var a = varA();
           var b = varB();
 
-          var emptyArrayValueS = emptySArrayValue(a);
-          var instantiatedEmptyArrayValueS = sInstantiate(list(b), emptyArrayValueS);
+          var sEmptyArrayValue = sPoly(list(a), emptySArrayValue(a));
 
-          var referencingValueS = sValue("referencing", instantiatedEmptyArrayValueS);
-          var instantiatedReferencingValueS = sInstantiate(list(sIntType()), referencingValueS);
+          var sInstantiatedEmptyArrayValue = sInstantiate(sEmptyArrayValue, list(b));
+          var sReferencingValue =
+              sPoly(list(b), sValue("referencing", sInstantiatedEmptyArrayValue));
 
-          var orderB = bOrder(bIntType());
+          var sInstantiatedReferencingValue = sInstantiate(sReferencingValue, list(sIntType()));
+
+          var bOrder = bOrder(bIntType());
           assertTranslation(
-              bindings(emptyArrayValueS, referencingValueS), instantiatedReferencingValueS, orderB);
+              bindings(sEmptyArrayValue, sReferencingValue), sInstantiatedReferencingValue, bOrder);
         }
 
         @Test
@@ -76,14 +79,14 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var path = moduleFullPath();
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = sNativeAnnotation(location(path, 1), sString(classBinaryName));
-          var nativeValueS =
-              sAnnotatedValue(nativeAnnotation, sStringType(), "myValue", location(path, 2));
+          var sNativeValue =
+              sPoly(sAnnotatedValue(nativeAnnotation, sStringType(), "myValue", location(path, 2)));
 
           var jar = bBlob(37);
           var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
-          var translator = sbTranslator(fileContentReader, bindings(nativeValueS));
+          var translator = sbTranslator(fileContentReader, bindings(sNativeValue));
 
-          assertCall(() -> translator.translateExpr(sInstantiate(nativeValueS)))
+          assertCall(() -> translator.translateExpr(sInstantiate(sNativeValue)))
               .throwsException(new SbTranslatorException("Illegal value annotation: `@Native`."));
         }
 
@@ -93,14 +96,15 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var path = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(path, 1));
-          var bytecodeValueS = sAnnotatedValue(ann, sStringType(), "myValue", location(path, 2));
+          var sBytecodeValue =
+              sPoly(sAnnotatedValue(ann, sStringType(), "myValue", location(path, 2)));
 
           var fileContentReader =
               fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
               fileContentReader,
-              bindings(bytecodeValueS),
-              sInstantiate(bytecodeValueS),
+              bindings(sBytecodeValue),
+              sInstantiate(sBytecodeValue),
               bString("abc"));
         }
 
@@ -108,17 +112,17 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         void poly_bytecode_value() throws Exception {
           var clazz = ReturnIdFunc.class;
           var a = varA();
-          var funcTS = sFuncType(a, a);
+          var sFuncType = sFuncType(a, a);
           var fullPath = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
-          var bytecodeValueS = sAnnotatedValue(2, ann, funcTS, "myFunc");
+          var sBytecodeValue = sPoly(list(a), sAnnotatedValue(2, ann, sFuncType, "myFunc"));
 
           var fileContentReader =
               fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var instantiateS = sInstantiate(list(sIntType()), bytecodeValueS);
+          var instantiateS = sInstantiate(sBytecodeValue, list(sIntType()));
           assertTranslation(
-              fileContentReader, bindings(bytecodeValueS), instantiateS, bIntIdLambda());
+              fileContentReader, bindings(sBytecodeValue), instantiateS, bIntIdLambda());
         }
       }
 
@@ -126,16 +130,16 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       class _named_func {
         @Test
         void mono_expression_function() throws Exception {
-          var funcS = sFunc("myFunc", nlist(), sInt(7));
-          assertTranslation(funcS, bLambda(bInt(7)));
+          var sFunc = sPoly(sFunc("myFunc", nlist(), sInt(7)));
+          assertTranslation(sFunc, bLambda(bInt(7)));
         }
 
         @Test
         void poly_expression_function() throws Exception {
-          var funcS = idSFunc();
-          var instantiateS = sInstantiate(list(sIntType()), funcS);
+          var sFunc = idSFunc();
+          var sInstantiate = sInstantiate(sFunc, list(sIntType()));
           var bLambda = bLambda(bIntIntLambdaType(), bReference(bIntType(), 0));
-          assertTranslation(bindings(funcS), instantiateS, bLambda);
+          assertTranslation(bindings(sFunc), sInstantiate, bLambda);
         }
 
         @Test
@@ -143,17 +147,17 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
             throws Exception {
           var b = varB();
 
-          var idFuncS = idSFunc();
-          var monoIdFuncS = sInstantiate(list(b), idFuncS);
+          var sIdFunc = idSFunc();
+          var monoIdFuncS = sInstantiate(sIdFunc, list(b));
 
-          var bodyS = sCall(monoIdFuncS, sParamRef(b, "p"));
-          var wrapFuncS = sFunc(b, "wrap", nlist(sItem(b, "p")), bodyS);
-          var wrapMonoFuncS = sInstantiate(list(sIntType()), wrapFuncS);
+          var sBody = sCall(monoIdFuncS, sParamRef(b, "p"));
+          var sWrapFunc = sPoly(list(b), sFunc(b, "wrap", nlist(sItem(b, "p")), sBody));
+          var sWrapMonoFunc = sInstantiate(sWrapFunc, list(sIntType()));
 
           var bIdLambda = bLambda(bIntIntLambdaType(), bReference(bIntType(), 0));
           var bWrapLambda =
               bLambda(bIntIntLambdaType(), bCall(bIdLambda, bReference(bIntType(), 0)));
-          assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, bWrapLambda);
+          assertTranslation(bindings(sIdFunc, sWrapFunc), sWrapMonoFunc, bWrapLambda);
         }
 
         @Test
@@ -163,7 +167,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(path, 1), sString(classBinaryName));
           var sNativeFunc =
-              sAnnotatedFunc(sAnnotation, sIntType(), "myFunc", nlist(sItem(sBlobType())));
+              sPoly(sAnnotatedFunc(sAnnotation, sIntType(), "myFunc", nlist(sItem(sBlobType()))));
 
           var bInvoke = bInvoke(
               bIntType(),
@@ -183,8 +187,9 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var path = moduleFullPath();
           var jar = bBlob(37);
           var classBinaryName = "class.binary.name";
-          var annotationS = sNativeAnnotation(location(path, 1), sString(classBinaryName));
-          var sNativeFunc = sAnnotatedFunc(annotationS, a, "myIdentity", nlist(sItem(a, "param")));
+          var sAnnotation = sNativeAnnotation(location(path, 1), sString(classBinaryName));
+          var sNativeFunc = sPoly(
+              list(a), sAnnotatedFunc(sAnnotation, a, "myIdentity", nlist(sItem(a, "param"))));
 
           var bInvoke = bInvoke(
               bIntType(),
@@ -194,8 +199,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var bLambda = bLambda(list(bIntType()), bInvoke);
 
           var fileContentReader = fileContentReaderMock(path.withExtension("jar"), jar);
-          var instantiateS = sInstantiate(list(sIntType()), sNativeFunc);
-          assertTranslation(fileContentReader, bindings(sNativeFunc), instantiateS, bLambda);
+          var sInstantiate = sInstantiate(sNativeFunc, list(sIntType()));
+          assertTranslation(fileContentReader, bindings(sNativeFunc), sInstantiate, bLambda);
         }
 
         @Test
@@ -203,16 +208,16 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var clazz = ReturnReturnAbcFunc.class;
           var path = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
-          var annotationS = sBytecode(sString(classBinaryName), location(path, 1));
-          var bytecodeFuncS =
-              sAnnotatedFunc(annotationS, sStringType(), "myFunc", nlist(), location(path, 2));
+          var sAnnotation = sBytecode(sString(classBinaryName), location(path, 1));
+          var sBytecodeFunc = sPoly(
+              sAnnotatedFunc(sAnnotation, sStringType(), "myFunc", nlist(), location(path, 2)));
 
           var fileContentReader =
               fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           assertTranslation(
               fileContentReader,
-              bindings(bytecodeFuncS),
-              sInstantiate(bytecodeFuncS),
+              bindings(sBytecodeFunc),
+              sInstantiate(sBytecodeFunc),
               bReturnAbcLambda());
         }
 
@@ -224,14 +229,14 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var fullPath = moduleFullPath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(classBinaryName, location(fullPath, 1));
-          var bytecodeFuncS =
-              sAnnotatedFunc(1, ann, funcTS.result(), "myFunc", nlist(sItem(a, "p")));
+          var func = sAnnotatedFunc(1, ann, funcTS.result(), "myFunc", nlist(sItem(a, "p")));
+          var sBytecodeFunc = sPoly(list(a), func);
 
           var fileContentReader =
               fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var instantiateS = sInstantiate(list(sIntType()), bytecodeFuncS);
+          var sInstantiate = sInstantiate(sBytecodeFunc, list(sIntType()));
           assertTranslation(
-              fileContentReader, bindings(bytecodeFuncS), instantiateS, bIntIdLambda());
+              fileContentReader, bindings(sBytecodeFunc), sInstantiate, bIntIdLambda());
         }
       }
     }
@@ -240,20 +245,20 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     class _expr {
       @Test
       void blob() throws Exception {
-        var blobS = sBlob(37);
-        assertTranslation(blobS, bBlob(37));
+        var sBlob = sBlob(37);
+        assertTranslation(sBlob, bBlob(37));
       }
 
       @Test
       void int_() throws Exception {
-        var intS = sInt(1);
-        assertTranslation(intS, bInt(1));
+        var sInt = sInt(1);
+        assertTranslation(sInt, bInt(1));
       }
 
       @Test
       void string() throws Exception {
-        var stringS = sString("abc");
-        assertTranslation(stringS, bString("abc"));
+        var sString = sString("abc");
+        assertTranslation(sString, bString("abc"));
       }
 
       @Test
@@ -265,7 +270,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       @Test
       void lambda_referencing_param_of_enclosing_function() throws Exception {
         var sLambda = sLambda(sParamRef(sIntType(), "p"));
-        var sFunc = sFunc("myFunc", nlist(sItem(sIntType(), "p")), sLambda);
+        var sFunc = sPoly(sFunc("myFunc", nlist(sItem(sIntType(), "p")), sLambda));
 
         var bBody = bLambda(bReference(bIntType(), 0));
         var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bBody);
@@ -277,7 +282,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       void lambda_with_param_and_referencing_param_of_enclosing_function() throws Exception {
         // myFunc(Int i) = (Blob b) -> i;
         var sLambda = sLambda(nlist(sItem(sBlobType(), "b")), sParamRef(sIntType(), "i"));
-        var sFunc = sFunc("myFunc", nlist(sItem(sIntType(), "i")), sLambda);
+        var sFunc = sPoly(sFunc("myFunc", nlist(sItem(sIntType(), "i")), sLambda));
 
         var bBody = bLambda(list(bBlobType()), bReference(bIntType(), 1));
         var bLambda = bLambda(list(bIntType()), bBody);
@@ -287,7 +292,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void call() throws Exception {
-        var funcS = sFunc("myFunc", nlist(), sString("abc"));
+        var funcS = sPoly(sFunc("myFunc", nlist(), sString("abc")));
         var callS = sCall(sInstantiate(funcS));
         assertTranslation(bindings(funcS), callS, bCall(bLambda(bString("abc"))));
       }
@@ -306,13 +311,13 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void param_ref() throws Exception {
-        var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p"));
+        var funcS = sPoly(sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p")));
         assertTranslation(funcS, bIntIdLambda());
       }
 
       @Test
       void param_ref_to_unknown_param_causes_exception() {
-        var funcS = sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2"));
+        var funcS = sPoly(sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2")));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(sInstantiate(funcS)))
             .throwsException(
                 new SbTranslatorException("{t-project}/module.smooth:1: Cannot resolve `p2`."));
@@ -321,7 +326,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       @Test
       void select() throws Exception {
         var sStructType = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
-        var sConstructor = sConstructor(sStructType);
+        var sConstructor = sPoly(sConstructor(sStructType));
         var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
         var sSelect = sSelect(sCall, "field");
 
@@ -335,8 +340,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           throws Exception {
         // regression test
         var sLambda = sLambda(sParamRef(varA(), "a"));
-        var sFunc = sFunc("myFunc", nlist(sItem(varA(), "a")), sLambda);
-        var sInstantiate = sInstantiate(list(sIntType()), sFunc);
+        var sFunc = sPoly(list(varA()), sFunc("myFunc", nlist(sItem(varA(), "a")), sLambda));
+        var sInstantiate = sInstantiate(sFunc, list(sIntType()));
 
         var bBody = bLambda(bReference(bIntType(), 0));
         var bLambda = bLambda(bLambdaType(bIntType(), bIntLambdaType()), bBody);
@@ -354,17 +359,17 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       class _named_value {
         @Test
         void expression_value() throws Exception {
-          var valueS = sValue(3, "myValue", sInt(7, 37));
-          Bindings<SNamedEvaluable> evaluables = bindings(valueS);
+          var valueS = sPoly(sValue(3, "myValue", sInt(7, 37)));
+          var evaluables = bindings(valueS);
           SExpr sExpr = sInstantiate(9, valueS);
           assertNalMapping(evaluables, sExpr, null, location(7));
         }
 
         @Test
         void expression_value_referencing_other_expression_value() throws Exception {
-          var otherValueS = sValue(6, "otherValue", sInt(7, 37));
-          var valueS = sValue(5, "myValue", sInstantiate(otherValueS));
-          Bindings<SNamedEvaluable> evaluables = bindings(otherValueS, valueS);
+          var otherValueS = sPoly(sValue(6, "otherValue", sInt(7, 37)));
+          var valueS = sPoly(sValue(5, "myValue", sInstantiate(otherValueS)));
+          var evaluables = bindings(otherValueS, valueS);
           SExpr sExpr = sInstantiate(9, valueS);
           assertNalMapping(evaluables, sExpr, null, location(7));
         }
@@ -376,7 +381,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 7));
           var bytecodeValueS =
-              sAnnotatedValue(ann, sStringType(), "myValue", location(fullPath, 8));
+              sPoly(sAnnotatedValue(ann, sStringType(), "myValue", location(fullPath, 8)));
 
           var fileContentReader =
               fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -390,13 +395,13 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       class _named_func {
         @Test
         void expression_function() throws Exception {
-          var funcS = sFunc(7, "myFunc", nlist(), sInt(37));
+          var funcS = sPoly(sFunc(7, "myFunc", nlist(), sInt(37)));
           assertNalMapping(bindings(funcS), sInstantiate(3, funcS), "myFunc", location(7));
         }
 
         @Test
         void expression_inside_expression_function_body() throws Exception {
-          var funcS = sFunc(7, "myFunc", nlist(), sInt(8, 37));
+          var funcS = sPoly(sFunc(7, "myFunc", nlist(), sInt(8, 37)));
           var sbTranslator = newTranslator(bindings(funcS));
           var funcB = (BLambda) sbTranslator.translateExpr(sInstantiate(funcS));
           var body = funcB.body();
@@ -408,8 +413,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var fullPath = moduleFullPath();
           var classBinaryName = "class.binary.name";
           var sAnnotation = sNativeAnnotation(location(fullPath, 1), sString(classBinaryName));
-          var sNativeFunc =
-              sAnnotatedFunc(2, sAnnotation, sIntType(), "myFunc", nlist(sItem(sBlobType())));
+          var sNativeFunc = sPoly(
+              sAnnotatedFunc(2, sAnnotation, sIntType(), "myFunc", nlist(sItem(sBlobType()))));
 
           var fileContentReader = fileContentReaderMock(fullPath.withExtension("jar"), bBlob(37));
           var sbTranslator = sbTranslator(fileContentReader, bindings(sNativeFunc));
@@ -423,7 +428,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
           var classBinaryName = clazz.getCanonicalName();
           var ann = sBytecode(sString(classBinaryName), location(fullPath, 1));
           var bytecodeFuncS =
-              sAnnotatedFunc(ann, sStringType(), "myFunc", nlist(), location(fullPath, 2));
+              sPoly(sAnnotatedFunc(ann, sStringType(), "myFunc", nlist(), location(fullPath, 2)));
 
           var fileContentReader =
               fileContentReaderMock(fullPath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -467,7 +472,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void call() throws Exception {
-        var funcS = sFunc(7, "myFunc", nlist(), sString("abc"));
+        var funcS = sPoly(sFunc(7, "myFunc", nlist(), sString("abc")));
         var call = sCall(8, sInstantiate(funcS));
         assertNalMapping(bindings(funcS), call, null, location(8));
       }
@@ -481,7 +486,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       @Test
       void param_ref() throws Exception {
         var funcS =
-            sFunc(4, "myFunc", nlist(sItem(sIntType(), "p")), sParamRef(5, sIntType(), "p"));
+            sPoly(sFunc(4, "myFunc", nlist(sItem(sIntType(), "p")), sParamRef(5, sIntType(), "p")));
         var sbTranslator = newTranslator(bindings(funcS));
         var bLambda = (BLambda) sbTranslator.translateExpr(sInstantiate(funcS));
         assertNalMapping(sbTranslator, bLambda.body(), "p", location(5));
@@ -490,7 +495,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       @Test
       void select() throws Exception {
         var structTS = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
-        var constructorS = sConstructor(structTS);
+        var constructorS = sPoly(sConstructor(structTS));
         var callS = sCall(sInstantiate(constructorS), sString("abc"));
         var selectS = sSelect(4, callS, "field");
         assertNalMapping(bindings(constructorS), selectS, null, location(4));
@@ -500,15 +505,16 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       class _instantiate {
         @Test
         void expression_value() throws Exception {
-          var sValue = sValue(7, "emptyArray", sOrder(8, varA()));
-          var sInstantiate = sInstantiate(4, list(sIntType()), sValue);
+          var a = varA();
+          var sValue = sPoly(list(a), sValue(7, "emptyArray", sOrder(8, a)));
+          var sInstantiate = sInstantiate(4, sValue, list(sIntType()));
           assertNalMapping(bindings(sValue), sInstantiate, null, location(8));
         }
 
         @Test
         void expression_function() throws Exception {
           var identity = idSFunc();
-          var instantiateS = sInstantiate(list(sIntType()), identity);
+          var instantiateS = sInstantiate(identity, list(sIntType()));
           assertNalMapping(bindings(idSFunc()), instantiateS, "myId", location(1));
         }
       }
@@ -533,8 +539,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       var fileContentReader =
           fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertTranslationIsCached(
-          fileContentReader, bindings(bytecodeValueS), sInstantiate(bytecodeValueS));
+      var poly = sPoly(bytecodeValueS);
+      assertTranslationIsCached(fileContentReader, bindings(poly), sInstantiate(poly));
     }
 
     @Test
@@ -555,7 +561,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       var path = moduleFullPath();
       var classBinaryName = clazz.getCanonicalName();
       var ann = sBytecode(sString(classBinaryName), location(path, 1));
-      var bytecodeFuncS = sAnnotatedFunc(ann, sStringType(), "myFunc", nlist(), location(path, 2));
+      var bytecodeFuncS =
+          sPoly(sAnnotatedFunc(ann, sStringType(), "myFunc", nlist(), location(path, 2)));
       var fileContentReader =
           fileContentReaderMock(path.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
@@ -572,21 +579,26 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     @Test
     void instantiated_poly_function_translation_result() throws Exception {
       var funcS = idSFunc();
-      var instantiateS = sInstantiate(list(sIntType()), funcS);
+      var instantiateS = sInstantiate(funcS, list(sIntType()));
       assertTranslationIsCached(bindings(funcS), instantiateS);
     }
 
     private void assertTranslationIsCached(SNamedEvaluable sNamedEvaluable) throws Exception {
+      var poly = sPoly(sNamedEvaluable);
+      assertTranslationIsCached(bindings(poly), sInstantiate(poly));
+    }
+
+    private void assertTranslationIsCached(SPolyEvaluable sNamedEvaluable) throws Exception {
       assertTranslationIsCached(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable));
     }
 
-    private void assertTranslationIsCached(Bindings<SNamedEvaluable> evaluables, SExpr sExpr)
+    private void assertTranslationIsCached(Bindings<SPolyEvaluable> evaluables, SExpr sExpr)
         throws Exception {
       assertTranslationIsCached(sExpr, newTranslator(evaluables));
     }
 
     private void assertTranslationIsCached(
-        FileContentReader fileContentReader, Bindings<SNamedEvaluable> evaluables, SExpr sExpr)
+        FileContentReader fileContentReader, Bindings<SPolyEvaluable> evaluables, SExpr sExpr)
         throws SbTranslatorException {
       var sbTranslator = newTranslator(fileContentReader, evaluables);
       assertTranslationIsCached(sExpr, sbTranslator);
@@ -599,14 +611,13 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     }
   }
 
-  private void assertTranslation(Bindings<SNamedEvaluable> evaluables, SExpr sExpr, BExpr expected)
+  private void assertTranslation(Bindings<SPolyEvaluable> evaluables, SExpr sExpr, BExpr expected)
       throws Exception {
     assertTranslation(newTranslator(evaluables), sExpr, expected);
   }
 
-  private void assertTranslation(SNamedEvaluable sNamedEvaluable, BExpr expectedB)
-      throws Exception {
-    assertTranslation(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable), expectedB);
+  private void assertTranslation(SPolyEvaluable sPolyEvaluable, BExpr expected) throws Exception {
+    assertTranslation(bindings(sPolyEvaluable), sInstantiate(sPolyEvaluable), expected);
   }
 
   private void assertTranslation(SExpr sExpr, BExpr expected) throws Exception {
@@ -615,7 +626,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
   private void assertTranslation(
       FileContentReader fileContentReader,
-      Bindings<SNamedEvaluable> evaluables,
+      Bindings<SPolyEvaluable> evaluables,
       SExpr sExpr,
       BExpr expected)
       throws SbTranslatorException {
@@ -629,7 +640,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
   }
 
   private void assertNalMapping(
-      Bindings<SNamedEvaluable> evaluables,
+      Bindings<SPolyEvaluable> evaluables,
       SExpr sExpr,
       String expectedName,
       Location expectedLocation)
@@ -661,14 +672,14 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     return newTranslator(bindings());
   }
 
-  private SbTranslator newTranslator(Bindings<SNamedEvaluable> evaluables) throws Exception {
+  private SbTranslator newTranslator(Bindings<SPolyEvaluable> evaluables) throws Exception {
     var fileContentReader = mock(FileContentReader.class);
     when(fileContentReader.read(any())).thenReturn(bBlob(1));
     return sbTranslator(fileContentReader, evaluables);
   }
 
   private SbTranslator newTranslator(
-      FileContentReader fileContentReader, Bindings<SNamedEvaluable> evaluables) {
+      FileContentReader fileContentReader, Bindings<SPolyEvaluable> evaluables) {
     return sbTranslator(fileContentReader, evaluables);
   }
 
@@ -678,19 +689,19 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     return mock;
   }
 
-  public SbTranslator sbTranslator(Bindings<SNamedEvaluable> evaluables) {
+  public SbTranslator sbTranslator(Bindings<SPolyEvaluable> evaluables) {
     return sbTranslator(fileContentReader(), evaluables);
   }
 
   public SbTranslator sbTranslator(
-      FileContentReader fileContentReader, Bindings<SNamedEvaluable> evaluables) {
+      FileContentReader fileContentReader, Bindings<SPolyEvaluable> evaluables) {
     return sbTranslator(fileContentReader, bytecodeLoader(), evaluables);
   }
 
   private SbTranslator sbTranslator(
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      Bindings<SNamedEvaluable> evaluables) {
+      Bindings<SPolyEvaluable> evaluables) {
     return new SbTranslator(bytecodeF(), fileContentReader, bytecodeLoader, evaluables);
   }
 }

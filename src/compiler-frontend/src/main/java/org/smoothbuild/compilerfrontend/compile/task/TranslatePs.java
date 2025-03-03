@@ -47,12 +47,12 @@ import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SLambda;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SMonoReference;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
@@ -92,15 +92,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return new STypeDefinition(pStruct.type(), pStruct.type().fqn(), pStruct.location());
     }
 
-    private SConstructor convertConstructor(PConstructor pConstructor) {
-      var fields = pConstructor.params();
-      var params = fields.map(
-          f -> new SItem(fields.get(f.name()).type().sType(), f.fqn(), none(), f.location()));
-      return new SConstructor(
-          pConstructor.typeScheme(), pConstructor.fqn(), params, pConstructor.location());
-    }
-
-    private SNamedEvaluable convertNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
+    private SPolyEvaluable convertNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
       return switch (pNamedEvaluable) {
         case PConstructor pConstructor -> convertConstructor(pConstructor);
         case PNamedFunc pNamedFunc -> convertNamedFunc(pNamedFunc);
@@ -108,23 +100,41 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       };
     }
 
-    public SNamedValue convertNamedValue(PNamedValue pNamedValue) {
+    private SPolyEvaluable convertConstructor(PConstructor pConstructor) {
+      var fields = pConstructor.params();
+      var params = fields.map(
+          f -> new SItem(fields.get(f.name()).type().sType(), f.fqn(), none(), f.location()));
+      var typeScheme = pConstructor.typeScheme();
+      var constructor = new SConstructor(
+          typeScheme.type().result(), pConstructor.fqn(), params, pConstructor.location());
+      return new SPolyEvaluable(typeScheme.typeParams(), constructor);
+    }
+
+    public SPolyEvaluable convertNamedValue(PNamedValue pNamedValue) {
+      var typeParams = pNamedValue.typeScheme().typeParams();
+      var namedValue = convertMonoNamedValue(pNamedValue);
+      return new SPolyEvaluable(typeParams, namedValue);
+    }
+
+    private SNamedValue convertMonoNamedValue(PNamedValue pNamedValue) {
       var schema = pNamedValue.typeScheme();
       var fqn = pNamedValue.fqn();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
         var ann = convertAnnotation(pNamedValue.annotation().get());
-        return new SAnnotatedValue(ann, schema, fqn, location);
+        return new SAnnotatedValue(ann, schema.type(), fqn, location);
       } else if (pNamedValue.body().isSome()) {
         var body = convertExpr(pNamedValue.body().get());
-        return new SNamedExprValue(schema, fqn, body, location);
+        return new SNamedExprValue(schema.type(), fqn, body, location);
       } else {
         throw new RuntimeException("Internal error: PNamedValue without annotation and body.");
       }
     }
 
-    public SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc) {
-      return convertNamedFunc(pNamedFunc, convertParams(pNamedFunc));
+    public SPolyEvaluable convertNamedFunc(PNamedFunc pNamedFunc) {
+      var typeParams = pNamedFunc.typeScheme().typeParams();
+      var func = convertNamedFunc(pNamedFunc, convertParams(pNamedFunc));
+      return new SPolyEvaluable(typeParams, func);
     }
 
     private NList<SItem> convertParams(PNamedFunc pNamedFunc) {
@@ -149,10 +159,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var loc = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
         var annotationS = convertAnnotation(pNamedFunc.annotation().get());
-        return new SAnnotatedFunc(annotationS, schema, fqn, params, loc);
+        return new SAnnotatedFunc(annotationS, schema.type().result(), fqn, params, loc);
       } else if (pNamedFunc.body().isSome()) {
         var body = convertFuncBody(pNamedFunc.body().get());
-        return new SNamedExprFunc(schema, fqn, params, body, loc);
+        return new SNamedExprFunc(schema.type().result(), fqn, params, body, loc);
       } else {
         throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
       }
@@ -184,7 +194,8 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda.bodyGet());
-      return new SLambda(pLambda.typeScheme(), pLambda.fqn(), params, body, pLambda.location());
+      var resultType = pLambda.typeScheme().type().result();
+      return new SLambda(resultType, pLambda.fqn(), params, body, pLambda.location());
     }
 
     private SBlob convertBlob(PBlob blob) {
@@ -224,7 +235,9 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
         case MonoReferenceable mono -> new SMonoReference(mono.sType(), fqn, location);
         case PolyReferenceable poly -> {
           var sPolyReference = new SPolyReference(poly.typeScheme(), fqn, location);
-          yield new SInstantiate(pInstantiate.typeArgs(), sPolyReference, pInstantiate.location());
+          var type = poly.instantiatedType(pInstantiate.typeArgs());
+          yield new SInstantiate(
+              pInstantiate.typeArgs(), sPolyReference, type, pInstantiate.location());
         }
         default -> throw unexpectedCaseException(pReference.referenced());
       };

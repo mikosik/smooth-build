@@ -24,7 +24,7 @@ import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 
@@ -52,12 +52,12 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       return this;
     }
 
-    public void containsEvaluable(SNamedEvaluable expected) {
+    public void containsEvaluable(SPolyEvaluable expected) {
       var actual = assertContainsEvaluable(expected.fqn());
       assertThat(actual).isEqualTo(expected);
     }
 
-    private SNamedEvaluable assertContainsEvaluable(Fqn fqn) {
+    private SPolyEvaluable assertContainsEvaluable(Fqn fqn) {
       var evaluables = sModule.get().evaluables();
       var sNamedEvaluable = evaluables.get(fqn.parts().getLast());
       assertWithMessage("Module doesn't contain " + fqn.q() + ".")

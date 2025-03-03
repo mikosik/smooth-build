@@ -9,20 +9,20 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class SNamedExprValueTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
-    var value = new SNamedExprValue(sScheme(varA()), fqn("module:myValue"), sInt(9), location(7));
+    var value = new SNamedExprValue(varA(), fqn("module:myValue"), sInt(9), location(7));
     assertThat(value.toSourceCode()).isEqualTo("""
-        A myValue<A>
+        A myValue
           = 9;""");
   }
 
   @Test
   void to_string() {
-    var value = new SNamedExprValue(sScheme(sStringType()), fqn("myVal"), sInt(9), location(7));
+    var value = new SNamedExprValue(sStringType(), fqn("myVal"), sInt(9), location(7));
     assertThat(value.toString())
         .isEqualTo(
             """
             SNamedExprValue(
-              typeScheme = <>String
+              type = String
               fqn = myVal
               location = {t-project}/module.smooth:7
               body = SInt(

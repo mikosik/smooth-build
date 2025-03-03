@@ -22,8 +22,8 @@ import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.common.tuple.Tuple0;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 
 public class ScheduleList implements Task0<Tuple0> {
   private final Scheduler scheduler;
@@ -54,10 +54,10 @@ public class ScheduleList implements Task0<Tuple0> {
     }
   }
 
-  private static boolean isNoArgNotGenericValue(SNamedEvaluable evaluable) {
-    return isInUserSpace(evaluable.location())
-        && evaluable instanceof SNamedValue
-        && evaluable.typeScheme().typeParams().isEmpty();
+  private static boolean isNoArgNotGenericValue(SPolyEvaluable polyEvaluable) {
+    return isInUserSpace(polyEvaluable.location())
+        && polyEvaluable.evaluable() instanceof SNamedValue
+        && polyEvaluable.typeParams().isEmpty();
   }
 
   private static boolean isInUserSpace(Location location) {

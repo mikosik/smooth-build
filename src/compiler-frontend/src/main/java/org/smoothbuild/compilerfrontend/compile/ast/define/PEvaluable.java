@@ -9,7 +9,7 @@ public sealed interface PEvaluable extends IdentifiableCode, PContainer
     permits PFunc, PNamedEvaluable {
   public String nameText();
 
-  public PTypeParams typeParams();
+  public PTypeParams pTypeParams();
 
   public abstract PType evaluationType();
 

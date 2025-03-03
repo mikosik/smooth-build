@@ -1,20 +1,34 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import static org.smoothbuild.common.collect.Maybe.none;
+
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Structure constructor.
  * This class is immutable.
  */
 public final class SConstructor extends SNamedFunc {
-  public SConstructor(
-      SFuncTypeScheme funcTypeScheme, Fqn fqn, NList<SItem> params, Location location) {
-    super(funcTypeScheme, fqn, params, location);
+  public SConstructor(SType resultType, Fqn fqn, NList<SItem> params, Location location) {
+    super(resultType, fqn, params, location);
+  }
+
+  @Override
+  public String toSourceCode() {
+    return toSourceCode(none());
+  }
+
+  @Override
+  public String toSourceCode(Maybe<List<STypeVar>> typeParams) {
+    return funcHeaderToSourceCode(typeParams) + "\n  = <generated>;";
   }
 
   @Override
@@ -23,7 +37,7 @@ public final class SConstructor extends SNamedFunc {
       return true;
     }
     return object instanceof SConstructor that
-        && this.typeScheme().equals(that.typeScheme())
+        && this.type().equals(that.type())
         && this.fqn().equals(that.fqn())
         && this.params().equals(that.params())
         && this.location().equals(that.location());
@@ -31,21 +45,16 @@ public final class SConstructor extends SNamedFunc {
 
   @Override
   public int hashCode() {
-    return Objects.hash(typeScheme(), fqn(), params(), location());
+    return Objects.hash(type(), fqn(), params(), location());
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SConstructor")
         .addField("fqn", fqn())
-        .addField("typeScheme", this.typeScheme())
+        .addField("type", type())
         .addListField("params", params().list())
         .addField("location", location())
         .toString();
-  }
-
-  @Override
-  public String toSourceCode() {
-    return funcHeaderToSourceCode() + "\n  = <generated>;";
   }
 }

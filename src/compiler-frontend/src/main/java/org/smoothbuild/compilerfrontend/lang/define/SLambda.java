@@ -1,14 +1,15 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
-import static org.smoothbuild.common.collect.List.list;
-
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Lambda.
@@ -16,19 +17,14 @@ import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
  * This class is immutable.
  */
 public final class SLambda implements SExprFunc, SExpr {
-  private final SFuncTypeScheme funcTypeScheme;
+  private final SFuncType funcType;
   private final Fqn fqn;
   private final NList<SItem> params;
   private final SExpr body;
   private final Location location;
 
-  public SLambda(SFuncType type, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
-    this(new SFuncTypeScheme(list(), type), fqn, params, body, location);
-  }
-
-  public SLambda(
-      SFuncTypeScheme funcTypeScheme, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
-    this.funcTypeScheme = funcTypeScheme;
+  public SLambda(SType resultType, Fqn fqn, NList<SItem> params, SExpr body, Location location) {
+    this.funcType = new SFuncType(params.list().map(SItem::type), resultType);
     this.fqn = fqn;
     this.params = params;
     this.body = body;
@@ -36,8 +32,8 @@ public final class SLambda implements SExprFunc, SExpr {
   }
 
   @Override
-  public SFuncTypeScheme typeScheme() {
-    return funcTypeScheme;
+  public SFuncType type() {
+    return funcType;
   }
 
   @Override
@@ -62,7 +58,7 @@ public final class SLambda implements SExprFunc, SExpr {
 
   @Override
   public SFuncType evaluationType() {
-    return funcTypeScheme.type();
+    return funcType;
   }
 
   @Override
@@ -72,29 +68,34 @@ public final class SLambda implements SExprFunc, SExpr {
   }
 
   @Override
+  public String toSourceCode(Maybe<List<STypeVar>> typeParams) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;
     }
     return object instanceof SLambda that
-        && this.funcTypeScheme.equals(that.funcTypeScheme)
+        && this.funcType.equals(that.funcType)
         && this.params.equals(that.params)
         && this.body.equals(that.body)
-        && this.location().equals(that.location());
+        && this.location.equals(that.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(funcTypeScheme, params, body, location());
+    return Objects.hash(funcType, params, body, location);
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SLambda")
-        .addField("fqn", fqn())
-        .addField("type", typeScheme().type())
+        .addField("fqn", fqn)
+        .addField("type", funcType)
         .addListField("params", params().list())
-        .addField("location", location())
+        .addField("location", location)
         .addField("body", body)
         .toString();
   }

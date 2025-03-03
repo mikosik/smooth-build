@@ -1,9 +1,14 @@
 package org.smoothbuild.compilerfrontend.compile.ast.define;
 
+import static org.smoothbuild.common.collect.Map.zipToMap;
+
 import org.smoothbuild.common.base.Strings;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Evaluable that has fully qualified name.
@@ -47,7 +52,18 @@ public abstract sealed class PNamedEvaluable implements PEvaluable, PPolyReferen
   }
 
   @Override
-  public PTypeParams typeParams() {
+  public List<STypeVar> typeParams() {
+    return typeParams.typeVars();
+  }
+
+  @Override
+  public SType instantiatedType(List<SType> typeArgs) {
+    var map = zipToMap(typeParams().toList(), typeArgs);
+    return typeScheme().type().mapTypeVars(v -> map.getOrDefault(v, v));
+  }
+
+  @Override
+  public PTypeParams pTypeParams() {
     return typeParams;
   }
 

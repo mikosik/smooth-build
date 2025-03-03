@@ -36,7 +36,7 @@ public class SSelectTest extends FrontendCompilerTestContext {
   private SSelect createSSelect() {
     var annotation = new SAnnotation("myAnnotation", sString(7, "myPath"), location(17));
     var structType = sStructType("MyStruct", nlist(sSig(sIntType(), "field")));
-    var structValue = sAnnotatedValue(11, annotation, structType, "structValue");
+    var structValue = sPoly(sAnnotatedValue(11, annotation, structType, "structValue"));
     return sSelect(3, sInstantiate(12, structValue), "field");
   }
 }

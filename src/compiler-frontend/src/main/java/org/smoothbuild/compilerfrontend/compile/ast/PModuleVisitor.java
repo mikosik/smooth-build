@@ -102,7 +102,7 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
   public void visitNamedValueSignature(PNamedValue pNamedValue) throws T {
     pNamedValue.annotation().ifPresent(this::visitAnnotation);
     visitType(pNamedValue.type());
-    visitTypeParams(pNamedValue.typeParams());
+    visitTypeParams(pNamedValue.pTypeParams());
     visitNameOf(pNamedValue);
   }
 
@@ -118,7 +118,7 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
   public void visitNamedFuncSignature(PNamedFunc pNamedFunc) throws T {
     pNamedFunc.annotation().ifPresent(this::visitAnnotation);
     visitType(pNamedFunc.resultType());
-    visitTypeParams(pNamedFunc.typeParams());
+    visitTypeParams(pNamedFunc.pTypeParams());
     visitItems(pNamedFunc.params().list());
     visitNameOf(pNamedFunc);
   }
@@ -176,7 +176,7 @@ public abstract class PModuleVisitor<P, T extends Throwable> {
 
   public void visitLambdaSignature(PLambda pLambda) throws T {
     visitType(pLambda.resultType());
-    visitTypeParams(pLambda.typeParams());
+    visitTypeParams(pLambda.pTypeParams());
     visitItems(pLambda.params().list());
     visitNameOf(pLambda);
   }

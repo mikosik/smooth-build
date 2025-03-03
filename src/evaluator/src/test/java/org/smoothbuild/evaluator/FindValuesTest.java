@@ -14,19 +14,18 @@ import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 public class FindValuesTest extends FrontendCompilerTestContext {
   @Test
   void find_evaluable() {
-    var sSchema = sScheme(sIntArrayT());
-    var sValue = sValue(sSchema, "myValue", sOrder(sIntType()));
+    var sValue = sPoly(sValue(sIntArrayT(), "myValue", sOrder(sIntType())));
     var sScope = new SScope(bindings(), bindings(sValue));
 
     var exprs = new FindValues().execute(sScope, list(sValue.fqn().toString()));
 
-    var sReference = sPolyReference(sSchema, fqn("myValue"), commandLineLocation());
+    var sReference = sPolyReference(sScheme(sIntArrayT()), fqn("myValue"), commandLineLocation());
     assertThat(exprs.result().get().get()).isEqualTo(list(sInstantiate(sReference)));
   }
 
   @Test
   void find_polymorphic_evaluable_fails() {
-    var value = sValue(sScheme(sVarAArrayT()), "myValue", sOrder(varA()));
+    var value = sPoly(list(varA()), sValue(sVarAArrayT(), "myValue", sOrder(varA())));
     var sScope = new SScope(bindings(), bindings(value));
 
     var exprs = new FindValues().execute(sScope, list(value.fqn().toString()));

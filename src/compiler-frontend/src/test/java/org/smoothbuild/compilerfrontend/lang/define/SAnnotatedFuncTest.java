@@ -11,21 +11,22 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
     var params = nlist(sItem(varA(), "p1"), sItem(sIntType(), "p2", "default:value"));
-    var funcTS = sFuncScheme(params, sStringType());
-    var func =
-        new SAnnotatedFunc(sNativeAnnotation("path"), funcTS, fqn("myFunc"), params, location(1));
+    var resultType = sStringType();
+    var annotation = sNativeAnnotation("path");
+    var func = new SAnnotatedFunc(annotation, resultType, fqn("myFunc"), params, location(1));
     assertThat(func.toSourceCode())
         .isEqualTo(
             """
         @Native("path")
-        String myFunc<A>(A p1, Int p2 = default:value);""");
+        String myFunc(A p1, Int p2 = default:value);""");
   }
 
   @Test
   void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
-    var funcTS = sFuncScheme(params, sStringType());
-    var func = new SAnnotatedFunc(sNativeAnnotation(), funcTS, fqn("myFunc"), params, location(1));
+    var resultType = sStringType();
+    var func =
+        new SAnnotatedFunc(sNativeAnnotation(), resultType, fqn("myFunc"), params, location(1));
     assertThat(func.toString())
         .isEqualTo(
             """
@@ -39,7 +40,7 @@ public class SAnnotatedFuncTest extends FrontendCompilerTestContext {
                     )
                     location = {t-project}/module.smooth:1
                   )
-                  typeScheme = <>(Int)->String
+                  type = (Int)->String
                   params = [
                     SItem(
                       type = Int

@@ -1,5 +1,6 @@
 package org.smoothbuild.evaluator;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Result.err;
 import static org.smoothbuild.common.collect.Result.ok;
@@ -17,6 +18,7 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
@@ -25,7 +27,7 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
   @Override
   public Output<List<SExpr>> execute(SScope environment, List<String> valueNames) {
     var logger = new Logger();
-    var result = new ArrayList<SNamedValue>();
+    var result = new ArrayList<SPolyEvaluable>();
     for (var name : valueNames) {
       parseFqn(name)
           .flatMapOk(fqn -> getNamedEvaluable(environment, fqn))
@@ -36,29 +38,34 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
     if (logger.containsFailure()) {
       return output(label, logger.toList());
     }
-    List<SExpr> exprs =
-        listOfAll(result).map(v -> new SInstantiate(referenceTo(v), commandLineLocation()));
+    List<SExpr> exprs = listOfAll(result).map(FindValues::instantiatePoly);
     return output(exprs, label, logger.toList());
+  }
+
+  private static SInstantiate instantiatePoly(SPolyEvaluable v) {
+    return new SInstantiate(list(), referenceTo(v), v.typeScheme().type(), commandLineLocation());
   }
 
   private static Result<Fqn> parseFqn(String name) {
     return parseReference(name).mapErr(message -> "Illegal reference `" + name + "`. " + message);
   }
 
-  private static Result<SNamedValue> getNamedEvaluable(SScope environment, Fqn fqn) {
+  private static Result<SPolyEvaluable> getNamedEvaluable(SScope environment, Fqn fqn) {
     return environment
         .evaluables()
         .find(fqn)
         .mapErr(e -> unknownFqnMessage(fqn))
-        .flatMapOk(e -> {
-          if (e instanceof SNamedValue namedValue) {
-            if (namedValue.typeScheme().typeParams().isEmpty()) {
-              return ok(namedValue);
+        .flatMapOk(polyEvaluable -> {
+          if (polyEvaluable.evaluable() instanceof SNamedValue) {
+            if (polyEvaluable.typeParams().isEmpty()) {
+              return ok(polyEvaluable);
             } else {
-              return err(e.fqn().q() + " cannot be calculated as it is a polymorphic value.");
+              return err(
+                  polyEvaluable.fqn().q() + " cannot be calculated as it is a polymorphic value.");
             }
           } else {
-            return err(e.fqn().q() + " cannot be calculated as it is not a value but a function.");
+            return err(polyEvaluable.fqn().q()
+                + " cannot be calculated as it is not a value but a function.");
           }
         });
   }
@@ -68,7 +75,8 @@ public class FindValues implements Task2<SScope, List<String>, List<SExpr>> {
         + "Try 'smooth list' to see all available values that can be calculated.";
   }
 
-  private static SPolyReference referenceTo(SNamedValue sNamedValue) {
-    return new SPolyReference(sNamedValue.typeScheme(), sNamedValue.fqn(), commandLineLocation());
+  private static SPolyReference referenceTo(SPolyEvaluable sPolyEvaluable) {
+    return new SPolyReference(
+        sPolyEvaluable.typeScheme(), sPolyEvaluable.fqn(), commandLineLocation());
   }
 }

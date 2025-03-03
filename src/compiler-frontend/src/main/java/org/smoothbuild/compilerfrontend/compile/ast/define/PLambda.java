@@ -52,7 +52,7 @@ public final class PLambda extends PExpr implements PFunc {
   }
 
   @Override
-  public PTypeParams typeParams() {
+  public PTypeParams pTypeParams() {
     return typeParams;
   }
 

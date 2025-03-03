@@ -18,7 +18,7 @@ public class SCallTest extends FrontendCompilerTestContext {
 
   @Test
   void to_string() {
-    var funcS = sInstantiate(4, list(sIntType()), idSFunc());
+    var funcS = sInstantiate(4, idSFunc(), list(sIntType()));
     var callS = sCall(3, funcS, sInt(3, 7));
     assertThat(callS.toString())
         .isEqualTo(

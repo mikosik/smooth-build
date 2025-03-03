@@ -10,6 +10,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
@@ -41,6 +42,9 @@ public class TypeResolver {
     resolveBody(pNamedValue.body());
     var typeScheme = pNamedValue.typeScheme();
     var typeParams = resolveTypeParams(typeScheme);
+    if (pNamedValue.pTypeParams() instanceof PImplicitTypeParams implicit) {
+      implicit.setTypeVars(typeParams);
+    }
     pNamedValue.setSchema(new STypeScheme(typeParams, resolveType(typeScheme)));
   }
 
@@ -51,6 +55,9 @@ public class TypeResolver {
   private void resolveFunc(PFunc pFunc) throws TypeException {
     var funcTypeScheme = pFunc.typeScheme();
     var typeParams = resolveTypeParams(funcTypeScheme);
+    if (pFunc.pTypeParams() instanceof PImplicitTypeParams implicit) {
+      implicit.setTypeVars(typeParams);
+    }
     pFunc.setScheme(new SFuncTypeScheme(typeParams, (SFuncType) resolveType(funcTypeScheme)));
     resolveBody(pFunc.body());
   }

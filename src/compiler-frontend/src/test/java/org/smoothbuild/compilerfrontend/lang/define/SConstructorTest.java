@@ -16,7 +16,7 @@ public class SConstructorTest extends FrontendCompilerTestContext {
             """
             SConstructor(
               fqn = constructorName
-              typeScheme = <>(Int)->MyStruct
+              type = (Int)->MyStruct
               params = [
                 SItem(
                   type = Int

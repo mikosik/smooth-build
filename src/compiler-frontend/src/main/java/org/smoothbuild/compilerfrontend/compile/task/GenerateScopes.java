@@ -123,7 +123,7 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     }
 
     private void addTypeParams(PEvaluable pEvaluable) {
-      var pTypeParams = pEvaluable.typeParams();
+      var pTypeParams = pEvaluable.pTypeParams();
       switch (pTypeParams) {
           // For now, we don't have anything (function or value) that can be enclosed inside other
           // function or value and have fully qualified name that contains enclosing name.

@@ -1,13 +1,17 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.compilerfrontend.lang.define.SNamedValue.valueHeaderToSourceCode;
 
 import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
+import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.IdentifiableCode;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
 /**
  * Named Expression Value (one that has a body).
@@ -15,12 +19,12 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
  */
 public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
   private final SExpr body;
-  private final STypeScheme typeScheme;
+  private final SType type;
   private final Fqn fqn;
   private final Location location;
 
-  public SNamedExprValue(STypeScheme typeScheme, Fqn fqn, SExpr body, Location location) {
-    this.typeScheme = typeScheme;
+  public SNamedExprValue(SType type, Fqn fqn, SExpr body, Location location) {
+    this.type = type;
     this.fqn = fqn;
     this.body = body;
     this.location = location;
@@ -32,12 +36,17 @@ public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
 
   @Override
   public String toSourceCode() {
-    return valueHeaderToSourceCode(this) + "\n  = " + body.toSourceCode() + ";";
+    return toSourceCode(none());
   }
 
   @Override
-  public STypeScheme typeScheme() {
-    return typeScheme;
+  public String toSourceCode(Maybe<List<STypeVar>> typeParams) {
+    return valueHeaderToSourceCode(this, typeParams) + "\n  = " + body.toSourceCode() + ";";
+  }
+
+  @Override
+  public SType type() {
+    return type;
   }
 
   @Override
@@ -56,23 +65,23 @@ public final class SNamedExprValue implements SNamedValue, IdentifiableCode {
       return true;
     }
     return object instanceof SNamedExprValue that
-        && this.typeScheme().equals(that.typeScheme())
-        && this.fqn().equals(that.fqn())
-        && this.body().equals(that.body())
-        && this.location().equals(that.location());
+        && this.type.equals(that.type)
+        && this.fqn.equals(that.fqn)
+        && this.body.equals(that.body)
+        && this.location.equals(that.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(typeScheme(), fqn(), body(), location());
+    return Objects.hash(type, fqn, body, location);
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder("SNamedExprValue")
-        .addField("typeScheme", typeScheme())
-        .addField("fqn", fqn())
-        .addField("location", location())
+        .addField("type", type)
+        .addField("fqn", fqn)
+        .addField("location", location)
         .addField("body", body)
         .toString();
   }

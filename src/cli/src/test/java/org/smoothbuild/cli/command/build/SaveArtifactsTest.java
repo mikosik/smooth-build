@@ -248,7 +248,8 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
   }
 
   private SInstantiate instantiateS(SType sType, String name) {
-    return sInstantiate(list(), sAnnotatedValue(sNativeAnnotation(), sType, name, location()));
+    var value = sPoly(sAnnotatedValue(sNativeAnnotation(), sType, name, location()));
+    return sInstantiate(value, list());
   }
 
   public SStructType sFileT() {

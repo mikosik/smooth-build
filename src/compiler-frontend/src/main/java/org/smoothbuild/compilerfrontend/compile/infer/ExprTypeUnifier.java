@@ -26,7 +26,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
@@ -89,7 +88,7 @@ public class ExprTypeUnifier {
   private List<STypeVar> resolveTypeParams(PEvaluable pEvaluable, SType sType)
       throws TypeException {
     var typeParams = sType.typeVars().removeAll(outerScopeTypeVars.map(unifier::resolve));
-    if (pEvaluable.typeParams() instanceof PExplicitTypeParams explicitTypeParams) {
+    if (pEvaluable.pTypeParams() instanceof PExplicitTypeParams explicitTypeParams) {
       var explicit = explicitTypeParams.explicitTypeVars();
       if (!explicit.toSet().equals(typeParams)) {
         // Sort to make error message stable so tests are not flaky.
@@ -110,7 +109,7 @@ public class ExprTypeUnifier {
   }
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, PScope bodyScope) throws TypeException {
-    var vars = outerScopeTypeVars.addAll(pEvaluable.typeParams().explicitTypeVars());
+    var vars = outerScopeTypeVars.addAll(pEvaluable.pTypeParams().explicitTypeVars());
     var evaluationType = pEvaluable.evaluationType().sType();
     new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
   }
@@ -198,16 +197,19 @@ public class ExprTypeUnifier {
   }
 
   private SType unifyInstantiate(PInstantiate pInstantiate) {
-    var schema =
-        switch (pInstantiate.reference()) {
-          case PReference pReference -> switch (pReference.referenced()) {
-            case MonoReferenceable mono -> new STypeScheme(list(), mono.sType());
-            case PolyReferenceable poly -> poly.typeScheme();
-            default -> throw unexpectedCaseException(pReference.referenced());
-          };
-        };
-    pInstantiate.setTypeArgs(generateList(schema.typeParams().size(), unifier::newFlexibleTypeVar));
-    return schema.instantiate(pInstantiate.typeArgs());
+    var pReference = pInstantiate.reference();
+    return switch (pReference.referenced()) {
+      case MonoReferenceable mono -> {
+        pInstantiate.setTypeArgs(list());
+        yield mono.sType();
+      }
+      case PolyReferenceable poly -> {
+        var argSize = poly.typeParams().size();
+        pInstantiate.setTypeArgs(generateList(argSize, unifier::newFlexibleTypeVar));
+        yield poly.instantiatedType(pInstantiate.typeArgs());
+      }
+      default -> throw unexpectedCaseException(pReference.referenced());
+    };
   }
 
   private SFuncType unifyLambda(PLambda pLambda) throws TypeException {

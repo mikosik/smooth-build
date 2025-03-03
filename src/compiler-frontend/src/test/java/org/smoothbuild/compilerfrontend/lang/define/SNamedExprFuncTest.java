@@ -11,25 +11,25 @@ public class SNamedExprFuncTest extends FrontendCompilerTestContext {
   @Test
   void to_source_code() {
     var params = nlist(sItem(varA(), "p1"), sItem(sIntType(), "p2", "default:value"));
-    var scheme = sFuncScheme(params, sStringType());
-    var func = new SNamedExprFunc(scheme, fqn("module:myFunc"), params, sInt(17), location(1));
+    var resultType = sStringType();
+    var func = new SNamedExprFunc(resultType, fqn("module:myFunc"), params, sInt(17), location(1));
     assertThat(func.toSourceCode())
         .isEqualTo("""
-        String myFunc<A>(A p1, Int p2 = default:value)
+        String myFunc(A p1, Int p2 = default:value)
           = 17;""");
   }
 
   @Test
   void to_string() {
     var params = nlist(sItem(sIntType(), "myParam"));
-    var scheme = sFuncScheme(params, sStringType());
-    var func = new SNamedExprFunc(scheme, fqn("myFunc"), params, sInt(17), location(1));
+    var resultType = sStringType();
+    var func = new SNamedExprFunc(resultType, fqn("myFunc"), params, sInt(17), location(1));
     assertThat(func.toString())
         .isEqualTo(
             """
             SNamedExprFunc(
               fqn = myFunc
-              typeScheme = <>(Int)->String
+              type = (Int)->String
               params = [
                 SItem(
                   type = Int

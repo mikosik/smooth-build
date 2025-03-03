@@ -6,7 +6,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 
 /**
- * Reference to {@link SMonoReferenceable}.
+ * Reference to {@link SPolyEvaluable}.
  */
 public record SPolyReference(STypeScheme scheme, Id referencedId, Location location)
     implements SReference {

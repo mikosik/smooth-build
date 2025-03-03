@@ -62,6 +62,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
@@ -168,6 +169,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SFuncType sFuncType(SType param1, SType param2, SType resultType) {
     return sFuncType(list(param1, param2), resultType);
+  }
+
+  public default SFuncType sFuncType(NList<SItem> paramTs, SType resultType) {
+    return new SFuncType(sTupleType(paramTs.list().map(SItem::type)), resultType);
   }
 
   public default SFuncType sFuncType(List<SType> paramTs, SType resultType) {
@@ -368,23 +373,21 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return map(typeVar, type);
   }
 
-  public default SInstantiate sInstantiate(SNamedEvaluable namedEvaluable) {
-    return sInstantiate(17, namedEvaluable);
+  public default SInstantiate sInstantiate(SPolyEvaluable polyEvaluable) {
+    return sInstantiate(17, polyEvaluable);
   }
 
-  public default SInstantiate sInstantiate(int line, SNamedEvaluable namedEvaluable) {
-    return sInstantiate(line, sPolyReference(line, namedEvaluable));
+  public default SInstantiate sInstantiate(int line, SPolyEvaluable polyEvaluable) {
+    return sInstantiate(line, sPolyReference(line, polyEvaluable));
   }
 
-  public default SInstantiate sInstantiate(List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
-    return sInstantiate(1, typeArgs, namedEvaluable);
+  public default SInstantiate sInstantiate(SPolyEvaluable polyEvaluable, List<SType> typeArgs) {
+    return sInstantiate(17, polyEvaluable, typeArgs);
   }
 
   public default SInstantiate sInstantiate(
-      int line, List<SType> typeArgs, SNamedEvaluable namedEvaluable) {
-    var location = location(line);
-    var reference = new SPolyReference(namedEvaluable.typeScheme(), namedEvaluable.fqn(), location);
-    return sInstantiate(typeArgs, reference, location);
+      int line, SPolyEvaluable polyEvaluable, List<SType> typeArgs) {
+    return sInstantiate(line, typeArgs, sPolyReference(line, polyEvaluable));
   }
 
   public default SInstantiate sInstantiate(SPolyReference sPolyReference) {
@@ -396,7 +399,12 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SInstantiate sInstantiate(SPolyReference sPolyReference, Location location) {
-    return sInstantiate(list(), sPolyReference, location);
+    return sInstantiate(sPolyReference, list(), location);
+  }
+
+  public default SInstantiate sInstantiate(
+      SPolyReference sPolyReference, List<SType> list, Location location) {
+    return sInstantiate(list, sPolyReference, location);
   }
 
   public default SInstantiate sInstantiate(List<SType> typeArgs, SPolyReference sPolyReference) {
@@ -445,8 +453,8 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SMonoReference(type, fqn, location(line));
   }
 
-  public default SPolyReference sPolyReference(int line, SNamedEvaluable namedEvaluable) {
-    return sPolyReference(line, namedEvaluable.typeScheme(), namedEvaluable.fqn());
+  public default SPolyReference sPolyReference(int line, SPolyEvaluable polyEvaluable) {
+    return sPolyReference(line, polyEvaluable.typeScheme(), polyEvaluable.fqn());
   }
 
   public default SPolyReference sPolyReference(STypeScheme scheme, Id id) {
@@ -459,6 +467,14 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SPolyReference sPolyReference(STypeScheme scheme, Id id, Location location) {
     return new SPolyReference(scheme, id, location);
+  }
+
+  public default SPolyEvaluable sPoly(SNamedEvaluable evaluable) {
+    return sPoly(list(), evaluable);
+  }
+
+  public default SPolyEvaluable sPoly(List<STypeVar> list, SNamedEvaluable evaluable) {
+    return new SPolyEvaluable(list, evaluable);
   }
 
   public default SSelect sSelect(SExpr selectable, String field) {
@@ -567,7 +583,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SAnnotatedValue sAnnotatedValue(
       SAnnotation annotation, SType type, String name, Location location) {
-    return new SAnnotatedValue(annotation, sScheme(type), fqn(name), location);
+    return new SAnnotatedValue(annotation, type, fqn(name), location);
   }
 
   public default SNamedExprValue sValue(String name, SExpr body) {
@@ -579,15 +595,11 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SNamedExprValue sValue(int line, SType type, String name, SExpr body) {
-    return sValue(line, sScheme(type), name, body);
+    return new SNamedExprValue(type, fqn(name), body, location(line));
   }
 
-  public default SNamedExprValue sValue(STypeScheme scheme, String name, SExpr body) {
-    return sValue(1, scheme, name, body);
-  }
-
-  public default SNamedExprValue sValue(int line, STypeScheme scheme, String name, SExpr body) {
-    return new SNamedExprValue(scheme, fqn(name), body, location(line));
+  public default SNamedExprValue sValue(SType type, String name, SExpr body) {
+    return sValue(1, type, name, body);
   }
 
   public default SNamedValue emptySArrayValue() {
@@ -612,7 +624,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
       var fqn = structType.fqn().append(f.name());
       return sItem(2, f.type(), fqn);
     });
-    return new SConstructor(sFuncScheme(params, structType), fqn(name), params, location(line));
+    return new SConstructor(structType, fqn(name), params, location(line));
   }
 
   public default SAnnotatedFunc sBytecodeFunc(
@@ -646,7 +658,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SAnnotatedFunc sAnnotatedFunc(
       SAnnotation ann, SType resultType, String name, NList<SItem> params, Location location) {
-    return new SAnnotatedFunc(ann, sFuncScheme(params, resultType), fqn(name), params, location);
+    return new SAnnotatedFunc(ann, resultType, fqn(name), params, location);
   }
 
   public default SNamedExprFunc sFunc(int line, String name, NList<SItem> params, SExpr body) {
@@ -664,9 +676,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default SNamedExprFunc sFunc(
       int line, SType resultType, String name, NList<SItem> params, SExpr body) {
-    Fqn fqn = fqn(name);
-    var scheme = sFuncScheme(params, resultType);
-    return new SNamedExprFunc(scheme, fqn, params, body, location(line));
+    return new SNamedExprFunc(resultType, fqn(name), params, body, location(line));
   }
 
   public default SLambda sLambda(SExpr body) {
@@ -683,15 +693,13 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   }
 
   public default SLambda sLambda(int line, Fqn fqn, NList<SItem> params, SExpr body) {
-    var paramTypes = toTypes(params.list());
-    var funcType = sFuncType(paramTypes, body.evaluationType());
-    var funcSScheme = sFuncScheme(List.<STypeVar>list(), funcType);
-    return new SLambda(funcSScheme, fqn, params, body, location(line));
+    var resultType = body.evaluationType();
+    return new SLambda(resultType, fqn, params, body, location(line));
   }
 
-  public default SNamedExprFunc idSFunc() {
+  public default SPolyEvaluable idSFunc() {
     var a = varA();
-    return sFunc(a, "myId", nlist(sItem(a, "a")), sParamRef(a, "a"));
+    return sPoly(list(a), sFunc(a, "myId", nlist(sItem(a, "a")), sParamRef(a, "a")));
   }
 
   public default SNamedExprFunc intIdSFunc() {

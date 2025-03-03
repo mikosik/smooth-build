@@ -10,7 +10,7 @@ import org.smoothbuild.compilerfrontend.lang.name.Name;
  * Smooth module containing type, function and value definitions.
  */
 public record SModule(
-    Map<Name, STypeDefinition> types, Map<Name, SNamedEvaluable> evaluables, SScope scope) {
+    Map<Name, STypeDefinition> types, Map<Name, SPolyEvaluable> evaluables, SScope scope) {
   public String toSourceCode() {
     return typesAsSourceCode().addAll(evaluablesAsSourceCode()).toString("", "\n", "\n");
   }
@@ -20,6 +20,6 @@ public record SModule(
   }
 
   private List<String> evaluablesAsSourceCode() {
-    return listOfAll(evaluables.values()).map(SEvaluable::toSourceCode);
+    return listOfAll(evaluables.values()).map(SPolyEvaluable::toSourceCode);
   }
 }

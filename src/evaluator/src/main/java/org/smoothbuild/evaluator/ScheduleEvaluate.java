@@ -25,7 +25,7 @@ import org.smoothbuild.compilerbackend.CompiledExprs;
 import org.smoothbuild.compilerfrontend.FrontendCompile;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
@@ -57,7 +57,7 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
   public static Promise<Maybe<EvaluatedExprs>> scheduleEvaluateCore(
       Scheduler scheduler,
       Promise<Maybe<List<SExpr>>> sExprs,
-      Promise<Maybe<Bindings<SNamedEvaluable>>> evaluables) {
+      Promise<Maybe<Bindings<SPolyEvaluable>>> evaluables) {
     var compiledExprs = scheduler.submit(BackendCompile.class, sExprs, evaluables);
     var getLabel = EVALUATOR_LABEL.append(":getCompiledExprs");
     var bExprs = scheduler.submit(task1(getLabel, ScheduleEvaluate::toTuples), compiledExprs);

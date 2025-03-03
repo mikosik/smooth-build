@@ -49,6 +49,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
+import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
@@ -78,7 +79,7 @@ public class SbTranslator {
   private final TypeSbTranslator typeTranslator;
   private final FileContentReader fileContentReader;
   private final BytecodeLoader bytecodeLoader;
-  private final Bindings<SNamedEvaluable> evaluables;
+  private final Bindings<SPolyEvaluable> evaluables;
   private final NList<SItem> lexicalEnvironment;
   private final HashMap<CacheKey, BExpr> cache;
   private final HashMap<Hash, String> names;
@@ -89,7 +90,7 @@ public class SbTranslator {
       BytecodeFactory bytecodeFactory,
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      @Assisted Bindings<SNamedEvaluable> evaluables) {
+      @Assisted Bindings<SPolyEvaluable> evaluables) {
     this(
         new ChainingBytecodeFactory(bytecodeFactory),
         new TypeSbTranslator(new ChainingBytecodeFactory(bytecodeFactory), map()),
@@ -107,7 +108,7 @@ public class SbTranslator {
       TypeSbTranslator typeTranslator,
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
-      Bindings<SNamedEvaluable> evaluables,
+      Bindings<SPolyEvaluable> evaluables,
       NList<SItem> lexicalEnvironment,
       HashMap<CacheKey, BExpr> cache,
       HashMap<Hash, String> names,
@@ -229,8 +230,9 @@ public class SbTranslator {
             e -> new SbTranslatorException(compileErrorMessage(sPolyReference.location(), e)));
   }
 
-  private BExpr translateNamedEvaluable(SNamedEvaluable evaluable) throws SbTranslatorException {
-    return switch (evaluable) {
+  private BExpr translateNamedEvaluable(SPolyEvaluable sPolyEvaluable)
+      throws SbTranslatorException {
+    return switch (sPolyEvaluable.evaluable()) {
       case SNamedFunc sNamedFunc -> translateNamedFuncWithCache(sNamedFunc);
       case SNamedValue sNamedValue -> translateNamedValueWithCache(sNamedValue);
     };
@@ -279,7 +281,7 @@ public class SbTranslator {
   }
 
   private BLambda translateExprFunc(SExprFunc sExprFunc) throws SbTranslatorException {
-    var funcType = typeTranslator.translate(sExprFunc.typeScheme().type());
+    var funcType = typeTranslator.translate(sExprFunc.type());
     var bBody = translateExpr(sExprFunc.body());
     return bytecodeF.lambda(funcType, bBody);
   }
@@ -291,7 +293,7 @@ public class SbTranslator {
     var bMethodName = bytecodeF.string(NATIVE_METHOD_NAME);
     var bMethodTuple = bytecodeF.method(bJar, bClassBinaryName, bMethodName).tuple();
     var bIsPure = bytecodeF.bool(sAnnotation.name().equals(NATIVE_PURE));
-    var bLambdaType = typeTranslator.translate(sNativeFunc.typeScheme().type());
+    var bLambdaType = typeTranslator.translate(sNativeFunc.type());
     var bArguments = referencesToAllArguments(bLambdaType);
     var bInvoke = bytecodeF.invoke(bLambdaType.result(), bMethodTuple, bIsPure, bArguments);
     saveNal(bInvoke, sNativeFunc);
@@ -310,7 +312,7 @@ public class SbTranslator {
   }
 
   private BLambda translateConstructor(SConstructor sConstructor) throws SbTranslatorException {
-    var bFuncType = typeTranslator.translate(sConstructor.typeScheme().type());
+    var bFuncType = typeTranslator.translate(sConstructor.type());
     var bBody = bytecodeF.combine(createReferenceB(bFuncType.params()));
     saveLoc(bBody, sConstructor);
     return bytecodeF.lambda(bFuncType, bBody);
@@ -373,12 +375,12 @@ public class SbTranslator {
   // helpers
 
   private BExpr fetchValBytecode(SAnnotatedValue sAnnotatedValue) throws SbTranslatorException {
-    var bType = typeTranslator.translate(sAnnotatedValue.typeScheme().type());
+    var bType = typeTranslator.translate(sAnnotatedValue.type());
     return fetchBytecode(sAnnotatedValue.annotation(), bType, sAnnotatedValue.fqn());
   }
 
   private BExpr fetchFuncBytecode(SAnnotatedFunc sAnnotatedFunc) throws SbTranslatorException {
-    var bType = typeTranslator.translate(sAnnotatedFunc.typeScheme().type());
+    var bType = typeTranslator.translate(sAnnotatedFunc.type());
     return fetchBytecode(sAnnotatedFunc.annotation(), bType, sAnnotatedFunc.fqn());
   }
 
