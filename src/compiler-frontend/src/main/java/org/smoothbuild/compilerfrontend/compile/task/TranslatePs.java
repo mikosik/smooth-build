@@ -21,11 +21,11 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
@@ -82,7 +82,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var structs =
           pModule.structs().map(this::convertStruct).toMap(s -> s.fqn().parts().getLast(), v -> v);
       var evaluables =
-          pModule.evaluables().map(this::convertReferenceable).toMap(Identifiable::name, v -> v);
+          pModule.evaluables().map(this::convertNamedEvaluable).toMap(Identifiable::name, v -> v);
       var sScope = new SScope(
           bindings(imported.types(), structs), bindings(imported.evaluables(), evaluables));
       return new SModule(structs, evaluables, sScope);
@@ -100,12 +100,11 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
           pConstructor.typeScheme(), pConstructor.fqn(), params, pConstructor.location());
     }
 
-    private SNamedEvaluable convertReferenceable(PReferenceable pReferenceable) {
-      return switch (pReferenceable) {
+    private SNamedEvaluable convertNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
+      return switch (pNamedEvaluable) {
         case PConstructor pConstructor -> convertConstructor(pConstructor);
         case PNamedFunc pNamedFunc -> convertNamedFunc(pNamedFunc);
         case PNamedValue pNamedValue -> convertNamedValue(pNamedValue);
-        case PItem pItem -> throw unexpectedCaseException(pItem);
       };
     }
 
