@@ -51,7 +51,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
         var location = expr.location();
         var type = new PImplicitType(location);
         var typeParams = new PImplicitTypeParams();
-        var name = fqn.parts().getLast().toString();
+        var name = fqn.parts().last().toString();
         var pNamedValue = new PNamedValue(type, name, typeParams, some(expr), none(), location);
         pNamedValue.setFqn(fqn);
         namedDefaultValues.add(pNamedValue);

@@ -11,6 +11,6 @@ public interface Identifiable extends HasName {
 
   @Override
   public default Name name() {
-    return fqn().parts().getLast();
+    return fqn().parts().last();
   }
 }

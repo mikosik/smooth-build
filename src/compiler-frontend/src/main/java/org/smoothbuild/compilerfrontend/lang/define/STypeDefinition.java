@@ -14,7 +14,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 public record STypeDefinition(SType type, Fqn fqn, Location location) implements TypeDefinition {
   @Override
   public Name name() {
-    return fqn.parts().getLast();
+    return fqn.parts().last();
   }
 
   public String toSourceCode() {

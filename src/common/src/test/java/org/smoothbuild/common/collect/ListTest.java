@@ -627,15 +627,15 @@ public class ListTest {
   }
 
   @Nested
-  class _getLast {
+  class _last {
     @Test
     void returns_last_element() {
-      assertThat(list(1, 2, 3, 4).getLast()).isEqualTo(4);
+      assertThat(list(1, 2, 3, 4).last()).isEqualTo(4);
     }
 
     @Test
     void throws_exception_for_empty_list() {
-      assertCall(() -> list().getLast()).throwsException(NoSuchElementException.class);
+      assertCall(() -> list().last()).throwsException(NoSuchElementException.class);
     }
   }
 

@@ -117,7 +117,7 @@ public final class List<E> implements Collection<E> {
     return array[index];
   }
 
-  public E getLast() {
+  public E last() {
     if (array.length == 0) {
       throw new NoSuchElementException();
     }

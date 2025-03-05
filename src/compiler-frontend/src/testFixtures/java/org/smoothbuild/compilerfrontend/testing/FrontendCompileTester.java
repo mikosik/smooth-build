@@ -59,7 +59,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
     private SPolyEvaluable assertContainsEvaluable(Fqn fqn) {
       var evaluables = sModule.get().evaluables();
-      var sNamedEvaluable = evaluables.get(fqn.parts().getLast());
+      var sNamedEvaluable = evaluables.get(fqn.parts().last());
       assertWithMessage("Module doesn't contain " + fqn.q() + ".")
           .that(sNamedEvaluable)
           .isNotNull();
@@ -71,7 +71,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
 
     public void containsType(SStructType expected) {
       var fqn = expected.fqn();
-      var typeDefinition = sModule.get().types().get(fqn.parts().getLast());
+      var typeDefinition = sModule.get().types().get(fqn.parts().last());
       assertWithMessage("Module doesn't contain type '" + fqn + "'.")
           .that(typeDefinition)
           .isNotNull();
