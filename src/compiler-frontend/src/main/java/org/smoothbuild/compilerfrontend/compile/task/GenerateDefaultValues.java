@@ -15,13 +15,13 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 
 public class GenerateDefaultValues implements Task1<PModule, PModule> {
   @Override
   public Output<PModule> execute(PModule pModule) {
-    var namedDefaultValues = new ArrayList<PNamedEvaluable>();
+    var namedDefaultValues = new ArrayList<PPolyEvaluable>();
     generateDefaultValues(pModule, namedDefaultValues);
     var label = COMPILER_FRONT_LABEL.append(":generateDefaultValues");
     var newModule = new PModule(
@@ -30,7 +30,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
   }
 
   private static void generateDefaultValues(
-      PModule pModule, ArrayList<PNamedEvaluable> namedDefaultValues) {
+      PModule pModule, ArrayList<PPolyEvaluable> namedDefaultValues) {
     new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
@@ -43,11 +43,10 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
         var fqn = pDefaultValue.fqn();
         var location = expr.location();
         var type = new PImplicitType(location);
-        var typeParams = new PImplicitTypeParams();
         var name = fqn.parts().last().toString();
-        var pNamedValue = new PNamedValue(type, name, typeParams, some(expr), none(), location);
+        var pNamedValue = new PNamedValue(type, name, some(expr), none(), location);
         pNamedValue.setFqn(fqn);
-        namedDefaultValues.add(pNamedValue);
+        namedDefaultValues.add(new PPolyEvaluable(new PImplicitTypeParams(), pNamedValue));
       }
     }.visit(pModule);
   }

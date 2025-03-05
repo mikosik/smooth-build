@@ -25,7 +25,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
@@ -56,15 +56,15 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
     return output(result, label, list());
   }
 
-  private static TopologicalSortingRes<Id, PNamedEvaluable, Location> sortEvaluablesByDeps(
-      List<PNamedEvaluable> evaluables) {
+  private static TopologicalSortingRes<Id, PPolyEvaluable, Location> sortEvaluablesByDeps(
+      List<PPolyEvaluable> evaluables) {
     HashSet<Id> ids = new HashSet<>();
     evaluables.forEach(e -> ids.add(e.fqn()));
     return sortTopologically(evaluables.map(e -> evaluable(e, ids)));
   }
 
-  private static GraphNode<Id, PNamedEvaluable, Location> evaluable(
-      PNamedEvaluable evaluable, HashSet<Id> ids) {
+  private static GraphNode<Id, PPolyEvaluable, Location> evaluable(
+      PPolyEvaluable evaluable, HashSet<Id> ids) {
     HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
     new PScopingModuleVisitor<RuntimeException>() {
       @Override
@@ -80,7 +80,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
         super.visitItem(pItem);
         pItem.defaultValue().ifPresent(dv -> deps.add(new GraphEdge<>(pItem.location(), dv.fqn())));
       }
-    }.visitNamedEvaluable(evaluable);
+    }.visitPolyEvaluable(evaluable);
     return new GraphNode<>(evaluable.fqn(), evaluable, listOfAll(deps));
   }
 

@@ -15,13 +15,12 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReferenceable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
@@ -85,7 +84,8 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
       switch (pContainer) {
         case PModule pModule -> initializeScopeFor(pModule);
         case PStruct pStruct -> initializeScopeFor(pStruct);
-        case PNamedValue pNamedValue -> initializeScopeFor(pNamedValue);
+        case PPolyEvaluable pPolyEvaluable -> initializeScopeFor(pPolyEvaluable);
+        case PNamedValue pNamedValue -> {}
         case PConstructor pConstructor -> initializeScopeFor(pConstructor);
         case PFunc pFunc -> initializeScopeFor(pFunc);
       }
@@ -101,11 +101,11 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
       pModule.evaluables().forEach(this::addNamedEvaluable);
     }
 
-    private void addNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
+    private void addNamedEvaluable(PPolyEvaluable pNamedEvaluable) {
       // Do not report duplicate constructor names. As constructor names starts uppercase then the
       // only way duplicate constructor name can occur is when struct with duplicate names exists
       // which is reported as struct error so we don't want to duplicate that error here.
-      var reportErrors = !(pNamedEvaluable instanceof PConstructor);
+      var reportErrors = !(pNamedEvaluable.evaluable() instanceof PConstructor);
       addReferenceable(pNamedEvaluable, reportErrors);
     }
 
@@ -113,8 +113,17 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
       pStruct.fields().forEach(this::addReferenceable);
     }
 
-    private void initializeScopeFor(PNamedValue pNamedValue) {
-      addTypeParams(pNamedValue);
+    private void initializeScopeFor(PPolyEvaluable pPolyEvaluable) {
+      switch (pPolyEvaluable.pTypeParams()) {
+          // For now, we don't have anything (function or value) that can be enclosed inside other
+          // function or value and have fully qualified name that contains enclosing name.
+          // Everything is flat in the global scope. Parameter default values have workaround of
+          // gluing function name and parameter name using '~' into a name.
+        case PExplicitTypeParams explicit -> explicit
+            .typeParams()
+            .foreach(type -> addType(type, type.name()));
+        case PImplicitTypeParams implicit -> {}
+      }
     }
 
     private void initializeScopeFor(PConstructor pConstructor) {
@@ -125,21 +134,6 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
 
     private void initializeScopeFor(PFunc pFunc) {
       pFunc.params().forEach(this::addReferenceable);
-      addTypeParams(pFunc);
-    }
-
-    private void addTypeParams(PEvaluable pEvaluable) {
-      var pTypeParams = pEvaluable.pTypeParams();
-      switch (pTypeParams) {
-          // For now, we don't have anything (function or value) that can be enclosed inside other
-          // function or value and have fully qualified name that contains enclosing name.
-          // Everything is flat in the global scope. Parameter default values have workaround of
-          // gluing function name and parameter name using '~' into a name.
-        case PExplicitTypeParams explicit -> explicit
-            .typeParams()
-            .foreach(type -> addType(type, type.name()));
-        case PImplicitTypeParams implicit -> {}
-      }
     }
 
     private void addType(PTypeDefinition type, Name name) {

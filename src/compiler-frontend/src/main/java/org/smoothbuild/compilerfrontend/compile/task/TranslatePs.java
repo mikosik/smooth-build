@@ -25,6 +25,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
@@ -47,10 +48,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SItem;
 import org.smoothbuild.compilerfrontend.lang.define.SLambda;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SMonoReference;
+import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedExprValue;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedFunc;
-import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
@@ -82,17 +82,23 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var structs =
           pModule.structs().map(this::convertStruct).toMap(s -> s.fqn().last(), v -> v);
       var evaluables =
-          pModule.evaluables().map(this::convertNamedEvaluable).toMap(Identifiable::name, v -> v);
+          pModule.evaluables().map(this::convertPolyEvaluable).toMap(Identifiable::name, v -> v);
       var sScope = new SScope(
           bindings(imported.types(), structs), bindings(imported.evaluables(), evaluables));
       return new SModule(structs, evaluables, sScope);
+    }
+
+    private SPolyEvaluable convertPolyEvaluable(PPolyEvaluable pPolyEvaluable) {
+      var typeParams = pPolyEvaluable.typeParams();
+      var evaluable = convertNamedEvaluable(pPolyEvaluable.evaluable());
+      return new SPolyEvaluable(typeParams, evaluable);
     }
 
     private STypeDefinition convertStruct(PStruct pStruct) {
       return new STypeDefinition(pStruct.type(), pStruct.type().fqn(), pStruct.location());
     }
 
-    private SPolyEvaluable convertNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
+    private SNamedEvaluable convertNamedEvaluable(PNamedEvaluable pNamedEvaluable) {
       return switch (pNamedEvaluable) {
         case PConstructor pConstructor -> convertConstructor(pConstructor);
         case PNamedFunc pNamedFunc -> convertNamedFunc(pNamedFunc);
@@ -100,41 +106,41 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       };
     }
 
-    private SPolyEvaluable convertConstructor(PConstructor pConstructor) {
-      var fields = pConstructor.params();
-      var params = fields.map(
-          f -> new SItem(fields.get(f.name()).type().sType(), f.fqn(), none(), f.location()));
-      var typeScheme = pConstructor.typeScheme();
-      var constructor = new SConstructor(
-          typeScheme.type().result(), pConstructor.fqn(), params, pConstructor.location());
-      return new SPolyEvaluable(typeScheme.typeParams(), constructor);
+    private SNamedEvaluable convertConstructor(PConstructor pConstructor) {
+      var type = pConstructor.sType();
+      var params = pConstructor
+          .params()
+          .map(f -> new SItem(f.type().sType(), f.fqn(), none(), f.location()));
+      return new SConstructor(type.result(), pConstructor.fqn(), params, pConstructor.location());
     }
 
-    public SPolyEvaluable convertNamedValue(PNamedValue pNamedValue) {
-      var typeParams = pNamedValue.typeScheme().typeParams();
-      var namedValue = convertMonoNamedValue(pNamedValue);
-      return new SPolyEvaluable(typeParams, namedValue);
-    }
-
-    private SNamedValue convertMonoNamedValue(PNamedValue pNamedValue) {
-      var schema = pNamedValue.typeScheme();
+    public SNamedEvaluable convertNamedValue(PNamedValue pNamedValue) {
       var fqn = pNamedValue.fqn();
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
         var ann = convertAnnotation(pNamedValue.annotation().get());
-        return new SAnnotatedValue(ann, schema.type(), fqn, location);
+        return new SAnnotatedValue(ann, pNamedValue.sType(), fqn, location);
       } else if (pNamedValue.body().isSome()) {
         var body = convertExpr(pNamedValue.body().get());
-        return new SNamedExprValue(schema.type(), fqn, body, location);
+        return new SNamedExprValue(pNamedValue.sType(), fqn, body, location);
       } else {
         throw new RuntimeException("Internal error: PNamedValue without annotation and body.");
       }
     }
 
-    public SPolyEvaluable convertNamedFunc(PNamedFunc pNamedFunc) {
-      var typeParams = pNamedFunc.typeScheme().typeParams();
-      var func = convertNamedFunc(pNamedFunc, convertParams(pNamedFunc));
-      return new SPolyEvaluable(typeParams, func);
+    public SNamedEvaluable convertNamedFunc(PNamedFunc pNamedFunc) {
+      var params = convertParams(pNamedFunc);
+      var fqn = pNamedFunc.fqn();
+      var location = pNamedFunc.location();
+      if (pNamedFunc.annotation().isSome()) {
+        var annotationS = convertAnnotation(pNamedFunc.annotation().get());
+        return new SAnnotatedFunc(annotationS, pNamedFunc.sType().result(), fqn, params, location);
+      } else if (pNamedFunc.body().isSome()) {
+        var body = convertFuncBody(pNamedFunc.body().get());
+        return new SNamedExprFunc(pNamedFunc.sType().result(), fqn, params, body, location);
+      } else {
+        throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
+      }
     }
 
     private NList<SItem> convertParams(PNamedFunc pNamedFunc) {
@@ -151,21 +157,6 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
           pParam.fqn(),
           pParam.defaultValue().map(dv -> new SDefaultValue(dv.fqn())),
           pParam.location());
-    }
-
-    private SNamedFunc convertNamedFunc(PNamedFunc pNamedFunc, NList<SItem> params) {
-      var schema = pNamedFunc.typeScheme();
-      var fqn = pNamedFunc.fqn();
-      var loc = pNamedFunc.location();
-      if (pNamedFunc.annotation().isSome()) {
-        var annotationS = convertAnnotation(pNamedFunc.annotation().get());
-        return new SAnnotatedFunc(annotationS, schema.type().result(), fqn, params, loc);
-      } else if (pNamedFunc.body().isSome()) {
-        var body = convertFuncBody(pNamedFunc.body().get());
-        return new SNamedExprFunc(schema.type().result(), fqn, params, body, loc);
-      } else {
-        throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
-      }
     }
 
     private SAnnotation convertAnnotation(PAnnotation pAnnotation) {
@@ -194,7 +185,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda.bodyGet());
-      var resultType = pLambda.typeScheme().type().result();
+      var resultType = pLambda.sType().result();
       return new SLambda(resultType, pLambda.fqn(), params, body, pLambda.location());
     }
 

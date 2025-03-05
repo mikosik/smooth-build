@@ -62,10 +62,10 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
@@ -81,7 +81,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
   public Output<PModule> execute(ModuleContext moduleContext, FullPath fullPath) {
     var logger = new Logger();
     var structs = new ArrayList<PStruct>();
-    var evaluables = new ArrayList<PNamedEvaluable>();
+    var evaluables = new ArrayList<PPolyEvaluable>();
     var apTranslatingVisitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
     apTranslatingVisitor.visit(moduleContext);
     var pModule = new PModule(fullPath, listOfAll(structs), listOfAll(evaluables));
@@ -108,14 +108,14 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
   private static class ApTranslatingVisitor extends SmoothAntlrBaseVisitor<Void> {
     private final FullPath fullPath;
     private final ArrayList<PStruct> structs;
-    private final ArrayList<PNamedEvaluable> evaluables;
+    private final ArrayList<PPolyEvaluable> evaluables;
     private final Logger logger;
     private int lambdaCount;
 
     public ApTranslatingVisitor(
         FullPath fullPath,
         ArrayList<PStruct> structs,
-        ArrayList<PNamedEvaluable> evaluables,
+        ArrayList<PPolyEvaluable> evaluables,
         Logger logger) {
       this.fullPath = fullPath;
       this.structs = structs;
@@ -140,18 +140,17 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       var location = fileLocation(fullPath, nameNode);
       var type = createTypeSane(evaluable.type(), location);
       var name = nameNode.getText();
-
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
       var body = visitor.createPipeSane(evaluable.pipe());
-
       var annotation = createNativeSane(evaluable.annotation());
-
       var typeParams = createTypeParams(evaluable.typeParams());
       if (evaluable.params() == null) {
-        evaluables.add(new PNamedValue(type, name, typeParams, body, annotation, location));
+        var value = new PNamedValue(type, name, body, annotation, location);
+        evaluables.add(new PPolyEvaluable(typeParams, value));
       } else {
         var params = visitor.createItems(evaluable.params().itemList());
-        evaluables.add(new PNamedFunc(type, name, typeParams, params, body, annotation, location));
+        var func = new PNamedFunc(type, name, params, body, annotation, location);
+        evaluables.add(new PPolyEvaluable(typeParams, func));
       }
       return null;
     }
@@ -308,11 +307,10 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PLambda createLambda(LambdaContext lambdaFunc) {
       var name = "lambda~" + (++lambdaCount);
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
-      var typeParams = new PExplicitTypeParams(list(), fileLocation(fullPath, lambdaFunc));
       var params = visitor.createItems(lambdaFunc.params().itemList());
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
-      return new PLambda(name, typeParams, params, body, location);
+      return new PLambda(name, params, body, location);
     }
 
     private PString createStringNode(ParserRuleContext expr, TerminalNode quotedString) {

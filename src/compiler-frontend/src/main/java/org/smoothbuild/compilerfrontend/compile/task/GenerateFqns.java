@@ -23,6 +23,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
@@ -56,6 +57,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
           switch (pContainer) {
             case PLambda pLambda -> nameOf(pLambda);
             case PModule pModule -> Result.<Name>err("");
+            case PPolyEvaluable pPolyEvaluable -> Result.<Name>err("");
             case PNamedEvaluable pNamedEvaluable -> nameOf(pNamedEvaluable);
             case PStruct pStruct -> nameOf(pStruct);
           };

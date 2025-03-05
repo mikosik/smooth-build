@@ -5,20 +5,17 @@ import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 
 public final class PNamedValue extends PNamedEvaluable {
   private final PType type;
-  private STypeScheme sTypeScheme;
 
   public PNamedValue(
       PType type,
       String nameText,
-      PTypeParams typeParams,
       Maybe<PExpr> body,
       Maybe<PAnnotation> annotation,
       Location location) {
-    super(nameText, typeParams, body, annotation, location);
+    super(nameText, body, annotation, location);
     this.type = type;
   }
 
@@ -34,15 +31,6 @@ public final class PNamedValue extends PNamedEvaluable {
   @Override
   public SType sType() {
     return type().sType();
-  }
-
-  @Override
-  public STypeScheme typeScheme() {
-    return sTypeScheme;
-  }
-
-  public void setSchema(STypeScheme typeScheme) {
-    this.sTypeScheme = typeScheme;
   }
 
   @Override

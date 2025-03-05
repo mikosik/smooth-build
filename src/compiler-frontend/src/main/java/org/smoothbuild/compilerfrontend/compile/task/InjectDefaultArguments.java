@@ -22,6 +22,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
@@ -58,7 +59,8 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
     }
 
     private List<PExpr> inferPositionedArgs(PCall pCall, Referenceable referenceable) {
-      if (referenceable instanceof NamedFunc namedFunc) {
+      if (referenceable instanceof PPolyEvaluable pPolyEvaluable
+          && pPolyEvaluable.evaluable() instanceof NamedFunc namedFunc) {
         return inferPositionedArgs(pCall, namedFunc.params(), logger);
       } else if (referenceable instanceof SPolyEvaluable sPolyEvaluable
           && sPolyEvaluable.evaluable() instanceof NamedFunc namedFunc) {

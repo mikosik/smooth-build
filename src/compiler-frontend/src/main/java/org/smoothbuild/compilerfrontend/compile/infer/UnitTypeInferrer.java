@@ -3,8 +3,8 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
@@ -22,8 +22,8 @@ public class UnitTypeInferrer extends PScopingModuleVisitor<RuntimeException> {
     this.unifier = unifier;
   }
 
-  public static void inferUnitTypes(Unifier unifier, PExpr expr) {
-    new UnitTypeInferrer(unifier).visitExpr(expr);
+  public static void inferUnitTypes(Unifier unifier, PNamedEvaluable expr) {
+    new UnitTypeInferrer(unifier).visit(expr);
   }
 
   @Override

@@ -271,11 +271,12 @@ public class EvaluateTest extends EvaluatorTestContext {
         class _in_expr_func {
           @Test
           void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
-            createUserModule(
+            var code =
                 """
-          func(String withDefault = "abc") = withDefault;
-          result = func();
-          """);
+                func(String withDefault = "abc") = withDefault;
+                result = func();
+                """;
+            createUserModule(code);
             evaluate("result");
             assertThat(artifact()).isEqualTo(bString("abc"));
           }
@@ -311,14 +312,14 @@ public class EvaluateTest extends EvaluatorTestContext {
         class _in_native_func {
           @Test
           void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
-            var userModule = format(
+            var code = format(
                 """
                     @Native("%s")
                     String stringIdentity(String value = "abc");
                     result = stringIdentity();
                     """,
                 StringIdentity.class.getCanonicalName());
-            createUserModule(userModule, StringIdentity.class);
+            createUserModule(code, StringIdentity.class);
             evaluate("result");
             assertThat(artifact()).isEqualTo(bString("abc"));
           }

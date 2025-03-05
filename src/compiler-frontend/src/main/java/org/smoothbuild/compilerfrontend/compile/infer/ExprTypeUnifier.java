@@ -1,23 +1,17 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static java.util.Comparator.comparing;
-import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.generateList;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Set.set;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
 
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.collect.Set;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
@@ -26,7 +20,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PScope;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
@@ -34,11 +27,8 @@ import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
 import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
@@ -46,72 +36,36 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
 public class ExprTypeUnifier {
   private final Unifier unifier;
-  private final PScope scope;
-  private final Set<STypeVar> outerScopeTypeVars;
 
-  private ExprTypeUnifier(Unifier unifier, PScope scope) {
-    this(unifier, scope, set());
-  }
-
-  private ExprTypeUnifier(Unifier unifier, PScope scope, Set<STypeVar> outerScopeTypeVars) {
+  private ExprTypeUnifier(Unifier unifier) {
     this.unifier = unifier;
-    this.scope = scope;
-    this.outerScopeTypeVars = outerScopeTypeVars;
   }
 
-  public static void unifyNamedValue(Unifier unifier, PScope scope, PNamedValue pNamedValue)
-      throws TypeException {
-    new ExprTypeUnifier(unifier, scope).unifyNamedValue(pNamedValue);
+  public static void unifyEvaluable(Unifier unifier, PEvaluable pEvaluable) throws TypeException {
+    new ExprTypeUnifier(unifier).unifyEvaluable(pEvaluable);
+  }
+
+  private void unifyEvaluable(PEvaluable pEvaluable) throws TypeException {
+    switch (pEvaluable) {
+      case PNamedValue pNamedValue -> unifyNamedValue(pNamedValue);
+      case PFunc pNamedFunc -> unifyFunc(pNamedFunc);
+    }
   }
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
     generateSType(pNamedValue.type());
-    unifyEvaluableBody(pNamedValue, scope);
-    var resolvedType = resolveType(pNamedValue);
-    var typeParams = resolveTypeParams(pNamedValue, resolvedType);
-    pNamedValue.setSchema(new STypeScheme(typeParams, resolvedType));
-  }
-
-  public static void unifyFunc(Unifier unifier, PScope scope, PFunc pFunc) throws TypeException {
-    new ExprTypeUnifier(unifier, scope).unifyFunc(pFunc);
+    unifyEvaluableBody(pNamedValue);
   }
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
     pFunc.params().forEach(p -> generateSType(p.type()));
     generateSType(pFunc.resultType());
-    unifyEvaluableBody(pFunc, pFunc.scope());
-    var resolvedT = (SFuncType) resolveType(pFunc);
-    var typeParams = resolveTypeParams(pFunc, resolvedT);
-    pFunc.setScheme(new SFuncTypeScheme(typeParams, resolvedT));
+    unifyEvaluableBody(pFunc);
   }
 
-  private List<STypeVar> resolveTypeParams(PEvaluable pEvaluable, SType sType)
-      throws TypeException {
-    var typeParams = sType.typeVars().removeAll(outerScopeTypeVars.map(unifier::resolve));
-    if (pEvaluable.pTypeParams() instanceof PExplicitTypeParams explicitTypeParams) {
-      var explicit = explicitTypeParams.explicitTypeVars();
-      if (!explicit.toSet().equals(typeParams)) {
-        // Sort to make error message stable so tests are not flaky.
-        var sortedTypeParams = typeParams.toList().sortUsing(comparing(STypeVar::name));
-        throw new TypeException(compileError(
-            explicitTypeParams.location(),
-            "Type parameters are declared as " + explicitTypeParams.q()
-                + " but inferred type parameters are " + q(typeParamsToSourceCode(sortedTypeParams))
-                + "."));
-      }
-      return explicit;
-    }
-    return typeParams.toList();
-  }
-
-  private SType resolveType(PEvaluable pEvaluable) {
-    return unifier.resolve(pEvaluable.sType());
-  }
-
-  private void unifyEvaluableBody(PEvaluable pEvaluable, PScope bodyScope) throws TypeException {
-    var vars = outerScopeTypeVars.addAll(pEvaluable.pTypeParams().explicitTypeVars());
+  private void unifyEvaluableBody(PEvaluable pEvaluable) throws TypeException {
     var evaluationType = pEvaluable.evaluationType().sType();
-    new ExprTypeUnifier(unifier, bodyScope, vars).unifyEvaluableBody(pEvaluable, evaluationType);
+    new ExprTypeUnifier(unifier).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType)
@@ -213,16 +167,10 @@ public class ExprTypeUnifier {
   }
 
   private SFuncType unifyLambda(PLambda pLambda) throws TypeException {
-    return new ExprTypeUnifier(unifier, pLambda.scope(), outerScopeTypeVars).unifyLambda2(pLambda);
-  }
-
-  private SFuncType unifyLambda2(PLambda pLambda) throws TypeException {
     pLambda.params().forEach(p -> generateSType(p.type()));
     generateSType(pLambda.resultType());
     unifyEvaluableBody(pLambda, pLambda.evaluationType().sType());
-    var resolvedType = (SFuncType) resolveType(pLambda);
-    pLambda.setScheme(new SFuncTypeScheme(list(), resolvedType));
-    return resolvedType;
+    return pLambda.sType();
   }
 
   private SType unifyNamedArg(PNamedArg pNamedArg) throws TypeException {

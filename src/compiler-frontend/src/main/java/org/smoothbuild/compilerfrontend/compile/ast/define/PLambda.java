@@ -9,23 +9,18 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 public final class PLambda extends PExpr implements PFunc {
   private final String nameText;
   private final PImplicitType resultType;
-  private final PTypeParams typeParams;
   private final NList<PItem> params;
   private final PExpr body;
   private Fqn fqn;
-  private SFuncTypeScheme sTypeScheme;
   private PScope scope;
 
-  public PLambda(
-      String nameText, PTypeParams typeParams, NList<PItem> params, PExpr body, Location location) {
+  public PLambda(String nameText, NList<PItem> params, PExpr body, Location location) {
     super(location);
     this.nameText = nameText;
-    this.typeParams = typeParams;
     this.resultType = new PImplicitType(location);
     this.params = params;
     this.body = body;
@@ -52,11 +47,6 @@ public final class PLambda extends PExpr implements PFunc {
   }
 
   @Override
-  public PTypeParams pTypeParams() {
-    return typeParams;
-  }
-
-  @Override
   public NList<PItem> params() {
     return params;
   }
@@ -73,16 +63,6 @@ public final class PLambda extends PExpr implements PFunc {
   @Override
   public SFuncType sType() {
     return PFunc.super.sType();
-  }
-
-  @Override
-  public SFuncTypeScheme typeScheme() {
-    return sTypeScheme;
-  }
-
-  @Override
-  public void setScheme(SFuncTypeScheme sTypeScheme) {
-    this.sTypeScheme = sTypeScheme;
   }
 
   @Override

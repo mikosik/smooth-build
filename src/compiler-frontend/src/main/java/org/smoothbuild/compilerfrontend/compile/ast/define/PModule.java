@@ -11,16 +11,16 @@ import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 public final class PModule implements PContainer {
   private final FullPath fullPath;
   private final List<PStruct> structs;
-  private final List<PNamedEvaluable> evaluables;
+  private final List<PPolyEvaluable> evaluables;
   private PScope scope;
   private Fqn fqn = null;
 
-  public PModule(FullPath fullPath, List<PStruct> structs, List<PNamedEvaluable> evaluables) {
+  public PModule(FullPath fullPath, List<PStruct> structs, List<PPolyEvaluable> evaluables) {
     this(fullPath, structs, evaluables, null);
   }
 
   public PModule(
-      FullPath fullPath, List<PStruct> structs, List<PNamedEvaluable> evaluables, PScope scope) {
+      FullPath fullPath, List<PStruct> structs, List<PPolyEvaluable> evaluables, PScope scope) {
     this.fullPath = fullPath;
     this.structs = structs;
     this.evaluables = evaluables;
@@ -46,7 +46,7 @@ public final class PModule implements PContainer {
     return new FileLocation(fullPath, 0);
   }
 
-  public List<PNamedEvaluable> evaluables() {
+  public List<PPolyEvaluable> evaluables() {
     return evaluables;
   }
 

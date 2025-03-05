@@ -10,7 +10,9 @@ import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 
 public class GenerateConstructors implements Task1<PModule, PModule> {
@@ -25,12 +27,13 @@ public class GenerateConstructors implements Task1<PModule, PModule> {
   }
 
   private static class ConstructorCreator extends PScopingModuleVisitor<RuntimeException> {
-    private final List<PConstructor> constructors = new ArrayList<>();
+    private final List<PPolyEvaluable> constructors = new ArrayList<>();
 
     @Override
     public void visitStructSignature(PStruct pStruct) throws RuntimeException {
       super.visitStructSignature(pStruct);
-      constructors.add(new PConstructor(pStruct));
+      var typeParams = new PExplicitTypeParams(list(), pStruct.location());
+      constructors.add(new PPolyEvaluable(typeParams, new PConstructor(pStruct)));
     }
   }
 }

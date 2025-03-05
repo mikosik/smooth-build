@@ -1,28 +1,23 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
@@ -33,41 +28,31 @@ public class TypeResolver {
     this.unifier = unifier;
   }
 
-  public static void resolveNamedValue(Unifier unifier, PNamedValue pNamedValue)
+  public static void resolveNamedEvaluable(Unifier unifier, PNamedEvaluable pNamedEvaluable)
       throws TypeException {
-    new TypeResolver(unifier).resolveNamedValue(pNamedValue);
+    new TypeResolver(unifier).resolveNamedEvaluable(pNamedEvaluable);
+  }
+
+  private void resolveNamedEvaluable(PNamedEvaluable pNamedEvaluable) throws TypeException {
+    switch (pNamedEvaluable) {
+      case PNamedValue pNamedValue -> resolveNamedValue(pNamedValue);
+      case PFunc pFunc -> resolveFunc(pFunc);
+    }
   }
 
   private void resolveNamedValue(PNamedValue pNamedValue) throws TypeException {
     resolveBody(pNamedValue.body());
-    var typeScheme = pNamedValue.typeScheme();
-    var typeParams = resolveTypeParams(typeScheme);
-    if (pNamedValue.pTypeParams() instanceof PImplicitTypeParams implicit) {
-      implicit.setTypeVars(typeParams);
-    }
-    pNamedValue.setSchema(new STypeScheme(typeParams, resolveType(typeScheme)));
-  }
-
-  public static void resolveFunc(Unifier unifier, PFunc pFunc) throws TypeException {
-    new TypeResolver(unifier).resolveFunc(pFunc);
+    resolveType(pNamedValue.type());
   }
 
   private void resolveFunc(PFunc pFunc) throws TypeException {
-    var funcTypeScheme = pFunc.typeScheme();
-    var typeParams = resolveTypeParams(funcTypeScheme);
-    if (pFunc.pTypeParams() instanceof PImplicitTypeParams implicit) {
-      implicit.setTypeVars(typeParams);
-    }
-    pFunc.setScheme(new SFuncTypeScheme(typeParams, (SFuncType) resolveType(funcTypeScheme)));
     resolveBody(pFunc.body());
+    resolveType(pFunc.resultType());
+    pFunc.params().forEach(p -> resolveType(p.type()));
   }
 
-  private List<STypeVar> resolveTypeParams(STypeScheme sTypeScheme) {
-    return sTypeScheme.typeParams().map(v -> (STypeVar) unifier.resolve(v));
-  }
-
-  private SType resolveType(STypeScheme sTypeScheme) {
-    return unifier.resolve(sTypeScheme.type());
+  private void resolveType(PType pType) {
+    pType.setSType(unifier.resolve(pType.sType()));
   }
 
   private void resolveBody(Maybe<PExpr> body) throws TypeException {
@@ -75,7 +60,6 @@ public class TypeResolver {
   }
 
   private void resolveBody(PExpr body) throws TypeException {
-    inferUnitTypes(unifier, body);
     resolveExpr(body);
   }
 
@@ -83,7 +67,7 @@ public class TypeResolver {
     switch (expr) {
       case PCall pCall -> resolveCall(pCall);
       case PInstantiate pInstantiate -> resolveInstantiate(pInstantiate);
-      case PLambda pLambda -> resolveLambda(pLambda);
+      case PLambda pLambda -> resolveFunc(pLambda);
       case PNamedArg pNamedArg -> resolveNamedArg(pNamedArg);
       case POrder pOrder -> resolveOrder(pOrder);
       case PSelect pSelect -> resolveSelect(pSelect);
@@ -106,12 +90,6 @@ public class TypeResolver {
           compileError(pInstantiate.location(), "Cannot infer actual type parameters."));
     }
     pInstantiate.setTypeArgs(resolvedTypeArgs);
-  }
-
-  private void resolveLambda(PLambda pFunc) throws TypeException {
-    var typeScheme = pFunc.typeScheme();
-    pFunc.setScheme(new SFuncTypeScheme(list(), (SFuncType) resolveType(typeScheme)));
-    resolveBody(pFunc.body());
   }
 
   private void resolveNamedArg(PNamedArg pNamedArg) throws TypeException {

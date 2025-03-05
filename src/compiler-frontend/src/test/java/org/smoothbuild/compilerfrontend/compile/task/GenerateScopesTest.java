@@ -19,7 +19,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
   class _module {
     @Test
     void module_scope_has_its_member_function_in_referenceables() {
-      var pNamedFunc = pNamedFunc("myFunc");
+      var pNamedFunc = pPoly(pNamedFunc("myFunc"));
       var pModule = pModule(list(), list(pNamedFunc));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
@@ -29,7 +29,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
 
     @Test
     void module_scope_has_its_member_value_in_referenceables() {
-      var pNamedValue = pNamedValue("myValue");
+      var pNamedValue = pPoly(pNamedValue("myValue"));
       var pModule = pModule(list(), list(pNamedValue));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
@@ -43,37 +43,38 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
     @Test
     void named_function_scope_has_its_parameter() {
       var param = pItem("param");
-      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pNamedFunc = pPoly(pNamedFunc("myFunc", nlist(param)));
       var pModule = pModule(list(), list(pNamedFunc));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      assertThat(pNamedFunc.scope().referenceables().find(fqn("param"))).isEqualTo(ok(param));
+      assertThat(pNamedFunc.evaluable().scope().referenceables().find(fqn("param")))
+          .isEqualTo(ok(param));
     }
 
     @Test
     void named_function_scope_has_its_sibling_named_value() {
-      var pNamedValue = pNamedValue("myValue");
+      var pNamedValue = pPoly(pNamedValue("myValue"));
       var param = pItem("param");
-      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pNamedFunc = pPoly(pNamedFunc("myFunc", nlist(param)));
       var pModule = pModule(list(), list(pNamedFunc, pNamedValue));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      assertThat(pNamedFunc.scope().referenceables().find(fqn("myValue")))
+      assertThat(pNamedFunc.evaluable().scope().referenceables().find(fqn("myValue")))
           .isEqualTo(ok(pNamedValue));
     }
 
     @Test
     void named_function_scope_has_its_sibling_named_function() {
-      var otherFunc = pNamedFunc("otherFunc");
+      var otherFunc = pPoly(pNamedFunc("otherFunc"));
       var param = pItem("param");
-      var pNamedFunc = pNamedFunc("myFunc", nlist(param));
+      var pNamedFunc = pPoly(pNamedFunc("myFunc", nlist(param)));
       var pModule = pModule(list(), list(pNamedFunc, otherFunc));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 
-      assertThat(pNamedFunc.scope().referenceables().find(fqn("otherFunc")))
+      assertThat(pNamedFunc.evaluable().scope().referenceables().find(fqn("otherFunc")))
           .isEqualTo(ok(otherFunc));
     }
   }
@@ -84,7 +85,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
     void lambda_scope_has_value_that_encloses_it() {
       var param = pItem("param");
       var pLambda = pLambda(nlist(param), pInt());
-      var pNamedValue = pNamedValue("myValue", pLambda);
+      var pNamedValue = pPoly(pNamedValue("myValue", pLambda));
       var pModule = pModule(list(), list(pNamedValue));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
@@ -97,7 +98,7 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
     void lambda_scope_has_function_that_encloses_it() {
       var param = pItem("param");
       var pLambda = pLambda(nlist(param), pInt());
-      var pNamedValue = pNamedFunc("myFunc", pLambda);
+      var pNamedValue = pPoly(pNamedFunc("myFunc", pLambda));
       var pModule = pModule(list(), list(pNamedValue));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
@@ -109,7 +110,8 @@ public class GenerateScopesTest extends FrontendCompilerTestContext {
     void lambda_scope_has_its_parameter() {
       var param = pItem("param");
       var pLambda = pLambda(nlist(param), pInt());
-      var pModule = pModule(list(), list(pNamedValue(pLambda)));
+      var value = pPoly(pNamedValue(pLambda));
+      var pModule = pModule(list(), list(value));
 
       initializeScopes(emptyImportedScope(), pModule, new Logger());
 

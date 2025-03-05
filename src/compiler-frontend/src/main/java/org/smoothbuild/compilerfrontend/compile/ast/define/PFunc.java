@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 
 public sealed interface PFunc extends PEvaluable permits PLambda, PNamedFunc {
   public PType resultType();
@@ -19,9 +18,4 @@ public sealed interface PFunc extends PEvaluable permits PLambda, PNamedFunc {
     return new SFuncType(
         params().list().map(p -> p.type().sType()), resultType().sType());
   }
-
-  @Override
-  public SFuncTypeScheme typeScheme();
-
-  public void setScheme(SFuncTypeScheme sFuncTypeScheme);
 }

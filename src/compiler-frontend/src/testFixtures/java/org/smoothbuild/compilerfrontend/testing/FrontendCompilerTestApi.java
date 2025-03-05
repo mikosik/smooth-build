@@ -39,6 +39,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
@@ -714,13 +715,12 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SItemSig(type, referenceableName(name));
   }
 
-  public default PModule pModule(List<PStruct> structs, List<PNamedEvaluable> evaluables) {
+  public default PModule pModule(List<PStruct> structs, List<PPolyEvaluable> evaluables) {
     return new PModule(moduleFullPath(), structs, evaluables);
   }
 
   public default PLambda pLambda(NList<PItem> params, PExpr body) {
-    var typeParams = new PExplicitTypeParams(list(), location());
-    var pLambda = new PLambda("lambda~1", typeParams, params, body, location());
+    var pLambda = new PLambda("lambda~1", params, body, location());
     pLambda.setFqn(fqn("lambda~1"));
     return pLambda;
   }
@@ -735,6 +735,10 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PInstantiate pInstantiate(PReference reference) {
     return new PInstantiate(reference, reference.location());
+  }
+
+  public default PPolyEvaluable pPoly(PNamedEvaluable evaluable) {
+    return new PPolyEvaluable(new PExplicitTypeParams(list(), location()), evaluable);
   }
 
   public default PNamedFunc pNamedFunc() {
@@ -768,8 +772,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
   public default PNamedFunc pNamedFunc(
       String name, NList<PItem> params, Maybe<PExpr> body, Location location) {
     var resultT = new PImplicitType(location);
-    var typeParams = new PExplicitTypeParams(list(), location());
-    var pNamedFunc = new PNamedFunc(resultT, name, typeParams, params, body, none(), location);
+    var pNamedFunc = new PNamedFunc(resultT, name, params, body, none(), location);
     pNamedFunc.setFqn(fqn(name));
     return pNamedFunc;
   }
@@ -794,8 +797,7 @@ public interface FrontendCompilerTestApi extends VmTestApi {
 
   public default PNamedValue pNamedValue(
       String name, PExpr body, PImplicitType type, Location location) {
-    var typeParams = new PExplicitTypeParams(list(), location());
-    var pNamedValue = new PNamedValue(type, name, typeParams, some(body), none(), location);
+    var pNamedValue = new PNamedValue(type, name, some(body), none(), location);
     pNamedValue.setFqn(fqn(name));
     return pNamedValue;
   }
