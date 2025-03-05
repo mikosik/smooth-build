@@ -8,8 +8,7 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
 /**
  * Reference to {@link SMonoReferenceable}.
  */
-public record SMonoReference(SType type, Id referencedId, Location location)
-    implements SReference, SExpr {
+public record SMonoReference(SType type, Id referencedId, Location location) implements SExpr {
   @Override
   public SType evaluationType() {
     return type;
