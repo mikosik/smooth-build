@@ -302,6 +302,19 @@ public class IdTest {
       assertCall(() -> fqn.parent())
           .throwsException(new NoSuchElementException("`abc` does not have parent."));
     }
+
+    @ParameterizedTest
+    @MethodSource
+    void last(Fqn fqn, Name name) {
+      assertThat(fqn.last()).isEqualTo(name);
+    }
+
+    public static Stream<Arguments> last() {
+      return Stream.of(
+          arguments(fqn("abc:def"), referenceableName("def")),
+          arguments(fqn("abc:def:ghi"), referenceableName("ghi")),
+          arguments(fqn("abc:def:ghi:jkl"), referenceableName("jkl")));
+    }
   }
 
   @Test

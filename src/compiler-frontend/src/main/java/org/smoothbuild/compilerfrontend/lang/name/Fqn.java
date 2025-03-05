@@ -69,4 +69,8 @@ public final class Fqn extends Id {
     }
     return new Fqn(parts.subList(0, parts.size() - 1).toString(":"));
   }
+
+  public Name last() {
+    return parts().last();
+  }
 }
