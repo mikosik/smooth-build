@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PContainer;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitTypeParams;
@@ -18,7 +17,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
-import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 
 public class GenerateDefaultValues implements Task1<PModule, PModule> {
   @Override
@@ -33,12 +31,7 @@ public class GenerateDefaultValues implements Task1<PModule, PModule> {
 
   private static void generateDefaultValues(
       PModule pModule, ArrayList<PNamedEvaluable> namedDefaultValues) {
-    new PModuleVisitor<Fqn, RuntimeException>() {
-      @Override
-      protected Fqn propertyOf(PContainer pContainer) {
-        return pContainer.fqn();
-      }
-
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitItem(PItem pItem) throws RuntimeException {
         super.visitItem(pItem);

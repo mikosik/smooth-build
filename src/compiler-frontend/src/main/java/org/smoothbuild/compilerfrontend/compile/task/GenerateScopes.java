@@ -48,19 +48,25 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
     new Initializer(pScope, logger).visit(pModule);
   }
 
-  private static class Initializer extends PModuleVisitor<PScope, RuntimeException> {
+  private static class Initializer extends PModuleVisitor<RuntimeException> {
+    private PScope scope;
     private final Logger logger;
 
     private Initializer(PScope scope, Logger logger) {
-      super(scope);
+      this.scope = scope;
       this.logger = logger;
     }
 
     @Override
-    protected PScope propertyOf(PContainer pContainer) {
-      var newScope = new ScopeCreator(containerProperty(), logger).createScopeFor(pContainer);
-      pContainer.setScope(newScope);
-      return newScope;
+    public void visit(PContainer pContainer) {
+      var oldScope = scope;
+      scope = new ScopeCreator(oldScope, logger).createScopeFor(pContainer);
+      pContainer.setScope(scope);
+      try {
+        super.visit(pContainer);
+      } finally {
+        scope = oldScope;
+      }
     }
   }
 

@@ -29,36 +29,18 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParams;
 
-public abstract class PModuleVisitor<P, T extends Throwable> {
-  private P containerProperty;
-
+public abstract class PModuleVisitor<T extends Throwable> {
   public PModuleVisitor() {}
-
-  public PModuleVisitor(P containerProperty) {
-    this.containerProperty = containerProperty;
-  }
-
-  protected abstract P propertyOf(PContainer pContainer);
-
-  public P containerProperty() {
-    return containerProperty;
-  }
 
   public void visit(List<? extends PContainer> pContainers) throws T {
     pContainers.foreach(this::visit);
   }
 
   public void visit(PContainer pContainer) throws T {
-    var previousProperty = containerProperty;
-    try {
-      containerProperty = propertyOf(pContainer);
-      switch (pContainer) {
-        case PModule pModule -> visitModule(pModule);
-        case PEvaluable pEvaluable -> visitEvaluable(pEvaluable);
-        case PStruct pStruct -> visitStruct(pStruct);
-      }
-    } finally {
-      containerProperty = previousProperty;
+    switch (pContainer) {
+      case PModule pModule -> visitModule(pModule);
+      case PEvaluable pEvaluable -> visitEvaluable(pEvaluable);
+      case PStruct pStruct -> visitStruct(pStruct);
     }
   }
 

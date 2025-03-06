@@ -41,15 +41,17 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     return output(pModule, label, logger.toList());
   }
 
-  private static class Visitor extends PModuleVisitor<Fqn, RuntimeException> {
+  private static class Visitor extends PModuleVisitor<RuntimeException> {
     private final Logger logger;
+    private Fqn fqn;
 
     public Visitor(Logger logger) {
       this.logger = logger;
+      this.fqn = null;
     }
 
     @Override
-    protected Fqn propertyOf(PContainer pContainer) {
+    public void visit(PContainer pContainer) {
       var name =
           switch (pContainer) {
             case PLambda pLambda -> nameOf(pLambda);
@@ -57,7 +59,14 @@ public class GenerateFqns implements Task1<PModule, PModule> {
             case PNamedEvaluable pNamedEvaluable -> nameOf(pNamedEvaluable);
             case PStruct pStruct -> nameOf(pStruct);
           };
-      return name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOr(null);
+
+      var oldFqn = fqn;
+      try {
+        fqn = name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOr(null);
+        super.visit(pContainer);
+      } finally {
+        fqn = oldFqn;
+      }
     }
 
     @Override
@@ -75,8 +84,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       }
     }
 
-    private Result<Name> nameOf(PNamedEvaluable pNamedEvaluable)
-        throws RuntimeException {
+    private Result<Name> nameOf(PNamedEvaluable pNamedEvaluable) throws RuntimeException {
       var nameText = pNamedEvaluable.nameText();
       return parseReferenceableName(nameText)
           .ifErr(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e));
@@ -175,8 +183,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     }
 
     private Fqn toFqn(Name name) {
-      var containerFqn = containerProperty();
-      return containerFqn == null ? fqn(name.toString()) : containerFqn.append(name);
+      return fqn == null ? fqn(name.toString()) : fqn.append(name);
     }
   }
 }
