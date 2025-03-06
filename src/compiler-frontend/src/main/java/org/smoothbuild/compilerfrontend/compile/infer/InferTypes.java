@@ -16,6 +16,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
@@ -59,14 +60,19 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private SItemSig inferFieldSig(PItem field) throws TypeException {
-      var type = scope().translate(field.type());
-      if (type.typeVars().isEmpty()) {
-        field.type().setSType(type);
-        return new SItemSig(type, field.name());
+      var type = field.type();
+      if (type instanceof PExplicitType explicit) {
+        SType sType = explicit.infer();
+        if (sType.typeVars().isEmpty()) {
+          type.setSType(sType);
+          return new SItemSig(sType, field.name());
+        } else {
+          var message = "Field type cannot be polymorphic. Found field %s with type %s."
+              .formatted(field.q(), sType.q());
+          throw new TypeException(compileError(type, message));
+        }
       } else {
-        var message = "Field type cannot be polymorphic. Found field %s with type %s."
-            .formatted(field.q(), type.q());
-        throw new TypeException(compileError(field.type(), message));
+        throw new RuntimeException("Implicit field types in Struct are forbidden.");
       }
     }
 

@@ -4,24 +4,24 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 
 public final class PFuncType extends PExplicitType {
-  private final PType result;
-  private final List<PType> params;
+  private final PExplicitType result;
+  private final List<PExplicitType> params;
 
-  public PFuncType(PType result, List<PType> params, Location location) {
+  public PFuncType(PExplicitType result, List<PExplicitType> params, Location location) {
     super(createName(result, params), location);
     this.result = result;
     this.params = params;
   }
 
-  private static String createName(PType result, List<PType> params) {
+  private static String createName(PExplicitType result, List<PExplicitType> params) {
     return "(" + params.map(PType::nameText).toString(",") + ")->" + result.nameText();
   }
 
-  public PType result() {
+  public PExplicitType result() {
     return result;
   }
 
-  public List<PType> params() {
+  public List<PExplicitType> params() {
     return params;
   }
 }

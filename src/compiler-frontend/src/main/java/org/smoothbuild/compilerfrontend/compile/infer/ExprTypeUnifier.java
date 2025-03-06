@@ -16,10 +16,10 @@ import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PImplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
@@ -285,6 +285,6 @@ public class ExprTypeUnifier {
 
   private void generateSType(PType pType) {
     pType.setSType(
-        pType instanceof PImplicitType ? unifier.newFlexibleTypeVar() : scope.translate(pType));
+        pType instanceof PExplicitType explicit ? explicit.infer() : unifier.newFlexibleTypeVar());
   }
 }

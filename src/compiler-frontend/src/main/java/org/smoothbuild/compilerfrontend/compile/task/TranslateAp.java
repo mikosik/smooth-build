@@ -50,6 +50,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
@@ -349,7 +350,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return type == null ? new PImplicitType(location) : createType(type);
     }
 
-    private PType createType(TypeContext type) {
+    private PExplicitType createType(TypeContext type) {
       return switch (type) {
         case TypeNameContext name -> createTypeReference(name);
         case ArrayTypeContext arrayType -> createArrayType(arrayType);
@@ -358,16 +359,16 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       };
     }
 
-    private PType createTypeReference(TypeNameContext type) {
+    private PExplicitType createTypeReference(TypeNameContext type) {
       return new PTypeReference(type.getText(), fileLocation(fullPath, type.NAME()));
     }
 
-    private PType createArrayType(ArrayTypeContext arrayType) {
+    private PExplicitType createArrayType(ArrayTypeContext arrayType) {
       var elemType = createType(arrayType.type());
       return new PArrayType(elemType, fileLocation(fullPath, arrayType));
     }
 
-    private PType createFuncType(FuncTypeContext funcType) {
+    private PExplicitType createFuncType(FuncTypeContext funcType) {
       var types = listOfAll(funcType.type()).map(this::createType);
       var resultType = types.get(types.size() - 1);
       var paramTypes = types.subList(0, types.size() - 1);
