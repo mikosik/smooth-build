@@ -52,10 +52,10 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     protected Fqn propertyOf(PContainer pContainer) {
       var name =
           switch (pContainer) {
-            case PLambda pLambda -> setLambdaFqn(pLambda);
+            case PLambda pLambda -> nameOf(pLambda);
             case PModule pModule -> Result.<Name>err("");
-            case PNamedEvaluable pNamedEvaluable -> setNamedEvaluableFqn(pNamedEvaluable);
-            case PStruct pStruct -> setStructFqn(pStruct);
+            case PNamedEvaluable pNamedEvaluable -> nameOf(pNamedEvaluable);
+            case PStruct pStruct -> nameOf(pStruct);
           };
       return name.mapOk(this::toFqn).ifOk(pContainer::setFqn).okOr(null);
     }
@@ -75,14 +75,14 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       }
     }
 
-    private Result<Name> setNamedEvaluableFqn(PNamedEvaluable pNamedEvaluable)
+    private Result<Name> nameOf(PNamedEvaluable pNamedEvaluable)
         throws RuntimeException {
       var nameText = pNamedEvaluable.nameText();
       return parseReferenceableName(nameText)
           .ifErr(e -> logIllegalIdentifier(nameText, pNamedEvaluable.location(), e));
     }
 
-    private Result<Name> setLambdaFqn(PLambda pLambda) throws RuntimeException {
+    private Result<Name> nameOf(PLambda pLambda) throws RuntimeException {
       var nameText = pLambda.nameText();
       return parseReferenceableName(nameText)
           .ifErr(e -> logIllegalIdentifier(nameText, pLambda.location(), e));
@@ -125,7 +125,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
       logger.log(compileError(location, "`" + nameText + "` is illegal identifier name. " + e));
     }
 
-    private Result<Name> setStructFqn(PStruct pStruct) {
+    private Result<Name> nameOf(PStruct pStruct) {
       var nameText = pStruct.nameText();
       return parseTypeName(nameText)
           .ifErr(e -> logIllegalStructName(pStruct, e, pStruct.nameText()));
