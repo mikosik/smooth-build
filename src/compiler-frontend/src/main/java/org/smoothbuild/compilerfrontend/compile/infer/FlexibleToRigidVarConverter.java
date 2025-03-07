@@ -29,6 +29,5 @@ public class FlexibleToRigidVarConverter extends PScopingModuleVisitor<RuntimeEx
         .toMap(v -> (SType) new STypeVar(nameGenerator.next()));
     var renamedVarsType = resolvedType.mapTypeVars(mapping);
     unifier.addOrFailWithRuntimeException(new Constraint(renamedVarsType, resolvedType));
-    evaluable.body().ifPresent(this::visitExpr);
   }
 }
