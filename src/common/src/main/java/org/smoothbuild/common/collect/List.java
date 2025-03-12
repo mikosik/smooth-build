@@ -318,6 +318,7 @@ public final class List<E> implements Collection<E> {
     return true;
   }
 
+  @Override
   public <V, T extends Throwable> Map<E, V> toMap(Function1<? super E, V, T> valueMapper) throws T {
     return zipToMap(this, map(valueMapper));
   }

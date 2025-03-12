@@ -40,5 +40,7 @@ public abstract sealed interface Collection<E> extends Iterable<E> permits List,
 
   public Set<E> toSet();
 
+  public <V, T extends Throwable> Map<E, V> toMap(Function1<? super E, V, T> valueMapper) throws T;
+
   public Stream<E> stream();
 }

@@ -74,7 +74,8 @@ public non-sealed class Set<E> implements Collection<E> {
     return new Set<>(set.stream().collect(toImmutableSortedSet(comparator)));
   }
 
-  public <V, T extends Throwable> Map<E, V> toMap(Function1<E, V, T> mapper) throws T {
+  @Override
+  public <V, T extends Throwable> Map<E, V> toMap(Function1<? super E, V, T> mapper) throws T {
     return zipToMap(this, this.map(mapper));
   }
 
