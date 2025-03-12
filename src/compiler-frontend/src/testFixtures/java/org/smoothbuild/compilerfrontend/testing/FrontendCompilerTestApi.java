@@ -75,7 +75,6 @@ import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SBlobType;
 import org.smoothbuild.compilerfrontend.lang.type.SBoolType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
-import org.smoothbuild.compilerfrontend.lang.type.SFuncTypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.SIntType;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SStringType;
@@ -192,28 +191,28 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return STypes.INT;
   }
 
-  public default SFuncTypeScheme sFuncScheme(NList<SItem> params, SType resultType) {
+  public default STypeScheme sFuncScheme(NList<SItem> params, SType resultType) {
     return sFuncScheme(toTypes(params.list()), resultType);
   }
 
-  public default SFuncTypeScheme sFuncScheme(SType resultType) {
+  public default STypeScheme sFuncScheme(SType resultType) {
     return sFuncScheme(sFuncType(list(), resultType));
   }
 
-  public default SFuncTypeScheme sFuncScheme(SType paramType, SType resultType) {
+  public default STypeScheme sFuncScheme(SType paramType, SType resultType) {
     return sFuncScheme(sFuncType(list(paramType), resultType));
   }
 
-  public default SFuncTypeScheme sFuncScheme(List<SType> paramTypes, SType resultType) {
+  public default STypeScheme sFuncScheme(List<SType> paramTypes, SType resultType) {
     return sFuncScheme(sFuncType(paramTypes, resultType));
   }
 
-  private SFuncTypeScheme sFuncScheme(SFuncType funcType) {
+  private STypeScheme sFuncScheme(SFuncType funcType) {
     return sFuncScheme(funcType.typeVars().toList(), funcType);
   }
 
-  private SFuncTypeScheme sFuncScheme(List<STypeVar> typeParams, SFuncType funcType) {
-    return new SFuncTypeScheme(typeParams, funcType);
+  private STypeScheme sFuncScheme(List<STypeVar> typeParams, SFuncType funcType) {
+    return new STypeScheme(typeParams, funcType);
   }
 
   public default SInterfaceType sInterfaceType() {

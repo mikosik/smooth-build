@@ -11,7 +11,7 @@ import org.smoothbuild.common.collect.List;
 /**
  * Polymorphic type (aka type scheme).
  */
-public sealed class STypeScheme permits SFuncTypeScheme {
+public class STypeScheme {
   private final List<STypeVar> typeParams;
   private final SType type;
 

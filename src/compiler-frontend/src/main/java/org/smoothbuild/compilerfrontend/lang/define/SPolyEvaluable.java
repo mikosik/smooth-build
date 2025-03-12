@@ -1,7 +1,6 @@
 package org.smoothbuild.compilerfrontend.lang.define;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.common.collect.Map.zipToMap;
 import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.Objects;
@@ -10,7 +9,6 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
