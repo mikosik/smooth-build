@@ -24,7 +24,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
-import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
@@ -157,7 +157,7 @@ public class ExprTypeUnifier {
         pInstantiate.setTypeArgs(list());
         yield mono.sType();
       }
-      case PolyReferenceable poly -> {
+      case PolyEvaluable poly -> {
         var argSize = poly.typeParams().size();
         pInstantiate.setTypeArgs(generateList(argSize, unifier::newFlexibleTypeVar));
         yield poly.instantiatedType(pInstantiate.typeArgs());

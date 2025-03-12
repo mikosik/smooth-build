@@ -32,7 +32,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
-import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedFunc;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotatedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SAnnotation;
@@ -224,7 +224,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       final var location = pReference.location();
       return switch (pReference.referenced()) {
         case MonoReferenceable mono -> new SMonoReference(mono.sType(), fqn, location);
-        case PolyReferenceable poly -> {
+        case PolyEvaluable poly -> {
           var sPolyReference = new SPolyReference(poly.typeScheme(), fqn, location);
           var type = poly.instantiatedType(pInstantiate.typeArgs());
           yield new SInstantiate(

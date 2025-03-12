@@ -6,12 +6,13 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 
-public final class PPolyEvaluable implements PPolyReferenceable, PContainer {
+public final class PPolyEvaluable implements PReferenceable, PolyEvaluable, PContainer {
   private final PTypeParams typeParams;
   private final PNamedEvaluable evaluable;
   private PScope scope;
@@ -30,6 +31,7 @@ public final class PPolyEvaluable implements PPolyReferenceable, PContainer {
     return typeParams.typeVars();
   }
 
+  @Override
   public PNamedEvaluable evaluable() {
     return evaluable;
   }

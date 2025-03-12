@@ -8,8 +8,10 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 /**
  * Polymorphic referenceable.
  */
-public interface PolyReferenceable extends Referenceable {
+public interface PolyEvaluable extends Referenceable {
   public List<STypeVar> typeParams();
+
+  public Evaluable evaluable();
 
   public SType instantiatedType(List<SType> typeArgs);
 

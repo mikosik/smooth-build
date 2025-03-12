@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.location.Location;
-import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
@@ -17,7 +17,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 /**
  * Polymorphic evaluable.
  */
-public final class SPolyEvaluable implements PolyReferenceable, SReferenceable {
+public final class SPolyEvaluable implements PolyEvaluable, SReferenceable {
   private final List<STypeVar> typeParams;
   private final SNamedEvaluable evaluable;
 
@@ -31,6 +31,7 @@ public final class SPolyEvaluable implements PolyReferenceable, SReferenceable {
     return typeParams;
   }
 
+  @Override
   public SNamedEvaluable evaluable() {
     return evaluable;
   }

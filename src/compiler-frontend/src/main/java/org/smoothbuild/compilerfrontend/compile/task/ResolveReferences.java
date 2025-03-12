@@ -18,7 +18,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
-import org.smoothbuild.compilerfrontend.lang.base.PolyReferenceable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 
 /**
  * For each PReference or PTypeReference it resolves its .fqn() and stores result in
@@ -61,7 +61,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
       pItem.defaultValue().ifPresent(dv -> scope()
           .referenceables()
           .find(dv.fqn())
-          .ifOk(referenced -> dv.setReferenced((PolyReferenceable) referenced))
+          .ifOk(referenced -> dv.setReferenced((PolyEvaluable) referenced))
           .ifErr(e -> logger.log(compileError(dv, e))));
     }
 

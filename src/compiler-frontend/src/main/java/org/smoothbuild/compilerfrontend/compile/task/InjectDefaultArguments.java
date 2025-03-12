@@ -22,12 +22,10 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.lang.base.Item;
 import org.smoothbuild.compilerfrontend.lang.base.NamedFunc;
-import org.smoothbuild.compilerfrontend.lang.base.Referenceable;
-import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
 
@@ -51,19 +49,8 @@ public class InjectDefaultArguments implements Task1<PModule, PModule> {
 
     private List<PExpr> inferPositionedArgs(PCall pCall) {
       if (pCall.callee() instanceof PInstantiate pInstantiate
-          && pInstantiate.reference() instanceof PReference pReference) {
-        return inferPositionedArgs(pCall, pReference.referenced());
-      } else {
-        return inferPositionedArgs(pCall, logger);
-      }
-    }
-
-    private List<PExpr> inferPositionedArgs(PCall pCall, Referenceable referenceable) {
-      if (referenceable instanceof PPolyEvaluable pPolyEvaluable
+          && pInstantiate.reference().referenced() instanceof PolyEvaluable pPolyEvaluable
           && pPolyEvaluable.evaluable() instanceof NamedFunc namedFunc) {
-        return inferPositionedArgs(pCall, namedFunc.params(), logger);
-      } else if (referenceable instanceof SPolyEvaluable sPolyEvaluable
-          && sPolyEvaluable.evaluable() instanceof NamedFunc namedFunc) {
         return inferPositionedArgs(pCall, namedFunc.params(), logger);
       } else {
         return inferPositionedArgs(pCall, logger);
