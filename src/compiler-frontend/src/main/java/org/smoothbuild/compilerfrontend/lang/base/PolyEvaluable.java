@@ -1,5 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
+import static org.smoothbuild.common.collect.Map.zipToMap;
+
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeScheme;
@@ -13,7 +15,10 @@ public interface PolyEvaluable extends Referenceable {
 
   public Evaluable evaluable();
 
-  public SType instantiatedType(List<SType> typeArgs);
+  public default SType instantiatedType(List<SType> typeArgs) {
+    var map = zipToMap(typeParams().toList(), typeArgs);
+    return evaluable().type().mapTypeVars(v -> map.getOrDefault(v, v));
+  }
 
   public STypeScheme typeScheme();
 }

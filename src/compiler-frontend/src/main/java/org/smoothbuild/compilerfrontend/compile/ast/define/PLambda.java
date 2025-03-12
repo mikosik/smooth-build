@@ -61,8 +61,8 @@ public final class PLambda extends PExpr implements PFunc {
   }
 
   @Override
-  public SFuncType sType() {
-    return PFunc.super.sType();
+  public SFuncType type() {
+    return PFunc.super.type();
   }
 
   @Override

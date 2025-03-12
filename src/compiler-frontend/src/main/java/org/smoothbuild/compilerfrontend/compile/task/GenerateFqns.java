@@ -128,7 +128,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
                     fqn(pItem.fqn().parent() + "~" + pItem.name().toString())));
           });
       pItem.defaultValue().ifPresent(pDefaultValue -> visitExpr(pDefaultValue.expr()));
-      visitType(pItem.type());
+      visitType(pItem.pType());
     }
 
     private void logIllegalIdentifier(String nameText, Location location, String e) {

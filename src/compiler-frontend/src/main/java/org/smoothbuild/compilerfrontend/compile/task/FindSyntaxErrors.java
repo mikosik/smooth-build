@@ -79,7 +79,7 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
                 logger.log(compileError(
                     pNamedValue, "Value with @" + annName + " annotation cannot have body."));
               }
-              if (pNamedValue.type() instanceof PImplicitType) {
+              if (pNamedValue.pType() instanceof PImplicitType) {
                 logger.log(compileError(
                     pNamedValue,
                     "Value " + pNamedValue.q() + " with @" + annName

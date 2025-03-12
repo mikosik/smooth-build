@@ -1,3 +1,7 @@
 package org.smoothbuild.compilerfrontend.lang.base;
 
-public interface Evaluable {}
+import org.smoothbuild.compilerfrontend.lang.type.SType;
+
+public interface Evaluable {
+  public SType type();
+}

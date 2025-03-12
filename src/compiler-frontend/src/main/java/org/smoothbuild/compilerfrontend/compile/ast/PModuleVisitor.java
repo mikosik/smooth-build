@@ -101,7 +101,7 @@ public abstract class PModuleVisitor<T extends Throwable> {
 
   public void visitNamedValueSignature(PNamedValue pNamedValue) throws T {
     pNamedValue.annotation().ifPresent(this::visitAnnotation);
-    visitType(pNamedValue.type());
+    visitType(pNamedValue.pType());
     visitNameOf(pNamedValue);
   }
 
@@ -140,7 +140,7 @@ public abstract class PModuleVisitor<T extends Throwable> {
   }
 
   public void visitItem(PItem pItem) throws T {
-    visitType(pItem.type());
+    visitType(pItem.pType());
     visitNameOf(pItem);
   }
 

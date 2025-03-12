@@ -27,12 +27,12 @@ public final class SItem implements Item, SMonoReferenceable {
     this.location = location;
   }
 
+  @Override
   public SType type() {
     return type;
   }
 
-  @Override
-  public SType sType() {
+  public SType pType() {
     return type;
   }
 

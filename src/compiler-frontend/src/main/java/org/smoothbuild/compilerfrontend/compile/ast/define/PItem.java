@@ -23,12 +23,12 @@ public final class PItem implements Item, PMonoReferenceable {
     this.location = location;
   }
 
-  public PType type() {
+  public PType pType() {
     return type;
   }
 
   @Override
-  public SType sType() {
+  public SType type() {
     return type.sType();
   }
 

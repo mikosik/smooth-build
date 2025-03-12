@@ -11,7 +11,8 @@ public sealed interface PEvaluable extends Evaluable, IdentifiableCode, PContain
 
   public abstract PType evaluationType();
 
-  public SType sType();
+  @Override
+  public SType type();
 
   public Maybe<PExpr> body();
 

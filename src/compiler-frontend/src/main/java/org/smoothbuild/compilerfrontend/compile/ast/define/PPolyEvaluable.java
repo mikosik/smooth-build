@@ -37,14 +37,8 @@ public final class PPolyEvaluable implements PReferenceable, PolyEvaluable, PCon
   }
 
   @Override
-  public SType instantiatedType(List<SType> typeArgs) {
-    var map = zipToMap(typeParams().toList(), typeArgs);
-    return evaluable.sType().mapTypeVars(v -> map.getOrDefault(v, v));
-  }
-
-  @Override
   public STypeScheme typeScheme() {
-    return new STypeScheme(typeParams(), evaluable.sType());
+    return new STypeScheme(typeParams(), evaluable.type());
   }
 
   @Override

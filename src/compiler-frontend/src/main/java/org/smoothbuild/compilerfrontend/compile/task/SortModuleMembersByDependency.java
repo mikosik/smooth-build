@@ -98,7 +98,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
       @Override
       public void visitStructSignature(PStruct pStruct) {
         super.visitStructSignature(pStruct);
-        pStruct.fields().forEach(f -> addToDeps(f.type()));
+        pStruct.fields().forEach(f -> addToDeps(f.pType()));
       }
 
       private void addToDeps(PType pType) {

@@ -53,12 +53,12 @@ public class ExprTypeUnifier {
   }
 
   private void unifyNamedValue(PNamedValue pNamedValue) throws TypeException {
-    generateSType(pNamedValue.type());
+    generateSType(pNamedValue.pType());
     unifyEvaluableBody(pNamedValue);
   }
 
   private void unifyFunc(PFunc pFunc) throws TypeException {
-    pFunc.params().forEach(p -> generateSType(p.type()));
+    pFunc.params().forEach(p -> generateSType(p.pType()));
     generateSType(pFunc.resultType());
     unifyEvaluableBody(pFunc);
   }
@@ -155,7 +155,7 @@ public class ExprTypeUnifier {
     return switch (pReference.referenced()) {
       case MonoReferenceable mono -> {
         pInstantiate.setTypeArgs(list());
-        yield mono.sType();
+        yield mono.type();
       }
       case PolyEvaluable poly -> {
         var argSize = poly.typeParams().size();
@@ -167,10 +167,10 @@ public class ExprTypeUnifier {
   }
 
   private SFuncType unifyLambda(PLambda pLambda) throws TypeException {
-    pLambda.params().forEach(p -> generateSType(p.type()));
+    pLambda.params().forEach(p -> generateSType(p.pType()));
     generateSType(pLambda.resultType());
     unifyEvaluableBody(pLambda, pLambda.evaluationType().sType());
-    return pLambda.sType();
+    return pLambda.type();
   }
 
   private SType unifyNamedArg(PNamedArg pNamedArg) throws TypeException {

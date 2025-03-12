@@ -107,10 +107,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     }
 
     private SNamedEvaluable convertConstructor(PConstructor pConstructor) {
-      var type = pConstructor.sType();
+      var type = pConstructor.type();
       var params = pConstructor
           .params()
-          .map(f -> new SItem(f.type().sType(), f.fqn(), none(), f.location()));
+          .map(f -> new SItem(f.pType().sType(), f.fqn(), none(), f.location()));
       return new SConstructor(type.result(), pConstructor.fqn(), params, pConstructor.location());
     }
 
@@ -119,10 +119,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var location = pNamedValue.location();
       if (pNamedValue.annotation().isSome()) {
         var ann = convertAnnotation(pNamedValue.annotation().get());
-        return new SAnnotatedValue(ann, pNamedValue.sType(), fqn, location);
+        return new SAnnotatedValue(ann, pNamedValue.type(), fqn, location);
       } else if (pNamedValue.body().isSome()) {
         var body = convertExpr(pNamedValue.body().get());
-        return new SNamedExprValue(pNamedValue.sType(), fqn, body, location);
+        return new SNamedExprValue(pNamedValue.type(), fqn, body, location);
       } else {
         throw new RuntimeException("Internal error: PNamedValue without annotation and body.");
       }
@@ -134,10 +134,10 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       var location = pNamedFunc.location();
       if (pNamedFunc.annotation().isSome()) {
         var annotationS = convertAnnotation(pNamedFunc.annotation().get());
-        return new SAnnotatedFunc(annotationS, pNamedFunc.sType().result(), fqn, params, location);
+        return new SAnnotatedFunc(annotationS, pNamedFunc.type().result(), fqn, params, location);
       } else if (pNamedFunc.body().isSome()) {
         var body = convertFuncBody(pNamedFunc.body().get());
-        return new SNamedExprFunc(pNamedFunc.sType().result(), fqn, params, body, location);
+        return new SNamedExprFunc(pNamedFunc.type().result(), fqn, params, body, location);
       } else {
         throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
       }
@@ -153,7 +153,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
 
     public SItem convertParam(PItem pParam) {
       return new SItem(
-          pParam.type().sType(),
+          pParam.pType().sType(),
           pParam.fqn(),
           pParam.defaultValue().map(dv -> new SDefaultValue(dv.fqn())),
           pParam.location());
@@ -185,7 +185,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
     private SLambda convertLambda(PLambda pLambda) {
       var params = convertParams(pLambda.params());
       var body = convertFuncBody(pLambda.bodyGet());
-      var resultType = pLambda.sType().result();
+      var resultType = pLambda.type().result();
       return new SLambda(resultType, pLambda.fqn(), params, body, pLambda.location());
     }
 
@@ -223,7 +223,7 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       final var fqn = pReference.fqn();
       final var location = pReference.location();
       return switch (pReference.referenced()) {
-        case MonoReferenceable mono -> new SMonoReference(mono.sType(), fqn, location);
+        case MonoReferenceable mono -> new SMonoReference(mono.type(), fqn, location);
         case PolyEvaluable poly -> {
           var sPolyReference = new SPolyReference(poly.typeScheme(), fqn, location);
           var type = poly.instantiatedType(pInstantiate.typeArgs());

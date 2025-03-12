@@ -65,7 +65,7 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private SItemSig inferFieldSig(PItem field) throws TypeException {
-      var type = field.type();
+      var type = field.pType();
       if (type instanceof PExplicitType explicit) {
         SType sType = explicit.infer();
         if (sType.typeVars().isEmpty()) {
@@ -96,7 +96,7 @@ public class InferTypes implements Task1<PModule, PModule> {
 
     private void resolveTypeParams(PPolyEvaluable pPolyEvaluable, Unifier unifier)
         throws TypeException {
-      var typeVars = unifier.resolve(pPolyEvaluable.evaluable().sType()).typeVars();
+      var typeVars = unifier.resolve(pPolyEvaluable.evaluable().type()).typeVars();
       switch (pPolyEvaluable.pTypeParams()) {
         case PExplicitTypeParams explicit -> checkExplicitTypeParams(explicit, typeVars);
         case PImplicitTypeParams implicit -> resolveImplicitTypeParams(implicit, typeVars, unifier);
@@ -142,7 +142,7 @@ public class InferTypes implements Task1<PModule, PModule> {
       for (var param : params) {
         param.defaultValue().ifPresent(defaultValue -> {
           var unifier = new Unifier();
-          var paramType = param.type().sType();
+          var paramType = param.pType().sType();
           var flexibleParamType = toFlexible(paramType, unifier);
           var defaultValueSchema = defaultValue.referenced().typeScheme();
           var defaultValueFlexibleType = toFlexible(defaultValueSchema, unifier);

@@ -6,5 +6,5 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Monomorphic referenceable.
  */
 public interface MonoReferenceable extends Referenceable {
-  public SType sType();
+  public SType type();
 }

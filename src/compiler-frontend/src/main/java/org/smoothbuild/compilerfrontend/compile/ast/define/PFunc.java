@@ -14,8 +14,8 @@ public sealed interface PFunc extends PEvaluable permits PLambda, PNamedFunc {
   }
 
   @Override
-  public default SFuncType sType() {
+  public default SFuncType type() {
     return new SFuncType(
-        params().list().map(p -> p.type().sType()), resultType().sType());
+        params().list().map(p -> p.pType().sType()), resultType().sType());
   }
 }

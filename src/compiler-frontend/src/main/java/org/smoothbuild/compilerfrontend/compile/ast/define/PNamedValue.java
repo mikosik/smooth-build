@@ -19,18 +19,18 @@ public final class PNamedValue extends PNamedEvaluable {
     this.type = type;
   }
 
-  public PType type() {
+  public PType pType() {
     return type;
   }
 
   @Override
   public PType evaluationType() {
-    return type();
+    return pType();
   }
 
   @Override
-  public SType sType() {
-    return type().sType();
+  public SType type() {
+    return pType().sType();
   }
 
   @Override

@@ -36,8 +36,8 @@ public sealed class PNamedFunc extends PNamedEvaluable implements NamedFunc, PFu
   }
 
   @Override
-  public SFuncType sType() {
-    return PFunc.super.sType();
+  public SFuncType type() {
+    return PFunc.super.type();
   }
 
   @Override

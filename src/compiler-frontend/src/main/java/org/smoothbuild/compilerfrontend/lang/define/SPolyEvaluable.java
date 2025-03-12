@@ -51,12 +51,6 @@ public final class SPolyEvaluable implements PolyEvaluable, SReferenceable {
   }
 
   @Override
-  public SType instantiatedType(List<SType> typeArgs) {
-    var map = zipToMap(typeParams.toList(), typeArgs);
-    return evaluable.type().mapTypeVars(v -> map.getOrDefault(v, v));
-  }
-
-  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

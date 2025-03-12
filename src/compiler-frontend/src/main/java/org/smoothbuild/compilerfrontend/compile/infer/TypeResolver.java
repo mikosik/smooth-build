@@ -42,13 +42,13 @@ public class TypeResolver {
 
   private void resolveNamedValue(PNamedValue pNamedValue) throws TypeException {
     resolveBody(pNamedValue.body());
-    resolveType(pNamedValue.type());
+    resolveType(pNamedValue.pType());
   }
 
   private void resolveFunc(PFunc pFunc) throws TypeException {
     resolveBody(pFunc.body());
     resolveType(pFunc.resultType());
-    pFunc.params().forEach(p -> resolveType(p.type()));
+    pFunc.params().forEach(p -> resolveType(p.pType()));
   }
 
   private void resolveType(PType pType) {

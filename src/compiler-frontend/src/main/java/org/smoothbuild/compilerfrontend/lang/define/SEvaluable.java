@@ -12,6 +12,7 @@ import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
  */
 public abstract sealed interface SEvaluable extends Evaluable, IdentifiableCode
     permits SFunc, SNamedEvaluable, SValue {
+  @Override
   public SType type();
 
   public String toSourceCode();
