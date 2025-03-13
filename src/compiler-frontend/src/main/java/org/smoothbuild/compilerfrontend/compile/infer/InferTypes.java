@@ -144,14 +144,14 @@ public class InferTypes implements Task1<PModule, PModule> {
           var unifier = new Unifier();
           var paramType = param.pType().sType();
           var flexibleParamType = toFlexible(paramType, unifier);
-          var defaultValueSchema = defaultValue.referenced().typeScheme();
-          var defaultValueFlexibleType = toFlexible(defaultValueSchema, unifier);
+          var defaultValueScheme = defaultValue.referenced().typeScheme();
+          var defaultValueFlexibleType = toFlexible(defaultValueScheme, unifier);
           try {
             unifier.add(new Constraint(flexibleParamType, defaultValueFlexibleType));
           } catch (UnifierException e) {
-            var defaultValueTypeString = defaultValueSchema.typeParams().isEmpty()
-                ? defaultValueSchema.type().q()
-                : defaultValueSchema.q();
+            var defaultValueTypeString = defaultValueScheme.typeParams().isEmpty()
+                ? defaultValueScheme.type().q()
+                : defaultValueScheme.q();
             var paramTypeString = q(paramType.specifier());
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(param.q(), paramTypeString, defaultValueTypeString);
@@ -165,8 +165,8 @@ public class InferTypes implements Task1<PModule, PModule> {
       return toFlexible(resolvedParamType.typeVars(), resolvedParamType, unifier);
     }
 
-    private SType toFlexible(STypeScheme defaultValueSchema, Unifier unifier) {
-      return toFlexible(defaultValueSchema.typeParams(), defaultValueSchema.type(), unifier);
+    private SType toFlexible(STypeScheme defaultValueScheme, Unifier unifier) {
+      return toFlexible(defaultValueScheme.typeParams(), defaultValueScheme.type(), unifier);
     }
 
     private static SType toFlexible(Collection<STypeVar> typeVars, SType type, Unifier unifier) {
