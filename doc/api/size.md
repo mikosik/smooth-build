@@ -1,4 +1,4 @@
-## elem
+## Int elem<A>([A] array)
 
 Returns size of an array.
 

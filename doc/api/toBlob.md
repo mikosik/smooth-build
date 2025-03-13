@@ -1,4 +1,4 @@
-## toBlob
+## Blob toBlob<>(String string)
 
 Converts String to Blob using UTF-8 encoding.
 

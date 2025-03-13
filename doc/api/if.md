@@ -1,4 +1,4 @@
-## if
+## A if<A>(Bool condition, A then, A else)
 
 Returns one of two values depending on bool condition.
 Note that like in any function call in smooth, 
@@ -9,9 +9,9 @@ depending on value of `condition` arguments.
  | Name      | Type | Default | Description                                           |
  |-----------|------|---------|-------------------------------------------------------|
  | condition | Bool |         | Condition specifying which of two values is returned. |
- | then      | a    |         | Value that is returned when condition is true.        |
- | else      | a    |         | Value that is returned when condition is false.       |
+ | then      | A    |         | Value that is returned when condition is true.        |
+ | else      | A    |         | Value that is returned when condition is false.       |
 
-Returns `thenValue` when `condition` is true, `elseValue` otherwise. 
+Returns `then` when `condition` is true, `else` otherwise. 
 
 

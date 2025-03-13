@@ -1,4 +1,4 @@
-## zip
+## Blob zip<>([File] files)
 
 Zips an array of files.
 

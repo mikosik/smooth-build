@@ -1,4 +1,4 @@
-## filterFiles
+## [File] filterFiles<>([File] files, String pattern)
 
 Filters files according to given glob pattern.
 

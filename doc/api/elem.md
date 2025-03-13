@@ -1,4 +1,4 @@
-## elem
+## A elem<A>([A] array, Int index)
 
 Returns array element at given index.
 

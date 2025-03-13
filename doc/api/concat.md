@@ -1,12 +1,12 @@
-## concat
+## [A] concat<A>([[A]] array)
 
 Concatenates an array of arrays.
 
 | Name  | Type  | Default | Description     |
 |-------|-------|---------|-----------------|
-| array | [[a]] |         | array of arrays |
+| array | [[A]] |         | array of arrays |
 
-Returns __[a]__ containing all elements from array elements concatenated 
+Returns __[A]__ containing all elements from array elements concatenated 
 
 ### examples
 

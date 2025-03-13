@@ -1,4 +1,4 @@
-## jar
+## Blob jar<>([File] files, Blob manifest)
 
 Jars an array of files.
 

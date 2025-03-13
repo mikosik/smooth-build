@@ -1,4 +1,4 @@
-## or
+## Bool or<>(Bool first, Bool second)
 
 Returns `true` if any argument is `true`.
 

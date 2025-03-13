@@ -1,4 +1,4 @@
-## unzip
+## [File] unzip<>(Blob blob)
 
 Unzips files from given zip file.
 

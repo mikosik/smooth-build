@@ -1,4 +1,4 @@
-## not
+## Bool not<>(Bool value)
 
 Returns negation of its argument.
 

@@ -1,4 +1,4 @@
-## File
+## File File<>(Blob content, String path)
 
 Constructor of File structure.
 Creates File from given path and Blob content.

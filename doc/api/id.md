@@ -1,4 +1,4 @@
-## id
+## A id<A>(A a)
 
 Identity function - it returns its only argument.
 

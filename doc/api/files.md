@@ -1,4 +1,4 @@
-## files
+## [File] files<>(String dir)
 
 Returns all files read recursively from the directory specified by `dir` parameter.
 

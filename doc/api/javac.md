@@ -1,5 +1,4 @@
-
-## javac
+## [File] javac<>([File] srcs, [File] libs, String source, String target, [String] options)
 
 Compiles array of java files.
 

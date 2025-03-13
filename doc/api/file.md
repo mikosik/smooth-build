@@ -1,5 +1,4 @@
-
-## file
+## File file<>(String path)
 
 Returns file read from project tree at given path.
 

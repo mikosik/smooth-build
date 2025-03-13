@@ -1,4 +1,4 @@
-## and
+## Bool and<>(Bool first, Bool second)
 
 Returns `true` if both arguments are `true`.
 

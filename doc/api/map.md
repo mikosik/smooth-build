@@ -1,11 +1,11 @@
-## map
+## [R] map<E, R>([E] array, (R)->E function)
 
 Returns array created by applying `function` to each element of `array`.
 
-| Name     | Type | Default | Description                                    |
-|----------|------|---------|------------------------------------------------|
-| array    | [E]  |         | Array with elements to map.                    |
-| function | R(E) |         | Function to apply to each element of an array. |
+| Name     | Type   | Default | Description                                    |
+|----------|--------|---------|------------------------------------------------|
+| array    | [E]    |         | Array with elements to map.                    |
+| function | (R)->E |         | Function to apply to each element of an array. |
 
 Returns array created by applying `function` to each element of `array`.
 

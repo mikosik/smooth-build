@@ -1,4 +1,4 @@
-## error
+## A error<A>(String message)
 
 Fails build with given error message.
 
@@ -6,7 +6,7 @@ Fails build with given error message.
 |---------|--------|---------|-------------------------------|
 | message | String |         | Error message to be reported. |
 
-Function return type is __[A]__ so it can be assigned to any value however its invocation never
+Function return type is __A__ so it can be assigned to any value however its invocation never
 completes normally as it always fails with error so nothing is ever returned by this function in 
 runtime.
 

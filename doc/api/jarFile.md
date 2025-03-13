@@ -1,4 +1,4 @@
-## jarFile
+## File jarFile<>([File] files, String path, Blob manifest)
 
 Creates jar with (compresses) files.
 

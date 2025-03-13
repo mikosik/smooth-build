@@ -1,4 +1,4 @@
-## unjar
+## [File] unjar<>(Blob jar)
 
 Unjars files from given jar file.
 

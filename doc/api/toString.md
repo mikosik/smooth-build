@@ -1,4 +1,4 @@
-## toString
+## String toString<>(Blob blob)
 
 Converts Blob to String using UTF-8 encoding.
 

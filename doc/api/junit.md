@@ -1,4 +1,4 @@
-## junit
+## String junit<>(File tests, [File] deps, String include)
 
 Executes junit tests and fails if any of the test fail.
 

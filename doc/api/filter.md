@@ -1,4 +1,4 @@
-## filter
+## [A] filter<A>([A] array, (A)->Bool predicate)
 
 Filters array using predicate.
 
