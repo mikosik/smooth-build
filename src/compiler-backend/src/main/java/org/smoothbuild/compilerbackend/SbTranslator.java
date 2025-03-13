@@ -203,28 +203,13 @@ public class SbTranslator {
         return saveNalAndReturn(name.toString(), sMonoReference, bReference);
       }
     }
-    return evaluables
-        .find(id)
-        .mapOk(this::translateNamedEvaluable)
-        .okOrThrow(
-            e -> new SbTranslatorException(compileErrorMessage(sMonoReference.location(), e)));
+    throw new SbTranslatorException(compileErrorMessage(
+        sMonoReference.location(), "Cannot find " + id.q() + " in lexical environment."));
   }
 
   private BExpr translatePolyReference(SPolyReference sPolyReference) throws SbTranslatorException {
-    var id = sPolyReference.referencedId();
-    var parts = id.parts();
-    if (parts.size() == 1) {
-      var name = parts.get(0);
-      var itemS = lexicalEnvironment.get(name);
-      if (itemS != null) {
-        var evaluationType = typeTranslator.translate(itemS.type());
-        var index = BigInteger.valueOf(lexicalEnvironment.indexOf(name));
-        var bReference = bytecodeF.reference(evaluationType, index);
-        return saveNalAndReturn(name.toString(), sPolyReference, bReference);
-      }
-    }
     return evaluables
-        .find(id)
+        .find(sPolyReference.referencedId())
         .mapOk(this::translateNamedEvaluable)
         .okOrThrow(
             e -> new SbTranslatorException(compileErrorMessage(sPolyReference.location(), e)));

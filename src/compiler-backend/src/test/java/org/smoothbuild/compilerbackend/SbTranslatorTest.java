@@ -319,8 +319,8 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
       void param_ref_to_unknown_param_causes_exception() {
         var funcS = sPoly(sFunc("f", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p2")));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(sInstantiate(funcS)))
-            .throwsException(
-                new SbTranslatorException("{t-project}/module.smooth:1: Cannot resolve `p2`."));
+            .throwsException(new SbTranslatorException(
+                "{t-project}/module.smooth:1: Cannot find `p2` in lexical environment."));
       }
 
       @Test
