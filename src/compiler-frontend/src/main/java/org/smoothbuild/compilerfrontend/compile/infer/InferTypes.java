@@ -104,11 +104,12 @@ public class InferTypes implements Task1<PModule, PModule> {
     }
 
     private void checkExplicitTypeParams(
-        PExplicitTypeParams explicitTypeParams, Set<STypeVar> typeVars) throws TypeException {
-      var explicit = explicitTypeParams.explicitTypeVars();
-      if (!explicit.toSet().equals(typeVars)) {
+        PExplicitTypeParams explicitTypeParams, Set<STypeVar> inferredTypeVars)
+        throws TypeException {
+      var explicitTypeVars = explicitTypeParams.typeVars();
+      if (!explicitTypeVars.toSet().equals(inferredTypeVars)) {
         // Sort to make error message stable so tests are not flaky.
-        var sortedTypeParams = typeVars.toList().sortUsing(comparing(STypeVar::name));
+        var sortedTypeParams = inferredTypeVars.toList().sortUsing(comparing(STypeVar::name));
         throw new TypeException(compileError(
             explicitTypeParams.location(),
             "Type parameters are declared as " + explicitTypeParams.q()

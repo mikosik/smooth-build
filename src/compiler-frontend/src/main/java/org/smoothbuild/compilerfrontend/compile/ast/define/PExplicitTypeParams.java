@@ -25,11 +25,6 @@ public final class PExplicitTypeParams implements PTypeParams {
   }
 
   @Override
-  public List<STypeVar> explicitTypeVars() {
-    return typeVars();
-  }
-
-  @Override
   public List<STypeVar> typeVars() {
     return typeVars.map(PTypeParam::type);
   }
