@@ -18,12 +18,6 @@ separate smooth modules that can encapsulate functions and structures
 that provides default values for most common settings and
 possibility to alter them according to specific project requirements.
 
-Smooth build tool is still work in progress,
-so it may not match all features of other build tools yet.
-If you miss some feature/function you would love to use
-just create new github issue.
-
-
 ### Simplest example
 
 Let's start with the simplest (almost trivial) build - 
@@ -87,9 +81,9 @@ Blob release = jar(classes);
 
 Each value, no matter whether literal (like `"src"`) 
 or named value (like `sources`) is immutable.
-Value names are written with lowerCamelCase.
+Its name must start with small letter and by convention smooth uses camelCase.
 
-Types (`String`, `Blob`, etc) are always written with UpperCamelCase.
+Type names (`String`, `Blob`, etc) start with capital letters and by convention use UpperCamelCase.
 Types inside brackets `[]` denotes arrays - more on that later.
 In example above we specified type of each value explicitly
 however we can omit type declarations, and they would be inferred by compiler.
@@ -132,8 +126,8 @@ Nth element of an array is accessed using [elem](api/elem.md) function.
 Let's see everything we just explained in code below:
 
 ```
-[Int] naturalNumbers = [1, 2, 3, 5, 7];
-Int fourthNaturalNumber = elem(naturalNumbers, 4);
+[Int] primeNumbers = [2, 3, 5, 7, 11];
+Int fourthPrimeNumber = elem(primeNumbers, 4);
 ```
 
 
@@ -193,16 +187,16 @@ Functions are first-class citizens and as such they can be:
  - assigned to named values
 
 Let's refactor our initial example that compiles and jars java code,
-by extracting handy `javaModule` function,
+by extracting handy `subprojectJar` function,
 so it can be used for building different modules.
 
 ```
-Blob javaModule(String path) = files(path) > javac() > jar();
-commonsJar = javaModule("src/commons");
-pluginsJar = javaModule("src/plugins");
+Blob subprojectJar(String path) = files(path) > javac() > jar();
+commonsJar = subprojectJar("src/commons");
+pluginsJar = subprojectJar("src/plugins");
 ```
 
-Function type is constructed arrow syntax.
+Function type is constructed using arrow syntax.
 `(Int,Bool)->String` is type of function that takes `Int` and `Bool` and returns `String`.
 
 
@@ -213,8 +207,8 @@ This way call to such function does not have to provide values for such paramete
 Consider [javac](api/javac.md) function.
 So far we always called it with single argument.
 However, if you inspect its documentation, you can see that it has multiple parameters.
-Compiler allowed to pass only argument for first parameter
-because all the others have default value.
+Compiler accepts calls to javac with single argument
+because all parameters except the first have default value.
 Let's try passing values for first and second parameter:
 
 ```
@@ -253,12 +247,12 @@ release = javac(sources, target="17") > jar();
 
 Smooth allows declaring polymorphic functions and values via
 [parametric polymorphism](https://en.wikipedia.org/wiki/Parametric_polymorphism).
-To define type variable simply use ALLCAPS name.
+To declare type parameters place them inside angle brackets `<>`.
 Below copy of [id](api/id.md) function declaration from [standard library](api.md)
 that returns its only parameter.
 
 ```
-A id(A a) = a;
+A id<A>(A a) = a;
 ```
 
 When polymorphic function is invoked its actual type is inferred automatically.
@@ -285,6 +279,7 @@ Person {
 [String] names = map(persons, (Person person) -> person.name);
 ```
 
+As mentioned before, type can be inferred, so above lambda can be shortened to `person -> person.name`.
 
 ### Caching
 
@@ -383,4 +378,3 @@ Such a change is also more readable in version control.
 Basic native functions:
  - `fold` function (`B fold([A] array, (A,B)->B func, B zero)`)
  - modules and imports so functions/values do not pollute global namespace
- - recursion
