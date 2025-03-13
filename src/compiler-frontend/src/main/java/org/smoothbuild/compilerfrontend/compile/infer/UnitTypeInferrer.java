@@ -13,7 +13,7 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
  * Infers unit type (which is represented by empty tuple in smooth) for each type argument
  * to PInstantiate that has not been inferred after inferring phase. Such situation may happen when
  * type variable is used in function parameters but not in return type.
- * For example in call `concat([[]])`.
+ * For example in call `size([])`.
  */
 public class UnitTypeInferrer extends PScopingModuleVisitor<RuntimeException> {
   private final Unifier unifier;
