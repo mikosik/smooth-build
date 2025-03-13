@@ -160,8 +160,9 @@ public class ConstraintCollector {
       }
       case PolyEvaluable poly -> {
         var argSize = poly.typeParams().size();
-        pInstantiate.setTypeArgs(generateList(argSize, unifier::newFlexibleTypeVar));
-        yield poly.instantiatedType(pInstantiate.typeArgs());
+        List<SType> typeArgs = generateList(argSize, unifier::newFlexibleTypeVar);
+        pInstantiate.setTypeArgs(typeArgs);
+        yield poly.instantiatedType(typeArgs);
       }
       default -> throw unexpectedCaseException(pReference.referenced());
     };
