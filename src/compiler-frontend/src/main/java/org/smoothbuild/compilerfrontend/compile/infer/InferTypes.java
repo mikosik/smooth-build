@@ -5,9 +5,9 @@ import static org.smoothbuild.common.base.Strings.q;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.schedule.Output.output;
 import static org.smoothbuild.compilerfrontend.FrontendCompilerConstants.COMPILER_FRONT_LABEL;
-import static org.smoothbuild.compilerfrontend.compile.infer.ExprTypeUnifier.unifyEvaluable;
-import static org.smoothbuild.compilerfrontend.compile.infer.TypeResolver.resolveNamedEvaluable;
-import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.inferUnitTypes;
+import static org.smoothbuild.compilerfrontend.compile.infer.ConstraintCollector.collectConstraints;
+import static org.smoothbuild.compilerfrontend.compile.infer.TypeAssigner.assignInferredTypes;
+import static org.smoothbuild.compilerfrontend.compile.infer.UnitTypeInferrer.collectUnitTypesConstraints;
 import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
 import static org.smoothbuild.compilerfrontend.lang.type.STypeVar.typeParamsToSourceCode;
 
@@ -85,10 +85,10 @@ public class InferTypes implements Task1<PModule, PModule> {
     public void visitPolyEvaluable(PPolyEvaluable pPolyEvaluable) throws TypeException {
       var unifier = new Unifier();
       var evaluable = pPolyEvaluable.evaluable();
-      unifyEvaluable(unifier, evaluable);
+      collectConstraints(unifier, evaluable);
       resolveTypeParams(pPolyEvaluable, unifier);
-      inferUnitTypes(unifier, evaluable);
-      resolveNamedEvaluable(unifier, evaluable);
+      collectUnitTypesConstraints(unifier, evaluable);
+      assignInferredTypes(unifier, evaluable);
       if (evaluable instanceof PNamedFunc pNamedFunc) {
         detectTypeErrorsBetweenParamAndItsDefaultValue(pNamedFunc);
       }

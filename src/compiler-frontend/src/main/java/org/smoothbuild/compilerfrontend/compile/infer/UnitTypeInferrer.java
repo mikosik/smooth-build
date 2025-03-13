@@ -22,7 +22,7 @@ public class UnitTypeInferrer extends PScopingModuleVisitor<RuntimeException> {
     this.unifier = unifier;
   }
 
-  public static void inferUnitTypes(Unifier unifier, PNamedEvaluable expr) {
+  public static void collectUnitTypesConstraints(Unifier unifier, PNamedEvaluable expr) {
     new UnitTypeInferrer(unifier).visit(expr);
   }
 

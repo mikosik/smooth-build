@@ -34,15 +34,16 @@ import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 import org.smoothbuild.compilerfrontend.lang.type.tool.UnifierException;
 
-public class ExprTypeUnifier {
+public class ConstraintCollector {
   private final Unifier unifier;
 
-  private ExprTypeUnifier(Unifier unifier) {
+  private ConstraintCollector(Unifier unifier) {
     this.unifier = unifier;
   }
 
-  public static void unifyEvaluable(Unifier unifier, PEvaluable pEvaluable) throws TypeException {
-    new ExprTypeUnifier(unifier).unifyEvaluable(pEvaluable);
+  public static void collectConstraints(Unifier unifier, PEvaluable pEvaluable)
+      throws TypeException {
+    new ConstraintCollector(unifier).unifyEvaluable(pEvaluable);
   }
 
   private void unifyEvaluable(PEvaluable pEvaluable) throws TypeException {
@@ -65,7 +66,7 @@ public class ExprTypeUnifier {
 
   private void unifyEvaluableBody(PEvaluable pEvaluable) throws TypeException {
     var evaluationType = pEvaluable.evaluationType().sType();
-    new ExprTypeUnifier(unifier).unifyEvaluableBody(pEvaluable, evaluationType);
+    new ConstraintCollector(unifier).unifyEvaluableBody(pEvaluable, evaluationType);
   }
 
   private void unifyEvaluableBody(PEvaluable pEvaluable, SType evaluationType)
