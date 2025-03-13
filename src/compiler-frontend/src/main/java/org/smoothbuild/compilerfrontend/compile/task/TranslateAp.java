@@ -307,10 +307,22 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PLambda createLambda(LambdaContext lambdaFunc) {
       var name = "lambda~" + (++lambdaCount);
       var visitor = new ApTranslatingVisitor(fullPath, structs, evaluables, logger);
-      var params = visitor.createItems(lambdaFunc.params().itemList());
+      var params = createLambdaParams(lambdaFunc, visitor);
       var body = visitor.createExpr(lambdaFunc.expr());
       var location = fileLocation(fullPath, lambdaFunc);
       return new PLambda(name, params, body, location);
+    }
+
+    private NList<PItem> createLambdaParams(
+        LambdaContext lambdaFunc, ApTranslatingVisitor visitor) {
+      if (lambdaFunc.params() != null) {
+        return visitor.createItems(lambdaFunc.params().itemList());
+      } else {
+        var name = lambdaFunc.NAME().getText();
+        var location = fileLocation(fullPath, lambdaFunc.NAME());
+        var param = new PItem(new PImplicitType(location), name, none(), location);
+        return nlistWithShadowing(list(param));
+      }
     }
 
     private PString createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
