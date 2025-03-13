@@ -1,7 +1,5 @@
 package org.smoothbuild.compilerfrontend.compile.infer;
 
-import static org.smoothbuild.compilerfrontend.compile.task.CompileError.compileError;
-
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
@@ -17,8 +15,6 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
-import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
 public class TypeResolver {
@@ -83,13 +79,8 @@ public class TypeResolver {
     resolveExprType(pCall);
   }
 
-  private void resolveInstantiate(PInstantiate pInstantiate) throws TypeException {
-    var resolvedTypeArgs = pInstantiate.typeArgs().map(unifier::resolve);
-    if (resolvedTypeArgs.stream().anyMatch(this::hasFlexibleVar)) {
-      throw new TypeException(
-          compileError(pInstantiate.location(), "Cannot infer actual type parameters."));
-    }
-    pInstantiate.setTypeArgs(resolvedTypeArgs);
+  private void resolveInstantiate(PInstantiate pInstantiate) {
+    pInstantiate.setTypeArgs(pInstantiate.typeArgs().map(unifier::resolve));
   }
 
   private void resolveNamedArg(PNamedArg pNamedArg) throws TypeException {
@@ -109,9 +100,5 @@ public class TypeResolver {
 
   private void resolveExprType(PExpr pExpr) {
     pExpr.setSType(unifier.resolve(pExpr.sType()));
-  }
-
-  private boolean hasFlexibleVar(SType sType) {
-    return sType.typeVars().stream().anyMatch(STypeVar::isFlexibleTypeVar);
   }
 }
