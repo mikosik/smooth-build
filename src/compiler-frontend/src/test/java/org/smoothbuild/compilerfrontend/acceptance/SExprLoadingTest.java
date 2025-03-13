@@ -54,7 +54,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
     @Nested
     class _lambda {
       @Test
-      void mono_lambda() {
+      void lambda() {
         var code =
             """
             result =
@@ -68,7 +68,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
       }
 
       @Test
-      void mono_lambda_using_generic_type_of_enclosing_function() {
+      void lambda_using_generic_type_of_enclosing_function() {
         var code =
             """
             (A)->A myFunc<A>(A outerA) =
@@ -85,7 +85,7 @@ public class SExprLoadingTest extends FrontendCompileTester {
       }
 
       @Test
-      void mono_lambda_using_generic_type_of_enclosing_func_two_level_deep() {
+      void lambda_using_generic_type_of_enclosing_func_two_level_deep() {
         var code =
             """
             () -> (A)->A myFunc<A>(A outerA) =
