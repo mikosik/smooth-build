@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.commontesting.AssertCall.assertCall;
 import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
+import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -460,13 +461,12 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
 
       @Test
       void lambda() throws Exception {
-        var sLambda = sLambda(7, nlist(), sString("abc"));
-
+        var sLambda = sLambda(7, fqn("my_lambda"), nlist(), sString("abc"));
         var sbTranslator = newTranslator();
         var bLambda = (BLambda) sbTranslator.translateExpr(sLambda);
         var names = sbTranslator.bExprAttributes().names();
         var locations = sbTranslator.bExprAttributes().locations();
-        assertThat(names.get(bLambda.hash())).isEqualTo("<lambda>");
+        assertThat(names.get(bLambda.hash())).isEqualTo("my_lambda");
         assertThat(locations.get(bLambda.hash())).isEqualTo(location(7));
       }
 

@@ -187,7 +187,7 @@ public class SbTranslator {
 
   private BExpr translateLambda(SLambda sLambda) throws SbTranslatorException {
     var bLambda = funcBodySbTranslator(sLambda).translateExprFunc(sLambda);
-    return saveNalAndReturn("<lambda>", sLambda, bLambda);
+    return saveNalAndReturn(sLambda.fqn().toString(), sLambda, bLambda);
   }
 
   private BExpr translateMonoReference(SMonoReference sMonoReference) throws SbTranslatorException {
