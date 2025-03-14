@@ -14,6 +14,7 @@ public class LoggingCommand extends ACommand {
       description =
           """
               Print logs with specified level or above.
+              Defaults value is 'info'.
 
               Available levels:
                 f, fatal   - show FATAL logs

@@ -53,6 +53,7 @@ public class HelpCommandTest extends SystemTestContext {
         Options:
           -l, --filter-logs=<level>
                            Print logs with specified level or above.
+                           Defaults value is 'info'.
 
                            Available levels:
                              f, fatal   - show FATAL logs
@@ -63,13 +64,16 @@ public class HelpCommandTest extends SystemTestContext {
           -s, --filter-stack-traces=<filter>
                            Print stack trace for task execution reports that match
                              filter.
+                           Default value is 'error'.
 
                            Filter is specified using the same language as used for
                              specifying filters
                            in --filter-tasks option.
 
           -t, --filter-tasks=<filter>
-                           Print executed build tasks that match filter.
+                           Print executed tasks that match filter. Amount of
+                             information provided for each task is specified by
+                             --filter-stack-traces and --filter-logs.
 
                            Filter is a boolean expression made up of matchers (listed
                              below), boolean operators '&', '|', grouping brackets '(',
@@ -117,6 +121,7 @@ public class HelpCommandTest extends SystemTestContext {
         Options:
           -l, --filter-logs=<level>
                  Print logs with specified level or above.
+                 Defaults value is 'info'.
 
                  Available levels:
                    f, fatal   - show FATAL logs
@@ -142,6 +147,7 @@ public class HelpCommandTest extends SystemTestContext {
         Options:
           -l, --filter-logs=<level>
                  Print logs with specified level or above.
+                 Defaults value is 'info'.
 
                  Available levels:
                    f, fatal   - show FATAL logs
@@ -167,6 +173,7 @@ public class HelpCommandTest extends SystemTestContext {
         Options:
           -l, --filter-logs=<level>
                  Print logs with specified level or above.
+                 Defaults value is 'info'.
 
                  Available levels:
                    f, fatal   - show FATAL logs

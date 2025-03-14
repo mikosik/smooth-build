@@ -28,7 +28,8 @@ public class BuildCommand extends ProjectCommand {
       converter = FilterTasksConverter.class,
       description =
           """
-          Print executed build tasks that match filter.
+          Print executed tasks that match filter. Amount of information provided \
+          for each task is specified by --filter-stack-traces and --filter-logs.
 
           Filter is a boolean expression made up of matchers (listed below), \
           boolean operators '&', '|', grouping brackets '(', ')'.
@@ -66,6 +67,7 @@ public class BuildCommand extends ProjectCommand {
       description =
           """
           Print stack trace for task execution reports that match filter.
+          Default value is 'error'.
 
           Filter is specified using the same language as used for specifying filters
           in --filter-tasks option.
