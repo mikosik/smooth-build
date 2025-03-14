@@ -15,7 +15,6 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Scheduler;
 import org.smoothbuild.common.schedule.Task2;
@@ -30,6 +29,7 @@ import org.smoothbuild.compilerfrontend.lang.define.SScope;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.evaluate.execute.BEvaluate;
+import org.smoothbuild.virtualmachine.evaluate.execute.BExprAttributes;
 
 public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, EvaluatedExprs> {
   private final Scheduler scheduler;

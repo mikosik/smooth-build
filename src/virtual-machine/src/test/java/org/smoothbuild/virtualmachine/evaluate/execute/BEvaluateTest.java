@@ -36,7 +36,6 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Origin;
-import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.schedule.Output;

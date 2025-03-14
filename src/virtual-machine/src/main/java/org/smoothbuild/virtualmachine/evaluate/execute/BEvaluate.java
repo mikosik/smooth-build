@@ -18,7 +18,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.function.Function2;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.log.report.BExprAttributes;
 import org.smoothbuild.common.log.report.Trace;
 import org.smoothbuild.common.log.report.TraceLine;
 import org.smoothbuild.common.schedule.Output;
