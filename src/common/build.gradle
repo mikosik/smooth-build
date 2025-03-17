@@ -14,6 +14,9 @@ dependencies {
     testFixturesImplementation libs.guava
     testFixturesImplementation libs.guice
     testFixturesImplementation libs.awaitility
+    testFixturesImplementation libs.junit.jupiter.api
+    testFixturesImplementation libs.junit.jupiter.params
+    testFixturesImplementation libs.truth
 
     testImplementation project(':src:common-testing')
     testRuntimeOnly libs.junit.jupiter.engine
