@@ -9,48 +9,33 @@ import org.smoothbuild.cli.command.list.ListCommand;
 import org.smoothbuild.cli.command.version.VersionCommand;
 
 public class CommandWithArgs {
-  private final String command;
-  private final String[] args;
+  private final String[] command;
 
-  public CommandWithArgs(String command, String... args) {
+  public CommandWithArgs(String... command) {
     this.command = requireNonNull(command);
-    this.args = args;
   }
 
   public static CommandWithArgs buildCommand(String... args) {
-    return new CommandWithArgs(BuildCommand.NAME, args);
+    return new CommandWithArgs(concat(BuildCommand.NAME, args));
   }
 
   public static CommandWithArgs cleanCommand(String... args) {
-    return new CommandWithArgs(CleanCommand.NAME, args);
+    return new CommandWithArgs(concat(CleanCommand.NAME, args));
   }
 
   public static CommandWithArgs helpCommand(String... args) {
-    return new CommandWithArgs("help", args);
+    return new CommandWithArgs(concat("help", args));
   }
 
   public static CommandWithArgs listCommand(String... args) {
-    return new CommandWithArgs(ListCommand.NAME, args);
+    return new CommandWithArgs(concat(ListCommand.NAME, args));
   }
 
   public static CommandWithArgs versionCommand(String... args) {
-    return new CommandWithArgs(VersionCommand.NAME, args);
+    return new CommandWithArgs(concat(VersionCommand.NAME, args));
   }
 
   public String[] commandPlusArgs() {
-    return commandPlus(args);
-  }
-
-  public String[] commandPlusArgsPlus(String... additionalArgs) {
-    String[] allArgs = concat(additionalArgs, args, String.class);
-    return commandPlus(allArgs);
-  }
-
-  private String[] commandPlus(String[] allArgs) {
-    if (command.isBlank()) {
-      return allArgs;
-    } else {
-      return concat(command, allArgs);
-    }
+    return command;
   }
 }
