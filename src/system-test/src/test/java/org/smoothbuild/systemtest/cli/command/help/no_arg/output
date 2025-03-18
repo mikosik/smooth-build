@@ -1,0 +1,18 @@
+Usage:
+smooth COMMAND
+
+Description:
+smooth-build is a build tool with strongly and statically typed, purely
+functional language. It features fine-grained, aggressive caching that will
+make sure no computation happens twice on the same machine, decreasing build
+times significantly.
+More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md
+
+Commands:
+  build    Evaluate specified value(s) and store them as artifact(s).
+  clean    Remove all cached objects and artifacts calculated during all
+             previous builds.
+  help     Display help information about the specified command.
+  list     Print user defined values that can be evaluated and stored as
+             artifact.
+  version  Print version information.

@@ -1,0 +1,17 @@
+Usage:
+smooth version [-l=<level>]
+
+Description:
+Print version information.
+
+Options:
+  -l, --filter-logs=<level>
+         Print logs with specified level or above.
+         Defaults value is 'info'.
+
+         Available levels:
+           f, fatal   - show FATAL logs
+           e, error   - show FATAL, ERROR logs
+           w, warning - show FATAL, ERROR, WARNING logs
+           i, info    - show FATAL, ERROR, WARNING, INFO logs
+
