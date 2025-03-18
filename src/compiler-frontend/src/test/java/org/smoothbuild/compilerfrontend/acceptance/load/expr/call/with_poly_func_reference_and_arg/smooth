@@ -1,0 +1,2 @@
+A myId<A>(A a) = a;
+result = myId(7);

@@ -1,0 +1,104 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myFunc=sPolyEvaluable(
+      typeParams = [A]
+      evaluable = SNamedExprFunc(
+        fqn = myFunc
+        type = (A)->(A)->A
+        params = [
+          SItem(
+            type = A
+            fqn = myFunc:outerA
+            defaultValue = None
+            location = {t-project}/module.smooth:1
+          )
+        ]
+        location = {t-project}/module.smooth:1
+        body = SLambda(
+          fqn = myFunc:lambda~1
+          type = (A)->A
+          params = [
+            SItem(
+              type = A
+              fqn = myFunc:lambda~1:a
+              defaultValue = None
+              location = {t-project}/module.smooth:2
+            )
+          ]
+          location = {t-project}/module.smooth:2
+          body = SMonoReference(
+            type = A
+            referencedName = a
+            location = {t-project}/module.smooth:3
+          )
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myFunc -> sPolyEvaluable(
+            typeParams = [A]
+            evaluable = SNamedExprFunc(
+              fqn = myFunc
+              type = (A)->(A)->A
+              params = [
+                SItem(
+                  type = A
+                  fqn = myFunc:outerA
+                  defaultValue = None
+                  location = {t-project}/module.smooth:1
+                )
+              ]
+              location = {t-project}/module.smooth:1
+              body = SLambda(
+                fqn = myFunc:lambda~1
+                type = (A)->A
+                params = [
+                  SItem(
+                    type = A
+                    fqn = myFunc:lambda~1:a
+                    defaultValue = None
+                    location = {t-project}/module.smooth:2
+                  )
+                ]
+                location = {t-project}/module.smooth:2
+                body = SMonoReference(
+                  type = A
+                  referencedName = a
+                  location = {t-project}/module.smooth:3
+                )
+              )
+            )
+          )
+    ]
+  )
+)

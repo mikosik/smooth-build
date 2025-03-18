@@ -1,7 +1,9 @@
 # Make sure that when git checks out text file with test data
 # to working tree it will always keep line ending as lf.
-# This way test data stored in *.log and *.expected is 
+# This way test data stored in *.log and *.expected is
 # not converted to crlf on windows.
-*.smooth	text eol=lf
-*.logs		text eol=lf
-*.expected	text eol=lf
+smooth      text eol=lf
+logs        text eol=lf
+expected    text eol=lf
+command     text eol=lf
+output      text eol=lf

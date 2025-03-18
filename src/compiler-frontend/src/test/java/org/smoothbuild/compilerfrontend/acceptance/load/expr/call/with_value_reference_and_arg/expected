@@ -1,0 +1,178 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myIntId=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprFunc(
+        fqn = myIntId
+        type = (Int)->Int
+        params = [
+          SItem(
+            type = Int
+            fqn = myIntId:i
+            defaultValue = None
+            location = {t-project}/module.smooth:1
+          )
+        ]
+        location = {t-project}/module.smooth:1
+        body = SMonoReference(
+          type = Int
+          referencedName = i
+          location = {t-project}/module.smooth:1
+        )
+      )
+    )
+    myValue=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = (Int)->Int
+        fqn = myValue
+        location = {t-project}/module.smooth:2
+        body = SInstantiate(
+          typeArgs = <>
+          polymorphic = SPolyReference(
+            typeScheme = <>(Int)->Int
+            referencedName = myIntId
+            location = {t-project}/module.smooth:2
+          )
+          evaluationType = (Int)->Int
+          location = {t-project}/module.smooth:2
+        )
+      )
+    )
+    result=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = Int
+        fqn = result
+        location = {t-project}/module.smooth:3
+        body = SCall(
+          callee = SInstantiate(
+            typeArgs = <>
+            polymorphic = SPolyReference(
+              typeScheme = <>(Int)->Int
+              referencedName = myValue
+              location = {t-project}/module.smooth:3
+            )
+            evaluationType = (Int)->Int
+            location = {t-project}/module.smooth:3
+          )
+          args = SCombine(
+            evaluationType = {Int}
+            elements = [
+              SInt(
+                type = Int
+                bigInteger = 7
+                location = {t-project}/module.smooth:4
+              )
+            ]
+            location = {t-project}/module.smooth:3
+          )
+          location = {t-project}/module.smooth:3
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myIntId -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprFunc(
+              fqn = myIntId
+              type = (Int)->Int
+              params = [
+                SItem(
+                  type = Int
+                  fqn = myIntId:i
+                  defaultValue = None
+                  location = {t-project}/module.smooth:1
+                )
+              ]
+              location = {t-project}/module.smooth:1
+              body = SMonoReference(
+                type = Int
+                referencedName = i
+                location = {t-project}/module.smooth:1
+              )
+            )
+          )
+          myValue -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = (Int)->Int
+              fqn = myValue
+              location = {t-project}/module.smooth:2
+              body = SInstantiate(
+                typeArgs = <>
+                polymorphic = SPolyReference(
+                  typeScheme = <>(Int)->Int
+                  referencedName = myIntId
+                  location = {t-project}/module.smooth:2
+                )
+                evaluationType = (Int)->Int
+                location = {t-project}/module.smooth:2
+              )
+            )
+          )
+          result -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = Int
+              fqn = result
+              location = {t-project}/module.smooth:3
+              body = SCall(
+                callee = SInstantiate(
+                  typeArgs = <>
+                  polymorphic = SPolyReference(
+                    typeScheme = <>(Int)->Int
+                    referencedName = myValue
+                    location = {t-project}/module.smooth:3
+                  )
+                  evaluationType = (Int)->Int
+                  location = {t-project}/module.smooth:3
+                )
+                args = SCombine(
+                  evaluationType = {Int}
+                  elements = [
+                    SInt(
+                      type = Int
+                      bigInteger = 7
+                      location = {t-project}/module.smooth:4
+                    )
+                  ]
+                  location = {t-project}/module.smooth:3
+                )
+                location = {t-project}/module.smooth:3
+              )
+            )
+          )
+    ]
+  )
+)

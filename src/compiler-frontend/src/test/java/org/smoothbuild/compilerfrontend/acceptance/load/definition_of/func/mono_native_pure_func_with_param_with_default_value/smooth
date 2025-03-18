@@ -1,0 +1,4 @@
+@Native("Impl.met")
+String myFunc(
+  Blob p1 =
+    0x07);

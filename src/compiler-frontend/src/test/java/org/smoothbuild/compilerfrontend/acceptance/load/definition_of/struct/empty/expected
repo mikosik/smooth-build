@@ -1,0 +1,65 @@
+SModule(
+  types = [
+    MyStruct=STypeDefinition(
+      type = MyStruct{}
+      fqn = MyStruct
+      location = {t-project}/module.smooth:1
+    )
+  ]
+  evaluables = [
+    MyStruct=sPolyEvaluable(
+      typeParams = []
+      evaluable = SConstructor(
+        fqn = MyStruct
+        type = ()->MyStruct
+        params = [
+        ]
+        location = {t-project}/module.smooth:1
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          MyStruct -> STypeDefinition(
+            type = MyStruct{}
+            fqn = MyStruct
+            location = {t-project}/module.smooth:1
+          )
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          MyStruct -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SConstructor(
+              fqn = MyStruct
+              type = ()->MyStruct
+              params = [
+              ]
+              location = {t-project}/module.smooth:1
+            )
+          )
+    ]
+  )
+)

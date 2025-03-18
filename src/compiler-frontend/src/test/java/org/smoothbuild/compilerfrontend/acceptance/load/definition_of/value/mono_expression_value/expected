@@ -1,0 +1,62 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myValue=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = Blob
+        fqn = myValue
+        location = {t-project}/module.smooth:1
+        body = SBlob(
+          type = Blob
+          byteString = 0x07
+          location = {t-project}/module.smooth:2
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myValue -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = Blob
+              fqn = myValue
+              location = {t-project}/module.smooth:1
+              body = SBlob(
+                type = Blob
+                byteString = 0x07
+                location = {t-project}/module.smooth:2
+              )
+            )
+          )
+    ]
+  )
+)

@@ -1,0 +1,114 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myFunc~p1=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = Blob
+        fqn = myFunc~p1
+        location = {t-project}/module.smooth:4
+        body = SBlob(
+          type = Blob
+          byteString = 0x07
+          location = {t-project}/module.smooth:4
+        )
+      )
+    )
+    myFunc=sPolyEvaluable(
+      typeParams = [A]
+      evaluable = SAnnotatedFunc(
+        annotation = SAnnotation(
+          name = Native
+          path = SString(
+            type = String
+            string = Impl.met
+            location = {t-project}/module.smooth:1
+          )
+          location = {t-project}/module.smooth:1
+        )
+        type = (Blob)->A
+        params = [
+          SItem(
+            type = Blob
+            fqn = myFunc:p1
+            defaultValue = Some(SDefaultValue(
+              fqn = myFunc~p1
+            ))
+            location = {t-project}/module.smooth:3
+          )
+        ]
+        location = {t-project}/module.smooth:2
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myFunc~p1 -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = Blob
+              fqn = myFunc~p1
+              location = {t-project}/module.smooth:4
+              body = SBlob(
+                type = Blob
+                byteString = 0x07
+                location = {t-project}/module.smooth:4
+              )
+            )
+          )
+          myFunc -> sPolyEvaluable(
+            typeParams = [A]
+            evaluable = SAnnotatedFunc(
+              annotation = SAnnotation(
+                name = Native
+                path = SString(
+                  type = String
+                  string = Impl.met
+                  location = {t-project}/module.smooth:1
+                )
+                location = {t-project}/module.smooth:1
+              )
+              type = (Blob)->A
+              params = [
+                SItem(
+                  type = Blob
+                  fqn = myFunc:p1
+                  defaultValue = Some(SDefaultValue(
+                    fqn = myFunc~p1
+                  ))
+                  location = {t-project}/module.smooth:3
+                )
+              ]
+              location = {t-project}/module.smooth:2
+            )
+          )
+    ]
+  )
+)

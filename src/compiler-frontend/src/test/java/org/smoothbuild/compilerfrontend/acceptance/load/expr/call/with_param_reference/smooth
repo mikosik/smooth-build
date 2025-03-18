@@ -1,0 +1,3 @@
+result(
+  ()->String f)
+    = f();

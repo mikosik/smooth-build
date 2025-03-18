@@ -1,0 +1,4 @@
+@Native("Impl.met")
+A myFunc<A>(
+  Blob p1 =
+    0x07);

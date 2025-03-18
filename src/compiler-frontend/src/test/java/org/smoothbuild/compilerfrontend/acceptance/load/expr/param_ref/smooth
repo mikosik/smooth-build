@@ -1,0 +1,2 @@
+Blob myFunc(Blob param1)
+  = param1;

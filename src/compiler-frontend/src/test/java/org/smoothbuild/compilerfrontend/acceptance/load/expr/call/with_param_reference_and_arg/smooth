@@ -1,0 +1,3 @@
+result(
+  (Blob)->String f)
+    = f(0x09);

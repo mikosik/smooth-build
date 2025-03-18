@@ -1,0 +1,175 @@
+SModule(
+  types = [
+    MyStruct=STypeDefinition(
+      type = MyStruct{String field}
+      fqn = MyStruct
+      location = {t-project}/module.smooth:4
+    )
+  ]
+  evaluables = [
+    getStruct=sPolyEvaluable(
+      typeParams = []
+      evaluable = SAnnotatedFunc(
+        annotation = SAnnotation(
+          name = Native
+          path = SString(
+            type = String
+            string = impl
+            location = {t-project}/module.smooth:1
+          )
+          location = {t-project}/module.smooth:1
+        )
+        type = ()->MyStruct
+        params = [
+        ]
+        location = {t-project}/module.smooth:2
+      )
+    )
+    result=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = String
+        fqn = result
+        location = {t-project}/module.smooth:8
+        body = SSelect(
+          selectable = SCall(
+            callee = SInstantiate(
+              typeArgs = <>
+              polymorphic = SPolyReference(
+                typeScheme = <>()->MyStruct
+                referencedName = getStruct
+                location = {t-project}/module.smooth:8
+              )
+              evaluationType = ()->MyStruct
+              location = {t-project}/module.smooth:8
+            )
+            args = SCombine(
+              evaluationType = {}
+              elements = [
+              ]
+              location = {t-project}/module.smooth:8
+            )
+            location = {t-project}/module.smooth:8
+          )
+          field = field
+          location = {t-project}/module.smooth:9
+        )
+      )
+    )
+    MyStruct=sPolyEvaluable(
+      typeParams = []
+      evaluable = SConstructor(
+        fqn = MyStruct
+        type = (String)->MyStruct
+        params = [
+          SItem(
+            type = String
+            fqn = MyStruct:field
+            defaultValue = None
+            location = {t-project}/module.smooth:5
+          )
+        ]
+        location = {t-project}/module.smooth:4
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          MyStruct -> STypeDefinition(
+            type = MyStruct{String field}
+            fqn = MyStruct
+            location = {t-project}/module.smooth:4
+          )
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          getStruct -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SAnnotatedFunc(
+              annotation = SAnnotation(
+                name = Native
+                path = SString(
+                  type = String
+                  string = impl
+                  location = {t-project}/module.smooth:1
+                )
+                location = {t-project}/module.smooth:1
+              )
+              type = ()->MyStruct
+              params = [
+              ]
+              location = {t-project}/module.smooth:2
+            )
+          )
+          result -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = String
+              fqn = result
+              location = {t-project}/module.smooth:8
+              body = SSelect(
+                selectable = SCall(
+                  callee = SInstantiate(
+                    typeArgs = <>
+                    polymorphic = SPolyReference(
+                      typeScheme = <>()->MyStruct
+                      referencedName = getStruct
+                      location = {t-project}/module.smooth:8
+                    )
+                    evaluationType = ()->MyStruct
+                    location = {t-project}/module.smooth:8
+                  )
+                  args = SCombine(
+                    evaluationType = {}
+                    elements = [
+                    ]
+                    location = {t-project}/module.smooth:8
+                  )
+                  location = {t-project}/module.smooth:8
+                )
+                field = field
+                location = {t-project}/module.smooth:9
+              )
+            )
+          )
+          MyStruct -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SConstructor(
+              fqn = MyStruct
+              type = (String)->MyStruct
+              params = [
+                SItem(
+                  type = String
+                  fqn = MyStruct:field
+                  defaultValue = None
+                  location = {t-project}/module.smooth:5
+                )
+              ]
+              location = {t-project}/module.smooth:4
+            )
+          )
+    ]
+  )
+)

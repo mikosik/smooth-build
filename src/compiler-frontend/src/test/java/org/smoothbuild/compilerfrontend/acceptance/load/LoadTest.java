@@ -1,4 +1,4 @@
-package org.smoothbuild.compilerfrontend.acceptance.infer;
+package org.smoothbuild.compilerfrontend.acceptance.load;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -7,28 +7,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.common.testing.GoldenFilesArgumentsProvider;
 import org.smoothbuild.common.testing.GoldenFilesTestCase;
-import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompileTester;
 
 /**
- * Test verifying that type that is not declared explicitly is inferred correctly or error is
- * reported when it is impossible to infer it.
+ * Tests verifying that compiled smooth code is loaded as expected.
  */
-public class InferTest extends FrontendCompileTester {
+public class LoadTest extends FrontendCompileTester {
   private static final String TESTS_DIR =
-      "src/test/java/org/smoothbuild/compilerfrontend/acceptance/infer";
+      "src/test/java/org/smoothbuild/compilerfrontend/acceptance/load";
 
   @ParameterizedTest
   @ArgumentsSource(ArgumentsProvider.class)
-  void test_inference(GoldenFilesTestCase testCase) throws IOException {
+  void test_compile(GoldenFilesTestCase testCase) throws IOException {
     testCase.assertWithGoldenFiles(generateFiles(testCase));
   }
 
   private Map<String, String> generateFiles(GoldenFilesTestCase testCase) throws IOException {
-    var module = module(testCase.readFile("smooth")).loadModule();
-    var moduleText = module.toMaybe().map(SModule::toSourceCode).getOr("");
-    var logsText = module.logs().toString("\n");
-    return Map.of("expected", moduleText, "logs", logsText);
+    var module = module(testCase.readFile("smooth")).loadsWithSuccess().getLoadedModule();
+    return Map.of("expected", module.toString());
   }
 
   static class ArgumentsProvider extends GoldenFilesArgumentsProvider {

@@ -1,0 +1,2 @@
+@NativeImpure("Impl.met")
+A myFunc<A>();

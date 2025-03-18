@@ -1,0 +1,4 @@
+Int myIntId(Int i) = i;
+(Int)->Int myValue = myIntId;
+result = myValue(
+7);

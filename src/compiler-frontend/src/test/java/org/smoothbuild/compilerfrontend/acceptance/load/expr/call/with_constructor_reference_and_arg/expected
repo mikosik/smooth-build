@@ -1,0 +1,141 @@
+SModule(
+  types = [
+    MyStruct=STypeDefinition(
+      type = MyStruct{String field}
+      fqn = MyStruct
+      location = {t-project}/module.smooth:1
+    )
+  ]
+  evaluables = [
+    MyStruct=sPolyEvaluable(
+      typeParams = []
+      evaluable = SConstructor(
+        fqn = MyStruct
+        type = (String)->MyStruct
+        params = [
+          SItem(
+            type = String
+            fqn = MyStruct:field
+            defaultValue = None
+            location = {t-project}/module.smooth:2
+          )
+        ]
+        location = {t-project}/module.smooth:1
+      )
+    )
+    result=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = MyStruct{String field}
+        fqn = result
+        location = {t-project}/module.smooth:4
+        body = SCall(
+          callee = SInstantiate(
+            typeArgs = <>
+            polymorphic = SPolyReference(
+              typeScheme = <>(String)->MyStruct
+              referencedName = MyStruct
+              location = {t-project}/module.smooth:4
+            )
+            evaluationType = (String)->MyStruct
+            location = {t-project}/module.smooth:4
+          )
+          args = SCombine(
+            evaluationType = {String}
+            elements = [
+              SString(
+                type = String
+                string = aaa
+                location = {t-project}/module.smooth:5
+              )
+            ]
+            location = {t-project}/module.smooth:4
+          )
+          location = {t-project}/module.smooth:4
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          MyStruct -> STypeDefinition(
+            type = MyStruct{String field}
+            fqn = MyStruct
+            location = {t-project}/module.smooth:1
+          )
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          MyStruct -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SConstructor(
+              fqn = MyStruct
+              type = (String)->MyStruct
+              params = [
+                SItem(
+                  type = String
+                  fqn = MyStruct:field
+                  defaultValue = None
+                  location = {t-project}/module.smooth:2
+                )
+              ]
+              location = {t-project}/module.smooth:1
+            )
+          )
+          result -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = MyStruct{String field}
+              fqn = result
+              location = {t-project}/module.smooth:4
+              body = SCall(
+                callee = SInstantiate(
+                  typeArgs = <>
+                  polymorphic = SPolyReference(
+                    typeScheme = <>(String)->MyStruct
+                    referencedName = MyStruct
+                    location = {t-project}/module.smooth:4
+                  )
+                  evaluationType = (String)->MyStruct
+                  location = {t-project}/module.smooth:4
+                )
+                args = SCombine(
+                  evaluationType = {String}
+                  elements = [
+                    SString(
+                      type = String
+                      string = aaa
+                      location = {t-project}/module.smooth:5
+                    )
+                  ]
+                  location = {t-project}/module.smooth:4
+                )
+                location = {t-project}/module.smooth:4
+              )
+            )
+          )
+    ]
+  )
+)

@@ -1,0 +1,3 @@
+Int myIntId(Int i) = i;
+result = myIntId(i=
+7);

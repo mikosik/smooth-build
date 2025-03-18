@@ -1,0 +1,108 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myFunc~param1=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = Blob
+        fqn = myFunc~param1
+        location = {t-project}/module.smooth:3
+        body = SBlob(
+          type = Blob
+          byteString = 0x07
+          location = {t-project}/module.smooth:3
+        )
+      )
+    )
+    myFunc=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprFunc(
+        fqn = myFunc
+        type = (Blob)->String
+        params = [
+          SItem(
+            type = Blob
+            fqn = myFunc:param1
+            defaultValue = Some(SDefaultValue(
+              fqn = myFunc~param1
+            ))
+            location = {t-project}/module.smooth:2
+          )
+        ]
+        location = {t-project}/module.smooth:1
+        body = SString(
+          type = String
+          string = abc
+          location = {t-project}/module.smooth:4
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myFunc~param1 -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = Blob
+              fqn = myFunc~param1
+              location = {t-project}/module.smooth:3
+              body = SBlob(
+                type = Blob
+                byteString = 0x07
+                location = {t-project}/module.smooth:3
+              )
+            )
+          )
+          myFunc -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprFunc(
+              fqn = myFunc
+              type = (Blob)->String
+              params = [
+                SItem(
+                  type = Blob
+                  fqn = myFunc:param1
+                  defaultValue = Some(SDefaultValue(
+                    fqn = myFunc~param1
+                  ))
+                  location = {t-project}/module.smooth:2
+                )
+              ]
+              location = {t-project}/module.smooth:1
+              body = SString(
+                type = String
+                string = abc
+                location = {t-project}/module.smooth:4
+              )
+            )
+          )
+    ]
+  )
+)

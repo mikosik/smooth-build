@@ -1,0 +1,4 @@
+A myFunc<A>(
+  A a =
+    7)
+    = a;

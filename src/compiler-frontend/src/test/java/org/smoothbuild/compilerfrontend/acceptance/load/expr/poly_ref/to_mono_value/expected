@@ -1,0 +1,98 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myValue=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = String
+        fqn = myValue
+        location = {t-project}/module.smooth:1
+        body = SString(
+          type = String
+          string = abc
+          location = {t-project}/module.smooth:1
+        )
+      )
+    )
+    result=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = String
+        fqn = result
+        location = {t-project}/module.smooth:2
+        body = SInstantiate(
+          typeArgs = <>
+          polymorphic = SPolyReference(
+            typeScheme = <>String
+            referencedName = myValue
+            location = {t-project}/module.smooth:3
+          )
+          evaluationType = String
+          location = {t-project}/module.smooth:3
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myValue -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = String
+              fqn = myValue
+              location = {t-project}/module.smooth:1
+              body = SString(
+                type = String
+                string = abc
+                location = {t-project}/module.smooth:1
+              )
+            )
+          )
+          result -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = String
+              fqn = result
+              location = {t-project}/module.smooth:2
+              body = SInstantiate(
+                typeArgs = <>
+                polymorphic = SPolyReference(
+                  typeScheme = <>String
+                  referencedName = myValue
+                  location = {t-project}/module.smooth:3
+                )
+                evaluationType = String
+                location = {t-project}/module.smooth:3
+              )
+            )
+          )
+    ]
+  )
+)

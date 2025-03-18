@@ -1,0 +1,3 @@
+String myFunc() = "abc";
+()->String result =
+  myFunc;

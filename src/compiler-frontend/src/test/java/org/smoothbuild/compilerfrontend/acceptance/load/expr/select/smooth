@@ -1,0 +1,9 @@
+@Native("impl")
+MyStruct getStruct();
+
+MyStruct{
+  String field,
+}
+
+result = getStruct()
+  .field;

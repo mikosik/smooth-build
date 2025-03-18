@@ -2,6 +2,7 @@ package org.smoothbuild.compilerfrontend.lang.define;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
@@ -21,5 +22,14 @@ public record SModule(
 
   private List<String> evaluablesAsSourceCode() {
     return listOfAll(evaluables.values()).map(SPolyEvaluable::toSourceCode);
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder("SModule")
+        .addListField("types", types.entrySet().toList())
+        .addListField("evaluables", evaluables.entrySet().toList())
+        .addField("scope", scope)
+        .toString();
   }
 }

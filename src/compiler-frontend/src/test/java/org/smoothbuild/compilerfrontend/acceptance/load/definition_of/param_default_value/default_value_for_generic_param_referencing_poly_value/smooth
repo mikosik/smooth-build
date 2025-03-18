@@ -1,0 +1,5 @@
+Int myFunc<B>(
+  [B] param1 =
+    empty)
+    = 7;
+[A] empty<A> = [];

@@ -1,0 +1,5 @@
+Int returnInt() = 7;
+result =
+[
+  returnInt,
+];

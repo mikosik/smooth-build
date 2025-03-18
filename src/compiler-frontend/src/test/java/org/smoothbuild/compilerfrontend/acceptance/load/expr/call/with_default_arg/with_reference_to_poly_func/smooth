@@ -1,0 +1,5 @@
+B myFunc<B>(B b = polyFunc()) = b;
+Int result = myFunc();
+
+@Bytecode("impl")
+A polyFunc<A>();

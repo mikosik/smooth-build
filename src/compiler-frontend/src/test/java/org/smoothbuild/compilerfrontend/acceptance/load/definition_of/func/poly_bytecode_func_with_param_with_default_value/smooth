@@ -1,0 +1,4 @@
+@Bytecode("Impl.met")
+A myFunc<A>(
+  Blob param1 =
+    0x07);

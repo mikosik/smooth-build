@@ -1,0 +1,108 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    myFunc~a=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = Int
+        fqn = myFunc~a
+        location = {t-project}/module.smooth:3
+        body = SInt(
+          type = Int
+          bigInteger = 7
+          location = {t-project}/module.smooth:3
+        )
+      )
+    )
+    myFunc=sPolyEvaluable(
+      typeParams = [A]
+      evaluable = SNamedExprFunc(
+        fqn = myFunc
+        type = (A)->A
+        params = [
+          SItem(
+            type = A
+            fqn = myFunc:a
+            defaultValue = Some(SDefaultValue(
+              fqn = myFunc~a
+            ))
+            location = {t-project}/module.smooth:2
+          )
+        ]
+        location = {t-project}/module.smooth:1
+        body = SMonoReference(
+          type = A
+          referencedName = a
+          location = {t-project}/module.smooth:4
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          myFunc~a -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = Int
+              fqn = myFunc~a
+              location = {t-project}/module.smooth:3
+              body = SInt(
+                type = Int
+                bigInteger = 7
+                location = {t-project}/module.smooth:3
+              )
+            )
+          )
+          myFunc -> sPolyEvaluable(
+            typeParams = [A]
+            evaluable = SNamedExprFunc(
+              fqn = myFunc
+              type = (A)->A
+              params = [
+                SItem(
+                  type = A
+                  fqn = myFunc:a
+                  defaultValue = Some(SDefaultValue(
+                    fqn = myFunc~a
+                  ))
+                  location = {t-project}/module.smooth:2
+                )
+              ]
+              location = {t-project}/module.smooth:1
+              body = SMonoReference(
+                type = A
+                referencedName = a
+                location = {t-project}/module.smooth:4
+              )
+            )
+          )
+    ]
+  )
+)

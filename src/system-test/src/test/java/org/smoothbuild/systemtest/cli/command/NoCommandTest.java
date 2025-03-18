@@ -11,7 +11,7 @@ public class NoCommandTest extends SystemTestContext {
   void calling_smooth_without_command_defaults_to_help_command() {
     runSmoothHelp();
     String helpOutput = systemOut();
-    runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));
+    runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs());
     assertFinishedWithSuccess();
     assertThat(systemOut()).isEqualTo(helpOutput);
   }

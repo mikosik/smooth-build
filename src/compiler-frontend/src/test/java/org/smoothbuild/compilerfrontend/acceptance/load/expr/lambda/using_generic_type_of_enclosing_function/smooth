@@ -1,0 +1,4 @@
+() -> (A)->A myFunc<A>(A outerA) =
+  ()
+    -> (A a)
+      -> a;

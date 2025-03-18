@@ -1,0 +1,2 @@
+@Bytecode("impl")
+A myValue<A>;

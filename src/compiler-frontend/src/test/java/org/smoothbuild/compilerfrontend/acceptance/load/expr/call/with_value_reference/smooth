@@ -1,0 +1,3 @@
+Int myReturnInt() = 3;
+()->Int myValue = myReturnInt;
+result = myValue();

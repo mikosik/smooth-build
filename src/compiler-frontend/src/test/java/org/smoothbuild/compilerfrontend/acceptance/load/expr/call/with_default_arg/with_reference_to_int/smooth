@@ -1,0 +1,2 @@
+B myFunc<B>(B b = 7) = b;
+Int result = myFunc();
