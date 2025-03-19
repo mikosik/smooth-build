@@ -95,29 +95,18 @@ public class BuildCommandTest {
 
     @Test
     void shows_call_to_native_func_when_enabled() throws IOException {
-      testThatTaskHeaderShownWhenInvokeIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
+      createUserModule(NATIVE_FUNCTION_CALL);
+      runSmooth(buildCommand("--filter-tasks=:vm:evaluate:invoke", "result"));
+      assertFinishedWithSuccess();
+      assertSystemOutContains(NATIVE_CALL_TASK_HEADER);
     }
 
     @Test
     void hides_call_to_native_func_when_not_enabled() throws IOException {
-      testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
-          NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
-    }
-
-    private void testThatTaskHeaderShownWhenInvokeIsEnabled(
-        String callDeclaration, String expectedHeaderToBeShown) throws IOException {
-      createUserModule(callDeclaration);
-      runSmooth(buildCommand("--filter-tasks=:vm:evaluate:invoke", "result"));
-      assertFinishedWithSuccess();
-      assertSystemOutContains(expectedHeaderToBeShown);
-    }
-
-    private void testThatTaskHeaderIsNotShownWhenInvokeIsDisabled(
-        String callDeclaration, String headerThatShouldNotBeShows) throws IOException {
-      createUserModule(callDeclaration);
+      createUserModule(NATIVE_FUNCTION_CALL);
       runSmooth(buildCommand("--filter-tasks=none", "result"));
       assertFinishedWithSuccess();
-      assertSystemOutDoesNotContain(headerThatShouldNotBeShows);
+      assertSystemOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
     }
 
     private static final String ORDER =
