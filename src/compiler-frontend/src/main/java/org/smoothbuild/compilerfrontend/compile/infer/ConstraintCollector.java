@@ -229,8 +229,8 @@ public class ConstraintCollector {
     }
   }
 
-  private void unify(SType sType, SType bodyType) throws UnifierException {
-    unifier.add(new Constraint(sType, bodyType));
+  private void unify(SType sType1, SType sType2) throws UnifierException {
+    unifier.add(new Constraint(sType1, sType2));
   }
 
   private void generateSType(PType pType) {
