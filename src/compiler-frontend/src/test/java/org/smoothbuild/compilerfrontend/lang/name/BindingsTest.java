@@ -43,14 +43,16 @@ public class BindingsTest {
 
     @Test
     void to_string() {
-      var outer = bindings(element("valueA", 7), element("valueB", 8));
+      var empty = Bindings.<Element>bindings();
+      var outer = newBindings(empty, element("valueA", 7), element("valueB", 8));
       var inner = newBindings(outer, element("valueC", 9));
       assertThat(inner.toString())
           .isEqualTo(
               """
-            valueA -> Element[name=valueA, value=7]
-            valueB -> Element[name=valueB, value=8]
-              valueC -> Element[name=valueC, value=9]""");
+              <empty bindings>
+                valueA -> Element[name=valueA, value=7]
+                valueB -> Element[name=valueB, value=8]
+                  valueC -> Element[name=valueC, value=9]""");
     }
 
     private Bindings<Element> newBindings(Bindings<Element> outerScope, Element... elements) {

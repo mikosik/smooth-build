@@ -81,13 +81,17 @@ public final class Bindings<E> {
 
   @Override
   public String toString() {
-    var innerToString = mapToString(inner);
-    return outer == null ? innerToString : outer + "\n" + indent(innerToString);
+    return toString("");
+  }
+
+  private String toString(String innersAppendix) {
+    var string = mapToString(inner) + innersAppendix;
+    return outer == null ? string : outer.toString("\n" + indent(string));
   }
 
   private static String mapToString(Map<Name, ?> map) {
-    return listOfAll(map.entrySet())
-        .map(e -> e.getKey() + " -> " + e.getValue())
-        .toString("\n");
+    var string =
+        listOfAll(map.entrySet()).map(e -> e.getKey() + " -> " + e.getValue()).toString("\n");
+    return string.isEmpty() ? "<empty bindings>" : string;
   }
 }
