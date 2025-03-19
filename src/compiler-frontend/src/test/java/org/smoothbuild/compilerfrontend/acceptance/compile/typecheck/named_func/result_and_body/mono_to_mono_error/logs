@@ -1,1 +1,1 @@
-Log{ERROR, '{t-project}/module.smooth:1: `myFunc` body type `String` is not equal to declared type `Blob`.'}
+Log{ERROR, '{t-project}/module.smooth:1: `myFunc` body type `String` is not assignable to declared type `Blob`.'}

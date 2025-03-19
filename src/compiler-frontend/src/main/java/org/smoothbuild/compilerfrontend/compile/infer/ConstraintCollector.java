@@ -90,9 +90,8 @@ public class ConstraintCollector {
       throw new TypeException(
           compileError(
               pEvaluable.location(),
-              pEvaluable.q() + " body type " + bodyType.q()
-                  + " is not equal to declared type " + evaluationType.q()
-                  + "."),
+              pEvaluable.q() + " body type " + unifier.resolve(bodyType).q()
+                  + " is not assignable to declared type " + evaluationType.q() + "."),
           e);
     }
   }
