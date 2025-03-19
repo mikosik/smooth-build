@@ -27,7 +27,7 @@ dependencyResolutionManagement {
       library('guice', 'com.google.inject:guice:7.0.0')
       library('guice-assisted-inject', 'com.google.inject.extensions:guice-assistedinject:7.0.0')
       library('okio', 'com.squareup.okio:okio:3.9.0')
-      library('picocli', 'info.picocli:picocli:4.7.4')
+      library('picocli', 'info.picocli:picocli:4.7.6')
       library('zip4j', 'net.lingala.zip4j:zip4j:2.11.5')
 
       library('awaitility', 'org.awaitility:awaitility:4.3.0')
