@@ -2,8 +2,9 @@
 Change Log
 ==========
 
-Version ?.??.? (????.??.??)
+Version 0.23.0 (2025.03.20)
 ---------------------------
+
  * changed smooth language: Added inferring parameter types in functions and lambdas
  * changed smooth language: Added explicit type parameters to functions and named values
  * redesigned cli options of `smooth build` command
@@ -14,6 +15,7 @@ Version ?.??.? (????.??.??)
  * removed --project-dir command line option
 
 Version 0.22.0 (2023.04.17)
+---------------------------
 
  * added support for Window OS
  * improved tutorial
