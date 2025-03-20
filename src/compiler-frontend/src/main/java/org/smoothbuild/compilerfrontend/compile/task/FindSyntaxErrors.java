@@ -86,12 +86,13 @@ public class FindSyntaxErrors implements Task1<PModule, PModule> {
                         + " annotation must declare type."));
               }
             }
-            case AnnotationNames.NATIVE_PURE, AnnotationNames.NATIVE_IMPURE -> logger.log(
-                compileError(
-                    pNamedValue.annotation().get(),
-                    "Value cannot have @" + annName + " annotation."));
-            default -> logger.log(
-                compileError(ann, "Unknown annotation " + Strings.q(ann.nameText()) + "."));
+            case AnnotationNames.NATIVE_PURE, AnnotationNames.NATIVE_IMPURE ->
+              logger.log(compileError(
+                  pNamedValue.annotation().get(),
+                  "Value cannot have @" + annName + " annotation."));
+            default ->
+              logger.log(
+                  compileError(ann, "Unknown annotation " + Strings.q(ann.nameText()) + "."));
           }
         } else if (pNamedValue.body().isNone()) {
           logger.log(compileError(pNamedValue, "Value cannot have empty body."));

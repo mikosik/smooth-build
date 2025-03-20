@@ -60,14 +60,16 @@ public class ConstraintInferrer {
   private static SInterfaceType unifyInterface(
       SInterfaceType type1, SType type2, Queue<Constraint> c) throws UnifierException {
     return switch (type2) {
-      case SStructType struct2 -> switch (type1) {
-        case SStructType struct1 -> unifyStructAndStruct(struct1, struct2, c);
-        case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, c);
-      };
-      case SInterfaceType interface2 -> switch (type1) {
-        case SStructType struct1 -> unifyStructAndInterface(struct1, interface2, c);
-        case SInterfaceType interface1 -> unifyInterfaceAndInterface(interface1, interface2, c);
-      };
+      case SStructType struct2 ->
+        switch (type1) {
+          case SStructType struct1 -> unifyStructAndStruct(struct1, struct2, c);
+          case SInterfaceType interface1 -> unifyStructAndInterface(struct2, interface1, c);
+        };
+      case SInterfaceType interface2 ->
+        switch (type1) {
+          case SStructType struct1 -> unifyStructAndInterface(struct1, interface2, c);
+          case SInterfaceType interface1 -> unifyInterfaceAndInterface(interface1, interface2, c);
+        };
       default -> throw new UnifierException();
     };
   }

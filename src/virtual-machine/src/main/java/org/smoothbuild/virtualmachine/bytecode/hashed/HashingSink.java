@@ -40,8 +40,9 @@ public class HashingSink extends ForwardingSink {
     switch (pathState) {
       case NOTHING -> fileSystem.move(tempPath, path);
       case FILE -> fileSystem.deleteRecursively(tempPath);
-      case DIR -> throw new IOException(
-          "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
+      case DIR ->
+        throw new IOException(
+            "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
     }
     return localHash;
   }

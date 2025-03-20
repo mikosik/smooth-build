@@ -40,8 +40,9 @@ public class LabelMatcher implements Predicate<Label> {
       case 0 -> {}
       case 1 -> builder.append("[^:]*");
       case 2 -> builder.append(".*");
-      default -> throw new IllegalArgumentException(
-          "Pattern contains more than 2 consecutive '*' characters.");
+      default ->
+        throw new IllegalArgumentException(
+            "Pattern contains more than 2 consecutive '*' characters.");
     }
   }
 

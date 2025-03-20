@@ -217,8 +217,8 @@ public class DiskFileSystem implements FileSystem<FullPath> {
       throws IOException {
     switch (pathState(pathJdk, error)) {
       case FILE -> {}
-      case DIR -> throw new IOException(
-          error.get() + "File " + path.q() + " doesn't exist. It is a dir.");
+      case DIR ->
+        throw new IOException(error.get() + "File " + path.q() + " doesn't exist. It is a dir.");
       case NOTHING -> throw new IOException(error.get() + "File " + path.q() + " doesn't exist.");
     }
   }
@@ -227,8 +227,8 @@ public class DiskFileSystem implements FileSystem<FullPath> {
       throws IOException {
     switch (pathState(pathJdk, error)) {
       case DIR -> {}
-      case FILE -> throw new IOException(
-          error.get() + "Dir " + path.q() + " doesn't exist. It is a file.");
+      case FILE ->
+        throw new IOException(error.get() + "Dir " + path.q() + " doesn't exist. It is a file.");
       case NOTHING -> throw new IOException(error.get() + "Dir " + path.q() + " doesn't exist.");
     }
   }
@@ -236,8 +236,9 @@ public class DiskFileSystem implements FileSystem<FullPath> {
   private void assertPathIsUnused(FullPath path, java.nio.file.Path pathJdk, Supplier<String> error)
       throws IOException {
     switch (pathState(pathJdk, error)) {
-      case FILE, DIR -> throw new IOException(
-          error.get() + "Cannot use " + path.q() + " path. It is already taken.");
+      case FILE, DIR ->
+        throw new IOException(
+            error.get() + "Cannot use " + path.q() + " path. It is already taken.");
       case NOTHING -> {}
     }
   }

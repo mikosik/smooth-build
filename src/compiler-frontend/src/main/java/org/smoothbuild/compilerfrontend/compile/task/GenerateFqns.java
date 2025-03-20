@@ -79,9 +79,10 @@ public class GenerateFqns implements Task1<PModule, PModule> {
           visitType(pFuncType.result());
           pFuncType.params().forEach(this::visitType);
         }
-        case PTypeReference pTypeReference -> parseReference(pTypeReference.nameText())
-            .ifErr(e -> logIllegalTypeReference(pTypeReference, e))
-            .ifOk(pTypeReference::setFqn);
+        case PTypeReference pTypeReference ->
+          parseReference(pTypeReference.nameText())
+              .ifErr(e -> logIllegalTypeReference(pTypeReference, e))
+              .ifOk(pTypeReference::setFqn);
         case PImplicitType pImplicitType -> {}
       }
     }

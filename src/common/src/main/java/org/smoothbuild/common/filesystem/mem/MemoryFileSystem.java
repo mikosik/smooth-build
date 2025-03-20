@@ -159,8 +159,9 @@ public class MemoryFileSystem implements FileSystem<FullPath> {
 
     assertAliasesAreEqual(link, target);
     switch (pathStateImpl(link, error)) {
-      case FILE, DIR -> throw new IOException(
-          error.get() + "Cannot use " + link.q() + " path. It is already taken.");
+      case FILE, DIR ->
+        throw new IOException(
+            error.get() + "Cannot use " + link.q() + " path. It is already taken.");
       case NOTHING -> {}
     }
 

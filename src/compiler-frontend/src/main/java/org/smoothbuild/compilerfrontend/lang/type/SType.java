@@ -35,17 +35,14 @@ public abstract sealed class SType
   private static void forEachFlexibleTypeVar(SType sType, Consumer<STypeVar> consumer) {
     switch (sType) {
       case SArrayType sArrayType -> forEachFlexibleTypeVar(sArrayType.elem(), consumer);
-      case SInterfaceType sFieldSetType -> sFieldSetType
-          .fieldSet()
-          .values()
-          .forEach(f -> forEachFlexibleTypeVar(f.type(), consumer));
+      case SInterfaceType sFieldSetType ->
+        sFieldSetType.fieldSet().values().forEach(f -> forEachFlexibleTypeVar(f.type(), consumer));
       case SFuncType sFuncType -> {
         forEachFlexibleTypeVar(sFuncType.params(), consumer);
         forEachFlexibleTypeVar(sFuncType.result(), consumer);
       }
-      case STupleType sTupleType -> sTupleType
-          .elements()
-          .forEach(t -> forEachFlexibleTypeVar(t, consumer));
+      case STupleType sTupleType ->
+        sTupleType.elements().forEach(t -> forEachFlexibleTypeVar(t, consumer));
       case STypeVar sTypeVar -> {
         if (sTypeVar.isFlexibleTypeVar()) {
           consumer.accept(sTypeVar);

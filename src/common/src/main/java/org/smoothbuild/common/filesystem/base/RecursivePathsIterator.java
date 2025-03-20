@@ -57,9 +57,10 @@ public class RecursivePathsIterator implements PathIterator {
             return path;
           }
           case DIR -> dirStack.push(path);
-          case NOTHING -> throw new IOException(format(
-              "FileSystem changed when iterating tree of directory %s. Cannot find %s.",
-              baseDir.q(), baseDir.append(path).q()));
+          case NOTHING ->
+            throw new IOException(format(
+                "FileSystem changed when iterating tree of directory %s. Cannot find %s.",
+                baseDir.q(), baseDir.append(path).q()));
         }
       }
     }

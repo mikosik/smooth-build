@@ -260,8 +260,8 @@ public class SbTranslator {
     return switch (annotationName) {
       case BYTECODE -> fetchFuncBytecode(sAnnotatedFunc);
       case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(sAnnotatedFunc);
-      default -> throw new SbTranslatorException(
-          "Illegal function annotation: " + annotationName + ".");
+      default ->
+        throw new SbTranslatorException("Illegal function annotation: " + annotationName + ".");
     };
   }
 

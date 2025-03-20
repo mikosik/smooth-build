@@ -115,13 +115,12 @@ public class GenerateScopes implements Task2<SScope, PModule, PModule> {
 
     private void initializeScopeFor(PPolyEvaluable pPolyEvaluable) {
       switch (pPolyEvaluable.pTypeParams()) {
-          // For now, we don't have anything (function or value) that can be enclosed inside other
-          // function or value and have fully qualified name that contains enclosing name.
-          // Everything is flat in the global scope. Parameter default values have workaround of
-          // gluing function name and parameter name using '~' into a name.
-        case PExplicitTypeParams explicit -> explicit
-            .typeParams()
-            .foreach(type -> addType(type, type.name()));
+        // For now, we don't have anything (function or value) that can be enclosed inside other
+        // function or value and have fully qualified name that contains enclosing name.
+        // Everything is flat in the global scope. Parameter default values have workaround of
+        // gluing function name and parameter name using '~' into a name.
+        case PExplicitTypeParams explicit ->
+          explicit.typeParams().foreach(type -> addType(type, type.name()));
         case PImplicitTypeParams implicit -> {}
       }
     }

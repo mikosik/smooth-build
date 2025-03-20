@@ -146,8 +146,9 @@ public class HashedDb {
     var pathState = stateOf(path);
     return switch (pathState) {
       case FILE -> readHashChainSize(hash, path);
-      case DIR -> throw new CorruptedHashedDbException(
-          format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
+      case DIR ->
+        throw new CorruptedHashedDbException(
+            format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
       case NOTHING -> throw new NoSuchDataException(hash);
     };
   }
@@ -195,8 +196,9 @@ public class HashedDb {
     var pathState = stateOf(path);
     return switch (pathState) {
       case FILE -> true;
-      case DIR -> throw new CorruptedHashedDbException(
-          "Corrupted HashedDb. " + path.q() + " is a directory not a data file.");
+      case DIR ->
+        throw new CorruptedHashedDbException(
+            "Corrupted HashedDb. " + path.q() + " is a directory not a data file.");
       case NOTHING -> false;
     };
   }
@@ -206,8 +208,9 @@ public class HashedDb {
     var pathState = stateOf(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
-      case DIR -> throw new CorruptedHashedDbException(
-          format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
+      case DIR ->
+        throw new CorruptedHashedDbException(
+            format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
       case NOTHING -> throw new NoSuchDataException(hash);
     };
   }
