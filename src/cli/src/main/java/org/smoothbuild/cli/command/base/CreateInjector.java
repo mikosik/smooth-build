@@ -23,8 +23,8 @@ import org.smoothbuild.common.filesystem.base.Alias;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.ReportWiring;
+import org.smoothbuild.common.schedule.SchedulerWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
-import org.smoothbuild.evaluator.EvaluatorWiring;
 import org.smoothbuild.virtualmachine.wire.VmWiring;
 
 public class CreateInjector {
@@ -46,9 +46,9 @@ public class CreateInjector {
     return Guice.createInjector(
         PRODUCTION,
         new CliWiring(),
-        new EvaluatorWiring(),
         new CompilerBackendWiring(),
         new VmWiring(),
+        new SchedulerWiring(),
         new FileSystemWiring(aliasToPath),
         new ReportWiring(out, logLevel, filterTasks, filterTraces));
   }
@@ -61,6 +61,7 @@ public class CreateInjector {
     return Guice.createInjector(
         PRODUCTION,
         new CliWiring(),
+        new SchedulerWiring(),
         new FileSystemWiring(aliasToPath),
         new ReportWiring(out, INFO, ReportMatchers.ALL, ReportMatchers.ALL));
   }

@@ -23,6 +23,7 @@ import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.SchedulerWiring;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
@@ -267,6 +268,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
     return createInjector(new AbstractModule() {
       @Override
       protected void configure() {
+        install(new SchedulerWiring());
         install(new CompilerBackendWiring());
         install(new VmTestWiring());
         install(new ReportTestWiring());

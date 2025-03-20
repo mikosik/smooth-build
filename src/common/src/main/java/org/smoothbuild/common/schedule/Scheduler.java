@@ -1,6 +1,5 @@
 package org.smoothbuild.common.schedule;
 
-import static java.lang.Thread.startVirtualThread;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promise.promise;
@@ -39,11 +38,17 @@ public class Scheduler {
   public static final Label LABEL = label(":scheduler");
   private final Injector injector;
   private final Reporter reporter;
+  private final RunnableScheduler runnableScheduler;
+
+  public Scheduler(Injector injector, Reporter reporter) {
+    this(injector, reporter, new VirtualThreadRunnableScheduler());
+  }
 
   @Inject
-  public Scheduler(Injector injector, Reporter reporter) {
+  public Scheduler(Injector injector, Reporter reporter, RunnableScheduler runnableScheduler) {
     this.injector = injector;
     this.reporter = reporter;
+    this.runnableScheduler = runnableScheduler;
   }
 
   // Task0
@@ -239,7 +244,7 @@ public class Scheduler {
       if (dependencies.anyMatches(d -> d.get().isNone())) {
         execution.result.accept(none());
       } else {
-        startVirtualThread(execution);
+        runnableScheduler.submit(execution);
       }
     });
     return execution.resultPromise();

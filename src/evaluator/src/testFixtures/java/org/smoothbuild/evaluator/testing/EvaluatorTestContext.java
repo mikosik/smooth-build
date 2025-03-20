@@ -34,13 +34,13 @@ import org.smoothbuild.common.init.Initializer;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.schedule.SchedulerWiring;
 import org.smoothbuild.common.testing.ReportTestWiring;
 import org.smoothbuild.common.testing.TestReporter;
 import org.smoothbuild.common.testing.TestingFileSystem;
 import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestApi;
 import org.smoothbuild.evaluator.EvaluatedExprs;
-import org.smoothbuild.evaluator.EvaluatorWiring;
 import org.smoothbuild.evaluator.ScheduleEvaluate;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -166,7 +166,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private static Injector createInjector(FileSystem<FullPath> fileSystem) {
     return Guice.createInjector(
         PRODUCTION,
-        new EvaluatorWiring(),
+        new SchedulerWiring(),
         new CompilerBackendWiring(),
         new VmTestWiring(fileSystem),
         new ReportTestWiring());
