@@ -39,9 +39,4 @@ public class TestReporter implements Reporter {
   private Stream<Log> streamOfAllLogs() {
     return reports.stream().flatMap(r -> r.logs().stream());
   }
-
-  @Override
-  public String toString() {
-    return listOfAll(reports).map(Report::toPrettyString).toString("\n");
-  }
 }
