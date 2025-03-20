@@ -1,0 +1,4 @@
+result = myfunc();
+myfunc() = apply([7], wrap);
+apply(v, f) = f(v);
+wrap(v) = [v];

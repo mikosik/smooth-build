@@ -1,0 +1,50 @@
+:initializer:schedule 
+:initializer:initializeHashedDb 
+:initializer:initializeComputationCache 
+:scheduler:join 
+:evaluator:schedule 
+:compiler:frontend:schedule 
+:compiler:frontend:loadInternalModule 
+:compiler:frontend:schedule:module 
+:compiler:frontend:readFileContent 
+:compiler:frontend:parse 
+:compiler:frontend:simplifyParseTree 
+:compiler:frontend:generateIds 
+:compiler:frontend:generateDefaultValues 
+:compiler:frontend:findSyntaxErrors 
+:compiler:frontend:decodeLiterals 
+:compiler:frontend:generateConstructors 
+:compiler:frontend:initializeScopes 
+:compiler:frontend:detectUndefined 
+:compiler:frontend:injectDefaultArguments 
+:compiler:frontend:sortMembers 
+:compiler:frontend:inferTypes 
+:compiler:frontend:buildIr 
+:evaluator:getMembersAndImported 
+:evaluator:findValues 
+:evaluator:getMembersAndImported 
+:compiler:backend:generateBytecode 
+:evaluator:getCompiledExprs 
+:scheduler:scheduleParallel 
+:vm:schedule 
+:vm:inline 
+  @ <empty trace>
+:vm:scheduleCall 
+  @ <empty trace>
+:vm:inline 
+  @ {t-project}/module.smooth:1 myfunc
+:vm:scheduleCall 
+  @ {t-project}/module.smooth:1 myfunc
+:vm:inline 
+  @ {t-project}/module.smooth:1 myfunc
+:vm:scheduleCall 
+  @ {t-project}/module.smooth:2 apply
+@ {t-project}/module.smooth:1 myfunc
+:vm:evaluate:order 
+  @ {t-project}/module.smooth:1 myfunc
+:vm:evaluate:order 
+  @ {t-project}/module.smooth:3 wrap
+@ {t-project}/module.smooth:2 apply
+@ {t-project}/module.smooth:1 myfunc
+:scheduler:join 
+:evaluator:merge 

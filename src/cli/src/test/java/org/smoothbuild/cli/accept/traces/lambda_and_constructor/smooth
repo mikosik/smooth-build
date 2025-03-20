@@ -1,0 +1,5 @@
+MyStruct {
+  String name
+}
+result = apply("John", x -> MyStruct(x));
+apply(v, f) = f(v);

@@ -1,0 +1,2 @@
+mylambda = (x) -> (y) -> (z) -> [x, y, z];
+result = mylambda(1)(2)(3);

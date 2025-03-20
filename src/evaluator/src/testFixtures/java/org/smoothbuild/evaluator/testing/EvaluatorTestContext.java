@@ -21,6 +21,7 @@ import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import java.io.IOException;
 import okio.Source;
@@ -54,12 +55,21 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   private Injector injector;
   private Maybe<EvaluatedExprs> evaluatedExprs;
   private FileSystem<FullPath> fileSystem;
+  private final Module schedulerWiring;
+
+  public EvaluatorTestContext() {
+    this(new SchedulerWiring());
+  }
+
+  public EvaluatorTestContext(com.google.inject.Module schedulerWiring) {
+    this.schedulerWiring = schedulerWiring;
+  }
 
   @BeforeEach
   public void beforeEach() throws IOException {
     this.modules = list();
     this.fileSystem = newSynchronizedMemoryFileSystem();
-    this.injector = createInjector(fileSystem);
+    this.injector = createInjector(fileSystem, schedulerWiring);
     this.fileSystem = injector.getInstance(Key.get(new TypeLiteral<>() {}));
   }
 
@@ -108,7 +118,7 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   }
 
   protected void restartSmoothWithSameFileSystem() {
-    injector = createInjector(fileSystem);
+    injector = createInjector(fileSystem, schedulerWiring);
     evaluatedExprs = null;
   }
 
@@ -163,10 +173,11 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
     return injector.getInstance(TestReporter.class);
   }
 
-  private static Injector createInjector(FileSystem<FullPath> fileSystem) {
+  private static Injector createInjector(
+      FileSystem<FullPath> fileSystem, com.google.inject.Module schedulerWiring) {
     return Guice.createInjector(
         PRODUCTION,
-        new SchedulerWiring(),
+        schedulerWiring,
         new CompilerBackendWiring(),
         new VmTestWiring(fileSystem),
         new ReportTestWiring());

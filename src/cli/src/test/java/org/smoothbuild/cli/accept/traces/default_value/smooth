@@ -1,0 +1,4 @@
+result = myfunc();
+myfunc(x = myvalue) = x;
+myvalue = returnArray();
+returnArray() = [7];
