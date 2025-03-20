@@ -54,8 +54,8 @@ This command starts build process that builds (evaluates) `release` value
 and prints (among others) following summary:
 
 ````
-Saving artifact(s)
-  release -> '.smooth/artifacts/release'
+:cli:build:saveArtifacts
+  [INFO] release -> '.smooth/artifacts/release'
 ````
 
 That output informs that `release` value has been evaluated 
@@ -104,12 +104,12 @@ Smooth language has four base types:
  - `Bool` boolean type with two allowed values `true` and `false`
 
 Value of each type can be defined inline using its literal.
- - `String` - enclose string using double quotes, for example `"Hello, world!"`
+ - `String` - enclose string using double quotes, for example `"Hello, world!"`,
+    special characters in string literals are escaped using backslash, for example
+    `"line1\nline2"`.
  - `Blob` - prefix hexadecimal digits with `0x`, for example `0xCAFEBABE`
  - `Int` - provide all digits optionally prefixed with `-`, for example `-378`
  - `Bool` - use one of predefined values - `true` or `false`
-
-Additionally, special characters in string literals are escaped using backslash.
 
 Apart from base types smooth contains also composite types -
 arrays, structures and functions.
@@ -122,12 +122,13 @@ Let's explore each one in more detail.
 Array is a sequence of elements of the same type.
 Array type is referenced by enclosing its element type inside brackets `[]`.
 Array literal is declared enclosing comma separated elements (expressions) inside brackets `[]`.
-Nth element of an array is accessed using [elem](api/elem.md) function.
+Elements of an array are accessed using [elem](api/elem.md) function
+which using index that starts at zero.
 Let's see everything we just explained in code below:
 
 ```
 [Int] primeNumbers = [2, 3, 5, 7, 11];
-Int fourthPrimeNumber = elem(primeNumbers, 4);
+Int fourthPrimeNumber = elem(primeNumbers, 3);
 ```
 
 
@@ -170,7 +171,7 @@ It is just file path and file content.
 It is used by many functions from standard library, most popular are:
  - [file](api/file.md) - reads single file from project at given path
  - [files](api/files.md) - reads all files from given directory inside project
- - [filter](api/filter.md) - filters array of files according to glob pattern
+ - [filterFiles](api/filterFiles.md) - filters array of files according to glob pattern
  - [jar](api/jar.md) - jars array of files
  - [zip](api/zip.md) - zips array of files
 
@@ -183,8 +184,8 @@ It can be polymorphic - more on that below.
 Functions are first-class citizens and as such they can be:
  - passed to other functions as argument
  - returned from function as its result
- - stored as array elements or structure fields
- - assigned to named values
+ - stored as array element or structure field
+ - assigned to named value
 
 Let's refactor our initial example that compiles and jars java code,
 by extracting handy `subprojectJar` function,
@@ -203,7 +204,7 @@ Function type is constructed using arrow syntax.
 #### parameter default value
 
 When we define function we can provide default values for some parameters.
-This way call to such function does not have to provide values for such parameters.
+This way call to such function does not have to provide values for those parameters.
 Consider [javac](api/javac.md) function.
 So far we always called it with single argument.
 However, if you inspect its documentation, you can see that it has multiple parameters.
@@ -255,7 +256,8 @@ that returns its only parameter.
 A id<A>(A a) = a;
 ```
 
-When polymorphic function is invoked its actual type is inferred automatically.
+At invocation site type arguments are inferred by compiler.
+In below example `id<A>()` function is instantiated to `id<Int>()`. 
 ```
 Int result = id(7);
 ```
@@ -375,6 +377,5 @@ Such a change is also more readable in version control.
 
 ### Things not yet implemented
 
-Basic native functions:
  - `fold` function (`B fold([A] array, (A,B)->B func, B zero)`)
  - modules and imports so functions/values do not pollute global namespace
