@@ -8,7 +8,7 @@ import static org.smoothbuild.virtualmachine.testing.VmTestApi.PROJECT_PATH;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
