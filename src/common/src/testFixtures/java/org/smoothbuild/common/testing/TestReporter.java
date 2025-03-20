@@ -10,6 +10,10 @@ import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.SystemOutReporter;
 
+/**
+ * Reporter that memorizes submitted reports and also prints them to system out.
+ * This way it is possible both asserting reports in test case and see those reports in test output.
+ */
 public class TestReporter implements Reporter {
   private final CopyOnWriteArrayList<Report> reports = new CopyOnWriteArrayList<>();
   private final Reporter systemOutReporter = new SystemOutReporter();
