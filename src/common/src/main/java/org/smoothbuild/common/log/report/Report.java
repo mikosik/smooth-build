@@ -58,16 +58,16 @@ public record Report(Label label, Maybe<Trace> trace, Origin origin, List<Log> l
 
   public String toPrettyString() {
     var builder = new StringBuilder();
-    builder.append("TaskReport [");
     builder.append(this.label());
-    builder.append("] ");
+    builder.append(" ");
     builder.append(origin);
-    builder.append("\n");
-    builder.append(trace);
-    builder.append("\n");
+    trace.ifPresent(t -> {
+      builder.append("\n  ");
+      builder.append(t);
+    });
     for (var log : this.logs()) {
+      builder.append("\n  ");
       builder.append(log.toPrettyString());
-      builder.append("\n");
     }
     return builder.toString();
   }
