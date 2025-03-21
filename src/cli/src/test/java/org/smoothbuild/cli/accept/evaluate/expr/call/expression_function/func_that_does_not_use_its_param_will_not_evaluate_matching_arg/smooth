@@ -1,0 +1,4 @@
+@Native("org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException")
+A throwException<A>();
+func(String notUsedParameter) = "abc";
+result = func(throwException());

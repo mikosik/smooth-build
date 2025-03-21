@@ -1,0 +1,2 @@
+()->String createProducer() = () -> "abc";
+result = createProducer()();

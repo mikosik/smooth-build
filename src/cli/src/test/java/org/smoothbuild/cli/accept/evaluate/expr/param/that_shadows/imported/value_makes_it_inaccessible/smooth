@@ -1,0 +1,2 @@
+String myFunc(String importedValue) = importedValue;
+result = myFunc("abc");

@@ -1,0 +1,3 @@
+@Native("org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity")
+String stringIdentity(String value = "def");
+result = stringIdentity();

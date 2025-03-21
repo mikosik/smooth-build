@@ -1,0 +1,3 @@
+localValue = 7;
+String myFunc(String localValue) = localValue;
+result = myFunc("abc");

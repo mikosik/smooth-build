@@ -1,0 +1,21 @@
+BArray(
+  hash = 4fafcc7438f5b6f95a9f9863dbacdcc2fccc1bf6130de3ec98aae1ab050e8c7b
+  type = [Int]
+  elements = [
+    BInt(
+      hash = b4f5acf1123d217b7c40c9b5f694b31bf83c07bd40b24fe42cadb0e458f4ab45
+      type = Int
+      value = 1
+    )
+    BInt(
+      hash = d12e6fd8b83ab61eb4936e0924c6c6c682b6ee3a08148533efff2e72fcfef8c8
+      type = Int
+      value = 2
+    )
+    BInt(
+      hash = 8d9dc000d034e1cff537e6f98152d3429d29975251f22610c6f7065171f10955
+      type = Int
+      value = 3
+    )
+  ]
+)

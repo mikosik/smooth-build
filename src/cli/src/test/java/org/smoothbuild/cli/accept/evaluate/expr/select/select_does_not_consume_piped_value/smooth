@@ -1,0 +1,6 @@
+MyStruct {
+  (String)->Int field,
+}
+Int return7(String s) = 7;
+aStruct = MyStruct(return7);
+Int result = "abc" > aStruct.field();

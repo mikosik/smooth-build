@@ -1,0 +1,7 @@
+@Native("org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException")
+A throwException<A>();
+
+@Native("org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity")
+String stringIdentity(String value = throwException());
+
+result = stringIdentity("abc");

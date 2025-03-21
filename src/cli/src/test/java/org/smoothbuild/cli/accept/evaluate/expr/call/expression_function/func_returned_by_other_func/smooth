@@ -1,0 +1,3 @@
+String returnAbc() = "abc";
+()->String createProducer() = returnAbc;
+result = createProducer()();

@@ -7,3 +7,4 @@ logs        text eol=lf
 expected    text eol=lf
 command     text eol=lf
 output      text eol=lf
+artifact    text eol=lf

@@ -1,0 +1,3 @@
+String returnAbc() = "abc";
+A invokeProducer<A>(()->A producer) = producer();
+result = invokeProducer(returnAbc);
