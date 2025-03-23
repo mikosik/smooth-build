@@ -1,9 +1,3 @@
 Log{ERROR, '{t-project}/module.smooth:1: mismatched input '[' expecting {'>', NAME}
 Int result<[7]> = 7;
            ^'}
-Log{ERROR, '{t-project}/module.smooth:1: mismatched input '7' expecting {'(', '[', NAME}
-Int result<[7]> = 7;
-            ^'}
-Log{ERROR, '{t-project}/module.smooth:1: mismatched input '>' expecting NAME
-Int result<[7]> = 7;
-              ^'}

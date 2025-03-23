@@ -31,6 +31,8 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.LambdaContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.NonFuncTypeContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.NotFuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
@@ -362,10 +364,17 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
 
     private PExplicitType createType(TypeContext type) {
       return switch (type) {
-        case TypeNameContext name -> createTypeReference(name);
-        case ArrayTypeContext arrayType -> createArrayType(arrayType);
+        case NotFuncTypeContext notFuncType -> createNotFuncType(notFuncType.nonFuncType());
         case FuncTypeContext funcType -> createFuncType(funcType);
         default -> throw unexpectedCaseException(type);
+      };
+    }
+
+    private PExplicitType createNotFuncType(NonFuncTypeContext notFuncType) {
+      return switch (notFuncType) {
+        case TypeNameContext name -> createTypeReference(name);
+        case ArrayTypeContext arrayType -> createArrayType(arrayType);
+        default -> throw unexpectedCaseException(notFuncType);
       };
     }
 
@@ -379,10 +388,16 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     }
 
     private PExplicitType createFuncType(FuncTypeContext funcType) {
-      var types = listOfAll(funcType.type()).map(this::createType);
-      var resultType = types.get(types.size() - 1);
-      var paramTypes = types.subList(0, types.size() - 1);
-      return new PFuncType(resultType, paramTypes, fileLocation(fullPath, funcType));
+      if (funcType.nonFuncType() != null) {
+        var resultType = createType(funcType.type().get(0));
+        var paramTypes = list(createNotFuncType(funcType.nonFuncType()));
+        return new PFuncType(resultType, paramTypes, fileLocation(fullPath, funcType));
+      } else {
+        var types = listOfAll(funcType.type()).map(this::createType);
+        var resultType = types.get(types.size() - 1);
+        var paramTypes = types.subList(0, types.size() - 1);
+        return new PFuncType(resultType, paramTypes, fileLocation(fullPath, funcType));
+      }
     }
 
     private RuntimeException newRuntimeException(Class<?> clazz) {

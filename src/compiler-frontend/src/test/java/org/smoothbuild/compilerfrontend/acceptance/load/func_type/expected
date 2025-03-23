@@ -1,0 +1,148 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    funcReturningFuncCase=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = [(String)->(Blob)->Int]
+        fqn = funcReturningFuncCase
+        location = {t-project}/module.smooth:1
+        body = SOrder(
+          evaluationType = [(String)->(Blob)->Int]
+          elements = [
+          ]
+          location = {t-project}/module.smooth:1
+        )
+      )
+    )
+    funcReturningFuncCaseWithUnnecessaryParentheses=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = [(String)->(Blob)->Int]
+        fqn = funcReturningFuncCaseWithUnnecessaryParentheses
+        location = {t-project}/module.smooth:2
+        body = SOrder(
+          evaluationType = [(String)->(Blob)->Int]
+          elements = [
+          ]
+          location = {t-project}/module.smooth:2
+        )
+      )
+    )
+    funcTakingFuncTypeParamCase=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = [((String)->Blob)->Int]
+        fqn = funcTakingFuncTypeParamCase
+        location = {t-project}/module.smooth:4
+        body = SOrder(
+          evaluationType = [((String)->Blob)->Int]
+          elements = [
+          ]
+          location = {t-project}/module.smooth:4
+        )
+      )
+    )
+    funcTakingFuncTypeParamCaseWithUnnecessaryParentheses=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = [((String)->Blob)->Int]
+        fqn = funcTakingFuncTypeParamCaseWithUnnecessaryParentheses
+        location = {t-project}/module.smooth:5
+        body = SOrder(
+          evaluationType = [((String)->Blob)->Int]
+          elements = [
+          ]
+          location = {t-project}/module.smooth:5
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          funcReturningFuncCase -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = [(String)->(Blob)->Int]
+              fqn = funcReturningFuncCase
+              location = {t-project}/module.smooth:1
+              body = SOrder(
+                evaluationType = [(String)->(Blob)->Int]
+                elements = [
+                ]
+                location = {t-project}/module.smooth:1
+              )
+            )
+          )
+          funcReturningFuncCaseWithUnnecessaryParentheses -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = [(String)->(Blob)->Int]
+              fqn = funcReturningFuncCaseWithUnnecessaryParentheses
+              location = {t-project}/module.smooth:2
+              body = SOrder(
+                evaluationType = [(String)->(Blob)->Int]
+                elements = [
+                ]
+                location = {t-project}/module.smooth:2
+              )
+            )
+          )
+          funcTakingFuncTypeParamCase -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = [((String)->Blob)->Int]
+              fqn = funcTakingFuncTypeParamCase
+              location = {t-project}/module.smooth:4
+              body = SOrder(
+                evaluationType = [((String)->Blob)->Int]
+                elements = [
+                ]
+                location = {t-project}/module.smooth:4
+              )
+            )
+          )
+          funcTakingFuncTypeParamCaseWithUnnecessaryParentheses -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = [((String)->Blob)->Int]
+              fqn = funcTakingFuncTypeParamCaseWithUnnecessaryParentheses
+              location = {t-project}/module.smooth:5
+              body = SOrder(
+                evaluationType = [((String)->Blob)->Int]
+                elements = [
+                ]
+                location = {t-project}/module.smooth:5
+              )
+            )
+          )
+    ]
+  )
+)

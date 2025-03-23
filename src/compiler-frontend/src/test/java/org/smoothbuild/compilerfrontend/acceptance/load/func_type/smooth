@@ -1,0 +1,5 @@
+[String->Blob->Int] funcReturningFuncCase = [];
+[(String)->(Blob)->Int] funcReturningFuncCaseWithUnnecessaryParentheses = [];
+
+[(String->Blob)->Int] funcTakingFuncTypeParamCase = [];
+[((String)->Blob)->Int] funcTakingFuncTypeParamCaseWithUnnecessaryParentheses = [];

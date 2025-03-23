@@ -88,9 +88,13 @@ lambda
    ;
 
 type
+   : nonFuncType # notFuncType
+   | (nonFuncType | '(' (type (',' type)*)? ')') '->' type # funcType
+   ;
+
+nonFuncType
    : NAME # typeName
    | '[' type ']' # arrayType
-   | '(' (type (',' type)*)? ')' '->' type # funcType
    ;
 
 NAME

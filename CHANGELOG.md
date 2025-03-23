@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+Version ?????? (??????????)
+---------------------------
+
+ * extend smooth syntax: Allow omitting parentheses in function type when it has one parameter
+
 Version 0.23.0 (2025.03.20)
 ---------------------------
 
