@@ -20,6 +20,7 @@ import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.schedule.Task1;
+import org.smoothbuild.compilerfrontend.compile.ast.PModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFuncType;
@@ -29,6 +30,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
+import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 
 /**
@@ -64,13 +66,14 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
   }
 
   private static GraphNode<Id, PPolyEvaluable, Location> evaluable(
-      PPolyEvaluable evaluable, HashSet<Id> ids) {
+      PPolyEvaluable evaluable, HashSet<Id> localModuleIds) {
     HashSet<GraphEdge<Location, Id>> deps = new HashSet<>();
-    new PScopingModuleVisitor<RuntimeException>() {
+    new PModuleVisitor<RuntimeException>() {
       @Override
       public void visitReference(PReference pReference) {
         super.visitReference(pReference);
-        if (ids.contains(pReference.fqn())) {
+        if (localModuleIds.contains(pReference.fqn())
+            && pReference.referenced() instanceof PolyEvaluable) {
           deps.add(new GraphEdge<>(pReference.location(), pReference.fqn()));
         }
       }
