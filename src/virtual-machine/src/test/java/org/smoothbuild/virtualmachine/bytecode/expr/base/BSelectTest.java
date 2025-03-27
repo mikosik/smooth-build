@@ -80,6 +80,33 @@ public class BSelectTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var select = bSelect(bAnimal(), bInt(0));
-    assertThat(select.toString()).isEqualTo("SELECT:String(???)@" + select.hash());
+    assertThat(select.toString())
+        .isEqualTo(
+            """
+        BSelect(
+          hash = b4c6333d5e5eddbaf6cc10f5f2ea298d7b7c163f71632dc7842c306f5f896d66
+          evaluationType = String
+          selectable = BTuple(
+            hash = 2c46ab85d0281ae6d3389c32fc5e8a8d38865ae3b18f7dafe11676129d2c8f63
+            type = {String,Int}
+            elements = [
+              BString(
+                hash = b1f3b6cee6f8b6bb9fd67e58238157aa4267fb633b75c886e1b08b8e42c89175
+                type = String
+                value = "rabbit"
+              )
+              BInt(
+                hash = b00b1c1fa3eb808c7898052142c9f222df725d8e5f3801b69326c4bc3c2d2809
+                type = Int
+                value = 7
+              )
+            ]
+          )
+          index = BInt(
+            hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
+            type = Int
+            value = 0
+          )
+        )""");
   }
 }

@@ -229,10 +229,6 @@ public abstract sealed class BExpr permits BOperation, BValue {
 
   @Override
   public String toString() {
-    return exprToStringSafe() + "@" + hash();
-  }
-
-  private String exprToStringSafe() {
     try {
       return exprToString();
     } catch (BytecodeException e) {

@@ -49,6 +49,13 @@ public class BReferenceTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var reference = bReference(bIntType(), 123);
-    assertThat(reference.toString()).isEqualTo("REFERENCE:Int(123)@" + reference.hash());
+    assertThat(reference.toString())
+        .isEqualTo(
+            """
+        BReference(
+          hash = 835fd9277c4aa2efb281e2e777cc65e74be8d939758e7454a4a6041c47aa4887
+          evaluationType = Int
+          index = 123
+        )""");
   }
 }

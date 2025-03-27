@@ -73,6 +73,13 @@ public class BBlobTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var blob = bBlob(bytes);
-    assertThat(blob.toString()).isEqualTo("0x??@" + blob.hash());
+    assertThat(blob.toString())
+        .isEqualTo(
+            """
+        BBlob(
+          hash = b55447cffca08d7fa9f4ee62686e803009872477df8a2b1b58c7934b3d3de25c
+          evaluationType = Blob
+          value = 0x616161
+        )""");
   }
 }

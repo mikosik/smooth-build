@@ -2,6 +2,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -22,6 +23,10 @@ public final class BBool extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return Boolean.toString(toJavaBoolean());
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("type", type())
+        .addField("value", Boolean.toString(toJavaBoolean()))
+        .toString();
   }
 }

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.checkIndex;
 import static org.smoothbuild.common.function.Function0.memoizer;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -63,12 +64,12 @@ public final class BTuple extends BValue {
     }
   }
 
-  private static String asTupleToString(List<BType> elementTypes) {
-    return elementTypes.toString("`{", ",", "}`");
-  }
-
   @Override
   public String exprToString() throws BytecodeException {
-    return elements().map(BExpr::exprToString).toString("{", ",", "}");
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("type", type())
+        .addListField("elements", elements().map(BExpr::exprToString))
+        .toString();
   }
 }

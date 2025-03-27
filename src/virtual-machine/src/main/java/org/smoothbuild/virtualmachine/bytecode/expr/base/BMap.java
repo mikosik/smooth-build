@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -49,6 +50,17 @@ public final class BMap extends BOperation {
           hash(), kind(), "mapper", expectedMapperEvaluationType, mapperEvaluationType);
     }
     return new BSubExprs(array, mapper);
+  }
+
+  @Override
+  public String exprToString() throws BytecodeException {
+    var subExprs = subExprs();
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("evaluationType", evaluationType())
+        .addField("array", subExprs.array())
+        .addField("mapper", subExprs.mapper())
+        .toString();
   }
 
   public static record BSubExprs(BExpr array, BExpr mapper) implements BExprs {

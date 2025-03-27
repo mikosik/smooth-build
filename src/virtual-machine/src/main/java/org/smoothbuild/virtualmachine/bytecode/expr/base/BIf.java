@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -26,6 +27,18 @@ public final class BIf extends BOperation {
     var then_ = readMemberFromHashChain(hashes, 1, "then", evaluationType());
     var else_ = readMemberFromHashChain(hashes, 2, "else", evaluationType());
     return new BSubExprs(condition, then_, else_);
+  }
+
+  @Override
+  public String exprToString() throws BytecodeException {
+    var subExprs = subExprs();
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("evaluationType", evaluationType())
+        .addField("condition", subExprs.condition())
+        .addField("then", subExprs.then_())
+        .addField("else", subExprs.else_())
+        .toString();
   }
 
   public static record BSubExprs(BExpr condition, BExpr then_, BExpr else_) implements BExprs {

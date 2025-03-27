@@ -149,7 +149,24 @@ public class BArrayTest extends VmTestContext {
     var string1 = bString("abc");
     var string2 = bString("def");
     var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
-    assertThat(array.toString()).isEqualTo("""
-            ["abc","def"]@""" + array.hash());
+    assertThat(array.toString())
+        .isEqualTo(
+            """
+        BArray(
+          hash = b948a36694c34568a77d7fdd23cadd7a7d8d5c62c26fe5585bbf19fabfa5647e
+          type = [String]
+          elements = [
+            BString(
+              hash = a8290d3ebf36fd0cda7c9e3e5e4a81199d86c6ed3585c073502313f03bdf9986
+              type = String
+              value = "abc"
+            )
+            BString(
+              hash = 8481449ed8722fe7a7a6d1d3b1a731fca4385ce3e555e2e718aeb530ccfa4f2e
+              type = String
+              value = "def"
+            )
+          ]
+        )""");
   }
 }

@@ -56,6 +56,13 @@ public class BBoolTest extends VmTestContext {
   @Test
   void to_string_contains_value() throws Exception {
     var bool = bBool(true);
-    assertThat(bool.toString()).isEqualTo("true@" + bool.hash());
+    assertThat(bool.toString())
+        .isEqualTo(
+            """
+        BBool(
+          hash = e9585a54d9f08cc32a4c31683378c0fdc64e7b8fb6af4eb92ba3c9cf8911e8ba
+          type = Bool
+          value = true
+        )""");
   }
 }

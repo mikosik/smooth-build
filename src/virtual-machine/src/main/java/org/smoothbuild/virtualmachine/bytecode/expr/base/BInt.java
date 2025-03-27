@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.math.BigInteger;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -23,6 +24,10 @@ public final class BInt extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return toJavaBigInteger().toString();
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("type", type())
+        .addField("value", toJavaBigInteger())
+        .toString();
   }
 }

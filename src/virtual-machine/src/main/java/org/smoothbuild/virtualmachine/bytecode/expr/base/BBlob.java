@@ -1,8 +1,11 @@
 package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static okio.Okio.buffer;
+import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChainIOException;
 
 import okio.Source;
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -22,7 +25,16 @@ public final class BBlob extends BValue {
   }
 
   @Override
-  public String exprToString() {
-    return "0x??";
+  public String exprToString() throws BytecodeException {
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("evaluationType", evaluationType())
+        .addField("value", toHexString())
+        .toString();
+  }
+
+  private String toHexString() throws BytecodeException {
+    return invokeAndChainIOException(
+        () -> "0x" + buffer(source()).readByteString().hex(), BytecodeException::new);
   }
 }

@@ -2,8 +2,8 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.base.Strings.escaped;
-import static org.smoothbuild.common.base.Strings.limitedWithEllipsis;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
 import org.smoothbuild.virtualmachine.bytecode.expr.MerkleRoot;
@@ -24,6 +24,10 @@ public final class BString extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return limitedWithEllipsis("\"" + escaped(toJavaString()) + "\"", 30);
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("type", type())
+        .addField("value", "\"" + escaped(toJavaString()) + "\"")
+        .toString();
   }
 }

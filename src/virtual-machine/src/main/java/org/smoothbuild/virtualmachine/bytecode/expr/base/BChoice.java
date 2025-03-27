@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.List.list;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.BExprDb;
@@ -52,7 +53,11 @@ public final class BChoice extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return members().toList().map(BExpr::exprToString).toString("{|", "=>", "|}");
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("type", type())
+        .addListField("members", members().toList().map(BExpr::exprToString))
+        .toString();
   }
 
   public static record BSubExprs(BInt index, BValue chosen) implements BExprs {

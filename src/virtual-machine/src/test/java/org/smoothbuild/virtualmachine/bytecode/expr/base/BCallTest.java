@@ -87,6 +87,32 @@ public class BCallTest extends VmTestContext {
   void to_string() throws Exception {
     var lambda = bLambda(list(bStringType()), bInt());
     var call = bCall(lambda, bString());
-    assertThat(call.toString()).isEqualTo("CALL:Int(???)@" + call.hash());
+    assertThat(call.toString())
+        .isEqualTo(
+            """
+        BCall(
+          hash = 3b252948eca848beff114959af5f9fe1e39fbf0a01279dd66b52d5f008f2fcc9
+          evaluationType = Int
+          lambda = BLambda(
+            hash = a71e9acb33d438c168f026f4df84f156b0abdb99c6006c26e382ec85378b6eff
+            type = (String)->Int
+            body = BInt(
+              hash = d6781a8034402f1bb1369df5042c4cc9d4d726044ba4ae8eb55efce43bad6ec5
+              type = Int
+              value = 17
+            )
+          )
+          arguments = BCombine(
+            hash = b761d4282e51919ce2ad4a68c47d5713769c730ff59b991186d93fb838afb46a
+            evaluationType = {String}
+            items = [
+              BString(
+                hash = a8290d3ebf36fd0cda7c9e3e5e4a81199d86c6ed3585c073502313f03bdf9986
+                type = String
+                value = "abc"
+              )
+            ]
+          )
+        )""");
   }
 }

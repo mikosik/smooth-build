@@ -87,6 +87,22 @@ public class BChooseTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var choose = bChoose();
-    assertThat(choose.toString()).isEqualTo("CHOOSE:{String|Int}(???)@" + choose.hash());
+    assertThat(choose.toString())
+        .isEqualTo(
+            """
+        BChoose(
+          hash = caec4416a98ec12639f2b26ee748efcb87b40207d1061ad0487eee1a1398b3f5
+          evaluationType = {String|Int}
+          chosen = BString(
+            hash = 1e1c0b706a66964d2af072b61122f728afb591ebfeacaec9ef1b846e00a16676
+            type = String
+            value = "7"
+          )
+          index = BInt(
+            hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
+            type = Int
+            value = 0
+          )
+        )""");
   }
 }

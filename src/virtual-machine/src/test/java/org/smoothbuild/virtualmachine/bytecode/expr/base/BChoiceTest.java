@@ -86,6 +86,24 @@ public class BChoiceTest extends VmTestContext {
 
   @Test
   void to_string() throws Exception {
-    assertThat(bChoice().toString()).isEqualTo("{|0=>\"7\"|}@" + bChoice().hash());
+    assertThat(bChoice().toString())
+        .isEqualTo(
+            """
+        BChoice(
+          hash = 656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b
+          type = {String|Int}
+          members = [
+            BInt(
+              hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
+              type = Int
+              value = 0
+            )
+            BString(
+              hash = 1e1c0b706a66964d2af072b61122f728afb591ebfeacaec9ef1b846e00a16676
+              type = String
+              value = "7"
+            )
+          ]
+        )""");
   }
 }

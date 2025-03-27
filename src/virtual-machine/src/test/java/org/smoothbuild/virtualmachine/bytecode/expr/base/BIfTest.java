@@ -63,6 +63,27 @@ public class BIfTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var ifB = bIf(bBool(true), bInt(1), bInt(2));
-    assertThat(ifB.toString()).isEqualTo("IF:Int(???)@" + ifB.hash());
+    assertThat(ifB.toString())
+        .isEqualTo(
+            """
+        BIf(
+          hash = ae2abb3bad2420d56b3777571d60d2b9086d8153d22d332e7da71918e7f830de
+          evaluationType = Int
+          condition = BBool(
+            hash = e9585a54d9f08cc32a4c31683378c0fdc64e7b8fb6af4eb92ba3c9cf8911e8ba
+            type = Bool
+            value = true
+          )
+          then = BInt(
+            hash = b4f5acf1123d217b7c40c9b5f694b31bf83c07bd40b24fe42cadb0e458f4ab45
+            type = Int
+            value = 1
+          )
+          else = BInt(
+            hash = d12e6fd8b83ab61eb4936e0924c6c6c682b6ee3a08148533efff2e72fcfef8c8
+            type = Int
+            value = 2
+          )
+        )""");
   }
 }

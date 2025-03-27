@@ -77,6 +77,17 @@ public class BLambdaTest extends VmTestContext {
   void to_string() throws Exception {
     var lambdaType = bLambdaType(bStringType(), bIntType());
     var lambda = bLambda(lambdaType, bInt());
-    assertThat(lambda.toString()).isEqualTo("Lambda((String)->Int)@" + lambda.hash());
+    assertThat(lambda.toString())
+        .isEqualTo(
+            """
+        BLambda(
+          hash = a71e9acb33d438c168f026f4df84f156b0abdb99c6006c26e382ec85378b6eff
+          type = (String)->Int
+          body = BInt(
+            hash = d6781a8034402f1bb1369df5042c4cc9d4d726044ba4ae8eb55efce43bad6ec5
+            type = Int
+            value = 17
+          )
+        )""");
   }
 }

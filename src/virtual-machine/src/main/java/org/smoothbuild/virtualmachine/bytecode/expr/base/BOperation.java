@@ -40,9 +40,4 @@ public abstract sealed class BOperation extends BExpr
   }
 
   public abstract BExprs subExprs() throws BytecodeException;
-
-  @Override
-  public String exprToString() throws BytecodeException {
-    return kind().name() + ":" + evaluationType() + "(???)";
-  }
 }

@@ -68,6 +68,19 @@ public class BOrderTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var order = bOrder(bInt(1));
-    assertThat(order.toString()).isEqualTo("ORDER:[Int](???)@" + order.hash());
+    assertThat(order.toString())
+        .isEqualTo(
+            """
+        BOrder(
+          hash = 32525892ab4d75f2b1f23293d34118c444fa06fe837ee9efaa2072032c879054
+          evaluationType = [Int]
+          elements = [
+            BInt(
+              hash = b4f5acf1123d217b7c40c9b5f694b31bf83c07bd40b24fe42cadb0e458f4ab45
+              type = Int
+              value = 1
+            )
+          ]
+        )""");
   }
 }

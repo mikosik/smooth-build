@@ -84,8 +84,25 @@ public class BTupleTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var person = johnDoePerson();
-    assertThat(person.toString()).isEqualTo("""
-            {"John","Doe"}@""" + person.hash());
+    assertThat(person.toString())
+        .isEqualTo(
+            """
+        BTuple(
+          hash = 73d8d48ae8b9dd946be996c3d2d0997dd3810e8cf3bff5b2e55da3be08e29f9e
+          type = {String,String}
+          elements = [
+            BString(
+              hash = 999a9f44d60b6c11a6d6739e78061314cb62142a71fbfd304367ee210283b369
+              type = String
+              value = "John"
+            )
+            BString(
+              hash = a1e37c708997efd307bb7a76864a1965c8ea525e5c82ea2eddc0351bdbf06c05
+              type = String
+              value = "Doe"
+            )
+          ]
+        )""");
   }
 
   private BTuple johnDoePerson() throws Exception {

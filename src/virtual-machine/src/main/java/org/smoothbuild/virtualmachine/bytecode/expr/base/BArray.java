@@ -3,6 +3,7 @@ package org.smoothbuild.virtualmachine.bytecode.expr.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.function.Function0.memoizer;
 
+import org.smoothbuild.common.base.ToStringBuilder;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -71,6 +72,10 @@ public final class BArray extends BValue {
 
   @Override
   public String exprToString() throws BytecodeException {
-    return readElements().map(BExpr::exprToString).toString("[", ",", "]");
+    return new ToStringBuilder(getClass().getSimpleName())
+        .addField("hash", hash())
+        .addField("type", type())
+        .addListField("elements", readElements().map(BExpr::exprToString))
+        .toString();
   }
 }

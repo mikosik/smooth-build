@@ -71,6 +71,28 @@ public class BPickTest extends VmTestContext {
   @Test
   void to_string() throws Exception {
     var pick = bPick(bArray(bInt(17)), bInt(0));
-    assertThat(pick.toString()).isEqualTo("PICK:Int(???)@" + pick.hash());
+    assertThat(pick.toString())
+        .isEqualTo(
+            """
+        BPick(
+          hash = 2a3ee0490047c831fed1b6bade199fc3c9f79d10b33e705a945a5eb171b0b385
+          evaluationType = Int
+          pickable = BArray(
+            hash = 0bb233bbb42989f27846b6a121ff2570f12136aeababcf0d6fe1c57195bcc2a9
+            type = [Int]
+            elements = [
+              BInt(
+                hash = d6781a8034402f1bb1369df5042c4cc9d4d726044ba4ae8eb55efce43bad6ec5
+                type = Int
+                value = 17
+              )
+            ]
+          )
+          index = BInt(
+            hash = 7188b43d5debd8d65201a289a38515321a8419bc78b29e75675211deff8b08ba
+            type = Int
+            value = 0
+          )
+        )""");
   }
 }
