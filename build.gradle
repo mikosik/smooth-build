@@ -46,5 +46,13 @@ subprojects { subproject ->
                 palantirJavaFormat('2.60.0').style("GOOGLE")
             }
         }
+
+        testing {
+            suites {
+                test {
+                    useJUnitJupiter()
+                }
+            }
+        }
     }
 }

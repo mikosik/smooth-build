@@ -4,16 +4,16 @@ plugins {
 
 def zip = tasks.register('zip', Zip) {
     archiveBaseName = 'smooth'
-    dependsOn project(':src:cli').tasks.fatJar
-    dependsOn project(':src:standard-library').tasks.zip
+    dependsOn project(':src:cli').tasks.named('fatJar')
+    dependsOn project(':src:standard-library').tasks.named('zip')
 
-    from (project(':src:cli').tasks.fatJar) {
+    from (project(':src:cli').tasks.named('fatJar')) {
         into('bin')
     }
     from (layout.projectDirectory.dir('src/main/shell')) {
         into('bin')
     }
-    from (project(':src:standard-library').tasks.zip.outputs.files.collect( { zipTree(it) })) {
+    from (project(':src:standard-library').tasks.named('zip').map { task -> task.outputs.files.collect { zipTree(it) } }) {
         into('lib')
     }
     into 'smooth'

@@ -34,15 +34,12 @@ dependencies {
     junit4 'junit:junit:4.13.2'
 }
 def junit4files = tasks.register('junit4files', Copy) {
-    from configurations.getByName("junit4").resolvedConfiguration.files
+    from configurations.getByName("junit4").files
     into file("${buildDir}/junit4files")
 }
 tasks.test.dependsOn(junit4files)
 
 def zip = tasks.register('zip', Zip) {
-    manifest {
-        attributes = []
-    }
     archiveBaseName = 'std_lib-all'
     dependsOn jar
     from jar
@@ -51,6 +48,5 @@ def zip = tasks.register('zip', Zip) {
 tasks.assemble.dependsOn(zip)
 
 test {
-    useJUnitPlatform()
     jvmArgs "-Xshare:off"  // to silence JVM warning emitted by gradle
 }
