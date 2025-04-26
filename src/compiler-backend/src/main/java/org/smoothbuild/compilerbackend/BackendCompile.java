@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerbackend;
 
+import static org.smoothbuild.common.base.Throwables.concatenateExceptionMessages;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.schedule.Output.output;
@@ -31,7 +32,7 @@ public class BackendCompile implements Task2<List<SExpr>, Bindings<SPolyEvaluabl
       var result = new CompiledExprs(bExprs, bExprAttributes);
       return output(result, label, list());
     } catch (SbTranslatorException e) {
-      return output(label, list(fatal(e.getMessage())));
+      return output(label, list(fatal(concatenateExceptionMessages(e))));
     }
   }
 }

@@ -12,4 +12,17 @@ public class Throwables {
         "Unexpected case.\nobject=" + o + "\nclass=" + o.getClass().getCanonicalName();
     };
   }
+
+  public static String concatenateExceptionMessages(Exception e) {
+    StringBuilder messageBuilder = new StringBuilder();
+    Throwable current = e;
+    while (current != null) {
+      if (!messageBuilder.isEmpty()) {
+        messageBuilder.append("\n");
+      }
+      messageBuilder.append(current.getMessage());
+      current = current.getCause();
+    }
+    return messageBuilder.toString();
+  }
 }

@@ -90,7 +90,11 @@ public class NativeTest extends EvaluatorTestContext {
             """);
         evaluate("result");
         assertThat(logs())
-            .contains(userFatal(1, "Error loading native jar '{t-project}/module.jar'."));
+            .contains(userFatal(
+                1,
+                "Error loading native jar '{t-project}/module.jar'.\n"
+                    + "Cannot read '{t-project}/module.jar'. "
+                    + "File '{t-project}/module.jar' doesn't exist."));
       }
 
       @Test
@@ -300,6 +304,23 @@ public class NativeTest extends EvaluatorTestContext {
       createUserModule(userModule, ReturnIdFunc.class);
       evaluate("result");
       assertThat(artifact()).isEqualTo(bInt(77));
+    }
+
+    @Test
+    void without_native_jar_file_causes_fatal() throws Exception {
+      createUserModule(
+          """
+          @Bytecode("MissingClass")
+          String myFunc();
+          result = myFunc();
+          """);
+      evaluate("result");
+      assertThat(logs())
+          .contains(userFatal(
+              1,
+              "Error loading native jar '{t-project}/module.jar'.\n"
+                  + "Cannot read '{t-project}/module.jar'. "
+                  + "File '{t-project}/module.jar' doesn't exist."));
     }
 
     @Test
