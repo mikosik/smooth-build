@@ -1,0 +1,3 @@
+Log{ERROR, '{t-project}/module.smooth:1: mismatched input '{' expecting {'>', NAME}
+Int result<{7}.1> = 7;
+           ^'}

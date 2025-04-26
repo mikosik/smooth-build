@@ -16,6 +16,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PItem;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
@@ -70,6 +71,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
       switch (pType) {
         case PArrayType array -> visitType(array.elemT());
         case PFuncType func -> visitFuncType(func);
+        case PTupleType tuple -> visitTupleType(tuple);
         case PTypeReference pTypeReference -> visitExplicitType(pTypeReference);
         case PImplicitType pImplicitType -> {}
       }
@@ -86,6 +88,10 @@ public class ResolveReferences implements Task1<PModule, PModule> {
     private void visitFuncType(PFuncType func) {
       visitType(func.result());
       func.params().forEach(this::visitType);
+    }
+
+    private void visitTupleType(PTupleType tuple) {
+      tuple.elementTypes().forEach(this::visitType);
     }
   }
 }

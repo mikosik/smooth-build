@@ -10,6 +10,7 @@ import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
@@ -20,14 +21,16 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PLambda;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
+import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Constraint;
@@ -99,11 +102,13 @@ public class ConstraintCollector {
   private SType unifyExpr(PExpr pExpr) throws TypeException {
     return switch (pExpr) {
       case PCall pCall -> unifyAndMemoize(pCall, this::unifyCall);
+      case PCombine pCombine -> unifyAndMemoize(pCombine, this::unifyCombine);
       case PInstantiate pInstantiate -> unifyAndMemoize(pInstantiate, this::unifyInstantiate);
       case PLambda pLambda -> unifyLambda(pLambda);
       case PNamedArg pNamedArg -> unifyAndMemoize(pNamedArg, this::unifyNamedArg);
       case POrder pOrder -> unifyAndMemoize(pOrder, this::unifyOrder);
-      case PSelect pSelect -> unifyAndMemoize(pSelect, this::unifySelect);
+      case PStructSelect pStructSelect -> unifyAndMemoize(pStructSelect, this::unifySelect);
+      case PTupleSelect pTupleSelect -> unifyAndMemoize(pTupleSelect, this::unifyTupleSelect);
       case PString pString -> setAndMemoize(pString, STypes.STRING);
       case PInt pInt -> setAndMemoize(pInt, STypes.INT);
       case PBlob pBlob -> setAndMemoize(pBlob, STypes.BLOB);
@@ -184,6 +189,12 @@ public class ConstraintCollector {
     return unifyElementsWithArray(elemTypes, pOrder.location());
   }
 
+  private STupleType unifyCombine(PCombine pCombine) throws TypeException {
+    var elems = pCombine.elements();
+    var elemTypes = elems.map(this::unifyExpr);
+    return new STupleType(elemTypes);
+  }
+
   private SArrayType unifyElementsWithArray(List<SType> elemTypes, Location location)
       throws TypeException {
     var elemVar = unifier.newFlexibleTypeVar();
@@ -206,25 +217,47 @@ public class ConstraintCollector {
     return new SArrayType(elemVar);
   }
 
-  private SType unifySelect(PSelect pSelect) throws TypeException {
-    var selectableType = unifyExpr(pSelect.selectable());
+  private SType unifySelect(PStructSelect pStructSelect) throws TypeException {
+    var selectableType = unifyExpr(pStructSelect.selectable());
     var resolvedSelectableType = unifier.resolve(selectableType);
     if (resolvedSelectableType instanceof SStructType sStructType) {
-      var itemSigS = sStructType.fields().get(pSelect.fieldName());
+      var itemSigS = sStructType.fields().get(pStructSelect.fieldName());
       if (itemSigS == null) {
         throw new TypeException(compileError(
-            pSelect.location(),
+            pStructSelect.location(),
             "Struct " + sStructType.fqn().q() + " has no field "
-                + pSelect.fieldName().q() + "."));
+                + pStructSelect.fieldName().q() + "."));
       } else {
         return itemSigS.type();
       }
     } else {
       throw new TypeException(compileError(
-          pSelect.location(),
+          pStructSelect.location(),
           "Instance of " + resolvedSelectableType.q()
-              + " has no field " + pSelect.fieldName().q()
+              + " has no field " + pStructSelect.fieldName().q()
               + "."));
+    }
+  }
+
+  private SType unifyTupleSelect(PTupleSelect pTupleSelect) throws TypeException {
+    var selectableType = unifyExpr(pTupleSelect.selectable());
+    var resolvedSelectableType = unifier.resolve(selectableType);
+    var position = pTupleSelect.position().bigInteger().intValueExact();
+    if (resolvedSelectableType instanceof STupleType sTupleType) {
+      var index = position - 1;
+      var elements = sTupleType.elements();
+      if (0 <= index && index < elements.size()) {
+        return elements.get(index);
+      } else {
+        throw new TypeException(compileError(
+            pTupleSelect.location(),
+            "Tuple " + sTupleType.specifier() + " has no element at position " + position + "."));
+      }
+    } else {
+      throw new TypeException(compileError(
+          pTupleSelect.location(),
+          "Cannot access element at position " + position
+              + " because it is applied to not a tuple type."));
     }
   }
 

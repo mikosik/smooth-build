@@ -1,0 +1,6 @@
+Log{ERROR, '{t-project}/module.smooth:2: mismatched input '>' expecting {'}', ','}
+result = {"abc" > myIdentity()};
+                ^'}
+Log{ERROR, '{t-project}/module.smooth:2: extraneous input '}' expecting ';'
+result = {"abc" > myIdentity()};
+                              ^'}

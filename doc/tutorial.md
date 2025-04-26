@@ -132,6 +132,30 @@ Int fourthPrimeNumber = elem(primeNumbers, 3);
 ```
 
 
+#### Tuples
+
+Tuple is an ordered collection of elements that can have different types.
+Tuple type is referenced by enclosing its element types inside curly braces `{}`.
+Tuple literal is declared by enclosing comma separated expressions inside curly braces `{}`.
+Here's an example of a tuple with three elements of different types:
+
+```
+{String, Int, Bool} personData = {"John", 25, true};
+```
+
+Elements of a tuple can be accessed using dot notation followed by the one-based index of the element:
+
+```
+String name = personData.1;    // "John"
+Int age = personData.2;        // 25
+Bool isActive = personData.3;  // true
+```
+
+Tuples are useful when you need to group multiple values together without creating
+a named structure. They can be used as function return values or as temporary
+containers for related data.
+
+
 #### Structures
 
 Structure is a composite of named values known as its fields with potentially different types.

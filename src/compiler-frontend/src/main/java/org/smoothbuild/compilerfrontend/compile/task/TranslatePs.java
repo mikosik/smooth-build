@@ -1,5 +1,6 @@
 package org.smoothbuild.compilerfrontend.compile.task;
 
+import static java.math.BigInteger.ONE;
 import static org.smoothbuild.common.base.Throwables.unexpectedCaseException;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.none;
@@ -13,6 +14,7 @@ import org.smoothbuild.common.schedule.Task2;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PConstructor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
@@ -27,9 +29,10 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
 import org.smoothbuild.compilerfrontend.lang.base.Identifiable;
 import org.smoothbuild.compilerfrontend.lang.base.MonoReferenceable;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
@@ -55,8 +58,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
 import org.smoothbuild.compilerfrontend.lang.define.SScope;
-import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
+import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
+import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
 import org.smoothbuild.compilerfrontend.lang.define.STypeDefinition;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
@@ -172,13 +176,15 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return switch (expr) {
         case PBlob pBlob -> convertBlob(pBlob);
         case PCall pCall -> convertCall(pCall);
+        case PCombine pCombine -> convertCombine(pCombine);
         case PInt pInt -> convertInt(pInt);
         case PInstantiate pInstantiate -> convertInstantiate(pInstantiate);
         case PLambda pLambda -> convertLambda(pLambda);
         case PNamedArg pNamedArg -> convertExpr(pNamedArg.expr());
         case POrder pOrder -> convertOrder(pOrder);
-        case PSelect pSelect -> convertSelect(pSelect);
+        case PStructSelect pStructSelect -> convertStructSelect(pStructSelect);
         case PString pString -> convertString(pString);
+        case PTupleSelect pTupleSelect -> convertTupleSelect(pTupleSelect);
       };
     }
 
@@ -239,9 +245,21 @@ public class TranslatePs implements Task2<PModule, SScope, SModule> {
       return new SOrder((SArrayType) order.sType(), elems, order.location());
     }
 
-    private SExpr convertSelect(PSelect pSelect) {
-      var selectable = convertExpr(pSelect.selectable());
-      return new SSelect(selectable, pSelect.fieldName(), pSelect.location());
+    private SExpr convertCombine(PCombine combine) {
+      var elems = convertExprs(combine.elements());
+      return new SCombine((STupleType) combine.sType(), elems, combine.location());
+    }
+
+    private SExpr convertStructSelect(PStructSelect pStructSelect) {
+      var selectable = convertExpr(pStructSelect.selectable());
+      var fieldName = pStructSelect.fieldName();
+      return new SStructSelect(selectable, fieldName, pStructSelect.location());
+    }
+
+    private SExpr convertTupleSelect(PTupleSelect pTupleSelect) {
+      var selectable = convertExpr(pTupleSelect.selectable());
+      var position = pTupleSelect.position().bigInteger().subtract(ONE);
+      return new STupleSelect(selectable, position, pTupleSelect.location());
     }
 
     private SString convertString(PString string) {

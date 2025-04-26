@@ -25,8 +25,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeReference;
@@ -79,6 +80,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
           visitType(pFuncType.result());
           pFuncType.params().forEach(this::visitType);
         }
+        case PTupleType pTupleType -> pTupleType.elementTypes().forEach(this::visitType);
         case PTypeReference pTypeReference ->
           parseReference(pTypeReference.nameText())
               .ifErr(e -> logIllegalTypeReference(pTypeReference, e))
@@ -173,16 +175,16 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     }
 
     @Override
-    public void visitSelect(PSelect pSelect) throws RuntimeException {
-      super.visitSelect(pSelect);
-      parseReferenceableName(pSelect.fieldNameText())
-          .ifOk(pSelect::setFieldName)
-          .ifErr(e -> logIllegalFieldName(pSelect, e));
+    public void visitStructSelect(PStructSelect pStructSelect) throws RuntimeException {
+      super.visitStructSelect(pStructSelect);
+      parseReferenceableName(pStructSelect.fieldNameText())
+          .ifOk(pStructSelect::setFieldName)
+          .ifErr(e -> logIllegalFieldName(pStructSelect, e));
     }
 
-    private void logIllegalFieldName(PSelect pSelect, String e) {
-      var message = "`" + pSelect.fieldNameText() + "` is illegal field name. " + e;
-      logger.log(compileError(pSelect.location(), message));
+    private void logIllegalFieldName(PStructSelect pStructSelect, String e) {
+      var message = "`" + pStructSelect.fieldNameText() + "` is illegal field name. " + e;
+      logger.log(compileError(pStructSelect.location(), message));
     }
 
     private Fqn toFqn(Name name) {

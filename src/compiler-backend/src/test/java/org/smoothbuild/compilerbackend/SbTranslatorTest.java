@@ -329,7 +329,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var sStructType = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
         var sConstructor = sPoly(sConstructor(sStructType));
         var sCall = sCall(sInstantiate(sConstructor), sString("abc"));
-        var sSelect = sSelect(sCall, "field");
+        var sSelect = sStructSelect(sCall, "field");
 
         var bConstructor = bLambda(list(bStringType()), bCombine(bReference(bStringType(), 0)));
         var bCall = bCall(bConstructor, bString("abc"));
@@ -497,7 +497,7 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
         var structTS = sStructType("MyStruct", nlist(sSig(sStringType(), "field")));
         var constructorS = sPoly(sConstructor(structTS));
         var callS = sCall(sInstantiate(constructorS), sString("abc"));
-        var selectS = sSelect(4, callS, "field");
+        var selectS = sStructSelect(4, callS, "field");
         assertNalMapping(bindings(constructorS), selectS, null, location(4));
       }
 

@@ -3,6 +3,7 @@ package org.smoothbuild.compilerfrontend.compile.infer;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExpr;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInstantiate;
@@ -12,8 +13,9 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedArg;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.type.tool.Unifier;
 
@@ -62,11 +64,13 @@ public class TypeAssigner {
   private void assignExpr(PExpr expr) throws TypeException {
     switch (expr) {
       case PCall pCall -> assignCall(pCall);
+      case PCombine pCombine -> assignCombine(pCombine);
       case PInstantiate pInstantiate -> assignInstantiate(pInstantiate);
       case PLambda pLambda -> assignFunc(pLambda);
       case PNamedArg pNamedArg -> assignNamedArg(pNamedArg);
       case POrder pOrder -> assignOrder(pOrder);
-      case PSelect pSelect -> assignSelect(pSelect);
+      case PStructSelect pStructSelect -> assignStructSelect(pStructSelect);
+      case PTupleSelect pTupleSelect -> assignTupleSelect(pTupleSelect);
       case PString pString -> assignExprType(pString);
       case PInt pInt -> assignExprType(pInt);
       case PBlob pBlob -> assignExprType(pBlob);
@@ -93,9 +97,19 @@ public class TypeAssigner {
     assignExprType(pOrder);
   }
 
-  private void assignSelect(PSelect pSelect) throws TypeException {
-    assignExpr(pSelect.selectable());
-    assignExprType(pSelect);
+  private void assignCombine(PCombine pCombine) throws TypeException {
+    pCombine.elements().foreach(this::assignExpr);
+    assignExprType(pCombine);
+  }
+
+  private void assignStructSelect(PStructSelect pStructSelect) throws TypeException {
+    assignExpr(pStructSelect.selectable());
+    assignExprType(pStructSelect);
+  }
+
+  private void assignTupleSelect(PTupleSelect pTupleSelect) throws TypeException {
+    assignExpr(pTupleSelect.selectable());
+    assignExprType(pTupleSelect);
   }
 
   private void assignExprType(PExpr pExpr) {

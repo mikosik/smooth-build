@@ -65,8 +65,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
-import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
+import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
+import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
@@ -477,12 +478,20 @@ public interface FrontendCompilerTestApi extends VmTestApi {
     return new SPolyEvaluable(list, evaluable);
   }
 
-  public default SSelect sSelect(SExpr selectable, String field) {
-    return sSelect(1, selectable, field);
+  public default STupleSelect sTupleSelect(SExpr selectable, int index) {
+    return sTupleSelect(1, selectable, BigInteger.valueOf(index));
   }
 
-  public default SSelect sSelect(int line, SExpr selectable, String field) {
-    return new SSelect(selectable, referenceableName(field), location(line));
+  public default STupleSelect sTupleSelect(int line, SExpr selectable, BigInteger index) {
+    return new STupleSelect(selectable, index, location(line));
+  }
+
+  public default SStructSelect sStructSelect(SExpr selectable, String field) {
+    return sStructSelect(1, selectable, field);
+  }
+
+  public default SStructSelect sStructSelect(int line, SExpr selectable, String field) {
+    return new SStructSelect(selectable, referenceableName(field), location(line));
   }
 
   public default SString sString() {

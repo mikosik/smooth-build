@@ -50,8 +50,9 @@ import org.smoothbuild.compilerfrontend.lang.define.SNamedValue;
 import org.smoothbuild.compilerfrontend.lang.define.SOrder;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyReference;
-import org.smoothbuild.compilerfrontend.lang.define.SSelect;
 import org.smoothbuild.compilerfrontend.lang.define.SString;
+import org.smoothbuild.compilerfrontend.lang.define.SStructSelect;
+import org.smoothbuild.compilerfrontend.lang.define.STupleSelect;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
@@ -139,7 +140,10 @@ public class SbTranslator {
       case SCombine sCombine -> saveLocAndReturn(sCombine, translateCombine(sCombine));
       case SInt sInt -> saveLocAndReturn(sInt, translateInt(sInt));
       case SOrder sOrder -> saveLocAndReturn(sOrder, translateOrder(sOrder));
-      case SSelect sSelect -> saveLocAndReturn(sSelect, translateSelect(sSelect));
+      case SStructSelect sStructSelect ->
+        saveLocAndReturn(sStructSelect, translateStructSelect(sStructSelect));
+      case STupleSelect sTupleSelect ->
+        saveLocAndReturn(sTupleSelect, translateTupleSelect(sTupleSelect));
       case SString sString -> saveLocAndReturn(sString, translateString(sString));
       case SInstantiate sInstantiate -> translateInstantiate(sInstantiate);
       case SMonoReference sMonoReference -> translateMonoReference(sMonoReference);
@@ -316,13 +320,21 @@ public class SbTranslator {
     return bytecodeF.order(bArrayType, bElements);
   }
 
-  private BSelect translateSelect(SSelect sSelect) throws SbTranslatorException {
-    var bSelectable = translateExpr(sSelect.selectable());
-    var sStructType = (SStructType) sSelect.selectable().evaluationType();
-    var indexJ = sStructType.fields().indexOf(sSelect.field());
+  private BSelect translateStructSelect(SStructSelect sStructSelect) throws SbTranslatorException {
+    var bSelectable = translateExpr(sStructSelect.selectable());
+    var sStructType = (SStructType) sStructSelect.selectable().evaluationType();
+    var indexJ = sStructType.fields().indexOf(sStructSelect.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var bIndex = bytecodeF.int_(bigInteger);
-    saveLoc(bIndex, sSelect);
+    saveLoc(bIndex, sStructSelect);
+    return bytecodeF.select(bSelectable, bIndex);
+  }
+
+  private BSelect translateTupleSelect(STupleSelect sTupleSelect) throws SbTranslatorException {
+    var bSelectable = translateExpr(sTupleSelect.selectable());
+    var bigInteger = sTupleSelect.index();
+    var bIndex = bytecodeF.int_(bigInteger);
+    saveLoc(bIndex, sTupleSelect);
     return bytecodeF.select(bSelectable, bIndex);
   }
 

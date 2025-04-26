@@ -1,0 +1,16 @@
+BTuple(
+  hash = e1173358d0514f1f702f69d6e1639e98cfc7bc526e74d5f3f3c04040e2a5ec45
+  type = {Int,String}
+  elements = [
+    BInt(
+      hash = b4f5acf1123d217b7c40c9b5f694b31bf83c07bd40b24fe42cadb0e458f4ab45
+      type = Int
+      value = 1
+    )
+    BString(
+      hash = a8290d3ebf36fd0cda7c9e3e5e4a81199d86c6ed3585c073502313f03bdf9986
+      type = String
+      value = "abc"
+    )
+  ]
+)

@@ -17,6 +17,7 @@ public class STypeSchemeTest extends FrontendCompilerTestContext {
         .addEqualityGroup(new STypeScheme(list(), sIntFuncType()))
         .addEqualityGroup(new STypeScheme(list(), sFuncType(sIntType(), sIntType())))
         .addEqualityGroup(new STypeScheme(list(varA()), sVarAArrayT()))
+        .addEqualityGroup(new STypeScheme(list(varA()), sTupleType(varA(), varA())))
         .addEqualityGroup(new STypeScheme(list(varA()), sVarAFuncType()))
         .addEqualityGroup(new STypeScheme(list(varA()), sFuncType(varA(), varA())))
         .testEquals();

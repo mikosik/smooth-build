@@ -1,6 +1,6 @@
-Log{ERROR, '{t-project}/module.smooth:2: mismatched input ',' expecting {'(', '[', NAME}
+Log{ERROR, '{t-project}/module.smooth:2: mismatched input ',' expecting {'{', '(', '[', NAME}
 (String,,)->Blob myFunc();
         ^'}
-Log{ERROR, '{t-project}/module.smooth:2: mismatched input ')' expecting {'(', '[', NAME}
+Log{ERROR, '{t-project}/module.smooth:2: mismatched input ')' expecting {'{', '(', '[', NAME}
 (String,,)->Blob myFunc();
          ^'}

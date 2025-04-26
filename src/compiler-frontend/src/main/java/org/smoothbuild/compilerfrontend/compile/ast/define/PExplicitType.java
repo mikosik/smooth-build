@@ -3,10 +3,11 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 import org.smoothbuild.common.log.location.Location;
 import org.smoothbuild.compilerfrontend.lang.type.SArrayType;
 import org.smoothbuild.compilerfrontend.lang.type.SFuncType;
+import org.smoothbuild.compilerfrontend.lang.type.STupleType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 
 public abstract sealed class PExplicitType extends PType
-    permits PArrayType, PFuncType, PTypeReference {
+    permits PArrayType, PFuncType, PTypeReference, PTupleType {
   protected PExplicitType(String nameText, Location location) {
     super(nameText, location);
   }
@@ -16,6 +17,7 @@ public abstract sealed class PExplicitType extends PType
       case PArrayType a -> new SArrayType(a.elemT().infer());
       case PFuncType f -> translateFunc(f);
       case PTypeReference r -> r.referenced().type();
+      case PTupleType t -> new STupleType(t.elementTypes().map(PExplicitType::infer));
     };
   }
 

@@ -7,7 +7,15 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Expression.
  */
 public sealed interface SExpr extends HasLocation
-    permits SCall, SCombine, SConstant, SInstantiate, SLambda, SMonoReference, SOrder, SSelect {
+    permits SCall,
+        SCombine,
+        SConstant,
+        SInstantiate,
+        SLambda,
+        SMonoReference,
+        SOrder,
+        SStructSelect,
+        STupleSelect {
   public String toSourceCode();
 
   public SType evaluationType();

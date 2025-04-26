@@ -13,6 +13,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.PScopingModuleVisitor;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PInt;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPosition;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 
 public class DecodeLiterals implements Task1<PModule, PModule> {
@@ -44,6 +45,17 @@ public class DecodeLiterals implements Task1<PModule, PModule> {
         pInt.decodeBigInteger();
       } catch (NumberFormatException e) {
         logger.log(compileError(pInt, "Illegal Int literal: `" + pInt.literal() + "`."));
+      }
+    }
+
+    @Override
+    public void visitPosition(PPosition pPosition) {
+      super.visitPosition(pPosition);
+      try {
+        pPosition.decodeBigInteger();
+      } catch (NumberFormatException e) {
+        logger.log(
+            compileError(pPosition, "Illegal tuple position: `" + pPosition.literal() + "`."));
       }
     }
 

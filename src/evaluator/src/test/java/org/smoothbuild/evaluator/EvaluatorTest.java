@@ -186,7 +186,8 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "f")));
           var constructorS = sPoly(sConstructor(structTS));
           var callS = sCall(sInstantiate(constructorS), sInt(7));
-          assertEvaluation(newInjector(), bindings(constructorS), sSelect(callS, "f"), bInt(7));
+          assertEvaluation(
+              newInjector(), bindings(constructorS), sStructSelect(callS, "f"), bInt(7));
         }
       }
     }

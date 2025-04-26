@@ -36,6 +36,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.NotFuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.TupleTypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeParamsContext;
@@ -51,6 +52,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PAnnotation;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PArrayType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PBlob;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PCall;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PCombine;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PDefaultValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PExplicitTypeParams;
@@ -68,10 +70,13 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedFunc;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PNamedValue;
 import org.smoothbuild.compilerfrontend.compile.ast.define.POrder;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PPosition;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
-import org.smoothbuild.compilerfrontend.compile.ast.define.PSelect;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PString;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PStructSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleSelect;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParam;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PTypeParams;
@@ -270,6 +275,14 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
         }
         return new POrder(elems, location);
       }
+      if (chainHead.tuple() != null) {
+        var elems = listOfAll(chainHead.tuple().expr()).map(this::createExpr);
+        if (pipedArg.get() != null) {
+          elems = list(pipedArg.get()).addAll(elems);
+          pipedArg.set(null);
+        }
+        return new PCombine(elems, location);
+      }
       if (chainHead.parens() != null) {
         return createPipe(pipedArg, chainHead.parens().pipe());
       }
@@ -333,10 +346,19 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return new PString(unquoted, location);
     }
 
-    private PSelect createSelect(PExpr selectable, SelectContext fieldRead) {
-      var name = fieldRead.NAME().getText();
-      var location = fileLocation(fullPath, fieldRead);
-      return new PSelect(selectable, name, location);
+    private PExpr createSelect(PExpr selectable, SelectContext fieldRead) {
+      String name;
+      if (fieldRead.NAME() != null) {
+        name = fieldRead.NAME().getText();
+        var location = fileLocation(fullPath, fieldRead);
+        return new PStructSelect(selectable, name, location);
+      } else if (fieldRead.INT() != null) {
+        name = fieldRead.INT().getText();
+        var position = new PPosition(name, fileLocation(fullPath, fieldRead));
+        return new PTupleSelect(selectable, position, fileLocation(fullPath, fieldRead));
+      } else {
+        throw newRuntimeException(SelectContext.class);
+      }
     }
 
     private List<PExpr> createArgList(ArgListContext argList) {
@@ -374,6 +396,7 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
       return switch (notFuncType) {
         case TypeNameContext name -> createTypeReference(name);
         case ArrayTypeContext arrayType -> createArrayType(arrayType);
+        case TupleTypeContext tupleType -> createTupleType(tupleType);
         default -> throw unexpectedCaseException(notFuncType);
       };
     }
@@ -385,6 +408,11 @@ public class TranslateAp implements Task2<ModuleContext, FullPath, PModule> {
     private PExplicitType createArrayType(ArrayTypeContext arrayType) {
       var elemType = createType(arrayType.type());
       return new PArrayType(elemType, fileLocation(fullPath, arrayType));
+    }
+
+    private PExplicitType createTupleType(TupleTypeContext tupleType) {
+      var elementTypes = listOfAll(tupleType.type()).map(this::createType);
+      return new PTupleType(elementTypes, fileLocation(fullPath, tupleType));
     }
 
     private PExplicitType createFuncType(FuncTypeContext funcType) {

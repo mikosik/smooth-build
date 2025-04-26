@@ -1,0 +1,96 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    result=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = {Int,{String}}
+        fqn = result
+        location = {t-project}/module.smooth:1
+        body = SCombine(
+          evaluationType = {Int,{String}}
+          elements = [
+            SInt(
+              type = Int
+              bigInteger = 7
+              location = {t-project}/module.smooth:2
+            )
+            SCombine(
+              evaluationType = {String}
+              elements = [
+                SString(
+                  type = String
+                  string = abc
+                  location = {t-project}/module.smooth:4
+                )
+              ]
+              location = {t-project}/module.smooth:3
+            )
+          ]
+          location = {t-project}/module.smooth:1
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          result -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = {Int,{String}}
+              fqn = result
+              location = {t-project}/module.smooth:1
+              body = SCombine(
+                evaluationType = {Int,{String}}
+                elements = [
+                  SInt(
+                    type = Int
+                    bigInteger = 7
+                    location = {t-project}/module.smooth:2
+                  )
+                  SCombine(
+                    evaluationType = {String}
+                    elements = [
+                      SString(
+                        type = String
+                        string = abc
+                        location = {t-project}/module.smooth:4
+                      )
+                    ]
+                    location = {t-project}/module.smooth:3
+                  )
+                ]
+                location = {t-project}/module.smooth:1
+              )
+            )
+          )
+    ]
+  )
+)

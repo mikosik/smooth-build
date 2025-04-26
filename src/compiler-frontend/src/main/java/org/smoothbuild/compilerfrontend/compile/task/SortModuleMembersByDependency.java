@@ -29,6 +29,7 @@ import org.smoothbuild.compilerfrontend.compile.ast.define.PModule;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PPolyEvaluable;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PReference;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PStruct;
+import org.smoothbuild.compilerfrontend.compile.ast.define.PTupleType;
 import org.smoothbuild.compilerfrontend.compile.ast.define.PType;
 import org.smoothbuild.compilerfrontend.lang.base.PolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Id;
@@ -111,6 +112,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
             addToDeps(funcT.result());
             funcT.params().forEach(this::addToDeps);
           }
+          case PTupleType tupleT -> tupleT.elementTypes().forEach(this::addToDeps);
           default -> {
             if (structNames.contains(pType.nameText())) {
               deps.add(new GraphEdge<>(pType.location(), fqn(pType.nameText())));

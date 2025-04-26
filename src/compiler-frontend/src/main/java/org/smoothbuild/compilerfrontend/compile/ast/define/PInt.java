@@ -13,9 +13,13 @@ public final class PInt extends PLiteral {
   }
 
   public void decodeBigInteger() throws NumberFormatException {
-    assertNoLeadingZeros(literal());
-    assertNotNegativeZero(literal());
-    bigInteger = new BigInteger(literal(), 10);
+    bigInteger = decodeAsBigInteger(literal());
+  }
+
+  static BigInteger decodeAsBigInteger(String literal) {
+    assertNoLeadingZeros(literal);
+    assertNotNegativeZero(literal);
+    return new BigInteger(literal, 10);
   }
 
   private static void assertNoLeadingZeros(String literal) {

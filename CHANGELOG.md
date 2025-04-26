@@ -5,7 +5,8 @@ Change Log
 Version ?????? (??????????)
 ---------------------------
 
- * extend smooth syntax: Allow omitting parentheses in function type when it has one parameter
+ * added tuple to smooth language
+ * extended smooth syntax: Allow omitting parentheses in function type when it has one parameter
  * added standard library function `fold`
 
 Version 0.23.0 (2025.03.20)

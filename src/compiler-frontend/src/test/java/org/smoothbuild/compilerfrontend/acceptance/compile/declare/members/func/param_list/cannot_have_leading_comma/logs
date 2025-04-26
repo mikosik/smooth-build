@@ -1,4 +1,4 @@
-Log{ERROR, '{t-project}/module.smooth:1: mismatched input ',' expecting {'(', ')', '[', NAME}
+Log{ERROR, '{t-project}/module.smooth:1: mismatched input ',' expecting {'{', '(', ')', '[', NAME}
 String myFunc(,String string) = "abc";
               ^'}
 Log{ERROR, '{t-project}/module.smooth:1: extraneous input ')' expecting {'=', ';', '<', '('}

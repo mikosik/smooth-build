@@ -1,0 +1,5 @@
+@Native("impl")
+{String, Int} getTuple();
+
+result = getTuple()
+  .2;

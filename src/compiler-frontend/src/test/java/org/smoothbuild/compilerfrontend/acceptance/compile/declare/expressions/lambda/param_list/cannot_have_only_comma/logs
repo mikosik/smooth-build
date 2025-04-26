@@ -1,9 +1,9 @@
 Log{ERROR, '{t-project}/module.smooth:1: no viable alternative at input '(,'
 result = (,) -> 7;
           ^'}
-Log{ERROR, '{t-project}/module.smooth:1: extraneous input ',' expecting {'(', ')', '[', NAME}
+Log{ERROR, '{t-project}/module.smooth:1: extraneous input ',' expecting {'{', '(', ')', '[', NAME}
 result = (,) -> 7;
           ^'}
-Log{ERROR, '{t-project}/module.smooth:1: mismatched input '7' expecting {'(', '[', NAME}
+Log{ERROR, '{t-project}/module.smooth:1: mismatched input '7' expecting {'{', '(', '[', NAME}
 result = (,) -> 7;
                 ^'}

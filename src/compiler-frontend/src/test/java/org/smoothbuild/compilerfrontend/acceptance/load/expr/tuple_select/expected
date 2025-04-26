@@ -1,0 +1,134 @@
+SModule(
+  types = [
+  ]
+  evaluables = [
+    getTuple=sPolyEvaluable(
+      typeParams = []
+      evaluable = SAnnotatedFunc(
+        annotation = SAnnotation(
+          name = Native
+          path = SString(
+            type = String
+            string = impl
+            location = {t-project}/module.smooth:1
+          )
+          location = {t-project}/module.smooth:1
+        )
+        type = ()->{String,Int}
+        params = [
+        ]
+        location = {t-project}/module.smooth:2
+      )
+    )
+    result=sPolyEvaluable(
+      typeParams = []
+      evaluable = SNamedExprValue(
+        type = Int
+        fqn = result
+        location = {t-project}/module.smooth:4
+        body = STupleSelect(
+          selectable = SCall(
+            callee = SInstantiate(
+              typeArgs = <>
+              polymorphic = SPolyReference(
+                typeScheme = <>()->{String,Int}
+                referencedName = getTuple
+                location = {t-project}/module.smooth:4
+              )
+              evaluationType = ()->{String,Int}
+              location = {t-project}/module.smooth:4
+            )
+            args = SCombine(
+              evaluationType = {}
+              elements = [
+              ]
+              location = {t-project}/module.smooth:4
+            )
+            location = {t-project}/module.smooth:4
+          )
+          index = 1
+          location = {t-project}/module.smooth:5
+        )
+      )
+    )
+  ]
+  scope = SScope(
+    types = [
+      Blob -> STypeDefinition(
+        type = Blob
+        fqn = Blob
+        location = internal
+      )
+      Bool -> STypeDefinition(
+        type = Bool
+        fqn = Bool
+        location = internal
+      )
+      Int -> STypeDefinition(
+        type = Int
+        fqn = Int
+        location = internal
+      )
+      String -> STypeDefinition(
+        type = String
+        fqn = String
+        location = internal
+      )
+        <empty bindings>
+          <empty bindings>
+    ]
+    evaluables = [
+      <empty bindings>
+        <empty bindings>
+          getTuple -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SAnnotatedFunc(
+              annotation = SAnnotation(
+                name = Native
+                path = SString(
+                  type = String
+                  string = impl
+                  location = {t-project}/module.smooth:1
+                )
+                location = {t-project}/module.smooth:1
+              )
+              type = ()->{String,Int}
+              params = [
+              ]
+              location = {t-project}/module.smooth:2
+            )
+          )
+          result -> sPolyEvaluable(
+            typeParams = []
+            evaluable = SNamedExprValue(
+              type = Int
+              fqn = result
+              location = {t-project}/module.smooth:4
+              body = STupleSelect(
+                selectable = SCall(
+                  callee = SInstantiate(
+                    typeArgs = <>
+                    polymorphic = SPolyReference(
+                      typeScheme = <>()->{String,Int}
+                      referencedName = getTuple
+                      location = {t-project}/module.smooth:4
+                    )
+                    evaluationType = ()->{String,Int}
+                    location = {t-project}/module.smooth:4
+                  )
+                  args = SCombine(
+                    evaluationType = {}
+                    elements = [
+                    ]
+                    location = {t-project}/module.smooth:4
+                  )
+                  location = {t-project}/module.smooth:4
+                )
+                index = 1
+                location = {t-project}/module.smooth:5
+              )
+            )
+          )
+    ]
+  )
+)

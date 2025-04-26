@@ -52,6 +52,7 @@ chain
 chainHead
    : NAME
    | array
+   | tuple
    | parens
    | BLOB
    | INT
@@ -77,10 +78,15 @@ arg
 
 select
    : '.' NAME
+   | '.' INT
    ;
 
 array
    : '[' (expr (',' expr)* (',')?)? ']'
+   ;
+
+tuple
+   : '{' (expr (',' expr)* (',')?)? '}'
    ;
 
 lambda
@@ -95,6 +101,7 @@ type
 nonFuncType
    : NAME # typeName
    | '[' type ']' # arrayType
+   | '{' (type (',' type)* (',')?)? '}' # tupleType
    ;
 
 NAME

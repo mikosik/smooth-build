@@ -1,0 +1,2 @@
+String justAbc() = "abc";
+result = {justAbc}.1();

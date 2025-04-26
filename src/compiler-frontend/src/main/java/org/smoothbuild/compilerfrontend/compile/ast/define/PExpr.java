@@ -8,7 +8,15 @@ import org.smoothbuild.compilerfrontend.lang.type.SType;
  * Expression in smooth language.
  */
 public abstract sealed class PExpr implements HasLocation
-    permits PCall, PInstantiate, PLambda, PLiteral, PNamedArg, POrder, PSelect {
+    permits PCall,
+        PCombine,
+        PInstantiate,
+        PLambda,
+        PLiteral,
+        PNamedArg,
+        POrder,
+        PStructSelect,
+        PTupleSelect {
   private final Location location;
   private SType type;
 
