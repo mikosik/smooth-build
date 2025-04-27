@@ -46,10 +46,10 @@ public class STypeTest extends FrontendCompilerTestContext {
   }
 
   public static List<Arguments> specifiers() {
-    return new STypeTest().names_non_static();
+    return new STypeTest().specifiers_non_static();
   }
 
-  public List<Arguments> names_non_static() {
+  public List<Arguments> specifiers_non_static() {
     return specifier_or_to_string()
         .addAll(list(
             arguments(sStructType("MyStruct", nlist()), "MyStruct"),
