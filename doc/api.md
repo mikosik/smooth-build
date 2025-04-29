@@ -28,6 +28,7 @@
 | [toBlob](api/toBlob.md)               | Converts String to Blob using UTF-8 encoding.                       |
 | [toString](api/toString.md)           | Converts Blob to String using UTF-8 encoding.                       |
 | [unjar](api/unjar.md)                 | Unjars (uncompresses) files from given jar file.                    |
+| [zip](api/zip.md)                     | Combines two arrays into a single array of tuples.                  |
 
 | value | definition                 |
 |-------|----------------------------|

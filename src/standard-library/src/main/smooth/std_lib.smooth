@@ -93,6 +93,9 @@ A if<A>(Bool condition, A then, A else);
 @Bytecode("org.smoothbuild.stdlib.core.MapFunc")
 [R] map<S,R>([S] array, (S)->R mapper);
 
+@Native("org.smoothbuild.stdlib.array.ZipFunc")
+[{A,B}] zip<A,B>([A] first, [B] second);
+
 @Bytecode("org.smoothbuild.stdlib.core.FoldFunc")
 A fold<A,E>([E] array, A initial, (A,E)->A folder);
 

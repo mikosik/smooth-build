@@ -8,6 +8,7 @@ Version ?????? (??????????)
  * added tuple to smooth language
  * extended smooth syntax: Allow omitting parentheses in function type when it has one parameter
  * added standard library function `fold`
+ * added standard library function `zip`
 
 Version 0.23.0 (2025.03.20)
 ---------------------------
