@@ -12,7 +12,7 @@ public class ZipTest extends StandardLibraryTestContext {
   void zip_unzip() throws Exception {
     var userModule =
         """
-        result = [file("dir/file1.txt"), file("file2.txt")] > zip() > unzip();
+        result = [file("dir/file1.txt"), file("file2.txt")] > compressZip() > compressUnzip();
         """;
     createUserModule(userModule);
     createProjectFile("dir/file1.txt", "abc");
@@ -29,7 +29,7 @@ public class ZipTest extends StandardLibraryTestContext {
     var userModule =
         """
         randomJunk = 0x123456;
-        result = unzip(randomJunk);
+        result = compressUnzip(randomJunk);
         """;
     createUserModule(userModule);
 

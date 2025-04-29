@@ -59,13 +59,13 @@ Blob jar([File] files, Blob manifest = 0x);
 [File] javac_([File] srcs, [[File]] libs = [], [String] options = []);
 
 String junit(File tests, [File] deps = [], String include = "**Test.class") =
-    junit_(unzip(tests.content), jarsToFiles(deps), include);
+  junit_(compressUnzip(tests.content), jarsToFiles(deps), include);
 
 @Native("org.smoothbuild.stdlib.java.junit.JunitFunc")
 String junit_([File] tests, [[File]] deps, String include);
 
 [[File]] jarsToFiles([File] libs) =
-  map(libs, (File lib) -> filterFiles(unzip(lib.content), "**.class"));
+  map(libs, (File lib) -> filterFiles(compressUnzip(lib.content), "**.class"));
 
 @Native("org.smoothbuild.stdlib.string.ToBlobFunc")
 Blob toBlob(String string);
@@ -77,10 +77,10 @@ String toString(Blob blob);
 [File] unjar(Blob jar);
 
 @Native("org.smoothbuild.stdlib.compress.UnzipFunc")
-[File] unzip(Blob blob);
+[File] compressUnzip(Blob blob);
 
 @Native("org.smoothbuild.stdlib.compress.ZipFunc")
-Blob zip([File] files);
+Blob compressZip([File] files);
 
 A id<A>(A a) = a;
 

@@ -197,7 +197,7 @@ It is used by many functions from the standard library, the most popular are:
  - [files](api/files.md) - reads all files from given directory inside project
  - [filterFiles](api/filterFiles.md) - filters array of files according to glob pattern
  - [jar](api/jar.md) - jars array of files
- - [zip](api/zip.md) - zips array of files
+ - [compressZip](api/zip.md) - zips array of files
 
 
 #### Functions

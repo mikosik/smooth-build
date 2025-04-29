@@ -1,4 +1,4 @@
-## [File] unzip<>(Blob blob)
+## [File] compressUnzip<>(Blob blob)
 
 Unzips files from given zip file.
 
@@ -12,6 +12,5 @@ Returns __[File]__ - arrays of File uncompressed from given zip.
 Uncompresses all files from "zips/myZip.zip" file.
 
 ```
-[File] files = file("zips/myZip.zip").content > unzip();
+[File] files = file("zips/myZip.zip").content > compressUnzip();
 ```
-

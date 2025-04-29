@@ -1,4 +1,4 @@
-## Blob zip<>([File] files)
+## Blob compressZip<>([File] files)
 
 Zips an array of files.
 
@@ -12,5 +12,5 @@ Returns __Blob__ containing compressed files.
 
 Zips all files from "src" directory.
 ```
-Blob zippedFiles = files("src") > zip();
+Blob zippedFiles = files("src") > compressZip();
 ```
