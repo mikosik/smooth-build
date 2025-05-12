@@ -13,7 +13,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.function.Supplier;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.MutablePromise;
@@ -258,20 +257,19 @@ public class Scheduler {
 
   private class Execution<R> implements Runnable {
     private final MutablePromise<Maybe<R>> result;
-    private final Supplier<Output<R>> taskResultSupplier;
+    private final Task0<R> task;
 
-    private Execution(Supplier<Output<R>> taskResultSupplier) {
-      this.taskResultSupplier = taskResultSupplier;
+    private Execution(Task0<R> task) {
+      this.task = task;
       this.result = promise();
     }
 
     @Override
     public void run() {
       try {
-        var taskResult = taskResultSupplier.get();
-        var report = taskResult.report();
-        reporter.submit(report);
-        taskResult.result().addConsumer(result);
+        var output = task.execute();
+        reporter.submit(output.report());
+        output.result().addConsumer(result);
       } catch (Exception e) {
         var fatal = fatal("Task execution failed with exception:", e);
         reporter.submit(report(LABEL, list(fatal)));
