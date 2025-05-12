@@ -107,7 +107,7 @@ public class SortModuleMembersByDependency implements Task1<PModule, PModule> {
 
       private void addToDeps(PType pType) {
         switch (pType) {
-          case PArrayType arrayT -> addToDeps(arrayT.elemT());
+          case PArrayType arrayT -> addToDeps(arrayT.elementType());
           case PFuncType funcT -> {
             addToDeps(funcT.result());
             funcT.params().forEach(this::addToDeps);

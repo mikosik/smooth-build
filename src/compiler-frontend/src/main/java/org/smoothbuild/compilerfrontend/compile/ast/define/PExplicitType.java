@@ -14,7 +14,7 @@ public abstract sealed class PExplicitType extends PType
 
   public SType infer() {
     return switch (this) {
-      case PArrayType a -> new SArrayType(a.elemT().infer());
+      case PArrayType a -> new SArrayType(a.elementType().infer());
       case PFuncType f -> translateFunc(f);
       case PTypeReference r -> r.referenced().type();
       case PTupleType t -> new STupleType(t.elementTypes().map(PExplicitType::infer));

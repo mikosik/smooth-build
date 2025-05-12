@@ -69,7 +69,7 @@ public class ResolveReferences implements Task1<PModule, PModule> {
     @Override
     public void visitType(PType pType) {
       switch (pType) {
-        case PArrayType array -> visitType(array.elemT());
+        case PArrayType array -> visitType(array.elementType());
         case PFuncType func -> visitFuncType(func);
         case PTupleType tuple -> visitTupleType(tuple);
         case PTypeReference pTypeReference -> visitExplicitType(pTypeReference);

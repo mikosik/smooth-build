@@ -10,7 +10,7 @@ public final class PArrayType extends PExplicitType {
     this.elementType = elementType;
   }
 
-  public PExplicitType elemT() {
+  public PExplicitType elementType() {
     return elementType;
   }
 }

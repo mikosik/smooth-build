@@ -75,7 +75,7 @@ public class GenerateFqns implements Task1<PModule, PModule> {
     @Override
     public void visitType(PType pType) throws RuntimeException {
       switch (pType) {
-        case PArrayType pArrayType -> visitType(pArrayType.elemT());
+        case PArrayType pArrayType -> visitType(pArrayType.elementType());
         case PFuncType pFuncType -> {
           visitType(pFuncType.result());
           pFuncType.params().forEach(this::visitType);
