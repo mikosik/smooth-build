@@ -30,7 +30,7 @@ public class BFoldTest extends VmTestContext {
   void creating_fold_with_folder_which_parameter_count_is_different_than_two_fails() {
     assertCall(() -> bytecodeF().fold(bArray(bInt()), bInt(), bLambda(list(bIntType()), bInt())))
         .throwsException(new IllegalArgumentException(
-            "`folder.arguments.evaluationType()` should be `{Int,Int}` but is `{Int}`."));
+            "`folder.type()` should be `(Int,Int)->Int` but is `(Int)->Int`."));
   }
 
   @Test
@@ -38,7 +38,7 @@ public class BFoldTest extends VmTestContext {
     assertCall(() -> bytecodeF()
             .fold(bArray(bInt()), bInt(), bLambda(list(bStringType(), bIntType()), bInt())))
         .throwsException(new IllegalArgumentException(
-            "`folder.arguments.evaluationType()` should be `{Int,Int}` but is `{String,Int}`."));
+            "`folder.type()` should be `(Int,Int)->Int` but is `(String,Int)->Int`."));
   }
 
   @Test
@@ -47,7 +47,7 @@ public class BFoldTest extends VmTestContext {
     assertCall(() -> bytecodeF()
             .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bStringType()), bInt())))
         .throwsException(new IllegalArgumentException(
-            "`folder.arguments.evaluationType()` should be `{Int,Int}` but is `{Int,String}`."));
+            "`folder.type()` should be `(Int,Int)->Int` but is `(Int,String)->Int`."));
   }
 
   @Test
@@ -55,7 +55,7 @@ public class BFoldTest extends VmTestContext {
     assertCall(() -> bytecodeF()
             .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bIntType()), bString())))
         .throwsException(new IllegalArgumentException(
-            "`folder.result.evaluationType()` should be `Int` but is `String`."));
+            "`folder.type()` should be `(Int,Int)->Int` but is `(Int,Int)->String`."));
   }
 
   @Nested

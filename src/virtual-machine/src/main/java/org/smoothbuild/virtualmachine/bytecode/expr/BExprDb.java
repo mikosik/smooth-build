@@ -172,29 +172,19 @@ public class BExprDb {
 
   private BType validateFoldSubExprsAndGetResultType(BExpr array, BExpr initial, BExpr folder)
       throws BKindDbException {
-    var lambdaType = validateMemberEvaluationTypeClass("folder", folder, BLambdaType.class);
+    var folderType = validateMemberEvaluationTypeClass("folder", folder, BLambdaType.class);
     var arrayType = validateMemberEvaluationTypeClass("array", array, BArrayType.class);
     var initialType = initial.evaluationType();
-    var params = lambdaType.params().elements();
     var elementType = arrayType.element();
-    if (!(params.size() == 2
-        && params.get(0).equals(initialType)
-        && params.get(1).equals(elementType))) {
-      throw illegalEvaluationType(
-          "folder.arguments",
-          expectedFolderArgumentsType(initialType, elementType),
-          lambdaType.params());
-    }
-    var resultType = lambdaType.result();
-    if (!resultType.equals(initialType)) {
-      throw illegalEvaluationType("folder.result", initialType, resultType);
-    }
-    return resultType;
+    var expectedFolderType = folderType(initialType, elementType);
+    validateMemberType("folder", folderType, expectedFolderType);
+    return initialType;
   }
 
-  private BTupleType expectedFolderArgumentsType(BType accumulatorType, BType elementType)
+  private BLambdaType folderType(BType accumulatorType, BType arrayElementType)
       throws BKindDbException {
-    return kindDb.tuple(accumulatorType, elementType);
+    var params = kindDb.tuple(accumulatorType, arrayElementType);
+    return kindDb.lambda(params, accumulatorType);
   }
 
   public BIf newIf(BExpr condition, BExpr then_, BExpr else_) throws BytecodeException {
@@ -207,8 +197,8 @@ public class BExprDb {
   }
 
   public BMap newMap(BExpr array, BExpr mapper) throws BytecodeException {
-    var mapperArgumentType = validateMapSubExprsAndGetMapperResultType(array, mapper);
-    var kind = kindDb.map(kindDb.array(mapperArgumentType));
+    var mapperResultType = validateMapSubExprsAndGetMapperResultType(array, mapper);
+    var kind = kindDb.map(kindDb.array(mapperResultType));
     var data = writeChain(array.hash(), mapper.hash());
     var root = newRoot(kind, data);
     return kind.newExpr(root, this);
@@ -216,19 +206,11 @@ public class BExprDb {
 
   private BType validateMapSubExprsAndGetMapperResultType(BExpr array, BExpr mapper)
       throws BKindDbException {
-    var lambdaType = validateMemberEvaluationTypeClass("mapper", mapper, BLambdaType.class);
+    var mapperType = validateMemberEvaluationTypeClass("mapper", mapper, BLambdaType.class);
     var arrayType = validateMemberEvaluationTypeClass("array", array, BArrayType.class);
-    var params = lambdaType.params().elements();
-    var elementType = arrayType.element();
-    if (!(params.size() == 1 && params.get(0).equals(elementType))) {
-      throw illegalEvaluationType(
-          "mapper.arguments", expectedMapperArgumentsType(elementType), lambdaType.params());
-    }
-    return lambdaType.result();
-  }
-
-  private BTupleType expectedMapperArgumentsType(BType elementType) throws BKindDbException {
-    return kindDb.tuple(elementType);
+    var expectedParamTypes = kindDb.tuple(arrayType.element());
+    validateMemberType("mapper.parameters", mapperType.params(), expectedParamTypes);
+    return mapperType.result();
   }
 
   public BOrder newOrder(BArrayType evaluationType, List<? extends BExpr> elements)
@@ -324,12 +306,14 @@ public class BExprDb {
 
   private static <T extends BType> T validateMemberEvaluationTypeClass(
       String memberName, BExpr member, Class<T> clazz) {
-    var lambdaEvaluationType = member.evaluationType();
-    if (!(lambdaEvaluationType.getClass().equals(clazz))) {
-      throw illegalEvaluationType(memberName, clazz, lambdaEvaluationType);
+    var evaluationType = member.evaluationType();
+    var evaluationTypeClass = evaluationType.getClass();
+    if (!(evaluationTypeClass.equals(clazz))) {
+      throw illegalEvaluationType(
+          memberName, clazz.getSimpleName(), evaluationTypeClass.getSimpleName());
     }
     @SuppressWarnings("unchecked")
-    var cast = (T) lambdaEvaluationType;
+    var cast = (T) evaluationType;
     return cast;
   }
 
@@ -339,12 +323,6 @@ public class BExprDb {
     if (!memberEvaluationType.equals(expectedType)) {
       throw illegalEvaluationType(memberName, expectedType, memberEvaluationType);
     }
-  }
-
-  private static IllegalArgumentException illegalEvaluationType(
-      String name, Class<?> expected, BType actual) {
-    return illegalEvaluationType(
-        name, expected.getSimpleName(), actual.getClass().getSimpleName());
   }
 
   private static IllegalArgumentException illegalEvaluationType(
@@ -359,7 +337,10 @@ public class BExprDb {
   }
 
   private static void validateMemberType(String memberName, BValue member, BType expectedType) {
-    var memberType = member.type();
+    validateMemberType(memberName, member.type(), expectedType);
+  }
+
+  private static void validateMemberType(String memberName, BType memberType, BType expectedType) {
     if (!memberType.equals(expectedType)) {
       throw new IllegalArgumentException("`%s.type()` should be `%s` but is `%s`."
           .formatted(memberName, expectedType.name(), memberType.name()));

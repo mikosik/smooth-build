@@ -30,14 +30,14 @@ public class BMapTest extends VmTestContext {
   void creating_map_with_mapper_which_parameter_count_is_different_than_one_fails() {
     assertCall(() -> bMap(bArray(bInt()), bii2iLambda()))
         .throwsException(new IllegalArgumentException(
-            "`mapper.arguments.evaluationType()` should be `{Int}` but is `{Int,Int}`."));
+            "`mapper.parameters.type()` should be `{Int}` but is `{Int,Int}`."));
   }
 
   @Test
   void creating_map_with_mapper_that_has_different_type_than_array_element_type_fails() {
     assertCall(() -> bMap(bArray(bString()), bIntIdLambda()))
         .throwsException(new IllegalArgumentException(
-            "`mapper.arguments.evaluationType()` should be `{String}` but is `{Int}`."));
+            "`mapper.parameters.type()` should be `{String}` but is `{Int}`."));
   }
 
   @Nested
