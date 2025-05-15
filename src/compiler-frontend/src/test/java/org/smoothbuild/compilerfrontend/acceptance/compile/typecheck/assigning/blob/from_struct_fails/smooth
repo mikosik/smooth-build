@@ -1,0 +1,5 @@
+MyStruct {
+  String field
+}
+
+Blob blob = MyStruct("abc");

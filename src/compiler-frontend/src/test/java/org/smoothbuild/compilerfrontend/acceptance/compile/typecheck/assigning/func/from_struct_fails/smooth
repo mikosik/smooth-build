@@ -1,0 +1,5 @@
+MyStruct {
+  String field
+}
+
+()->Int func = MyStruct("abc");

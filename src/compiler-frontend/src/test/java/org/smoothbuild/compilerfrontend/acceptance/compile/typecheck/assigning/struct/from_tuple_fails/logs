@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:5: `struct` body type `{Int,String}` is not assignable to declared type `MyStruct`.'}

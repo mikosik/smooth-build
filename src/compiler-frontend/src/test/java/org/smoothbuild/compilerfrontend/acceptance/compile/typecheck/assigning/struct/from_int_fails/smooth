@@ -1,0 +1,5 @@
+MyStruct {
+  String field
+}
+
+MyStruct struct = 123;

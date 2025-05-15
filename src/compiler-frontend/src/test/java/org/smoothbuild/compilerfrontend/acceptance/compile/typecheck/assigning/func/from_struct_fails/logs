@@ -1,0 +1,1 @@
+Log{ERROR, '{t-project}/module.smooth:5: `func` body type `MyStruct` is not assignable to declared type `()->Int`.'}

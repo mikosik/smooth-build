@@ -1,0 +1,5 @@
+MyStruct {
+  String field
+}
+
+[Int] array = MyStruct("abc");

@@ -1,0 +1,6 @@
+MyStruct {
+  String field
+}
+
+String myFunc() = "abc";
+MyStruct struct = myFunc;
