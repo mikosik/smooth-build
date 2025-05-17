@@ -22,6 +22,7 @@
 | [javac](api/javac.md)                 | Compiles java files.                                                |
 | [junit](api/junit.md)                 | Runs junit tests.                                                   |
 | [map](api/map.md)                     | Applies given function to each element of an array.                 |
+| [mavenArtifact](api/mavenArtifact.md) | Downloads a Java library from Maven Central repository.             |
 | [not](api/not.md)                     | Returns negation of its argument.                                   |
 | [or](api/or.md)                       | Returns `true` if any argument is `true`.                           |
 | [size](api/size.md)                   | Returns size of an array.                                           |

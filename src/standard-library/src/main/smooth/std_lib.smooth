@@ -82,6 +82,9 @@ String toString(Blob blob);
 @Native("org.smoothbuild.stdlib.compress.ZipFunc")
 Blob compressZip([File] files);
 
+@Native("org.smoothbuild.stdlib.java.MavenArtifactFunc")
+File mavenArtifact(String groupId, String artifactId, String version);
+
 A id<A>(A a) = a;
 
 @Native("org.smoothbuild.stdlib.core.ErrorFunc")

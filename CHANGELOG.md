@@ -5,6 +5,7 @@ Change Log
 Version ?????? (??????????)
 ---------------------------
 
+ * added standard library function `mavenArtifact`
  * added tuple to smooth language
  * extended smooth syntax: Allow omitting parentheses in function type when it has one parameter
  * added standard library function `fold`
