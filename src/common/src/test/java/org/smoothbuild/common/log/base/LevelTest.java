@@ -10,25 +10,25 @@ import org.junit.jupiter.api.Test;
 
 public class LevelTest {
   @Test
-  void hasPriorityAtLeast() {
-    assertThat(FATAL.hasPriorityAtLeast(FATAL)).isTrue();
-    assertThat(FATAL.hasPriorityAtLeast(ERROR)).isTrue();
-    assertThat(FATAL.hasPriorityAtLeast(WARNING)).isTrue();
-    assertThat(FATAL.hasPriorityAtLeast(INFO)).isTrue();
+  void hasSeverityAtLeast() {
+    assertThat(FATAL.hasSeverityAtLeast(FATAL)).isTrue();
+    assertThat(FATAL.hasSeverityAtLeast(ERROR)).isTrue();
+    assertThat(FATAL.hasSeverityAtLeast(WARNING)).isTrue();
+    assertThat(FATAL.hasSeverityAtLeast(INFO)).isTrue();
 
-    assertThat(ERROR.hasPriorityAtLeast(FATAL)).isFalse();
-    assertThat(ERROR.hasPriorityAtLeast(ERROR)).isTrue();
-    assertThat(ERROR.hasPriorityAtLeast(WARNING)).isTrue();
-    assertThat(ERROR.hasPriorityAtLeast(INFO)).isTrue();
+    assertThat(ERROR.hasSeverityAtLeast(FATAL)).isFalse();
+    assertThat(ERROR.hasSeverityAtLeast(ERROR)).isTrue();
+    assertThat(ERROR.hasSeverityAtLeast(WARNING)).isTrue();
+    assertThat(ERROR.hasSeverityAtLeast(INFO)).isTrue();
 
-    assertThat(WARNING.hasPriorityAtLeast(FATAL)).isFalse();
-    assertThat(WARNING.hasPriorityAtLeast(ERROR)).isFalse();
-    assertThat(WARNING.hasPriorityAtLeast(WARNING)).isTrue();
-    assertThat(WARNING.hasPriorityAtLeast(INFO)).isTrue();
+    assertThat(WARNING.hasSeverityAtLeast(FATAL)).isFalse();
+    assertThat(WARNING.hasSeverityAtLeast(ERROR)).isFalse();
+    assertThat(WARNING.hasSeverityAtLeast(WARNING)).isTrue();
+    assertThat(WARNING.hasSeverityAtLeast(INFO)).isTrue();
 
-    assertThat(INFO.hasPriorityAtLeast(FATAL)).isFalse();
-    assertThat(INFO.hasPriorityAtLeast(ERROR)).isFalse();
-    assertThat(INFO.hasPriorityAtLeast(WARNING)).isFalse();
-    assertThat(INFO.hasPriorityAtLeast(INFO)).isTrue();
+    assertThat(INFO.hasSeverityAtLeast(FATAL)).isFalse();
+    assertThat(INFO.hasSeverityAtLeast(ERROR)).isFalse();
+    assertThat(INFO.hasSeverityAtLeast(WARNING)).isFalse();
+    assertThat(INFO.hasSeverityAtLeast(INFO)).isTrue();
   }
 }

@@ -35,7 +35,7 @@ public record Log(Level level, String message) {
   }
 
   public static boolean containsFailure(Iterable<? extends Log> iterable) {
-    return stream(iterable).anyMatch(l -> l.level().hasPriorityAtLeast(ERROR));
+    return stream(iterable).anyMatch(l -> l.level().hasSeverityAtLeast(ERROR));
   }
 
   public String toPrettyString() {

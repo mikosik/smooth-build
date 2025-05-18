@@ -25,7 +25,7 @@ public class FilteringReporter implements Reporter {
   public void submit(Report report) {
     if (taskFilter.test(report)) {
       var trace = traceFilter.test(report) ? report.trace() : Maybe.<Trace>none();
-      var logs = report.logs().filter(l -> l.level().hasPriorityAtLeast(logLevel));
+      var logs = report.logs().filter(l -> l.level().hasSeverityAtLeast(logLevel));
       reporter.print(report.label(), trace, report.origin(), logs);
     }
   }
