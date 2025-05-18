@@ -105,7 +105,7 @@ public class JavacFunc {
         nativeApi.log().error(message);
         return null;
       } catch (IOException e) {
-        nativeApi.log().error("IOException: " + e.getMessage());
+        nativeApi.log().fatal("IOException: " + e.getMessage());
         return null;
       }
     }
