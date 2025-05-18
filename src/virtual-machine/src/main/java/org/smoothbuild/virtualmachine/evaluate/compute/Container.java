@@ -11,6 +11,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
+import org.smoothbuild.virtualmachine.evaluate.plugin.MessageLogger;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.wire.Project;
 
@@ -22,7 +23,7 @@ public class Container implements NativeApi {
   private final FullPath projectPath;
   private final FileContentReader fileContentReader;
   private final BytecodeFactory bytecodeFactory;
-  private final ContainerMessageLoggerImpl messageLogger;
+  private final MessageLoggerImpl messageLogger;
   private final NativeMethodLoader nativeMethodLoader;
 
   @Inject
@@ -36,7 +37,7 @@ public class Container implements NativeApi {
     this.projectPath = projectPath;
     this.fileContentReader = fileContentReader;
     this.bytecodeFactory = bytecodeFactory;
-    this.messageLogger = new ContainerMessageLoggerImpl(bytecodeFactory);
+    this.messageLogger = new MessageLoggerImpl(bytecodeFactory);
     this.nativeMethodLoader = nativeMethodLoader;
   }
 
@@ -54,7 +55,7 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public ContainerMessageLogger log() {
+  public MessageLogger log() {
     return messageLogger;
   }
 
@@ -70,12 +71,12 @@ public class Container implements NativeApi {
     return messageLogger.containsErrorOrAbove;
   }
 
-  private static class ContainerMessageLoggerImpl implements ContainerMessageLogger {
+  private static class MessageLoggerImpl implements MessageLogger {
     private final List<BValue> messages = new ArrayList<>();
     private final BytecodeFactory bytecodeFactory;
     private boolean containsErrorOrAbove = false;
 
-    public ContainerMessageLoggerImpl(BytecodeFactory bytecodeFactory) {
+    public MessageLoggerImpl(BytecodeFactory bytecodeFactory) {
       this.bytecodeFactory = bytecodeFactory;
     }
 
