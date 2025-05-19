@@ -112,7 +112,7 @@ Value of each type can be defined inline using its literal.
  - `Bool` - use one of predefined values - `true` or `false`
 
 Apart from base types, smooth contains also composite types -
-arrays, structures and functions.
+arrays, tuples, structures and functions.
 They work the same way as in other languages.
 Let's explore each one in more detail.
 
@@ -140,15 +140,15 @@ Tuple literal is declared by enclosing comma separated expressions inside curly 
 Here's an example of a tuple with three elements of different types:
 
 ```
-{String, Int, Bool} personData = {"John", 25, true};
+{String, Int, Bool} person = {"John", 25, true};
 ```
 
 Elements of a tuple can be accessed using dot notation followed by the one-based index of the element:
 
 ```
-String name = personData.1;    // "John"
-Int age = personData.2;        // 25
-Bool isActive = personData.3;  // true
+String name = person.1;    // "John"
+Int age = person.2;        // 25
+Bool isActive = person.3;  // true
 ```
 
 Tuples are useful when you need to group multiple values together without creating
