@@ -19,23 +19,37 @@ import org.smoothbuild.evaluator.ScheduleEvaluate;
 public class ScheduleBuild implements Task0<Tuple0> {
   private final Scheduler scheduler;
   private final List<String> values;
+  private final Initializer initializer;
+  private final DeleteArtifacts deleteArtifacts;
+  private final ScheduleEvaluate scheduleEvaluate;
+  private final SaveArtifacts saveArtifacts;
 
   @Inject
-  public ScheduleBuild(Scheduler scheduler, List<String> values) {
+  public ScheduleBuild(
+      Scheduler scheduler,
+      List<String> values,
+      Initializer initializer,
+      DeleteArtifacts deleteArtifacts,
+      ScheduleEvaluate scheduleEvaluate,
+      SaveArtifacts saveArtifacts) {
     this.scheduler = scheduler;
     this.values = values;
+    this.initializer = initializer;
+    this.deleteArtifacts = deleteArtifacts;
+    this.scheduleEvaluate = scheduleEvaluate;
+    this.saveArtifacts = saveArtifacts;
   }
 
   @Override
   public Output<Tuple0> execute() {
-    var initialize = scheduler.submit(Initializer.class);
-    var removeArtifacts = scheduler.submit(list(initialize), DeleteArtifacts.class);
+    var initialize = scheduler.submit(initializer);
+    var removeArtifacts = scheduler.submit(list(initialize), deleteArtifacts);
     var evaluatedExprs = scheduler.submit(
         list(removeArtifacts),
-        ScheduleEvaluate.class,
+        scheduleEvaluate,
         argument(Layout.MODULES),
         argument(listOfAll(values)));
-    var result = scheduler.submit(SaveArtifacts.class, evaluatedExprs);
+    var result = scheduler.submit(saveArtifacts, evaluatedExprs);
     var buildLabel = BuildCommand.LABEL.append(":schedule");
     return schedulingOutput(result, report(buildLabel, list()));
   }

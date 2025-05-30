@@ -131,7 +131,8 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
       });
       var scheduler = injector.getInstance(Scheduler.class);
       var paths = list(standardLibraryModulePath(), moduleFullPath());
-      var module = scheduler.submit(FrontendCompile.class, argument(paths));
+      var task = injector.getInstance(FrontendCompile.class);
+      var module = scheduler.submit(task, argument(paths));
       await().until(() -> module.toMaybe().isSome());
       sModule = Try.of(module.get().getOr(null), testReporter.logs());
       return sModule;

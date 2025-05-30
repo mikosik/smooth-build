@@ -16,32 +16,34 @@ import org.smoothbuild.compilerfrontend.lang.define.SModule;
 
 public class CompileModule implements Task2<SModule, FullPath, SModule> {
   private final Scheduler scheduler;
+  private final ReadFileContent readFileContent;
 
   @Inject
-  public CompileModule(Scheduler scheduler) {
+  public CompileModule(Scheduler scheduler, ReadFileContent readFileContent) {
     this.scheduler = scheduler;
+    this.readFileContent = readFileContent;
   }
 
   @Override
   public Output<SModule> execute(SModule importedModule, FullPath fullPath) {
     var importedScope = argument(importedModule.scope());
     var path = argument(fullPath);
-    var fileContent = scheduler.submit(ReadFileContent.class, path);
-    var moduleContext = scheduler.submit(Parse.class, fileContent, path);
-    var pModule = scheduler.submit(TranslateAp.class, moduleContext, path);
-    var withVerifiedIds = scheduler.submit(GenerateFqns.class, pModule);
-    var withGeneratedDefaults = scheduler.submit(GenerateDefaultValues.class, withVerifiedIds);
-    var withSyntaxCheck = scheduler.submit(FindSyntaxErrors.class, withGeneratedDefaults);
-    var withDecodedLiterals = scheduler.submit(DecodeLiterals.class, withSyntaxCheck);
+    var fileContent = scheduler.submit(readFileContent, path);
+    var moduleContext = scheduler.submit(new Parse(), fileContent, path);
+    var pModule = scheduler.submit(new TranslateAp(), moduleContext, path);
+    var withVerifiedIds = scheduler.submit(new GenerateFqns(), pModule);
+    var withGeneratedDefaults = scheduler.submit(new GenerateDefaultValues(), withVerifiedIds);
+    var withSyntaxCheck = scheduler.submit(new FindSyntaxErrors(), withGeneratedDefaults);
+    var withDecodedLiterals = scheduler.submit(new DecodeLiterals(), withSyntaxCheck);
     var withGeneratedConstructors =
-        scheduler.submit(GenerateConstructors.class, withDecodedLiterals);
+        scheduler.submit(new GenerateConstructors(), withDecodedLiterals);
     var withInitializedScopes =
-        scheduler.submit(GenerateScopes.class, importedScope, withGeneratedConstructors);
-    var withResolvedReferences = scheduler.submit(ResolveReferences.class, withInitializedScopes);
-    var withInjected = scheduler.submit(InjectDefaultArguments.class, withResolvedReferences);
-    var sorted = scheduler.submit(SortModuleMembersByDependency.class, withInjected);
-    var typesInferred = scheduler.submit(InferTypes.class, sorted);
-    var sModule = scheduler.submit(TranslatePs.class, typesInferred, importedScope);
+        scheduler.submit(new GenerateScopes(), importedScope, withGeneratedConstructors);
+    var withResolvedReferences = scheduler.submit(new ResolveReferences(), withInitializedScopes);
+    var withInjected = scheduler.submit(new InjectDefaultArguments(), withResolvedReferences);
+    var sorted = scheduler.submit(new SortModuleMembersByDependency(), withInjected);
+    var typesInferred = scheduler.submit(new InferTypes(), sorted);
+    var sModule = scheduler.submit(new TranslatePs(), typesInferred, importedScope);
     var report = report(COMPILER_FRONT_LABEL.append(":schedule:module"), list());
     return schedulingOutput(sModule, report);
   }

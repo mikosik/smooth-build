@@ -30,22 +30,25 @@ import org.smoothbuild.virtualmachine.evaluate.execute.BExprAttributes;
 
 public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, EvaluatedExprs> {
   private final Scheduler scheduler;
+  private final FrontendCompile frontendCompile;
+  private final EvaluateCore evaluateCore;
 
   @Inject
-  public ScheduleEvaluate(Scheduler scheduler) {
+  public ScheduleEvaluate(
+      Scheduler scheduler, FrontendCompile frontendCompile, EvaluateCore evaluateCore) {
     this.scheduler = scheduler;
+    this.frontendCompile = frontendCompile;
+    this.evaluateCore = evaluateCore;
   }
 
   @Override
   public Output<EvaluatedExprs> execute(List<FullPath> modules, List<String> names) {
-    var sModule = scheduler.submit(FrontendCompile.class, argument(modules));
+    var sModule = scheduler.submit(frontendCompile, argument(modules));
     var mapLabel = EVALUATOR_LABEL.append(":getMembersAndImported");
     var sScope = scheduler.submit(task1(mapLabel, SModule::scope), sModule);
-    var sExprs = scheduler.submit(FindValues.class, sScope, argument(names));
+    var sExprs = scheduler.submit(new FindValues(), sScope, argument(names));
     var evaluables = scheduler.submit(task1(mapLabel, SScope::evaluables), sScope);
-
-    var evaluatedExprs = scheduler.submit(EvaluateCore.class, sExprs, evaluables);
-
+    var evaluatedExprs = scheduler.submit(evaluateCore, sExprs, evaluables);
     var scheduleLabel = EVALUATOR_LABEL.append(":schedule");
     return schedulingOutput(evaluatedExprs, report(scheduleLabel, list()));
   }
@@ -53,19 +56,22 @@ public class ScheduleEvaluate implements Task2<List<FullPath>, List<String>, Eva
   public static class EvaluateCore
       implements Task2<List<SExpr>, Bindings<SPolyEvaluable>, EvaluatedExprs> {
     private final Scheduler scheduler;
+    private final BackendCompile backendCompile;
+    private final BEvaluate bEvaluate;
 
     @Inject
-    public EvaluateCore(Scheduler scheduler) {
+    public EvaluateCore(Scheduler scheduler, BackendCompile backendCompile, BEvaluate bEvaluate) {
       this.scheduler = scheduler;
+      this.backendCompile = backendCompile;
+      this.bEvaluate = bEvaluate;
     }
 
     @Override
     public Output<EvaluatedExprs> execute(List<SExpr> sExprs, Bindings<SPolyEvaluable> evaluables) {
-      var compiledExprs =
-          scheduler.submit(BackendCompile.class, argument(sExprs), argument(evaluables));
+      var compiledExprs = scheduler.submit(backendCompile, argument(sExprs), argument(evaluables));
       var getLabel = EVALUATOR_LABEL.append(":getCompiledExprs");
       var bExprs = scheduler.submit(task1(getLabel, this::toTuples), compiledExprs);
-      var evaluated = scheduler.submit(scheduler.newParallelTask(BEvaluate.class), bExprs);
+      var evaluated = scheduler.submit(scheduler.newParallelTask(bEvaluate), bExprs);
       var mergeLabel = EVALUATOR_LABEL.append(":merge");
       var evaluate =
           scheduler.submit(task2(mergeLabel, EvaluatedExprs::new), argument(sExprs), evaluated);

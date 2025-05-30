@@ -27,16 +27,18 @@ import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 
 public class ScheduleList implements Task0<Tuple0> {
   private final Scheduler scheduler;
+  private final FrontendCompile frontendCompile;
 
   @Inject
-  public ScheduleList(Scheduler scheduler) {
+  public ScheduleList(Scheduler scheduler, FrontendCompile frontendCompile) {
     this.scheduler = scheduler;
+    this.frontendCompile = frontendCompile;
   }
 
   @Override
   public Output<Tuple0> execute() {
-    var sScope = scheduler.submit(FrontendCompile.class, argument(Layout.MODULES));
-    var result = scheduler.submit(PrintEvaluables.class, sScope);
+    var sScope = scheduler.submit(frontendCompile, argument(Layout.MODULES));
+    var result = scheduler.submit(new PrintEvaluables(), sScope);
     var label = ListCommand.LABEL.append(":schedule");
     return schedulingOutput(result, report(label, list()));
   }

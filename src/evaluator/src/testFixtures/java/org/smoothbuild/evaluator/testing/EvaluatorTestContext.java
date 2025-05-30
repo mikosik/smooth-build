@@ -108,11 +108,9 @@ public class EvaluatorTestContext implements FrontendCompilerTestApi {
   protected void evaluate(String... names) {
     var scheduler = injector.getInstance(Scheduler.class);
     var initialize = scheduler.submit(injector.getInstance(Initializer.class));
+    var scheduleEvaluate = injector.getInstance(ScheduleEvaluate.class);
     var evaluated = scheduler.submit(
-        list(initialize),
-        ScheduleEvaluate.class,
-        argument(modules),
-        argument(listOfAll(asList(names))));
+        list(initialize), scheduleEvaluate, argument(modules), argument(listOfAll(asList(names))));
     await().until(() -> evaluated.toMaybe().isSome());
     this.evaluatedExprs = evaluated.get();
   }

@@ -21,10 +21,6 @@ import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.schedule.Tasks.task1;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
 import jakarta.inject.Inject;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,7 +39,6 @@ import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
 import org.smoothbuild.common.log.report.SystemOutReporter;
-import org.smoothbuild.common.testing.ReportTestWiring;
 
 public class SchedulerTest {
   @Nested
@@ -93,85 +88,6 @@ public class SchedulerTest {
 
         var report = reportAboutExceptionThrownByTask(exception);
         assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), report);
-      }
-    }
-
-    @Nested
-    class _injected_task {
-      @Test
-      void successful_task_execution_sets_result_in_promise() {
-        var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), "abc");
-      }
-
-      @Test
-      void successful_task_execution_submits_report() {
-        var task = Key.get(ReturnAbc.class);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task), newReport());
-      }
-
-      private static class ReturnAbc implements Task0<String> {
-        @Override
-        public Output<String> execute() {
-          return output("abc", newReport());
-        }
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task), null);
-      }
-
-      private static class ReturnNull implements Task0<String> {
-        @Override
-        public Output<String> execute() {
-          return output(null, newReport());
-        }
-      }
-
-      @Test
-      void task_is_executed_after_its_predecessors() throws Exception {
-        var atomicInteger = new AtomicInteger(0);
-        MutablePromise<Maybe<String>> predecessor = promise();
-
-        var scheduler = newScheduler(atomicInteger);
-        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class);
-        Thread.sleep(1000);
-        atomicInteger.set(1);
-        predecessor.accept(some(""));
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void execution_of_task_that_thrown_exception_submits_fatal_report() {
-        var exception = new RuntimeException();
-        var injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure() {
-            bind(RuntimeException.class).toInstance(exception);
-          }
-        });
-
-        var task = Key.get(ThrowException.class);
-        var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task), report);
-      }
-
-      private static class ThrowException implements Task0<String> {
-        private final RuntimeException exception;
-
-        @Inject
-        private ThrowException(RuntimeException exception) {
-          this.exception = exception;
-        }
-
-        @Override
-        public Output<String> execute() {
-          throw exception;
-        }
       }
     }
 
@@ -237,7 +153,7 @@ public class SchedulerTest {
         MutablePromise<Maybe<String>> predecessor = promise();
         var arg1 = argument(7);
 
-        var scheduler = newScheduler(atomicInteger);
+        var scheduler = newScheduler();
         var task = new GetAtomicInteger(atomicInteger);
         var result = scheduler.submit(list(predecessor), task, arg1);
         Thread.sleep(1000);
@@ -271,105 +187,6 @@ public class SchedulerTest {
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
-      }
-    }
-
-    @Nested
-    class _injected_task {
-      @Test
-      void successful_task_execution_sets_result_in_promise() {
-        var arg1 = argument("");
-        var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), "abc");
-      }
-
-      @Test
-      void successful_task_execution_submits_report() {
-        var arg1 = argument("");
-        var task = Key.get(ReturnAbc.class);
-        var report = newReport();
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1), report);
-      }
-
-      private static class ReturnAbc implements Task1<String, String> {
-        @Override
-        public Output<String> execute(String arg1) {
-          return output("abc", newReport());
-        }
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        var arg1 = argument("");
-        var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1), null);
-      }
-
-      private static class ReturnNull implements Task1<String, String> {
-        @Override
-        public Output<String> execute(String arg1) {
-          return output(null, newReport());
-        }
-      }
-
-      @Test
-      void task_is_executed_after_its_predecessors() throws Exception {
-        var atomicInteger = new AtomicInteger(0);
-        MutablePromise<Maybe<String>> predecessor = promise();
-        var arg1 = argument(7);
-
-        var scheduler = newScheduler(atomicInteger);
-        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class, arg1);
-        Thread.sleep(1000);
-        atomicInteger.set(1);
-        predecessor.accept(some(""));
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void execution_of_task_that_thrown_exception_submits_fatal_report() {
-        var arg1 = argument("");
-        var exception = new RuntimeException();
-        var injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure() {
-            bind(RuntimeException.class).toInstance(exception);
-          }
-        });
-
-        var task = Key.get(ThrowException.class);
-        var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task, arg1), report);
-      }
-
-      private static class ThrowException implements Task1<String, String> {
-        private final RuntimeException exception;
-
-        @Inject
-        private ThrowException(RuntimeException exception) {
-          this.exception = exception;
-        }
-
-        @Override
-        public Output<String> execute(String arg1) {
-          throw exception;
-        }
-      }
-
-      @Test
-      void task_is_not_executed_when_argument_task_failed_with_error() {
-        var atomicBoolean = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> arg1 = promise(none());
-        var predecessor = argument(7);
-
-        var scheduler = newScheduler(atomicBoolean);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(atomicBoolean.get()).isFalse();
         assertThat(result.get()).isEqualTo(none());
       }
     }
@@ -442,7 +259,7 @@ public class SchedulerTest {
         var arg1 = argument(7);
         var arg2 = argument(8);
 
-        var scheduler = newScheduler(atomicInteger);
+        var scheduler = newScheduler();
         var task = new GetAtomicInteger(atomicInteger);
         var result = scheduler.submit(list(predecessor), task, arg1, arg2);
         Thread.sleep(1000);
@@ -479,111 +296,6 @@ public class SchedulerTest {
         ConditionFactory result1;
         result1 = await();
         result1.until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
-      }
-    }
-
-    @Nested
-    class _injected_task {
-      @Test
-      void successful_task_execution_sets_result_in_promise() {
-        var arg1 = argument("");
-        var arg2 = argument("");
-        var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(
-            scheduler -> scheduler.submit(task, arg1, arg2), "abc");
-      }
-
-      @Test
-      void successful_task_execution_submits_report() {
-        var arg1 = argument("");
-        var arg2 = argument("");
-        var task = Key.get(ReturnAbc.class);
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, arg1, arg2), newReport());
-      }
-
-      private static class ReturnAbc implements Task2<String, String, String> {
-        @Override
-        public Output<String> execute(String arg1, String arg2) {
-          return output("abc", newReport());
-        }
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        var arg1 = argument("");
-        var arg2 = argument("");
-        var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, arg1, arg2), null);
-      }
-
-      private static class ReturnNull implements Task2<String, String, String> {
-        @Override
-        public Output<String> execute(String arg1, String arg2) {
-          return output(null, newReport());
-        }
-      }
-
-      @Test
-      void task_is_executed_after_its_predecessors() throws Exception {
-        var atomicInteger = new AtomicInteger(0);
-        MutablePromise<Maybe<String>> predecessor = promise();
-        var arg1 = argument(7);
-        var arg2 = argument(8);
-
-        var scheduler = newScheduler(atomicInteger);
-        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class, arg1, arg2);
-        Thread.sleep(1000);
-        atomicInteger.set(1);
-        predecessor.accept(some(""));
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void execution_of_task_that_thrown_exception_submits_fatal_report() {
-        var arg1 = argument("");
-        var arg2 = argument("");
-        var exception = new RuntimeException();
-        var injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure() {
-            bind(RuntimeException.class).toInstance(exception);
-          }
-        });
-
-        var task = Key.get(ThrowException.class);
-        var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, s -> s.submit(task, arg1, arg2), report);
-      }
-
-      private static class ThrowException implements Task2<String, String, String> {
-        private final RuntimeException exception;
-
-        @Inject
-        private ThrowException(RuntimeException exception) {
-          this.exception = exception;
-        }
-
-        @Override
-        public Output<String> execute(String arg1, String arg2) {
-          throw exception;
-        }
-      }
-
-      @Test
-      void task_is_not_executed_when_argument_task_failed_with_error() {
-        var executed = new AtomicBoolean(false);
-        var predecessor = argument(7);
-        Promise<Maybe<Integer>> arg1 = promise(none());
-        var arg2 = argument(8);
-
-        var scheduler = newScheduler(executed);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, arg1, arg2);
-        await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
         assertThat(result.get()).isEqualTo(none());
@@ -683,105 +395,6 @@ public class SchedulerTest {
 
         var scheduler = newScheduler();
         var result = scheduler.submit(list(predecessor), new SetAtomicBoolean(executed), args);
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(executed.get()).isFalse();
-        assertThat(result.get()).isEqualTo(none());
-      }
-    }
-
-    @Nested
-    class _injected_task {
-      @Test
-      void successful_task_execution_sets_result_in_promise() {
-        var list = list(argument(""));
-        var task = Key.get(ReturnAbc.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, list), "abc");
-      }
-
-      @Test
-      void successful_task_execution_submits_report() {
-        var args = list(argument(""));
-        var task = Key.get(ReturnAbc.class);
-        var report = newReport();
-        assertExecutionSubmitsReport(scheduler -> scheduler.submit(task, args), report);
-      }
-
-      private static class ReturnAbc implements TaskX<String, String> {
-        @Override
-        public Output<String> execute(List<String> args) {
-          return output("abc", newReport());
-        }
-      }
-
-      @Test
-      void successful_task_execution_can_return_null() {
-        var args = list(argument(""));
-        var task = Key.get(ReturnNull.class);
-        assertExecutionStoresResultInPromise(scheduler -> scheduler.submit(task, args), null);
-      }
-
-      private static class ReturnNull implements TaskX<String, String> {
-        @Override
-        public Output<String> execute(List<String> args) {
-          return output(null, newReport());
-        }
-      }
-
-      @Test
-      void task_is_executed_after_its_predecessors() throws Exception {
-        var atomicInteger = new AtomicInteger(0);
-        MutablePromise<Maybe<String>> predecessor = promise();
-        var args = list(argument(7));
-
-        var scheduler = newScheduler(atomicInteger);
-        var result = scheduler.submit(list(predecessor), GetAtomicInteger.class, args);
-        Thread.sleep(1000);
-        atomicInteger.set(1);
-        predecessor.accept(some(""));
-        await().until(() -> result.toMaybe().isSome());
-
-        assertThat(result.get()).isEqualTo(some(1));
-      }
-
-      @Test
-      void execution_of_task_that_thrown_exception_submits_fatal_report() {
-        var args = list(argument(""));
-        var exception = new RuntimeException();
-        var injector = Guice.createInjector(new AbstractModule() {
-          @Override
-          protected void configure() {
-            bind(RuntimeException.class).toInstance(exception);
-          }
-        });
-
-        var task = Key.get(ThrowException.class);
-        var report = reportAboutExceptionThrownByTask(exception);
-        assertExecutionSubmitsReport(injector, scheduler -> scheduler.submit(task, args), report);
-      }
-
-      private static class ThrowException implements TaskX<String, String> {
-        private final RuntimeException exception;
-
-        @Inject
-        private ThrowException(RuntimeException exception) {
-          this.exception = exception;
-        }
-
-        @Override
-        public Output<String> execute(List<String> args) {
-          throw exception;
-        }
-      }
-
-      @Test
-      void task_is_not_executed_when_argument_task_failed_with_error() {
-        var executed = new AtomicBoolean(false);
-        Promise<Maybe<Integer>> predecessor = argument(6);
-        List<Promise<? extends Maybe<Integer>>> args = list(argument(7), promise(none()));
-
-        var scheduler = newScheduler(executed);
-        var result = scheduler.submit(list(predecessor), SetAtomicBoolean.class, args);
         await().until(() -> result.toMaybe().isSome());
 
         assertThat(executed.get()).isFalse();
@@ -947,13 +560,8 @@ public class SchedulerTest {
 
   private static <R> void assertExecutionSubmitsReport(
       Function<Scheduler, Promise<R>> scheduleFunction, Report report) {
-    assertExecutionSubmitsReport(Guice.createInjector(), scheduleFunction, report);
-  }
-
-  private static <R> void assertExecutionSubmitsReport(
-      Injector injector, Function<Scheduler, Promise<R>> scheduleFunction, Report report) {
     var reporter = mock(Reporter.class);
-    var scheduler = new Scheduler(injector, reporter);
+    var scheduler = new Scheduler(reporter);
 
     var result = scheduleFunction.apply(scheduler);
     await().until(() -> result.toMaybe().isSome());
@@ -962,27 +570,7 @@ public class SchedulerTest {
   }
 
   private static Scheduler newScheduler() {
-    return new Scheduler(Guice.createInjector(new ReportTestWiring()), new SystemOutReporter());
-  }
-
-  private static Scheduler newScheduler(AtomicInteger atomicInteger) {
-    var injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(AtomicInteger.class).toInstance(atomicInteger);
-      }
-    });
-    return new Scheduler(injector, new SystemOutReporter());
-  }
-
-  private static Scheduler newScheduler(AtomicBoolean atomicBoolean) {
-    var injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(AtomicBoolean.class).toInstance(atomicBoolean);
-      }
-    });
-    return new Scheduler(injector, new SystemOutReporter());
+    return new Scheduler(new SystemOutReporter());
   }
 
   public static List<Arguments> executionReports() {

@@ -9,8 +9,6 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Tasks.taskX;
 
-import com.google.inject.Injector;
-import com.google.inject.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.smoothbuild.common.collect.List;
@@ -35,40 +33,20 @@ public class Scheduler {
    * scheduled task to Scheduler.
    */
   public static final Label LABEL = label(":scheduler");
-  private final Injector injector;
   private final Reporter reporter;
   private final RunnableScheduler runnableScheduler;
 
-  public Scheduler(Injector injector, Reporter reporter) {
-    this(injector, reporter, new VirtualThreadRunnableScheduler());
+  public Scheduler(Reporter reporter) {
+    this(reporter, new VirtualThreadRunnableScheduler());
   }
 
   @Inject
-  public Scheduler(Injector injector, Reporter reporter, RunnableScheduler runnableScheduler) {
-    this.injector = injector;
+  public Scheduler(Reporter reporter, RunnableScheduler runnableScheduler) {
     this.reporter = reporter;
     this.runnableScheduler = runnableScheduler;
   }
 
   // Task0
-
-  public <R> Promise<Maybe<R>> submit(Class<? extends Task0<R>> task) {
-    return submit(Key.get(task));
-  }
-
-  public <R> Promise<Maybe<R>> submit(Key<? extends Task0<R>> task) {
-    return submit(list(), task);
-  }
-
-  public <R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors, Class<? extends Task0<R>> task) {
-    return submit(predecessors, Key.get(task));
-  }
-
-  public <R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors, Key<? extends Task0<R>> task) {
-    return submit(predecessors, injector.getInstance(task));
-  }
 
   public <R> Promise<Maybe<R>> submit(Task0<R> task) {
     return submit(list(), task);
@@ -76,35 +54,11 @@ public class Scheduler {
 
   public <R> Promise<Maybe<R>> submit(
       List<? extends Promise<? extends Maybe<?>>> predecessors, Task0<R> task) {
-    var execution = new Execution<>(task::execute);
+    var execution = new Execution<>(task);
     return submit(predecessors, execution);
   }
 
   // Task1
-
-  public <A1, R> Promise<Maybe<R>> submit(
-      Class<? extends Task1<A1, R>> task, Promise<? extends Maybe<? extends A1>> arg1) {
-    return submit(Key.get(task), arg1);
-  }
-
-  public <A1, R> Promise<Maybe<R>> submit(
-      Key<? extends Task1<A1, R>> task, Promise<? extends Maybe<? extends A1>> arg1) {
-    return submit(list(), task, arg1);
-  }
-
-  public <A1, R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Class<? extends Task1<A1, R>> task,
-      Promise<? extends Maybe<? extends A1>> arg1) {
-    return submit(predecessors, Key.get(task), arg1);
-  }
-
-  public <A1, R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Key<? extends Task1<A1, R>> task,
-      Promise<? extends Maybe<? extends A1>> arg1) {
-    return submit(predecessors, injector.getInstance(task), arg1);
-  }
 
   public <A1, R> Promise<Maybe<R>> submit(
       Task1<A1, R> task, Promise<? extends Maybe<? extends A1>> arg1) {
@@ -120,36 +74,6 @@ public class Scheduler {
   }
 
   // Task2
-
-  public <A1, A2, R> Promise<Maybe<R>> submit(
-      Class<? extends Task2<A1, A2, R>> task,
-      Promise<? extends Maybe<? extends A1>> arg1,
-      Promise<? extends Maybe<? extends A2>> arg2) {
-    return submit(Key.get(task), arg1, arg2);
-  }
-
-  public <A1, A2, R> Promise<Maybe<R>> submit(
-      Key<? extends Task2<A1, A2, R>> task,
-      Promise<? extends Maybe<? extends A1>> arg1,
-      Promise<? extends Maybe<? extends A2>> arg2) {
-    return submit(list(), task, arg1, arg2);
-  }
-
-  public <A1, A2, R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Class<? extends Task2<A1, A2, R>> task,
-      Promise<? extends Maybe<? extends A1>> arg1,
-      Promise<? extends Maybe<? extends A2>> arg2) {
-    return submit(predecessors, Key.get(task), arg1, arg2);
-  }
-
-  public <A1, A2, R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Key<? extends Task2<A1, A2, R>> task,
-      Promise<? extends Maybe<? extends A1>> arg1,
-      Promise<? extends Maybe<? extends A2>> arg2) {
-    return submit(predecessors, injector.getInstance(task), arg1, arg2);
-  }
 
   public <A1, A2, R> Promise<Maybe<R>> submit(
       Task2<A1, A2, R> task,
@@ -171,31 +95,6 @@ public class Scheduler {
   // TaskX
 
   public <A, R> Promise<Maybe<R>> submit(
-      Class<? extends TaskX<A, R>> task,
-      List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    return submit(Key.get(task), args);
-  }
-
-  public <A, R> Promise<Maybe<R>> submit(
-      Key<? extends TaskX<A, R>> task, List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    return submit(list(), task, args);
-  }
-
-  public <A, R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Class<? extends TaskX<A, R>> task,
-      List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    return submit(predecessors, Key.get(task), args);
-  }
-
-  public <A, R> Promise<Maybe<R>> submit(
-      List<? extends Promise<? extends Maybe<?>>> predecessors,
-      Key<? extends TaskX<A, R>> task,
-      List<? extends Promise<? extends Maybe<? extends A>>> args) {
-    return submit(predecessors, injector.getInstance(task), args);
-  }
-
-  public <A, R> Promise<Maybe<R>> submit(
       TaskX<A, R> task, List<? extends Promise<? extends Maybe<? extends A>>> args) {
     return submit(list(), task, args);
   }
@@ -213,11 +112,6 @@ public class Scheduler {
   public <T> Promise<Maybe<List<T>>> join(
       List<? extends Promise<? extends Maybe<? extends T>>> list) {
     return submit(taskX(LABEL.append(":join"), l -> l), list);
-  }
-
-  public <A1, R> Task1<List<? extends A1>, List<R>> newParallelTask(
-      Class<? extends Task1<A1, R>> task) {
-    return newParallelTask(injector.getInstance(task));
   }
 
   public <A1, R> Task1<List<? extends A1>, List<R>> newParallelTask(Task1<A1, R> task) {
