@@ -17,9 +17,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.lang.name.NList;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class STypeTest extends FrontendCompilerTestContext {
   @Test

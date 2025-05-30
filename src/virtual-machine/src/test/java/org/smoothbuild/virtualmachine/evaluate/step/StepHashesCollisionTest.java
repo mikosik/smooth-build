@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class StepHashesCollisionTest extends VmTestContext {
   @Test

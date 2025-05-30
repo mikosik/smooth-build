@@ -51,10 +51,11 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
+import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 import org.smoothbuild.virtualmachine.evaluate.compute.StepEvaluator;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ConcatStrings;
 
 public class BEvaluateTest extends VmTestContext {
@@ -388,7 +389,7 @@ public class BEvaluateTest extends VmTestContext {
         var array = bArray(bString("a"), bString("b"), bString("c"));
         var initial = bString("0");
 
-        var fold = bytecodeF().fold(array, initial, folder);
+        var fold = bFold(array, initial, folder);
         assertThat(evaluate(fold)).isEqualTo(bString("0abc"));
       }
 
@@ -401,7 +402,7 @@ public class BEvaluateTest extends VmTestContext {
         var array = bArray(bStringType());
         var initial = bString("0");
 
-        var fold = bytecodeF().fold(array, initial, folder);
+        var fold = bFold(array, initial, folder);
         assertThat(evaluate(fold)).isEqualTo(bString("0"));
       }
 
@@ -423,9 +424,10 @@ public class BEvaluateTest extends VmTestContext {
         @Test
         void pick_with_index_outside_of_bounds() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(4));
-          evaluate(bEvaluate(), pick);
-          if (!reporter().reports().anyMatches(this::isResultWithIndexOutOfBoundsError)) {
-            fail("Expected report ERROR caused by index out of bounds but got:\n" + reporter());
+          evaluate(provide().bEvaluate(), pick);
+          if (!provide().reporter().reports().anyMatches(this::isResultWithIndexOutOfBoundsError)) {
+            fail("Expected report ERROR caused by index out of bounds but got:\n"
+                + provide().reporter());
           }
         }
 
@@ -436,10 +438,10 @@ public class BEvaluateTest extends VmTestContext {
         @Test
         void pick_with_index_negative() throws Exception {
           var pick = bPick(bArray(bInt(10), bInt(11), bInt(12), bInt(13)), bInt(-1));
-          evaluate(bEvaluate(), pick);
-          if (!reporter().reports().anyMatches(this::isResultWithNegativeIndexError)) {
-            fail("Expected report with ERROR caused by index out of bounds, but got:\n"
-                + reporter());
+          evaluate(provide().bEvaluate(), pick);
+          var reporter = provide().reporter();
+          if (!reporter.reports().anyMatches(this::isResultWithNegativeIndexError)) {
+            fail("Expected report with ERROR caused by index out of bounds, but got:\n" + reporter);
           }
         }
 
@@ -479,8 +481,8 @@ public class BEvaluateTest extends VmTestContext {
         void var_referencing_with_index_out_of_bounds_causes_fatal() throws Exception {
           var lambda = bLambda(list(bIntType()), bReference(bIntType(), 2));
           var call = bCall(lambda, bInt(7));
-          evaluate(bEvaluate(), call);
-          var reports = reporter().reports();
+          evaluate(provide().bEvaluate(), call);
+          var reports = provide().reporter().reports();
           assertReportsContains(
               reports,
               FATAL,
@@ -495,9 +497,9 @@ public class BEvaluateTest extends VmTestContext {
                 throws Exception {
           var lambda = bLambda(list(bBlobType()), bReference(bIntType(), 0));
           var call = bCall(lambda, bBlob());
-          evaluate(bEvaluate(), call);
+          evaluate(provide().bEvaluate(), call);
           assertReportsContains(
-              reporter().reports(),
+              provide().reporter().reports(),
               FATAL,
               "Task execution failed with exception:\n"
                   + "java.lang.RuntimeException: environment(0) evaluationType is `Blob` but expected `Int`.");
@@ -516,14 +518,14 @@ public class BEvaluateTest extends VmTestContext {
     class _errors {
       @Test
       void task_throwing_runtime_exception_causes_fatal() throws Exception {
-        var scheduler = scheduler();
-        var bEvaluate = bEvaluate(scheduler);
+        var bEvaluate = provide().bEvaluate();
         var expr = throwExceptionCall();
         evaluate(bEvaluate, expr);
 
-        List<Report> reports = reporter().reports();
+        var reporter = provide().reporter();
+        List<Report> reports = reporter.reports();
         if (!reports.anyMatches(this::reportWithFatalCausedByRuntimeException)) {
-          fail("Expected FATAL report caused by ArithmeticException but got:\n===\n" + reporter()
+          fail("Expected FATAL report caused by ArithmeticException but got:\n===\n" + reporter
               + "\n===\n");
         }
       }
@@ -548,18 +550,23 @@ public class BEvaluateTest extends VmTestContext {
       void step_evaluator_that_throws_exception_is_detected() throws Exception {
         var expr = bOrder();
         var runtimeException = new RuntimeException();
-        var scheduler = scheduler();
-        var stepEvaluator = new StepEvaluator(null, null, null, scheduler, bytecodeF()) {
-          @Override
-          public Output<BValue> evaluateStep(Step task, BTuple input) {
-            throw runtimeException;
-          }
-        };
-        var bEvaluate = bEvaluate(stepEvaluator);
+        var scheduler = provide().scheduler();
+        var stepEvaluator =
+            new StepEvaluator(null, null, null, scheduler, provide().bytecodeFactory()) {
+              @Override
+              public Output<BValue> evaluateStep(Step task, BTuple input) {
+                throw runtimeException;
+              }
+            };
+        var bEvaluate = new BEvaluate(
+            provide().scheduler(),
+            stepEvaluator,
+            provide().bytecodeFactory(),
+            provide().bReferenceInliner());
 
         evaluate(bEvaluate, expr);
         var fatal = fatal("Task execution failed with exception:", runtimeException);
-        assertThat(reporter().reports()).contains(report(LABEL, list(fatal)));
+        assertThat(provide().reporter().reports()).contains(report(LABEL, list(fatal)));
       }
     }
   }
@@ -652,9 +659,9 @@ public class BEvaluateTest extends VmTestContext {
     }
 
     private void assertTaskReport(BExpr expr, String operationName, Trace trace, Origin origin) {
-      evaluate(bEvaluate(), expr);
+      evaluate(provide().bEvaluate(), expr);
       var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
-      assertThat(reporter().reports()).contains(taskReport);
+      assertThat(provide().reporter().reports()).contains(taskReport);
     }
 
     private void assertTaskReport(
@@ -663,9 +670,9 @@ public class BEvaluateTest extends VmTestContext {
         String operationName,
         Trace trace,
         Origin origin) {
-      evaluate(bEvaluate(), expr, bExprAttributes);
+      evaluate(provide().bEvaluate(), expr, bExprAttributes);
       var taskReport = report(VM_EVALUATE.append(":" + operationName), trace, origin, list());
-      assertThat(reporter().reports()).contains(taskReport);
+      assertThat(provide().reporter().reports()).contains(taskReport);
     }
   }
 
@@ -697,9 +704,8 @@ public class BEvaluateTest extends VmTestContext {
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"),
           invokeExecuteCommands(testName, "INC1"));
-      var reporter = reporter();
-      var scheduler = scheduler();
-      var bEvaluate = bEvaluate(scheduler);
+      var reporter = provide().reporter();
+      var bEvaluate = provide().bEvaluate();
       assertThat(evaluate(bEvaluate, bExpr).get().get())
           .isEqualTo(bArray(bString("1"), bString("1"), bString("1"), bString("1")));
 
@@ -750,7 +756,7 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private BValue evaluate(BExpr expr) {
-    return evaluate(bEvaluate(), expr).get().get();
+    return evaluate(provide().bEvaluate(), expr).get().get();
   }
 
   private Promise<Maybe<BValue>> evaluate(BEvaluate bEvaluate, BExpr expr) {
@@ -759,7 +765,7 @@ public class BEvaluateTest extends VmTestContext {
 
   private Promise<Maybe<BValue>> evaluate(
       BEvaluate bEvaluate, BExpr expr, BExprAttributes bExprAttributes) {
-    var result = scheduler().submit(bEvaluate, argument(tuple(expr, bExprAttributes)));
+    var result = provide().scheduler().submit(bEvaluate, argument(tuple(expr, bExprAttributes)));
     await().until(() -> result.toMaybe().isSome());
     return result;
   }
@@ -800,7 +806,11 @@ public class BEvaluateTest extends VmTestContext {
   }
 
   private CountingBEvaluate countingBEvaluate() {
-    return new CountingBEvaluate(scheduler(), stepEvaluator(), bytecodeF(), bReferenceInliner());
+    return new CountingBEvaluate(
+        provide().scheduler(),
+        provide().stepEvaluator(),
+        provide().bytecodeFactory(),
+        provide().bReferenceInliner());
   }
 
   private static class CountingBEvaluate extends BEvaluate {
@@ -839,5 +849,28 @@ public class BEvaluateTest extends VmTestContext {
     } else {
       throw new RuntimeException("Cannot detect enclosing method name.");
     }
+  }
+
+  private BEvaluate bEvaluate(NativeMethodLoader nativeMethodLoader) {
+    var stepEvaluator = new StepEvaluator(
+        provide().computationHashFactory(),
+        () -> container(nativeMethodLoader),
+        provide().computationCache(),
+        provide().scheduler(),
+        provide().bytecodeFactory());
+    return new BEvaluate(
+        provide().scheduler(),
+        stepEvaluator,
+        provide().bytecodeFactory(),
+        provide().bReferenceInliner());
+  }
+
+  private Container container(NativeMethodLoader nativeMethodLoader) {
+    return new Container(
+        provide().fileSystem(),
+        provide().projectPath(),
+        provide().fileContentReader(),
+        provide().bytecodeFactory(),
+        nativeMethodLoader);
   }
 }

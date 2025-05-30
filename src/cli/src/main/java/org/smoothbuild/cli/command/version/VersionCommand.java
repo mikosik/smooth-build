@@ -1,9 +1,9 @@
 package org.smoothbuild.cli.command.version;
 
+import static org.smoothbuild.cli.command.base.CreateInjector.createAliasPathMap;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.util.concurrent.Callable;
-import org.smoothbuild.cli.command.base.CreateInjector;
 import org.smoothbuild.cli.command.base.LoggingCommand;
 import org.smoothbuild.common.log.base.Label;
 import picocli.CommandLine.Command;
@@ -15,7 +15,13 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
 
   @Override
   public Integer call() {
-    var injector = CreateInjector.createInjector(out());
-    return injector.getInstance(VersionRunner.class).run();
+    var commandRunnerFactory = DaggerVersionCommandRunnerFactory.builder()
+        .aliasPathMap(createAliasPathMap())
+        .out(out())
+        .logLevel(filterLogs)
+        .filterTasks(report -> true)
+        .filterTraces(report -> true)
+        .build();
+    return commandRunnerFactory.versionCommandRunner().run();
   }
 }

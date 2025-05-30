@@ -11,9 +11,9 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.load.FileContentReader;
 import org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader;
+import org.smoothbuild.virtualmachine.dagger.Project;
 import org.smoothbuild.virtualmachine.evaluate.plugin.MessageLogger;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.wire.Project;
 
 /**
  * This class is NOT thread-safe.

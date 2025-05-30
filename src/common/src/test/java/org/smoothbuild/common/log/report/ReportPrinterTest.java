@@ -10,7 +10,7 @@ import static org.smoothbuild.common.testing.TestingLog.logsWithAllLevels;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.testing.CommonTestContext;
+import org.smoothbuild.common.dagger.CommonTestContext;
 
 public class ReportPrinterTest extends CommonTestContext {
   @Test

@@ -7,7 +7,7 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class InputSourceFileTest extends VmTestContext {
   @Test

@@ -3,9 +3,9 @@ package org.smoothbuild.virtualmachine.bytecode.load;
 import static okio.Okio.buffer;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
@@ -17,7 +17,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlobBuilder;
  * Stores disk file as BlobB in expression-db.
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class FileContentReader {
   private final FileSystem<FullPath> fileSystem;
   private final BExprDb exprDb;

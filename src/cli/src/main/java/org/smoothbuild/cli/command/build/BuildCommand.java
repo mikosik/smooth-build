@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command.build;
 
-import static org.smoothbuild.cli.command.base.CreateInjector.createInjector;
+import static org.smoothbuild.cli.command.base.CreateInjector.createAliasPathMap;
 import static org.smoothbuild.common.log.base.Label.label;
 
 import java.nio.file.Path;
@@ -88,7 +88,14 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    var injector = createInjector(projectDir, out(), filterLogs, filterTasks, filterTraces, values);
-    return injector.getInstance(BuildRunner.class).run();
+    var commandRunnerFactory = DaggerBuildCommandRunnerFactory.builder()
+        .aliasPathMap(createAliasPathMap(projectDir))
+        .out(out())
+        .logLevel(filterLogs)
+        .filterTasks(filterTasks)
+        .filterTraces(filterTraces)
+        .arguments(values)
+        .build();
+    return commandRunnerFactory.buildCommandRunner().run();
   }
 }

@@ -10,7 +10,7 @@ dependencies {
     implementation project(':src:compiler-backend')
 
     implementation libs.guava
-    implementation libs.guice
+    implementation libs.jakarta.inject
     implementation libs.okio
     implementation libs.picocli
 
@@ -19,11 +19,13 @@ dependencies {
     testFixturesApi testFixtures(project(':src:compiler-backend'))
     testFixturesApi testFixtures(project(':src:virtual-machine'))
     testFixturesApi libs.guava
-    testFixturesApi libs.guice
     testFixturesApi libs.junit.jupiter.api
     testFixturesApi libs.mockito
     testFixturesApi libs.okio
     testFixturesApi libs.awaitility
+    testFixturesImplementation libs.dagger
+    testFixturesAnnotationProcessor libs.dagger.compiler
+    testFixturesImplementation libs.jakarta.inject
 
     testImplementation project(':src:common-testing')
     testImplementation libs.guava.testlib

@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 
 public class STypeSchemeTest extends FrontendCompilerTestContext {
   @Test

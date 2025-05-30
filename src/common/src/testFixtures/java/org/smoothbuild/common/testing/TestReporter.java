@@ -2,9 +2,11 @@ package org.smoothbuild.common.testing;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
 
+import jakarta.inject.Inject;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.report.Report;
 import org.smoothbuild.common.log.report.Reporter;
@@ -14,9 +16,13 @@ import org.smoothbuild.common.log.report.SystemOutReporter;
  * Reporter that memorizes submitted reports and also prints them to system out.
  * This way it is possible both asserting reports in test case and see those reports in test output.
  */
+@PerCommand
 public class TestReporter implements Reporter {
   private final CopyOnWriteArrayList<Report> reports = new CopyOnWriteArrayList<>();
   private final Reporter systemOutReporter = new SystemOutReporter();
+
+  @Inject
+  public TestReporter() {}
 
   @Override
   public void submit(Report report) {

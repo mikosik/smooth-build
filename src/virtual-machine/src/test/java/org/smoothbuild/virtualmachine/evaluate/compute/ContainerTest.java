@@ -6,12 +6,12 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.StoredLogStruct.mes
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class ContainerTest extends VmTestContext {
   @Test
   void messages_are_logged() throws Exception {
-    var container = container();
+    var container = provide().container();
     container.log().error("message");
     Iterable<BTuple> iterable = container.messages().elements(BTuple.class);
     assertThat(iterable).hasSize(1);

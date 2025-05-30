@@ -9,7 +9,7 @@ import static org.smoothbuild.common.log.base.Log.fatal;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.Promise;
-import org.smoothbuild.common.testing.CommonTestContext;
+import org.smoothbuild.common.dagger.CommonTestContext;
 import org.smoothbuild.common.testing.TestReporter;
 
 public class CompletionWaiterTest extends CommonTestContext {

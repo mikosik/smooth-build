@@ -33,9 +33,8 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BSelect;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.kind.BKindDb;
-import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class BKindTest extends VmTestContext {
   @ParameterizedTest
@@ -137,7 +136,7 @@ public class BKindTest extends VmTestContext {
     public void elemType(Function1<BKindDb, BType, BytecodeException> factoryCall)
         throws Exception {
       var elementType = execute(factoryCall);
-      var arrayType = kindDb().array(elementType);
+      var arrayType = bArrayType(elementType);
       assertThat(arrayType.element()).isEqualTo(elementType);
     }
 
@@ -242,9 +241,9 @@ public class BKindTest extends VmTestContext {
   @Nested
   class _method {
     @Test
-    void method_elements() throws BKindDbException {
-      assertThat(kindDb().method().elements())
-          .isEqualTo(list(kindDb().blob(), kindDb().string(), kindDb().string()));
+    void method_elements() throws BytecodeException {
+      assertThat(provide().kindDb().method().elements())
+          .isEqualTo(list(bBlobType(), bStringType(), bStringType()));
     }
   }
 
@@ -253,7 +252,7 @@ public class BKindTest extends VmTestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(BType type) throws Exception {
-      assertThat(kindDb().call(type).evaluationType()).isEqualTo(type);
+      assertThat(bCallKind(type).evaluationType()).isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -263,11 +262,10 @@ public class BKindTest extends VmTestContext {
     }
 
     public static Stream<Arguments> combine_cases() throws BytecodeException {
-      var test = new VmTestContext();
-      BKindDb db = test.kindDb();
+      var c = new VmTestContext();
       return Stream.of(
-          arguments(db.combine(db.tuple()), db.tuple()),
-          arguments(db.combine(db.tuple(test.bStringType())), db.tuple(test.bStringType())));
+          arguments(c.bCombineKind(), c.bTupleType()),
+          arguments(c.bCombineKind(c.bStringType()), c.bTupleType(c.bStringType())));
     }
 
     @ParameterizedTest
@@ -316,7 +314,7 @@ public class BKindTest extends VmTestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void fold(BType type) throws Exception {
-      assertThat(kindDb().fold(type).evaluationType()).isEqualTo(type);
+      assertThat(bFoldKind(type).evaluationType()).isEqualTo(type);
     }
 
     public static List<BKind> types() {
@@ -370,7 +368,7 @@ public class BKindTest extends VmTestContext {
   }
 
   private <R> R execute(Function1<BKindDb, R, BytecodeException> f) throws BytecodeException {
-    return f.apply(kindDb());
+    return f.apply(provide().kindDb());
   }
 
   /**

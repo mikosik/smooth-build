@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Result;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.MissingMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.OverloadedMethod;
@@ -51,7 +51,8 @@ public class MethodLoaderTest extends VmTestContext {
   }
 
   private MethodLoader methodLoaderWithPlatformClassLoader() {
-    return new MethodLoader(new JarClassLoaderFactory(bytecodeF(), getPlatformClassLoader()));
+    return new MethodLoader(
+        new JarClassLoaderFactory(provide().bytecodeFactory(), getPlatformClassLoader()));
   }
 
   @Nested

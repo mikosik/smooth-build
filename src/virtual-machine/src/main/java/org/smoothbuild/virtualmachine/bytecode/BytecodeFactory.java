@@ -10,11 +10,11 @@ import static org.smoothbuild.common.log.base.Level.INFO;
 import static org.smoothbuild.common.log.base.Level.WARNING;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.math.BigInteger;
 import okio.BufferedSink;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.function.Consumer1;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.common.log.base.Level;
@@ -58,7 +58,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
  * This class is thread-safe.
  * Builders returned by xxxBuilder() methods are not thread-safe.
  */
-@Singleton
+@PerCommand
 public class BytecodeFactory {
   private final BExprDb exprDb;
   private final BKindDb kindDb;

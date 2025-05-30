@@ -5,7 +5,7 @@ import static java.lang.String.format;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.Random;
 
 public class CachingTest extends EvaluatorTestContext {

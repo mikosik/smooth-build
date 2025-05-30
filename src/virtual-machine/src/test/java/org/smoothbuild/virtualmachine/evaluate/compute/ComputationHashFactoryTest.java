@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
 import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class ComputationHashFactoryTest extends VmTestContext {
   @Test
@@ -125,7 +125,7 @@ public class ComputationHashFactoryTest extends VmTestContext {
     }
   }
 
-  private static Hash create(Hash of, Step step, BTuple input) {
-    return new ComputationHashFactory(of).create(step, input);
+  private static Hash create(Hash hash, Step step, BTuple input) {
+    return new ComputationHashFactory(() -> hash).create(step, input);
   }
 }

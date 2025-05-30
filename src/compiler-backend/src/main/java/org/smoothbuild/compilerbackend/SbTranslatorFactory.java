@@ -1,9 +1,10 @@
 package org.smoothbuild.compilerbackend;
 
-import com.google.inject.assistedinject.Assisted;
+import dagger.assisted.AssistedFactory;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
 
+@AssistedFactory
 public interface SbTranslatorFactory {
-  public SbTranslator create(@Assisted Bindings<SPolyEvaluable> evaluables);
+  public SbTranslator create(Bindings<SPolyEvaluable> evaluables);
 }

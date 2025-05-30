@@ -2,7 +2,7 @@ package org.smoothbuild.compilerfrontend.compile.ast.define;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 
 public class PNamedFuncTest extends FrontendCompilerTestContext {
   @Test

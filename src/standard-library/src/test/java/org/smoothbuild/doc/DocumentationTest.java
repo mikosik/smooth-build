@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.ParameterDeclarations;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 
 public class DocumentationTest extends EvaluatorTestContext {
   @ParameterizedTest

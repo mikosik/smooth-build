@@ -7,10 +7,10 @@ import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Result;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
@@ -22,7 +22,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
  * Method to load is specified by providing {@link BInvoke}.
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class BytecodeMethodLoader {
   public static final String BYTECODE_METHOD_NAME = "bytecode";
   private final MethodLoader methodLoader;

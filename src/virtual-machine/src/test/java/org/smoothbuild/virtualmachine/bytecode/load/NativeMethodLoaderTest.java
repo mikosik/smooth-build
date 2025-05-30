@@ -17,8 +17,8 @@ import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BOrder;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.NonStaticMethod;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
@@ -74,8 +74,8 @@ public class NativeMethodLoaderTest extends VmTestContext {
   }
 
   private NativeMethodLoader nativeMethodLoaderWithPlatformClassLoader() {
-    return new NativeMethodLoader(
-        new MethodLoader(new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader())));
+    return new NativeMethodLoader(new MethodLoader(
+        new JarClassLoaderFactory(provide().bytecodeFactory(), getSystemClassLoader())));
   }
 
   private Result<Object> loadingError(Class<?> clazz, String message) {

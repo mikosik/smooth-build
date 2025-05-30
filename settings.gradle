@@ -20,22 +20,20 @@ dependencyResolutionManagement {
 
   versionCatalogs {
     libs {
-      version('antlr4', '4.13.0')
-      library('antlr4', 'org.antlr', 'antlr4').versionRef('antlr4')
-      library('antlr4-runtime', 'org.antlr', 'antlr4-runtime').versionRef('antlr4')
+      library('antlr4', 'org.antlr:antlr4:4.13.0')
+      library('antlr4-runtime', 'org.antlr:antlr4-runtime:4.13.0')
       library('guava', 'com.google.guava:guava:33.4.8-jre')
-      library('guice', 'com.google.inject:guice:7.0.0')
-      library('guice-assisted-inject', 'com.google.inject.extensions:guice-assistedinject:7.0.0')
+      library('dagger', 'com.google.dagger:dagger:2.56.2')
+      library('dagger-compiler', 'com.google.dagger:dagger-compiler:2.56.2')
       library('okio', 'com.squareup.okio:okio:3.12.0')
       library('picocli', 'info.picocli:picocli:4.7.7')
       library('zip4j', 'net.lingala.zip4j:zip4j:2.11.5')
-
       library('awaitility', 'org.awaitility:awaitility:4.3.0')
       library('guava-testlib', 'com.google.guava:guava-testlib:33.4.8-jre')
-      version('junit', '5.13.1')
-      library('junit-jupiter-engine', 'org.junit.jupiter', 'junit-jupiter-engine').versionRef('junit')
-      library('junit-jupiter-api', 'org.junit.jupiter', 'junit-jupiter-api').versionRef('junit')
-      library('junit-jupiter-params', 'org.junit.jupiter', 'junit-jupiter-params').versionRef('junit')
+      library('jakarta-inject', 'jakarta.inject:jakarta.inject-api:2.0.1')
+      library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.13.1')
+      library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.13.1')
+      library('junit-jupiter-params', 'org.junit.jupiter:junit-jupiter-params:5.13.1')
       library('mockito', 'org.mockito:mockito-core:5.18.0')
       library('truth', 'com.google.truth:truth:1.1.5')
     }

@@ -10,11 +10,11 @@ import static org.smoothbuild.common.log.report.Report.report;
 import static org.smoothbuild.common.schedule.Tasks.taskX;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.report.Reporter;
 
@@ -24,7 +24,7 @@ import org.smoothbuild.common.log.report.Reporter;
  * tasks are submitted to Reporter is not deterministic.
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class Scheduler {
   /*
    * Design decisions: Output returned by Task*.execute() contains `Promise<T> result` field

@@ -17,11 +17,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.type.SInterfaceType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class UnifierTest extends FrontendCompilerTestContext {
   private final Unifier unifier = new Unifier();

@@ -6,7 +6,7 @@ import static org.smoothbuild.common.schedule.Output.output;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
-import org.smoothbuild.cli.Artifacts;
+import org.smoothbuild.cli.dagger.Artifacts;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.schedule.Output;

@@ -11,6 +11,7 @@ import okio.Buffer;
 import okio.ByteString;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class JarTester {
   public static BBlob jar(BTuple... files) throws Exception {

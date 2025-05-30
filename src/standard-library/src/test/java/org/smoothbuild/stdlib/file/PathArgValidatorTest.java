@@ -11,13 +11,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class PathArgValidatorTest extends VmTestContext {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) throws Exception {
-    validatedProjectPath(container(), "name", bString(path));
+    validatedProjectPath(provide().container(), "name", bString(path));
   }
 
   public static Stream<String> listOfCorrectProjectPaths() {
@@ -40,9 +40,9 @@ public class PathArgValidatorTest extends VmTestContext {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) throws Exception {
-    Path name = validatedProjectPath(container(), "name", bString(path));
+    Path name = validatedProjectPath(provide().container(), "name", bString(path));
     assertThat(name).isNull();
-    var elements = container().messages().elements(BTuple.class);
+    var elements = provide().container().messages().elements(BTuple.class);
     elements.map(e -> storedLogMessage(e).toJavaString()).forEach(t -> assertThat(t)
         .startsWith("Param `name` has illegal value."));
     elements.map(e -> storedLogLevel(e).toJavaString()).forEach(s -> assertThat(s)

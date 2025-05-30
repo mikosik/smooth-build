@@ -7,7 +7,7 @@ import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BExprStableHashTest extends VmTestContext {
   @Nested
@@ -109,14 +109,14 @@ public class BExprStableHashTest extends VmTestContext {
   class _choice {
     @Test
     void first_alternative() throws Exception {
-      assertThat(exprDb().newChoice(bChoiceType(), bInt(0), bString("7")).hash())
+      assertThat(bChoice(bChoiceType(), bInt(0), bString("7")).hash())
           .isEqualTo(
               Hash.decode("656815d265879fc6dbd78bdc187affd260d2b6af8bcfad10dc9b32f5c5ae9d4b"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(exprDb().newChoice(bChoiceType(), bInt(1), bInt(7)).hash())
+      assertThat(bChoice(bChoiceType(), bInt(1), bInt(7)).hash())
           .isEqualTo(
               Hash.decode("c3c3a47dc890634321beb35bc73b8a0cca86e6a43c8e37c98a0dbda734c89593"));
     }
@@ -124,7 +124,7 @@ public class BExprStableHashTest extends VmTestContext {
     @Test
     void reversed_alternatives() throws Exception {
       var type = bChoiceType(bIntType(), bStringType());
-      assertThat(exprDb().newChoice(type, bInt(1), bString("7")).hash())
+      assertThat(bChoice(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("85de78ee123ee1a99e1fbd63febd0a7207558ec672d6ab22df06599379de8d55"));
     }
@@ -134,14 +134,14 @@ public class BExprStableHashTest extends VmTestContext {
   class _choose {
     @Test
     void first_alternative() throws Exception {
-      assertThat(exprDb().newChoose(bChoiceType(), bInt(0), bString("7")).hash())
+      assertThat(bChoose(bChoiceType(), bInt(0), bString("7")).hash())
           .isEqualTo(
               Hash.decode("caec4416a98ec12639f2b26ee748efcb87b40207d1061ad0487eee1a1398b3f5"));
     }
 
     @Test
     void second_alternative() throws Exception {
-      assertThat(exprDb().newChoose(bChoiceType(), bInt(1), bInt(7)).hash())
+      assertThat(bChoose(bChoiceType(), bInt(1), bInt(7)).hash())
           .isEqualTo(
               Hash.decode("fdc44a7228f7276d2f8a2c45b8e9c89cb79f4384082bcd541dc8e559bbe3ba02"));
     }
@@ -149,7 +149,7 @@ public class BExprStableHashTest extends VmTestContext {
     @Test
     void reversed_alternatives() throws Exception {
       var type = bChoiceType(bIntType(), bStringType());
-      assertThat(exprDb().newChoose(type, bInt(1), bString("7")).hash())
+      assertThat(bChoose(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("a53c5ac6929698e9f9ab27b1d82d5ba6a04f86bd0f57cc0e01dabed5e873042b"));
     }
@@ -174,7 +174,7 @@ public class BExprStableHashTest extends VmTestContext {
     @Test
     void reversed_alternatives() throws Exception {
       var type = bChoiceType(bIntType(), bStringType());
-      assertThat(exprDb().newChoice(type, bInt(1), bString("7")).hash())
+      assertThat(bChoice(type, bInt(1), bString("7")).hash())
           .isEqualTo(
               Hash.decode("85de78ee123ee1a99e1fbd63febd0a7207558ec672d6ab22df06599379de8d55"));
     }

@@ -16,7 +16,6 @@ import static org.smoothbuild.virtualmachine.evaluate.step.Purity.PURE;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.common.base.Hash;
@@ -24,6 +23,7 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.concurrent.MutablePromise;
 import org.smoothbuild.common.concurrent.Promise;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Origin;
 import org.smoothbuild.common.log.report.Report;
@@ -42,7 +42,7 @@ import org.smoothbuild.virtualmachine.evaluate.step.Step;
 /**
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class StepEvaluator {
   private final ComputationHashFactory computationHashFactory;
   private final Provider<Container> containerProvider;

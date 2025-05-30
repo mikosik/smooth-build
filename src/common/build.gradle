@@ -5,15 +5,22 @@ plugins {
 
 dependencies {
     implementation libs.guava
-    implementation libs.guice
+    implementation libs.dagger
+    annotationProcessor libs.dagger.compiler
+    implementation libs.jakarta.inject
     implementation libs.okio
     implementation libs.zip4j
     implementation libs.antlr4.runtime
 
     testFixturesApi libs.okio
+    testFixturesApi libs.awaitility
     testFixturesImplementation libs.guava
-    testFixturesImplementation libs.guice
-    testFixturesImplementation libs.awaitility
+    implementation libs.dagger
+    annotationProcessor libs.dagger.compiler
+    implementation libs.jakarta.inject
+    testFixturesImplementation libs.dagger
+    testFixturesAnnotationProcessor libs.dagger.compiler
+    testFixturesImplementation libs.jakarta.inject
     testFixturesImplementation libs.junit.jupiter.api
     testFixturesImplementation libs.junit.jupiter.params
     testFixturesImplementation libs.truth

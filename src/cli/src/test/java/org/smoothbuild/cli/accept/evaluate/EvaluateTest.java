@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.testing.GoldenFilesArgumentsProvider;
 import org.smoothbuild.common.testing.GoldenFilesTestCase;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
 

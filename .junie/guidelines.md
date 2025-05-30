@@ -75,7 +75,7 @@ Shared testing utilities.
 - **Java 24** - Primary programming language
 - **Gradle** - Build system
 - **ANTLR4** - Parser generator for the language
-- **Guice** - Dependency injection
+- **Dagger** - Dependency injection
 - **Guava** - Utility libraries
 - **JUnit 5** - Testing framework
 - **Mockito & Truth** - Testing utilities
@@ -128,7 +128,7 @@ Each module follows the standard Maven/Gradle structure:
    Maintain high test coverage.
    Name junit test methods using snake_case.
 3. **Use dependency injection**
-   Follow the Guice patterns established in the codebase
+   Follow the Dagger patterns established in the codebase
 4. **Documentation**
    Never add Javadocs nor comments unless explicitly asked.
    Update existing Javadocs or comments when they exist for code you modified.

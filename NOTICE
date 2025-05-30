@@ -4,5 +4,5 @@ libraries:
 
 antlr: BSD License
 guava: Apache License 2.0
-guice: Apache License 2.0
+dagger: Apache License 2.0
 

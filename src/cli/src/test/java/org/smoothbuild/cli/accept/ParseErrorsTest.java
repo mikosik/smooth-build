@@ -3,7 +3,7 @@ package org.smoothbuild.cli.accept;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 
 public class ParseErrorsTest extends EvaluatorTestContext {
   @Test

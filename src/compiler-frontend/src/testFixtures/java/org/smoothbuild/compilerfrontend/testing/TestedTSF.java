@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.define.SItemSig;
 import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedArrayTS;
 import org.smoothbuild.compilerfrontend.testing.TestedTS.TestedFuncTS;

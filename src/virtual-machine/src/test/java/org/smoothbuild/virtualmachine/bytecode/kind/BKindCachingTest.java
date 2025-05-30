@@ -12,21 +12,22 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BKindCachingTest extends VmTestContext {
   @ParameterizedTest
   @MethodSource("factories")
   public void created_type_is_cached(Function1<BKindDb, BKind, BytecodeException> factory)
       throws Exception {
-    assertThat(factory.apply(kindDb())).isSameInstanceAs(factory.apply(kindDb()));
+    assertThat(factory.apply(provide().kindDb()))
+        .isSameInstanceAs(factory.apply(provide().kindDb()));
   }
 
   @ParameterizedTest
   @MethodSource("factories")
   public void read_type_is_cached(Function1<BKindDb, BKind, BytecodeException> factory)
       throws Exception {
-    var hash = factory.apply(kindDb()).hash();
+    var hash = factory.apply(provide().kindDb()).hash();
     var kindDb = kindDbOther();
     assertThat(kindDb.get(hash)).isSameInstanceAs(kindDb.get(hash));
   }

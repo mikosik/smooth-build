@@ -13,7 +13,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class MavenArtifactFuncTest extends VmTestContext {
   @Test
@@ -28,7 +29,7 @@ public class MavenArtifactFuncTest extends VmTestContext {
     when(response.body()).thenReturn(new ByteArrayInputStream(jarContent.getBytes()));
 
     var result = MavenArtifactFunc.funcImpl(
-        nativeApi(),
+        provide().container(),
         bTuple(bString("com.example"), bString("library"), bString("1.0.0")),
         httpClient);
 
@@ -43,7 +44,7 @@ public class MavenArtifactFuncTest extends VmTestContext {
         .thenReturn(response);
     when(response.statusCode()).thenReturn(404);
 
-    var nativeApi = nativeApi();
+    var nativeApi = (NativeApi) provide().container();
     var result = MavenArtifactFunc.funcImpl(
         nativeApi,
         bTuple(bString("com.example"), bString("library"), bString("1.0.0")),

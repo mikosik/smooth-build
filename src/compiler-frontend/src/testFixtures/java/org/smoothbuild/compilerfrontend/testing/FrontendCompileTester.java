@@ -2,7 +2,6 @@ package org.smoothbuild.compilerfrontend.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.base.Log.containsFailure;
 import static org.smoothbuild.common.log.base.Log.error;
@@ -10,20 +9,12 @@ import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.createFile;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Provides;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.base.Log;
 import org.smoothbuild.common.log.base.Try;
-import org.smoothbuild.common.log.report.Reporter;
-import org.smoothbuild.common.schedule.Scheduler;
-import org.smoothbuild.common.schedule.SchedulerWiring;
-import org.smoothbuild.common.testing.TestReporter;
-import org.smoothbuild.compilerfrontend.FrontendCompile;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.define.SModule;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
@@ -116,36 +107,20 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     public Try<SModule> loadModule() {
-      var testReporter = new TestReporter();
-      var injector = Guice.createInjector(PRODUCTION, new SchedulerWiring(), new AbstractModule() {
-        @Override
-        protected void configure() {
-          bind(Reporter.class).toInstance(testReporter);
-        }
-
-        @Provides
-        @Singleton
-        public FileSystem<FullPath> provideFilesystem() {
-          return createFilesystemWithModuleFiles();
-        }
-      });
-      var scheduler = injector.getInstance(Scheduler.class);
+      createModuleFiles(provide().fileSystem());
       var paths = list(standardLibraryModulePath(), moduleFullPath());
-      var task = injector.getInstance(FrontendCompile.class);
-      var module = scheduler.submit(task, argument(paths));
+      var module = provide().scheduler().submit(provide().frontendCompile(), argument(paths));
       await().until(() -> module.toMaybe().isSome());
-      sModule = Try.of(module.get().getOr(null), testReporter.logs());
+      sModule = Try.of(module.get().getOr(null), provide().reporter().logs());
       return sModule;
     }
 
-    private FileSystem<FullPath> createFilesystemWithModuleFiles() {
-      var fileSystem = newSynchronizedMemoryFileSystem();
+    private void createModuleFiles(FileSystem<FullPath> fileSystem) {
       writeModuleFile(
           fileSystem,
           standardLibraryModulePath(),
           importedSourceCode == null ? "" : importedSourceCode);
       writeModuleFile(fileSystem, moduleFullPath(), sourceCode);
-      return fileSystem;
     }
 
     private static void writeModuleFile(
@@ -158,7 +133,7 @@ public class FrontendCompileTester extends FrontendCompilerTestContext {
     }
 
     private FullPath standardLibraryModulePath() {
-      return PROJECT_PATH.append("std_lib.smooth");
+      return provide().projectPath().append("std_lib.smooth");
     }
   }
 }

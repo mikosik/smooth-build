@@ -5,6 +5,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.Name.typeName;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
 import org.smoothbuild.compilerfrontend.lang.type.STypeVar;
 import org.smoothbuild.compilerfrontend.lang.type.STypes;

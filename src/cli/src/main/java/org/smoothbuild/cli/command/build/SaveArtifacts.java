@@ -15,7 +15,7 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
-import org.smoothbuild.cli.Artifacts;
+import org.smoothbuild.cli.dagger.Artifacts;
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.FullPath;
@@ -38,7 +38,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.dagger.BytecodeDb;
 
 public class SaveArtifacts implements Task1<EvaluatedExprs, Tuple0> {
   static final Fqn FILE_STRUCT_FQN = fqn("File");

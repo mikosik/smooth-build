@@ -6,7 +6,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public abstract class AbstractBExprTestSuite<T extends BExpr> extends VmTestContext {
   protected abstract List<T> equalExprs() throws Exception;

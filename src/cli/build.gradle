@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'java-test-fixtures'
 }
 
 application {
@@ -15,9 +16,25 @@ dependencies {
     implementation project(':src:evaluator')
 
     implementation libs.guava
-    implementation libs.guice
+    implementation libs.dagger
+    annotationProcessor libs.dagger.compiler
+    implementation libs.jakarta.inject
     implementation libs.okio
     implementation libs.picocli
+
+    testFixturesApi project(':src:common')
+    testFixturesApi project(':src:cli')
+    testFixturesApi testFixtures(project(':src:common'))
+    testFixturesApi testFixtures(project(':src:virtual-machine'))
+    testFixturesApi testFixtures(project(':src:compiler-frontend'))
+    testFixturesApi libs.guava
+    testFixturesImplementation libs.dagger
+    testFixturesAnnotationProcessor libs.dagger.compiler
+    testFixturesImplementation libs.jakarta.inject
+    testFixturesApi libs.junit.jupiter.api
+    testFixturesApi libs.mockito
+    testFixturesApi libs.okio
+    testFixturesApi libs.truth
 
     testImplementation project(':src:common-testing')
     testImplementation project(':src:virtual-machine')

@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.name.Fqn;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemTest extends FrontendCompilerTestContext {
   private final Fqn name = fqn("myFunc:name");

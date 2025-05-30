@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BKindStableHashTest extends VmTestContext {
   @ParameterizedTest
@@ -79,7 +79,7 @@ public class BKindStableHashTest extends VmTestContext {
             t.bReferenceKind(t.bIntType()),
             "caf484ac9e60b0b662b1aee490192288de4e44832518aaff3b78ebe732098560"),
         arguments(
-            t.kindDb().fold(t.bIntType()),
+            t.bFoldKind(t.bIntType()),
             "725bc999943a1fd20aa87a5b988316139308b18951846f5bbf5c958c26156aa6"));
   }
 }

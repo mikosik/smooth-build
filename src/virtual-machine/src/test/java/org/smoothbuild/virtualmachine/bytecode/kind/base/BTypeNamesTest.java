@@ -8,7 +8,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.lambd
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.BTypeNames.tupleTypeName;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BTypeNamesTest extends VmTestContext {
   @Test

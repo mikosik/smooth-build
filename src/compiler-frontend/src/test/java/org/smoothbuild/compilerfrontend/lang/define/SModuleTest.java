@@ -5,7 +5,7 @@ import static org.smoothbuild.common.collect.Map.map;
 import static org.smoothbuild.compilerfrontend.lang.name.Fqn.fqn;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 
 public class SModuleTest extends FrontendCompilerTestContext {
   @Test

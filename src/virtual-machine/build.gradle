@@ -6,14 +6,19 @@ plugins {
 dependencies {
     implementation project(':src:common')
     implementation libs.guava
-    implementation libs.guice
+    implementation libs.jakarta.inject
     implementation libs.okio
 
     testFixturesApi project(':src:common')
     testFixturesApi project(':src:virtual-machine')
     testFixturesApi testFixtures(project(':src:common'))
     testFixturesApi libs.guava
-    testFixturesApi libs.guice
+    implementation libs.dagger
+    annotationProcessor libs.dagger.compiler
+    implementation libs.jakarta.inject
+    testFixturesImplementation libs.dagger
+    testFixturesAnnotationProcessor libs.dagger.compiler
+    testFixturesImplementation libs.jakarta.inject
     testFixturesApi libs.junit.jupiter.api
     testFixturesApi libs.mockito
     testFixturesApi libs.okio

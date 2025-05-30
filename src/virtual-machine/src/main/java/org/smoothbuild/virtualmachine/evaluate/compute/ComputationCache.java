@@ -10,10 +10,10 @@ import static org.smoothbuild.virtualmachine.evaluate.step.BOutput.bOutput;
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.smoothbuild.common.base.Hash;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathState;
@@ -23,13 +23,13 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.dagger.ComputationDb;
 import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
-import org.smoothbuild.virtualmachine.wire.ComputationDb;
 
 /**
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class ComputationCache {
   private final FileSystem<Path> fileSystem;
   private final BExprDb exprDb;

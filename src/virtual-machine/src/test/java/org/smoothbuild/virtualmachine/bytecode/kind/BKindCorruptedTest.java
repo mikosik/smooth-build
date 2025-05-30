@@ -53,7 +53,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindNodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindRootException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindWrongChainSizeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindWrongNodeKindException;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BKindCorruptedTest extends VmTestContext {
   @Nested
@@ -213,7 +213,7 @@ public class BKindCorruptedTest extends VmTestContext {
           throws Exception {
         var notHashOfChain = hash(ByteString.of(new byte[byteCount]));
         var typeHash = hash(hash(LAMBDA.byteMarker()), notHashOfChain);
-        assertCall(() -> ((BLambdaType) kindDb().get(typeHash)).result())
+        assertCall(() -> ((BLambdaType) provide().kindDb().get(typeHash)).result())
             .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, DATA_PATH))
             .withCause(
                 new DecodeHashChainException(notHashOfChain, byteCount % Hash.lengthInBytes()));
@@ -224,7 +224,7 @@ public class BKindCorruptedTest extends VmTestContext {
         var paramTypes = bTupleType(bStringType(), bBoolType());
         var nowhere = Hash.of(33);
         var typeHash = hash(hash(LAMBDA.byteMarker()), hash(hash(paramTypes), nowhere));
-        assertCall(() -> kindDb().get(typeHash))
+        assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH))
             .withCause(new DecodeKindException(nowhere));
       }
@@ -234,7 +234,7 @@ public class BKindCorruptedTest extends VmTestContext {
         var paramType = bTupleType(bStringType(), bBoolType());
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(hash(paramType), hash(bReferenceKind())));
-        assertCall(() -> kindDb().get(typeHash))
+        assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
                 typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH, BType.class, BReferenceKind.class));
       }
@@ -244,7 +244,7 @@ public class BKindCorruptedTest extends VmTestContext {
         var paramTypes = bTupleType(bStringType(), bBoolType());
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(hash(paramTypes), corruptedArrayTHash()));
-        assertCall(() -> kindDb().get(typeHash))
+        assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, BKindDb.LAMBDA_RES_PATH))
             .withCause(corruptedArrayTypeExc());
       }
@@ -253,7 +253,7 @@ public class BKindCorruptedTest extends VmTestContext {
       void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
         var typeHash = hash(hash(LAMBDA.byteMarker()), hash(nowhere, hash(bIntType())));
-        assertCall(() -> kindDb().get(typeHash))
+        assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
             .withCause(new DecodeKindException(nowhere));
       }
@@ -270,7 +270,7 @@ public class BKindCorruptedTest extends VmTestContext {
       void with_params_being_operation_type() throws Exception {
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(hash(bReferenceKind()), hash(bIntType())));
-        assertCall(() -> kindDb().get(typeHash))
+        assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindWrongNodeKindException(
                 typeHash, LAMBDA, LAMBDA_PARAMS_PATH, BType.class, BReferenceKind.class));
       }
@@ -279,7 +279,7 @@ public class BKindCorruptedTest extends VmTestContext {
       void with_params_type_corrupted() throws Exception {
         var typeHash =
             hash(hash(LAMBDA.byteMarker()), hash(corruptedArrayTHash(), hash(bIntType())));
-        assertCall(() -> kindDb().get(typeHash))
+        assertCall(() -> provide().kindDb().get(typeHash))
             .throwsException(new DecodeKindNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
       }
@@ -421,7 +421,7 @@ public class BKindCorruptedTest extends VmTestContext {
       throws Exception {
     var dataHash = Hash.of(33);
     var typeHash = hash(hash(id.byteMarker()), dataHash);
-    assertCall(() -> kindDb().get(typeHash))
+    assertCall(() -> provide().kindDb().get(typeHash))
         .throwsException(new DecodeKindNodeException(typeHash, id, DATA_PATH))
         .withCause(new DecodeKindException(dataHash));
   }
@@ -430,7 +430,7 @@ public class BKindCorruptedTest extends VmTestContext {
       KindId id) throws Exception {
     var dataHash = Hash.of(33);
     var typeHash = hash(hash(id.byteMarker()), dataHash);
-    assertCall(() -> kindDb().get(typeHash))
+    assertCall(() -> provide().kindDb().get(typeHash))
         .throwsException(new DecodeKindNodeException(typeHash, id, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
   }
@@ -444,7 +444,7 @@ public class BKindCorruptedTest extends VmTestContext {
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
-    return assertCall(() -> kindDb().get(hash));
+    return assertCall(() -> provide().kindDb().get(hash));
   }
 
   private DecodeKindException illegalTypeMarkerException(Hash hash, int marker) {
@@ -460,7 +460,7 @@ public class BKindCorruptedTest extends VmTestContext {
   }
 
   protected Hash hash(String string) throws HashedDbException {
-    return hashedDb().writeString(string);
+    return provide().hashedDb().writeString(string);
   }
 
   protected Hash hash(boolean value) throws Exception {
@@ -468,11 +468,11 @@ public class BKindCorruptedTest extends VmTestContext {
   }
 
   protected Hash hash(byte value) throws Exception {
-    return hashedDb().writeData(sink -> sink.writeByte(value));
+    return provide().hashedDb().writeData(sink -> sink.writeByte(value));
   }
 
   protected Hash hash(ByteString bytes) throws Exception {
-    return hashedDb().writeData(sink -> sink.write(bytes));
+    return provide().hashedDb().writeData(sink -> sink.write(bytes));
   }
 
   protected Hash hash(BExpr expr) {
@@ -484,7 +484,7 @@ public class BKindCorruptedTest extends VmTestContext {
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
-    return hashedDb().writeHashChain(hashes);
+    return provide().hashedDb().writeHashChain(hashes);
   }
 
   @Nested
@@ -642,7 +642,7 @@ public class BKindCorruptedTest extends VmTestContext {
          * to save FOLD kind in HashedDb.
          */
         var hash = hash(hash(FOLD.byteMarker()), hash(bIntType()));
-        assertThat(hash).isEqualTo(kindDb().fold(bIntType()).hash());
+        assertThat(hash).isEqualTo(bFoldKind(bIntType()).hash());
       }
 
       @Nested

@@ -29,12 +29,14 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.SWITCH;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.TUPLE;
 import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.fromOrdinal;
 
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.function.Function0;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BArrayType;
@@ -72,6 +74,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.exc.DecodeKindWrongNodeKindE
 /**
  * This class is thread-safe.
  */
+@PerCommand
 public class BKindDb {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
@@ -88,6 +91,7 @@ public class BKindDb {
   private final Function0<BStringType, BKindDbException> stringSupplier;
   private final Function0<BTupleType, BKindDbException> methodSupplier;
 
+  @Inject
   public BKindDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.cache = new ConcurrentHashMap<>();

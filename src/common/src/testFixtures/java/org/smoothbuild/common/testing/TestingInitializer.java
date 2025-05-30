@@ -2,14 +2,11 @@ package org.smoothbuild.common.testing;
 
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 
-import com.google.inject.Injector;
-import org.smoothbuild.common.init.Initializer;
-import org.smoothbuild.common.schedule.Scheduler;
+import org.smoothbuild.common.dagger.CommonTestComponent;
 
 public class TestingInitializer {
-  public static void runInitializations(Injector injector) {
-    var scheduler = injector.getInstance(Scheduler.class);
-    var initializer = scheduler.submit(injector.getInstance(Initializer.class));
-    await().until(() -> initializer.toMaybe().isSome());
+  public static void runInitializer(CommonTestComponent component) {
+    var promise = component.scheduler().submit(component.initializer());
+    await().until(() -> promise.toMaybe().isSome());
   }
 }

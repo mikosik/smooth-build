@@ -10,7 +10,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.Path.path;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
@@ -21,6 +20,7 @@ import okio.Source;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.filesystem.base.PathState;
@@ -33,12 +33,12 @@ import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeHashChainExcepti
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.virtualmachine.bytecode.hashed.exc.NoSuchDataException;
-import org.smoothbuild.virtualmachine.wire.BytecodeDb;
+import org.smoothbuild.virtualmachine.dagger.BytecodeDb;
 
 /**
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class HashedDb {
   static final Path TEMP_DIR_PATH = path("tmp");
   private final FileSystem<Path> fileSystem;

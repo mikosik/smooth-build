@@ -8,13 +8,17 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.bytecode.kind.base.BChoiceType;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BChooseTest extends VmTestContext {
   @Test
   void setting_chosen_with_wrong_type_throws_exception() throws BytecodeException {
     var type = bChoiceType(bStringType(), bBlobType());
-    assertCall(() -> exprDb().newChoose(type, bInt(0), bBlob()))
+    assertCall(() -> {
+          BInt index = bInt(0);
+          bChoose(type, index, bBlob());
+        })
         .throwsException(new IllegalArgumentException(
             "`chosen.evaluationType()` should be `String` but is `Blob`."));
   }
@@ -22,26 +26,37 @@ public class BChooseTest extends VmTestContext {
   @Test
   void setting_index_with_index_out_of_bounds_throws_exception() throws BytecodeException {
     var type = bChoiceType(bStringType(), bBlobType());
-    assertCall(() -> exprDb().newChoose(type, bInt(2), bBlob()))
+    assertCall(() -> {
+          BInt index = bInt(2);
+          bChoose(type, index, bBlob());
+        })
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   void setting_chosen_to_null_throws_exception() {
-    assertCall(() -> exprDb().newChoose(bChoiceType(bStringType(), bBlobType()), bInt(0), null))
+    assertCall(() -> {
+          BChoiceType choiceType = bChoiceType(bStringType(), bBlobType());
+          BInt index = bInt(0);
+          bChoose(choiceType, index, null);
+        })
         .throwsException(NullPointerException.class);
   }
 
   @Test
   void setting_index_to_null_throws_exception() {
-    assertCall(() -> exprDb().newChoose(bChoiceType(bStringType(), bBlobType()), null, bString()))
+    assertCall(() -> {
+          BChoiceType choiceType = bChoiceType(bStringType(), bBlobType());
+          bChoose(choiceType, null, bString());
+        })
         .throwsException(NullPointerException.class);
   }
 
   @Test
   void kind() throws Exception {
     var type = bChoiceType(bStringType(), bBlobType());
-    var choice = exprDb().newChoose(type, bInt(0), bString("7"));
+    BInt index = bInt(0);
+    var choice = bChoose(type, index, bString("7"));
     assertThat(choice.kind()).isEqualTo(bChooseKind(type));
   }
 
@@ -62,12 +77,17 @@ public class BChooseTest extends VmTestContext {
     protected List<BChoose> nonEqualExprs() throws BytecodeException {
       var type1 = bChoiceType(bStringType());
       var type2 = bChoiceType(bStringType(), bIntType());
+      BInt index = bInt(1);
+      BInt index1 = bInt(0);
+      BInt index2 = bInt(0);
+      BInt index3 = bInt(0);
+      BInt index4 = bInt(0);
       return list(
-          exprDb().newChoose(type1, bInt(0), bString("7")),
-          exprDb().newChoose(type1, bInt(0), bString("8")),
-          exprDb().newChoose(type2, bInt(0), bString("7")),
-          exprDb().newChoose(type2, bInt(0), bString("8")),
-          exprDb().newChoose(type2, bInt(1), bInt(11)));
+          BChooseTest.this.bChoose(type1, index4, bString("7")),
+          BChooseTest.this.bChoose(type1, index3, bString("8")),
+          BChooseTest.this.bChoose(type2, index2, bString("7")),
+          BChooseTest.this.bChoose(type2, index1, bString("8")),
+          BChooseTest.this.bChoose(type2, index, bInt(11)));
     }
   }
 

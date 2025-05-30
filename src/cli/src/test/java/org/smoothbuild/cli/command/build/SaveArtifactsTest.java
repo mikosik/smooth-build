@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Map;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.cli.dagger.CliTestContext;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.common.schedule.Output;
 import org.smoothbuild.common.tuple.Tuple0;
@@ -27,13 +27,10 @@ import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SInstantiate;
 import org.smoothbuild.compilerfrontend.lang.type.SStructType;
 import org.smoothbuild.compilerfrontend.lang.type.SType;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
 import org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb;
 
-public class SaveArtifactsTest extends FrontendCompilerTestContext {
-  private static final FullPath ARTIFACTS_PATH = PROJECT_PATH.append(".smooth/artifacts");
-
+public class SaveArtifactsTest extends CliTestContext {
   @Test
   void store_bool_artifact() throws Exception {
     var sType = sBoolType();
@@ -85,8 +82,8 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
   void store_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name() throws Exception {
     var sType = sStructType("NotAFile", sBlobType(), sStringType());
     var bValue = bTuple(bString("my/path"), bBlob(byteStringFrom("abc")));
-    var filePath = BYTECODE_DB_PATH.append(HashedDb.dbPathTo(bValue.dataHash()));
-    var byteString = readFile(fileSystem(), filePath);
+    var filePath = provide().bytecodeDbPath().append(HashedDb.dbPathTo(bValue.dataHash()));
+    var byteString = readFile(provide().fileSystem(), filePath);
 
     testValueStoring(sType, bValue, byteString);
   }
@@ -197,7 +194,7 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
 
   @Test
   void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order() throws Exception {
-    var saveArtifacts = new SaveArtifacts(fileSystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
+    var saveArtifacts = provide().saveArtifacts();
     List<SExpr> sExprs = list(
         instantiateS(sStringType(), "myValue1"),
         instantiateS(sStringType(), "myValue2"),
@@ -234,11 +231,12 @@ public class SaveArtifactsTest extends FrontendCompilerTestContext {
     var label = label(":cli:build:saveArtifacts");
     var logs = list(info("myValue -> '.smooth/artifacts/" + artifactRelativePath + "'"));
     assertThat(result.report()).isEqualTo(report(label, logs));
-    assertThat(directoryToFileMap(fileSystem(), ARTIFACTS_PATH)).isEqualTo(expectedDirectoryMap);
+    assertThat(directoryToFileMap(provide().fileSystem(), provide().artifactsPath()))
+        .isEqualTo(expectedDirectoryMap);
   }
 
   private Output<Tuple0> saveArtifacts(SType sType, BValue value) {
-    var saveArtifacts = new SaveArtifacts(fileSystem(), ARTIFACTS_PATH, BYTECODE_DB_PATH);
+    var saveArtifacts = provide().saveArtifacts();
     SExpr instantiateS = instantiateS(sType, "myValue");
     return saveArtifacts.execute(evaluatedExprs(list(instantiateS), list(value)));
   }

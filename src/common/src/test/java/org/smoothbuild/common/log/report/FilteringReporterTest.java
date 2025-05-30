@@ -25,10 +25,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
+import org.smoothbuild.common.dagger.CommonTestContext;
 import org.smoothbuild.common.log.base.Label;
 import org.smoothbuild.common.log.base.Level;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.common.testing.CommonTestContext;
 
 public class FilteringReporterTest extends CommonTestContext {
   @Test

@@ -1,6 +1,7 @@
 package org.smoothbuild.compilerbackend;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -14,11 +15,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.FullPath;
 import org.smoothbuild.common.log.location.Location;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SNamedEvaluable;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BBlob;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
@@ -689,19 +690,16 @@ public class SbTranslatorTest extends FrontendCompilerTestContext {
     return mock;
   }
 
-  public SbTranslator sbTranslator(Bindings<SPolyEvaluable> evaluables) {
-    return sbTranslator(fileContentReader(), evaluables);
-  }
-
   public SbTranslator sbTranslator(
       FileContentReader fileContentReader, Bindings<SPolyEvaluable> evaluables) {
-    return sbTranslator(fileContentReader, bytecodeLoader(), evaluables);
+    return sbTranslator(fileContentReader, bytecodeLoader(getSystemClassLoader()), evaluables);
   }
 
   private SbTranslator sbTranslator(
       FileContentReader fileContentReader,
       BytecodeLoader bytecodeLoader,
       Bindings<SPolyEvaluable> evaluables) {
-    return new SbTranslator(bytecodeF(), fileContentReader, bytecodeLoader, evaluables);
+    return new SbTranslator(
+        provide().bytecodeFactory(), fileContentReader, bytecodeLoader, evaluables);
   }
 }

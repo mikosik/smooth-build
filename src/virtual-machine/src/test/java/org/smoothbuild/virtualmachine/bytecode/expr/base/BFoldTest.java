@@ -9,33 +9,36 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BFold.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BFoldTest extends VmTestContext {
   @Test
   void creating_fold_with_non_array_fails() {
-    assertCall(() -> bytecodeF().fold(bInt(), bInt(), bIntIdLambda()))
+    assertCall(() -> bFold(bInt(), bInt(), bIntIdLambda()))
         .throwsException(new IllegalArgumentException(
             "`array.evaluationType()` should be `BArrayType` but is `BIntType`."));
   }
 
   @Test
   void creating_fold_with_non_lambda_fails() {
-    assertCall(() -> bytecodeF().fold(bArray(bInt()), bInt(), bInt()))
+    assertCall(() -> bFold(bArray(bInt()), bInt(), bInt()))
         .throwsException(new IllegalArgumentException(
             "`folder.evaluationType()` should be `BLambdaType` but is `BIntType`."));
   }
 
   @Test
   void creating_fold_with_folder_which_parameter_count_is_different_than_two_fails() {
-    assertCall(() -> bytecodeF().fold(bArray(bInt()), bInt(), bLambda(list(bIntType()), bInt())))
+    assertCall(() -> provide()
+            .bytecodeFactory()
+            .fold(bArray(bInt()), bInt(), bLambda(list(bIntType()), bInt())))
         .throwsException(new IllegalArgumentException(
             "`folder.type()` should be `(Int,Int)->Int` but is `(Int)->Int`."));
   }
 
   @Test
   void creating_fold_with_folder_that_has_different_first_param_type_than_initial_type_fails() {
-    assertCall(() -> bytecodeF()
+    assertCall(() -> provide()
+            .bytecodeFactory()
             .fold(bArray(bInt()), bInt(), bLambda(list(bStringType(), bIntType()), bInt())))
         .throwsException(new IllegalArgumentException(
             "`folder.type()` should be `(Int,Int)->Int` but is `(String,Int)->Int`."));
@@ -44,7 +47,8 @@ public class BFoldTest extends VmTestContext {
   @Test
   void
       creating_fold_with_folder_that_has_different_second_param_type_than_array_element_type_fails() {
-    assertCall(() -> bytecodeF()
+    assertCall(() -> provide()
+            .bytecodeFactory()
             .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bStringType()), bInt())))
         .throwsException(new IllegalArgumentException(
             "`folder.type()` should be `(Int,Int)->Int` but is `(Int,String)->Int`."));
@@ -52,7 +56,8 @@ public class BFoldTest extends VmTestContext {
 
   @Test
   void creating_fold_with_folder_that_has_different_result_type_than_initial_type_fails() {
-    assertCall(() -> bytecodeF()
+    assertCall(() -> provide()
+            .bytecodeFactory()
             .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bIntType()), bString())))
         .throwsException(new IllegalArgumentException(
             "`folder.type()` should be `(Int,Int)->Int` but is `(Int,Int)->String`."));
@@ -63,23 +68,23 @@ public class BFoldTest extends VmTestContext {
     @Override
     protected List<BFold> equalExprs() throws BytecodeException {
       return list(
-          bytecodeF().fold(bArray(bInt(0)), bInt(0), bii2iLambda()),
-          bytecodeF().fold(bArray(bInt(0)), bInt(0), bii2iLambda()));
+          bFold(bArray(bInt(0)), bInt(0), bii2iLambda()),
+          bFold(bArray(bInt(0)), bInt(0), bii2iLambda()));
     }
 
     @Override
     protected List<BFold> nonEqualExprs() throws BytecodeException {
       return list(
-          bytecodeF().fold(bArray(bInt(0)), bInt(0), bii2iLambda(0)),
-          bytecodeF().fold(bArray(bInt(0)), bInt(0), bii2iLambda(1)),
-          bytecodeF().fold(bArray(bInt(0)), bInt(1), bii2iLambda(0)),
-          bytecodeF().fold(bArray(bInt(1)), bInt(0), bii2iLambda(0)));
+          bFold(bArray(bInt(0)), bInt(0), bii2iLambda(0)),
+          bFold(bArray(bInt(0)), bInt(0), bii2iLambda(1)),
+          bFold(bArray(bInt(0)), bInt(1), bii2iLambda(0)),
+          bFold(bArray(bInt(1)), bInt(0), bii2iLambda(0)));
     }
   }
 
   @Test
   void fold_can_be_read_back_by_hash() throws Exception {
-    var fold = bytecodeF().fold(bArray(bInt()), bInt(), bii2iLambda());
+    var fold = bFold(bArray(bInt()), bInt(), bii2iLambda());
     assertThat(exprDbOther().get(fold.hash())).isEqualTo(fold);
   }
 
@@ -88,14 +93,14 @@ public class BFoldTest extends VmTestContext {
     var array = bArray(bInt());
     var initial = bInt();
     var folder = bii2iLambda();
-    var fold = bytecodeF().fold(array, initial, folder);
+    var fold = bFold(array, initial, folder);
     assertThat(((BFold) exprDbOther().get(fold.hash())).subExprs())
         .isEqualTo(new BSubExprs(array, initial, folder));
   }
 
   @Test
   void to_string() throws Exception {
-    var fold = bytecodeF().fold(bArray(bInt(17)), bInt(0), bii2iLambda());
+    var fold = bFold(bArray(bInt(17)), bInt(0), bii2iLambda());
     assertThat(fold.toString())
         .isEqualTo(
             """

@@ -9,7 +9,7 @@ import static org.smoothbuild.common.tuple.Tuples.tuple;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.testing.CommonTestContext;
+import org.smoothbuild.common.dagger.CommonTestContext;
 
 public class InitializerTest extends CommonTestContext {
   @Test
@@ -18,7 +18,7 @@ public class InitializerTest extends CommonTestContext {
     var visited2 = new AtomicBoolean(false);
     var initializable1 = initializable(visited1);
     var initializable2 = initializable(visited2);
-    var scheduler = scheduler();
+    var scheduler = provide().scheduler();
 
     var initializer = new Initializer(Set.of(initializable1, initializable2), scheduler);
     var result = scheduler.submit(initializer);

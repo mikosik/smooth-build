@@ -21,6 +21,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInvoke;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.evaluate.step.BOutput;
 import org.smoothbuild.virtualmachine.evaluate.step.CombineStep;
 import org.smoothbuild.virtualmachine.evaluate.step.InvokeStep;
@@ -28,7 +29,6 @@ import org.smoothbuild.virtualmachine.evaluate.step.OrderStep;
 import org.smoothbuild.virtualmachine.evaluate.step.PickStep;
 import org.smoothbuild.virtualmachine.evaluate.step.SelectStep;
 import org.smoothbuild.virtualmachine.evaluate.step.Step;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class StepEvaluatorTest extends VmTestContext {
   @Nested
@@ -306,8 +306,8 @@ public class StepEvaluatorTest extends VmTestContext {
 
   private StepEvaluator stepEvaluatorWithCaches(
       Step step, BTuple input, BValue memoryValue, BValue diskValue) throws Exception {
-    var computationCache = computationCache();
-    var computationHashFactory = computationHashFactory();
+    var computationCache = provide().computationCache();
+    var computationHashFactory = provide().computationHashFactory();
     var computationHash = computationHashFactory.create(step, input);
     if (diskValue != null) {
       computationCache.write(computationHash, output(diskValue));
@@ -318,10 +318,10 @@ public class StepEvaluatorTest extends VmTestContext {
     }
     return new StepEvaluator(
         computationHashFactory,
-        this::container,
+        () -> provide().container(),
         computationCache,
-        scheduler(),
-        bytecodeF(),
+        provide().scheduler(),
+        provide().bytecodeFactory(),
         memoryCache);
   }
 
@@ -338,21 +338,21 @@ public class StepEvaluatorTest extends VmTestContext {
 
     assertThat(result.get().get()).isEqualTo(expectedOutput.value());
     var report = report(step.label(), step.trace(), expectedOrigin, list());
-    assertThat(reporter().reports()).contains(report);
+    assertThat(provide().reporter().reports()).contains(report);
   }
 
   private void assertCachesState(Step step, BTuple input, BOutput memoryValue, BValue diskValue)
       throws Exception {
-    var computationCache = computationCache();
+    var computationCache = provide().computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, Promise<BOutput>>();
-    var computationHashFactory = computationHashFactory();
-    var scheduler = scheduler();
+    var computationHashFactory = provide().computationHashFactory();
+    var scheduler = provide().scheduler();
     var stepEvaluator = new StepEvaluator(
         computationHashFactory,
-        this::container,
+        () -> provide().container(),
         computationCache,
         scheduler,
-        bytecodeF(),
+        provide().bytecodeFactory(),
         memoryCache);
     var result = stepEvaluator.evaluate(step, input.elements().map(Tasks::argument));
     await().until(() -> result.toMaybe().isSome());

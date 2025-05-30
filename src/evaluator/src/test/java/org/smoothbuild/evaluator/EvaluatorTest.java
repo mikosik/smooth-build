@@ -1,43 +1,29 @@
 package org.smoothbuild.evaluator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.schedule.Tasks.argument;
 import static org.smoothbuild.common.testing.AwaitHelper.await;
 import static org.smoothbuild.common.testing.TestingFileSystem.saveBytecodeInJar;
-import static org.smoothbuild.common.testing.TestingInitializer.runInitializations;
 import static org.smoothbuild.compilerfrontend.lang.name.Bindings.bindings;
 import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
 import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FullPath;
-import org.smoothbuild.common.schedule.Scheduler;
-import org.smoothbuild.common.schedule.SchedulerWiring;
-import org.smoothbuild.common.testing.ReportTestWiring;
-import org.smoothbuild.compilerbackend.CompilerBackendWiring;
 import org.smoothbuild.compilerfrontend.lang.define.SExpr;
 import org.smoothbuild.compilerfrontend.lang.define.SPolyEvaluable;
 import org.smoothbuild.compilerfrontend.lang.name.Bindings;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
-import org.smoothbuild.evaluator.ScheduleEvaluate.EvaluateCore;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
-import org.smoothbuild.virtualmachine.testing.VmTestWiring;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
 
-public class EvaluatorTest extends FrontendCompilerTestContext {
+public class EvaluatorTest extends EvaluatorTestContext {
   @Nested
   class _evaluation {
     @Nested
@@ -74,7 +60,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var sLambda = sLambda(nlist(), sParamRef(sIntType(), "p"));
           var sFunc = sPoly(sFunc("myFunc", nlist(sItem(sIntType(), "p")), sCall(sLambda)));
           var sCall = sCall(sInstantiate(sFunc), sInt(7));
-          assertEvaluation(newInjector(), bindings(sFunc), sCall, bInt(7));
+          assertEvaluation(bindings(sFunc), sCall, bInt(7));
         }
 
         @Test
@@ -84,14 +70,14 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var sFunc = sPoly(sFunc("myFunc", nlist(sItem(sIntType(), "p")), sLambda));
           var callFunc = sCall(sInstantiate(sFunc), sInt(7));
           var callReturnedLambda = sCall(callFunc);
-          assertEvaluation(newInjector(), bindings(sFunc), callReturnedLambda, bInt(7));
+          assertEvaluation(bindings(sFunc), callReturnedLambda, bInt(7));
         }
 
         @Test
         void call_expression_function() throws BytecodeException {
           var sFunc = sPoly(sFunc("n", nlist(), sInt(7)));
           var sCall = sCall(sInstantiate(sFunc));
-          assertEvaluation(newInjector(), bindings(sFunc), sCall, bInt(7));
+          assertEvaluation(bindings(sFunc), sCall, bInt(7));
         }
 
         @Test
@@ -100,7 +86,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var sOrder = sOrder(a, sParamRef(a, "e"));
           var sFunc = sPoly(list(a), sFunc(sArrayType(a), "n", nlist(sItem(a, "e")), sOrder));
           var sCall = sCall(sInstantiate(sFunc, list(sIntType())), sInt(7));
-          assertEvaluation(newInjector(), bindings(sFunc), sCall, bArray(bIntType(), bInt(7)));
+          assertEvaluation(bindings(sFunc), sCall, bArray(bIntType(), bInt(7)));
         }
 
         @Test
@@ -108,23 +94,21 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var sConstructor =
               sPoly(sConstructor(sStructType("MyStruct", nlist(sSig(sIntType(), "field")))));
           var sCall = sCall(sInstantiate(sConstructor), sInt(7));
-          assertEvaluation(newInjector(), bindings(sConstructor), sCall, bTuple(bInt(7)));
+          assertEvaluation(bindings(sConstructor), sCall, bTuple(bInt(7)));
         }
 
         @Test
         void call_native_argless_func() throws Exception {
-          var injector = newInjector();
           var sFunc = sPoly(sAnnotatedFunc(
               sNativeAnnotation(1, sString(ReturnAbc.class.getName())),
               sStringType(),
               "f",
               nlist()));
           var sCall = sCall(sInstantiate(sFunc));
-          var buildJar = PROJECT_PATH.append("module.jar");
-          var fileSystem =
-              injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
+          var buildJar = provide().projectPath().append("module.jar");
+          var fileSystem = provide().fileSystem();
           saveBytecodeInJar(fileSystem, buildJar, list(ReturnAbc.class));
-          assertEvaluation(injector, bindings(sFunc), sCall, bString("abc"));
+          assertEvaluation(bindings(sFunc), sCall, bString("abc"));
         }
 
         @Test
@@ -135,12 +119,10 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
               "f",
               nlist(sItem(sStringType(), "p"))));
           var sCall = sCall(sInstantiate(sFunc), sString("abc"));
-          var injector = newInjector();
-          var buildJar = PROJECT_PATH.append("module.jar");
-          var fileSystem =
-              injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
+          var buildJar = provide().projectPath().append("module.jar");
+          var fileSystem = provide().fileSystem();
           saveBytecodeInJar(fileSystem, buildJar, list(StringIdentity.class));
-          assertEvaluation(injector, bindings(sFunc), sCall, bString("abc"));
+          assertEvaluation(bindings(sFunc), sCall, bString("abc"));
         }
       }
 
@@ -175,7 +157,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         void param_ref() throws BytecodeException {
           var funcS = sPoly(sFunc("n", nlist(sItem(sIntType(), "p")), sParamRef(sIntType(), "p")));
           var callS = sCall(sInstantiate(funcS), sInt(7));
-          assertEvaluation(newInjector(), bindings(funcS), callS, bInt(7));
+          assertEvaluation(bindings(funcS), callS, bInt(7));
         }
       }
 
@@ -186,8 +168,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var structTS = sStructType("MyStruct", nlist(sSig(sIntType(), "f")));
           var constructorS = sPoly(sConstructor(structTS));
           var callS = sCall(sInstantiate(constructorS), sInt(7));
-          assertEvaluation(
-              newInjector(), bindings(constructorS), sStructSelect(callS, "f"), bInt(7));
+          assertEvaluation(bindings(constructorS), sStructSelect(callS, "f"), bInt(7));
         }
       }
     }
@@ -206,22 +187,21 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var a = varA();
           var funcS = sPoly(list(varA()), sFunc("n", nlist(sItem(a, "e")), sParamRef(a, "e")));
           var instantiateS = sInstantiate(funcS, list(sIntType()));
-          assertEvaluation(newInjector(), bindings(funcS), instantiateS, bIntIdLambda());
+          assertEvaluation(bindings(funcS), instantiateS, bIntIdLambda());
         }
 
         @Test
         void ann_func() throws Exception {
-          var injector = newInjector();
-          var buildJar = PROJECT_PATH.append("module.jar");
-          var fileSystem =
-              injector.getInstance(Key.get(new TypeLiteral<FileSystem<FullPath>>() {}));
+          var buildJar = provide().projectPath().append("module.jar");
+          var fileSystem = provide().fileSystem();
           saveBytecodeInJar(fileSystem, buildJar, list(ReturnIdFunc.class));
           var binaryName = ReturnIdFunc.class.getName();
           var sBytecodeFunc = sPoly(
               list(varA()), sBytecodeFunc(binaryName, varA(), "f", nlist(sItem(varA(), "p"))));
           var sExpr = sInstantiate(sBytecodeFunc, list(sIntType()));
-          var expected = ReturnIdFunc.bytecode(bytecodeF(), Map.of("A", bIntType()));
-          assertEvaluation(injector, bindings(sBytecodeFunc), sExpr, expected);
+          var expected =
+              ReturnIdFunc.bytecode(provide().bytecodeFactory(), Map.of("A", bIntType()));
+          assertEvaluation(bindings(sBytecodeFunc), sExpr, expected);
         }
 
         @Test
@@ -238,7 +218,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
         @Test
         void mono_expression_value() throws BytecodeException {
           var valueS = sPoly(sValue(1, sIntType(), "name", sInt(7)));
-          assertEvaluation(newInjector(), bindings(valueS), sInstantiate(valueS), bInt(7));
+          assertEvaluation(bindings(valueS), sInstantiate(valueS), bInt(7));
         }
 
         @Test
@@ -246,8 +226,7 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
           var a = varA();
           var polyValue = sPoly(list(a), sValue(1, sArrayType(a), "name", sOrder(a)));
           var instantiatedValue = sInstantiate(polyValue, list(sIntType()));
-          assertEvaluation(
-              newInjector(), bindings(polyValue), instantiatedValue, bArray(bIntType()));
+          assertEvaluation(bindings(polyValue), instantiatedValue, bArray(bIntType()));
         }
       }
 
@@ -265,43 +244,28 @@ public class EvaluatorTest extends FrontendCompilerTestContext {
     }
   }
 
-  private static Injector newInjector() {
-    return createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        install(new SchedulerWiring());
-        install(new CompilerBackendWiring());
-        install(new VmTestWiring());
-        install(new ReportTestWiring());
-      }
-    });
-  }
-
   private void assertEvaluation(SPolyEvaluable sNamedEvaluable, BExpr bExpr) {
-    assertThat(evaluate(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable), newInjector()))
+    assertThat(evaluate(bindings(sNamedEvaluable), sInstantiate(sNamedEvaluable)))
         .isEqualTo(bExpr);
   }
 
   private void assertEvaluation(SExpr sExpr, BExpr bExpr) {
-    assertEvaluation(newInjector(), bindings(), sExpr, bExpr);
+    assertEvaluation(bindings(), sExpr, bExpr);
   }
 
-  private void assertEvaluation(
-      Injector injector, Bindings<SPolyEvaluable> evaluables, SExpr sExpr, BExpr bExpr) {
-    assertThat(evaluate(evaluables, sExpr, injector)).isEqualTo(bExpr);
+  private void assertEvaluation(Bindings<SPolyEvaluable> evaluables, SExpr sExpr, BExpr bExpr) {
+    assertThat(evaluate(evaluables, sExpr)).isEqualTo(bExpr);
   }
 
-  private BExpr evaluate(Bindings<SPolyEvaluable> evaluables, SExpr sExpr, Injector injector) {
-    var bValues = evaluate(injector, evaluables, list(sExpr)).get().bValues();
+  private BExpr evaluate(Bindings<SPolyEvaluable> evaluables, SExpr sExpr) {
+    var bValues = evaluate(evaluables, list(sExpr)).get().bValues();
     assertThat(bValues.size()).isEqualTo(1);
     return bValues.get(0);
   }
 
-  private Maybe<EvaluatedExprs> evaluate(
-      Injector injector, Bindings<SPolyEvaluable> evaluables, List<SExpr> exprs) {
-    runInitializations(injector);
-    var scheduler = injector.getInstance(Scheduler.class);
-    var evaluateCore = injector.getInstance(EvaluateCore.class);
+  private Maybe<EvaluatedExprs> evaluate(Bindings<SPolyEvaluable> evaluables, List<SExpr> exprs) {
+    var scheduler = provide().scheduler();
+    var evaluateCore = provide().evaluateCore();
     var evaluatedExprs = scheduler.submit(evaluateCore, argument(exprs), argument(evaluables));
     await().until(() -> evaluatedExprs.toMaybe().isSome());
     return evaluatedExprs.get();

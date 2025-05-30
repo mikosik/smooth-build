@@ -11,6 +11,7 @@ import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BLambdaType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BTupleType;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class TestingBKind {
   public static final VmTestContext CONTEXT = new VmTestContext();
@@ -87,8 +88,8 @@ public class TestingBKind {
         CONTEXT.bMapKind(CONTEXT.bStringArrayType()),
         CONTEXT.bInvokeKind(CONTEXT.bBlobType()),
         CONTEXT.bInvokeKind(CONTEXT.bStringType()),
-        CONTEXT.kindDb().fold(CONTEXT.bBlobType()),
-        CONTEXT.kindDb().fold(CONTEXT.bStringType()));
+        CONTEXT.bFoldKind(CONTEXT.bBlobType()),
+        CONTEXT.bFoldKind(CONTEXT.bStringType()));
 
     return exprKinds.addAll(valueKinds);
   }

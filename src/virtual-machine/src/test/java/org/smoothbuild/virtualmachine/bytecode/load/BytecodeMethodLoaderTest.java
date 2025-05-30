@@ -1,6 +1,7 @@
 package org.smoothbuild.virtualmachine.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BValue;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonStaticMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
@@ -90,7 +91,7 @@ public class BytecodeMethodLoaderTest extends VmTestContext {
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws Exception {
     var bMethod = bMethod(clazz, BYTECODE_METHOD_NAME);
-    var bytecodeMethodLoader = bytecodeMethodLoader();
+    var bytecodeMethodLoader = bytecodeMethodLoader(getSystemClassLoader());
     assertThat(bytecodeMethodLoader.load(bMethod)).isEqualTo(err(message));
   }
 

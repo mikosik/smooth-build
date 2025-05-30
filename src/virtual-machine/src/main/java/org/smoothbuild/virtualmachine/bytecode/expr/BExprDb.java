@@ -7,9 +7,11 @@ import static org.smoothbuild.virtualmachine.bytecode.expr.Helpers.invokeAndChai
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.cannotReadRootException;
 import static org.smoothbuild.virtualmachine.bytecode.expr.exc.RootHashChainSizeIsWrongException.wrongSizeOfRootChainException;
 
+import jakarta.inject.Inject;
 import java.math.BigInteger;
 import org.smoothbuild.common.base.Hash;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArray;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BArrayBuilder;
@@ -56,10 +58,12 @@ import org.smoothbuild.virtualmachine.bytecode.kind.exc.BKindDbException;
 /**
  * This class is thread-safe.
  */
+@PerCommand
 public class BExprDb {
   private final HashedDb hashedDb;
   private final BKindDb kindDb;
 
+  @Inject
   public BExprDb(HashedDb hashedDb, BKindDb kindDb) {
     this.hashedDb = hashedDb;
     this.kindDb = kindDb;

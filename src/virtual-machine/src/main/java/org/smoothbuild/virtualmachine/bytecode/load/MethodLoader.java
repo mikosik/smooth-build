@@ -6,10 +6,10 @@ import static org.smoothbuild.common.collect.Result.ok;
 import static org.smoothbuild.common.function.Function1.memoizer;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import org.smoothbuild.common.collect.Result;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
@@ -19,7 +19,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BMethod;
  * Method to load is specified by providing {@link BMethod}.
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class MethodLoader {
   private final JarClassLoaderFactory jarClassLoaderFactory;
   private final Function1<BMethod, Result<Method>, IOException> memoizer;

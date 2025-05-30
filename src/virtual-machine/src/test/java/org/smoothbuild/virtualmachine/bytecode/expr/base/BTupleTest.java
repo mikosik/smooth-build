@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BTupleTest extends VmTestContext {
   @Test
   void setting_element_to_null_throws_exception() {
-    assertCall(() -> exprDb().newTuple(list(bString("John"), null)))
+    assertCall(() -> bTuple(list(bString("John"), null)))
         .throwsException(NullPointerException.class);
   }
 

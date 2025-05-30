@@ -13,19 +13,19 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BKind;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.TestingBKind;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
 
 public class BArrayTest extends VmTestContext {
   @Test
   void empty_int_array_can_be_iterated_as_int() throws Exception {
-    var array = exprDb().newArrayBuilder(bIntArrayType()).build();
+    var array = newBArrayBuilder(bIntArrayType()).build();
     assertThat(array.elements(BInt.class)).isEmpty();
   }
 
   @Test
   void string_array_cannot_be_iterated_as_tuple() throws Exception {
-    var array = exprDb().newArrayBuilder(bStringArrayType()).add(bString("abc")).build();
+    var array = newBArrayBuilder(bStringArrayType()).add(bString("abc")).build();
     assertCall(() -> array.elements(BTuple.class))
         .throwsException(new IllegalArgumentException(
             "[String] cannot be viewed as Iterable of " + BTuple.class.getCanonicalName() + "."));
@@ -33,26 +33,26 @@ public class BArrayTest extends VmTestContext {
 
   @Test
   void empty_array_is_empty() throws Exception {
-    var array = exprDb().newArrayBuilder(bArrayType()).build();
+    var array = newBArrayBuilder(bArrayType()).build();
     assertThat(array.elements(BString.class)).isEmpty();
   }
 
   @Test
   void adding_null_is_forbidden() throws Exception {
-    var arrayBuilder = exprDb().newArrayBuilder(bArrayType());
+    var arrayBuilder = newBArrayBuilder(bArrayType());
     assertCall(() -> arrayBuilder.add(null)).throwsException(NullPointerException.class);
   }
 
   @Test
   void adding_elem_with_wrong_type_is_forbidden() throws Exception {
-    var arrayBuilder = exprDb().newArrayBuilder(bArrayType());
+    var arrayBuilder = newBArrayBuilder(bArrayType());
     assertCall(() -> arrayBuilder.add(bBlob(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   void array_contains_added_elem() throws Exception {
-    var array = exprDb().newArrayBuilder(bArrayType()).add(bString("abc")).build();
+    var array = newBArrayBuilder(bArrayType()).add(bString("abc")).build();
     assertThat(array.elements(BString.class)).containsExactly(bString("abc"));
   }
 
@@ -60,8 +60,7 @@ public class BArrayTest extends VmTestContext {
   void array_contains_added_elem_via_add_all_method() throws Exception {
     var string = bString("abc");
     var string2 = bString("def");
-    var array =
-        exprDb().newArrayBuilder(bArrayType()).addAll(list(string, string2)).build();
+    var array = newBArrayBuilder(bArrayType()).addAll(list(string, string2)).build();
     assertThat(array.elements(BString.class)).containsExactly(string, string2).inOrder();
   }
 
@@ -70,12 +69,8 @@ public class BArrayTest extends VmTestContext {
     var string1 = bString("abc");
     var string2 = bString("def");
     var string3 = bString("ghi");
-    var array = exprDb()
-        .newArrayBuilder(bArrayType())
-        .add(string1)
-        .add(string2)
-        .add(string3)
-        .build();
+    var array =
+        newBArrayBuilder(bArrayType()).add(string1).add(string2).add(string3).build();
     assertThat(array.elements(BString.class))
         .containsExactly(string1, string2, string3)
         .inOrder();
@@ -84,7 +79,7 @@ public class BArrayTest extends VmTestContext {
   @Test
   void adding_same_elem_twice_builds_array_with_two_elements() throws Exception {
     var string = bString("abc");
-    var array = exprDb().newArrayBuilder(bArrayType()).add(string).add(string).build();
+    var array = newBArrayBuilder(bArrayType()).add(string).add(string).build();
     assertThat(array.elements(BString.class)).containsExactly(string, string);
   }
 
@@ -110,7 +105,7 @@ public class BArrayTest extends VmTestContext {
   void array_can_be_read_by_hash() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
-    var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
+    var array = newBArrayBuilder(bArrayType()).add(string1).add(string2).build();
     assertThat(exprDbOther().get(array.hash())).isEqualTo(array);
   }
 
@@ -118,7 +113,7 @@ public class BArrayTest extends VmTestContext {
   void array_read_by_hash_contains_same_elements() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
-    var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
+    var array = newBArrayBuilder(bArrayType()).add(string1).add(string2).build();
     assertThat(((BArray) exprDbOther().get(array.hash())).elements(BString.class))
         .containsExactly(string1, string2)
         .inOrder();
@@ -128,7 +123,7 @@ public class BArrayTest extends VmTestContext {
   void array_read_by_hash_has_same_hash() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
-    var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
+    var array = newBArrayBuilder(bArrayType()).add(string1).add(string2).build();
     assertThat(exprDbOther().get(array.hash()).hash()).isEqualTo(array.hash());
   }
 
@@ -136,7 +131,7 @@ public class BArrayTest extends VmTestContext {
   @MethodSource("type_test_data")
   public void type(BType elemType) throws Exception {
     var bArrayType = bArrayType(elemType);
-    var bArray = exprDb().newArrayBuilder(bArrayType).build();
+    var bArray = newBArrayBuilder(bArrayType).build();
     assertThat(bArray.kind()).isEqualTo(bArrayType);
   }
 
@@ -148,7 +143,7 @@ public class BArrayTest extends VmTestContext {
   void to_string() throws Exception {
     var string1 = bString("abc");
     var string2 = bString("def");
-    var array = exprDb().newArrayBuilder(bArrayType()).add(string1).add(string2).build();
+    var array = newBArrayBuilder(bArrayType()).add(string1).add(string2).build();
     assertThat(array.toString())
         .isEqualTo(
             """

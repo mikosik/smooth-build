@@ -5,7 +5,7 @@ import static org.smoothbuild.virtualmachine.bytecode.kind.base.KindId.INT;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.base.Hash;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class DecodeKindWrongChainSizeExceptionTest extends VmTestContext {
   @Test

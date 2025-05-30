@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BSwitch.BSubExprs;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BSwitchTest extends VmTestContext {
   @Test
@@ -17,7 +17,7 @@ public class BSwitchTest extends VmTestContext {
       throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newSwitch(choice, bCombine(bs2iLambda())))
+    assertCall(() -> bSwitch(choice, bCombine(bs2iLambda())))
         .throwsException(
             new IllegalArgumentException("`handlers.evaluationType().elements().size()` == 1 "
                 + "must be equal `choice.evaluationType().alternatives().size()` == 2."));
@@ -28,7 +28,7 @@ public class BSwitchTest extends VmTestContext {
       throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newSwitch(choice, bCombine(bs2iLambda(), bInt(7))))
+    assertCall(() -> bSwitch(choice, bCombine(bs2iLambda(), bInt(7))))
         .throwsException(
             new IllegalArgumentException(
                 "`alternatives.evaluationType()` is tuple with element at index 1 not equal to lambda type"));
@@ -40,7 +40,7 @@ public class BSwitchTest extends VmTestContext {
           throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newSwitch(choice, bCombine(bs2iLambda(), bs2iLambda())))
+    assertCall(() -> bSwitch(choice, bCombine(bs2iLambda(), bs2iLambda())))
         .throwsException(new IllegalArgumentException("`handlers.evaluationType()` is tuple "
             + "with element at index 1 being lambda with parameters `(String)` "
             + "but expected `(Int)`."));
@@ -52,7 +52,7 @@ public class BSwitchTest extends VmTestContext {
           throws BytecodeException {
     var type = bChoiceType(bStringType(), bIntType());
     var choice = bChoice(type, 0, bString("a"));
-    assertCall(() -> exprDb().newSwitch(choice, bCombine(bs2iLambda(), bi2sLambda())))
+    assertCall(() -> bSwitch(choice, bCombine(bs2iLambda(), bi2sLambda())))
         .throwsException(new IllegalArgumentException(
             "`handlers.evaluationType()` have lambdas at index 0 and 1 "
                 + "that have different result types: `Int` and `String`."));
@@ -61,7 +61,7 @@ public class BSwitchTest extends VmTestContext {
   @Test
   void sub_expressions_contains_choice_and_handlers() throws Exception {
     var handlers = bCombine(bs2iLambda(), bi2iLambda());
-    var switch_ = exprDb().newSwitch(bChoice(), handlers);
+    var switch_ = bSwitch(bChoice(), handlers);
     assertThat(switch_.subExprs()).isEqualTo(new BSubExprs(bChoice(), handlers));
   }
 
@@ -77,8 +77,8 @@ public class BSwitchTest extends VmTestContext {
     @Override
     protected List<BSwitch> nonEqualExprs() throws BytecodeException {
       var type = bChoiceType(bStringType(), bIntType());
-      var choice1 = exprDb().newChoice(type, bInt(0), bString("7"));
-      var choice2 = exprDb().newChoice(type, bInt(1), bInt(8));
+      var choice1 = bChoice(type, bInt(0), bString("7"));
+      var choice2 = bChoice(type, bInt(1), bInt(8));
       return list(
           bSwitch(choice1, bCombine(bs2iLambda(), bi2iLambda(11))),
           bSwitch(choice1, bCombine(bs2iLambda(), bi2iLambda(12))),

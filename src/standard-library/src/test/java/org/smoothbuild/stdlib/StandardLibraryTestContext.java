@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 
 public class StandardLibraryTestContext extends EvaluatorTestContext {
   @BeforeEach
-  @Override
   public void beforeEach() throws IOException {
-    super.beforeEach();
     createLibraryModule(standardLibraryPath(), standardLibraryJarPath());
   }
 

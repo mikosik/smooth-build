@@ -7,7 +7,7 @@ import static org.smoothbuild.compilerfrontend.lang.name.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 
 public class SPolyEvaluableTest extends FrontendCompilerTestContext {
   @Nested

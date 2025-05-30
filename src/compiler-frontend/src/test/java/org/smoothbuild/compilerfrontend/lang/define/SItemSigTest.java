@@ -6,8 +6,8 @@ import static org.smoothbuild.compilerfrontend.lang.name.Name.referenceableName;
 
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compilerfrontend.dagger.FrontendCompilerTestContext;
 import org.smoothbuild.compilerfrontend.lang.name.Name;
-import org.smoothbuild.compilerfrontend.testing.FrontendCompilerTestContext;
 
 public class SItemSigTest extends FrontendCompilerTestContext {
   private final Name name = referenceableName("name");

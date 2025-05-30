@@ -6,16 +6,16 @@ import java.util.Map;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.common.log.report.Report;
-import org.smoothbuild.common.schedule.SingleThreadSchedulerWiring;
+import org.smoothbuild.common.schedule.SingleThreadRunnableScheduler;
 import org.smoothbuild.common.testing.GoldenFilesArgumentsProvider;
 import org.smoothbuild.common.testing.GoldenFilesTestCase;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 
 public class EvaluatorTracesTest extends EvaluatorTestContext {
   private static final String TESTS_DIR = "src/test/java/org/smoothbuild/cli/accept/traces";
 
   public EvaluatorTracesTest() {
-    super(new SingleThreadSchedulerWiring());
+    super(new SingleThreadRunnableScheduler());
   }
 
   @ParameterizedTest
@@ -26,11 +26,11 @@ public class EvaluatorTracesTest extends EvaluatorTestContext {
 
   private Map<String, String> generateFiles(GoldenFilesTestCase testCase) throws IOException {
     var code = testCase.readFile("smooth");
-    var actualLogs = compile(code);
+    var actualLogs = compileAndGetLogs(code);
     return Map.of("logs", actualLogs);
   }
 
-  private String compile(String code) throws IOException {
+  private String compileAndGetLogs(String code) throws IOException {
     createUserModule(code);
     evaluate("result");
     return reporter().reports().map(Report::toPrettyString).toString("\n");

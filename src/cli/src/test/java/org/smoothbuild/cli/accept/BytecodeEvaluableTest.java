@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;

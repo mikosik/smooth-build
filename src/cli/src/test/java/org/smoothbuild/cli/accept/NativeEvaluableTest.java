@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.base.Log;
-import org.smoothbuild.evaluator.testing.EvaluatorTestContext;
+import org.smoothbuild.evaluator.dagger.EvaluatorTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.nativ.AddElementOfWrongTypeToArray;
 import org.smoothbuild.virtualmachine.testing.func.nativ.BrokenIdentity;

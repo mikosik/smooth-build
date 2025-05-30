@@ -9,10 +9,10 @@ import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath
 import static org.smoothbuild.virtualmachine.evaluate.plugin.UnzipBlob.unzipBlob;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.collect.Result;
+import org.smoothbuild.common.dagger.PerCommand;
 import org.smoothbuild.common.function.Function1;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
@@ -24,7 +24,7 @@ import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
  * Factory for creating classLoaders that load classes from jar file provided as BlobB.
  * This class is thread-safe.
  */
-@Singleton
+@PerCommand
 public class JarClassLoaderFactory {
   private final BytecodeFactory bytecodeFactory;
   private final ClassLoader parentClassLoader;

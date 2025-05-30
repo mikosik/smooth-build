@@ -9,7 +9,8 @@ import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.Path;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BTuple;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class OutputClassFileTest extends VmTestContext {
   private final Path path = Path.path("my/path");
@@ -17,9 +18,9 @@ public class OutputClassFileTest extends VmTestContext {
 
   @Test
   void open_output_stream() throws Exception {
-    var nativeApi = nativeApi();
+    var nativeApi = (NativeApi) provide().container();
     var factory = nativeApi.factory();
-    var fileArrayBuilder = exprDb().newArrayBuilder(factory.arrayType(factory.fileType()));
+    var fileArrayBuilder = newBArrayBuilder(factory.arrayType(factory.fileType()));
     var outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi);
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
@@ -30,7 +31,7 @@ public class OutputClassFileTest extends VmTestContext {
   @Test
   void get_name_returns_file_path() throws Exception {
     var outputClassFile =
-        new OutputClassFile(exprDb().newArrayBuilder(bFileArrayType()), path, nativeApi());
+        new OutputClassFile(newBArrayBuilder(bFileArrayType()), path, provide().container());
     assertThat(outputClassFile.getName()).isEqualTo("/" + path);
   }
 }

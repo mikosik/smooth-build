@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.testing.CommonTestContext;
+import org.smoothbuild.common.dagger.CommonTestContext;
 
 public class TraceTest extends CommonTestContext {
   @Test

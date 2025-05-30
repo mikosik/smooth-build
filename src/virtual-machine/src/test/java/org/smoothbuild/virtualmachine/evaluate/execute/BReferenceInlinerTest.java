@@ -13,7 +13,7 @@ import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BInt;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BLambda;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 
 public class BReferenceInlinerTest extends VmTestContext {
   @Nested
@@ -45,7 +45,7 @@ public class BReferenceInlinerTest extends VmTestContext {
     @Test
     void fold() throws Exception {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> bytecodeF().fold(bArray(bInt()), bInt(), bFolderLambda()));
+          r -> bFold(bArray(bInt()), bInt(), bFolderLambda()));
     }
 
     @Test
@@ -229,19 +229,18 @@ public class BReferenceInlinerTest extends VmTestContext {
 
     @Test
     void fold_array() throws Exception {
-      assertReferenceInliningReplacesReference(
-          r -> bytecodeF().fold(bOrder(r), bInt(), bFolderLambda()));
+      assertReferenceInliningReplacesReference(r -> bFold(bOrder(r), bInt(), bFolderLambda()));
     }
 
     @Test
     void fold_initial() throws Exception {
-      assertReferenceInliningReplacesReference(
-          r -> bytecodeF().fold(bArray(bInt()), r, bFolderLambda()));
+      assertReferenceInliningReplacesReference(r -> bFold(bArray(bInt()), r, bFolderLambda()));
     }
 
     @Test
     void fold_folder() throws Exception {
-      assertReferenceInliningReplacesReference(2, bInt(1), r -> bytecodeF()
+      assertReferenceInliningReplacesReference(2, bInt(1), r -> provide()
+          .bytecodeFactory()
           .fold(bArray(bInt()), bInt(), bLambda(list(bIntType(), bIntType()), r)));
     }
 
@@ -288,14 +287,14 @@ public class BReferenceInlinerTest extends VmTestContext {
   @Test
   void reference_with_index_equal_to_environment_size_causes_exception() throws Exception {
     var job = job(bReference(bStringType(), 3), bInt(), bInt(), bInt(17));
-    assertCall(() -> bReferenceInliner().inline(job))
+    assertCall(() -> provide().bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(3, 3));
   }
 
   @Test
   void reference_with_negative_index_causes_exception() throws Exception {
     var job = job(bReference(bStringType(), -1), bInt(), bInt(), bInt(17));
-    assertCall(() -> bReferenceInliner().inline(job))
+    assertCall(() -> provide().bReferenceInliner().inline(job))
         .throwsException(new ReferenceIndexOutOfBoundsException(-1, 3));
   }
 
@@ -326,7 +325,7 @@ public class BReferenceInlinerTest extends VmTestContext {
     BExpr expr = factory.apply(bReference(referenceEvaluationType, referencedIndex));
     BExpr expected = factory.apply(expectedReplacement);
     var job = job(expr, environment);
-    var inlined = bReferenceInliner().inline(job);
+    var inlined = provide().bReferenceInliner().inline(job);
     assertThat(inlined).isEqualTo(expected);
   }
 
@@ -339,6 +338,6 @@ public class BReferenceInlinerTest extends VmTestContext {
       int referencedIndex, Function1<BExpr, BExpr, IOException> factory) throws IOException {
     var expr = factory.apply(bReference(bIntType(), referencedIndex));
     var job = job(expr, bInt(1), bInt(2), bInt(3));
-    assertThat(bReferenceInliner().inline(job)).isSameInstanceAs(expr);
+    assertThat(provide().bReferenceInliner().inline(job)).isSameInstanceAs(expr);
   }
 }

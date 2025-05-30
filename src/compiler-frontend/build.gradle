@@ -7,15 +7,17 @@ dependencies {
     implementation project(':src:antlr-smooth')
     implementation project(':src:common')
     implementation libs.guava
-    implementation libs.guice
+    implementation libs.jakarta.inject
     implementation libs.okio
 
+    testFixturesImplementation libs.dagger
+    testFixturesAnnotationProcessor libs.dagger.compiler
+    testFixturesImplementation libs.jakarta.inject
     testFixturesApi project(':src:common')
     testFixturesApi project(':src:compiler-frontend')
     testFixturesApi testFixtures(project(':src:common'))
     testFixturesApi testFixtures(project(':src:virtual-machine'))
     testFixturesApi libs.guava
-    testFixturesApi libs.guice
     testFixturesApi libs.junit.jupiter.api
     testFixturesApi libs.mockito
     testFixturesApi libs.okio

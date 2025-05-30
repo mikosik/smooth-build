@@ -14,8 +14,8 @@ import static org.smoothbuild.compilerfrontend.lang.type.AnnotationNames.NATIVE_
 import static org.smoothbuild.virtualmachine.bytecode.load.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 import static org.smoothbuild.virtualmachine.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
-import com.google.inject.assistedinject.Assisted;
-import jakarta.inject.Inject;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class SbTranslator {
   private final HashMap<Hash, String> names;
   private final HashMap<Hash, Location> locations;
 
-  @Inject
+  @AssistedInject
   public SbTranslator(
       BytecodeFactory bytecodeFactory,
       FileContentReader fileContentReader,

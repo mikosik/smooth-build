@@ -14,7 +14,7 @@ import org.smoothbuild.common.collect.Result;
 import org.smoothbuild.virtualmachine.bytecode.BytecodeFactory;
 import org.smoothbuild.virtualmachine.bytecode.expr.base.BExpr;
 import org.smoothbuild.virtualmachine.bytecode.kind.base.BType;
-import org.smoothbuild.virtualmachine.testing.VmTestContext;
+import org.smoothbuild.virtualmachine.dagger.VmTestContext;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.virtualmachine.testing.func.bytecode.ThrowException;
@@ -45,7 +45,8 @@ public class BytecodeLoaderTest extends VmTestContext {
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);
     when(bytecodeMethodLoader.load(bMethod)).thenReturn(fetchMethod(clazz));
 
-    return new BytecodeLoader(bytecodeMethodLoader, bytecodeF()).load("name", bMethod, varMap);
+    return new BytecodeLoader(bytecodeMethodLoader, provide().bytecodeFactory())
+        .load("name", bMethod, varMap);
   }
 
   private static Result<Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
