@@ -26,7 +26,7 @@ dependencyResolutionManagement {
       library('guava', 'com.google.guava:guava:33.4.8-jre')
       library('guice', 'com.google.inject:guice:7.0.0')
       library('guice-assisted-inject', 'com.google.inject.extensions:guice-assistedinject:7.0.0')
-      library('okio', 'com.squareup.okio:okio:3.11.0')
+      library('okio', 'com.squareup.okio:okio:3.12.0')
       library('picocli', 'info.picocli:picocli:4.7.7')
       library('zip4j', 'net.lingala.zip4j:zip4j:2.11.5')
 
